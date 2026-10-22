@@ -141,6 +141,23 @@ void main() {
     expect(reboots, [false]);
   });
 
+  testWidgets('dari onboarding: Lanjut langsung memulihkan, tanpa dialog penggantian (EXPORT_BACKUP §7.3)', (
+    tester,
+  ) async {
+    final hold = gateway.holdStage = Completer<void>();
+    await pump(tester, source: RestoreKind.onboarding);
+    await tester.tap(find.byKey(const ValueKey('restore-next')));
+    await tester.pump();
+    await tester.pump();
+
+    expect(find.byType(AlertDialog), findsNothing);
+    expect(find.text(t.dataPortability.restoreRunTitle), findsOneWidget);
+    hold.complete();
+    await tester.pump();
+    await tester.pump();
+    expect(reboots, [true]);
+  });
+
   testWidgets('galat berkas tidak bisa dipakai: Pilih berkas lain dan Tutup, datamu tidak berubah', (tester) async {
     gateway.inspectFailure = BackupFailureCodes.invalid;
     await pump(tester);

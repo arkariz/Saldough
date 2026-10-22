@@ -392,6 +392,7 @@ abstract final class RootModule {
           state,
           // Pengingat rutin di onboarding (FEATURE_DISCOVERY §4.4): alur
           // izin dan sakelar yang sama dengan Akun.
+          pickBackup: container<FileTransfer>().pickBackup,
           enableReminders: () async {
             final granted = await EnableReminders(
               scheduler: container<ReminderScheduler>(),
@@ -419,6 +420,7 @@ abstract final class RootModule {
   // `runApp`, jadi tidak ada frame yang berkedip. Dokumen progres rusak
   // dianggap belum dilihat.
   static Future<String> _initialLocation(GetIt container) async {
+    await markOnboardingDoneIfRestoring(container);
     final progress = (await container<TutorialProgressRepository>().load()).getOrElse((_) => TutorialProgress.empty);
     return progress.onboardingDone ? AppRouteRegistry.homePath : AppRouteRegistry.onboardingPath;
   }

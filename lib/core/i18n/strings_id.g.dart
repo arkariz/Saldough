@@ -2005,6 +2005,9 @@ class Translations$onboarding$id {
 	/// id: 'Sudah punya akun? Masuk'
 	String get signInAction => 'Sudah punya akun? Masuk';
 
+	/// id: 'Sudah punya cadangan? Pulihkan'
+	String get restoreAction => 'Sudah punya cadangan? Pulihkan';
+
 	/// id: 'Kembali'
 	String get backAction => 'Kembali';
 
@@ -5421,6 +5424,7 @@ extension on Translations {
 			'onboarding.createWalletAction' => 'Tambah dompet',
 			'onboarding.laterAction' => 'Nanti saja',
 			'onboarding.signInAction' => 'Sudah punya akun? Masuk',
+			'onboarding.restoreAction' => 'Sudah punya cadangan? Pulihkan',
 			'onboarding.backAction' => 'Kembali',
 			'onboarding.currencyTitle' => 'Pilih mata uangmu',
 			'onboarding.currencyBody' => 'Semua nominal di Tanukonomy memakai mata uang ini. Nanti bisa diganti di layar Akun, tapi angka yang sudah dicatat tidak dikonversi.',
@@ -5742,9 +5746,9 @@ extension on Translations {
 			'notificationCapture.reviewReason.kindUnclear' => 'Jenis belum pasti',
 			'notificationCapture.reviewReason.walletUnknown' => 'Dompet tidak dikenali',
 			'notificationCapture.reviewReason.categoryUnclear' => 'Kategori belum jelas',
-			'notificationCapture.reviewReason.dateUnclear' => 'Tanggal belum pasti',
 			_ => null,
 		} ?? switch (path) {
+			'notificationCapture.reviewReason.dateUnclear' => 'Tanggal belum pasti',
 			'notificationCapture.recordAction' => 'Catat',
 			'notificationCapture.dismissAction' => 'Abaikan',
 			'notificationCapture.makePatternAction' => 'Buat pola dari teks ini',

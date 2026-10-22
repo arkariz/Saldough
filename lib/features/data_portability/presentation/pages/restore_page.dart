@@ -22,6 +22,12 @@ class RestorePage extends StatelessWidget {
 
   Future<void> _confirm(BuildContext context, RestorePreview preview) async {
     final bloc = context.read<RestoreBloc>();
+    // Dari onboarding belum ada data yang bisa hilang: tanpa peringatan
+    // penggantian dan tanpa cadangan pengaman (EXPORT_BACKUP §7.3).
+    if (preview.source == RestoreKind.onboarding) {
+      bloc.add(const RestoreConfirmed());
+      return;
+    }
     final dataPortability = t.dataPortability;
     final message = [
       dataPortability.restoreConfirmBody,

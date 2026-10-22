@@ -4,7 +4,9 @@ import 'package:dependencies/dependencies.dart';
 import 'package:di/di.dart';
 import 'package:saldough/app/data_portability/app_reboot.dart';
 import 'package:saldough/core/foundation/analytics/app_bootstrap_firebase.dart';
+import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/data_portability/data/restore_engine.dart';
+import 'package:saldough/features/data_portability/domain/restore_models.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
@@ -53,5 +55,23 @@ Future<void> finishRestoreIfNeeded(GetIt container) async {
   } on Object catch (e, st) {
     developer.log('Finalisasi pemulihan gagal, dicoba lagi nanti', error: e, stackTrace: st, name: 'RestoreEngine');
     AppBootstrap.recordNonFatal(e, reason: 'RestoreEngine.finalize');
+  }
+}
+
+/// Pemulihan dari onboarding (EXPORT_BACKUP §7.3): progres tutorial milik
+/// perangkat dan tidak ikut cadangan, jadi onboarding ditandai selesai di sini;
+/// mata uang dan awal periode datang dari cadangan. Harus dipanggil SEBELUM
+/// rute awal ditentukan, dan dibaca dari jurnal (bukan dari layar boot ulang)
+/// supaya tetap benar bila aplikasi sempat tertutup di tengah jalan. Izin
+/// sistem untuk pengingat diminta lewat catatan di halaman "Data dipulihkan".
+Future<void> markOnboardingDoneIfRestoring(GetIt container) async {
+  if (container<RestoreRecoveryOutcome>().outcome != RecoveryOutcome.needsFinalize) return;
+  try {
+    if (await container<RestoreEngine>().pendingKind() == RestoreKind.onboarding) {
+      await container<TutorialProgressRepository>().markOnboardingDone();
+    }
+  } on Object catch (e, st) {
+    developer.log('Menandai onboarding selesai gagal', error: e, stackTrace: st, name: 'RestoreEngine');
+    AppBootstrap.recordNonFatal(e, reason: 'RestoreEngine.markOnboardingDone');
   }
 }

@@ -12,6 +12,10 @@ final class RestoreInput extends RouteInput {
   /// Membuat [RestoreInput].
   const RestoreInput({this.bytes, this.source = RestoreKind.account});
 
+  /// Pulihkan dari onboarding (ganti ponsel): belum ada data, tanpa salinan
+  /// pengaman.
+  const RestoreInput.onboarding(Uint8List this.bytes) : source = RestoreKind.onboarding;
+
   /// Isi berkas cadangan; `null` untuk `undo`.
   final Uint8List? bytes;
 

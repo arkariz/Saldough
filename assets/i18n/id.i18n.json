@@ -748,6 +748,7 @@
     "createWalletAction": "Tambah dompet",
     "laterAction": "Nanti saja",
     "signInAction": "Sudah punya akun? Masuk",
+    "restoreAction": "Sudah punya cadangan? Pulihkan",
     "backAction": "Kembali",
     "currencyTitle": "Pilih mata uangmu",
     "currencyBody": "Semua nominal di Tanukonomy memakai mata uang ini. Nanti bisa diganti di layar Akun, tapi angka yang sudah dicatat tidak dikonversi.",

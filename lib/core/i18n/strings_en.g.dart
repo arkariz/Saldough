@@ -803,6 +803,7 @@ class _Translations$onboarding$en extends Translations$onboarding$id {
 	@override String get createWalletAction => 'Add wallet';
 	@override String get laterAction => 'Maybe later';
 	@override String get signInAction => 'Have an account? Sign in';
+	@override String get restoreAction => 'Have a backup? Restore it';
 	@override String get backAction => 'Back';
 	@override String get currencyTitle => 'Choose your currency';
 	@override String get currencyBody => 'Every amount in Tanukonomy uses this currency. You can change it later on the Account screen, but amounts you\'ve already recorded aren\'t converted.';
@@ -2696,6 +2697,7 @@ extension on TranslationsEn {
 			'onboarding.createWalletAction' => 'Add wallet',
 			'onboarding.laterAction' => 'Maybe later',
 			'onboarding.signInAction' => 'Have an account? Sign in',
+			'onboarding.restoreAction' => 'Have a backup? Restore it',
 			'onboarding.backAction' => 'Back',
 			'onboarding.currencyTitle' => 'Choose your currency',
 			'onboarding.currencyBody' => 'Every amount in Tanukonomy uses this currency. You can change it later on the Account screen, but amounts you\'ve already recorded aren\'t converted.',
@@ -3017,9 +3019,9 @@ extension on TranslationsEn {
 			'notificationCapture.reviewReason.kindUnclear' => 'Type unclear',
 			'notificationCapture.reviewReason.walletUnknown' => 'Wallet not recognized',
 			'notificationCapture.reviewReason.categoryUnclear' => 'Category unclear',
-			'notificationCapture.reviewReason.dateUnclear' => 'Date unclear',
 			_ => null,
 		} ?? switch (path) {
+			'notificationCapture.reviewReason.dateUnclear' => 'Date unclear',
 			'notificationCapture.recordAction' => 'Record',
 			'notificationCapture.dismissAction' => 'Dismiss',
 			'notificationCapture.makePatternAction' => 'Make a pattern from this text',

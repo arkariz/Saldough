@@ -59,6 +59,7 @@ class OnboardingPage extends StatefulWidget {
     this.onPeriodConfirmed,
     this.onTurnOnReminders,
     this.onRemindersDeclined,
+    this.onRestoreRequested,
     this.skipPeriod = false,
     this.skipReminder = false,
     super.key,
@@ -84,6 +85,10 @@ class OnboardingPage extends StatefulWidget {
 
   /// Dipanggil saat pengguna memilih "Tidak sekarang" di langkah pengingat.
   final Future<void> Function()? onRemindersDeclined;
+
+  /// Memilih berkas cadangan lalu memulihkannya (ganti ponsel); `null` =
+  /// tautan di layar geser pertama tidak tampil.
+  final Future<void> Function()? onRestoreRequested;
 
   /// Langkah awal periode sudah dijawab di sesi sebelumnya.
   final bool skipPeriod;
@@ -198,6 +203,13 @@ class _OnboardingPageState extends State<OnboardingPage> {
     if (!mounted) return;
     setState(() => _reminder = OnboardingReminderChoice.off);
     _advance();
+  }
+
+  Future<void> _requestRestore() async {
+    if (_busy) return;
+    setState(() => _busy = true);
+    await widget.onRestoreRequested!();
+    if (mounted) setState(() => _busy = false);
   }
 
   Future<void> _finish(OnboardingOutcome outcome, AppCurrency? currency) async {
@@ -366,10 +378,29 @@ class _OnboardingPageState extends State<OnboardingPage> {
         );
       case _Step.slides:
         if (!_isLast) {
-          return SizedBox(
-            key: const ValueKey('next'),
+          final next = SizedBox(
             width: double.infinity,
             child: AppButton(label: t.onboarding.nextAction, onPressed: _nextSlide),
+          );
+          // Tautan pulihkan hanya di layar geser pertama (EXPORT_BACKUP §7.3).
+          if (_review || _page != 0 || widget.onRestoreRequested == null) {
+            return KeyedSubtree(key: const ValueKey('next'), child: next);
+          }
+          return Column(
+            key: const ValueKey('next-restore'),
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              next,
+              const SizedBox(height: AppSpacing.space1),
+              Center(
+                child: AppButton.text(
+                  key: const ValueKey('onboarding-restore'),
+                  label: t.onboarding.restoreAction,
+                  onPressed: _busy ? null : _requestRestore,
+                ),
+              ),
+            ],
           );
         }
         // Layar geser terakhir: mode tinjau menutup, mode pertama kali

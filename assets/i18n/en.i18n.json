@@ -748,6 +748,7 @@
     "createWalletAction": "Add wallet",
     "laterAction": "Maybe later",
     "signInAction": "Have an account? Sign in",
+    "restoreAction": "Have a backup? Restore it",
     "backAction": "Back",
     "currencyTitle": "Choose your currency",
     "currencyBody": "Every amount in Tanukonomy uses this currency. You can change it later on the Account screen, but amounts you've already recorded aren't converted.",

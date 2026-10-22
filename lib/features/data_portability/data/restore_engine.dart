@@ -171,6 +171,9 @@ final class RestoreEngine {
     return true;
   }
 
+  /// Asal pemulihan yang tertunda menurut jurnal, atau `null` bila tidak ada.
+  Future<RestoreKind?> pendingKind() async => (await _readJournal())?.kind;
+
   /// Memeriksa jurnal; dipanggil di setiap bootstrap, sebelum repositori
   /// dibuat. Pemulihan biasa dan pemulihan dari gangguan memakai jalur ini.
   Future<RecoveryOutcome> recover() async {

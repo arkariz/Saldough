@@ -333,6 +333,31 @@
     "share": "Share",
     "fileNotSaved": "The file isn't saved yet. You can still save or share it.",
     "fileStem": "export",
+    "countTransactions": {
+      "one": "${n} transaction",
+      "other": "${n} transactions"
+    },
+    "countWallets": {
+      "one": "${n} wallet",
+      "other": "${n} wallets"
+    },
+    "backupTitle": "Back up now",
+    "backupLast": "Last backup: $date",
+    "backupNever": "Never backed up",
+    "backupSummary": "$transactions, $wallets, since $since",
+    "backupSummaryNoTransactions": "No transactions yet, $wallets",
+    "backupIncluded": "Included",
+    "backupExcluded": "Not included",
+    "backupIn": ["Wallets and transactions", "Budgets and categories", "Freelance and recurring", "Money settings and reminders"],
+    "backupOut": ["Notification text", "System permissions", "Account", "Language and display"],
+    "backupHint": "Save it somewhere outside this phone, such as Google Drive, so it stays safe if the phone is lost. This file contains your financial records.",
+    "backupAction": "Back up",
+    "backupBusy": "Creating the backup…",
+    "backupReady": "Backup ready",
+    "backupNotSaved": "Not saved yet. Choose where to keep it so your backup is safe.",
+    "backupError": "The backup couldn't be created. Your data hasn't changed.",
+    "backupFileStem": "backup",
+    "backupFileMeta": "$transactions · $wallets",
     "sheetTransactions": "Transactions",
     "sheetWallets": "Wallets",
     "columns": {

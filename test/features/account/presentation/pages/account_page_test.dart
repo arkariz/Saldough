@@ -15,10 +15,12 @@ import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/account/presentation/navigation/account_route_keys.dart';
+import 'package:saldough/features/data_portability/domain/backup_gateway.dart';
 import 'package:saldough/shared/auth/auth.dart';
 import 'package:saldough/shared/category/category.dart';
 
 import '../../../../helpers/fake_auth_repository.dart';
+import '../../../../helpers/fake_backup_gateway.dart';
 import '../../../../helpers/routes.dart';
 
 void main() {
@@ -26,11 +28,17 @@ void main() {
 
   setUpAll(registerEffectHandlers);
 
-  Future<void> pumpAccount(WidgetTester tester, {AppUser? signedIn, TutorialProgressRepository? tutorials}) async {
+  Future<void> pumpAccount(
+    WidgetTester tester, {
+    AppUser? signedIn,
+    TutorialProgressRepository? tutorials,
+    FakeBackupGateway? backup,
+  }) async {
     repository = FakeAuthRepository(signedIn: signedIn);
     final container = GetIt.asNewInstance()
       ..registerSingleton<RouteRegistry>(appRouteRegistry())
       ..registerSingleton<AuthRepository>(repository)
+      ..registerSingleton<BackupGateway>(backup ?? FakeBackupGateway())
       ..registerSingleton<CurrencyPreferenceRepository>(
         CurrencyPreferenceRepositoryImpl(storage: InMemoryKeyValueStorage()),
       )
@@ -101,6 +109,24 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(TextField), findsNWidgets(2));
+  });
+
+  testWidgets('Cadangkan sekarang: belum pernah dicadangkan', (tester) async {
+    tester.view.physicalSize = const Size(800, 3200);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await pumpAccount(tester);
+    expect(find.text(t.dataPortability.backupTitle), findsOneWidget);
+    expect(find.text(t.dataPortability.backupNever), findsOneWidget);
+  });
+
+  testWidgets('Cadangkan sekarang menampilkan Cadangan terakhir bila sudah pernah', (tester) async {
+    tester.view.physicalSize = const Size(800, 3200);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await pumpAccount(tester, backup: FakeBackupGateway(lastBackup: DateTime(2026, 10, 12)));
+    expect(find.text(t.dataPortability.backupLast(date: '12 Okt 2026')), findsOneWidget);
+    expect(find.text(t.dataPortability.backupNever), findsNothing);
   });
 
   testWidgets('bagian Data kamu tampil sebelum masuk juga, sesudah setelan Tampilan (AkunData.dc.html)', (tester) async {

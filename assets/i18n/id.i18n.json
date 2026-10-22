@@ -333,6 +333,31 @@
     "share": "Bagikan",
     "fileNotSaved": "Berkas belum disimpan. Kamu masih bisa menyimpan atau membagikannya.",
     "fileStem": "ekspor",
+    "countTransactions": {
+      "one": "${n} transaksi",
+      "other": "${n} transaksi"
+    },
+    "countWallets": {
+      "one": "${n} dompet",
+      "other": "${n} dompet"
+    },
+    "backupTitle": "Cadangkan sekarang",
+    "backupLast": "Cadangan terakhir: $date",
+    "backupNever": "Belum pernah dicadangkan",
+    "backupSummary": "$transactions, $wallets, sejak $since",
+    "backupSummaryNoTransactions": "Belum ada transaksi, $wallets",
+    "backupIncluded": "Ikut",
+    "backupExcluded": "Tidak ikut",
+    "backupIn": ["Dompet dan transaksi", "Anggaran dan kategori", "Freelance dan rutin", "Setelan keuangan dan pengingat"],
+    "backupOut": ["Teks notifikasi", "Izin sistem", "Akun", "Bahasa dan tampilan"],
+    "backupHint": "Simpan di tempat di luar ponsel ini, misalnya Google Drive, supaya tetap aman kalau ponsel hilang. Berkas ini berisi catatan keuanganmu.",
+    "backupAction": "Cadangkan",
+    "backupBusy": "Membuat cadangan…",
+    "backupReady": "Cadangan siap",
+    "backupNotSaved": "Belum tersimpan. Pilih tempat menyimpannya supaya cadanganmu aman.",
+    "backupError": "Cadangan tidak bisa dibuat. Datamu tidak berubah.",
+    "backupFileStem": "cadangan",
+    "backupFileMeta": "$transactions · $wallets",
     "sheetTransactions": "Transaksi",
     "sheetWallets": "Dompet",
     "columns": {

@@ -9,6 +9,7 @@ import 'package:saldough/features/data_portability/domain/export_models.dart';
 import 'package:saldough/features/data_portability/domain/file_transfer.dart';
 import 'package:saldough/features/data_portability/presentation/bloc/export_bloc.dart';
 import 'package:saldough/features/data_portability/presentation/bloc/export_state.dart';
+import 'package:saldough/features/data_portability/presentation/widgets/sheet_parts.dart';
 import 'package:state_management/state_management.dart';
 
 /// Membuka lembar **Ekspor ke spreadsheet** (prototipe `LembarEkspor.dc.html`).
@@ -51,28 +52,34 @@ class ExportSheet extends StatelessWidget {
             AppFormHeader(title: t.dataPortability.exportTitle),
             const SizedBox(height: AppSpacing.space4),
             switch (state.phase) {
-              ExportPhase.loading => const _Loading(),
+              ExportPhase.loading => const SheetLoading(),
               ExportPhase.form || ExportPhase.empty => _Form(state: state),
-              ExportPhase.busy => const _Busy(),
-              ExportPhase.ready => _Ready(state: state),
+              ExportPhase.busy => SheetBusy(
+                message: t.dataPortability.exportBusy,
+                note: t.dataPortability.exportBusyNote,
+                cancelKey: const ValueKey('export-cancel'),
+                onCancel: () => context.read<ExportBloc>().add(const ExportCancelRequested()),
+              ),
+              ExportPhase.ready => SheetFileReady(
+                title: t.dataPortability.fileReady,
+                fileName: state.file!.name,
+                fileMeta: t.dataPortability.fileMeta(
+                  n: state.file!.rowCount,
+                  format: state.file!.format == ExportFormat.xlsx ? 'Excel' : 'CSV',
+                ),
+                notSavedText: t.dataPortability.fileNotSaved,
+                showNotSaved: state.notSaved,
+                saveKey: const ValueKey('export-save'),
+                shareKey: const ValueKey('export-share'),
+                onSave: () => context.read<ExportBloc>().add(const ExportSaveRequested()),
+                onShare: () => context.read<ExportBloc>().add(const ExportShareRequested()),
+              ),
             },
           ],
         ),
       ),
     );
   }
-}
-
-class _Loading extends StatelessWidget {
-  const _Loading();
-
-  @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.symmetric(vertical: AppSpacing.space8),
-    child: Center(
-      child: AppSpin(child: AppIcon(IconKey.progressActivity, color: context.appColors.ink2)),
-    ),
-  );
 }
 
 class _Form extends StatelessWidget {
@@ -128,7 +135,7 @@ class _Form extends StatelessWidget {
         ),
         if (!empty) ...[
           const SizedBox(height: AppSpacing.space3),
-          _Note(t.dataPortability.exportScope),
+          SheetNote(t.dataPortability.exportScope),
         ],
         const SizedBox(height: AppSpacing.space4),
         AppButton(
@@ -157,131 +164,6 @@ class _Form extends StatelessWidget {
       n: preview.count,
       first: CycleMonthFormatter.noBreak(firstText),
       last: lastText,
-    );
-  }
-}
-
-class _Busy extends StatelessWidget {
-  const _Busy();
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Semantics(
-          liveRegion: true,
-          child: Row(
-            children: [
-              AppSpin(child: AppIcon(IconKey.progressActivity, color: colors.brand)),
-              const SizedBox(width: AppSpacing.space3),
-              Expanded(child: Text(t.dataPortability.exportBusy, style: Theme.of(context).textTheme.titleMedium)),
-            ],
-          ),
-        ),
-        const SizedBox(height: AppSpacing.space3),
-        _Note(t.dataPortability.exportBusyNote),
-        const SizedBox(height: AppSpacing.space4),
-        AppButton.text(
-          key: const ValueKey('export-cancel'),
-          label: t.dataPortability.cancel,
-          expand: true,
-          onPressed: () => context.read<ExportBloc>().add(const ExportCancelRequested()),
-        ),
-      ],
-    );
-  }
-}
-
-class _Ready extends StatelessWidget {
-  const _Ready({required this.state});
-
-  final ExportState state;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
-    final file = state.file!;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Center(
-          child: DecoratedBox(
-            decoration: BoxDecoration(color: colors.brandSoft, borderRadius: BorderRadius.circular(AppRadius.sm)),
-            child: Padding(
-              padding: const EdgeInsets.all(AppSpacing.space3),
-              child: AppIcon(IconKey.checkCircle, color: colors.brandInk, size: 32),
-            ),
-          ),
-        ),
-        const SizedBox(height: AppSpacing.space2),
-        Text(t.dataPortability.fileReady, textAlign: TextAlign.center, style: textTheme.titleLarge),
-        const SizedBox(height: AppSpacing.space4),
-        AppCard(
-          child: Row(
-            children: [
-              const AppIconTile(IconKey.description),
-              const SizedBox(width: AppSpacing.space3),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(file.name, style: textTheme.titleMedium, maxLines: 2, overflow: TextOverflow.ellipsis),
-                    Text(
-                      t.dataPortability.fileMeta(
-                        n: file.rowCount,
-                        format: file.format == ExportFormat.xlsx ? 'Excel' : 'CSV',
-                      ),
-                      style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-        if (state.notSaved) ...[
-          const SizedBox(height: AppSpacing.space3),
-          Semantics(liveRegion: true, child: _Note(t.dataPortability.fileNotSaved)),
-        ],
-        const SizedBox(height: AppSpacing.space4),
-        AppButton(
-          key: const ValueKey('export-save'),
-          label: t.dataPortability.saveTo,
-          expand: true,
-          onPressed: () => context.read<ExportBloc>().add(const ExportSaveRequested()),
-        ),
-        const SizedBox(height: AppSpacing.space2),
-        AppButton.secondary(
-          key: const ValueKey('export-share'),
-          label: t.dataPortability.share,
-          expand: true,
-          onPressed: () => context.read<ExportBloc>().add(const ExportShareRequested()),
-        ),
-      ],
-    );
-  }
-}
-
-class _Note extends StatelessWidget {
-  const _Note(this.text);
-
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        AppIcon(IconKey.info, color: colors.ink2, size: 18),
-        const SizedBox(width: AppSpacing.space2),
-        Expanded(
-          child: Text(text, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: colors.ink2)),
-        ),
-      ],
     );
   }
 }

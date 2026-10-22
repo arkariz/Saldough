@@ -367,6 +367,41 @@ class _Translations$dataPortability$en extends Translations$dataPortability$id {
 	@override String get share => 'Share';
 	@override String get fileNotSaved => 'The file isn\'t saved yet. You can still save or share it.';
 	@override String get fileStem => 'export';
+	@override String countTransactions({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
+		one: '${n} transaction',
+		other: '${n} transactions',
+	);
+	@override String countWallets({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
+		one: '${n} wallet',
+		other: '${n} wallets',
+	);
+	@override String get backupTitle => 'Back up now';
+	@override String backupLast({required Object date}) => 'Last backup: ${date}';
+	@override String get backupNever => 'Never backed up';
+	@override String backupSummary({required Object transactions, required Object wallets, required Object since}) => '${transactions}, ${wallets}, since ${since}';
+	@override String backupSummaryNoTransactions({required Object wallets}) => 'No transactions yet, ${wallets}';
+	@override String get backupIncluded => 'Included';
+	@override String get backupExcluded => 'Not included';
+	@override List<String> get backupIn => [
+		'Wallets and transactions',
+		'Budgets and categories',
+		'Freelance and recurring',
+		'Money settings and reminders',
+	];
+	@override List<String> get backupOut => [
+		'Notification text',
+		'System permissions',
+		'Account',
+		'Language and display',
+	];
+	@override String get backupHint => 'Save it somewhere outside this phone, such as Google Drive, so it stays safe if the phone is lost. This file contains your financial records.';
+	@override String get backupAction => 'Back up';
+	@override String get backupBusy => 'Creating the backup…';
+	@override String get backupReady => 'Backup ready';
+	@override String get backupNotSaved => 'Not saved yet. Choose where to keep it so your backup is safe.';
+	@override String get backupError => 'The backup couldn\'t be created. Your data hasn\'t changed.';
+	@override String get backupFileStem => 'backup';
+	@override String backupFileMeta({required Object transactions, required Object wallets}) => '${transactions} · ${wallets}';
 	@override String get sheetTransactions => 'Transactions';
 	@override String get sheetWallets => 'Wallets';
 	@override late final _Translations$dataPortability$columns$en columns = _Translations$dataPortability$columns$en._(_root);
@@ -2212,6 +2247,31 @@ extension on TranslationsEn {
 			'dataPortability.share' => 'Share',
 			'dataPortability.fileNotSaved' => 'The file isn\'t saved yet. You can still save or share it.',
 			'dataPortability.fileStem' => 'export',
+			'dataPortability.countTransactions' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '${n} transaction', other: '${n} transactions', ), 
+			'dataPortability.countWallets' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '${n} wallet', other: '${n} wallets', ), 
+			'dataPortability.backupTitle' => 'Back up now',
+			'dataPortability.backupLast' => ({required Object date}) => 'Last backup: ${date}',
+			'dataPortability.backupNever' => 'Never backed up',
+			'dataPortability.backupSummary' => ({required Object transactions, required Object wallets, required Object since}) => '${transactions}, ${wallets}, since ${since}',
+			'dataPortability.backupSummaryNoTransactions' => ({required Object wallets}) => 'No transactions yet, ${wallets}',
+			'dataPortability.backupIncluded' => 'Included',
+			'dataPortability.backupExcluded' => 'Not included',
+			'dataPortability.backupIn.0' => 'Wallets and transactions',
+			'dataPortability.backupIn.1' => 'Budgets and categories',
+			'dataPortability.backupIn.2' => 'Freelance and recurring',
+			'dataPortability.backupIn.3' => 'Money settings and reminders',
+			'dataPortability.backupOut.0' => 'Notification text',
+			'dataPortability.backupOut.1' => 'System permissions',
+			'dataPortability.backupOut.2' => 'Account',
+			'dataPortability.backupOut.3' => 'Language and display',
+			'dataPortability.backupHint' => 'Save it somewhere outside this phone, such as Google Drive, so it stays safe if the phone is lost. This file contains your financial records.',
+			'dataPortability.backupAction' => 'Back up',
+			'dataPortability.backupBusy' => 'Creating the backup…',
+			'dataPortability.backupReady' => 'Backup ready',
+			'dataPortability.backupNotSaved' => 'Not saved yet. Choose where to keep it so your backup is safe.',
+			'dataPortability.backupError' => 'The backup couldn\'t be created. Your data hasn\'t changed.',
+			'dataPortability.backupFileStem' => 'backup',
+			'dataPortability.backupFileMeta' => ({required Object transactions, required Object wallets}) => '${transactions} · ${wallets}',
 			'dataPortability.sheetTransactions' => 'Transactions',
 			'dataPortability.sheetWallets' => 'Wallets',
 			'dataPortability.columns.date' => 'Date',
@@ -2400,6 +2460,8 @@ extension on TranslationsEn {
 			'freelance.deductionTitle' => 'Deduction',
 			'freelance.deductionLabelLabel' => 'Deduction name',
 			'freelance.deductionLabelHint' => 'Example: Tax',
+			_ => null,
+		} ?? switch (path) {
 			'freelance.deductionKindPercentage' => 'Percent',
 			'freelance.deductionKindFixed' => 'Fixed amount',
 			'freelance.deductionPercentLabel' => 'Percent of gross pay',
@@ -2425,8 +2487,6 @@ extension on TranslationsEn {
 			'freelance.hoursLabel' => 'Duration',
 			'freelance.entryRateHelp' => 'Filled from the project rate. Change it if this rate is different.',
 			'freelance.noteLabel' => 'Note',
-			_ => null,
-		} ?? switch (path) {
 			'freelance.noteHint' => 'What was done (optional)',
 			'freelance.entrySaveAction' => 'Save work hours',
 			'freelance.entrySaveHint' => 'This amount is recorded as earned, not yet received.',
@@ -2914,6 +2974,8 @@ extension on TranslationsEn {
 			'notificationCapture.autoRecordAnyCategoryHint' => 'You can fill in the category later.',
 			'notificationCapture.reminderLabel' => 'Notify me',
 			'notificationCapture.reminderHint' => 'Get a notification each time a transaction is caught.',
+			_ => null,
+		} ?? switch (path) {
 			'notificationCapture.sourceWallet' => ({required Object name}) => '${name} wallet',
 			'notificationCapture.walletHelp' => 'Transactions from this app are recorded in this wallet.',
 			'notificationCapture.advancedTitle' => 'Filter and patterns',
@@ -2939,8 +3001,6 @@ extension on TranslationsEn {
 			'recurring.starters.internet' => 'Internet',
 			'recurring.starters.bpjs' => 'BPJS',
 			'recurring.starters.installment' => 'Installment',
-			_ => null,
-		} ?? switch (path) {
 			'recurring.starters.paylater' => 'Paylater',
 			'recurring.starters.subscription' => 'Subscription',
 			'recurring.starters.parents' => 'Send to parents',

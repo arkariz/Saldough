@@ -60,6 +60,8 @@ final appBackupRegistry = BackupRegistry(
     'capture_processed_ids': 'sementara, pencegah ganda per perangkat',
     // P-1 ADR-040: log jendela batal pencatatan otomatis dari notifikasi.
     'capture_auto_recorded': 'sementara, terkait kotak masuk yang tidak ikut',
+    // Mencatat aksi di perangkat ini, bukan data keuangan (ADR-040 §3.5).
+    'settings_last_backup': 'status aksi di perangkat ini',
   },
   transactionIndexKey: 'transaction__index',
   transactionPartitionKey: (month) => 'transaction_$month',

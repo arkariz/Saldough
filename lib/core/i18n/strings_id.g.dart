@@ -824,6 +824,76 @@ class Translations$dataPortability$id {
 	/// id: 'ekspor'
 	String get fileStem => 'ekspor';
 
+	/// id: '(one) {${n} transaksi} (other) {${n} transaksi}'
+	String countTransactions({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n,
+		one: '${n} transaksi',
+		other: '${n} transaksi',
+	);
+
+	/// id: '(one) {${n} dompet} (other) {${n} dompet}'
+	String countWallets({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n,
+		one: '${n} dompet',
+		other: '${n} dompet',
+	);
+
+	/// id: 'Cadangkan sekarang'
+	String get backupTitle => 'Cadangkan sekarang';
+
+	/// id: 'Cadangan terakhir: $date'
+	String backupLast({required Object date}) => 'Cadangan terakhir: ${date}';
+
+	/// id: 'Belum pernah dicadangkan'
+	String get backupNever => 'Belum pernah dicadangkan';
+
+	/// id: '$transactions, $wallets, sejak $since'
+	String backupSummary({required Object transactions, required Object wallets, required Object since}) => '${transactions}, ${wallets}, sejak ${since}';
+
+	/// id: 'Belum ada transaksi, $wallets'
+	String backupSummaryNoTransactions({required Object wallets}) => 'Belum ada transaksi, ${wallets}';
+
+	/// id: 'Ikut'
+	String get backupIncluded => 'Ikut';
+
+	/// id: 'Tidak ikut'
+	String get backupExcluded => 'Tidak ikut';
+
+	List<String> get backupIn => [
+		'Dompet dan transaksi',
+		'Anggaran dan kategori',
+		'Freelance dan rutin',
+		'Setelan keuangan dan pengingat',
+	];
+	List<String> get backupOut => [
+		'Teks notifikasi',
+		'Izin sistem',
+		'Akun',
+		'Bahasa dan tampilan',
+	];
+
+	/// id: 'Simpan di tempat di luar ponsel ini, misalnya Google Drive, supaya tetap aman kalau ponsel hilang. Berkas ini berisi catatan keuanganmu.'
+	String get backupHint => 'Simpan di tempat di luar ponsel ini, misalnya Google Drive, supaya tetap aman kalau ponsel hilang. Berkas ini berisi catatan keuanganmu.';
+
+	/// id: 'Cadangkan'
+	String get backupAction => 'Cadangkan';
+
+	/// id: 'Membuat cadangan…'
+	String get backupBusy => 'Membuat cadangan…';
+
+	/// id: 'Cadangan siap'
+	String get backupReady => 'Cadangan siap';
+
+	/// id: 'Belum tersimpan. Pilih tempat menyimpannya supaya cadanganmu aman.'
+	String get backupNotSaved => 'Belum tersimpan. Pilih tempat menyimpannya supaya cadanganmu aman.';
+
+	/// id: 'Cadangan tidak bisa dibuat. Datamu tidak berubah.'
+	String get backupError => 'Cadangan tidak bisa dibuat. Datamu tidak berubah.';
+
+	/// id: 'cadangan'
+	String get backupFileStem => 'cadangan';
+
+	/// id: '$transactions · $wallets'
+	String backupFileMeta({required Object transactions, required Object wallets}) => '${transactions} · ${wallets}';
+
 	/// id: 'Transaksi'
 	String get sheetTransactions => 'Transaksi';
 
@@ -4831,6 +4901,31 @@ extension on Translations {
 			'dataPortability.share' => 'Bagikan',
 			'dataPortability.fileNotSaved' => 'Berkas belum disimpan. Kamu masih bisa menyimpan atau membagikannya.',
 			'dataPortability.fileStem' => 'ekspor',
+			'dataPortability.countTransactions' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n, one: '${n} transaksi', other: '${n} transaksi', ), 
+			'dataPortability.countWallets' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n, one: '${n} dompet', other: '${n} dompet', ), 
+			'dataPortability.backupTitle' => 'Cadangkan sekarang',
+			'dataPortability.backupLast' => ({required Object date}) => 'Cadangan terakhir: ${date}',
+			'dataPortability.backupNever' => 'Belum pernah dicadangkan',
+			'dataPortability.backupSummary' => ({required Object transactions, required Object wallets, required Object since}) => '${transactions}, ${wallets}, sejak ${since}',
+			'dataPortability.backupSummaryNoTransactions' => ({required Object wallets}) => 'Belum ada transaksi, ${wallets}',
+			'dataPortability.backupIncluded' => 'Ikut',
+			'dataPortability.backupExcluded' => 'Tidak ikut',
+			'dataPortability.backupIn.0' => 'Dompet dan transaksi',
+			'dataPortability.backupIn.1' => 'Anggaran dan kategori',
+			'dataPortability.backupIn.2' => 'Freelance dan rutin',
+			'dataPortability.backupIn.3' => 'Setelan keuangan dan pengingat',
+			'dataPortability.backupOut.0' => 'Teks notifikasi',
+			'dataPortability.backupOut.1' => 'Izin sistem',
+			'dataPortability.backupOut.2' => 'Akun',
+			'dataPortability.backupOut.3' => 'Bahasa dan tampilan',
+			'dataPortability.backupHint' => 'Simpan di tempat di luar ponsel ini, misalnya Google Drive, supaya tetap aman kalau ponsel hilang. Berkas ini berisi catatan keuanganmu.',
+			'dataPortability.backupAction' => 'Cadangkan',
+			'dataPortability.backupBusy' => 'Membuat cadangan…',
+			'dataPortability.backupReady' => 'Cadangan siap',
+			'dataPortability.backupNotSaved' => 'Belum tersimpan. Pilih tempat menyimpannya supaya cadanganmu aman.',
+			'dataPortability.backupError' => 'Cadangan tidak bisa dibuat. Datamu tidak berubah.',
+			'dataPortability.backupFileStem' => 'cadangan',
+			'dataPortability.backupFileMeta' => ({required Object transactions, required Object wallets}) => '${transactions} · ${wallets}',
 			'dataPortability.sheetTransactions' => 'Transaksi',
 			'dataPortability.sheetWallets' => 'Dompet',
 			'dataPortability.columns.date' => 'Tanggal',
@@ -5019,6 +5114,8 @@ extension on Translations {
 			'freelance.deductionTitle' => 'Potongan',
 			'freelance.deductionLabelLabel' => 'Nama potongan',
 			'freelance.deductionLabelHint' => 'Contoh: Pajak',
+			_ => null,
+		} ?? switch (path) {
 			'freelance.deductionKindPercentage' => 'Persen',
 			'freelance.deductionKindFixed' => 'Nominal tetap',
 			'freelance.deductionPercentLabel' => 'Persen dari gaji kotor',
@@ -5044,8 +5141,6 @@ extension on Translations {
 			'freelance.hoursLabel' => 'Durasi pengerjaan',
 			'freelance.entryRateHelp' => 'Terisi dari tarif proyek. Ubah kalau tarif kali ini berbeda.',
 			'freelance.noteLabel' => 'Catatan',
-			_ => null,
-		} ?? switch (path) {
 			'freelance.noteHint' => 'Apa yang dikerjakan (opsional)',
 			'freelance.entrySaveAction' => 'Simpan jam kerja',
 			'freelance.entrySaveHint' => 'Nominal ini tercatat sebagai diperoleh, belum diterima.',
@@ -5533,6 +5628,8 @@ extension on Translations {
 			'notificationCapture.autoRecordAnyCategoryHint' => 'Kategori bisa kamu isi belakangan.',
 			'notificationCapture.reminderLabel' => 'Kabari lewat notifikasi',
 			'notificationCapture.reminderHint' => 'Muncul notifikasi tiap ada transaksi tertangkap.',
+			_ => null,
+		} ?? switch (path) {
 			'notificationCapture.sourceWallet' => ({required Object name}) => 'Dompet ${name}',
 			'notificationCapture.walletHelp' => 'Transaksi dari aplikasi ini dicatat di dompet ini.',
 			'notificationCapture.advancedTitle' => 'Filter dan pola',
@@ -5558,8 +5655,6 @@ extension on Translations {
 			'recurring.starters.internet' => 'Internet',
 			'recurring.starters.bpjs' => 'BPJS',
 			'recurring.starters.installment' => 'Cicilan',
-			_ => null,
-		} ?? switch (path) {
 			'recurring.starters.paylater' => 'Paylater',
 			'recurring.starters.subscription' => 'Langganan',
 			'recurring.starters.parents' => 'Kirim ke orang tua',

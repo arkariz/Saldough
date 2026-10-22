@@ -74,7 +74,8 @@ abstract final class BackupCodec {
     final envelope = <String, Object?>{
       'format': format,
       'formatVersion': formatVersion,
-      'createdAt': createdAt.toIso8601String(),
+      // UTC supaya tidak ambigu antar perangkat dan zona waktu (B-51).
+      'createdAt': createdAt.toUtc().toIso8601String(),
       'app': {'version': appVersion, 'build': appBuild},
       'summary': summary.toJson(),
       'docs': docs,
@@ -122,7 +123,7 @@ abstract final class BackupCodec {
       final app = json['app'] as Map<String, dynamic>;
       return BackupContents(
         formatVersion: version,
-        createdAt: DateTime.parse(json['createdAt'] as String),
+        createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
         appVersion: app['version'] as String,
         appBuild: app['build'] as int,
         docs: docs,

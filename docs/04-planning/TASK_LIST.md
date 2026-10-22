@@ -86,7 +86,7 @@ Terakhir diperbarui: 18 Oktober 2026 (Fase 19 selesai dan masuk `main` lewat PR 
 | Persiapan Play Console — draf jawaban [PLAY_DATA_SAFETY.md](../03-release/PLAY_DATA_SAFETY.md) (Keamanan Data) dan [PLAY_STORE_LISTING.md](../03-release/PLAY_STORE_LISTING.md) (setelan toko, ASO) | 2 | 2 | Draf selesai (Keamanan Data 28 Sep, listing 29 Sep 2026); isi formulir persis sebelum build berfitur ini diunggah, jangan sebelum itu. Keputusan pemilik di §1 listing masih terbuka |
 | 20 — Pengumuman pembaruan ([APP_UPDATE.md](../01-product/features/APP_UPDATE.md)) | 8 | 8 | KT-U1–KT-U5 dijawab dan ADR-039 Accepted (15 Okt 2026); T-20.1–T-20.8 selesai dan sudah di `main` (ada di build `0.6.0+12` dan `0.7.0+13`); T-20.4 selesai (rupa v3 diterapkan, selisih diputuskan pemilik); T-20.7 formulir Play Console dan kebijakan privasi dilaporkan pemilik selesai; verifikasi perangkat T-20.8 lulus semua (15 Okt 2026) |
 | 21 — Penemuan fitur ([FEATURE_DISCOVERY.md](../01-product/features/FEATURE_DISCOVERY.md)) | 10 | 0 | Draf PO 18 Okt 2026, direvisi (onboarding wajib, tombol permanen); KT-D1 diputuskan; menunggu rupa (T-21.0) |
-| 22 — Ekspor dan cadangan manual ([EXPORT_BACKUP.md](../01-product/features/EXPORT_BACKUP.md)) | 8 | 2 | Spek final 22 Okt 2026 (dari B-42, KT-E1–KT-E5 diputuskan); ADR-040 Accepted, T-22.1 (fondasi) dan T-22.2 (ekspor) selesai 22 Okt 2026; rupa sudah ada (T-22.0); berikutnya T-22.3 |
+| 22 — Ekspor dan cadangan manual ([EXPORT_BACKUP.md](../01-product/features/EXPORT_BACKUP.md)) | 8 | 3 | Spek final 22 Okt 2026 (dari B-42, KT-E1–KT-E5 diputuskan); ADR-040 Accepted, T-22.1 (fondasi), T-22.2 (ekspor), dan T-22.3 (cadangkan) selesai 22 Okt 2026; rupa sudah ada (T-22.0); berikutnya T-22.4 |
 | Antrean (`B-n`, belum dijadwalkan) | 49 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
 
 ## Keputusan terbuka
@@ -5198,11 +5198,27 @@ onboarding (tautan pulihkan, bersinggungan dengan Fase
       (kotak Hive tak bisa dikirim antar isolate). ⚠ Belum dibuka di Excel
       dan Google Sheets sungguhan (hanya `openpyxl`): QA di T-22.7 #10.
       ⚠ iOS belum dicoba.
-- [ ] **T-22.3** Cadangkan sekarang: lembar, isi §6.2, simpan/bagikan, status
+- [x] **T-22.3** Cadangkan sekarang: lembar, isi §6.2, simpan/bagikan, status
       Cadangan terakhir hanya diperbarui bila tersimpan, aturan C-1–C-5.
       Verifikasi: uji isi berkas (versi, jumlah, checksum); batal di lembar
       sistem tidak mengubah status.
       Memenuhi FR-DAT-002.
+      **Selesai 22 Okt 2026.** Lembar Cadangkan sekarang
+      (`LembarCadangkan.dc.html`: ringkasan, Ikut dan Tidak ikut, proses yang
+      bisa dibatalkan, siap dengan Simpan ke… dan Bagikan), baris Akun dengan
+      status Cadangan terakhir, `BackupService` (cadangan dibuat dan diperiksa
+      lagi di isolate sebelum diserahkan), `settings_last_backup` (milik
+      perangkat, tidak ikut cadangan). Status hanya diperbarui bila
+      penyimpanan terkonfirmasi (Simpan ke… berhasil atau Bagikan melapor
+      `success`); dibatalkan atau tak terkonfirmasi tidak mengubahnya.
+      Selisih dari desain: ekstensi `.tkbak` (ADR-040), bukan `.tnk` di prototipe.
+      Verifikasi: uji layanan, bloc, lembar (teks 200% di 360dp), dan Akun
+      lulus; seluruh `flutter test` lulus (1981); emulator Android: lembar
+      cocok dengan desain, berkas disimpan ke Downloads lewat pemilih sistem,
+      Akun berubah menjadi "Cadangan terakhir: 22 Okt 2026"; isi berkas
+      diperiksa independen dengan Python (gzip, amplop versi 1, SHA-256 sesuai
+      ADR cocok, tanpa kunci milik perangkat). `createdAt` ditulis UTC.
+      ⚠ Belum dicoba di iOS.
 - [ ] **T-22.4** Pulihkan dari Akun: pemeriksaan R-1–R-3, pratinjau,
       peringatan penggantian, cadangan pengaman (R-5) dan baris Kembalikan,
       penggantian atomik (R-4), hitung ulang saldo (R-6), jadwal ulang

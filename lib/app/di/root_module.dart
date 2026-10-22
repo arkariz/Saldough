@@ -3,6 +3,7 @@ import 'package:di/di.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive_storage/hive_storage.dart';
 import 'package:navigation/navigation.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:saldough/app/data_portability/app_backup_registry.dart';
 import 'package:saldough/app/data_portability/app_export_data_source.dart';
 import 'package:saldough/app/data_portability/restore_recovery.dart';
@@ -15,6 +16,7 @@ import 'package:saldough/core/discovery/discovery.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/foundation/analytics/app_bootstrap_firebase.dart';
 import 'package:saldough/core/foundation/navigation/app_route_registry.dart';
+import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/language/language.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/account/presentation/navigation/account_route_module.dart';
@@ -39,9 +41,11 @@ import 'package:saldough/features/budget/data/repositories/budget_template_repos
 import 'package:saldough/features/budget/domain/repositories/budget_repository.dart';
 import 'package:saldough/features/budget/domain/repositories/budget_template_repository.dart';
 import 'package:saldough/features/budget/presentation/navigation/budget_route_module.dart';
+import 'package:saldough/features/data_portability/data/backup_service.dart';
 import 'package:saldough/features/data_portability/data/export_service.dart';
 import 'package:saldough/features/data_portability/data/platform_file_transfer.dart';
 import 'package:saldough/features/data_portability/data/restore_engine.dart';
+import 'package:saldough/features/data_portability/domain/backup_gateway.dart';
 import 'package:saldough/features/data_portability/domain/export_data.dart';
 import 'package:saldough/features/data_portability/domain/export_gateway.dart';
 import 'package:saldough/features/data_portability/domain/file_transfer.dart';
@@ -150,6 +154,17 @@ abstract final class RootModule {
       )
       ..registerLazySingleton<ExportGateway>(
         () => ExportService(source: container<ExportDataSource>(), labels: exportLabelsFromI18n),
+      )
+      ..registerLazySingleton<BackupGateway>(
+        () => BackupService(
+          storage: container<KeyValueStorage>(),
+          registry: appBackupRegistry,
+          appInfo: () async {
+            final info = await PackageInfo.fromPlatform();
+            return (version: info.version, build: int.tryParse(info.buildNumber) ?? 0);
+          },
+          fileStem: () => t.dataPortability.backupFileStem,
+        ),
       )
       ..registerLazySingleton<FileTransfer>(() => const PlatformFileTransfer());
   }

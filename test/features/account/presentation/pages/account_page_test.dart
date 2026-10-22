@@ -103,7 +103,22 @@ void main() {
     expect(find.byType(TextField), findsNWidgets(2));
   });
 
-  testWidgets('masuk Google menampilkan profil, data kamu, dan zona bahaya', (tester) async {
+  testWidgets('bagian Data kamu tampil sebelum masuk juga, sesudah setelan Tampilan (AkunData.dc.html)', (tester) async {
+    tester.view.physicalSize = const Size(800, 3200);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await pumpAccount(tester);
+
+    expect(find.text(t.dataPortability.sectionTitle), findsOneWidget);
+    expect(find.text(t.dataPortability.exportTitle), findsOneWidget);
+    final display = tester.getTopLeft(find.text(t.account.displaySection)).dy;
+    final data = tester.getTopLeft(find.text(t.dataPortability.sectionTitle)).dy;
+    final app = tester.getTopLeft(find.text(t.account.appSection)).dy;
+    expect(display, lessThan(data));
+    expect(data, lessThan(app));
+  });
+
+  testWidgets('masuk Google menampilkan profil dan zona bahaya', (tester) async {
     await pumpAccount(tester);
 
     await tester.tap(find.text(t.account.googleSignInAction));
@@ -112,8 +127,8 @@ void main() {
     expect(find.text('Tanu Ki'), findsOneWidget);
     expect(find.text('tanu@example.com'), findsOneWidget);
     expect(find.text(t.account.methodGoogle), findsOneWidget);
-    expect(find.text(t.account.dataTitle), findsOneWidget);
     expect(find.byKey(const ValueKey('account-delete')), findsOneWidget);
+    expect(find.byKey(const ValueKey('data-export')), findsOneWidget, reason: 'bagian Data kamu (ADR-040)');
   });
 
   testWidgets('hapus akun email/sandi dengan sesi lama meminta sandi lalu menghapus', (tester) async {

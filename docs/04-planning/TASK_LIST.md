@@ -86,7 +86,7 @@ Terakhir diperbarui: 18 Oktober 2026 (Fase 19 selesai dan masuk `main` lewat PR 
 | Persiapan Play Console — draf jawaban [PLAY_DATA_SAFETY.md](../03-release/PLAY_DATA_SAFETY.md) (Keamanan Data) dan [PLAY_STORE_LISTING.md](../03-release/PLAY_STORE_LISTING.md) (setelan toko, ASO) | 2 | 2 | Draf selesai (Keamanan Data 28 Sep, listing 29 Sep 2026); isi formulir persis sebelum build berfitur ini diunggah, jangan sebelum itu. Keputusan pemilik di §1 listing masih terbuka |
 | 20 — Pengumuman pembaruan ([APP_UPDATE.md](../01-product/features/APP_UPDATE.md)) | 8 | 8 | KT-U1–KT-U5 dijawab dan ADR-039 Accepted (15 Okt 2026); T-20.1–T-20.8 selesai dan sudah di `main` (ada di build `0.6.0+12` dan `0.7.0+13`); T-20.4 selesai (rupa v3 diterapkan, selisih diputuskan pemilik); T-20.7 formulir Play Console dan kebijakan privasi dilaporkan pemilik selesai; verifikasi perangkat T-20.8 lulus semua (15 Okt 2026) |
 | 21 — Penemuan fitur ([FEATURE_DISCOVERY.md](../01-product/features/FEATURE_DISCOVERY.md)) | 10 | 0 | Draf PO 18 Okt 2026, direvisi (onboarding wajib, tombol permanen); KT-D1 diputuskan; menunggu rupa (T-21.0) |
-| 22 — Ekspor dan cadangan manual ([EXPORT_BACKUP.md](../01-product/features/EXPORT_BACKUP.md)) | 8 | 1 | Spek final 22 Okt 2026 (dari B-42, KT-E1–KT-E5 diputuskan); ADR-040 Accepted dan T-22.1 (fondasi) selesai 22 Okt 2026; rupa sudah ada (T-22.0); berikutnya T-22.2 |
+| 22 — Ekspor dan cadangan manual ([EXPORT_BACKUP.md](../01-product/features/EXPORT_BACKUP.md)) | 8 | 2 | Spek final 22 Okt 2026 (dari B-42, KT-E1–KT-E5 diputuskan); ADR-040 Accepted, T-22.1 (fondasi) dan T-22.2 (ekspor) selesai 22 Okt 2026; rupa sudah ada (T-22.0); berikutnya T-22.3 |
 | Antrean (`B-n`, belum dijadwalkan) | 49 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
 
 ## Keputusan terbuka
@@ -5165,7 +5165,7 @@ onboarding (tautan pulihkan, bersinggungan dengan Fase
       ⚠ Sapuan galat memakai pembungkus penyimpanan, bukan proses yang benar-
       benar dimatikan: asumsi satu penulisan Hive utuh-atau-tidak diverifikasi
       QA di T-22.7 #4.
-- [ ] **T-22.2** Ekspor ke spreadsheet: lembar ekspor dari Akun saja, tanpa
+- [x] **T-22.2** Ekspor ke spreadsheet: lembar ekspor dari Akun saja, tanpa
       pilihan rentang (selalu seluruh data saat ini), xlsx (lembar Transaksi
       dan Dompet) dan CSV sesuai §5, aturan E-1–E-6.
       ⚠ Kolom Awal periode memakai `periodDateOf`; Arus transfer selalu 0
@@ -5174,6 +5174,30 @@ onboarding (tautan pulihkan, bersinggungan dengan Fase
       periode peralihan dan gajian maju; uji CSV (BOM, kutip, koma di
       catatan); buka berkas di Excel dan Google Sheets.
       Memenuhi FR-DAT-001.
+      **Selesai 22 Okt 2026.** Lembar ekspor dari Akun › Data kamu (slot
+      baru `dataSection`, tampil sebelum dan sesudah masuk), xlsx (lembar
+      Transaksi dan Dompet; penulis OOXML sendiri di atas `archive`) dan CSV,
+      `FileTransfer` (`file_picker` untuk Simpan ke…, `share_plus` untuk
+      Bagikan), ekspor dibangun di isolate dan bisa dibatalkan.
+      Verifikasi: 98 uji ekspor lulus (baris, `formatSen` tanpa `double`,
+      CSV, xlsx, layanan, bloc, lembar, teks 200% di 360dp); **jumlah Arus
+      per Awal periode sama dengan `CalculateCashFlow` asli** pada data
+      berisi periode peralihan, gajian maju, dan transfer; xlsx dan CSV
+      dibaca ulang oleh `openpyxl` dan parser CSV Python (tanggal bertipe
+      tanggal, nominal bilangan bulat, catatan berisi koma/kutip/baris
+      baru/emoji utuh); seluruh `flutter test` lulus; emulator Android:
+      keadaan kosong dan berisi cocok dengan `LembarEkspor*`, Simpan ke…
+      menulis berkas ke Downloads lewat pemilih sistem (tanpa izin
+      penyimpanan) dan isinya cocok dengan saldo aplikasi, Bagikan membuka
+      lembar bagi sistem dengan nama berkas benar.
+      Catatan: (1) kolom "Pos anggaran" memuat "Anggaran › Pos" dalam satu
+      kolom; (2) kolom teks CSV yang diawali `=`, `+`, `-`, `@` diberi awalan
+      petik supaya Excel tidak menjalankannya sebagai rumus; xlsx memakai sel
+      teks (`inlineStr`), tidak pernah rumus; (3) regresi yang ditemukan di
+      perangkat dan kini diuji: closure `Isolate.run` membawa `this`
+      (kotak Hive tak bisa dikirim antar isolate). ⚠ Belum dibuka di Excel
+      dan Google Sheets sungguhan (hanya `openpyxl`): QA di T-22.7 #10.
+      ⚠ iOS belum dicoba.
 - [ ] **T-22.3** Cadangkan sekarang: lembar, isi §6.2, simpan/bagikan, status
       Cadangan terakhir hanya diperbarui bila tersimpan, aturan C-1–C-5.
       Verifikasi: uji isi berkas (versi, jumlah, checksum); batal di lembar

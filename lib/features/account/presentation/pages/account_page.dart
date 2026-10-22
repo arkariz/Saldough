@@ -24,12 +24,17 @@ import 'package:state_management/state_management.dart';
 /// Keduanya memuat bagian "Pengaturan" (mata uang, ADR-025).
 class AccountPage extends StatefulWidget {
   /// Membuat [AccountPage].
-  const AccountPage({this.versionEntry, super.key});
+  const AccountPage({this.versionEntry, this.dataSection, super.key});
 
   /// Baris Versi aplikasi di grup paling bawah (APP_UPDATE F4), disisipkan
   /// akar komposisi karena isinya milik fitur lain (ADR-030); `null` = tanpa
   /// grup itu.
   final Widget? versionEntry;
+
+  /// Bagian Data kamu (ekspor, cadangkan, pulihkan; ADR-040), disisipkan akar
+  /// komposisi karena isinya milik fitur lain; tampil sesudah setelan, sama
+  /// untuk sudah dan belum masuk. `null` = tanpa bagian itu.
+  final Widget? dataSection;
 
   @override
   State<AccountPage> createState() => _AccountPageState();
@@ -65,7 +70,10 @@ class _AccountPageState extends State<AccountPage> {
                 child: ListView(
                   padding: const EdgeInsets.all(AppSpacing.space4),
                   children: [
-                    if (user == null) _SignedOut(state: state) else _SignedIn(state: state, user: user),
+                    if (user == null)
+                      _SignedOut(state: state, dataSection: widget.dataSection)
+                    else
+                      _SignedIn(state: state, user: user, dataSection: widget.dataSection),
                     if (widget.versionEntry case final entry?) ...[
                       const SizedBox(height: AppSpacing.space6),
                       AppSectionHeader(t.account.appSection),
@@ -86,9 +94,10 @@ String _busyLabel(String label, AccountState state, AccountAction action) =>
     state.pending == action ? '$label…' : label;
 
 class _SignedOut extends StatefulWidget {
-  const _SignedOut({required this.state});
+  const _SignedOut({required this.state, this.dataSection});
 
   final AccountState state;
+  final Widget? dataSection;
 
   @override
   State<_SignedOut> createState() => _SignedOutState();
@@ -194,7 +203,7 @@ class _SignedOutState extends State<_SignedOut> {
           ),
         ],
         const SizedBox(height: AppSpacing.space6),
-        const _Settings(),
+        _Settings(dataSection: widget.dataSection),
       ],
     );
   }
@@ -204,7 +213,10 @@ class _SignedOutState extends State<_SignedOut> {
 /// dan Tampilan. Sama untuk sudah dan belum masuk -- setelan tidak butuh
 /// akun.
 class _Settings extends StatelessWidget {
-  const _Settings();
+  const _Settings({this.dataSection});
+
+  /// Bagian Data kamu, sesudah kelompok Tampilan (prototipe `AkunData.dc.html`).
+  final Widget? dataSection;
 
   @override
   Widget build(BuildContext context) {
@@ -232,13 +244,16 @@ class _Settings extends StatelessWidget {
           dividerIndent: AppListCard.iconIndent,
           children: [LanguageSettingEntry(), CurrencySettingSection(), HideAmountsSettingEntry()],
         ),
+        if (dataSection case final section?) ...[const SizedBox(height: AppSpacing.space6), section],
       ],
     );
   }
 }
 
 class _SignedIn extends StatelessWidget {
-  const _SignedIn({required this.state, required this.user});
+  const _SignedIn({required this.state, required this.user, this.dataSection});
+
+  final Widget? dataSection;
 
   final AccountState state;
   final AppUser user;
@@ -291,15 +306,12 @@ class _SignedIn extends StatelessWidget {
           ),
         ),
         const SizedBox(height: AppSpacing.space6),
-        AppSectionHeader(t.account.dataTitle),
-        Text(t.account.dataBody, style: textTheme.bodyMedium),
-        const SizedBox(height: AppSpacing.space6),
         AppButton.secondary(
           label: _busyLabel(t.account.signOutAction, state, AccountAction.signOut),
           onPressed: state.isBusy ? null : () => context.read<AccountBloc>().add(const AccountSignOutRequested()),
         ),
         const SizedBox(height: AppSpacing.space6),
-        const _Settings(),
+        _Settings(dataSection: dataSection),
         const SizedBox(height: AppSpacing.space8),
         Divider(color: colors.line),
         const SizedBox(height: AppSpacing.space4),

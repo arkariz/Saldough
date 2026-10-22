@@ -45,6 +45,7 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$record$en record = _Translations$record$en._(_root);
 	@override late final _Translations$transaction$en transaction = _Translations$transaction$en._(_root);
 	@override late final _Translations$wallet$en wallet = _Translations$wallet$en._(_root);
+	@override late final _Translations$dataPortability$en dataPortability = _Translations$dataPortability$en._(_root);
 	@override late final _Translations$budget$en budget = _Translations$budget$en._(_root);
 	@override late final _Translations$freelance$en freelance = _Translations$freelance$en._(_root);
 	@override late final _Translations$home$en home = _Translations$home$en._(_root);
@@ -323,6 +324,53 @@ class _Translations$wallet$en extends Translations$wallet$id {
 	@override String get detailTransferInLabel => 'Transfers in';
 	@override String get detailTransferOutLabel => 'Transfers out';
 	@override String get detailBalanceChangeLabel => 'Balance change';
+}
+
+// Path: dataPortability
+class _Translations$dataPortability$en extends Translations$dataPortability$id {
+	_Translations$dataPortability$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get sectionTitle => 'Your data';
+	@override String get sectionBody => 'All your records are stored on this phone. Back them up somewhere else to keep them safe, or export to a spreadsheet.';
+	@override String get close => 'Close';
+	@override String get cancel => 'Cancel';
+	@override String get exportTitle => 'Export to spreadsheet';
+	@override String get exportSub => 'Excel or CSV';
+	@override String get exportFormat => 'Format';
+	@override String get formatXlsx => 'Excel (.xlsx)';
+	@override String get formatCsv => 'CSV';
+	@override String get xlsxHelp => 'Opens correctly in Excel and Google Sheets. Includes a Wallets sheet.';
+	@override String get csvHelp => 'For other apps. Transactions only.';
+	@override String exportSummary({required num n, required Object first, required Object last}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
+		one: '${n} transaction, ${first} – ${last}',
+		other: '${n} transactions, ${first} – ${last}',
+	);
+	@override String exportSummaryDay({required num n, required Object date}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
+		one: '${n} transaction, ${date}',
+		other: '${n} transactions, ${date}',
+	);
+	@override String get exportEmpty => 'No transactions to export yet.';
+	@override String get exportScope => 'Includes all your transactions and your current wallet balances. Filter what you need in the spreadsheet.';
+	@override String get exportAction => 'Export';
+	@override String get exportBusy => 'Preparing the file…';
+	@override String get exportBusyNote => 'This can take a while if you have a lot of data. You can cancel.';
+	@override String get exportError => 'The file couldn\'t be created. Your data hasn\'t changed.';
+	@override String get fileReady => 'File ready';
+	@override String fileMeta({required num n, required Object format}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
+		one: '${format} · ${n} transaction',
+		other: '${format} · ${n} transactions',
+	);
+	@override String get saveTo => 'Save to…';
+	@override String get share => 'Share';
+	@override String get fileNotSaved => 'The file isn\'t saved yet. You can still save or share it.';
+	@override String get fileStem => 'export';
+	@override String get sheetTransactions => 'Transactions';
+	@override String get sheetWallets => 'Wallets';
+	@override late final _Translations$dataPortability$columns$en columns = _Translations$dataPortability$columns$en._(_root);
+	@override late final _Translations$dataPortability$types$en types = _Translations$dataPortability$types$en._(_root);
 }
 
 // Path: budget
@@ -844,8 +892,6 @@ class _Translations$account$en extends Translations$account$id {
 	@override String get signedOutMessage => 'You\'re signed out.';
 	@override String get methodGoogle => 'Signed in with Google';
 	@override String get methodPassword => 'Signed in with email';
-	@override String get dataTitle => 'Your data';
-	@override String get dataBody => 'Wallets, transactions, and budgets are stored on this device. Signing out or deleting your account doesn\'t touch them.';
 	@override String get signOutAction => 'Sign out';
 	@override String get dangerTitle => 'Danger zone';
 	@override String get dangerBody => 'Deleting your account is permanent and can\'t be undone.';
@@ -1488,6 +1534,44 @@ class _Translations$record$calc$en extends Translations$record$calc$id {
 	@override String get tooLarge => 'The result is too large';
 }
 
+// Path: dataPortability.columns
+class _Translations$dataPortability$columns$en extends Translations$dataPortability$columns$id {
+	_Translations$dataPortability$columns$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get date => 'Date';
+	@override String get periodStart => 'Period start';
+	@override String get type => 'Type';
+	@override String get amount => 'Amount';
+	@override String get flow => 'Flow';
+	@override String get currency => 'Currency';
+	@override String get wallet => 'Wallet';
+	@override String get toWallet => 'To wallet';
+	@override String get category => 'Category';
+	@override String get note => 'Note';
+	@override String get budgetItem => 'Budget item';
+	@override String get recurring => 'Recurring';
+	@override String get freelanceProject => 'Freelance project';
+	@override String get id => 'ID';
+	@override String get walletName => 'Name';
+	@override String get openingBalance => 'Opening balance';
+	@override String get currentBalance => 'Current balance';
+}
+
+// Path: dataPortability.types
+class _Translations$dataPortability$types$en extends Translations$dataPortability$types$id {
+	_Translations$dataPortability$types$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get income => 'Income';
+	@override String get expense => 'Expense';
+	@override String get transfer => 'Transfer';
+}
+
 // Path: account.errors
 class _Translations$account$errors$en extends Translations$account$errors$id {
 	_Translations$account$errors$en._(TranslationsEn root) : this._root = root, super.internal(root);
@@ -2103,6 +2187,53 @@ extension on TranslationsEn {
 			'wallet.detailTransferInLabel' => 'Transfers in',
 			'wallet.detailTransferOutLabel' => 'Transfers out',
 			'wallet.detailBalanceChangeLabel' => 'Balance change',
+			'dataPortability.sectionTitle' => 'Your data',
+			'dataPortability.sectionBody' => 'All your records are stored on this phone. Back them up somewhere else to keep them safe, or export to a spreadsheet.',
+			'dataPortability.close' => 'Close',
+			'dataPortability.cancel' => 'Cancel',
+			'dataPortability.exportTitle' => 'Export to spreadsheet',
+			'dataPortability.exportSub' => 'Excel or CSV',
+			'dataPortability.exportFormat' => 'Format',
+			'dataPortability.formatXlsx' => 'Excel (.xlsx)',
+			'dataPortability.formatCsv' => 'CSV',
+			'dataPortability.xlsxHelp' => 'Opens correctly in Excel and Google Sheets. Includes a Wallets sheet.',
+			'dataPortability.csvHelp' => 'For other apps. Transactions only.',
+			'dataPortability.exportSummary' => ({required num n, required Object first, required Object last}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '${n} transaction, ${first} – ${last}', other: '${n} transactions, ${first} – ${last}', ), 
+			'dataPortability.exportSummaryDay' => ({required num n, required Object date}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '${n} transaction, ${date}', other: '${n} transactions, ${date}', ), 
+			'dataPortability.exportEmpty' => 'No transactions to export yet.',
+			'dataPortability.exportScope' => 'Includes all your transactions and your current wallet balances. Filter what you need in the spreadsheet.',
+			'dataPortability.exportAction' => 'Export',
+			'dataPortability.exportBusy' => 'Preparing the file…',
+			'dataPortability.exportBusyNote' => 'This can take a while if you have a lot of data. You can cancel.',
+			'dataPortability.exportError' => 'The file couldn\'t be created. Your data hasn\'t changed.',
+			'dataPortability.fileReady' => 'File ready',
+			'dataPortability.fileMeta' => ({required num n, required Object format}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '${format} · ${n} transaction', other: '${format} · ${n} transactions', ), 
+			'dataPortability.saveTo' => 'Save to…',
+			'dataPortability.share' => 'Share',
+			'dataPortability.fileNotSaved' => 'The file isn\'t saved yet. You can still save or share it.',
+			'dataPortability.fileStem' => 'export',
+			'dataPortability.sheetTransactions' => 'Transactions',
+			'dataPortability.sheetWallets' => 'Wallets',
+			'dataPortability.columns.date' => 'Date',
+			'dataPortability.columns.periodStart' => 'Period start',
+			'dataPortability.columns.type' => 'Type',
+			'dataPortability.columns.amount' => 'Amount',
+			'dataPortability.columns.flow' => 'Flow',
+			'dataPortability.columns.currency' => 'Currency',
+			'dataPortability.columns.wallet' => 'Wallet',
+			'dataPortability.columns.toWallet' => 'To wallet',
+			'dataPortability.columns.category' => 'Category',
+			'dataPortability.columns.note' => 'Note',
+			'dataPortability.columns.budgetItem' => 'Budget item',
+			'dataPortability.columns.recurring' => 'Recurring',
+			'dataPortability.columns.freelanceProject' => 'Freelance project',
+			'dataPortability.columns.id' => 'ID',
+			'dataPortability.columns.walletName' => 'Name',
+			'dataPortability.columns.openingBalance' => 'Opening balance',
+			'dataPortability.columns.currentBalance' => 'Current balance',
+			'dataPortability.types.income' => 'Income',
+			'dataPortability.types.expense' => 'Expense',
+			'dataPortability.types.transfer' => 'Transfer',
 			'budget.activeBadge' => ({required Object count}) => '${count} active',
 			'budget.plannedLabel' => 'Planned',
 			'budget.spentLabel' => 'Spent',
@@ -2294,6 +2425,8 @@ extension on TranslationsEn {
 			'freelance.hoursLabel' => 'Duration',
 			'freelance.entryRateHelp' => 'Filled from the project rate. Change it if this rate is different.',
 			'freelance.noteLabel' => 'Note',
+			_ => null,
+		} ?? switch (path) {
 			'freelance.noteHint' => 'What was done (optional)',
 			'freelance.entrySaveAction' => 'Save work hours',
 			'freelance.entrySaveHint' => 'This amount is recorded as earned, not yet received.',
@@ -2341,8 +2474,6 @@ extension on TranslationsEn {
 			'freelance.receiveNoteDefault' => ({required Object project}) => 'Freelance invoice ${project}',
 			'freelance.receiveAction' => 'Record received',
 			'freelance.paymentReceivedMessage' => 'Invoice recorded as received. Wallet balance increased.',
-			_ => null,
-		} ?? switch (path) {
 			'freelance.receiptCancelAction' => 'Cancel receipt',
 			'freelance.receiptCancelConfirmTitle' => 'Cancel receipt?',
 			'freelance.receiptCancelConfirmMessage' => 'Its income is deleted and the wallet balance goes back down. The invoice is pending again.',
@@ -2563,8 +2694,6 @@ extension on TranslationsEn {
 			'account.signedOutMessage' => 'You\'re signed out.',
 			'account.methodGoogle' => 'Signed in with Google',
 			'account.methodPassword' => 'Signed in with email',
-			'account.dataTitle' => 'Your data',
-			'account.dataBody' => 'Wallets, transactions, and budgets are stored on this device. Signing out or deleting your account doesn\'t touch them.',
 			'account.signOutAction' => 'Sign out',
 			'account.dangerTitle' => 'Danger zone',
 			'account.dangerBody' => 'Deleting your account is permanent and can\'t be undone.',
@@ -2810,6 +2939,8 @@ extension on TranslationsEn {
 			'recurring.starters.internet' => 'Internet',
 			'recurring.starters.bpjs' => 'BPJS',
 			'recurring.starters.installment' => 'Installment',
+			_ => null,
+		} ?? switch (path) {
 			'recurring.starters.paylater' => 'Paylater',
 			'recurring.starters.subscription' => 'Subscription',
 			'recurring.starters.parents' => 'Send to parents',
@@ -2855,8 +2986,6 @@ extension on TranslationsEn {
 			'recurring.progressLine' => ({required Object k, required Object n}) => '${k} of ${n} recorded',
 			'recurring.countLine' => ({required Object n}) => '${n} times',
 			'recurring.pausedLine' => 'Paused',
-			_ => null,
-		} ?? switch (path) {
 			'recurring.reminderLine' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: 'I pay it · reminded ${n} day before', other: 'I pay it · reminded ${n} days before', ), 
 			'recurring.autoDebitLine' => 'Auto-debit',
 			'recurring.pausedMessage' => ({required Object name}) => '${name} paused.',

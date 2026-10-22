@@ -298,6 +298,68 @@
     "detailTransferOutLabel": "Transfers out",
     "detailBalanceChangeLabel": "Balance change"
   },
+  "dataPortability": {
+    "sectionTitle": "Your data",
+    "sectionBody": "All your records are stored on this phone. Back them up somewhere else to keep them safe, or export to a spreadsheet.",
+    "close": "Close",
+    "cancel": "Cancel",
+    "exportTitle": "Export to spreadsheet",
+    "exportSub": "Excel or CSV",
+    "exportFormat": "Format",
+    "formatXlsx": "Excel (.xlsx)",
+    "formatCsv": "CSV",
+    "xlsxHelp": "Opens correctly in Excel and Google Sheets. Includes a Wallets sheet.",
+    "csvHelp": "For other apps. Transactions only.",
+    "exportSummary": {
+      "one": "${n} transaction, $first – $last",
+      "other": "${n} transactions, $first – $last"
+    },
+    "exportSummaryDay": {
+      "one": "${n} transaction, $date",
+      "other": "${n} transactions, $date"
+    },
+    "exportEmpty": "No transactions to export yet.",
+    "exportScope": "Includes all your transactions and your current wallet balances. Filter what you need in the spreadsheet.",
+    "exportAction": "Export",
+    "exportBusy": "Preparing the file…",
+    "exportBusyNote": "This can take a while if you have a lot of data. You can cancel.",
+    "exportError": "The file couldn't be created. Your data hasn't changed.",
+    "fileReady": "File ready",
+    "fileMeta": {
+      "one": "$format · ${n} transaction",
+      "other": "$format · ${n} transactions"
+    },
+    "saveTo": "Save to…",
+    "share": "Share",
+    "fileNotSaved": "The file isn't saved yet. You can still save or share it.",
+    "fileStem": "export",
+    "sheetTransactions": "Transactions",
+    "sheetWallets": "Wallets",
+    "columns": {
+      "date": "Date",
+      "periodStart": "Period start",
+      "type": "Type",
+      "amount": "Amount",
+      "flow": "Flow",
+      "currency": "Currency",
+      "wallet": "Wallet",
+      "toWallet": "To wallet",
+      "category": "Category",
+      "note": "Note",
+      "budgetItem": "Budget item",
+      "recurring": "Recurring",
+      "freelanceProject": "Freelance project",
+      "id": "ID",
+      "walletName": "Name",
+      "openingBalance": "Opening balance",
+      "currentBalance": "Current balance"
+    },
+    "types": {
+      "income": "Income",
+      "expense": "Expense",
+      "transfer": "Transfer"
+    }
+  },
   "budget": {
     "activeBadge": "$count active",
     "plannedLabel": "Planned",
@@ -769,8 +831,6 @@
     "signedOutMessage": "You're signed out.",
     "methodGoogle": "Signed in with Google",
     "methodPassword": "Signed in with email",
-    "dataTitle": "Your data",
-    "dataBody": "Wallets, transactions, and budgets are stored on this device. Signing out or deleting your account doesn't touch them.",
     "signOutAction": "Sign out",
     "dangerTitle": "Danger zone",
     "dangerBody": "Deleting your account is permanent and can't be undone.",

@@ -15,6 +15,7 @@ import 'package:saldough/core/foundation/analytics/app_bootstrap_firebase.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/language/language.dart';
+import 'package:saldough/features/data_portability/data/platform_file_transfer.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/transaction/source_icons.dart';
 
@@ -41,6 +42,9 @@ Future<void> bootstrapApp() async {
   _generation++;
 
   await di.run(rootGetIt);
+
+  // ADR-040 §3.8: sisa berkas bagi di cache dihapus; isinya data keuangan.
+  unawaited(PlatformFileTransfer.sweepTemp());
 
   // ADR-040 §3.4: bila pemulihan data selesai diterapkan (atau terputus di
   // tengah penerapan), tuntaskan sebelum ada yang membaca data.

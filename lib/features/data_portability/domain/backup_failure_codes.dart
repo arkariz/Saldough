@@ -14,6 +14,12 @@ abstract final class BackupFailureCodes {
 
   /// Ruang penyimpanan tidak cukup untuk menyiapkan pemulihan.
   static const space = FailureCode('BACKUP_SPACE');
+
+  /// Belum ada transaksi untuk diekspor.
+  static const emptyExport = FailureCode('EXPORT_EMPTY');
+
+  /// Pengguna membatalkan ekspor yang sedang disiapkan; bukan galat.
+  static const cancelled = FailureCode('EXPORT_CANCELLED');
 }
 
 /// Galat dari kodek dan validator cadangan. Dilempar di lapisan data dan

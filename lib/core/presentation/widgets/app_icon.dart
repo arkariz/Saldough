@@ -283,6 +283,24 @@ enum IconKey {
   /// Selesai, tidak ada yang tersisa (keadaan kosong kotak masuk).
   taskAlt,
 
+  /// Ekspor ke spreadsheet (Akun › Data kamu, ADR-040).
+  tableView,
+
+  /// Berkas (kartu berkas di lembar ekspor dan cadangkan).
+  description,
+
+  /// Belum ada data untuk diekspor.
+  eventBusy,
+
+  /// Cadangkan sekarang (Akun › Data kamu).
+  backup,
+
+  /// Pulihkan dari cadangan (Akun › Data kamu).
+  restoreBackup,
+
+  /// Kembalikan data sebelum pemulihan (Akun › Data kamu).
+  undo,
+
   /// Baris setelan Kategori.
   label,
 
@@ -417,6 +435,12 @@ const Map<IconKey, IconData> _symbols = {
   IconKey.warning: Symbols.warning_rounded,
   IconKey.error: Symbols.error_rounded,
   IconKey.taskAlt: Symbols.task_alt_rounded,
+  IconKey.tableView: Symbols.table_view_rounded,
+  IconKey.description: Symbols.description_rounded,
+  IconKey.eventBusy: Symbols.event_busy_rounded,
+  IconKey.backup: Symbols.backup_rounded,
+  IconKey.restoreBackup: Symbols.settings_backup_restore_rounded,
+  IconKey.undo: Symbols.undo_rounded,
   IconKey.label: Symbols.label_rounded,
   IconKey.notifications: Symbols.notifications_rounded,
   IconKey.translate: Symbols.translate_rounded,

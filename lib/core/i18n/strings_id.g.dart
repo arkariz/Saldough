@@ -47,6 +47,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$record$id record = Translations$record$id.internal(_root);
 	late final Translations$transaction$id transaction = Translations$transaction$id.internal(_root);
 	late final Translations$wallet$id wallet = Translations$wallet$id.internal(_root);
+	late final Translations$dataPortability$id dataPortability = Translations$dataPortability$id.internal(_root);
 	late final Translations$budget$id budget = Translations$budget$id.internal(_root);
 	late final Translations$freelance$id freelance = Translations$freelance$id.internal(_root);
 	late final Translations$home$id home = Translations$home$id.internal(_root);
@@ -729,6 +730,108 @@ class Translations$wallet$id {
 
 	/// id: 'Perubahan saldo'
 	String get detailBalanceChangeLabel => 'Perubahan saldo';
+}
+
+// Path: dataPortability
+class Translations$dataPortability$id {
+	Translations$dataPortability$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Data kamu'
+	String get sectionTitle => 'Data kamu';
+
+	/// id: 'Semua catatanmu tersimpan di ponsel ini. Cadangkan ke tempat lain supaya tetap aman, atau ekspor ke spreadsheet.'
+	String get sectionBody => 'Semua catatanmu tersimpan di ponsel ini. Cadangkan ke tempat lain supaya tetap aman, atau ekspor ke spreadsheet.';
+
+	/// id: 'Tutup'
+	String get close => 'Tutup';
+
+	/// id: 'Batal'
+	String get cancel => 'Batal';
+
+	/// id: 'Ekspor ke spreadsheet'
+	String get exportTitle => 'Ekspor ke spreadsheet';
+
+	/// id: 'Excel atau CSV'
+	String get exportSub => 'Excel atau CSV';
+
+	/// id: 'Format'
+	String get exportFormat => 'Format';
+
+	/// id: 'Excel (.xlsx)'
+	String get formatXlsx => 'Excel (.xlsx)';
+
+	/// id: 'CSV'
+	String get formatCsv => 'CSV';
+
+	/// id: 'Terbuka benar di Excel dan Google Sheets. Memuat lembar Dompet.'
+	String get xlsxHelp => 'Terbuka benar di Excel dan Google Sheets. Memuat lembar Dompet.';
+
+	/// id: 'Untuk aplikasi lain. Hanya transaksi.'
+	String get csvHelp => 'Untuk aplikasi lain. Hanya transaksi.';
+
+	/// id: '(one) {${n} transaksi, $first – $last} (other) {${n} transaksi, $first – $last}'
+	String exportSummary({required num n, required Object first, required Object last}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n,
+		one: '${n} transaksi, ${first} – ${last}',
+		other: '${n} transaksi, ${first} – ${last}',
+	);
+
+	/// id: '(one) {${n} transaksi, $date} (other) {${n} transaksi, $date}'
+	String exportSummaryDay({required num n, required Object date}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n,
+		one: '${n} transaksi, ${date}',
+		other: '${n} transaksi, ${date}',
+	);
+
+	/// id: 'Belum ada transaksi untuk diekspor.'
+	String get exportEmpty => 'Belum ada transaksi untuk diekspor.';
+
+	/// id: 'Berisi seluruh transaksimu dan saldo dompet saat ini. Saring sendiri bagian yang kamu perlukan di spreadsheet.'
+	String get exportScope => 'Berisi seluruh transaksimu dan saldo dompet saat ini. Saring sendiri bagian yang kamu perlukan di spreadsheet.';
+
+	/// id: 'Ekspor'
+	String get exportAction => 'Ekspor';
+
+	/// id: 'Menyiapkan berkas…'
+	String get exportBusy => 'Menyiapkan berkas…';
+
+	/// id: 'Ini bisa memakan waktu kalau datamu banyak. Kamu bisa membatalkannya.'
+	String get exportBusyNote => 'Ini bisa memakan waktu kalau datamu banyak. Kamu bisa membatalkannya.';
+
+	/// id: 'Berkas tidak bisa dibuat. Datamu tidak berubah.'
+	String get exportError => 'Berkas tidak bisa dibuat. Datamu tidak berubah.';
+
+	/// id: 'Berkas siap'
+	String get fileReady => 'Berkas siap';
+
+	/// id: '(one) {$format · ${n} transaksi} (other) {$format · ${n} transaksi}'
+	String fileMeta({required num n, required Object format}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n,
+		one: '${format} · ${n} transaksi',
+		other: '${format} · ${n} transaksi',
+	);
+
+	/// id: 'Simpan ke…'
+	String get saveTo => 'Simpan ke…';
+
+	/// id: 'Bagikan'
+	String get share => 'Bagikan';
+
+	/// id: 'Berkas belum disimpan. Kamu masih bisa menyimpan atau membagikannya.'
+	String get fileNotSaved => 'Berkas belum disimpan. Kamu masih bisa menyimpan atau membagikannya.';
+
+	/// id: 'ekspor'
+	String get fileStem => 'ekspor';
+
+	/// id: 'Transaksi'
+	String get sheetTransactions => 'Transaksi';
+
+	/// id: 'Dompet'
+	String get sheetWallets => 'Dompet';
+
+	late final Translations$dataPortability$columns$id columns = Translations$dataPortability$columns$id.internal(_root);
+	late final Translations$dataPortability$types$id types = Translations$dataPortability$types$id.internal(_root);
 }
 
 // Path: budget
@@ -2166,12 +2269,6 @@ class Translations$account$id {
 
 	/// id: 'Masuk lewat email'
 	String get methodPassword => 'Masuk lewat email';
-
-	/// id: 'Data kamu'
-	String get dataTitle => 'Data kamu';
-
-	/// id: 'Dompet, transaksi, dan anggaran tersimpan di perangkat ini. Keluar atau menghapus akun tidak menyentuhnya.'
-	String get dataBody => 'Dompet, transaksi, dan anggaran tersimpan di perangkat ini. Keluar atau menghapus akun tidak menyentuhnya.';
 
 	/// id: 'Keluar'
 	String get signOutAction => 'Keluar';
@@ -3764,6 +3861,84 @@ class Translations$record$calc$id {
 	String get tooLarge => 'Hasilnya terlalu besar';
 }
 
+// Path: dataPortability.columns
+class Translations$dataPortability$columns$id {
+	Translations$dataPortability$columns$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Tanggal'
+	String get date => 'Tanggal';
+
+	/// id: 'Awal periode'
+	String get periodStart => 'Awal periode';
+
+	/// id: 'Jenis'
+	String get type => 'Jenis';
+
+	/// id: 'Nominal'
+	String get amount => 'Nominal';
+
+	/// id: 'Arus'
+	String get flow => 'Arus';
+
+	/// id: 'Mata uang'
+	String get currency => 'Mata uang';
+
+	/// id: 'Dompet'
+	String get wallet => 'Dompet';
+
+	/// id: 'Dompet tujuan'
+	String get toWallet => 'Dompet tujuan';
+
+	/// id: 'Kategori'
+	String get category => 'Kategori';
+
+	/// id: 'Catatan'
+	String get note => 'Catatan';
+
+	/// id: 'Pos anggaran'
+	String get budgetItem => 'Pos anggaran';
+
+	/// id: 'Rutin'
+	String get recurring => 'Rutin';
+
+	/// id: 'Proyek freelance'
+	String get freelanceProject => 'Proyek freelance';
+
+	/// id: 'ID'
+	String get id => 'ID';
+
+	/// id: 'Nama'
+	String get walletName => 'Nama';
+
+	/// id: 'Saldo awal'
+	String get openingBalance => 'Saldo awal';
+
+	/// id: 'Saldo sekarang'
+	String get currentBalance => 'Saldo sekarang';
+}
+
+// Path: dataPortability.types
+class Translations$dataPortability$types$id {
+	Translations$dataPortability$types$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Pemasukan'
+	String get income => 'Pemasukan';
+
+	/// id: 'Pengeluaran'
+	String get expense => 'Pengeluaran';
+
+	/// id: 'Transfer'
+	String get transfer => 'Transfer';
+}
+
 // Path: account.errors
 class Translations$account$errors$id {
 	Translations$account$errors$id.internal(this._root);
@@ -4631,6 +4806,53 @@ extension on Translations {
 			'wallet.detailTransferInLabel' => 'Transfer masuk',
 			'wallet.detailTransferOutLabel' => 'Transfer keluar',
 			'wallet.detailBalanceChangeLabel' => 'Perubahan saldo',
+			'dataPortability.sectionTitle' => 'Data kamu',
+			'dataPortability.sectionBody' => 'Semua catatanmu tersimpan di ponsel ini. Cadangkan ke tempat lain supaya tetap aman, atau ekspor ke spreadsheet.',
+			'dataPortability.close' => 'Tutup',
+			'dataPortability.cancel' => 'Batal',
+			'dataPortability.exportTitle' => 'Ekspor ke spreadsheet',
+			'dataPortability.exportSub' => 'Excel atau CSV',
+			'dataPortability.exportFormat' => 'Format',
+			'dataPortability.formatXlsx' => 'Excel (.xlsx)',
+			'dataPortability.formatCsv' => 'CSV',
+			'dataPortability.xlsxHelp' => 'Terbuka benar di Excel dan Google Sheets. Memuat lembar Dompet.',
+			'dataPortability.csvHelp' => 'Untuk aplikasi lain. Hanya transaksi.',
+			'dataPortability.exportSummary' => ({required num n, required Object first, required Object last}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n, one: '${n} transaksi, ${first} – ${last}', other: '${n} transaksi, ${first} – ${last}', ), 
+			'dataPortability.exportSummaryDay' => ({required num n, required Object date}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n, one: '${n} transaksi, ${date}', other: '${n} transaksi, ${date}', ), 
+			'dataPortability.exportEmpty' => 'Belum ada transaksi untuk diekspor.',
+			'dataPortability.exportScope' => 'Berisi seluruh transaksimu dan saldo dompet saat ini. Saring sendiri bagian yang kamu perlukan di spreadsheet.',
+			'dataPortability.exportAction' => 'Ekspor',
+			'dataPortability.exportBusy' => 'Menyiapkan berkas…',
+			'dataPortability.exportBusyNote' => 'Ini bisa memakan waktu kalau datamu banyak. Kamu bisa membatalkannya.',
+			'dataPortability.exportError' => 'Berkas tidak bisa dibuat. Datamu tidak berubah.',
+			'dataPortability.fileReady' => 'Berkas siap',
+			'dataPortability.fileMeta' => ({required num n, required Object format}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n, one: '${format} · ${n} transaksi', other: '${format} · ${n} transaksi', ), 
+			'dataPortability.saveTo' => 'Simpan ke…',
+			'dataPortability.share' => 'Bagikan',
+			'dataPortability.fileNotSaved' => 'Berkas belum disimpan. Kamu masih bisa menyimpan atau membagikannya.',
+			'dataPortability.fileStem' => 'ekspor',
+			'dataPortability.sheetTransactions' => 'Transaksi',
+			'dataPortability.sheetWallets' => 'Dompet',
+			'dataPortability.columns.date' => 'Tanggal',
+			'dataPortability.columns.periodStart' => 'Awal periode',
+			'dataPortability.columns.type' => 'Jenis',
+			'dataPortability.columns.amount' => 'Nominal',
+			'dataPortability.columns.flow' => 'Arus',
+			'dataPortability.columns.currency' => 'Mata uang',
+			'dataPortability.columns.wallet' => 'Dompet',
+			'dataPortability.columns.toWallet' => 'Dompet tujuan',
+			'dataPortability.columns.category' => 'Kategori',
+			'dataPortability.columns.note' => 'Catatan',
+			'dataPortability.columns.budgetItem' => 'Pos anggaran',
+			'dataPortability.columns.recurring' => 'Rutin',
+			'dataPortability.columns.freelanceProject' => 'Proyek freelance',
+			'dataPortability.columns.id' => 'ID',
+			'dataPortability.columns.walletName' => 'Nama',
+			'dataPortability.columns.openingBalance' => 'Saldo awal',
+			'dataPortability.columns.currentBalance' => 'Saldo sekarang',
+			'dataPortability.types.income' => 'Pemasukan',
+			'dataPortability.types.expense' => 'Pengeluaran',
+			'dataPortability.types.transfer' => 'Transfer',
 			'budget.activeBadge' => ({required Object count}) => '${count} aktif',
 			'budget.plannedLabel' => 'Rencana',
 			'budget.spentLabel' => 'Terpakai',
@@ -4822,6 +5044,8 @@ extension on Translations {
 			'freelance.hoursLabel' => 'Durasi pengerjaan',
 			'freelance.entryRateHelp' => 'Terisi dari tarif proyek. Ubah kalau tarif kali ini berbeda.',
 			'freelance.noteLabel' => 'Catatan',
+			_ => null,
+		} ?? switch (path) {
 			'freelance.noteHint' => 'Apa yang dikerjakan (opsional)',
 			'freelance.entrySaveAction' => 'Simpan jam kerja',
 			'freelance.entrySaveHint' => 'Nominal ini tercatat sebagai diperoleh, belum diterima.',
@@ -4869,8 +5093,6 @@ extension on Translations {
 			'freelance.receiveNoteDefault' => ({required Object project}) => 'Tagihan freelance ${project}',
 			'freelance.receiveAction' => 'Catat diterima',
 			'freelance.paymentReceivedMessage' => 'Tagihan dicatat diterima. Saldo dompet bertambah.',
-			_ => null,
-		} ?? switch (path) {
 			'freelance.receiptCancelAction' => 'Batalkan penerimaan',
 			'freelance.receiptCancelConfirmTitle' => 'Batalkan penerimaan?',
 			'freelance.receiptCancelConfirmMessage' => 'Pemasukannya dihapus dan saldo dompet berkurang kembali. Tagihan kembali tertunda.',
@@ -5091,8 +5313,6 @@ extension on Translations {
 			'account.signedOutMessage' => 'Kamu sudah keluar.',
 			'account.methodGoogle' => 'Masuk lewat Google',
 			'account.methodPassword' => 'Masuk lewat email',
-			'account.dataTitle' => 'Data kamu',
-			'account.dataBody' => 'Dompet, transaksi, dan anggaran tersimpan di perangkat ini. Keluar atau menghapus akun tidak menyentuhnya.',
 			'account.signOutAction' => 'Keluar',
 			'account.dangerTitle' => 'Zona bahaya',
 			'account.dangerBody' => 'Menghapus akun bersifat permanen dan tidak bisa dibatalkan.',
@@ -5338,6 +5558,8 @@ extension on Translations {
 			'recurring.starters.internet' => 'Internet',
 			'recurring.starters.bpjs' => 'BPJS',
 			'recurring.starters.installment' => 'Cicilan',
+			_ => null,
+		} ?? switch (path) {
 			'recurring.starters.paylater' => 'Paylater',
 			'recurring.starters.subscription' => 'Langganan',
 			'recurring.starters.parents' => 'Kirim ke orang tua',
@@ -5383,8 +5605,6 @@ extension on Translations {
 			'recurring.progressLine' => ({required Object k, required Object n}) => '${k} dari ${n} tercatat',
 			'recurring.countLine' => ({required Object n}) => '${n} kali',
 			'recurring.pausedLine' => 'Dijeda',
-			_ => null,
-		} ?? switch (path) {
 			'recurring.reminderLine' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n, other: 'Bayar sendiri · diingatkan H−${n}', ), 
 			'recurring.autoDebitLine' => 'Autodebet',
 			'recurring.pausedMessage' => ({required Object name}) => '${name} dijeda.',

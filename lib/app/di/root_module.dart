@@ -4,8 +4,10 @@ import 'package:go_router/go_router.dart';
 import 'package:hive_storage/hive_storage.dart';
 import 'package:navigation/navigation.dart';
 import 'package:saldough/app/data_portability/app_backup_registry.dart';
+import 'package:saldough/app/data_portability/app_export_data_source.dart';
 import 'package:saldough/app/data_portability/restore_recovery.dart';
 import 'package:saldough/app/discovery/app_feature_statuses.dart';
+import 'package:saldough/app/shell/account_data_section.dart';
 import 'package:saldough/app/shell/account_version_entry.dart';
 import 'package:saldough/app/shell/app_shell_page.dart';
 import 'package:saldough/core/currency/currency.dart';
@@ -37,7 +39,13 @@ import 'package:saldough/features/budget/data/repositories/budget_template_repos
 import 'package:saldough/features/budget/domain/repositories/budget_repository.dart';
 import 'package:saldough/features/budget/domain/repositories/budget_template_repository.dart';
 import 'package:saldough/features/budget/presentation/navigation/budget_route_module.dart';
+import 'package:saldough/features/data_portability/data/export_service.dart';
+import 'package:saldough/features/data_portability/data/platform_file_transfer.dart';
 import 'package:saldough/features/data_portability/data/restore_engine.dart';
+import 'package:saldough/features/data_portability/domain/export_data.dart';
+import 'package:saldough/features/data_portability/domain/export_gateway.dart';
+import 'package:saldough/features/data_portability/domain/file_transfer.dart';
+import 'package:saldough/features/data_portability/presentation/export_labels_i18n.dart';
 import 'package:saldough/features/freelance/data/adapters/freelance_overview_source_impl.dart';
 import 'package:saldough/features/freelance/data/adapters/plan_freelance_source_impl.dart';
 import 'package:saldough/features/freelance/data/repositories/freelance_repository_impl.dart';
@@ -88,7 +96,7 @@ abstract final class RootModule {
   /// ⚠ Daftar ini tumbuh manual tiap fitur baru ditambahkan — tidak ada
   /// penemuan otomatis, sesuai desain `FeatureRouteModule`.
   static const List<FeatureRouteModule> featureModules = [
-    AccountRouteModule(versionEntry: accountVersionEntry),
+    AccountRouteModule(versionEntry: accountVersionEntry, dataSection: accountDataSection),
     AnalysisRouteModule(),
     AppUpdateRouteModule(),
     BudgetRouteModule(),
@@ -105,6 +113,7 @@ abstract final class RootModule {
   static Future<void> registerAll(GetIt container) async {
     await _registerStorage(container);
     _registerSharedRepositories(container);
+    _registerDataPortability(container);
     final registry = _registerRouteRegistry(container);
     await _registerRouter(container, registry);
   }
@@ -123,6 +132,26 @@ abstract final class RootModule {
     container
       ..registerSingleton<RestoreEngine>(restoreEngine)
       ..registerSingleton<RestoreRecoveryOutcome>(RestoreRecoveryOutcome(await recoverRestoreJournal(restoreEngine)));
+  }
+
+  /// Ekspor, cadangan, dan pemulihan (ADR-040). Dipanggil sesudah repositori
+  /// bersama dan fitur terdaftar; sumber data dibaca lewat port.
+  static void _registerDataPortability(GetIt container) {
+    container
+      ..registerLazySingleton<ExportDataSource>(
+        () => AppExportDataSource(
+          transactions: container<TransactionRepository>(),
+          wallets: container<WalletRepository>(),
+          categories: container<CategoryRepository>(),
+          budgets: container<BudgetItemCatalog>(),
+          rules: container<RecurringRuleRepository>(),
+          freelance: container<FreelanceRepository>(),
+        ),
+      )
+      ..registerLazySingleton<ExportGateway>(
+        () => ExportService(source: container<ExportDataSource>(), labels: exportLabelsFromI18n),
+      )
+      ..registerLazySingleton<FileTransfer>(() => const PlatformFileTransfer());
   }
 
   static void _registerSharedRepositories(GetIt container) {

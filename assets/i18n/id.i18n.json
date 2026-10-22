@@ -298,6 +298,68 @@
     "detailTransferOutLabel": "Transfer keluar",
     "detailBalanceChangeLabel": "Perubahan saldo"
   },
+  "dataPortability": {
+    "sectionTitle": "Data kamu",
+    "sectionBody": "Semua catatanmu tersimpan di ponsel ini. Cadangkan ke tempat lain supaya tetap aman, atau ekspor ke spreadsheet.",
+    "close": "Tutup",
+    "cancel": "Batal",
+    "exportTitle": "Ekspor ke spreadsheet",
+    "exportSub": "Excel atau CSV",
+    "exportFormat": "Format",
+    "formatXlsx": "Excel (.xlsx)",
+    "formatCsv": "CSV",
+    "xlsxHelp": "Terbuka benar di Excel dan Google Sheets. Memuat lembar Dompet.",
+    "csvHelp": "Untuk aplikasi lain. Hanya transaksi.",
+    "exportSummary": {
+      "one": "${n} transaksi, $first – $last",
+      "other": "${n} transaksi, $first – $last"
+    },
+    "exportSummaryDay": {
+      "one": "${n} transaksi, $date",
+      "other": "${n} transaksi, $date"
+    },
+    "exportEmpty": "Belum ada transaksi untuk diekspor.",
+    "exportScope": "Berisi seluruh transaksimu dan saldo dompet saat ini. Saring sendiri bagian yang kamu perlukan di spreadsheet.",
+    "exportAction": "Ekspor",
+    "exportBusy": "Menyiapkan berkas…",
+    "exportBusyNote": "Ini bisa memakan waktu kalau datamu banyak. Kamu bisa membatalkannya.",
+    "exportError": "Berkas tidak bisa dibuat. Datamu tidak berubah.",
+    "fileReady": "Berkas siap",
+    "fileMeta": {
+      "one": "$format · ${n} transaksi",
+      "other": "$format · ${n} transaksi"
+    },
+    "saveTo": "Simpan ke…",
+    "share": "Bagikan",
+    "fileNotSaved": "Berkas belum disimpan. Kamu masih bisa menyimpan atau membagikannya.",
+    "fileStem": "ekspor",
+    "sheetTransactions": "Transaksi",
+    "sheetWallets": "Dompet",
+    "columns": {
+      "date": "Tanggal",
+      "periodStart": "Awal periode",
+      "type": "Jenis",
+      "amount": "Nominal",
+      "flow": "Arus",
+      "currency": "Mata uang",
+      "wallet": "Dompet",
+      "toWallet": "Dompet tujuan",
+      "category": "Kategori",
+      "note": "Catatan",
+      "budgetItem": "Pos anggaran",
+      "recurring": "Rutin",
+      "freelanceProject": "Proyek freelance",
+      "id": "ID",
+      "walletName": "Nama",
+      "openingBalance": "Saldo awal",
+      "currentBalance": "Saldo sekarang"
+    },
+    "types": {
+      "income": "Pemasukan",
+      "expense": "Pengeluaran",
+      "transfer": "Transfer"
+    }
+  },
   "budget": {
     "activeBadge": "$count aktif",
     "plannedLabel": "Rencana",
@@ -769,8 +831,6 @@
     "signedOutMessage": "Kamu sudah keluar.",
     "methodGoogle": "Masuk lewat Google",
     "methodPassword": "Masuk lewat email",
-    "dataTitle": "Data kamu",
-    "dataBody": "Dompet, transaksi, dan anggaran tersimpan di perangkat ini. Keluar atau menghapus akun tidak menyentuhnya.",
     "signOutAction": "Keluar",
     "dangerTitle": "Zona bahaya",
     "dangerBody": "Menghapus akun bersifat permanen dan tidak bisa dibatalkan.",

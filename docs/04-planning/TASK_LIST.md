@@ -4807,7 +4807,7 @@ perlu rupa dari ui-ux-designer sebelum T-21.2.
       mobile, GoPay, DANA) adalah anggapan prototipe. (9) Letak kartu
       pembaruan Fase 20 (di atas kartu saldo) masih menunggu keputusan;
       kartu pintu mengikuti.
-- [ ] **T-21.1** Pondasi: status efektif fitur dan ingatan onboarding.
+- [x] **T-21.1** Pondasi: status efektif fitur dan ingatan onboarding.
       Sumber tunggal "apakah Catat dari notifikasi / pengingat rutin
       efektif" (sakelar dan izin sistem, P-2), dibaca Beranda, Rutin, dan
       Akun tanpa saling mengimpor fitur (sisipkan lewat akar komposisi
@@ -4820,7 +4820,22 @@ perlu rupa dari ui-ux-designer sebelum T-21.2.
       Verifikasi: uji unit status efektif (mati, nyala, izin hilang, iOS);
       uji migrasi pengguna lama; uji arsitektur hijau.
       Memenuhi FR-DSC-001.
-- [ ] **T-21.2** Onboarding: dua langkah wajib, awal periode keuangan lalu
+      **Hasil (19 Okt 2026):** `core/discovery/` (`FeatureStatus`,
+      `FeatureState` unsupported/unset/off/permissionNeeded/active,
+      `FeatureStatuses`, `FeatureStatusChanges`); implementasinya
+      `AppFeatureStatuses` di `app/discovery/` (akar komposisi), terdaftar di
+      `RootModule`. `ReminderScheduler.hasPermission()` baru (tanpa meminta
+      izin). Penulis setelan (`NotificationSettingsBloc`, halaman sakelar
+      pengingat) memancarkan `FeatureStatusChanges`. Ingatan onboarding:
+      `OnboardingStep` {period, reminder} (langkah notification dihapus di
+      rupa v2) di `TutorialProgress.answeredSteps`, skema dokumen 3;
+      `isStepPending` = `!onboardingDone && !answered`, jadi pengguna lama
+      tidak dipaksa. Uji: `test/app/discovery/app_feature_statuses_test.dart`
+      (iOS, belum disetel, semua sumber dihapus, mati, izin dicabut, aktif,
+      gagal baca), migrasi dan langkah di
+      `tutorial_progress_repository_impl_test.dart`. `flutter analyze` bersih;
+      seluruh suite lulus (1.736 uji).
+- [x] **T-21.2** Onboarding: dua langkah wajib, awal periode keuangan lalu
       pengingat rutin, plus baris informasi Catat dari notifikasi di penutup
       (Android saja, tidak dapat diketuk, tanpa izin), aturan FEATURE_DISCOVERY
       §4 (tanpa Lewati, Lanjut aktif setelah memilih, Lewati slide melompat
@@ -4833,7 +4848,41 @@ perlu rupa dari ui-ux-designer sebelum T-21.2.
       Verifikasi: uji widget tiap langkah dan jalur Nyalakan/Tidak sekarang/
       izin ditolak; baris informasi tidak ada di iOS; verifikasi perangkat.
       Memenuhi FR-DSC-003, FR-DSC-004.
-- [ ] **T-21.3** Pintu permanen di Beranda (P-1–P-8): baris Catat dari
+      **Hasil kode (19 Okt 2026):** `OnboardingPage` kini mesin langkah
+      (bahasa › layar geser › mata uang › awal periode › pengingat ›
+      penutup). Layar geser mode pertama kali tinggal empat; layar kelima
+      (ajakan dompet) menjadi penutup `OnboardingFinale` sesudah langkah
+      wajib, memuat ringkasan dua jawaban (satu baris tiap jawaban) dan,
+      hanya Android, baris informasi Catat dari notifikasi yang tidak dapat
+      diketuk. Awal periode memakai `AppDayGrid` (1–28 + hari terakhir,
+      tanggal 1 bawaan, tombol "Pakai tanggal {d}") dan disimpan sebagai
+      `FinancialMonthSchedule.single` sejak awal, jadi tidak ada periode
+      peralihan (diuji untuk tanggal 3/19/25/31). Pengingat: Nyalakan →
+      `EnableReminders` (izin lalu sakelar, disambungkan akar komposisi),
+      status Nyala atau Izin belum diberikan lalu Lanjut; Tidak sekarang
+      (tombol `secondary` selebar Nyalakan) langsung lanjut. Kembali (tombol
+      dan sistem) mundur satu langkah; Lewati di layar geser melompat ke
+      mata uang. Tiap jawaban dicatat per langkah (`answeredSteps`), jadi
+      onboarding yang terputus tidak menanyakannya lagi; mode tinjau tidak
+      menanyakan apa pun. Teks `onboarding.period*`, `reminder*`, `turnOn`,
+      `notNow`, `notificationInfo`, `summary*` id+en. Uji:
+      `onboarding_discovery_test.dart` (26 skenario) dan
+      `onboarding_test.dart` diperbarui ke alur baru.
+      *Selisih/catatan:* (1) urutan bahasa sudah di awal sejak ADR-028, jadi
+      "Lewati melompat ke langkah wajib pertama" berarti mata uang;
+      urutan bahasa tidak diubah. (2) Kegagalan menyimpan mata uang kini
+      terjadi di penutup (pengguna tetap di sana dengan snackbar), bukan di
+      langkah mata uang. (3) Mode tinjau tetap lima layar geser tanpa
+      langkah (rupa tinjau belum dirancang, pertanyaan 7 designer). ⚠ Belum:
+      verifikasi perangkat (T-21.8), analitik langkah (T-21.7).
+      *Ilustrasi (19 Okt 2026, permintaan pemilik):* langkah bahasa dan mata
+      uang `bahasa_mata_uang.png`, awal periode `tanggal_gajian.png`,
+      pengingat `pengingat_rutin.png`, penutup `penutup.png`, baris informasi
+      Catat dari notifikasi `catat_dari_notif.png`, layar Mulai cepat
+      `mulai_cepat.png`. Berkas punya margin transparan lebar, jadi
+      `OnboardingArt` memotongnya saat tampil (berkas tidak diubah); angka
+      potongan perkiraan dari tampilan berkas, periksa di perangkat (T-21.8).
+- [x] **T-21.3** Pintu permanen di Beranda (P-1–P-8): baris Catat dari
       notifikasi yang tidak pernah hilang di Android (belum disetel,
       "{n} aplikasi aktif", Izinkan/Nyalakan), tombol Nyalakan pengingat yang
       hilang saat efektif, tombol pengingat juga di segmen Rutin dan catatan
@@ -4845,26 +4894,123 @@ perlu rupa dari ui-ux-designer sebelum T-21.2.
       Beranda, kotak masuk, dan Akun membuka layar yang sama; urutan Beranda
       dengan banner pembaruan dan kartu Menunggu; tidak ada baris di iOS.
       Memenuhi FR-DSC-001, FR-DSC-002, FR-DSC-003.
-- [ ] **T-21.4** Awal bulan keuangan: isyarat kepala periode Rencana dapat
+      **Hasil (19 Okt 2026, rupa v3 disetujui pemilik):** dua kartu sesuai
+      komponen InboxCard dan FeatureNudge. `NotificationInboxCard`
+      (`notification_capture/presentation/widgets/`) menggantikan
+      `CaptureInboxBanner` di slot `notice` Beranda: lima keadaan (belum
+      disetel → Mulai cepat; izin hilang → pengungkapan + setelan sistem;
+      sakelar mati → setelan; aktif tanpa yang menunggu → "{n} aplikasi aktif"
+      + Kelola; aktif dengan tangkapan → Cek, pratinjau paling banyak dua
+      hanya-baca, Ajari pola pada nominal tak terbaca, kaki). Latar
+      `warning-soft` hanya bila ada yang menunggu; kosong di iOS. Banner lama
+      tetap di Riwayat. `ReminderNudgeCard` (`recurring/presentation/widgets/`)
+      di slot baru `featureNudge` Beranda (P-6: sesudah Menunggu dicatat dan
+      kotak masuk) dan di segmen Rutin di bawah kartu sisa tagihan; hilang
+      saat efektif, tanpa tutup/tunda. `ReminderRuleNote` di rincian rutin
+      di bawah sakelar per rutin. Menyalakan = `EnableReminders` (izin →
+      sakelar → sinkron jadwal), memancarkan `FeatureStatusChanges`. Kotak
+      masuk: tautan Kelola aplikasi & pola di bawah segmen (juga saat
+      kosong) dan Ajari pola di kartu tangkapan bernominal tak terbaca;
+      rute baru `teachPattern` membuka kotak masuk lalu langsung pembuat
+      pola. Jumlah aplikasi dibaca lewat `FeatureStatuses` (ADR-030).
+      Uji: `notification_inbox_card_test.dart` (semua keadaan, iOS, ubah
+      keadaan), `reminder_nudge_card_test.dart` (mati, izin hilang, efektif,
+      Nyalakan, ditolak, catatan rutin), tambahan di
+      `notification_capture_pages_test.dart`, urutan Beranda di
+      `app_shell_page_test.dart`. ⚠ Belum: izin notifikasi yang ditolak
+      permanen di Android 13+ membuat Izinkan tidak memunculkan dialog
+      (hanya snackbar); verifikasi perangkat di T-21.8. Banner pembaruan
+      Fase 20 tidak digeser.
+- [x] **T-21.4** Awal bulan keuangan: isyarat kepala periode Rencana dapat
       diketuk dan kartu tawaran gajian untuk pengguna lama (boleh ditutup).
       ⚠ Hanya menyarankan; P-1–P-11 FINANCIAL_PERIOD tidak berubah.
       Verifikasi: uji pemicu (tanggal 1 vs 2–28, jadwal sudah diubah,
       ditutup).
       Memenuhi FR-DSC-004.
-- [ ] **T-21.5** Akun: status Nyala/Mati/Izin belum diberikan di tiga baris
+      **Hasil (19 Okt 2026):** `AppPeriodHeader` yang dapat diketuk kini
+      membawa pil tonal "Atur" (teks `discovery.period.hint`, menggantikan
+      ikon panah). Kartu `PaydayOfferCard` di bawah kepala Rencana › Bulan
+      ini; pemicunya `paydayOfferDay` (`features/plan/domain/`): pemasukan
+      kategori Gaji (`builtInKey == 'salary'`, bukan pembayaran freelance)
+      bertanggal 2–28 dalam 3 bulan terakhir, jadwal masih bawaan,
+      `changedByUser` false, kartu belum dijawab; dipakai yang terbaru.
+      **Atur** membuka lembar Awal bulan keuangan (`source: offer`) dengan
+      tanggal itu; kartu tidak ditandai dijawab saat dibuka, jadi batal
+      menyimpan tidak menghilangkannya, dan hilang sendiri begitu jadwal
+      berubah (`ActiveFinancialMonth`). **Tutup** menyimpan
+      `paydayCardAnswered` (field baru `FinancialMonthOffer`, tidak
+      mengubah jadwal). Uji: `payday_offer_test.dart` (tanggal 1, 2, 28,
+      29–31, terbaru, bukan Gaji/freelance/pengeluaran, sudah diubah,
+      ditutup) dan `payday_offer_card_test.dart` (tampil, tidak tampil,
+      ditutup menetap, jadwal berubah). Analitik `discovery_payday_card`
+      di T-21.7; rupa menunggu persetujuan T-21.0 (kartu `surface` biasa
+      dengan tombol tutup, mengikuti selisih 9).
+- [x] **T-21.5** Akun: status Nyala/Mati/Izin belum diberikan di tiga baris
       dan urutannya (FEATURE_DISCOVERY §7.1).
       Verifikasi: uji widget tiap keadaan; baris notifikasi tidak ada di iOS.
       Memenuhi FR-DSC-001.
-- [ ] **T-21.6** Tur spotlight (`SpotlightKey` baru: baris tombol Beranda,
+      **Hasil (19 Okt 2026):** `FeatureStatusSettingRow`
+      (`features/account/presentation/widgets/`) membungkus `SettingRow` dengan
+      `AppBadge`: Nyala (positive), Mati (netral; juga untuk belum disetel),
+      Izin belum diberikan (warning + ikon, selalu bersama teks). Dibaca dari
+      `FeatureStatuses` (core, tanpa impor fitur) dan dibaca ulang saat
+      setelan berubah, aplikasi kembali ke depan, dan layar tujuan ditutup.
+      Catat dari notifikasi menampilkan "{n} aplikasi aktif" di keterangan
+      bila ada. Urutan baris sudah sesuai (Catat dari notifikasi, Pengingat
+      rutin, Awal bulan keuangan); baris ketiga tidak punya Nyala/Mati dan
+      tetap menampilkan tanggalnya (pertanyaan 4 designer, belum dijawab).
+      Baris notifikasi tetap hanya di Android (pemeriksaan platform halaman
+      Akun) dan status `unsupported` tanpa badge. Uji:
+      `feature_status_row_test.dart` (tiga keadaan + belum disetel, jumlah
+      aplikasi, tanpa dukungan/tanpa sumber, berubah, resume, 360dp).
+- [x] **T-21.6** Tur spotlight (`SpotlightKey` baru: baris tombol Beranda,
       status Akun, kepala periode), teks `onboarding.*` dan `discovery.*`
       id dan en.
       Verifikasi: `translations_test`, tur per langkah mengikuti ADR-021.
       Memenuhi FR-DSC-001.
-- [ ] **T-21.7** Peristiwa analitik FEATURE_DISCOVERY §9 tanpa nominal dan
+      **Hasil (19 Okt 2026):** `SpotlightKey.homeNotification` (kartu Kotak
+      masuk notifikasi, hanya Android) dan `homeReminder` (kartu pengingat,
+      hanya selama belum efektif) ditambahkan ke `TourId.home` sesudah
+      `homePending`; keduanya memicu `TourTrigger` sendiri saat kartunya
+      pertama tampil, jadi pengguna yang sudah menamatkan tur Beranda tetap
+      melihat tiap langkah sekali (progres per langkah, ADR-021).
+      `accountStatus` + `TourId.account` menyorot baris status pengingat di
+      Akun (ada di Android dan iOS) sekali saat Akun pertama dibuka.
+      Kepala periode Rencana sudah punya langkah `planPeriodHeader` sejak
+      T-18.10 dengan teks "Ketuk untuk memulai bulan di tanggal gajianmu",
+      jadi tidak ditambah lagi. Teks `tour.homeNotification*`,
+      `tour.homeReminder*`, `tour.accountStatus*` id+en; teks `discovery.*`
+      dan `onboarding.*` sudah ditambah bersama T-21.2/21.3/21.5/21.9.
+      Sekalian memperbaiki lapisan tur: `ensureVisible` kini dijalankan
+      sesudah frame (dengan gerak dikurangi ia melompat sinkron dan
+      menandai AppBar halaman kotor di tengah pembangunan; ketahuan di
+      Akun). Uji: `test/features/discovery_tour_test.dart` (tiap kartu
+      disorot sekali, tidak disorot bila kartunya tidak ada, pengguna lama)
+      dan uji tur Akun di `account_page_test.dart`; `translations_test`
+      hijau.
+- [x] **T-21.7** Peristiwa analitik FEATURE_DISCOVERY §9 tanpa nominal dan
       nama kategori buatan; catat di `PLAY_DATA_SAFETY.md` bila ada data
       baru.
       Verifikasi: uji tiap peristiwa dan parameternya.
       Memenuhi FR-DSC-001.
+      **Hasil (19 Okt 2026):** `DiscoveryEvents` di
+      `core/foundation/analytics/app_analytics.dart`, enam peristiwa §9.
+      `onboarding_step_answered` dari rute onboarding (period `confirmed`;
+      reminder `turned_on` walau izin ditolak, `not_now`).
+      `feature_enabled`: pengingat saat izin diberikan (via `onboarding`,
+      `home_row`, `rutin`, `account`); Catat dari notifikasi saat Mulai
+      cepat selesai (`quick_start`) dan saat sakelar setelan dinyalakan
+      (`account`, mencatat niat: izin sistem bisa menyusul).
+      `notification_row_tapped`: Beranda (quick_start/manage/teach_pattern),
+      kotak masuk (manage/teach_pattern), baris Akun (manage); Cek tidak
+      dicatat (bukan salah satu action §9). `quick_start_completed` hanya
+      `apps_count`. `discovery_button_tapped` untuk tombol pengingat
+      (home/rutin_segment/rutin_detail). `discovery_payday_card` shown
+      (sekali per kemunculan), accepted, closed. Tidak ada nominal, nama
+      kategori, nama/paket aplikasi, atau isi notifikasi (diuji).
+      `PLAY_DATA_SAFETY.md` diperbarui: jenis data sama, tanpa baris baru.
+      Uji: tiap peristiwa dan parameternya di uji kartu, kotak masuk,
+      Mulai cepat, setelan, onboarding, dan baris Akun.
 - [ ] **T-21.8** Verifikasi perangkat (QA/pemilik): akun baru melewati dua
       langkah wajib (Nyalakan, Tidak sekarang, izin ditolak), baris
       informasi di penutup, baris Catat dari notifikasi di Beranda tidak
@@ -4874,7 +5020,14 @@ perlu rupa dari ui-ux-designer sebelum T-21.2.
       urutan Beranda dengan banner pembaruan, iOS tanpa baris notifikasi.
       Mencakup T-21.9. Hasil di rencana verifikasi Fase 21.
       Memenuhi FR-DSC-001–004.
-- [ ] **T-21.9** Mulai cepat Catat dari notifikasi (FEATURE_DISCOVERY §5.1).
+      **Catatan yang harus diperiksa QA (dari pekerjaan kode, 19 Okt
+      2026):** (1) izin notifikasi yang ditolak permanen di Android 13+ →
+      B-63; (2) pola bawaan Catat dari notifikasi `verified: false`, jadi
+      tangkapan dari Mulai cepat tidak akan dicatat otomatis dan harus
+      lewat kotak masuk → B-64; (3) kegagalan simpan mata uang kini
+      muncul di penutup onboarding → B-65. Jangan menandai T-21.8 lulus
+      sebelum ketiganya dicoba di perangkat dan hasilnya dicatat.
+- [~] **T-21.9** Mulai cepat Catat dari notifikasi (FEATURE_DISCOVERY §5.1).
       Layar ringan untuk penyetelan pertama: aplikasi terpasang yang punya
       pola bawaan sudah tercentang, satu langkah izin akses dan persetujuan
       ADR-032 lewat alur yang ada, selesai ke keadaan "{n} aplikasi aktif".
@@ -4889,6 +5042,29 @@ perlu rupa dari ui-ux-designer sebelum T-21.2.
       aplikasi bawaan terpasang, izin diberikan/ditolak/dibatalkan); uji
       arsitektur hijau; verifikasi perangkat Android 14 dan 15.
       Memenuhi FR-DSC-002.
+      **Hasil kode (19 Okt 2026), ⚠ Sebagian:** layar + rute
+      `NotificationCaptureRouteKeys.quickStart` (hasil `true` bila akhirnya
+      aktif) selesai; pintu masuk dari baris Beranda dikerjakan di T-21.3
+      (kunci rute belum dipakai siapa pun). Verifikasi perangkat Android
+      14/15 menyusul di T-21.8.
+      *Konfirmasi ⚠ pertama:* aplikasi dengan pola bawaan **tidak** butuh
+      pembuat pola. Pola bawaan (`builtInNotificationPatterns`) berlaku per
+      aplikasi hanya dari nama paket; sumber baru cukup memakai filter bawaan
+      (`defaultNotificationKeywords`). Catatan: pola bawaan masih
+      `verified: false`, jadi drafnya tidak pernah dicatat otomatis (ADR-032
+      §3.4) sampai diverifikasi sampel asli; tidak diubah di sini.
+      *Izin keluar ke setelan sistem:* sumber dan sakelar disimpan lebih
+      dulu (`applyQuickStart`), lalu pengungkapan, lalu setelan sistem;
+      kembali dengan akses menutup layar, tanpa akses tombol menjadi
+      **Izinkan** dan memakai sumber tersimpan. Pengungkapan dan pemilih
+      aplikasi dipakai bersama setelan (`showAccessDisclosure`,
+      `pickAndOpenNotificationSource`).
+      Uji: `quick_start_apps_test.dart` (pemilihan dan penggabungan),
+      sembilan uji widget di `notification_capture_pages_test.dart` (ada/tanpa
+      aplikasi bawaan, akses ada/belum/dibatalkan, kembali dengan dan tanpa
+      akses, Aplikasi lain). Teks `discovery.quickStart.*` dan
+      `discovery.allowAccess` id+en ditambahkan; sisa `discovery.*`
+      di T-21.6.
 
 ## Antrean (belum dijadwalkan)
 
@@ -4943,6 +5119,9 @@ menambah dan memindahkannya ada di
 | B-60 | **Dompet Bersama / Plus Keluarga** (tingkat kedua, 2–5 orang). Butuh sinkronisasi B-7. | pemilik memutuskan, lalu agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §7 |
 | B-61 | Rapor kuartal freelance; Tanya Tanuki R2 (kueri gabungan, perbandingan antar tahun). | agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §7, sesudah B-50 dan B-52 terukur |
 | B-62 | Catat dari email (struk e-commerce, tagihan). Izin Gmail sensitif; dipertimbangkan paling akhir. | pemilik memutuskan | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §7 |
+| B-63 | **Izin notifikasi ditolak permanen di Android 13+**: tombol Izinkan di kartu pengingat (Beranda, segmen Rutin, catatan rincian rutin) dan langkah pengingat onboarding hanya memanggil `requestPermission()`; sesudah ditolak dua kali sistem tidak memunculkan dialog lagi, jadi pengguna hanya melihat snackbar penolakan dan tombol tidak berbuat apa-apa. Putuskan jalurnya (mis. buka setelan notifikasi aplikasi bila permintaan tidak memunculkan dialog) lalu uji di Android 13/14/15. Catat dari notifikasi tidak terkena (izin aksesnya lewat setelan sistem). | pemilik memutuskan, lalu agen | T-21.3, T-21.8 |
+| B-64 | **Pola bawaan Catat dari notifikasi belum terverifikasi** (`builtInNotificationPatterns`, `verified: false`): hanya berjangkar pada kata arah, bukan format asli tiap aplikasi, sehingga drafnya selalu masuk kotak masuk dan tidak pernah dicatat otomatis (ADR-032 §3.4), termasuk dari Mulai cepat. Kumpulkan sampel notifikasi asli per aplikasi (layar sampel debug), ganti dengan templat dari sampel, tandai `verified: true` beserta ujinya. Sampai itu selesai, teks Mulai cepat/onboarding/Beranda tidak boleh menjanjikan pencatatan otomatis. Nama paket di `builtInNotificationApps` juga belum dicek di perangkat. | pemilik menyerahkan sampel, lalu agen | T-21.9, ADR-032 §3.4 |
+| B-65 | **Kegagalan menyimpan mata uang kini muncul di penutup onboarding**, bukan di langkah mata uang (T-21.2): pengguna sudah melewati awal periode dan pengingat, lalu `onFinished` gagal menyimpan dan hanya menampilkan snackbar di penutup. Pertimbangkan menyimpan mata uang saat meninggalkan langkah mata uang (tetap sebelum `markOnboardingDone`), atau mengembalikan pengguna ke langkah itu. Pastikan mata uang tidak jatuh diam-diam ke IDR bila gagal. | agen | T-21.2 |
 | B-39 | **Pengumuman pembaruan R2**: pembaruan wajib/versi minimum untuk perbaikan kritis (KT-U1), pembaruan untuk iOS (App Store) sesudah iOS dirilis, dan pilihan jalur uji untuk penguji. | agen + pemilik | [APP_UPDATE.md](../01-product/features/APP_UPDATE.md) §14 |
 | B-35 | Uji di perangkat yang belum dilakukan QA PR #43: lebar 360dp (butuh izin mengubah setelan ponsel), Freelance, perekaman suara sungguhan, dan jalur Gemini secara terpisah. | pemilik | QA PR #43 (di luar PR) |
 | B-14 | **Catat lewat Suara**: STT sistem (`speech_to_text`) + parser aturan + Gemma lokal mulai dari model termurah, 270M → 1B → Gemma 4 E2B (unduhan opt-in dari Hugging Face) → form CATAT terisi draf; adaptor Firebase AI sebagai jalur pivot. ADR-027. Riset & rencana di [VOICE_INPUT_RESEARCH.md](../01-product/features/VOICE_INPUT_RESEARCH.md). | dijadwalkan: T-11.2–T-11.9 | riset 30 Sep 2026 |

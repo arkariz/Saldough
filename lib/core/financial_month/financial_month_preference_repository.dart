@@ -6,8 +6,9 @@ import 'package:saldough/core/foundation/repository_guard.dart';
 
 /// Status tawaran awal bulan saat menyimpan rutin gajian (FINANCIAL_PERIOD
 /// F2): apakah pengguna pernah mengubah awal bulan sendiri, dan rutin mana
-/// yang sudah pernah ditawari.
-typedef FinancialMonthOffer = ({bool changedByUser, Set<String> offeredRuleIds});
+/// yang sudah pernah ditawari, serta apakah kartu tawaran gajian di Rencana
+/// (FEATURE_DISCOVERY §6.2) sudah dijawab (diterima atau ditutup).
+typedef FinancialMonthOffer = ({bool changedByUser, Set<String> offeredRuleIds, bool paydayCardAnswered});
 
 /// Riwayat tanggal mulai bulan keuangan (ADR-038 §3.1).
 abstract interface class FinancialMonthPreferenceRepository {
@@ -82,7 +83,7 @@ final class FinancialMonthPreferenceRepositoryImpl with RepositoryGuard implemen
   @override
   Future<Either<Failure, Unit>> save(FinancialMonthSchedule schedule) => guardVoid(() => _store.write(schedule));
 
-  /// `{schemaVersion, changedByUser, offeredRuleIds}` di
+  /// `{schemaVersion, changedByUser, offeredRuleIds, paydayCardAnswered}` di
   /// `settings/financial_month_offer`.
   StoredValue<FinancialMonthOffer> get _offer => StoredValue<FinancialMonthOffer>.json(
     key: _offerKey,
@@ -93,18 +94,20 @@ final class FinancialMonthPreferenceRepositoryImpl with RepositoryGuard implemen
           for (final id in ids)
             if (id case final String id) id,
       },
+      paydayCardAnswered: json['paydayCardAnswered'] == true,
     ),
     toJson: (offer) => {
       'schemaVersion': 1,
       'changedByUser': offer.changedByUser,
       'offeredRuleIds': [...offer.offeredRuleIds],
+      'paydayCardAnswered': offer.paydayCardAnswered,
     },
     storage: _storage,
   );
 
   @override
   Future<Either<Failure, FinancialMonthOffer>> loadOffer() =>
-      guard(() async => await _offer.read() ?? (changedByUser: false, offeredRuleIds: const <String>{}));
+      guard(() async => await _offer.read() ?? (changedByUser: false, offeredRuleIds: const <String>{}, paydayCardAnswered: false));
 
   @override
   Future<Either<Failure, Unit>> saveOffer(FinancialMonthOffer offer) => guardVoid(() => _offer.write(offer));

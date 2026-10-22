@@ -16,6 +16,10 @@ abstract interface class ReminderScheduler {
   /// Ketukan selama aplikasi hidup.
   Stream<ReminderResponse> get responses;
 
+  /// Izin notifikasi sudah ada, tanpa meminta. Dicabut pengguna di setelan
+  /// sistem berarti `false` (FEATURE_DISCOVERY P-2).
+  Future<bool> hasPermission();
+
   /// Meminta izin notifikasi (Android 13+, iOS). `true` bila diizinkan.
   Future<bool> requestPermission();
 

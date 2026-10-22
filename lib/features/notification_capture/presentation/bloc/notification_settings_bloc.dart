@@ -1,5 +1,7 @@
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
+import 'package:saldough/core/discovery/discovery.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/features/notification_capture/domain/entities/captured_notification.dart';
 import 'package:saldough/features/notification_capture/domain/entities/notification_capture_settings.dart';
@@ -7,6 +9,7 @@ import 'package:saldough/features/notification_capture/domain/entities/notificat
 import 'package:saldough/features/notification_capture/domain/entities/notification_source.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_gateway.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_store.dart';
+import 'package:saldough/features/notification_capture/domain/services/quick_start_apps.dart';
 import 'package:saldough/features/notification_capture/presentation/host/sync_notification_capture.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 import 'package:state_management/state_management.dart';
@@ -81,15 +84,37 @@ final class NotificationSettingsState extends UiState<NotificationSettingsState>
   ];
 }
 
+/// Hasil [NotificationSettingsBloc.applyQuickStart].
+enum QuickStartResult {
+  /// Setelan gagal disimpan.
+  failed,
+
+  /// Tersimpan, tetapi akses notifikasi sistem belum diberikan.
+  needsAccess,
+
+  /// Tersimpan dan akses sudah ada.
+  ready,
+}
+
 /// Bloc layar setelan Catat dari notifikasi (ADR-032 §3.2–3.8). Setiap
 /// perubahan setelan disimpan lalu dikirim ke layanan native.
 final class NotificationSettingsBloc extends Bloc<NotificationSettingsEvent, NotificationSettingsState> {
   /// Membuat [NotificationSettingsBloc].
-  NotificationSettingsBloc({required this._gateway, required this._store, required this._walletRepository})
-    : super(const NotificationSettingsState()) {
+  NotificationSettingsBloc({
+    required this._gateway,
+    required this._store,
+    required this._walletRepository,
+    this._statusChanges,
+  }) : super(const NotificationSettingsState()) {
     on<NotificationSettingsStarted>(_onStarted);
     on<NotificationSettingsResumed>(_onResumed);
-    on<NotificationCaptureToggled>((e, emit) => _saveSettings(state.settings.copyWith(enabled: e.enabled), emit));
+    on<NotificationCaptureToggled>((e, emit) async {
+      await _saveSettings(state.settings.copyWith(enabled: e.enabled), emit);
+      // Sakelar dinyalakan lewat setelan (FEATURE_DISCOVERY §9).
+      if (e.enabled && state.settings.enabled) {
+        AppAnalytics.log(DiscoveryEvents.featureEnabled(feature: 'notification', via: 'account'));
+      }
+    });
     on<NotificationDeliveryChanged>(_onDeliveryChanged);
     on<AutoRecordLevelChanged>((e, emit) => _saveSettings(state.settings.copyWith(autoRecordLevel: e.level), emit));
     on<AutoRecordToggled>(_onAutoRecordToggled);
@@ -115,6 +140,7 @@ final class NotificationSettingsBloc extends Bloc<NotificationSettingsEvent, Not
 
   final NotificationCaptureGateway _gateway;
   final NotificationCaptureStore _store;
+  final FeatureStatusChanges? _statusChanges;
   final WalletRepository _walletRepository;
 
   Future<void> _onStarted(NotificationSettingsStarted event, Emitter<NotificationSettingsState> emit) async {
@@ -230,6 +256,7 @@ final class NotificationSettingsBloc extends Bloc<NotificationSettingsEvent, Not
         emit(state.copyWith(effect: _error(failure)));
       case Right():
         emit(state.copyWith(settings: settings));
+        _statusChanges?.notify();
         await syncNotificationCapture(_gateway, settings);
     }
   }
@@ -247,6 +274,27 @@ final class NotificationSettingsBloc extends Bloc<NotificationSettingsEvent, Not
   /// ADR-032 §3.8). Bukan event: tidak mengubah state; layar mengecek ulang
   /// akses saat kembali (`NotificationSettingsResumed`).
   Future<void> openAccessSettings() => _gateway.openAccessSettings();
+
+  /// Jumlah aplikasi aktif sesudah [applyQuickStart] terakhir (analitik).
+  int quickStartAppsCount = 0;
+
+  /// Mulai cepat (FEATURE_DISCOVERY §5.1): menyimpan [picked] sebagai sumber
+  /// dan menyalakan fitur dalam satu simpanan, lalu menyegarkan state.
+  /// Bukan event karena pemanggil menunggu hasilnya untuk memutuskan lanjut
+  /// ke izin akses.
+  Future<QuickStartResult> applyQuickStart(List<NotificationSource> picked) async {
+    final settings = state.settings.copyWith(
+      enabled: true,
+      sources: mergeQuickStartSources(state.settings.sources, picked),
+    );
+    if ((await _store.saveSettings(settings)).isLeft()) return QuickStartResult.failed;
+    _statusChanges?.notify();
+    await syncNotificationCapture(_gateway, settings);
+    final granted = await _gateway.isAccessGranted();
+    quickStartAppsCount = settings.sources.where((source) => source.enabled).length;
+    add(const NotificationSettingsStarted());
+    return granted ? QuickStartResult.ready : QuickStartResult.needsAccess;
+  }
 
   /// Aplikasi peluncur terpasang untuk pemilih sumber.
   Future<Either<Failure, List<InstalledApp>>> loadInstalledApps() => _gateway.installedApps();

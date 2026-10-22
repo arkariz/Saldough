@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:navigation/navigation.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
@@ -22,7 +25,11 @@ import 'package:state_management/state_management.dart';
 /// dan transaksi yang tercatat otomatis (Tinjau/Batalkan).
 class CaptureInboxPage extends StatelessWidget {
   /// Membuat [CaptureInboxPage].
-  const CaptureInboxPage({super.key});
+  const CaptureInboxPage({this.teachEntryId, super.key});
+
+  /// Tangkapan yang pembuat polanya langsung dibuka begitu daftar termuat
+  /// (Ajari pola dari kartu Beranda, FEATURE_DISCOVERY P-8); `null` = tidak.
+  final String? teachEntryId;
 
   /// Catat lewat CATAT. Bila draf cocok dengan satu kemunculan rutin,
   /// CATAT terisi kategori dan catatan dari rutin (yang kosong saja) dan
@@ -79,7 +86,7 @@ class CaptureInboxPage extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) => const _InboxBody();
+  Widget build(BuildContext context) => _InboxBody(page: this);
 }
 
 enum _InboxTab { pending, auto }
@@ -88,7 +95,9 @@ enum _InboxTab { pending, auto }
 /// "Tercatat otomatis" dengan hitungan, kartu tangkapan, dan daftar yang
 /// tercatat otomatis.
 class _InboxBody extends StatefulWidget {
-  const _InboxBody();
+  const _InboxBody({required this.page});
+
+  final CaptureInboxPage page;
 
   @override
   State<_InboxBody> createState() => _InboxBodyState();
@@ -100,6 +109,23 @@ class _InboxBodyState extends State<_InboxBody> {
   /// F17), sesudah itu pilihan pengguna.
   _InboxTab? _picked;
 
+  @override
+  void initState() {
+    super.initState();
+    if (widget.page.teachEntryId case final id?) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => unawaited(_teach(id)));
+    }
+  }
+
+  /// Membuka pembuat pola untuk [entryId] begitu daftar termuat.
+  Future<void> _teach(String entryId) async {
+    final inbox = context.read<CaptureInboxBloc>();
+    final loaded = inbox.state.isLoading ? await inbox.stream.firstWhere((s) => !s.isLoading) : inbox.state;
+    if (!mounted) return;
+    final entry = loaded.pending.where((e) => e.id == entryId).firstOrNull;
+    if (entry != null) await widget.page._makePattern(context, entry);
+  }
+
   _InboxTab _tabFor(CaptureInboxState state) =>
       _picked ??= state.pending.isEmpty && state.auto.isNotEmpty ? _InboxTab.auto : _InboxTab.pending;
 
@@ -108,7 +134,7 @@ class _InboxBodyState extends State<_InboxBody> {
     final texts = t.notificationCapture;
     final textTheme = Theme.of(context).textTheme;
     final colors = context.appColors;
-    const page = CaptureInboxPage();
+    final page = widget.page;
     return Scaffold(
       appBar: AppBar(
         title: Text(texts.inboxTitle),
@@ -135,7 +161,23 @@ class _InboxBodyState extends State<_InboxBody> {
                   counts: {_InboxTab.pending: state.pending.length, _InboxTab.auto: state.auto.length},
                   onChanged: (tab) => setState(() => _picked = tab),
                 ),
-                const SizedBox(height: AppSpacing.space4),
+                // Pintu ke setelan sumber dan pola, juga saat kotak masuk
+                // kosong (FEATURE_DISCOVERY P-8).
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: AppButton.text(
+                    key: const ValueKey('inbox-manage-sources'),
+                    small: true,
+                    label: t.discovery.notification.manageSources,
+                    onPressed: () {
+                      AppAnalytics.log(
+                        DiscoveryEvents.notificationRowTapped(state: 'active', surface: 'inbox', action: 'manage'),
+                      );
+                      unawaited(context.pushRoute(NotificationCaptureRouteKeys.settings, const EmptyInput()));
+                    },
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.space2),
                 if (tab == _InboxTab.pending) ...[
                   if (state.pending.isEmpty)
                     _InboxEmpty(text: texts.inboxEmpty)
@@ -317,6 +359,21 @@ class _PendingCard extends StatelessWidget {
               children: [
                 AppButton.text(small: true, label: texts.dismissAction, onPressed: onDismiss),
                 const SizedBox(width: AppSpacing.space2),
+                // Nominal tak terbaca: ajari pola di sebelah tombol catat.
+                if (amount == null) ...[
+                  AppButton.secondary(
+                    key: ValueKey('inbox-teach-${entry.id}'),
+                    small: true,
+                    label: t.discovery.notification.teachPattern,
+                    onPressed: () {
+                      AppAnalytics.log(
+                        DiscoveryEvents.notificationRowTapped(state: 'active', surface: 'inbox', action: 'teach_pattern'),
+                      );
+                      onMakePattern();
+                    },
+                  ),
+                  const SizedBox(width: AppSpacing.space2),
+                ],
                 AppButton(small: true, label: texts.recordAction, onPressed: onRecord),
               ],
             ),
@@ -369,7 +426,11 @@ class _AutoRow extends StatelessWidget {
     final amount = entry.amountSen;
     return AppListRow(
       onTap: onReview,
-      leading: TransactionIcon(kind: _transactionKind(entry.kind), categoryId: entry.categoryId, sourceIconId: entry.iconId),
+      leading: TransactionIcon(
+        kind: _transactionKind(entry.kind),
+        categoryId: entry.categoryId,
+        sourceIconId: entry.iconId,
+      ),
       title: entry.note.isEmpty ? entry.appLabel : entry.note,
       subtitle: '${entry.appLabel} · ${CycleMonthFormatter.formatDateShort(entry.transactionDate)}',
       trailing: Column(

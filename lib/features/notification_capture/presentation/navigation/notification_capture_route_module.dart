@@ -7,6 +7,7 @@ import 'package:saldough/features/notification_capture/presentation/bloc/notific
 import 'package:saldough/features/notification_capture/presentation/navigation/notification_capture_route_keys.dart';
 import 'package:saldough/features/notification_capture/presentation/pages/capture_inbox_page.dart';
 import 'package:saldough/features/notification_capture/presentation/pages/notification_settings_page.dart';
+import 'package:saldough/features/notification_capture/presentation/pages/quick_start_page.dart';
 import 'package:state_management/state_management.dart';
 
 /// Modul rute fitur `notification_capture` (ADR-030 §3.3, ADR-033 §3.3).
@@ -30,6 +31,16 @@ final class NotificationCaptureRouteModule extends FeatureRouteModule {
       ),
     ),
     RouteNode.typed<EmptyInput>(
+      key: NotificationCaptureRouteKeys.quickStart,
+      defaultInput: () => const EmptyInput(),
+      builder: (context, _) => _NotificationCapturePage(
+        builder: (scope) => BlocProvider.value(
+          value: scope.container<NotificationSettingsBloc>()..add(const NotificationSettingsStarted()),
+          child: const EffectListener<NotificationSettingsBloc, NotificationSettingsState>(child: QuickStartPage()),
+        ),
+      ),
+    ),
+    RouteNode.typed<EmptyInput>(
       key: NotificationCaptureRouteKeys.inbox,
       defaultInput: () => const EmptyInput(),
       builder: (context, _) => _NotificationCapturePage(
@@ -42,6 +53,22 @@ final class NotificationCaptureRouteModule extends FeatureRouteModule {
             ),
           ],
           child: const EffectListener<CaptureInboxBloc, CaptureInboxState>(child: CaptureInboxPage()),
+        ),
+      ),
+    ),
+    RouteNode.typed<TeachPatternInput>(
+      key: NotificationCaptureRouteKeys.teachPattern,
+      builder: (context, input) => _NotificationCapturePage(
+        builder: (scope) => MultiBlocProvider(
+          providers: [
+            BlocProvider.value(value: scope.container<CaptureInboxBloc>()..add(const CaptureInboxStarted())),
+            BlocProvider.value(
+              value: scope.container<NotificationSettingsBloc>()..add(const NotificationSettingsStarted()),
+            ),
+          ],
+          child: EffectListener<CaptureInboxBloc, CaptureInboxState>(
+            child: CaptureInboxPage(teachEntryId: input.entryId),
+          ),
         ),
       ),
     ),

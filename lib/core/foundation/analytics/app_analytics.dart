@@ -296,3 +296,42 @@ abstract final class UpdateEvents {
   static AnalyticsEvent whatsNewViewed({required int build, required int patch, required String source}) =>
       AnalyticsEvent('whats_new_viewed', {'build': build, 'patch': patch, 'source': source});
 }
+
+/// Peristiwa penemuan fitur (FEATURE_DISCOVERY §9, Fase 21): jawaban langkah
+/// onboarding, fitur yang dinyalakan, dan pemakaian pintu permanen. Tanpa
+/// nominal, nama kategori buatan, nama aplikasi, atau isi notifikasi
+/// (ADR-023).
+abstract final class DiscoveryEvents {
+  DiscoveryEvents._();
+
+  /// Langkah wajib onboarding dijawab. [step] `period` atau `reminder`;
+  /// [choice] `confirmed` (Pakai tanggal), `turned_on`, atau `not_now`.
+  static AnalyticsEvent stepAnswered({required String step, required String choice}) =>
+      AnalyticsEvent('onboarding_step_answered', {'step': step, 'choice': choice});
+
+  /// Fitur benar-benar menyala. [feature] `notification` atau `reminder`;
+  /// [via] `onboarding`, `home_row`, `quick_start`, `account`, atau `rutin`.
+  static AnalyticsEvent featureEnabled({required String feature, required String via}) =>
+      AnalyticsEvent('feature_enabled', {'feature': feature, 'via': via});
+
+  /// Kartu Kotak masuk notifikasi diketuk. [state] `unset`, `active`,
+  /// `permission`, atau `off`; [surface] `home`, `inbox`, atau `account`;
+  /// [action] `quick_start`, `manage`, atau `teach_pattern`.
+  static AnalyticsEvent notificationRowTapped({
+    required String state,
+    required String surface,
+    required String action,
+  }) => AnalyticsEvent('notification_row_tapped', {'state': state, 'surface': surface, 'action': action});
+
+  /// Mulai cepat selesai; hanya jumlah aplikasi, tanpa namanya.
+  static AnalyticsEvent quickStartCompleted({required int appsCount}) =>
+      AnalyticsEvent('quick_start_completed', {'apps_count': appsCount});
+
+  /// Tombol permanen pengingat diketuk. [surface] `home`, `rutin_segment`,
+  /// atau `rutin_detail`; [state] `off` atau `permission`.
+  static AnalyticsEvent buttonTapped({required String feature, required String surface, required String state}) =>
+      AnalyticsEvent('discovery_button_tapped', {'feature': feature, 'surface': surface, 'state': state});
+
+  /// Kartu tawaran gajian: [action] `shown`, `accepted`, atau `closed`.
+  static AnalyticsEvent paydayCard(String action) => AnalyticsEvent('discovery_payday_card', {'action': action});
+}

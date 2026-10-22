@@ -2,6 +2,7 @@ import 'package:api_storage/api_storage.dart';
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
 import 'package:saldough/core/foundation/repository_guard.dart';
+import 'package:saldough/core/tutorial/onboarding_step.dart';
 import 'package:saldough/core/tutorial/spotlight_key.dart';
 import 'package:saldough/core/tutorial/tutorial_progress.dart';
 import 'package:saldough/core/tutorial/tutorial_progress_repository.dart';
@@ -10,6 +11,11 @@ const _progressKey = StorageKey(namespace: 'tutorial', name: 'progress');
 
 /// Implementasi [TutorialProgressRepository] di atas [KeyValueStorage]:
 /// satu dokumen `{schemaVersion, onboardingDone, seenSteps}`.
+///
+/// Versi 3 menambah `answeredSteps` (langkah wajib onboarding, Fase 21);
+/// dokumen lama tanpa field itu terbaca kosong, dan pengguna yang
+/// `onboardingDone`-nya sudah true tidak dipaksa mengulang
+/// ([TutorialProgress.isStepPending]).
 ///
 /// Versi 1 (`completedTours`, hanya pernah ada di build pengembangan)
 /// dimigrasi saat dibaca: tur yang selesai berarti semua langkahnya sudah
@@ -20,7 +26,7 @@ final class TutorialProgressRepositoryImpl with RepositoryGuard implements Tutor
   const TutorialProgressRepositoryImpl({required this._storage});
 
   /// Versi skema dokumen progres.
-  static const schemaVersion = 2;
+  static const schemaVersion = 3;
 
   final KeyValueStorage _storage;
 
@@ -34,6 +40,10 @@ final class TutorialProgressRepositoryImpl with RepositoryGuard implements Tutor
         for (final step in SpotlightKey.values)
           if (progress.hasSeen(step)) step.name,
       ],
+      'answeredSteps': [
+        for (final step in OnboardingStep.values)
+          if (progress.answeredSteps.contains(step)) step.name,
+      ],
     },
     storage: _storage,
   );
@@ -44,7 +54,13 @@ final class TutorialProgressRepositoryImpl with RepositoryGuard implements Tutor
     final steps = json['seenSteps'];
     if (steps is List<dynamic>) {
       final byName = {for (final step in SpotlightKey.values) step.name: step};
-      return TutorialProgress(onboardingDone: onboardingDone, seenSteps: {for (final name in steps) ?byName[name]});
+      final answeredByName = {for (final step in OnboardingStep.values) step.name: step};
+      final answered = json['answeredSteps'];
+      return TutorialProgress(
+        onboardingDone: onboardingDone,
+        seenSteps: {for (final name in steps) ?byName[name]},
+        answeredSteps: {if (answered is List<dynamic>) for (final name in answered) ?answeredByName[name]},
+      );
     }
     final tours = json['completedTours'];
     if (tours is List<dynamic>) {
@@ -79,6 +95,12 @@ final class TutorialProgressRepositoryImpl with RepositoryGuard implements Tutor
   @override
   Future<Either<Failure, Unit>> markOnboardingDone() => guardVoid(() async {
     await _store.write((await _readForWrite()).copyWith(onboardingDone: true));
+  });
+
+  @override
+  Future<Either<Failure, Unit>> markOnboardingStepAnswered(OnboardingStep step) => guardVoid(() async {
+    final current = await _readForWrite();
+    await _store.write(current.copyWith(answeredSteps: {...current.answeredSteps, step}));
   });
 
   @override

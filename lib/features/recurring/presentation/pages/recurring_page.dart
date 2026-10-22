@@ -20,6 +20,7 @@ import 'package:saldough/features/recurring/presentation/widgets/recurring_pendi
 import 'package:saldough/features/recurring/presentation/widgets/recurring_row.dart';
 import 'package:saldough/features/recurring/presentation/widgets/recurring_starter_chips.dart';
 import 'package:saldough/features/recurring/presentation/widgets/recurring_summary_card.dart';
+import 'package:saldough/features/recurring/presentation/widgets/reminder_nudge_card.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:state_management/state_management.dart';
 
@@ -47,7 +48,7 @@ class RecurringPage extends StatelessWidget {
         return BlocProvider.value(
           value: bloc,
           child: EffectListener<RecurringBloc, RecurringState>(
-            child: RunOnce(action: () => bloc.add(const RecurringStarted()), child: const RecurringSegmentView()),
+            child: RunOnce(action: () => bloc.add(const RecurringStarted()), child: RecurringSegmentView(rootContainer: parentContainer)),
           ),
         );
       },
@@ -58,7 +59,10 @@ class RecurringPage extends StatelessWidget {
 /// Isi segmen Rutin di atas `RecurringBloc` yang sudah terpasang.
 class RecurringSegmentView extends StatelessWidget {
   /// Membuat [RecurringSegmentView].
-  const RecurringSegmentView({super.key});
+  const RecurringSegmentView({this.rootContainer, super.key});
+
+  /// Kontainer akar untuk kartu tombol pengingat (Fase 21); `null` = tanpa.
+  final GetIt? rootContainer;
 
   static void _add(BuildContext context) =>
       context.pushRoute(RecordRouteKeys.sheet, const RecordSheetInput(repeat: RecurringPattern()));
@@ -151,6 +155,9 @@ class RecurringSegmentView extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: AppSpacing.space4),
+              // Tombol permanen pengingat (FEATURE_DISCOVERY P-1): di bawah
+              // kartu sisa tagihan, hilang begitu efektif.
+              if (rootContainer case final root?) ReminderNudgeCard(container: root, bottomGap: true),
               // W6 rutin menganggur: satu kartu, yang pertama (ADR-037 §3.1).
               if (idleRules(
                     state.rules,

@@ -31,6 +31,8 @@ SpotlightStep spotlightStep(SpotlightKey key) {
     SpotlightKey.homeVoice => (tr.homeVoiceTitle, tr.homeVoiceBody),
     SpotlightKey.homeForecast => (tr.homeForecastTitle, tr.homeForecastBody),
     SpotlightKey.homePending => (tr.homePendingTitle, tr.homePendingBody),
+    SpotlightKey.homeNotification => (tr.homeNotificationTitle, tr.homeNotificationBody),
+    SpotlightKey.homeReminder => (tr.homeReminderTitle, tr.homeReminderBody),
     SpotlightKey.homeCashFlow => (tr.homeCashFlowTitle, tr.homeCashFlowBody),
     SpotlightKey.homeBudget => (tr.homeBudgetTitle, tr.homeBudgetBody),
     SpotlightKey.homeFreelance => (tr.homeFreelanceTitle, tr.homeFreelanceBody),
@@ -70,6 +72,7 @@ SpotlightStep spotlightStep(SpotlightKey key) {
     SpotlightKey.freelanceProject => (tr.freelanceProjectTitle, tr.freelanceProjectBody),
     SpotlightKey.freelanceWorklog => (tr.freelanceWorklogTitle, tr.freelanceWorklogBody),
     SpotlightKey.freelanceReceive => (tr.freelanceReceiveTitle, tr.freelanceReceiveBody),
+    SpotlightKey.accountStatus => (tr.accountStatusTitle, tr.accountStatusBody),
   };
   return SpotlightStep(key, title, body);
 }

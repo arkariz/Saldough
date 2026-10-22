@@ -55,6 +55,7 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$currency$en currency = _Translations$currency$en._(_root);
 	@override late final _Translations$category$en category = _Translations$category$en._(_root);
 	@override late final _Translations$language$en language = _Translations$language$en._(_root);
+	@override late final _Translations$discovery$en discovery = _Translations$discovery$en._(_root);
 	@override late final _Translations$notificationCapture$en notificationCapture = _Translations$notificationCapture$en._(_root);
 	@override late final _Translations$recurring$en recurring = _Translations$recurring$en._(_root);
 	@override late final _Translations$plan$en plan = _Translations$plan$en._(_root);
@@ -670,6 +671,17 @@ class _Translations$onboarding$en extends Translations$onboarding$id {
 	@override String get currencySuggested => 'Matches your device region';
 	@override String get currencyChooseFirst => 'Choose a currency first';
 	@override String currencyConfirm({required Object code}) => 'Use ${code}';
+	@override String get periodTitle => 'When does your monthly cycle start?';
+	@override String get periodBody => 'Your budget plan and financial analysis will start on this date each month. You can change this anytime in Account.';
+	@override String periodConfirm({required Object day}) => 'Use day ${day}';
+	@override String get periodConfirmLast => 'Use the last day';
+	@override String get reminderTitle => 'Remind you before things are due?';
+	@override String get reminderBody => 'You get a reminder before a recurring item is due, based on each item\'s settings.';
+	@override String get turnOn => 'Turn on';
+	@override String get notNow => 'Not now';
+	@override String get notificationInfo => 'You can record automatically from bank notifications. Turn it on from Home.';
+	@override String get summaryPeriod => 'Financial month start';
+	@override String get summaryReminder => 'Recurring reminders';
 	@override String get languageTitle => 'Choose your language';
 	@override String get languageBody => 'Used for the app and when recording by voice. You can change it later on the Account screen.';
 	@override String get languageConfirm => 'Continue';
@@ -737,6 +749,8 @@ class _Translations$tour$en extends Translations$tour$id {
 	@override String get freelanceWorklogBody => 'Work hours are income you\'ve earned. Group them into an invoice, then record it when you\'re paid.';
 	@override String get freelanceReceiveTitle => 'Money actually arrives';
 	@override String get freelanceReceiveBody => 'Record it when the pay arrives: your wallet balance grows and the invoice is settled.';
+	@override String get accountStatusTitle => 'Recording status';
+	@override String get accountStatusBody => 'See whether recording from notifications and recurring reminders are on. Tap a row to change it.';
 	@override String get homeVoiceTitle => 'Record by voice';
 	@override String get homeVoiceBody => 'Long-press the Record button, say one transaction, then check the form before recording it.';
 	@override String get planTabsTitle => 'Plan';
@@ -749,6 +763,10 @@ class _Translations$tour$en extends Translations$tour$id {
 	@override String get homeForecastBody => 'Your forecast wallet balance at month end and its lowest point. Tap for the breakdown in Plan.';
 	@override String get homePendingTitle => 'Waiting to record';
 	@override String get homePendingBody => 'Recurring bills and income that are due. Record in one tap, edit first, or Skip.';
+	@override String get homeNotificationTitle => 'Record from notifications';
+	@override String get homeNotificationBody => 'Pick your bank or e-wallet apps and their transaction notifications become draft entries. This card is always here.';
+	@override String get homeReminderTitle => 'Recurring reminders';
+	@override String get homeReminderBody => 'Turn them on to get reminded before bills are due. This card goes away once reminders are on.';
 	@override String get recordRepeatTitle => 'Repeat';
 	@override String get recordRepeatBody => 'For bills, salary, or subscriptions. Each next occurrence waits for you to record it; nothing is recorded silently.';
 	@override String get recurringStartersTitle => 'Quick start';
@@ -909,6 +927,23 @@ class _Translations$language$en extends Translations$language$id {
 	@override String get hint => 'App text and voice recording';
 }
 
+// Path: discovery
+class _Translations$discovery$en extends Translations$discovery$id {
+	_Translations$discovery$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override late final _Translations$discovery$payday$en payday = _Translations$discovery$payday$en._(_root);
+	@override late final _Translations$discovery$period$en period = _Translations$discovery$period$en._(_root);
+	@override late final _Translations$discovery$status$en status = _Translations$discovery$status$en._(_root);
+	@override String get turnOn => 'Turn on';
+	@override late final _Translations$discovery$notification$en notification = _Translations$discovery$notification$en._(_root);
+	@override late final _Translations$discovery$reminder$en reminder = _Translations$discovery$reminder$en._(_root);
+	@override String get allowAccess => 'Allow';
+	@override late final _Translations$discovery$quickStart$en quickStart = _Translations$discovery$quickStart$en._(_root);
+}
+
 // Path: notificationCapture
 class _Translations$notificationCapture$en extends Translations$notificationCapture$id {
 	_Translations$notificationCapture$en._(TranslationsEn root) : this._root = root, super.internal(root);
@@ -953,14 +988,14 @@ class _Translations$notificationCapture$en extends Translations$notificationCapt
 	@override String get removeSource => 'Remove this app';
 	@override String removeSourceConfirm({required Object app}) => 'Stop reading notifications from ${app}?';
 	@override String get save => 'Save';
-	@override String get patternTitle => 'Make a pattern';
-	@override String get patternSampleLabel => 'Example notification';
+	@override String get patternTitle => 'Teach a pattern';
+	@override String get patternSampleLabel => '1. Example notification';
 	@override String get patternSampleHint => 'Paste the notification text here';
-	@override String get patternInstructions => 'Pick a marker, then tap the words. Tap again to clear a mark.';
+	@override String get patternInstructions => 'Tap a marked word again to clear its mark.';
 	@override String get roleAmount => 'Amount';
 	@override String get roleNote => 'Note';
 	@override String get roleIgnore => 'Ignore';
-	@override String get patternKindLabel => 'Type';
+	@override String get patternKindLabel => '3. Transaction type';
 	@override String get kindExpense => 'Out';
 	@override String get kindIncome => 'In';
 	@override String get kindTransferOut => 'Transfer out';
@@ -1027,12 +1062,20 @@ class _Translations$notificationCapture$en extends Translations$notificationCapt
 	@override String get walletHelp => 'Transactions from this app are recorded in this wallet.';
 	@override String get advancedTitle => 'Filter and patterns';
 	@override String get advancedHint => 'Optional';
-	@override String get patternMarkLabel => 'Mark the parts';
+	@override String get patternMarkLabel => '2. Mark the important parts';
 	@override String patternNotAmount({required Object word}) => '"${word}" is not an amount. Amounts use Rp or thousands separators.';
 	@override String get kindTransfer => 'Transfer';
 	@override String get transferDirectionLabel => 'Transfer direction';
 	@override String get patternTransferWalletNone => 'Not set';
-	@override String get patternTemplateToggle => 'Edit template';
+	@override String get patternTemplateToggle => 'Show template (advanced)';
+	@override String get patternIntro => 'Teach Tanukonomy how to read this notification so the amount and note fill in on their own next time. Only the amount word is required.';
+	@override String get patternHintAmount => 'Tap the word that holds the amount, for example Rp50,000.';
+	@override String get patternHintNote => 'Amount marked. If you like, tap the words that become the note (shop name or description). You can skip this.';
+	@override String get roleAmountHelp => 'Amount: how much money.';
+	@override String get roleNoteHelp => 'Note: the shop name or description that gets recorded.';
+	@override String get roleIgnoreHelp => 'Ignore: words that change every time, like a reference number.';
+	@override String get patternNeedAmount => 'Mark one amount word first so you can save.';
+	@override String get patternTemplateLabel => 'Template';
 	@override String get moreActions => 'More';
 }
 
@@ -1486,6 +1529,82 @@ class _Translations$currency$names$en extends Translations$currency$names$id {
 	@override String get php => 'Philippine Peso';
 	@override String get vnd => 'Vietnamese Dong';
 	@override String get aud => 'Australian Dollar';
+}
+
+// Path: discovery.payday
+class _Translations$discovery$payday$en extends Translations$discovery$payday$id {
+	_Translations$discovery$payday$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String title({required Object d}) => 'Payday on the ${d}?';
+	@override String body({required Object d}) => 'Start your financial month on day ${d} so Plan and Analysis follow your payday.';
+	@override String get action => 'Set';
+}
+
+// Path: discovery.period
+class _Translations$discovery$period$en extends Translations$discovery$period$id {
+	_Translations$discovery$period$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get hint => 'Set';
+}
+
+// Path: discovery.status
+class _Translations$discovery$status$en extends Translations$discovery$status$id {
+	_Translations$discovery$status$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get on => 'On';
+	@override String get off => 'Off';
+	@override String get permissionNeeded => 'Permission needed';
+}
+
+// Path: discovery.notification
+class _Translations$discovery$notification$en extends Translations$discovery$notification$id {
+	_Translations$discovery$notification$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get button => 'Turn on recording from notifications';
+	@override String get manage => 'Record from notifications';
+	@override String get inboxTitle => 'Notification inbox';
+	@override String get check => 'Check';
+	@override String activeApps({required Object n}) => 'Active apps: ${n}';
+	@override String get manageSources => 'Manage apps & patterns';
+	@override String get teachPattern => 'Teach pattern';
+}
+
+// Path: discovery.reminder
+class _Translations$discovery$reminder$en extends Translations$discovery$reminder$id {
+	_Translations$discovery$reminder$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get button => 'Turn on recurring reminders';
+	@override String get body => 'Reminded before bills are due.';
+	@override String get rowNote => 'Reminders aren\'t on for all recurring items yet.';
+}
+
+// Path: discovery.quickStart
+class _Translations$discovery$quickStart$en extends Translations$discovery$quickStart$id {
+	_Translations$discovery$quickStart$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Pick your bank or e-wallet apps';
+	@override String get body => 'Notifications from the apps you pick are read on this device and become draft entries. You review them first.';
+	@override String get other => 'Other apps';
+	@override String get turnOn => 'Turn on';
+	@override String get noBuiltIn => 'No known bank or e-wallet apps on this device. Pick your own app.';
 }
 
 // Path: notificationCapture.reviewReason
@@ -2290,6 +2409,17 @@ extension on TranslationsEn {
 			'onboarding.currencySuggested' => 'Matches your device region',
 			'onboarding.currencyChooseFirst' => 'Choose a currency first',
 			'onboarding.currencyConfirm' => ({required Object code}) => 'Use ${code}',
+			'onboarding.periodTitle' => 'When does your monthly cycle start?',
+			'onboarding.periodBody' => 'Your budget plan and financial analysis will start on this date each month. You can change this anytime in Account.',
+			'onboarding.periodConfirm' => ({required Object day}) => 'Use day ${day}',
+			'onboarding.periodConfirmLast' => 'Use the last day',
+			'onboarding.reminderTitle' => 'Remind you before things are due?',
+			'onboarding.reminderBody' => 'You get a reminder before a recurring item is due, based on each item\'s settings.',
+			'onboarding.turnOn' => 'Turn on',
+			'onboarding.notNow' => 'Not now',
+			'onboarding.notificationInfo' => 'You can record automatically from bank notifications. Turn it on from Home.',
+			'onboarding.summaryPeriod' => 'Financial month start',
+			'onboarding.summaryReminder' => 'Recurring reminders',
 			'onboarding.languageTitle' => 'Choose your language',
 			'onboarding.languageBody' => 'Used for the app and when recording by voice. You can change it later on the Account screen.',
 			'onboarding.languageConfirm' => 'Continue',
@@ -2348,6 +2478,8 @@ extension on TranslationsEn {
 			'tour.freelanceWorklogBody' => 'Work hours are income you\'ve earned. Group them into an invoice, then record it when you\'re paid.',
 			'tour.freelanceReceiveTitle' => 'Money actually arrives',
 			'tour.freelanceReceiveBody' => 'Record it when the pay arrives: your wallet balance grows and the invoice is settled.',
+			'tour.accountStatusTitle' => 'Recording status',
+			'tour.accountStatusBody' => 'See whether recording from notifications and recurring reminders are on. Tap a row to change it.',
 			'tour.homeVoiceTitle' => 'Record by voice',
 			'tour.homeVoiceBody' => 'Long-press the Record button, say one transaction, then check the form before recording it.',
 			'tour.planTabsTitle' => 'Plan',
@@ -2360,6 +2492,10 @@ extension on TranslationsEn {
 			'tour.homeForecastBody' => 'Your forecast wallet balance at month end and its lowest point. Tap for the breakdown in Plan.',
 			'tour.homePendingTitle' => 'Waiting to record',
 			'tour.homePendingBody' => 'Recurring bills and income that are due. Record in one tap, edit first, or Skip.',
+			'tour.homeNotificationTitle' => 'Record from notifications',
+			'tour.homeNotificationBody' => 'Pick your bank or e-wallet apps and their transaction notifications become draft entries. This card is always here.',
+			'tour.homeReminderTitle' => 'Recurring reminders',
+			'tour.homeReminderBody' => 'Turn them on to get reminded before bills are due. This card goes away once reminders are on.',
 			'tour.recordRepeatTitle' => 'Repeat',
 			'tour.recordRepeatBody' => 'For bills, salary, or subscriptions. Each next occurrence waits for you to record it; nothing is recorded silently.',
 			'tour.recurringStartersTitle' => 'Quick start',
@@ -2495,6 +2631,30 @@ extension on TranslationsEn {
 			'language.label' => 'Language',
 			'language.pickerTitle' => 'Choose language',
 			'language.hint' => 'App text and voice recording',
+			'discovery.payday.title' => ({required Object d}) => 'Payday on the ${d}?',
+			'discovery.payday.body' => ({required Object d}) => 'Start your financial month on day ${d} so Plan and Analysis follow your payday.',
+			'discovery.payday.action' => 'Set',
+			'discovery.period.hint' => 'Set',
+			'discovery.status.on' => 'On',
+			'discovery.status.off' => 'Off',
+			'discovery.status.permissionNeeded' => 'Permission needed',
+			'discovery.turnOn' => 'Turn on',
+			'discovery.notification.button' => 'Turn on recording from notifications',
+			'discovery.notification.manage' => 'Record from notifications',
+			'discovery.notification.inboxTitle' => 'Notification inbox',
+			'discovery.notification.check' => 'Check',
+			'discovery.notification.activeApps' => ({required Object n}) => 'Active apps: ${n}',
+			'discovery.notification.manageSources' => 'Manage apps & patterns',
+			'discovery.notification.teachPattern' => 'Teach pattern',
+			'discovery.reminder.button' => 'Turn on recurring reminders',
+			'discovery.reminder.body' => 'Reminded before bills are due.',
+			'discovery.reminder.rowNote' => 'Reminders aren\'t on for all recurring items yet.',
+			'discovery.allowAccess' => 'Allow',
+			'discovery.quickStart.title' => 'Pick your bank or e-wallet apps',
+			'discovery.quickStart.body' => 'Notifications from the apps you pick are read on this device and become draft entries. You review them first.',
+			'discovery.quickStart.other' => 'Other apps',
+			'discovery.quickStart.turnOn' => 'Turn on',
+			'discovery.quickStart.noBuiltIn' => 'No known bank or e-wallet apps on this device. Pick your own app.',
 			'notificationCapture.accountEntryTitle' => 'Record from notifications',
 			'notificationCapture.accountEntryBody' => 'Record automatically from bank and e-wallet notifications.',
 			'notificationCapture.settingsTitle' => 'Record from notifications',
@@ -2532,14 +2692,14 @@ extension on TranslationsEn {
 			'notificationCapture.removeSource' => 'Remove this app',
 			'notificationCapture.removeSourceConfirm' => ({required Object app}) => 'Stop reading notifications from ${app}?',
 			'notificationCapture.save' => 'Save',
-			'notificationCapture.patternTitle' => 'Make a pattern',
-			'notificationCapture.patternSampleLabel' => 'Example notification',
+			'notificationCapture.patternTitle' => 'Teach a pattern',
+			'notificationCapture.patternSampleLabel' => '1. Example notification',
 			'notificationCapture.patternSampleHint' => 'Paste the notification text here',
-			'notificationCapture.patternInstructions' => 'Pick a marker, then tap the words. Tap again to clear a mark.',
+			'notificationCapture.patternInstructions' => 'Tap a marked word again to clear its mark.',
 			'notificationCapture.roleAmount' => 'Amount',
 			'notificationCapture.roleNote' => 'Note',
 			'notificationCapture.roleIgnore' => 'Ignore',
-			'notificationCapture.patternKindLabel' => 'Type',
+			'notificationCapture.patternKindLabel' => '3. Transaction type',
 			'notificationCapture.kindExpense' => 'Out',
 			'notificationCapture.kindIncome' => 'In',
 			'notificationCapture.kindTransferOut' => 'Transfer out',
@@ -2610,12 +2770,20 @@ extension on TranslationsEn {
 			'notificationCapture.walletHelp' => 'Transactions from this app are recorded in this wallet.',
 			'notificationCapture.advancedTitle' => 'Filter and patterns',
 			'notificationCapture.advancedHint' => 'Optional',
-			'notificationCapture.patternMarkLabel' => 'Mark the parts',
+			'notificationCapture.patternMarkLabel' => '2. Mark the important parts',
 			'notificationCapture.patternNotAmount' => ({required Object word}) => '"${word}" is not an amount. Amounts use Rp or thousands separators.',
 			'notificationCapture.kindTransfer' => 'Transfer',
 			'notificationCapture.transferDirectionLabel' => 'Transfer direction',
 			'notificationCapture.patternTransferWalletNone' => 'Not set',
-			'notificationCapture.patternTemplateToggle' => 'Edit template',
+			'notificationCapture.patternTemplateToggle' => 'Show template (advanced)',
+			'notificationCapture.patternIntro' => 'Teach Tanukonomy how to read this notification so the amount and note fill in on their own next time. Only the amount word is required.',
+			'notificationCapture.patternHintAmount' => 'Tap the word that holds the amount, for example Rp50,000.',
+			'notificationCapture.patternHintNote' => 'Amount marked. If you like, tap the words that become the note (shop name or description). You can skip this.',
+			'notificationCapture.roleAmountHelp' => 'Amount: how much money.',
+			'notificationCapture.roleNoteHelp' => 'Note: the shop name or description that gets recorded.',
+			'notificationCapture.roleIgnoreHelp' => 'Ignore: words that change every time, like a reference number.',
+			'notificationCapture.patternNeedAmount' => 'Mark one amount word first so you can save.',
+			'notificationCapture.patternTemplateLabel' => 'Template',
 			'notificationCapture.moreActions' => 'More',
 			'recurring.starters.salary' => 'Salary',
 			'recurring.starters.rent' => 'Rent',
@@ -2676,6 +2844,8 @@ extension on TranslationsEn {
 			'recurring.deletedMessage' => ({required Object name}) => '${name} deleted.',
 			'recurring.skippedMessage' => ({required Object date}) => '${date} skipped.',
 			'recurring.priceUpdateAction' => ({required Object amount}) => 'Update to ${amount}',
+			_ => null,
+		} ?? switch (path) {
 			'recurring.notFound' => 'This recurring no longer exists.',
 			'recurring.noRecorded' => 'Nothing recorded yet.',
 			'recurring.recordedMessage' => ({required Object name}) => '${name} recorded.',
@@ -2725,8 +2895,6 @@ extension on TranslationsEn {
 			'recurring.budgetLinkEmpty' => 'No repeating budget items in this wallet yet.',
 			'recurring.budgetLinkedMessage' => ({required Object name, required Object item}) => '${name} is linked to ${item}.',
 			'recurring.budgetUnlinkedMessage' => ({required Object name}) => '${name} is no longer linked to a budget item.',
-			_ => null,
-		} ?? switch (path) {
 			'recurring.fundingTitle' => ({required Object wallet}) => 'Prepare funds in ${wallet}',
 			'recurring.fundingBody' => ({required Object name, required Object amount, required Object date, required Object shortfall}) => '${name} ${amount} on ${date}. Expected short ≈${shortfall}.',
 			'recurring.installmentFreeLine' => ({required Object month, required Object amount}) => 'From ${month} you free up +${amount}/mo.',

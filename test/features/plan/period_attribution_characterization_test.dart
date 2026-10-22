@@ -301,7 +301,12 @@ void main() {
           periodEnd: budget.endDate,
           lines: [
             for (final item in spent.items)
-              (itemId: item.item.id, key: item.item.templateItemId, planned: item.item.plannedAmount, spent: item.spent),
+              (
+                itemId: item.item.id,
+                key: item.item.templateItemId,
+                planned: item.item.plannedAmount,
+                spent: item.spent,
+              ),
           ],
         ),
       ],

@@ -1,8 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/account/presentation/bloc/account_bloc.dart';
 import 'package:saldough/features/account/presentation/bloc/account_state.dart';
 import 'package:saldough/features/account/presentation/widgets/category_setting.dart';
@@ -57,16 +59,20 @@ class _AccountPageState extends State<AccountPage> {
           child: BlocBuilder<AccountBloc, AccountState>(
             builder: (context, state) {
               final user = state.user;
-              return ListView(
-                padding: const EdgeInsets.all(AppSpacing.space4),
-                children: [
-                  if (user == null) _SignedOut(state: state) else _SignedIn(state: state, user: user),
-                  if (widget.versionEntry case final entry?) ...[
-                    const SizedBox(height: AppSpacing.space6),
-                    AppSectionHeader(t.account.appSection),
-                    AppListCard(dividerIndent: AppListCard.iconIndent, children: [entry]),
+              return TourTrigger(
+                tour: TourId.account,
+                ready: true,
+                child: ListView(
+                  padding: const EdgeInsets.all(AppSpacing.space4),
+                  children: [
+                    if (user == null) _SignedOut(state: state) else _SignedIn(state: state, user: user),
+                    if (widget.versionEntry case final entry?) ...[
+                      const SizedBox(height: AppSpacing.space6),
+                      AppSectionHeader(t.account.appSection),
+                      AppListCard(dividerIndent: AppListCard.iconIndent, children: [entry]),
+                    ],
                   ],
-                ],
+                ),
               );
             },
           ),
@@ -211,7 +217,12 @@ class _Settings extends StatelessWidget {
           children: [
             const CategorySettingEntry(),
             if (defaultTargetPlatform == TargetPlatform.android) const NotificationCaptureSettingEntry(),
-            const RecurringReminderSettingEntry(),
+            // Baris status yang disorot sekali saat Akun pertama dibuka
+            // (T-21.6); ada di Android dan iOS.
+            const SpotlightTarget(
+              spotlightKey: SpotlightKey.accountStatus,
+              child: RecurringReminderSettingEntry(),
+            ),
             const FinancialMonthSettingEntry(),
           ],
         ),

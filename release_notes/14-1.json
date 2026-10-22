@@ -1,0 +1,22 @@
+{
+  "version": "0.8.0",
+  "groups": [
+    {
+      "category": "new",
+      "notes": [
+        {
+          "id": "Di Android, Beranda kini punya Kotak masuk notifikasi: pilih aplikasi bank atau dompet digitalmu, dan transaksi dari notifikasinya jadi draf catatan yang kamu tinjau.",
+          "en": "On Android, Home now has a Notification inbox: pick your bank or e-wallet apps, and transactions from their notifications become draft entries you review."
+        },
+        {
+          "id": "Tombol Nyalakan pengingat rutin muncul di Beranda dan Rutin selama pengingat belum menyala, dan Akun menunjukkan statusnya.",
+          "en": "A Turn on recurring reminders button shows on Home and Recurring until reminders are on, and Account shows their status."
+        },
+        {
+          "id": "Rencana menawarkan tanggal gajianmu sebagai awal bulan keuangan kalau kamu sudah mencatat gaji, dan kamu bisa mengubahnya lewat tombol Atur di kepala periode.",
+          "en": "Plan suggests your payday as the financial month start once you have recorded a salary, and you can change it with the Set button on the period header."
+        }
+      ]
+    }
+  ]
+}

@@ -59,7 +59,18 @@ class AppPeriodHeader extends StatelessWidget {
                     children: [
                       Flexible(child: Text(label, style: style)),
                       const SizedBox(width: AppSpacing.space1),
-                      AppIcon(IconKey.expandMore, size: AppSize.iconSm, color: colors.ink2),
+                      // Petunjuk dapat diketuk (FEATURE_DISCOVERY §6.1): pil
+                      // tonal "Atur", bukan sekadar label.
+                      DecoratedBox(
+                        decoration: ShapeDecoration(color: colors.surface2, shape: const PixelCornerBorder.small()),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2, vertical: AppSpacing.space1),
+                          child: Text(
+                            t.discovery.period.hint,
+                            style: Theme.of(context).textTheme.labelMedium?.copyWith(color: colors.ink2),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),

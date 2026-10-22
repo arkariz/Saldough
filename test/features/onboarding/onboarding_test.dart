@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:memory_storage/memory_storage.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:saldough/core/currency/currency.dart';
+import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/foundation/navigation/app_route_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/language/language.dart';
@@ -43,6 +44,21 @@ Future<void> _chooseCurrency(WidgetTester tester, AppCurrency currency) async {
   await tester.tap(_option(currency));
   await tester.pumpAndSettle();
   await tester.tap(_confirm);
+  await tester.pumpAndSettle();
+}
+
+/// Dari penutup, menekan tombol [label] (Tambah dompet, Nanti saja, Masuk).
+Future<void> _finale(WidgetTester tester, String label) async {
+  expect(find.text(t.onboarding.finalTitle), findsOneWidget);
+  await tester.tap(find.text(label));
+  await tester.pumpAndSettle();
+}
+
+final Finder _periodConfirm = find.byKey(const ValueKey('onboarding-period-confirm'));
+
+/// Mengonfirmasi langkah awal periode dengan pilihan bawaan.
+Future<void> _passPeriod(WidgetTester tester) async {
+  await tester.tap(_periodConfirm);
   await tester.pumpAndSettle();
 }
 
@@ -115,18 +131,27 @@ void main() {
       expect(find.text(t.onboarding.page1Title), findsOneWidget);
     });
 
-    Future<void> goToLast(WidgetTester tester) async {
-      for (var i = 0; i < 4; i++) {
+    /// Sampai layar geser terakhir (mode pertama kali: empat layar).
+    Future<void> goToLast(WidgetTester tester, {int slides = 4}) async {
+      for (var i = 0; i < slides - 1; i++) {
         await tester.tap(find.text(t.onboarding.nextAction));
         await tester.pumpAndSettle();
       }
+    }
+
+    /// Melewati layar geser terakhir dan mata uang sampai penutup.
+    Future<void> toFinale(WidgetTester tester, AppCurrency currency) async {
+      await goToLast(tester);
+      await tester.tap(find.text(t.onboarding.nextAction));
+      await tester.pumpAndSettle();
+      await _chooseCurrency(tester, currency);
     }
 
     testWidgets('menampilkan layar pertama dan indikator halaman', (tester) async {
       await pumpPage(tester);
 
       expect(find.text(t.onboarding.page1Title), findsOneWidget);
-      expect(find.bySemanticsLabel(t.onboarding.pageIndicatorLabel(current: 1, total: 5)), findsOneWidget);
+      expect(find.bySemanticsLabel(t.onboarding.pageIndicatorLabel(current: 1, total: 4)), findsOneWidget);
     });
 
     testWidgets('Lewati menuju langkah mata uang, bukan langsung selesai', (tester) async {
@@ -138,6 +163,9 @@ void main() {
       expect(outcomes, isEmpty);
       expect(find.text(t.onboarding.currencyTitle), findsOneWidget);
       await _chooseCurrency(tester, AppCurrency.usd);
+      // Sesudah mata uang masih ada penutup; baru di sana onboarding selesai.
+      expect(outcomes, isEmpty);
+      await _finale(tester, t.onboarding.laterAction);
 
       expect(outcomes, [(OnboardingOutcome.dismissed, AppCurrency.usd)]);
     });
@@ -199,45 +227,40 @@ void main() {
       expect(outcomes, isEmpty);
     });
 
-    testWidgets('Lanjut sampai layar akhir menampilkan ajakan dompet pertama', (tester) async {
+    testWidgets('Lanjut sampai layar akhir menampilkan ajakan dompet pertama sesudah mata uang', (tester) async {
       await pumpPage(tester);
-      await goToLast(tester);
+      await toFinale(tester, AppCurrency.idr);
 
       expect(find.text(t.onboarding.finalTitle), findsOneWidget);
       expect(find.text(t.onboarding.skipAction), findsNothing);
+      expect(outcomes, isEmpty);
       await tester.tap(find.text(t.onboarding.createWalletAction));
       await tester.pumpAndSettle();
-      expect(outcomes, isEmpty);
-      await _chooseCurrency(tester, AppCurrency.idr);
 
       expect(outcomes, [(OnboardingOutcome.createWallet, AppCurrency.idr)]);
     });
 
     testWidgets('"Nanti saja" di layar akhir tetap ada (KO-6)', (tester) async {
       await pumpPage(tester);
-      await goToLast(tester);
+      await toFinale(tester, AppCurrency.eur);
 
-      await tester.tap(find.text(t.onboarding.laterAction));
-      await tester.pumpAndSettle();
-      await _chooseCurrency(tester, AppCurrency.eur);
+      await _finale(tester, t.onboarding.laterAction);
 
       expect(outcomes, [(OnboardingOutcome.dismissed, AppCurrency.eur)]);
     });
 
     testWidgets('"Sudah punya akun? Masuk" di layar akhir (ADR-024)', (tester) async {
       await pumpPage(tester);
-      await goToLast(tester);
+      await toFinale(tester, AppCurrency.jpy);
 
-      await tester.tap(find.text(t.onboarding.signInAction));
-      await tester.pumpAndSettle();
-      await _chooseCurrency(tester, AppCurrency.jpy);
+      await _finale(tester, t.onboarding.signInAction);
 
       expect(outcomes, [(OnboardingOutcome.signIn, AppCurrency.jpy)]);
     });
 
     testWidgets('mode tinjau diakhiri dengan Tutup, tanpa ajakan dompet', (tester) async {
       await pumpPage(tester, mode: OnboardingMode.review);
-      await goToLast(tester);
+      await goToLast(tester, slides: 5);
 
       expect(find.text(t.onboarding.createWalletAction), findsNothing);
       expect(find.text(t.onboarding.signInAction), findsNothing);
@@ -272,15 +295,15 @@ void main() {
         await tester.pumpAndSettle();
       }
       expect(tester.takeException(), isNull);
-      expect(find.text(t.onboarding.createWalletAction), findsOneWidget);
-
-      await tester.tap(find.text(t.onboarding.createWalletAction));
-      await tester.pumpAndSettle();
       await _reveal(tester, _option(AppCurrency.idr));
       await tester.tap(_option(AppCurrency.idr));
       await tester.pumpAndSettle();
       expect(tester.takeException(), isNull);
       expect(find.text(t.onboarding.currencyConfirm(code: 'IDR')), findsOneWidget);
+      await tester.tap(_confirm);
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull);
+      expect(find.text(t.onboarding.createWalletAction), findsOneWidget);
     });
 
     testWidgets('adegan bergerak saat gerak diizinkan, tanpa galat', (tester) async {
@@ -311,6 +334,9 @@ void main() {
       container = GetIt.asNewInstance()
         ..registerSingleton<TutorialProgressRepository>(repository)
         ..registerSingleton<CurrencyPreferenceRepository>(currencyRepository)
+        ..registerSingleton<FinancialMonthPreferenceRepository>(
+          FinancialMonthPreferenceRepositoryImpl(storage: storage),
+        )
         ..registerSingleton<ChangeAppLanguage>(ChangeAppLanguage(repository: languageRepository));
     });
 
@@ -371,6 +397,8 @@ void main() {
       expect(find.text('beranda'), findsNothing);
       expect((await progress()).onboardingDone, isFalse);
       await _chooseCurrency(tester, AppCurrency.usd);
+      await _passPeriod(tester);
+      await _finale(tester, t.onboarding.laterAction);
 
       expect(find.text('beranda'), findsOneWidget);
       expect(homes.last, isNull);
@@ -379,7 +407,7 @@ void main() {
       expect(ActiveCurrency.value, AppCurrency.usd);
     });
 
-    testWidgets('mata uang gagal tersimpan: tetap di langkah mata uang, onboarding belum selesai', (tester) async {
+    testWidgets('mata uang gagal tersimpan: tetap di penutup, onboarding belum selesai', (tester) async {
       container
         ..unregister<CurrencyPreferenceRepository>()
         ..registerSingleton<CurrencyPreferenceRepository>(_failingCurrencyRepository());
@@ -388,9 +416,11 @@ void main() {
       await tester.tap(find.text(t.onboarding.skipAction));
       await tester.pumpAndSettle();
       await _chooseCurrency(tester, AppCurrency.usd);
+      await _passPeriod(tester);
+      await _finale(tester, t.onboarding.laterAction);
 
       expect(find.text('beranda'), findsNothing);
-      expect(_confirm, findsOneWidget);
+      expect(find.text(t.onboarding.finalTitle), findsOneWidget);
       expect(find.text(t.common.genericErrorMessage), findsOneWidget);
       expect((await progress()).onboardingDone, isFalse);
       expect(ActiveCurrency.value, AppCurrency.idr);
@@ -402,10 +432,9 @@ void main() {
         await tester.tap(find.text(t.onboarding.nextAction));
         await tester.pumpAndSettle();
       }
-
-      await tester.tap(find.text(t.onboarding.createWalletAction));
-      await tester.pumpAndSettle();
       await _chooseCurrency(tester, AppCurrency.idr);
+      await _passPeriod(tester);
+      await _finale(tester, t.onboarding.createWalletAction);
 
       expect(homes.last, OnboardingOutcome.createWallet);
       expect((await progress()).onboardingDone, isTrue);
@@ -417,10 +446,9 @@ void main() {
         await tester.tap(find.text(t.onboarding.nextAction));
         await tester.pumpAndSettle();
       }
-
-      await tester.tap(find.text(t.onboarding.signInAction));
-      await tester.pumpAndSettle();
       await _chooseCurrency(tester, AppCurrency.idr);
+      await _passPeriod(tester);
+      await _finale(tester, t.onboarding.signInAction);
 
       expect(homes.last, OnboardingOutcome.signIn);
       expect((await progress()).onboardingDone, isTrue);

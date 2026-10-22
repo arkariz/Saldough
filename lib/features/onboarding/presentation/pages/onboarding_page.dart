@@ -2,12 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:saldough/core/currency/currency.dart';
+import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/motion/motion.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/onboarding/presentation/widgets/onboarding_currency_step.dart';
+import 'package:saldough/features/onboarding/presentation/widgets/onboarding_gate_steps.dart';
 import 'package:saldough/features/onboarding/presentation/widgets/onboarding_language_step.dart';
 import 'package:saldough/features/onboarding/presentation/widgets/onboarding_scene.dart';
 import 'package:saldough/features/onboarding/presentation/widgets/onboarding_widgets.dart';
@@ -24,26 +26,41 @@ enum OnboardingOutcome {
   signIn,
 }
 
-/// Onboarding empat layar geser + satu layar akhir (ONBOARDING_PLAN §3,
-/// ART_BRIEF §3), dengan adegan bergerak ADR-021 §3.7.
+/// Langkah wajib mode pertama kali, urut tampil (FEATURE_DISCOVERY §4):
+/// bahasa › layar geser › mata uang › awal periode › pengingat › penutup.
+enum _Step { language, slides, currency, period, reminder, finale }
+
+/// Onboarding: layar geser pengantar, empat langkah wajib, lalu penutup
+/// (ONBOARDING_PLAN §3, ART_BRIEF §3, FEATURE_DISCOVERY §4), dengan adegan
+/// bergerak ADR-021 §3.7.
 ///
 /// Mode pertama kali dimulai dengan langkah pilih bahasa (ADR-028 §3.4):
 /// bahasa saat ini terpilih, dan mengetuk pilihan lain langsung mengganti
 /// teks lewat [OnboardingPage.onLanguageSelected].
 ///
-/// Mode pertama kali: setiap jalan keluar ("Lewati", ajakan layar akhir)
-/// lebih dulu melewati langkah pilih mata uang yang tidak bisa dilewati
-/// (ADR-025 §3.7) — tanpa tombol lewati, tanpa pilihan otomatis, dan tombol
-/// lanjutnya menyebut mata uang yang dipilih.
+/// Mode pertama kali: "Lewati" dan tombol Lanjut di layar geser terakhir
+/// melompat ke langkah wajib pertama yang tersisa (mata uang), tidak keluar
+/// dari onboarding. Mata uang (ADR-025 §3.7), awal periode keuangan, dan
+/// pengingat rutin tidak punya tombol lewati dan tidak terpilih otomatis;
+/// "wajib" berarti wajib dijawab, bukan wajib menyala (KT-D1). Tombol Kembali
+/// di aplikasi maupun tombol sistem kembali ke langkah sebelumnya. Penutup
+/// (ajakan dompet pertama, ringkasan jawaban, baris informasi Catat dari
+/// notifikasi di Android) tampil paling akhir. Mode tinjau (dari Akun) hanya
+/// menampilkan layar geser dan boleh ditutup kapan saja.
 ///
-/// Halaman ini tidak menyimpan apa pun — [onFinished] yang memutuskan
-/// (lihat `buildOnboardingRoute`).
+/// Halaman ini tidak menyimpan apa pun -- [onFinished] dan callback langkah
+/// yang memutuskan (lihat `buildOnboardingRoute`).
 class OnboardingPage extends StatefulWidget {
   /// Membuat [OnboardingPage].
   const OnboardingPage({
     required this.onFinished,
     this.mode = OnboardingMode.firstRun,
     this.onLanguageSelected,
+    this.onPeriodConfirmed,
+    this.onTurnOnReminders,
+    this.onRemindersDeclined,
+    this.skipPeriod = false,
+    this.skipReminder = false,
     super.key,
   });
 
@@ -57,6 +74,23 @@ class OnboardingPage extends StatefulWidget {
   /// Menerapkan dan menyimpan bahasa yang diketuk di langkah bahasa.
   final Future<void> Function(AppLocale locale)? onLanguageSelected;
 
+  /// Menyimpan awal periode keuangan yang dipilih; `false` = gagal, langkah
+  /// bertahan. `null` = langkah tidak ditanyakan.
+  final Future<bool> Function(FinancialMonthStart start)? onPeriodConfirmed;
+
+  /// Meminta izin notifikasi sistem lalu menyalakan pengingat rutin; `true`
+  /// bila akhirnya menyala. `null` = langkah tidak ditanyakan.
+  final Future<bool> Function()? onTurnOnReminders;
+
+  /// Dipanggil saat pengguna memilih "Tidak sekarang" di langkah pengingat.
+  final Future<void> Function()? onRemindersDeclined;
+
+  /// Langkah awal periode sudah dijawab di sesi sebelumnya.
+  final bool skipPeriod;
+
+  /// Langkah pengingat sudah dijawab di sesi sebelumnya.
+  final bool skipReminder;
+
   @override
   State<OnboardingPage> createState() => _OnboardingPageState();
 }
@@ -64,23 +98,64 @@ class OnboardingPage extends StatefulWidget {
 class _OnboardingPageState extends State<OnboardingPage> {
   final PageController _controller = PageController();
   int _page = 0;
-  bool _finishing = false;
+  bool _busy = false;
 
-  /// Jalan keluar yang sedang menunggu pilihan mata uang; terisi berarti
-  /// langkah mata uang sedang tampil.
-  OnboardingOutcome? _pendingOutcome;
+  late _Step _step = widget.mode == OnboardingMode.firstRun ? _Step.language : _Step.slides;
+
+  /// Langkah yang sudah dilalui, untuk Kembali.
+  final List<_Step> _trail = [];
+
   AppCurrency? _currency;
   late final AppCurrency? _suggested = AppCurrency.forCountry(
     WidgetsBinding.instance.platformDispatcher.locale.countryCode,
   );
-
-  bool get _choosingCurrency => _pendingOutcome != null;
-
-  /// Langkah bahasa sedang tampil (hanya mode pertama kali, di awal).
-  late bool _choosingLanguage = widget.mode == OnboardingMode.firstRun;
   AppLocale _language = LocaleSettings.currentLocale;
+  FinancialMonthStart _period = FinancialMonthStart.first;
+  bool _periodConfirmed = false;
+  OnboardingReminderChoice? _reminder;
 
-  bool get _onStep => _choosingCurrency || _choosingLanguage;
+  bool get _review => widget.mode == OnboardingMode.review;
+
+  /// Layar geser: lima di mode tinjau; empat di mode pertama kali, karena
+  /// layar kelimanya menjadi penutup sesudah langkah wajib.
+  int get _count => _review ? onboardingSlideCount : onboardingSlideCount - 1;
+
+  bool get _isLast => _page == _count - 1;
+
+  bool get _asksPeriod => widget.onPeriodConfirmed != null && !widget.skipPeriod;
+
+  bool get _asksReminder => widget.onTurnOnReminders != null && !widget.skipReminder;
+
+  /// Langkah sesudah [from] di mode pertama kali, melewati yang tidak ditanya.
+  _Step _after(_Step from) {
+    final order = [
+      _Step.language,
+      _Step.slides,
+      _Step.currency,
+      if (_asksPeriod) _Step.period,
+      if (_asksReminder) _Step.reminder,
+      _Step.finale,
+    ];
+    return order[order.indexOf(from) + 1];
+  }
+
+  void _go(_Step step) => setState(() {
+    _trail.add(_step);
+    _step = step;
+  });
+
+  void _advance() => _go(_after(_step));
+
+  void _back() {
+    if (_trail.isEmpty || _busy) return;
+    setState(() => _step = _trail.removeLast());
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   Future<void> _selectLanguage(AppLocale locale) async {
     setState(() => _language = locale);
@@ -92,60 +167,81 @@ class _OnboardingPageState extends State<OnboardingPage> {
   /// jadi lembar bahasa ucapan (ADR-028 §3.8) tidak bertanya lagi (B-17).
   Future<void> _confirmLanguage() async {
     await widget.onLanguageSelected?.call(_language);
-    if (mounted) setState(() => _choosingLanguage = false);
+    if (mounted) _advance();
   }
 
-  static const int _count = onboardingSlideCount;
-
-  bool get _isLast => _page == _count - 1;
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
+  Future<void> _confirmPeriod() async {
+    if (_busy) return;
+    setState(() => _busy = true);
+    final saved = await widget.onPeriodConfirmed!(_period);
+    if (!mounted) return;
+    setState(() => _busy = false);
+    if (saved) {
+      _periodConfirmed = true;
+      _advance();
+    }
   }
 
-  /// Jalan keluar dari layar geser: mode tinjau langsung selesai, mode
-  /// pertama kali menuju langkah mata uang.
-  Future<void> _leave(OnboardingOutcome outcome) async {
-    if (widget.mode == OnboardingMode.review) return _finish(outcome, null);
-    setState(() => _pendingOutcome = outcome);
+  Future<void> _turnOnReminders() async {
+    if (_busy) return;
+    setState(() => _busy = true);
+    final on = await widget.onTurnOnReminders!();
+    if (!mounted) return;
+    setState(() {
+      _busy = false;
+      _reminder = on ? OnboardingReminderChoice.on : OnboardingReminderChoice.permissionDenied;
+    });
   }
 
-  void _backToSlides() => setState(() => _pendingOutcome = null);
+  Future<void> _declineReminders() async {
+    await widget.onRemindersDeclined?.call();
+    if (!mounted) return;
+    setState(() => _reminder = OnboardingReminderChoice.off);
+    _advance();
+  }
 
   Future<void> _finish(OnboardingOutcome outcome, AppCurrency? currency) async {
-    if (_finishing) return;
-    setState(() => _finishing = true);
+    if (_busy) return;
+    setState(() => _busy = true);
     await widget.onFinished(outcome, currency);
-    if (mounted) setState(() => _finishing = false);
+    if (mounted) setState(() => _busy = false);
   }
 
-  void _next() {
+  /// "Lewati" / Lanjut di layar geser terakhir: mode tinjau selesai, mode
+  /// pertama kali melompat ke langkah wajib berikutnya.
+  void _leaveSlides() {
+    if (_review) {
+      unawaited(_finish(OnboardingOutcome.dismissed, null));
+    } else {
+      _advance();
+    }
+  }
+
+  void _nextSlide() {
     final duration = MotionPolicy.duration(context, const Duration(milliseconds: 420));
     if (duration == Duration.zero) {
       _controller.jumpToPage(_page + 1);
     } else {
-      _controller.nextPage(
-        duration: duration,
-        curve: Curves.easeInOut,
-      );
+      _controller.nextPage(duration: duration, curve: Curves.easeInOut);
     }
   }
+
+  /// Layar geser tampil (dan bisa dibalik) hanya di langkah `slides`.
+  bool get _onSlides => _step == _Step.slides;
 
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      // Tombol kembali sistem di langkah mata uang kembali ke layar geser,
+      // Tombol kembali sistem di langkah wajib kembali ke langkah sebelumnya,
       // bukan keluar dari onboarding.
-      canPop: !_choosingCurrency,
+      canPop: _trail.isEmpty || _review,
       onPopInvokedWithResult: (didPop, _) {
-        if (!didPop) _backToSlides();
+        if (!didPop) _back();
       },
       child: Builder(
         builder: (context) {
           final colors = context.appColors;
-          final review = widget.mode == OnboardingMode.review;
+          final showBack = !_review && _trail.isNotEmpty && _step != _Step.slides && _step != _Step.language;
           return Scaffold(
             body: Stack(
               children: [
@@ -166,18 +262,16 @@ class _OnboardingPageState extends State<OnboardingPage> {
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
-                              if (_choosingCurrency)
+                              if (showBack)
                                 AppButton.text(
                                   key: const ValueKey('onboarding-back'),
                                   label: t.onboarding.backAction,
-                                  onPressed: _finishing ? null : _backToSlides,
+                                  onPressed: _busy ? null : _back,
                                 )
-                              else if (_choosingLanguage)
-                                const SizedBox.shrink()
-                              else if (!_isLast || review)
+                              else if (_onSlides && (!_isLast || _review))
                                 AppButton.text(
-                                  label: review ? t.onboarding.closeAction : t.onboarding.skipAction,
-                                  onPressed: _finishing ? null : () => _leave(OnboardingOutcome.dismissed),
+                                  label: _review ? t.onboarding.closeAction : t.onboarding.skipAction,
+                                  onPressed: _busy ? null : _leaveSlides,
                                 ),
                             ],
                           ),
@@ -186,39 +280,55 @@ class _OnboardingPageState extends State<OnboardingPage> {
                       Expanded(
                         child: Stack(
                           children: [
-                            // Tetap terpasang saat langkah mata uang tampil,
-                            // supaya "Kembali" mendarat di layar yang sama.
+                            // Tetap terpasang di balik langkah lain, supaya
+                            // "Kembali" mendarat di layar geser yang sama.
                             Offstage(
-                              offstage: _onStep,
+                              offstage: !_onSlides,
                               child: PageView.builder(
                                 controller: _controller,
                                 itemCount: _count,
                                 onPageChanged: (page) => setState(() => _page = page),
                                 itemBuilder: (context, index) => OnboardingSlide(
                                   index: index,
-                                  active: index == _page && !_onStep,
+                                  active: index == _page && _onSlides,
                                   controller: _controller,
                                 ),
                               ),
                             ),
-                            if (_choosingLanguage)
+                            if (_step == _Step.language)
                               OnboardingLanguageStep(selected: _language, onSelected: _selectLanguage),
-                            if (_choosingCurrency)
+                            if (_step == _Step.currency)
                               OnboardingCurrencyStep(
                                 selected: _currency,
                                 suggested: _suggested,
                                 onSelected: (currency) => setState(() => _currency = currency),
                               ),
+                            if (_step == _Step.period)
+                              OnboardingPeriodStep(
+                                selected: _period,
+                                onSelected: (start) => setState(() => _period = start),
+                              ),
+                            if (_step == _Step.reminder) OnboardingReminderStep(choice: _reminder),
+                            if (_step == _Step.finale)
+                              OnboardingFinale(
+                                period: _periodConfirmed ? _period : null,
+                                reminder: _reminder,
+                              ),
                           ],
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space2, AppSpacing.space4, AppSpacing.space4),
+                        padding: const EdgeInsets.fromLTRB(
+                          AppSpacing.space4,
+                          AppSpacing.space2,
+                          AppSpacing.space4,
+                          AppSpacing.space4,
+                        ),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            if (!_onStep) ...[
+                            if (_onSlides) ...[
                               OnboardingPageIndicator(count: _count, current: _page),
                               const SizedBox(height: AppSpacing.space4),
                             ],
@@ -226,7 +336,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                               duration: MotionPolicy.duration(context, const Duration(milliseconds: 240)),
                               switchInCurve: Curves.easeOut,
                               switchOutCurve: Curves.easeIn,
-                              child: _actions(context, review),
+                              child: _actions(context),
                             ),
                           ],
                         ),
@@ -242,78 +352,129 @@ class _OnboardingPageState extends State<OnboardingPage> {
     );
   }
 
-  Widget _actions(BuildContext context, bool review) {
-    if (_choosingLanguage) {
-      return SizedBox(
-        key: const ValueKey('language'),
-        width: double.infinity,
-        child: AppButton(
-          key: const ValueKey('onboarding-language-confirm'),
-          label: t.onboarding.languageConfirm,
-          onPressed: _confirmLanguage,
-        ),
-      );
-    }
-    final pending = _pendingOutcome;
-    if (pending != null) {
-      final currency = _currency;
-      return SizedBox(
-        key: const ValueKey('currency'),
-        width: double.infinity,
-        child: AppButton(
-          key: const ValueKey('onboarding-currency-confirm'),
-          label: currency == null ? t.onboarding.currencyChooseFirst : t.onboarding.currencyConfirm(code: currency.code),
-          onPressed: currency == null || _finishing ? null : () => _finish(pending, currency),
-        ),
-      );
-    }
-    if (!_isLast) {
-      return SizedBox(
-        key: const ValueKey('next'),
-        width: double.infinity,
-        child: AppButton(label: t.onboarding.nextAction, onPressed: _next),
-      );
-    }
-    if (review) {
-      return SizedBox(
-        key: const ValueKey('close'),
-        width: double.infinity,
-        child: AppButton(
-          label: t.onboarding.closeAction,
-          onPressed: _finishing ? null : () => _finish(OnboardingOutcome.dismissed, null),
-        ),
-      );
-    }
-    return Column(
-      key: const ValueKey('final'),
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        // Satu denyut saat layar akhir tiba (ADR-021 §3.7).
-        AppFadeIn(
-          delay: const Duration(milliseconds: 200),
+  Widget _actions(BuildContext context) {
+    switch (_step) {
+      case _Step.language:
+        return SizedBox(
+          key: const ValueKey('language'),
+          width: double.infinity,
           child: AppButton(
-            label: t.onboarding.createWalletAction,
-            onPressed: _finishing ? null : () => _leave(OnboardingOutcome.createWallet),
+            key: const ValueKey('onboarding-language-confirm'),
+            label: t.onboarding.languageConfirm,
+            onPressed: _confirmLanguage,
           ),
-        ),
-        const SizedBox(height: AppSpacing.space1),
-        Center(
-          child: AppButton.text(
-            label: t.onboarding.laterAction,
-            onPressed: _finishing ? null : () => _leave(OnboardingOutcome.dismissed),
+        );
+      case _Step.slides:
+        if (!_isLast) {
+          return SizedBox(
+            key: const ValueKey('next'),
+            width: double.infinity,
+            child: AppButton(label: t.onboarding.nextAction, onPressed: _nextSlide),
+          );
+        }
+        // Layar geser terakhir: mode tinjau menutup, mode pertama kali
+        // melanjutkan ke langkah wajib.
+        return SizedBox(
+          key: const ValueKey('close'),
+          width: double.infinity,
+          child: AppButton(
+            label: _review ? t.onboarding.closeAction : t.onboarding.nextAction,
+            onPressed: _busy ? null : _leaveSlides,
           ),
-        ),
-        Center(
-          child: FittedBox(
-            fit: BoxFit.scaleDown,
-            child: AppButton.text(
-              label: t.onboarding.signInAction,
-              onPressed: _finishing ? null : () => _leave(OnboardingOutcome.signIn),
+        );
+      case _Step.currency:
+        final currency = _currency;
+        return SizedBox(
+          key: const ValueKey('currency'),
+          width: double.infinity,
+          child: AppButton(
+            key: const ValueKey('onboarding-currency-confirm'),
+            label: currency == null
+                ? t.onboarding.currencyChooseFirst
+                : t.onboarding.currencyConfirm(code: currency.code),
+            onPressed: currency == null || _busy ? null : _advance,
+          ),
+        );
+      case _Step.period:
+        return SizedBox(
+          key: const ValueKey('period'),
+          width: double.infinity,
+          child: AppButton(
+            key: const ValueKey('onboarding-period-confirm'),
+            label: switch (_period.day) {
+              final day? => t.onboarding.periodConfirm(day: day),
+              null => t.onboarding.periodConfirmLast,
+            },
+            loading: _busy,
+            onPressed: _busy ? null : _confirmPeriod,
+          ),
+        );
+      case _Step.reminder:
+        if (_reminder != null && _reminder != OnboardingReminderChoice.off) {
+          // Dijawab lewat Nyalakan (menyala atau izin ditolak): Lanjut.
+          return SizedBox(
+            key: const ValueKey('reminder-answered'),
+            width: double.infinity,
+            child: AppButton(
+              key: const ValueKey('onboarding-reminder-next'),
+              label: t.onboarding.nextAction,
+              onPressed: _advance,
             ),
-          ),
-        ),
-      ],
-    );
+          );
+        }
+        return Column(
+          key: const ValueKey('reminder-ask'),
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            AppButton(
+              key: const ValueKey('onboarding-reminder-turn-on'),
+              label: t.onboarding.turnOn,
+              loading: _busy,
+              onPressed: _busy ? null : _turnOnReminders,
+            ),
+            const SizedBox(height: AppSpacing.space2),
+            // Selebar Nyalakan dan bergaya tombol, bukan teks, supaya tidak
+            // terbaca sebagai Lewati.
+            AppButton.secondary(
+              key: const ValueKey('onboarding-reminder-not-now'),
+              label: t.onboarding.notNow,
+              onPressed: _busy ? null : () => unawaited(_declineReminders()),
+            ),
+          ],
+        );
+      case _Step.finale:
+        return Column(
+          key: const ValueKey('final'),
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Satu denyut saat layar akhir tiba (ADR-021 §3.7).
+            AppFadeIn(
+              delay: const Duration(milliseconds: 200),
+              child: AppButton(
+                label: t.onboarding.createWalletAction,
+                onPressed: _busy ? null : () => _finish(OnboardingOutcome.createWallet, _currency),
+              ),
+            ),
+            const SizedBox(height: AppSpacing.space1),
+            Center(
+              child: AppButton.text(
+                label: t.onboarding.laterAction,
+                onPressed: _busy ? null : () => _finish(OnboardingOutcome.dismissed, _currency),
+              ),
+            ),
+            Center(
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: AppButton.text(
+                  label: t.onboarding.signInAction,
+                  onPressed: _busy ? null : () => _finish(OnboardingOutcome.signIn, _currency),
+                ),
+              ),
+            ),
+          ],
+        );
+    }
   }
 }

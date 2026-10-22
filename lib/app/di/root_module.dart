@@ -3,9 +3,11 @@ import 'package:di/di.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive_storage/hive_storage.dart';
 import 'package:navigation/navigation.dart';
+import 'package:saldough/app/discovery/app_feature_statuses.dart';
 import 'package:saldough/app/shell/account_version_entry.dart';
 import 'package:saldough/app/shell/app_shell_page.dart';
 import 'package:saldough/core/currency/currency.dart';
+import 'package:saldough/core/discovery/discovery.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/foundation/analytics/app_bootstrap_firebase.dart';
 import 'package:saldough/core/foundation/navigation/app_route_registry.dart';
@@ -41,6 +43,8 @@ import 'package:saldough/features/freelance/presentation/navigation/freelance_ro
 import 'package:saldough/features/home/domain/budget_overview_source.dart';
 import 'package:saldough/features/home/domain/freelance_overview_source.dart';
 import 'package:saldough/features/notification_capture/di/notification_capture_module.dart';
+import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_gateway.dart';
+import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_store.dart';
 import 'package:saldough/features/notification_capture/presentation/navigation/notification_capture_route_module.dart';
 import 'package:saldough/features/onboarding/presentation/onboarding_route.dart';
 import 'package:saldough/features/onboarding/presentation/pages/onboarding_page.dart' show OnboardingOutcome;
@@ -50,8 +54,10 @@ import 'package:saldough/features/plan/domain/plan_sources.dart';
 import 'package:saldough/features/record/presentation/navigation/record_route_module.dart';
 import 'package:saldough/features/recurring/data/local_notification_reminder_scheduler.dart';
 import 'package:saldough/features/recurring/data/reminder_settings_repository_impl.dart';
+import 'package:saldough/features/recurring/domain/enable_reminders.dart';
 import 'package:saldough/features/recurring/domain/reminder_scheduler.dart';
 import 'package:saldough/features/recurring/domain/reminder_settings.dart';
+import 'package:saldough/features/recurring/domain/sync_recurring_reminders.dart';
 import 'package:saldough/features/recurring/presentation/navigation/recurring_route_module.dart';
 import 'package:saldough/features/transaction/data/history_segment_repository_impl.dart';
 import 'package:saldough/features/transaction/domain/history_segment.dart';
@@ -280,6 +286,19 @@ abstract final class RootModule {
     SourceIcons.loader = (id) async => (await container<SourceIconRepository>().read(id)).getOrElse((_) => null);
     // Catat dari notifikasi (ADR-032): pemroses di akar, dipicu shell.
     NotificationCaptureModule.register(container);
+    // Status efektif fitur untuk pintu permanen (Fase 21): dibaca Beranda,
+    // Rutin, dan Akun tanpa saling mengimpor fitur (ADR-030).
+    container
+      ..registerLazySingleton<FeatureStatusChanges>(FeatureStatusChanges.new)
+      ..registerLazySingleton<FeatureStatuses>(
+        () => AppFeatureStatuses(
+          captureGateway: container<NotificationCaptureGateway>(),
+          captureStore: container<NotificationCaptureStore>(),
+          reminderSettings: container<ReminderSettingsRepository>(),
+          reminderScheduler: container<ReminderScheduler>(),
+          changesSource: container<FeatureStatusChanges>(),
+        ),
+      );
   }
 
   static RouteRegistry _registerRouteRegistry(GetIt container) {
@@ -300,7 +319,26 @@ abstract final class RootModule {
             _ => null,
           },
         ),
-        onboardingBuilder: buildOnboardingRoute,
+        onboardingBuilder: (context, state) => buildOnboardingRoute(
+          context,
+          state,
+          // Pengingat rutin di onboarding (FEATURE_DISCOVERY §4.4): alur
+          // izin dan sakelar yang sama dengan Akun.
+          enableReminders: () async {
+            final granted = await EnableReminders(
+              scheduler: container<ReminderScheduler>(),
+              settings: container<ReminderSettingsRepository>(),
+              sync: SyncRecurringReminders(
+                scheduler: container<ReminderScheduler>(),
+                settings: container<ReminderSettingsRepository>(),
+                rules: container<RecurringRuleRepository>(),
+                transactions: container<TransactionRepository>(),
+              ),
+            )();
+            container<FeatureStatusChanges>().notify();
+            return granted;
+          },
+        ),
         // `screen_view` otomatis (ADR-023) -- belum ada event kustom.
         observers: [AppBootstrap.analyticsObserver],
       ),

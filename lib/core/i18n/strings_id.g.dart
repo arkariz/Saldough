@@ -57,6 +57,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$currency$id currency = Translations$currency$id.internal(_root);
 	late final Translations$category$id category = Translations$category$id.internal(_root);
 	late final Translations$language$id language = Translations$language$id.internal(_root);
+	late final Translations$discovery$id discovery = Translations$discovery$id.internal(_root);
 	late final Translations$notificationCapture$id notificationCapture = Translations$notificationCapture$id.internal(_root);
 	late final Translations$recurring$id recurring = Translations$recurring$id.internal(_root);
 	late final Translations$plan$id plan = Translations$plan$id.internal(_root);
@@ -1707,6 +1708,39 @@ class Translations$onboarding$id {
 	/// id: 'Pakai $code'
 	String currencyConfirm({required Object code}) => 'Pakai ${code}';
 
+	/// id: 'Kapan siklus bulananmu dimulai?'
+	String get periodTitle => 'Kapan siklus bulananmu dimulai?';
+
+	/// id: 'Rencana anggaran dan analisis keuangan akan dihitung mulai tanggal ini setiap bulannya. Bisa diubah kapan saja di menu Akun.'
+	String get periodBody => 'Rencana anggaran dan analisis keuangan akan dihitung mulai tanggal ini setiap bulannya. Bisa diubah kapan saja di menu Akun.';
+
+	/// id: 'Pakai tanggal $day'
+	String periodConfirm({required Object day}) => 'Pakai tanggal ${day}';
+
+	/// id: 'Pakai hari terakhir bulan'
+	String get periodConfirmLast => 'Pakai hari terakhir bulan';
+
+	/// id: 'Ingatkan kamu sebelum jatuh tempo?'
+	String get reminderTitle => 'Ingatkan kamu sebelum jatuh tempo?';
+
+	/// id: 'Kamu dapat pengingat sebelum rutin jatuh tempo, sesuai setelan tiap rutin.'
+	String get reminderBody => 'Kamu dapat pengingat sebelum rutin jatuh tempo, sesuai setelan tiap rutin.';
+
+	/// id: 'Nyalakan'
+	String get turnOn => 'Nyalakan';
+
+	/// id: 'Tidak sekarang'
+	String get notNow => 'Tidak sekarang';
+
+	/// id: 'Bisa catat otomatis dari notifikasi bank. Nyalakan dari Beranda.'
+	String get notificationInfo => 'Bisa catat otomatis dari notifikasi bank. Nyalakan dari Beranda.';
+
+	/// id: 'Awal bulan keuangan'
+	String get summaryPeriod => 'Awal bulan keuangan';
+
+	/// id: 'Pengingat rutin'
+	String get summaryReminder => 'Pengingat rutin';
+
 	/// id: 'Pilih bahasa'
 	String get languageTitle => 'Pilih bahasa';
 
@@ -1890,6 +1924,12 @@ class Translations$tour$id {
 	/// id: 'Catat saat honornya masuk: saldo dompet bertambah dan tagihannya lunas.'
 	String get freelanceReceiveBody => 'Catat saat honornya masuk: saldo dompet bertambah dan tagihannya lunas.';
 
+	/// id: 'Status pencatatan'
+	String get accountStatusTitle => 'Status pencatatan';
+
+	/// id: 'Lihat apakah Catat dari notifikasi dan pengingat rutin menyala. Ketuk barisnya untuk mengubah.'
+	String get accountStatusBody => 'Lihat apakah Catat dari notifikasi dan pengingat rutin menyala. Ketuk barisnya untuk mengubah.';
+
 	/// id: 'Catat pakai suara'
 	String get homeVoiceTitle => 'Catat pakai suara';
 
@@ -1925,6 +1965,18 @@ class Translations$tour$id {
 
 	/// id: 'Tagihan dan pemasukan rutin yang sudah tiba. Catat satu ketuk, ubah dulu, atau Lewati.'
 	String get homePendingBody => 'Tagihan dan pemasukan rutin yang sudah tiba. Catat satu ketuk, ubah dulu, atau Lewati.';
+
+	/// id: 'Catat dari notifikasi'
+	String get homeNotificationTitle => 'Catat dari notifikasi';
+
+	/// id: 'Pilih aplikasi bank atau dompet digitalmu, lalu notifikasi transaksinya jadi draf catatan. Kartu ini selalu ada di sini.'
+	String get homeNotificationBody => 'Pilih aplikasi bank atau dompet digitalmu, lalu notifikasi transaksinya jadi draf catatan. Kartu ini selalu ada di sini.';
+
+	/// id: 'Pengingat rutin'
+	String get homeReminderTitle => 'Pengingat rutin';
+
+	/// id: 'Nyalakan supaya kamu diingatkan sebelum tagihan jatuh tempo. Kartu ini hilang begitu pengingat menyala.'
+	String get homeReminderBody => 'Nyalakan supaya kamu diingatkan sebelum tagihan jatuh tempo. Kartu ini hilang begitu pengingat menyala.';
 
 	/// id: 'Ulangi'
 	String get recordRepeatTitle => 'Ulangi';
@@ -2270,6 +2322,29 @@ class Translations$language$id {
 	String get hint => 'Tampilan aplikasi dan bahasa ucapan';
 }
 
+// Path: discovery
+class Translations$discovery$id {
+	Translations$discovery$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+	late final Translations$discovery$payday$id payday = Translations$discovery$payday$id.internal(_root);
+	late final Translations$discovery$period$id period = Translations$discovery$period$id.internal(_root);
+	late final Translations$discovery$status$id status = Translations$discovery$status$id.internal(_root);
+
+	/// id: 'Nyalakan'
+	String get turnOn => 'Nyalakan';
+
+	late final Translations$discovery$notification$id notification = Translations$discovery$notification$id.internal(_root);
+	late final Translations$discovery$reminder$id reminder = Translations$discovery$reminder$id.internal(_root);
+
+	/// id: 'Izinkan'
+	String get allowAccess => 'Izinkan';
+
+	late final Translations$discovery$quickStart$id quickStart = Translations$discovery$quickStart$id.internal(_root);
+}
+
 // Path: notificationCapture
 class Translations$notificationCapture$id {
 	Translations$notificationCapture$id.internal(this._root);
@@ -2389,17 +2464,17 @@ class Translations$notificationCapture$id {
 	/// id: 'Simpan'
 	String get save => 'Simpan';
 
-	/// id: 'Buat pola'
-	String get patternTitle => 'Buat pola';
+	/// id: 'Ajari pola'
+	String get patternTitle => 'Ajari pola';
 
-	/// id: 'Contoh notifikasi'
-	String get patternSampleLabel => 'Contoh notifikasi';
+	/// id: '1. Contoh notifikasi'
+	String get patternSampleLabel => '1. Contoh notifikasi';
 
 	/// id: 'Tempel teks notifikasi di sini'
 	String get patternSampleHint => 'Tempel teks notifikasi di sini';
 
-	/// id: 'Pilih penanda, lalu ketuk katanya. Ketuk lagi untuk menghapus tanda.'
-	String get patternInstructions => 'Pilih penanda, lalu ketuk katanya. Ketuk lagi untuk menghapus tanda.';
+	/// id: 'Ketuk lagi kata yang sudah ditandai untuk menghapus tandanya.'
+	String get patternInstructions => 'Ketuk lagi kata yang sudah ditandai untuk menghapus tandanya.';
 
 	/// id: 'Nominal'
 	String get roleAmount => 'Nominal';
@@ -2410,8 +2485,8 @@ class Translations$notificationCapture$id {
 	/// id: 'Abaikan'
 	String get roleIgnore => 'Abaikan';
 
-	/// id: 'Jenis'
-	String get patternKindLabel => 'Jenis';
+	/// id: '3. Jenis transaksi'
+	String get patternKindLabel => '3. Jenis transaksi';
 
 	/// id: 'Keluar'
 	String get kindExpense => 'Keluar';
@@ -2437,7 +2512,7 @@ class Translations$notificationCapture$id {
 	/// id: 'Nama pola (opsional)'
 	String get patternLabelField => 'Nama pola (opsional)';
 
-	/// id: 'Terbaca: ${amount}'
+	/// id: 'Terbaca: $amount'
 	String patternPreview({required Object amount}) => 'Terbaca: ${amount}';
 
 	/// id: 'Tandai satu nominal. Kata Catatan harus berurutan.'
@@ -2603,8 +2678,8 @@ class Translations$notificationCapture$id {
 	/// id: 'Opsional'
 	String get advancedHint => 'Opsional';
 
-	/// id: 'Tandai bagiannya'
-	String get patternMarkLabel => 'Tandai bagiannya';
+	/// id: '2. Tandai bagian pentingnya'
+	String get patternMarkLabel => '2. Tandai bagian pentingnya';
 
 	/// id: '"${word}" bukan nominal. Nominal memakai Rp atau titik ribuan.'
 	String patternNotAmount({required Object word}) => '"${word}" bukan nominal. Nominal memakai Rp atau titik ribuan.';
@@ -2618,8 +2693,32 @@ class Translations$notificationCapture$id {
 	/// id: 'Belum ditentukan'
 	String get patternTransferWalletNone => 'Belum ditentukan';
 
-	/// id: 'Sunting templat'
-	String get patternTemplateToggle => 'Sunting templat';
+	/// id: 'Lihat templat (untuk yang paham)'
+	String get patternTemplateToggle => 'Lihat templat (untuk yang paham)';
+
+	/// id: 'Ajari Tanukonomy cara membaca notifikasi ini, supaya lain kali nominal dan catatannya terisi sendiri. Yang wajib hanya menandai kata nominal.'
+	String get patternIntro => 'Ajari Tanukonomy cara membaca notifikasi ini, supaya lain kali nominal dan catatannya terisi sendiri. Yang wajib hanya menandai kata nominal.';
+
+	/// id: 'Ketuk kata yang berisi nominal, misalnya Rp50.000.'
+	String get patternHintAmount => 'Ketuk kata yang berisi nominal, misalnya Rp50.000.';
+
+	/// id: 'Nominal sudah ditandai. Kalau mau, ketuk kata yang jadi catatan (nama toko atau keterangan). Boleh dilewati.'
+	String get patternHintNote => 'Nominal sudah ditandai. Kalau mau, ketuk kata yang jadi catatan (nama toko atau keterangan). Boleh dilewati.';
+
+	/// id: 'Nominal: jumlah uangnya.'
+	String get roleAmountHelp => 'Nominal: jumlah uangnya.';
+
+	/// id: 'Catatan: nama toko atau keterangan yang ikut dicatat.'
+	String get roleNoteHelp => 'Catatan: nama toko atau keterangan yang ikut dicatat.';
+
+	/// id: 'Abaikan: kata yang berubah tiap notifikasi, mis. nomor referensi.'
+	String get roleIgnoreHelp => 'Abaikan: kata yang berubah tiap notifikasi, mis. nomor referensi.';
+
+	/// id: 'Tandai satu kata nominal dulu supaya bisa disimpan.'
+	String get patternNeedAmount => 'Tandai satu kata nominal dulu supaya bisa disimpan.';
+
+	/// id: 'Templat'
+	String get patternTemplateLabel => 'Templat';
 
 	/// id: 'Lainnya'
 	String get moreActions => 'Lainnya';
@@ -3746,6 +3845,126 @@ class Translations$currency$names$id {
 	String get aud => 'Dolar Australia';
 }
 
+// Path: discovery.payday
+class Translations$discovery$payday$id {
+	Translations$discovery$payday$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Gajian tanggal $d?'
+	String title({required Object d}) => 'Gajian tanggal ${d}?';
+
+	/// id: 'Mulai bulan keuangan dari tanggal $d, supaya Rencana dan Analisis mengikuti gajianmu.'
+	String body({required Object d}) => 'Mulai bulan keuangan dari tanggal ${d}, supaya Rencana dan Analisis mengikuti gajianmu.';
+
+	/// id: 'Atur'
+	String get action => 'Atur';
+}
+
+// Path: discovery.period
+class Translations$discovery$period$id {
+	Translations$discovery$period$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Atur'
+	String get hint => 'Atur';
+}
+
+// Path: discovery.status
+class Translations$discovery$status$id {
+	Translations$discovery$status$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Nyala'
+	String get on => 'Nyala';
+
+	/// id: 'Mati'
+	String get off => 'Mati';
+
+	/// id: 'Izin belum diberikan'
+	String get permissionNeeded => 'Izin belum diberikan';
+}
+
+// Path: discovery.notification
+class Translations$discovery$notification$id {
+	Translations$discovery$notification$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Nyalakan catat dari notifikasi'
+	String get button => 'Nyalakan catat dari notifikasi';
+
+	/// id: 'Catat dari notifikasi'
+	String get manage => 'Catat dari notifikasi';
+
+	/// id: 'Kotak masuk notifikasi'
+	String get inboxTitle => 'Kotak masuk notifikasi';
+
+	/// id: 'Cek'
+	String get check => 'Cek';
+
+	/// id: '$n aplikasi aktif'
+	String activeApps({required Object n}) => '${n} aplikasi aktif';
+
+	/// id: 'Kelola aplikasi & pola'
+	String get manageSources => 'Kelola aplikasi & pola';
+
+	/// id: 'Ajari pola'
+	String get teachPattern => 'Ajari pola';
+}
+
+// Path: discovery.reminder
+class Translations$discovery$reminder$id {
+	Translations$discovery$reminder$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Nyalakan pengingat rutin'
+	String get button => 'Nyalakan pengingat rutin';
+
+	/// id: 'Diingatkan sebelum tagihan jatuh tempo.'
+	String get body => 'Diingatkan sebelum tagihan jatuh tempo.';
+
+	/// id: 'Pengingat belum menyala untuk semua rutin.'
+	String get rowNote => 'Pengingat belum menyala untuk semua rutin.';
+}
+
+// Path: discovery.quickStart
+class Translations$discovery$quickStart$id {
+	Translations$discovery$quickStart$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Pilih aplikasi bank atau dompet digitalmu'
+	String get title => 'Pilih aplikasi bank atau dompet digitalmu';
+
+	/// id: 'Notifikasi dari aplikasi yang kamu pilih dibaca di perangkat dan jadi draf catatan. Kamu tinjau dulu.'
+	String get body => 'Notifikasi dari aplikasi yang kamu pilih dibaca di perangkat dan jadi draf catatan. Kamu tinjau dulu.';
+
+	/// id: 'Aplikasi lain'
+	String get other => 'Aplikasi lain';
+
+	/// id: 'Nyalakan'
+	String get turnOn => 'Nyalakan';
+
+	/// id: 'Tidak ada aplikasi bank atau dompet digital yang dikenal di perangkat ini. Pilih aplikasimu sendiri.'
+	String get noBuiltIn => 'Tidak ada aplikasi bank atau dompet digital yang dikenal di perangkat ini. Pilih aplikasimu sendiri.';
+}
+
 // Path: notificationCapture.reviewReason
 class Translations$notificationCapture$reviewReason$id {
 	Translations$notificationCapture$reviewReason$id.internal(this._root);
@@ -4702,6 +4921,17 @@ extension on Translations {
 			'onboarding.currencySuggested' => 'Sesuai wilayah perangkatmu',
 			'onboarding.currencyChooseFirst' => 'Pilih mata uang dulu',
 			'onboarding.currencyConfirm' => ({required Object code}) => 'Pakai ${code}',
+			'onboarding.periodTitle' => 'Kapan siklus bulananmu dimulai?',
+			'onboarding.periodBody' => 'Rencana anggaran dan analisis keuangan akan dihitung mulai tanggal ini setiap bulannya. Bisa diubah kapan saja di menu Akun.',
+			'onboarding.periodConfirm' => ({required Object day}) => 'Pakai tanggal ${day}',
+			'onboarding.periodConfirmLast' => 'Pakai hari terakhir bulan',
+			'onboarding.reminderTitle' => 'Ingatkan kamu sebelum jatuh tempo?',
+			'onboarding.reminderBody' => 'Kamu dapat pengingat sebelum rutin jatuh tempo, sesuai setelan tiap rutin.',
+			'onboarding.turnOn' => 'Nyalakan',
+			'onboarding.notNow' => 'Tidak sekarang',
+			'onboarding.notificationInfo' => 'Bisa catat otomatis dari notifikasi bank. Nyalakan dari Beranda.',
+			'onboarding.summaryPeriod' => 'Awal bulan keuangan',
+			'onboarding.summaryReminder' => 'Pengingat rutin',
 			'onboarding.languageTitle' => 'Pilih bahasa',
 			'onboarding.languageBody' => 'Dipakai untuk tampilan aplikasi dan saat mencatat dengan suara. Bisa diubah lagi di layar Akun.',
 			'onboarding.languageConfirm' => 'Lanjut',
@@ -4760,6 +4990,8 @@ extension on Translations {
 			'tour.freelanceWorklogBody' => 'Jam kerja adalah penghasilan yang sudah kamu peroleh. Kumpulkan jadi tagihan, lalu catat saat dibayar.',
 			'tour.freelanceReceiveTitle' => 'Uang benar-benar masuk',
 			'tour.freelanceReceiveBody' => 'Catat saat honornya masuk: saldo dompet bertambah dan tagihannya lunas.',
+			'tour.accountStatusTitle' => 'Status pencatatan',
+			'tour.accountStatusBody' => 'Lihat apakah Catat dari notifikasi dan pengingat rutin menyala. Ketuk barisnya untuk mengubah.',
 			'tour.homeVoiceTitle' => 'Catat pakai suara',
 			'tour.homeVoiceBody' => 'Tekan lama tombol Catat, ucapkan satu transaksi, lalu periksa formulirnya sebelum dicatat.',
 			'tour.planTabsTitle' => 'Rencana',
@@ -4772,6 +5004,10 @@ extension on Translations {
 			'tour.homeForecastBody' => 'Saldo dompet perkiraan di akhir bulan dan titik paling tipisnya. Ketuk untuk rinciannya di Rencana.',
 			'tour.homePendingTitle' => 'Menunggu dicatat',
 			'tour.homePendingBody' => 'Tagihan dan pemasukan rutin yang sudah tiba. Catat satu ketuk, ubah dulu, atau Lewati.',
+			'tour.homeNotificationTitle' => 'Catat dari notifikasi',
+			'tour.homeNotificationBody' => 'Pilih aplikasi bank atau dompet digitalmu, lalu notifikasi transaksinya jadi draf catatan. Kartu ini selalu ada di sini.',
+			'tour.homeReminderTitle' => 'Pengingat rutin',
+			'tour.homeReminderBody' => 'Nyalakan supaya kamu diingatkan sebelum tagihan jatuh tempo. Kartu ini hilang begitu pengingat menyala.',
 			'tour.recordRepeatTitle' => 'Ulangi',
 			'tour.recordRepeatBody' => 'Untuk tagihan, gaji, atau langganan. Kemunculan berikutnya akan menunggu kamu catat; tidak pernah dicatat diam-diam.',
 			'tour.recurringStartersTitle' => 'Mulai cepat',
@@ -4907,6 +5143,30 @@ extension on Translations {
 			'language.label' => 'Bahasa',
 			'language.pickerTitle' => 'Pilih bahasa',
 			'language.hint' => 'Tampilan aplikasi dan bahasa ucapan',
+			'discovery.payday.title' => ({required Object d}) => 'Gajian tanggal ${d}?',
+			'discovery.payday.body' => ({required Object d}) => 'Mulai bulan keuangan dari tanggal ${d}, supaya Rencana dan Analisis mengikuti gajianmu.',
+			'discovery.payday.action' => 'Atur',
+			'discovery.period.hint' => 'Atur',
+			'discovery.status.on' => 'Nyala',
+			'discovery.status.off' => 'Mati',
+			'discovery.status.permissionNeeded' => 'Izin belum diberikan',
+			'discovery.turnOn' => 'Nyalakan',
+			'discovery.notification.button' => 'Nyalakan catat dari notifikasi',
+			'discovery.notification.manage' => 'Catat dari notifikasi',
+			'discovery.notification.inboxTitle' => 'Kotak masuk notifikasi',
+			'discovery.notification.check' => 'Cek',
+			'discovery.notification.activeApps' => ({required Object n}) => '${n} aplikasi aktif',
+			'discovery.notification.manageSources' => 'Kelola aplikasi & pola',
+			'discovery.notification.teachPattern' => 'Ajari pola',
+			'discovery.reminder.button' => 'Nyalakan pengingat rutin',
+			'discovery.reminder.body' => 'Diingatkan sebelum tagihan jatuh tempo.',
+			'discovery.reminder.rowNote' => 'Pengingat belum menyala untuk semua rutin.',
+			'discovery.allowAccess' => 'Izinkan',
+			'discovery.quickStart.title' => 'Pilih aplikasi bank atau dompet digitalmu',
+			'discovery.quickStart.body' => 'Notifikasi dari aplikasi yang kamu pilih dibaca di perangkat dan jadi draf catatan. Kamu tinjau dulu.',
+			'discovery.quickStart.other' => 'Aplikasi lain',
+			'discovery.quickStart.turnOn' => 'Nyalakan',
+			'discovery.quickStart.noBuiltIn' => 'Tidak ada aplikasi bank atau dompet digital yang dikenal di perangkat ini. Pilih aplikasimu sendiri.',
 			'notificationCapture.accountEntryTitle' => 'Catat dari notifikasi',
 			'notificationCapture.accountEntryBody' => 'Catat otomatis dari notifikasi bank dan e-wallet.',
 			'notificationCapture.settingsTitle' => 'Catat dari notifikasi',
@@ -4944,14 +5204,14 @@ extension on Translations {
 			'notificationCapture.removeSource' => 'Hapus aplikasi ini',
 			'notificationCapture.removeSourceConfirm' => ({required Object app}) => 'Berhenti membaca notifikasi ${app}?',
 			'notificationCapture.save' => 'Simpan',
-			'notificationCapture.patternTitle' => 'Buat pola',
-			'notificationCapture.patternSampleLabel' => 'Contoh notifikasi',
+			'notificationCapture.patternTitle' => 'Ajari pola',
+			'notificationCapture.patternSampleLabel' => '1. Contoh notifikasi',
 			'notificationCapture.patternSampleHint' => 'Tempel teks notifikasi di sini',
-			'notificationCapture.patternInstructions' => 'Pilih penanda, lalu ketuk katanya. Ketuk lagi untuk menghapus tanda.',
+			'notificationCapture.patternInstructions' => 'Ketuk lagi kata yang sudah ditandai untuk menghapus tandanya.',
 			'notificationCapture.roleAmount' => 'Nominal',
 			'notificationCapture.roleNote' => 'Catatan',
 			'notificationCapture.roleIgnore' => 'Abaikan',
-			'notificationCapture.patternKindLabel' => 'Jenis',
+			'notificationCapture.patternKindLabel' => '3. Jenis transaksi',
 			'notificationCapture.kindExpense' => 'Keluar',
 			'notificationCapture.kindIncome' => 'Masuk',
 			'notificationCapture.kindTransferOut' => 'Transfer keluar',
@@ -5022,12 +5282,20 @@ extension on Translations {
 			'notificationCapture.walletHelp' => 'Transaksi dari aplikasi ini dicatat di dompet ini.',
 			'notificationCapture.advancedTitle' => 'Filter dan pola',
 			'notificationCapture.advancedHint' => 'Opsional',
-			'notificationCapture.patternMarkLabel' => 'Tandai bagiannya',
+			'notificationCapture.patternMarkLabel' => '2. Tandai bagian pentingnya',
 			'notificationCapture.patternNotAmount' => ({required Object word}) => '"${word}" bukan nominal. Nominal memakai Rp atau titik ribuan.',
 			'notificationCapture.kindTransfer' => 'Transfer',
 			'notificationCapture.transferDirectionLabel' => 'Arah transfer',
 			'notificationCapture.patternTransferWalletNone' => 'Belum ditentukan',
-			'notificationCapture.patternTemplateToggle' => 'Sunting templat',
+			'notificationCapture.patternTemplateToggle' => 'Lihat templat (untuk yang paham)',
+			'notificationCapture.patternIntro' => 'Ajari Tanukonomy cara membaca notifikasi ini, supaya lain kali nominal dan catatannya terisi sendiri. Yang wajib hanya menandai kata nominal.',
+			'notificationCapture.patternHintAmount' => 'Ketuk kata yang berisi nominal, misalnya Rp50.000.',
+			'notificationCapture.patternHintNote' => 'Nominal sudah ditandai. Kalau mau, ketuk kata yang jadi catatan (nama toko atau keterangan). Boleh dilewati.',
+			'notificationCapture.roleAmountHelp' => 'Nominal: jumlah uangnya.',
+			'notificationCapture.roleNoteHelp' => 'Catatan: nama toko atau keterangan yang ikut dicatat.',
+			'notificationCapture.roleIgnoreHelp' => 'Abaikan: kata yang berubah tiap notifikasi, mis. nomor referensi.',
+			'notificationCapture.patternNeedAmount' => 'Tandai satu kata nominal dulu supaya bisa disimpan.',
+			'notificationCapture.patternTemplateLabel' => 'Templat',
 			'notificationCapture.moreActions' => 'Lainnya',
 			'recurring.starters.salary' => 'Gaji',
 			'recurring.starters.rent' => 'Kos/Sewa',
@@ -5088,6 +5356,8 @@ extension on Translations {
 			'recurring.deletedMessage' => ({required Object name}) => '${name} dihapus.',
 			'recurring.skippedMessage' => ({required Object date}) => '${date} dilewati.',
 			'recurring.priceUpdateAction' => ({required Object amount}) => 'Perbarui ke ${amount}',
+			_ => null,
+		} ?? switch (path) {
 			'recurring.notFound' => 'Rutin ini sudah tidak ada.',
 			'recurring.noRecorded' => 'Belum ada yang tercatat.',
 			'recurring.recordedMessage' => ({required Object name}) => '${name} tercatat.',
@@ -5137,8 +5407,6 @@ extension on Translations {
 			'recurring.budgetLinkEmpty' => 'Belum ada pos anggaran rutin di dompet ini.',
 			'recurring.budgetLinkedMessage' => ({required Object name, required Object item}) => '${name} tertaut ke pos ${item}.',
 			'recurring.budgetUnlinkedMessage' => ({required Object name}) => 'Tautan pos ${name} dilepas.',
-			_ => null,
-		} ?? switch (path) {
 			'recurring.fundingTitle' => ({required Object wallet}) => 'Siapkan dana di ${wallet}',
 			'recurring.fundingBody' => ({required Object name, required Object amount, required Object date, required Object shortfall}) => '${name} ${amount}, ${date}. Perkiraan kurang ≈${shortfall}.',
 			'recurring.installmentFreeLine' => ({required Object month, required Object amount}) => 'Mulai ${month} ruang bebas +${amount}/bln.',

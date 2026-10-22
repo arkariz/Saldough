@@ -22,6 +22,8 @@ void main() {
       'recurring.reminders',
       'notificationCapture.settings',
       'notificationCapture.inbox',
+      'notificationCapture.quickStart',
+      'notificationCapture.teachPattern',
       'transaction.detail',
       'transaction.filtered',
       'transaction.history',

@@ -617,6 +617,17 @@
     "currencySuggested": "Matches your device region",
     "currencyChooseFirst": "Choose a currency first",
     "currencyConfirm": "Use $code",
+    "periodTitle": "When does your monthly cycle start?",
+    "periodBody": "Your budget plan and financial analysis will start on this date each month. You can change this anytime in Account.",
+    "periodConfirm": "Use day $day",
+    "periodConfirmLast": "Use the last day",
+    "reminderTitle": "Remind you before things are due?",
+    "reminderBody": "You get a reminder before a recurring item is due, based on each item's settings.",
+    "turnOn": "Turn on",
+    "notNow": "Not now",
+    "notificationInfo": "You can record automatically from bank notifications. Turn it on from Home.",
+    "summaryPeriod": "Financial month start",
+    "summaryReminder": "Recurring reminders",
     "languageTitle": "Choose your language",
     "languageBody": "Used for the app and when recording by voice. You can change it later on the Account screen.",
     "languageConfirm": "Continue"
@@ -677,6 +688,8 @@
     "freelanceWorklogBody": "Work hours are income you've earned. Group them into an invoice, then record it when you're paid.",
     "freelanceReceiveTitle": "Money actually arrives",
     "freelanceReceiveBody": "Record it when the pay arrives: your wallet balance grows and the invoice is settled.",
+    "accountStatusTitle": "Recording status",
+    "accountStatusBody": "See whether recording from notifications and recurring reminders are on. Tap a row to change it.",
     "homeVoiceTitle": "Record by voice",
     "homeVoiceBody": "Long-press the Record button, say one transaction, then check the form before recording it.",
     "planTabsTitle": "Plan",
@@ -689,6 +702,10 @@
     "homeForecastBody": "Your forecast wallet balance at month end and its lowest point. Tap for the breakdown in Plan.",
     "homePendingTitle": "Waiting to record",
     "homePendingBody": "Recurring bills and income that are due. Record in one tap, edit first, or Skip.",
+    "homeNotificationTitle": "Record from notifications",
+    "homeNotificationBody": "Pick your bank or e-wallet apps and their transaction notifications become draft entries. This card is always here.",
+    "homeReminderTitle": "Recurring reminders",
+    "homeReminderBody": "Turn them on to get reminded before bills are due. This card goes away once reminders are on.",
     "recordRepeatTitle": "Repeat",
     "recordRepeatBody": "For bills, salary, or subscriptions. Each next occurrence waits for you to record it; nothing is recorded silently.",
     "recurringStartersTitle": "Quick start",
@@ -843,6 +860,44 @@
     "pickerTitle": "Choose language",
     "hint": "App text and voice recording"
   },
+  "discovery": {
+    "payday": {
+      "title": "Payday on the $d?",
+      "body": "Start your financial month on day $d so Plan and Analysis follow your payday.",
+      "action": "Set"
+    },
+    "period": {
+      "hint": "Set"
+    },
+    "status": {
+      "on": "On",
+      "off": "Off",
+      "permissionNeeded": "Permission needed"
+    },
+    "turnOn": "Turn on",
+    "notification": {
+      "button": "Turn on recording from notifications",
+      "manage": "Record from notifications",
+      "inboxTitle": "Notification inbox",
+      "check": "Check",
+      "activeApps": "Active apps: $n",
+      "manageSources": "Manage apps & patterns",
+      "teachPattern": "Teach pattern"
+    },
+    "reminder": {
+      "button": "Turn on recurring reminders",
+      "body": "Reminded before bills are due.",
+      "rowNote": "Reminders aren't on for all recurring items yet."
+    },
+    "allowAccess": "Allow",
+    "quickStart": {
+      "title": "Pick your bank or e-wallet apps",
+      "body": "Notifications from the apps you pick are read on this device and become draft entries. You review them first.",
+      "other": "Other apps",
+      "turnOn": "Turn on",
+      "noBuiltIn": "No known bank or e-wallet apps on this device. Pick your own app."
+    }
+  },
   "notificationCapture": {
     "accountEntryTitle": "Record from notifications",
     "accountEntryBody": "Record automatically from bank and e-wallet notifications.",
@@ -881,14 +936,14 @@
     "removeSource": "Remove this app",
     "removeSourceConfirm": "Stop reading notifications from ${app}?",
     "save": "Save",
-    "patternTitle": "Make a pattern",
-    "patternSampleLabel": "Example notification",
+    "patternTitle": "Teach a pattern",
+    "patternSampleLabel": "1. Example notification",
     "patternSampleHint": "Paste the notification text here",
-    "patternInstructions": "Pick a marker, then tap the words. Tap again to clear a mark.",
+    "patternInstructions": "Tap a marked word again to clear its mark.",
     "roleAmount": "Amount",
     "roleNote": "Note",
     "roleIgnore": "Ignore",
-    "patternKindLabel": "Type",
+    "patternKindLabel": "3. Transaction type",
     "kindExpense": "Out",
     "kindIncome": "In",
     "kindTransferOut": "Transfer out",
@@ -897,7 +952,7 @@
     "patternNoCategory": "No category",
     "patternTransferWallet": "Other wallet",
     "patternLabelField": "Pattern name (optional)",
-    "patternPreview": "Reads as: ${amount}",
+    "patternPreview": "Reads as: $amount",
     "patternInvalid": "Mark one amount. Note words must be next to each other.",
     "deletePattern": "Delete pattern",
     "inboxTitle": "Notification inbox",
@@ -964,12 +1019,20 @@
     "walletHelp": "Transactions from this app are recorded in this wallet.",
     "advancedTitle": "Filter and patterns",
     "advancedHint": "Optional",
-    "patternMarkLabel": "Mark the parts",
+    "patternMarkLabel": "2. Mark the important parts",
     "patternNotAmount": "\"${word}\" is not an amount. Amounts use Rp or thousands separators.",
     "kindTransfer": "Transfer",
     "transferDirectionLabel": "Transfer direction",
     "patternTransferWalletNone": "Not set",
-    "patternTemplateToggle": "Edit template",
+    "patternTemplateToggle": "Show template (advanced)",
+    "patternIntro": "Teach Tanukonomy how to read this notification so the amount and note fill in on their own next time. Only the amount word is required.",
+    "patternHintAmount": "Tap the word that holds the amount, for example Rp50,000.",
+    "patternHintNote": "Amount marked. If you like, tap the words that become the note (shop name or description). You can skip this.",
+    "roleAmountHelp": "Amount: how much money.",
+    "roleNoteHelp": "Note: the shop name or description that gets recorded.",
+    "roleIgnoreHelp": "Ignore: words that change every time, like a reference number.",
+    "patternNeedAmount": "Mark one amount word first so you can save.",
+    "patternTemplateLabel": "Template",
     "moreActions": "More"
   },
   "recurring": {

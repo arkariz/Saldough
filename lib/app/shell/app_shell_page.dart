@@ -23,6 +23,7 @@ import 'package:saldough/features/home/presentation/bloc/home_state.dart';
 import 'package:saldough/features/home/presentation/pages/home_page.dart';
 import 'package:saldough/features/notification_capture/presentation/host/notification_capture_host.dart';
 import 'package:saldough/features/notification_capture/presentation/widgets/capture_inbox_banner.dart';
+import 'package:saldough/features/notification_capture/presentation/widgets/notification_inbox_card.dart';
 import 'package:saldough/features/plan/presentation/funding_loader.dart';
 import 'package:saldough/features/plan/presentation/pages/plan_month_page.dart';
 import 'package:saldough/features/plan/presentation/pages/plan_page.dart';
@@ -33,6 +34,7 @@ import 'package:saldough/features/recurring/presentation/host/recurring_reminder
 import 'package:saldough/features/recurring/presentation/pages/recurring_page.dart';
 import 'package:saldough/features/recurring/presentation/widgets/recurring_pending.dart';
 import 'package:saldough/features/recurring/presentation/widgets/recurring_starter_chips.dart';
+import 'package:saldough/features/recurring/presentation/widgets/reminder_nudge_card.dart';
 import 'package:saldough/features/transaction/di/transaction_scope.dart';
 import 'package:saldough/features/transaction/domain/history_segment.dart';
 import 'package:saldough/features/transaction/presentation/bloc/transaction_bloc.dart';
@@ -155,12 +157,15 @@ class _AppShellPageState extends State<AppShellPage> {
             AppUpdateBanner(container: parentContainer),
           ],
         ),
-        notice: CaptureInboxBanner(container: parentContainer),
+        // Kotak masuk notifikasi (Android): pintu permanen Catat dari
+        // notifikasi, P-6 sesudah kartu pembaruan.
+        notice: NotificationInboxCard(container: parentContainer),
         pendingRecurring: RecurringPendingCard(
           spotlight: (tour: TourId.home, key: SpotlightKey.homePending),
           container: parentContainer,
           onShowAll: () => _showPlan(context, PlanSegment.recurring),
         ),
+        featureNudge: ReminderNudgeCard(container: parentContainer, spotlight: true),
         forecast: PlanForecastRow(
           container: parentContainer,
           onTap: () => _showPlan(context, PlanSegment.thisMonth),

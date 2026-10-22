@@ -617,6 +617,17 @@
     "currencySuggested": "Sesuai wilayah perangkatmu",
     "currencyChooseFirst": "Pilih mata uang dulu",
     "currencyConfirm": "Pakai $code",
+    "periodTitle": "Kapan siklus bulananmu dimulai?",
+    "periodBody": "Rencana anggaran dan analisis keuangan akan dihitung mulai tanggal ini setiap bulannya. Bisa diubah kapan saja di menu Akun.",
+    "periodConfirm": "Pakai tanggal $day",
+    "periodConfirmLast": "Pakai hari terakhir bulan",
+    "reminderTitle": "Ingatkan kamu sebelum jatuh tempo?",
+    "reminderBody": "Kamu dapat pengingat sebelum rutin jatuh tempo, sesuai setelan tiap rutin.",
+    "turnOn": "Nyalakan",
+    "notNow": "Tidak sekarang",
+    "notificationInfo": "Bisa catat otomatis dari notifikasi bank. Nyalakan dari Beranda.",
+    "summaryPeriod": "Awal bulan keuangan",
+    "summaryReminder": "Pengingat rutin",
     "languageTitle": "Pilih bahasa",
     "languageBody": "Dipakai untuk tampilan aplikasi dan saat mencatat dengan suara. Bisa diubah lagi di layar Akun.",
     "languageConfirm": "Lanjut"
@@ -677,6 +688,8 @@
     "freelanceWorklogBody": "Jam kerja adalah penghasilan yang sudah kamu peroleh. Kumpulkan jadi tagihan, lalu catat saat dibayar.",
     "freelanceReceiveTitle": "Uang benar-benar masuk",
     "freelanceReceiveBody": "Catat saat honornya masuk: saldo dompet bertambah dan tagihannya lunas.",
+    "accountStatusTitle": "Status pencatatan",
+    "accountStatusBody": "Lihat apakah Catat dari notifikasi dan pengingat rutin menyala. Ketuk barisnya untuk mengubah.",
     "homeVoiceTitle": "Catat pakai suara",
     "homeVoiceBody": "Tekan lama tombol Catat, ucapkan satu transaksi, lalu periksa formulirnya sebelum dicatat.",
     "planTabsTitle": "Rencana",
@@ -689,6 +702,10 @@
     "homeForecastBody": "Saldo dompet perkiraan di akhir bulan dan titik paling tipisnya. Ketuk untuk rinciannya di Rencana.",
     "homePendingTitle": "Menunggu dicatat",
     "homePendingBody": "Tagihan dan pemasukan rutin yang sudah tiba. Catat satu ketuk, ubah dulu, atau Lewati.",
+    "homeNotificationTitle": "Catat dari notifikasi",
+    "homeNotificationBody": "Pilih aplikasi bank atau dompet digitalmu, lalu notifikasi transaksinya jadi draf catatan. Kartu ini selalu ada di sini.",
+    "homeReminderTitle": "Pengingat rutin",
+    "homeReminderBody": "Nyalakan supaya kamu diingatkan sebelum tagihan jatuh tempo. Kartu ini hilang begitu pengingat menyala.",
     "recordRepeatTitle": "Ulangi",
     "recordRepeatBody": "Untuk tagihan, gaji, atau langganan. Kemunculan berikutnya akan menunggu kamu catat; tidak pernah dicatat diam-diam.",
     "recurringStartersTitle": "Mulai cepat",
@@ -843,6 +860,44 @@
     "pickerTitle": "Pilih bahasa",
     "hint": "Tampilan aplikasi dan bahasa ucapan"
   },
+  "discovery": {
+    "payday": {
+      "title": "Gajian tanggal $d?",
+      "body": "Mulai bulan keuangan dari tanggal $d, supaya Rencana dan Analisis mengikuti gajianmu.",
+      "action": "Atur"
+    },
+    "period": {
+      "hint": "Atur"
+    },
+    "status": {
+      "on": "Nyala",
+      "off": "Mati",
+      "permissionNeeded": "Izin belum diberikan"
+    },
+    "turnOn": "Nyalakan",
+    "notification": {
+      "button": "Nyalakan catat dari notifikasi",
+      "manage": "Catat dari notifikasi",
+      "inboxTitle": "Kotak masuk notifikasi",
+      "check": "Cek",
+      "activeApps": "$n aplikasi aktif",
+      "manageSources": "Kelola aplikasi & pola",
+      "teachPattern": "Ajari pola"
+    },
+    "reminder": {
+      "button": "Nyalakan pengingat rutin",
+      "body": "Diingatkan sebelum tagihan jatuh tempo.",
+      "rowNote": "Pengingat belum menyala untuk semua rutin."
+    },
+    "allowAccess": "Izinkan",
+    "quickStart": {
+      "title": "Pilih aplikasi bank atau dompet digitalmu",
+      "body": "Notifikasi dari aplikasi yang kamu pilih dibaca di perangkat dan jadi draf catatan. Kamu tinjau dulu.",
+      "other": "Aplikasi lain",
+      "turnOn": "Nyalakan",
+      "noBuiltIn": "Tidak ada aplikasi bank atau dompet digital yang dikenal di perangkat ini. Pilih aplikasimu sendiri."
+    }
+  },
   "notificationCapture": {
     "accountEntryTitle": "Catat dari notifikasi",
     "accountEntryBody": "Catat otomatis dari notifikasi bank dan e-wallet.",
@@ -881,14 +936,14 @@
     "removeSource": "Hapus aplikasi ini",
     "removeSourceConfirm": "Berhenti membaca notifikasi ${app}?",
     "save": "Simpan",
-    "patternTitle": "Buat pola",
-    "patternSampleLabel": "Contoh notifikasi",
+    "patternTitle": "Ajari pola",
+    "patternSampleLabel": "1. Contoh notifikasi",
     "patternSampleHint": "Tempel teks notifikasi di sini",
-    "patternInstructions": "Pilih penanda, lalu ketuk katanya. Ketuk lagi untuk menghapus tanda.",
+    "patternInstructions": "Ketuk lagi kata yang sudah ditandai untuk menghapus tandanya.",
     "roleAmount": "Nominal",
     "roleNote": "Catatan",
     "roleIgnore": "Abaikan",
-    "patternKindLabel": "Jenis",
+    "patternKindLabel": "3. Jenis transaksi",
     "kindExpense": "Keluar",
     "kindIncome": "Masuk",
     "kindTransferOut": "Transfer keluar",
@@ -897,7 +952,7 @@
     "patternNoCategory": "Tanpa kategori",
     "patternTransferWallet": "Dompet lawan",
     "patternLabelField": "Nama pola (opsional)",
-    "patternPreview": "Terbaca: ${amount}",
+    "patternPreview": "Terbaca: $amount",
     "patternInvalid": "Tandai satu nominal. Kata Catatan harus berurutan.",
     "deletePattern": "Hapus pola",
     "inboxTitle": "Kotak masuk notifikasi",
@@ -963,12 +1018,20 @@
     "walletHelp": "Transaksi dari aplikasi ini dicatat di dompet ini.",
     "advancedTitle": "Filter dan pola",
     "advancedHint": "Opsional",
-    "patternMarkLabel": "Tandai bagiannya",
+    "patternMarkLabel": "2. Tandai bagian pentingnya",
     "patternNotAmount": "\"${word}\" bukan nominal. Nominal memakai Rp atau titik ribuan.",
     "kindTransfer": "Transfer",
     "transferDirectionLabel": "Arah transfer",
     "patternTransferWalletNone": "Belum ditentukan",
-    "patternTemplateToggle": "Sunting templat",
+    "patternTemplateToggle": "Lihat templat (untuk yang paham)",
+    "patternIntro": "Ajari Tanukonomy cara membaca notifikasi ini, supaya lain kali nominal dan catatannya terisi sendiri. Yang wajib hanya menandai kata nominal.",
+    "patternHintAmount": "Ketuk kata yang berisi nominal, misalnya Rp50.000.",
+    "patternHintNote": "Nominal sudah ditandai. Kalau mau, ketuk kata yang jadi catatan (nama toko atau keterangan). Boleh dilewati.",
+    "roleAmountHelp": "Nominal: jumlah uangnya.",
+    "roleNoteHelp": "Catatan: nama toko atau keterangan yang ikut dicatat.",
+    "roleIgnoreHelp": "Abaikan: kata yang berubah tiap notifikasi, mis. nomor referensi.",
+    "patternNeedAmount": "Tandai satu kata nominal dulu supaya bisa disimpan.",
+    "patternTemplateLabel": "Templat",
     "moreActions": "Lainnya"
   },
   "recurring": {

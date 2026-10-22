@@ -8,9 +8,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
 import 'package:navigation/navigation.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/notification_capture/di/notification_capture_module.dart';
 import 'package:saldough/features/notification_capture/domain/entities/capture_inbox_entry.dart';
@@ -76,6 +78,194 @@ void main() {
     await tester.pumpAndSettle();
   }
 
+  group('Mulai cepat (FEATURE_DISCOVERY §5.1)', () {
+    const bri = InstalledApp(packageName: 'id.co.bri.brimo', label: 'BRImo');
+    const gopay = InstalledApp(packageName: 'com.gojek.gopay', label: 'GoPay');
+    const calculator = InstalledApp(packageName: 'com.android.calculator2', label: 'Kalkulator');
+
+    Future<NotificationCaptureSettings> settings() async =>
+        (await store.loadSettings()).getOrElse((_) => throw StateError(''));
+
+    Future<void> resumeApp(WidgetTester tester) async {
+      const [
+        AppLifecycleState.inactive,
+        AppLifecycleState.hidden,
+        AppLifecycleState.paused,
+        AppLifecycleState.hidden,
+        AppLifecycleState.inactive,
+        AppLifecycleState.resumed,
+      ].forEach(tester.binding.handleAppLifecycleStateChanged);
+      await tester.pumpAndSettle();
+    }
+
+    testWidgets('hanya aplikasi dengan pola bawaan, semuanya tercentang', (tester) async {
+      gateway.apps = const [gopay, calculator, bri];
+      await open(tester, NotificationCaptureRouteKeys.quickStart);
+
+      expect(find.text('BRImo'), findsOneWidget);
+      expect(find.text('GoPay'), findsOneWidget);
+      expect(find.text('Kalkulator'), findsNothing);
+      final boxes = tester.widgetList<Checkbox>(find.byType(Checkbox));
+      expect(boxes, hasLength(2));
+      expect(boxes.every((box) => box.value ?? false), isTrue);
+    });
+
+    testWidgets('akses sudah ada: Nyalakan menyimpan sumber, menyalakan fitur, dan menutup layar', (tester) async {
+      gateway
+        ..apps = const [gopay, bri]
+        ..accessGranted = true;
+      await open(tester, NotificationCaptureRouteKeys.quickStart);
+
+      await tester.tap(find.text(t.discovery.quickStart.turnOn));
+      await tester.pumpAndSettle();
+
+      final saved = await settings();
+      expect(saved.enabled, isTrue);
+      expect(saved.sources.map((s) => s.packageName), ['id.co.bri.brimo', 'com.gojek.gopay']);
+      expect(gateway.configuredSources, hasLength(2));
+      expect(find.text(t.discovery.quickStart.turnOn), findsNothing);
+      expect(find.text('buka'), findsOneWidget);
+    });
+
+    testWidgets('analitik: selesai mencatat jumlah aplikasi dan via quick_start, tanpa nama aplikasi', (tester) async {
+      final events = <AnalyticsEvent>[];
+      AppAnalytics.debugSink = events.add;
+      addTearDown(() => AppAnalytics.debugSink = null);
+      gateway
+        ..apps = const [gopay, bri]
+        ..accessGranted = true;
+      await open(tester, NotificationCaptureRouteKeys.quickStart);
+
+      await tester.tap(find.text(t.discovery.quickStart.turnOn));
+      await tester.pumpAndSettle();
+
+      expect(events, [
+        DiscoveryEvents.quickStartCompleted(appsCount: 2),
+        DiscoveryEvents.featureEnabled(feature: 'notification', via: 'quick_start'),
+      ]);
+      expect(events.first.parameters, {'apps_count': 2});
+    });
+
+    testWidgets('analitik: akses diberikan sesudah kembali dari setelan sistem juga selesai satu kali', (tester) async {
+      final events = <AnalyticsEvent>[];
+      AppAnalytics.debugSink = events.add;
+      addTearDown(() => AppAnalytics.debugSink = null);
+      gateway.apps = const [bri];
+      await open(tester, NotificationCaptureRouteKeys.quickStart);
+      await tester.tap(find.text(t.discovery.quickStart.turnOn));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(t.notificationCapture.disclosureAccept));
+      await tester.pumpAndSettle();
+      expect(events, isEmpty);
+
+      gateway.accessGranted = true;
+      await resumeApp(tester);
+
+      expect(events.map((e) => e.name), ['quick_start_completed', 'feature_enabled']);
+      expect(events.first.parameters, {'apps_count': 1});
+    });
+
+    testWidgets('aplikasi yang dicentang dihapus tidak ikut disimpan', (tester) async {
+      gateway
+        ..apps = const [gopay, bri]
+        ..accessGranted = true;
+      await open(tester, NotificationCaptureRouteKeys.quickStart);
+
+      await tester.tap(find.byKey(const ValueKey('quick-start-com.gojek.gopay')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(t.discovery.quickStart.turnOn));
+      await tester.pumpAndSettle();
+
+      expect((await settings()).sources.map((s) => s.packageName), ['id.co.bri.brimo']);
+    });
+
+    testWidgets('tanpa centang dan tanpa sumber, Nyalakan nonaktif', (tester) async {
+      gateway.apps = const [bri];
+      await open(tester, NotificationCaptureRouteKeys.quickStart);
+
+      await tester.tap(find.byKey(const ValueKey('quick-start-id.co.bri.brimo')));
+      await tester.pumpAndSettle();
+
+      final button = tester.widget<AppButton>(find.byKey(const ValueKey('quick-start-turn-on')));
+      expect(button.onPressed, isNull);
+    });
+
+    testWidgets('akses belum ada: pengungkapan dulu, lalu setelan sistem; kembali dengan akses menutup layar', (
+      tester,
+    ) async {
+      gateway.apps = const [bri];
+      await open(tester, NotificationCaptureRouteKeys.quickStart);
+
+      await tester.tap(find.text(t.discovery.quickStart.turnOn));
+      await tester.pumpAndSettle();
+      expect(find.text(t.notificationCapture.disclosureTitle), findsOneWidget);
+      expect(gateway.accessSettingsOpened, 0);
+      // Sumber sudah tersimpan sebelum keluar ke setelan sistem.
+      expect((await settings()).sources, hasLength(1));
+
+      await tester.tap(find.text(t.notificationCapture.disclosureAccept));
+      await tester.pumpAndSettle();
+      expect(gateway.accessSettingsOpened, 1);
+      expect(find.text(t.discovery.allowAccess), findsOneWidget);
+
+      gateway.accessGranted = true;
+      await resumeApp(tester);
+
+      expect(find.text(t.discovery.allowAccess), findsNothing);
+      expect(find.text('buka'), findsOneWidget);
+    });
+
+    testWidgets('kembali tanpa akses: layar bertahan dan tombol menjadi Izinkan', (tester) async {
+      gateway.apps = const [bri];
+      await open(tester, NotificationCaptureRouteKeys.quickStart);
+
+      await tester.tap(find.text(t.discovery.quickStart.turnOn));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(t.notificationCapture.disclosureAccept));
+      await tester.pumpAndSettle();
+      await resumeApp(tester);
+
+      expect(find.text(t.discovery.allowAccess), findsOneWidget);
+      expect(find.text('BRImo'), findsOneWidget);
+
+      // Izinkan memakai ulang sumber yang tersimpan, tanpa menyimpan lagi.
+      await tester.tap(find.text(t.discovery.allowAccess));
+      await tester.pumpAndSettle();
+      expect(find.text(t.notificationCapture.disclosureTitle), findsOneWidget);
+    });
+
+    testWidgets('pengungkapan dibatalkan: tidak membuka setelan sistem, layar tetap', (tester) async {
+      gateway.apps = const [bri];
+      await open(tester, NotificationCaptureRouteKeys.quickStart);
+
+      await tester.tap(find.text(t.discovery.quickStart.turnOn));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(t.common.cancel));
+      await tester.pumpAndSettle();
+
+      expect(gateway.accessSettingsOpened, 0);
+      expect(find.text(t.discovery.allowAccess), findsOneWidget);
+    });
+
+    testWidgets('tanpa aplikasi bawaan terpasang: pemilih aplikasi langsung terbuka', (tester) async {
+      gateway.apps = const [calculator];
+      await open(tester, NotificationCaptureRouteKeys.quickStart);
+
+      expect(find.text(t.notificationCapture.pickAppTitle), findsOneWidget);
+    });
+
+    testWidgets('Aplikasi lain membuka pemilih yang sudah ada', (tester) async {
+      gateway.apps = const [bri, calculator];
+      await open(tester, NotificationCaptureRouteKeys.quickStart);
+
+      await tester.tap(find.byKey(const ValueKey('quick-start-other')));
+      await tester.pumpAndSettle();
+
+      expect(find.text(t.notificationCapture.pickAppTitle), findsOneWidget);
+      expect(find.text('Kalkulator'), findsOneWidget);
+    });
+  });
+
   group('setelan', () {
     testWidgets('menyalakan fitur menampilkan akses; pengungkapan jelas sebelum setelan sistem', (tester) async {
       await open(tester, NotificationCaptureRouteKeys.settings);
@@ -93,6 +283,21 @@ void main() {
       await tester.tap(find.text(t.notificationCapture.disclosureAccept));
       await tester.pumpAndSettle();
       expect(gateway.accessSettingsOpened, 1);
+    });
+
+    testWidgets('analitik: menyalakan sakelar di setelan = feature_enabled via account', (tester) async {
+      final events = <AnalyticsEvent>[];
+      AppAnalytics.debugSink = events.add;
+      addTearDown(() => AppAnalytics.debugSink = null);
+      await open(tester, NotificationCaptureRouteKeys.settings);
+
+      await tester.tap(find.byType(Switch).first);
+      await tester.pumpAndSettle();
+      expect(events, [DiscoveryEvents.featureEnabled(feature: 'notification', via: 'account')]);
+
+      await tester.tap(find.byType(Switch).first);
+      await tester.pumpAndSettle();
+      expect(events, hasLength(1));
     });
 
     testWidgets('mode pengingat ditolak izinnya tetap kotak masuk saja', (tester) async {
@@ -218,6 +423,71 @@ void main() {
   group('kotak masuk', () {
     final at = DateTime(2026, 10, 1, 14);
 
+    CaptureInboxEntry unreadable() => CaptureInboxEntry(
+      id: 'u',
+      packageName: 'id.co.bri.brimo',
+      appLabel: 'BRImo',
+      text: 'Transfer masuk dari ANDI',
+      capturedAt: at,
+      draft: const RecordDraft(kind: DraftKind.income),
+    );
+
+    testWidgets('tautan Kelola aplikasi & pola ada juga saat kosong dan membuka setelan', (tester) async {
+      await open(tester, NotificationCaptureRouteKeys.inbox);
+
+      await tester.tap(find.byKey(const ValueKey('inbox-manage-sources')));
+      await tester.pumpAndSettle();
+
+      expect(find.text(t.notificationCapture.settingsTitle), findsWidgets);
+    });
+
+    testWidgets('nominal tak terbaca: Ajari pola membuka pembuat pola; yang terbaca tanpa tombol itu', (tester) async {
+      await store.saveInbox([
+        unreadable(),
+        CaptureInboxEntry(
+          id: 'ok',
+          packageName: 'id.co.bri.brimo',
+          appLabel: 'BRImo',
+          text: 'Bayar',
+          capturedAt: at,
+          draft: const RecordDraft(kind: DraftKind.expense, amountSen: 10000),
+        ),
+      ]);
+      await open(tester, NotificationCaptureRouteKeys.inbox);
+
+      expect(find.byKey(const ValueKey('inbox-teach-u')), findsOneWidget);
+      expect(find.byKey(const ValueKey('inbox-teach-ok')), findsNothing);
+
+      await tester.tap(find.byKey(const ValueKey('inbox-teach-u')));
+      await tester.pumpAndSettle();
+      expect(find.byType(NotificationPatternPage), findsOneWidget);
+    });
+
+    testWidgets('rute teachPattern langsung membuka pembuat pola untuk tangkapan itu', (tester) async {
+      await store.saveInbox([unreadable()]);
+      await tester.pumpWidget(
+        ScopeProvider(
+          container: container,
+          child: MaterialApp(
+            theme: PixelTheme.light,
+            home: Builder(
+              builder: (context) => TextButton(
+                onPressed: () => context.pushRoute(
+                  NotificationCaptureRouteKeys.teachPattern,
+                  const TeachPatternInput(entryId: 'u'),
+                ),
+                child: const Text('buka'),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.tap(find.text('buka'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(NotificationPatternPage), findsOneWidget);
+    });
+
     testWidgets('Abaikan menghapus tangkapan beserta teksnya', (tester) async {
       await store.saveInbox([
         CaptureInboxEntry(
@@ -336,5 +606,99 @@ void main() {
 
     expect(result?.template, 'QRIS {amount} di {note} sukses');
     expect(result?.kind, NotificationPatternKind.expense);
+  });
+
+  group('pembuat pola: petunjuk langkah demi langkah', () {
+    Future<void> openBuilder(WidgetTester tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: PixelTheme.light,
+          home: Builder(
+            builder: (context) => TextButton(
+              onPressed: () => openNotificationPatternPage(
+                context,
+                packageName: 'id.co.bri.brimo',
+                wallets: const [],
+                sample: 'QRIS Rp18.500 di WARUNG BU TINI sukses',
+              ),
+              child: const Text('buka'),
+            ),
+          ),
+        ),
+      );
+      await tester.tap(find.text('buka'));
+      await tester.pumpAndSettle();
+    }
+
+    final save = find.widgetWithText(AppButton, t.notificationCapture.save);
+
+    testWidgets('judul, pengantar satu kalimat, dan langkah bernomor', (tester) async {
+      await openBuilder(tester);
+
+      expect(find.text(t.notificationCapture.patternTitle), findsOneWidget);
+      expect(find.byKey(const ValueKey('pattern-intro')), findsOneWidget);
+      expect(find.text(t.notificationCapture.patternIntro), findsOneWidget);
+      expect(find.text(t.notificationCapture.patternSampleLabel), findsOneWidget);
+      expect(find.text(t.notificationCapture.patternMarkLabel), findsOneWidget);
+      await tester.scrollUntilVisible(
+        find.text(t.notificationCapture.patternKindLabel),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
+      expect(find.text(t.notificationCapture.patternKindLabel), findsOneWidget);
+    });
+
+    testWidgets('petunjuk mengikuti kemajuan: nominal dulu, lalu catatan yang boleh dilewati', (tester) async {
+      await openBuilder(tester);
+      expect(find.text(t.notificationCapture.patternHintAmount), findsOneWidget);
+      expect(find.text(t.notificationCapture.patternHintNote), findsNothing);
+
+      await tester.tap(find.text('Rp18.500'));
+      await tester.pump();
+
+      expect(find.text(t.notificationCapture.patternHintAmount), findsNothing);
+      expect(find.text(t.notificationCapture.patternHintNote), findsOneWidget);
+    });
+
+    testWidgets('arti penanda terpilih ditulis di bawah pilihannya', (tester) async {
+      await openBuilder(tester);
+      expect(find.text(t.notificationCapture.roleAmountHelp), findsOneWidget);
+
+      await tester.tap(find.text(t.notificationCapture.roleNote));
+      await tester.pump();
+      expect(find.text(t.notificationCapture.roleNoteHelp), findsOneWidget);
+
+      await tester.tap(find.text(t.notificationCapture.roleIgnore));
+      await tester.pump();
+      expect(find.text(t.notificationCapture.roleIgnoreHelp), findsOneWidget);
+    });
+
+    testWidgets('Simpan nonaktif disertai alasannya sampai nominal ditandai', (tester) async {
+      await openBuilder(tester);
+      expect(find.byKey(const ValueKey('pattern-need-amount')), findsOneWidget);
+      expect(tester.widget<AppButton>(save).onPressed, isNull);
+
+      await tester.tap(find.text('Rp18.500'));
+      await tester.pump();
+
+      expect(find.byKey(const ValueKey('pattern-need-amount')), findsNothing);
+      expect(tester.widget<AppButton>(save).onPressed, isNotNull);
+    });
+
+    testWidgets('templat mentah tidak disebut Pola dan tersembunyi di balik tautan', (tester) async {
+      await openBuilder(tester);
+      expect(find.byKey(const ValueKey('pattern-template')), findsNothing);
+
+      await tester.scrollUntilVisible(
+        find.text(t.notificationCapture.patternTemplateToggle),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.tap(find.text(t.notificationCapture.patternTemplateToggle));
+      await tester.pumpAndSettle();
+
+      expect(find.byKey(const ValueKey('pattern-template')), findsOneWidget);
+      expect(find.text(t.notificationCapture.patternTemplateLabel), findsOneWidget);
+    });
   });
 }

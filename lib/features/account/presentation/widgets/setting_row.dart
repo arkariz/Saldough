@@ -12,6 +12,7 @@ class SettingRow extends StatelessWidget {
     required this.title,
     this.subtitle,
     this.trailing,
+    this.badge,
     this.onTap,
     super.key,
   });
@@ -28,6 +29,9 @@ class SettingRow extends StatelessWidget {
   /// Pengganti panah, mis. sakelar.
   final Widget? trailing;
 
+  /// Status di sebelah panah (mis. Nyala/Mati); tidak menggantikan panah.
+  final Widget? badge;
+
   /// Dipanggil saat baris diketuk; `null` untuk baris bersakelar.
   final VoidCallback? onTap;
 
@@ -38,7 +42,7 @@ class SettingRow extends StatelessWidget {
     title: title,
     subtitle: subtitle,
     wrapSubtitle: true,
-    trailing: trailing,
+    trailing: trailing ?? badge,
     chevron: trailing == null,
     onTap: onTap,
   );

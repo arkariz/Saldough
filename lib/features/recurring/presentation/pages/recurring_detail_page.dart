@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:di/di.dart';
 import 'package:flutter/material.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
@@ -11,6 +12,7 @@ import 'package:saldough/features/record/presentation/navigation/record_route_ke
 import 'package:saldough/features/recurring/presentation/bloc/recurring_bloc.dart';
 import 'package:saldough/features/recurring/presentation/bloc/recurring_state.dart';
 import 'package:saldough/features/recurring/presentation/recurring_display.dart';
+import 'package:saldough/features/recurring/presentation/widgets/reminder_nudge_card.dart';
 import 'package:saldough/features/transaction/presentation/navigation/transaction_route_keys.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/category/category_presentation.dart';
@@ -26,7 +28,10 @@ enum _MenuAction { pause, end, delete }
 /// menu ⋮. Tidak ada yang di sini mengubah transaksi atau saldo.
 class RecurringDetailPage extends StatelessWidget {
   /// Membuat [RecurringDetailPage].
-  const RecurringDetailPage({required this.ruleId, super.key});
+  const RecurringDetailPage({required this.ruleId, this.rootContainer, super.key});
+
+  /// Kontainer akar untuk catatan pengingat (Fase 21); `null` = tanpa.
+  final GetIt? rootContainer;
 
   /// Rutin yang ditampilkan.
   final String ruleId;
@@ -296,6 +301,9 @@ class RecurringDetailPage extends StatelessWidget {
                         ),
                       ),
                     ),
+                    // Sakelar per rutin menyala tetapi pengingat global belum
+                    // efektif: satu kalimat dan Nyalakan / Izinkan.
+                    if (rule.reminders && rootContainer != null) ReminderRuleNote(container: rootContainer!),
                     if (rule.amountMode == RecurringAmountMode.fixed)
                       MergeSemantics(
                         child: AppListRow(

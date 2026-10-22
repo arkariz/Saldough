@@ -38,6 +38,7 @@ class HomePage extends StatefulWidget {
     this.updateNotice,
     this.notice,
     this.pendingRecurring,
+    this.featureNudge,
     this.forecast,
     super.key,
   });
@@ -66,6 +67,11 @@ class HomePage extends StatefulWidget {
   /// Kartu Menunggu dicatat (T-15.6), disisipkan akar komposisi supaya
   /// `home` tidak mengimpor fitur `recurring`; tampil hanya bila ada isinya.
   final Widget? pendingRecurring;
+
+  /// Kartu tombol permanen pengingat rutin (Fase 21, P-6: sesudah Menunggu
+  /// dicatat dan kotak masuk), disisipkan akar komposisi; kosong bila
+  /// pengingat sudah efektif.
+  final Widget? featureNudge;
 
   /// Baris perkiraan saldo akhir bulan (T-15.13), disisipkan akar komposisi.
   final Widget? forecast;
@@ -156,6 +162,7 @@ class _HomePageState extends State<HomePage> {
           // Banner kotak masuk membawa jarak atasnya sendiri (kosong = tidak ada).
           ?widget.notice,
           ?widget.pendingRecurring,
+          ?widget.featureNudge,
           // Kartu tanpa isi disembunyikan, bukan diisi angka nol (FR-HOME-005).
           if (state.hasTransactions) ...[
             const SizedBox(height: AppSpacing.space6),

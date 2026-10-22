@@ -37,6 +37,8 @@ Future<RecoveryOutcome> recoverRestoreJournal(RestoreEngine engine) async {
 Future<void> finishRestoreIfNeeded(GetIt container) async {
   if (container<RestoreRecoveryOutcome>().outcome != RecoveryOutcome.needsFinalize) return;
   try {
+    final onboarding = AppReboot.progress.value?.onboarding ?? false;
+    AppReboot.progress.value = RestoreProgress(step: 3, onboarding: onboarding);
     final report = await container<RestoreEngine>().finalize(() async {
       final result = await RecomputeWalletBalances(
         walletRepository: container<WalletRepository>(),
@@ -46,6 +48,7 @@ Future<void> finishRestoreIfNeeded(GetIt container) async {
         throw StateError('Hitung ulang saldo dompet gagal: ${failure.message}');
       }
     });
+    AppReboot.progress.value = RestoreProgress(step: 4, onboarding: onboarding);
     AppReboot.report.value = report;
   } on Object catch (e, st) {
     developer.log('Finalisasi pemulihan gagal, dicoba lagi nanti', error: e, stackTrace: st, name: 'RestoreEngine');

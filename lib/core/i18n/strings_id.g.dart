@@ -894,6 +894,121 @@ class Translations$dataPortability$id {
 	/// id: '$transactions · $wallets'
 	String backupFileMeta({required Object transactions, required Object wallets}) => '${transactions} · ${wallets}';
 
+	/// id: 'Pulihkan dari cadangan'
+	String get restoreTitle => 'Pulihkan dari cadangan';
+
+	/// id: 'Ganti data dengan cadangan'
+	String get restoreSub => 'Ganti data dengan cadangan';
+
+	/// id: 'Kembalikan data sebelum pemulihan ($date)'
+	String undoTitle({required Object date}) => 'Kembalikan data sebelum pemulihan (${date})';
+
+	/// id: 'Disimpan di ponsel ini sampai pemulihan berikutnya, paling lama 30 hari'
+	String get undoSub => 'Disimpan di ponsel ini sampai pemulihan berikutnya, paling lama 30 hari';
+
+	/// id: 'Kembalikan data'
+	String get undoPageTitle => 'Kembalikan data';
+
+	/// id: 'Memulihkan data'
+	String get restoreRunTitle => 'Memulihkan data';
+
+	/// id: 'Cadangan'
+	String get kickBackup => 'Cadangan';
+
+	/// id: 'Cadangan pengaman'
+	String get kickSafety => 'Cadangan pengaman';
+
+	/// id: 'Di ponsel ini'
+	String get kickNow => 'Di ponsel ini';
+
+	/// id: 'Sekarang'
+	String get nowLabel => 'Sekarang';
+
+	/// id: 'Sejak $date'
+	String since({required Object date}) => 'Sejak ${date}';
+
+	/// id: 'Yang akan berubah'
+	String get restoreChanges => 'Yang akan berubah';
+
+	/// id: 'Bahasa dan tampilan di ponsel ini tidak berubah.'
+	String get restoreUnchanged => 'Bahasa dan tampilan di ponsel ini tidak berubah.';
+
+	/// id: 'Mata uang akan menjadi $code'
+	String changeCurrency({required Object code}) => 'Mata uang akan menjadi ${code}';
+
+	/// id: '(one) {${n} draf dari notifikasi yang belum ditinjau tidak ikut.} (other) {${n} draf dari notifikasi yang belum ditinjau tidak ikut.}'
+	String changeDrafts({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n,
+		one: '${n} draf dari notifikasi yang belum ditinjau tidak ikut.',
+		other: '${n} draf dari notifikasi yang belum ditinjau tidak ikut.',
+	);
+
+	/// id: 'Cadangan ini lebih lama dari data di ponsel ini; catatan sesudah $date akan hilang dari ponsel ini.'
+	String restoreOlder({required Object date}) => 'Cadangan ini lebih lama dari data di ponsel ini; catatan sesudah ${date} akan hilang dari ponsel ini.';
+
+	/// id: 'Lanjut'
+	String get restoreNext => 'Lanjut';
+
+	/// id: 'Ganti semua data di ponsel ini?'
+	String get restoreConfirmTitle => 'Ganti semua data di ponsel ini?';
+
+	/// id: 'Semua data di ponsel ini akan diganti dengan isi cadangan. Data yang sekarang disimpan dulu sebagai cadangan pengaman.'
+	String get restoreConfirmBody => 'Semua data di ponsel ini akan diganti dengan isi cadangan. Data yang sekarang disimpan dulu sebagai cadangan pengaman.';
+
+	/// id: 'Ganti data'
+	String get restoreConfirmAction => 'Ganti data';
+
+	/// id: 'Proses ini tidak bisa dibatalkan. Kalau aplikasi tertutup di tengah jalan, datamu tetap utuh.'
+	String get restoreNoCancel => 'Proses ini tidak bisa dibatalkan. Kalau aplikasi tertutup di tengah jalan, datamu tetap utuh.';
+
+	List<String> get restoreSteps => [
+		'Menyimpan data sekarang sebagai cadangan pengaman',
+		'Mengganti data dengan isi cadangan',
+		'Menghitung ulang saldo dompet',
+		'Menjadwalkan ulang pengingat',
+	];
+
+	/// id: 'Data dipulihkan dari cadangan $date.'
+	String restoreDoneTitle({required Object date}) => 'Data dipulihkan dari cadangan ${date}.';
+
+	/// id: 'Data dikembalikan ke keadaan sebelum pemulihan.'
+	String get undoDoneTitle => 'Data dikembalikan ke keadaan sebelum pemulihan.';
+
+	/// id: 'Izin notifikasi perlu diberikan lagi di ponsel ini. Kamu bisa menyalakannya dari Beranda.'
+	String get restoreDoneNote => 'Izin notifikasi perlu diberikan lagi di ponsel ini. Kamu bisa menyalakannya dari Beranda.';
+
+	/// id: 'Ke Beranda'
+	String get goHome => 'Ke Beranda';
+
+	/// id: 'Pilih berkas lain'
+	String get chooseOtherFile => 'Pilih berkas lain';
+
+	/// id: 'Perbarui aplikasi'
+	String get updateApp => 'Perbarui aplikasi';
+
+	/// id: 'Berkas tidak bisa dipakai'
+	String get errorInvalidTitle => 'Berkas tidak bisa dipakai';
+
+	/// id: 'Berkas ini bukan cadangan Tanukonomy atau sudah rusak. Datamu tidak berubah.'
+	String get errorInvalidBody => 'Berkas ini bukan cadangan Tanukonomy atau sudah rusak. Datamu tidak berubah.';
+
+	/// id: 'Cadangan dari versi yang lebih baru'
+	String get errorNewerTitle => 'Cadangan dari versi yang lebih baru';
+
+	/// id: 'Cadangan ini dibuat oleh versi Tanukonomy yang lebih baru. Perbarui aplikasi lalu coba lagi. Datamu tidak berubah.'
+	String get errorNewerBody => 'Cadangan ini dibuat oleh versi Tanukonomy yang lebih baru. Perbarui aplikasi lalu coba lagi. Datamu tidak berubah.';
+
+	/// id: 'Ruang penyimpanan tidak cukup'
+	String get errorSpaceTitle => 'Ruang penyimpanan tidak cukup';
+
+	/// id: 'Ruang penyimpanan tidak cukup. Datamu tidak berubah.'
+	String get errorSpaceBody => 'Ruang penyimpanan tidak cukup. Datamu tidak berubah.';
+
+	/// id: 'Pemulihan tidak bisa dimulai'
+	String get errorOtherTitle => 'Pemulihan tidak bisa dimulai';
+
+	/// id: 'Terjadi masalah saat menyiapkan pemulihan. Datamu tidak berubah.'
+	String get errorOtherBody => 'Terjadi masalah saat menyiapkan pemulihan. Datamu tidak berubah.';
+
 	/// id: 'Transaksi'
 	String get sheetTransactions => 'Transaksi';
 
@@ -4926,6 +5041,45 @@ extension on Translations {
 			'dataPortability.backupError' => 'Cadangan tidak bisa dibuat. Datamu tidak berubah.',
 			'dataPortability.backupFileStem' => 'cadangan',
 			'dataPortability.backupFileMeta' => ({required Object transactions, required Object wallets}) => '${transactions} · ${wallets}',
+			'dataPortability.restoreTitle' => 'Pulihkan dari cadangan',
+			'dataPortability.restoreSub' => 'Ganti data dengan cadangan',
+			'dataPortability.undoTitle' => ({required Object date}) => 'Kembalikan data sebelum pemulihan (${date})',
+			'dataPortability.undoSub' => 'Disimpan di ponsel ini sampai pemulihan berikutnya, paling lama 30 hari',
+			'dataPortability.undoPageTitle' => 'Kembalikan data',
+			'dataPortability.restoreRunTitle' => 'Memulihkan data',
+			'dataPortability.kickBackup' => 'Cadangan',
+			'dataPortability.kickSafety' => 'Cadangan pengaman',
+			'dataPortability.kickNow' => 'Di ponsel ini',
+			'dataPortability.nowLabel' => 'Sekarang',
+			'dataPortability.since' => ({required Object date}) => 'Sejak ${date}',
+			'dataPortability.restoreChanges' => 'Yang akan berubah',
+			'dataPortability.restoreUnchanged' => 'Bahasa dan tampilan di ponsel ini tidak berubah.',
+			'dataPortability.changeCurrency' => ({required Object code}) => 'Mata uang akan menjadi ${code}',
+			'dataPortability.changeDrafts' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n, one: '${n} draf dari notifikasi yang belum ditinjau tidak ikut.', other: '${n} draf dari notifikasi yang belum ditinjau tidak ikut.', ), 
+			'dataPortability.restoreOlder' => ({required Object date}) => 'Cadangan ini lebih lama dari data di ponsel ini; catatan sesudah ${date} akan hilang dari ponsel ini.',
+			'dataPortability.restoreNext' => 'Lanjut',
+			'dataPortability.restoreConfirmTitle' => 'Ganti semua data di ponsel ini?',
+			'dataPortability.restoreConfirmBody' => 'Semua data di ponsel ini akan diganti dengan isi cadangan. Data yang sekarang disimpan dulu sebagai cadangan pengaman.',
+			'dataPortability.restoreConfirmAction' => 'Ganti data',
+			'dataPortability.restoreNoCancel' => 'Proses ini tidak bisa dibatalkan. Kalau aplikasi tertutup di tengah jalan, datamu tetap utuh.',
+			'dataPortability.restoreSteps.0' => 'Menyimpan data sekarang sebagai cadangan pengaman',
+			'dataPortability.restoreSteps.1' => 'Mengganti data dengan isi cadangan',
+			'dataPortability.restoreSteps.2' => 'Menghitung ulang saldo dompet',
+			'dataPortability.restoreSteps.3' => 'Menjadwalkan ulang pengingat',
+			'dataPortability.restoreDoneTitle' => ({required Object date}) => 'Data dipulihkan dari cadangan ${date}.',
+			'dataPortability.undoDoneTitle' => 'Data dikembalikan ke keadaan sebelum pemulihan.',
+			'dataPortability.restoreDoneNote' => 'Izin notifikasi perlu diberikan lagi di ponsel ini. Kamu bisa menyalakannya dari Beranda.',
+			'dataPortability.goHome' => 'Ke Beranda',
+			'dataPortability.chooseOtherFile' => 'Pilih berkas lain',
+			'dataPortability.updateApp' => 'Perbarui aplikasi',
+			'dataPortability.errorInvalidTitle' => 'Berkas tidak bisa dipakai',
+			'dataPortability.errorInvalidBody' => 'Berkas ini bukan cadangan Tanukonomy atau sudah rusak. Datamu tidak berubah.',
+			'dataPortability.errorNewerTitle' => 'Cadangan dari versi yang lebih baru',
+			'dataPortability.errorNewerBody' => 'Cadangan ini dibuat oleh versi Tanukonomy yang lebih baru. Perbarui aplikasi lalu coba lagi. Datamu tidak berubah.',
+			'dataPortability.errorSpaceTitle' => 'Ruang penyimpanan tidak cukup',
+			'dataPortability.errorSpaceBody' => 'Ruang penyimpanan tidak cukup. Datamu tidak berubah.',
+			'dataPortability.errorOtherTitle' => 'Pemulihan tidak bisa dimulai',
+			'dataPortability.errorOtherBody' => 'Terjadi masalah saat menyiapkan pemulihan. Datamu tidak berubah.',
 			'dataPortability.sheetTransactions' => 'Transaksi',
 			'dataPortability.sheetWallets' => 'Dompet',
 			'dataPortability.columns.date' => 'Tanggal',
@@ -5075,6 +5229,8 @@ extension on Translations {
 			'budget.templateDuplicatedMessage' => 'Template digandakan.',
 			'budget.templateCopyName' => ({required Object name}) => '${name} (salinan)',
 			'budget.templateNameLabel' => 'Nama template',
+			_ => null,
+		} ?? switch (path) {
 			'budget.repeatLabel' => 'Ulangi tiap periode',
 			'budget.repeatHelpMonthly' => ({required Object date}) => 'Lahir lagi tiap bulan mulai ${date} dengan pos yang sama.',
 			'budget.repeatHelpWeekly' => ({required Object date}) => 'Lahir lagi tiap minggu mulai ${date} dengan pos yang sama.',
@@ -5114,8 +5270,6 @@ extension on Translations {
 			'freelance.deductionTitle' => 'Potongan',
 			'freelance.deductionLabelLabel' => 'Nama potongan',
 			'freelance.deductionLabelHint' => 'Contoh: Pajak',
-			_ => null,
-		} ?? switch (path) {
 			'freelance.deductionKindPercentage' => 'Persen',
 			'freelance.deductionKindFixed' => 'Nominal tetap',
 			'freelance.deductionPercentLabel' => 'Persen dari gaji kotor',
@@ -5589,6 +5743,8 @@ extension on Translations {
 			'notificationCapture.reviewReason.walletUnknown' => 'Dompet tidak dikenali',
 			'notificationCapture.reviewReason.categoryUnclear' => 'Kategori belum jelas',
 			'notificationCapture.reviewReason.dateUnclear' => 'Tanggal belum pasti',
+			_ => null,
+		} ?? switch (path) {
 			'notificationCapture.recordAction' => 'Catat',
 			'notificationCapture.dismissAction' => 'Abaikan',
 			'notificationCapture.makePatternAction' => 'Buat pola dari teks ini',
@@ -5628,8 +5784,6 @@ extension on Translations {
 			'notificationCapture.autoRecordAnyCategoryHint' => 'Kategori bisa kamu isi belakangan.',
 			'notificationCapture.reminderLabel' => 'Kabari lewat notifikasi',
 			'notificationCapture.reminderHint' => 'Muncul notifikasi tiap ada transaksi tertangkap.',
-			_ => null,
-		} ?? switch (path) {
 			'notificationCapture.sourceWallet' => ({required Object name}) => 'Dompet ${name}',
 			'notificationCapture.walletHelp' => 'Transaksi dari aplikasi ini dicatat di dompet ini.',
 			'notificationCapture.advancedTitle' => 'Filter dan pola',

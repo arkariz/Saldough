@@ -402,6 +402,50 @@ class _Translations$dataPortability$en extends Translations$dataPortability$id {
 	@override String get backupError => 'The backup couldn\'t be created. Your data hasn\'t changed.';
 	@override String get backupFileStem => 'backup';
 	@override String backupFileMeta({required Object transactions, required Object wallets}) => '${transactions} · ${wallets}';
+	@override String get restoreTitle => 'Restore from backup';
+	@override String get restoreSub => 'Replace data with a backup';
+	@override String undoTitle({required Object date}) => 'Bring back data from before the restore (${date})';
+	@override String get undoSub => 'Kept on this phone until the next restore, 30 days at most';
+	@override String get undoPageTitle => 'Bring back data';
+	@override String get restoreRunTitle => 'Restoring data';
+	@override String get kickBackup => 'Backup';
+	@override String get kickSafety => 'Safety backup';
+	@override String get kickNow => 'On this phone';
+	@override String get nowLabel => 'Now';
+	@override String since({required Object date}) => 'Since ${date}';
+	@override String get restoreChanges => 'What will change';
+	@override String get restoreUnchanged => 'Language and display settings on this phone stay as they are.';
+	@override String changeCurrency({required Object code}) => 'Currency will become ${code}';
+	@override String changeDrafts({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
+		one: '${n} draft from notifications you haven\'t reviewed won\'t be kept.',
+		other: '${n} drafts from notifications you haven\'t reviewed won\'t be kept.',
+	);
+	@override String restoreOlder({required Object date}) => 'This backup is older than the data on this phone; records after ${date} will be gone from this phone.';
+	@override String get restoreNext => 'Continue';
+	@override String get restoreConfirmTitle => 'Replace all data on this phone?';
+	@override String get restoreConfirmBody => 'All data on this phone will be replaced with the backup. Your current data is saved first as a safety backup.';
+	@override String get restoreConfirmAction => 'Replace data';
+	@override String get restoreNoCancel => 'This can\'t be cancelled. If the app closes midway, your data stays intact.';
+	@override List<String> get restoreSteps => [
+		'Saving current data as a safety backup',
+		'Replacing data with the backup',
+		'Recalculating wallet balances',
+		'Rescheduling reminders',
+	];
+	@override String restoreDoneTitle({required Object date}) => 'Data restored from the ${date} backup.';
+	@override String get undoDoneTitle => 'Data brought back to how it was before the restore.';
+	@override String get restoreDoneNote => 'Notification permissions need to be granted again on this phone. You can turn them on from Home.';
+	@override String get goHome => 'Go to Home';
+	@override String get chooseOtherFile => 'Choose another file';
+	@override String get updateApp => 'Update the app';
+	@override String get errorInvalidTitle => 'This file can\'t be used';
+	@override String get errorInvalidBody => 'This file isn\'t a Tanukonomy backup or it\'s damaged. Your data hasn\'t changed.';
+	@override String get errorNewerTitle => 'Backup from a newer version';
+	@override String get errorNewerBody => 'This backup was made by a newer version of Tanukonomy. Update the app and try again. Your data hasn\'t changed.';
+	@override String get errorSpaceTitle => 'Storage is full';
+	@override String get errorSpaceBody => 'Not enough storage space. Your data hasn\'t changed.';
+	@override String get errorOtherTitle => 'Restore couldn\'t start';
+	@override String get errorOtherBody => 'Something went wrong while preparing the restore. Your data hasn\'t changed.';
 	@override String get sheetTransactions => 'Transactions';
 	@override String get sheetWallets => 'Wallets';
 	@override late final _Translations$dataPortability$columns$en columns = _Translations$dataPortability$columns$en._(_root);
@@ -2272,6 +2316,45 @@ extension on TranslationsEn {
 			'dataPortability.backupError' => 'The backup couldn\'t be created. Your data hasn\'t changed.',
 			'dataPortability.backupFileStem' => 'backup',
 			'dataPortability.backupFileMeta' => ({required Object transactions, required Object wallets}) => '${transactions} · ${wallets}',
+			'dataPortability.restoreTitle' => 'Restore from backup',
+			'dataPortability.restoreSub' => 'Replace data with a backup',
+			'dataPortability.undoTitle' => ({required Object date}) => 'Bring back data from before the restore (${date})',
+			'dataPortability.undoSub' => 'Kept on this phone until the next restore, 30 days at most',
+			'dataPortability.undoPageTitle' => 'Bring back data',
+			'dataPortability.restoreRunTitle' => 'Restoring data',
+			'dataPortability.kickBackup' => 'Backup',
+			'dataPortability.kickSafety' => 'Safety backup',
+			'dataPortability.kickNow' => 'On this phone',
+			'dataPortability.nowLabel' => 'Now',
+			'dataPortability.since' => ({required Object date}) => 'Since ${date}',
+			'dataPortability.restoreChanges' => 'What will change',
+			'dataPortability.restoreUnchanged' => 'Language and display settings on this phone stay as they are.',
+			'dataPortability.changeCurrency' => ({required Object code}) => 'Currency will become ${code}',
+			'dataPortability.changeDrafts' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '${n} draft from notifications you haven\'t reviewed won\'t be kept.', other: '${n} drafts from notifications you haven\'t reviewed won\'t be kept.', ), 
+			'dataPortability.restoreOlder' => ({required Object date}) => 'This backup is older than the data on this phone; records after ${date} will be gone from this phone.',
+			'dataPortability.restoreNext' => 'Continue',
+			'dataPortability.restoreConfirmTitle' => 'Replace all data on this phone?',
+			'dataPortability.restoreConfirmBody' => 'All data on this phone will be replaced with the backup. Your current data is saved first as a safety backup.',
+			'dataPortability.restoreConfirmAction' => 'Replace data',
+			'dataPortability.restoreNoCancel' => 'This can\'t be cancelled. If the app closes midway, your data stays intact.',
+			'dataPortability.restoreSteps.0' => 'Saving current data as a safety backup',
+			'dataPortability.restoreSteps.1' => 'Replacing data with the backup',
+			'dataPortability.restoreSteps.2' => 'Recalculating wallet balances',
+			'dataPortability.restoreSteps.3' => 'Rescheduling reminders',
+			'dataPortability.restoreDoneTitle' => ({required Object date}) => 'Data restored from the ${date} backup.',
+			'dataPortability.undoDoneTitle' => 'Data brought back to how it was before the restore.',
+			'dataPortability.restoreDoneNote' => 'Notification permissions need to be granted again on this phone. You can turn them on from Home.',
+			'dataPortability.goHome' => 'Go to Home',
+			'dataPortability.chooseOtherFile' => 'Choose another file',
+			'dataPortability.updateApp' => 'Update the app',
+			'dataPortability.errorInvalidTitle' => 'This file can\'t be used',
+			'dataPortability.errorInvalidBody' => 'This file isn\'t a Tanukonomy backup or it\'s damaged. Your data hasn\'t changed.',
+			'dataPortability.errorNewerTitle' => 'Backup from a newer version',
+			'dataPortability.errorNewerBody' => 'This backup was made by a newer version of Tanukonomy. Update the app and try again. Your data hasn\'t changed.',
+			'dataPortability.errorSpaceTitle' => 'Storage is full',
+			'dataPortability.errorSpaceBody' => 'Not enough storage space. Your data hasn\'t changed.',
+			'dataPortability.errorOtherTitle' => 'Restore couldn\'t start',
+			'dataPortability.errorOtherBody' => 'Something went wrong while preparing the restore. Your data hasn\'t changed.',
 			'dataPortability.sheetTransactions' => 'Transactions',
 			'dataPortability.sheetWallets' => 'Wallets',
 			'dataPortability.columns.date' => 'Date',
@@ -2421,6 +2504,8 @@ extension on TranslationsEn {
 			'budget.templateDuplicatedMessage' => 'Template duplicated.',
 			'budget.templateCopyName' => ({required Object name}) => '${name} (copy)',
 			'budget.templateNameLabel' => 'Template name',
+			_ => null,
+		} ?? switch (path) {
 			'budget.repeatLabel' => 'Repeat every period',
 			'budget.repeatHelpMonthly' => ({required Object date}) => 'Starts again every month from ${date} with the same items.',
 			'budget.repeatHelpWeekly' => ({required Object date}) => 'Starts again every week from ${date} with the same items.',
@@ -2460,8 +2545,6 @@ extension on TranslationsEn {
 			'freelance.deductionTitle' => 'Deduction',
 			'freelance.deductionLabelLabel' => 'Deduction name',
 			'freelance.deductionLabelHint' => 'Example: Tax',
-			_ => null,
-		} ?? switch (path) {
 			'freelance.deductionKindPercentage' => 'Percent',
 			'freelance.deductionKindFixed' => 'Fixed amount',
 			'freelance.deductionPercentLabel' => 'Percent of gross pay',
@@ -2935,6 +3018,8 @@ extension on TranslationsEn {
 			'notificationCapture.reviewReason.walletUnknown' => 'Wallet not recognized',
 			'notificationCapture.reviewReason.categoryUnclear' => 'Category unclear',
 			'notificationCapture.reviewReason.dateUnclear' => 'Date unclear',
+			_ => null,
+		} ?? switch (path) {
 			'notificationCapture.recordAction' => 'Record',
 			'notificationCapture.dismissAction' => 'Dismiss',
 			'notificationCapture.makePatternAction' => 'Make a pattern from this text',
@@ -2974,8 +3059,6 @@ extension on TranslationsEn {
 			'notificationCapture.autoRecordAnyCategoryHint' => 'You can fill in the category later.',
 			'notificationCapture.reminderLabel' => 'Notify me',
 			'notificationCapture.reminderHint' => 'Get a notification each time a transaction is caught.',
-			_ => null,
-		} ?? switch (path) {
 			'notificationCapture.sourceWallet' => ({required Object name}) => '${name} wallet',
 			'notificationCapture.walletHelp' => 'Transactions from this app are recorded in this wallet.',
 			'notificationCapture.advancedTitle' => 'Filter and patterns',

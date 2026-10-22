@@ -99,6 +99,7 @@ abstract final class BackupValidator {
   static BackupSummary summarize(Map<String, String> docs, BackupRegistry registry) {
     var transactions = 0;
     String? first;
+    String? last;
     for (final entry in docs.entries) {
       if (!entry.key.startsWith(registry.transactionPartitionPrefix)) continue;
       if (!BackupRegistry.isMonth(entry.key.substring(registry.transactionPartitionPrefix.length))) continue;
@@ -108,6 +109,7 @@ abstract final class BackupValidator {
         if (date is String && date.length >= 10) {
           final day = date.substring(0, 10);
           if (first == null || day.compareTo(first) < 0) first = day;
+          if (last == null || day.compareTo(last) > 0) last = day;
         }
       }
     }
@@ -117,6 +119,7 @@ abstract final class BackupValidator {
       transactions: transactions,
       wallets: wallets,
       firstDate: first,
+      lastDate: last,
       currency: currency is String ? currency : null,
     );
   }

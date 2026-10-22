@@ -7,6 +7,7 @@ final class BackupSummary {
     required this.wallets,
     required this.firstDate,
     required this.currency,
+    this.lastDate,
   });
 
   /// Jumlah transaksi.
@@ -21,11 +22,15 @@ final class BackupSummary {
   /// Kode mata uang, atau `null` bila belum tersimpan.
   final String? currency;
 
+  /// Tanggal transaksi paling akhir (`YYYY-MM-DD`), atau `null` bila kosong.
+  final String? lastDate;
+
   /// Bentuk JSON untuk amplop.
   Map<String, Object?> toJson() => {
     'transactions': transactions,
     'wallets': wallets,
     'firstDate': firstDate,
+    'lastDate': lastDate,
     'currency': currency,
   };
 }

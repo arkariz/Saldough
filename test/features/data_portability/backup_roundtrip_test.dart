@@ -12,6 +12,7 @@ import 'package:saldough/features/data_portability/data/backup_codec.dart';
 import 'package:saldough/features/data_portability/data/backup_scope.dart';
 import 'package:saldough/features/data_portability/data/backup_validator.dart';
 import 'package:saldough/features/data_portability/data/restore_engine.dart';
+import 'package:saldough/features/data_portability/domain/restore_models.dart';
 import 'package:saldough/shared/category/data/category_repository_impl.dart';
 import 'package:saldough/shared/category/domain/category.dart';
 import 'package:saldough/shared/transaction/data/source_icon_repository_impl.dart';

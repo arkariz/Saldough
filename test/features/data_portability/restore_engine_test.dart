@@ -5,6 +5,7 @@ import 'package:saldough/app/data_portability/app_backup_registry.dart';
 import 'package:saldough/features/data_portability/data/backup_scope.dart';
 import 'package:saldough/features/data_portability/data/restore_engine.dart';
 import 'package:saldough/features/data_portability/domain/backup_failure_codes.dart';
+import 'package:saldough/features/data_portability/domain/restore_models.dart';
 
 import '../../helpers/backup_docs.dart';
 import '../../helpers/backup_matchers.dart';

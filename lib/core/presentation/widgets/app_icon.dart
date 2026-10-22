@@ -301,6 +301,12 @@ enum IconKey {
   /// Kembalikan data sebelum pemulihan (Akun › Data kamu).
   undo,
 
+  /// Langkah proses yang belum dimulai (daftar langkah pemulihan).
+  stepWaiting,
+
+  /// Pembaruan aplikasi diperlukan (galat cadangan dari versi lebih baru).
+  appUpdate,
+
   /// Baris setelan Kategori.
   label,
 
@@ -441,6 +447,8 @@ const Map<IconKey, IconData> _symbols = {
   IconKey.backup: Symbols.backup_rounded,
   IconKey.restoreBackup: Symbols.settings_backup_restore_rounded,
   IconKey.undo: Symbols.undo_rounded,
+  IconKey.stepWaiting: Symbols.radio_button_unchecked_rounded,
+  IconKey.appUpdate: Symbols.system_update_rounded,
   IconKey.label: Symbols.label_rounded,
   IconKey.notifications: Symbols.notifications_rounded,
   IconKey.translate: Symbols.translate_rounded,

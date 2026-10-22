@@ -8,18 +8,7 @@ import 'package:api_storage/api_storage.dart';
 import 'package:saldough/features/data_portability/data/backup_scope.dart';
 import 'package:saldough/features/data_portability/domain/backup_failure_codes.dart';
 import 'package:saldough/features/data_portability/domain/backup_registry.dart';
-
-/// Dari mana pemulihan dimulai.
-enum RestoreKind {
-  /// Dari Akun, di atas data yang ada.
-  account,
-
-  /// Dari onboarding, belum ada data (tanpa salinan pengaman).
-  onboarding,
-
-  /// Mengembalikan data sebelum pemulihan (R-5).
-  undo,
-}
+import 'package:saldough/features/data_portability/domain/restore_models.dart';
 
 /// Keadaan jurnal pemulihan. Hanya satu kunci (`journal`) yang menentukan di
 /// sisi mana pemulihan dari gangguan jatuh.
@@ -59,18 +48,6 @@ final class SafetyCopy {
 
   /// Saat salinan dibuang otomatis (KT-E4: paling lama 30 hari).
   final DateTime expiresAt;
-}
-
-/// Keterangan pemulihan yang baru selesai, untuk pesan sesudah mulai ulang.
-final class RestoreReport {
-  /// Membuat [RestoreReport].
-  const RestoreReport({required this.kind, required this.backupCreatedAt});
-
-  /// Asal pemulihan.
-  final RestoreKind kind;
-
-  /// Tanggal cadangan yang dipulihkan, bila diketahui.
-  final DateTime? backupCreatedAt;
 }
 
 /// Penggantian data atomik lewat jurnal tulis-dulu dengan roll-forward
@@ -116,6 +93,20 @@ final class RestoreEngine {
     final expiresAt = createdAt.add(safetyLifetime);
     if (!_now().isBefore(expiresAt)) return null;
     return SafetyCopy(createdAt: createdAt, expiresAt: expiresAt);
+  }
+
+  /// Dokumen di cadangan pengaman yang masih berlaku, atau `null`.
+  Future<Map<String, String>?> safetyDocs() async {
+    if (await safetyCopy() == null) return null;
+    final meta = (await _readJson(_metaKey))!;
+    final id = meta['id'] as String;
+    final docs = <String, String>{};
+    for (final k in meta['keys'] as List<dynamic>) {
+      final value = await _staging.read(_safetyKey(id, k as String));
+      if (value == null) return null;
+      docs[k] = value;
+    }
+    return docs;
   }
 
   /// Menyiapkan penggantian data dengan [incoming] lalu menetapkan jurnal
@@ -229,7 +220,11 @@ final class RestoreEngine {
       await _staging.remove(_metaKey);
     }
     await _staging.remove(_journalKey);
-    return RestoreReport(kind: journal.kind, backupCreatedAt: journal.backupCreatedAt);
+    return RestoreReport(
+      kind: journal.kind,
+      backupCreatedAt: journal.backupCreatedAt,
+      restoredKeys: journal.incomingKeys,
+    );
   }
 
   Future<void> _apply(_Journal journal) async {

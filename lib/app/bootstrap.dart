@@ -97,6 +97,9 @@ Future<void> bootstrapApp() async {
 
   final router = rootGetIt<GoRouter>();
 
+  // Daftar langkah pemulihan di layar boot ulang selesai tepat saat aplikasi tampil.
+  AppReboot.progress.value = null;
+
   runApp(
     KeyedSubtree(
       key: ValueKey(_generation),

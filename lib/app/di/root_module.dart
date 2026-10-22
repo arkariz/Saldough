@@ -6,6 +6,7 @@ import 'package:navigation/navigation.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:saldough/app/data_portability/app_backup_registry.dart';
 import 'package:saldough/app/data_portability/app_export_data_source.dart';
+import 'package:saldough/app/data_portability/restore_reboot.dart';
 import 'package:saldough/app/data_portability/restore_recovery.dart';
 import 'package:saldough/app/discovery/app_feature_statuses.dart';
 import 'package:saldough/app/shell/account_data_section.dart';
@@ -45,11 +46,14 @@ import 'package:saldough/features/data_portability/data/backup_service.dart';
 import 'package:saldough/features/data_portability/data/export_service.dart';
 import 'package:saldough/features/data_portability/data/platform_file_transfer.dart';
 import 'package:saldough/features/data_portability/data/restore_engine.dart';
+import 'package:saldough/features/data_portability/data/restore_service.dart';
 import 'package:saldough/features/data_portability/domain/backup_gateway.dart';
 import 'package:saldough/features/data_portability/domain/export_data.dart';
 import 'package:saldough/features/data_portability/domain/export_gateway.dart';
 import 'package:saldough/features/data_portability/domain/file_transfer.dart';
+import 'package:saldough/features/data_portability/domain/restore_gateway.dart';
 import 'package:saldough/features/data_portability/presentation/export_labels_i18n.dart';
+import 'package:saldough/features/data_portability/presentation/navigation/data_portability_route_module.dart';
 import 'package:saldough/features/freelance/data/adapters/freelance_overview_source_impl.dart';
 import 'package:saldough/features/freelance/data/adapters/plan_freelance_source_impl.dart';
 import 'package:saldough/features/freelance/data/repositories/freelance_repository_impl.dart';
@@ -104,6 +108,7 @@ abstract final class RootModule {
     AnalysisRouteModule(),
     AppUpdateRouteModule(),
     BudgetRouteModule(),
+    DataPortabilityRouteModule(reboot: restoreReboot),
     FreelanceRouteModule(),
     NotificationCaptureRouteModule(),
     RecordRouteModule(),
@@ -164,6 +169,13 @@ abstract final class RootModule {
             return (version: info.version, build: int.tryParse(info.buildNumber) ?? 0);
           },
           fileStem: () => t.dataPortability.backupFileStem,
+        ),
+      )
+      ..registerLazySingleton<RestoreGateway>(
+        () => RestoreService(
+          storage: container<KeyValueStorage>(),
+          engine: container<RestoreEngine>(),
+          registry: appBackupRegistry,
         ),
       )
       ..registerLazySingleton<FileTransfer>(() => const PlatformFileTransfer());

@@ -1963,38 +1963,38 @@ class Translations$onboarding$id {
 	/// id: 'Tutup'
 	String get closeAction => 'Tutup';
 
-	/// id: 'Halaman $current dari $total'
-	String pageIndicatorLabel({required Object current, required Object total}) => 'Halaman ${current} dari ${total}';
+	/// id: 'Halaman $current/$total'
+	String pageIndicatorLabel({required Object current, required Object total}) => 'Halaman ${current}/${total}';
 
-	/// id: 'Semua uangmu, satu buku'
-	String get page1Title => 'Semua uangmu, satu buku';
+	/// id: 'Semua keuanganmu, satu aplikasi'
+	String get page1Title => 'Semua keuanganmu, satu aplikasi';
 
-	/// id: 'Lihat di mana uangmu berada, apa saja yang terjadi padanya, dan ke mana kamu merencanakannya — semuanya di satu buku catatan.'
-	String get page1Body => 'Lihat di mana uangmu berada, apa saja yang terjadi padanya, dan ke mana kamu merencanakannya — semuanya di satu buku catatan.';
+	/// id: 'Lihat di mana uangmu berada, telusuri riwayat transaksinya, dan susun rencana pengeluaranmu, semuanya dalam satu aplikasi.'
+	String get page1Body => 'Lihat di mana uangmu berada, telusuri riwayat transaksinya, dan susun rencana pengeluaranmu, semuanya dalam satu aplikasi.';
 
-	/// id: 'Tahu di mana uangmu'
-	String get page2Title => 'Tahu di mana uangmu';
+	/// id: 'Pantau semua dompetmu'
+	String get page2Title => 'Pantau semua dompetmu';
 
-	/// id: 'Rekening bank, e-wallet, dan uang tunai jadi dompet. Saldo tiap dompet dan totalnya selalu terlihat.'
-	String get page2Body => 'Rekening bank, e-wallet, dan uang tunai jadi dompet. Saldo tiap dompet dan totalnya selalu terlihat.';
+	/// id: 'Rekening bank, e-wallet, dan uang tunai dikelompokkan sebagai dompet. Saldo tiap dompet dan totalnya selalu terlihat.'
+	String get page2Body => 'Rekening bank, e-wallet, dan uang tunai dikelompokkan sebagai dompet. Saldo tiap dompet dan totalnya selalu terlihat.';
 
-	/// id: 'Catat dalam hitungan detik'
-	String get page3Title => 'Catat dalam hitungan detik';
+	/// id: 'Masukkan transaksi dalam hitungan detik'
+	String get page3Title => 'Masukkan transaksi dalam hitungan detik';
 
-	/// id: 'Pemasukan, pengeluaran, atau pindah dompet — ketuk Catat. Dompet yang biasa kamu pakai dan kategori favoritmu sudah menunggu.'
-	String get page3Body => 'Pemasukan, pengeluaran, atau pindah dompet — ketuk Catat. Dompet yang biasa kamu pakai dan kategori favoritmu sudah menunggu.';
+	/// id: 'Pemasukan, pengeluaran, atau transfer antardompet, cukup ketuk Catat. Dompet yang sering kamu pakai dan kategori favoritmu sudah siap.'
+	String get page3Body => 'Pemasukan, pengeluaran, atau transfer antardompet, cukup ketuk Catat. Dompet yang sering kamu pakai dan kategori favoritmu sudah siap.';
 
-	/// id: 'Rencanakan, lalu pantau'
-	String get page4Title => 'Rencanakan, lalu pantau';
+	/// id: 'Atur anggaran, pantau pengeluaran'
+	String get page4Title => 'Atur anggaran, pantau pengeluaran';
 
-	/// id: 'Susun anggaran per minggu atau bulan dengan pos-pos belanjamu. Saldo tetap utuh, dan kamu melihat berapa yang sudah terpakai dari rencana.'
-	String get page4Body => 'Susun anggaran per minggu atau bulan dengan pos-pos belanjamu. Saldo tetap utuh, dan kamu melihat berapa yang sudah terpakai dari rencana.';
+	/// id: 'Susun anggaran mingguan atau bulanan lengkap dengan pos belanjanya, lalu lihat berapa yang sudah terpakai. Anggaran tidak mengubah saldo dompet, jadi kamu bisa memantau pengeluaran tetap sesuai rencana.'
+	String get page4Body => 'Susun anggaran mingguan atau bulanan lengkap dengan pos belanjanya, lalu lihat berapa yang sudah terpakai. Anggaran tidak mengubah saldo dompet, jadi kamu bisa memantau pengeluaran tetap sesuai rencana.';
 
-	/// id: 'Mulai dari dompet pertamamu'
-	String get finalTitle => 'Mulai dari dompet pertamamu';
+	/// id: 'Mulai dengan dompet pertamamu'
+	String get finalTitle => 'Mulai dengan dompet pertamamu';
 
-	/// id: 'Tambahkan satu dompet, lalu catat transaksi pertamamu. Di tiap layar, tanuki akan menunjukkan jalannya.'
-	String get finalBody => 'Tambahkan satu dompet, lalu catat transaksi pertamamu. Di tiap layar, tanuki akan menunjukkan jalannya.';
+	/// id: 'Tambahkan satu dompet, lalu catat transaksi pertamamu. Si tanuki siap memandu kamu di setiap layar.'
+	String get finalBody => 'Tambahkan satu dompet, lalu catat transaksi pertamamu. Si tanuki siap memandu kamu di setiap layar.';
 
 	/// id: 'Tambah dompet'
 	String get createWalletAction => 'Tambah dompet';
@@ -2014,8 +2014,8 @@ class Translations$onboarding$id {
 	/// id: 'Pilih mata uangmu'
 	String get currencyTitle => 'Pilih mata uangmu';
 
-	/// id: 'Semua nominal di Tanukonomy memakai mata uang ini. Nanti bisa diganti di layar Akun, tapi angka yang sudah dicatat tidak dikonversi.'
-	String get currencyBody => 'Semua nominal di Tanukonomy memakai mata uang ini. Nanti bisa diganti di layar Akun, tapi angka yang sudah dicatat tidak dikonversi.';
+	/// id: 'Semua nominal di Tanukonomy memakai mata uang ini. Bisa diganti nanti di Akun, tapi angka yang sudah dicatat tidak ikut dikonversi.'
+	String get currencyBody => 'Semua nominal di Tanukonomy memakai mata uang ini. Bisa diganti nanti di Akun, tapi angka yang sudah dicatat tidak ikut dikonversi.';
 
 	/// id: 'Sesuai wilayah perangkatmu'
 	String get currencySuggested => 'Sesuai wilayah perangkatmu';
@@ -2026,11 +2026,11 @@ class Translations$onboarding$id {
 	/// id: 'Pakai $code'
 	String currencyConfirm({required Object code}) => 'Pakai ${code}';
 
-	/// id: 'Kapan siklus bulananmu dimulai?'
-	String get periodTitle => 'Kapan siklus bulananmu dimulai?';
+	/// id: 'Kapan bulan keuanganmu dimulai?'
+	String get periodTitle => 'Kapan bulan keuanganmu dimulai?';
 
-	/// id: 'Rencana anggaran dan analisis keuangan akan dihitung mulai tanggal ini setiap bulannya. Bisa diubah kapan saja di menu Akun.'
-	String get periodBody => 'Rencana anggaran dan analisis keuangan akan dihitung mulai tanggal ini setiap bulannya. Bisa diubah kapan saja di menu Akun.';
+	/// id: 'Anggaran dan analisis dihitung mulai tanggal ini setiap bulan. Bisa kamu ubah kapan saja di Akun.'
+	String get periodBody => 'Anggaran dan analisis dihitung mulai tanggal ini setiap bulan. Bisa kamu ubah kapan saja di Akun.';
 
 	/// id: 'Pakai tanggal $day'
 	String periodConfirm({required Object day}) => 'Pakai tanggal ${day}';
@@ -2041,8 +2041,8 @@ class Translations$onboarding$id {
 	/// id: 'Ingatkan kamu sebelum jatuh tempo?'
 	String get reminderTitle => 'Ingatkan kamu sebelum jatuh tempo?';
 
-	/// id: 'Kamu dapat pengingat sebelum rutin jatuh tempo, sesuai setelan tiap rutin.'
-	String get reminderBody => 'Kamu dapat pengingat sebelum rutin jatuh tempo, sesuai setelan tiap rutin.';
+	/// id: 'Dapatkan pengingat sebelum transaksi rutin jatuh tempo, sesuai setelan tiap rutin.'
+	String get reminderBody => 'Dapatkan pengingat sebelum transaksi rutin jatuh tempo, sesuai setelan tiap rutin.';
 
 	/// id: 'Nyalakan'
 	String get turnOn => 'Nyalakan';
@@ -2050,8 +2050,8 @@ class Translations$onboarding$id {
 	/// id: 'Tidak sekarang'
 	String get notNow => 'Tidak sekarang';
 
-	/// id: 'Bisa catat otomatis dari notifikasi bank. Nyalakan dari Beranda.'
-	String get notificationInfo => 'Bisa catat otomatis dari notifikasi bank. Nyalakan dari Beranda.';
+	/// id: 'Transaksi bisa tercatat otomatis dari notifikasi bank. Nyalakan lewat Beranda.'
+	String get notificationInfo => 'Transaksi bisa tercatat otomatis dari notifikasi bank. Nyalakan lewat Beranda.';
 
 	/// id: 'Awal bulan keuangan'
 	String get summaryPeriod => 'Awal bulan keuangan';
@@ -2062,8 +2062,8 @@ class Translations$onboarding$id {
 	/// id: 'Pilih bahasa'
 	String get languageTitle => 'Pilih bahasa';
 
-	/// id: 'Dipakai untuk tampilan aplikasi dan saat mencatat dengan suara. Bisa diubah lagi di layar Akun.'
-	String get languageBody => 'Dipakai untuk tampilan aplikasi dan saat mencatat dengan suara. Bisa diubah lagi di layar Akun.';
+	/// id: 'Dipakai untuk tampilan aplikasi dan saat mencatat dengan suara. Bisa diubah lagi di Akun.'
+	String get languageBody => 'Dipakai untuk tampilan aplikasi dan saat mencatat dengan suara. Bisa diubah lagi di Akun.';
 
 	/// id: 'Lanjut'
 	String get languageConfirm => 'Lanjut';
@@ -2089,8 +2089,8 @@ class Translations$tour$id {
 	/// id: '$current/$total'
 	String stepCounter({required Object current, required Object total}) => '${current}/${total}';
 
-	/// id: 'Langkah $current dari $total: $title. $body'
-	String stepSemantics({required Object current, required Object total, required Object title, required Object body}) => 'Langkah ${current} dari ${total}: ${title}. ${body}';
+	/// id: 'Langkah $current/$total: $title. $body'
+	String stepSemantics({required Object current, required Object total, required Object title, required Object body}) => 'Langkah ${current}/${total}: ${title}. ${body}';
 
 	/// id: 'Total saldo tercatat'
 	String get homeBalanceTitle => 'Total saldo tercatat';
@@ -5410,46 +5410,46 @@ extension on Translations {
 			'onboarding.skipAction' => 'Lewati',
 			'onboarding.nextAction' => 'Lanjut',
 			'onboarding.closeAction' => 'Tutup',
-			'onboarding.pageIndicatorLabel' => ({required Object current, required Object total}) => 'Halaman ${current} dari ${total}',
-			'onboarding.page1Title' => 'Semua uangmu, satu buku',
-			'onboarding.page1Body' => 'Lihat di mana uangmu berada, apa saja yang terjadi padanya, dan ke mana kamu merencanakannya — semuanya di satu buku catatan.',
-			'onboarding.page2Title' => 'Tahu di mana uangmu',
-			'onboarding.page2Body' => 'Rekening bank, e-wallet, dan uang tunai jadi dompet. Saldo tiap dompet dan totalnya selalu terlihat.',
-			'onboarding.page3Title' => 'Catat dalam hitungan detik',
-			'onboarding.page3Body' => 'Pemasukan, pengeluaran, atau pindah dompet — ketuk Catat. Dompet yang biasa kamu pakai dan kategori favoritmu sudah menunggu.',
-			'onboarding.page4Title' => 'Rencanakan, lalu pantau',
-			'onboarding.page4Body' => 'Susun anggaran per minggu atau bulan dengan pos-pos belanjamu. Saldo tetap utuh, dan kamu melihat berapa yang sudah terpakai dari rencana.',
-			'onboarding.finalTitle' => 'Mulai dari dompet pertamamu',
-			'onboarding.finalBody' => 'Tambahkan satu dompet, lalu catat transaksi pertamamu. Di tiap layar, tanuki akan menunjukkan jalannya.',
+			'onboarding.pageIndicatorLabel' => ({required Object current, required Object total}) => 'Halaman ${current}/${total}',
+			'onboarding.page1Title' => 'Semua keuanganmu, satu aplikasi',
+			'onboarding.page1Body' => 'Lihat di mana uangmu berada, telusuri riwayat transaksinya, dan susun rencana pengeluaranmu, semuanya dalam satu aplikasi.',
+			'onboarding.page2Title' => 'Pantau semua dompetmu',
+			'onboarding.page2Body' => 'Rekening bank, e-wallet, dan uang tunai dikelompokkan sebagai dompet. Saldo tiap dompet dan totalnya selalu terlihat.',
+			'onboarding.page3Title' => 'Masukkan transaksi dalam hitungan detik',
+			'onboarding.page3Body' => 'Pemasukan, pengeluaran, atau transfer antardompet, cukup ketuk Catat. Dompet yang sering kamu pakai dan kategori favoritmu sudah siap.',
+			'onboarding.page4Title' => 'Atur anggaran, pantau pengeluaran',
+			'onboarding.page4Body' => 'Susun anggaran mingguan atau bulanan lengkap dengan pos belanjanya, lalu lihat berapa yang sudah terpakai. Anggaran tidak mengubah saldo dompet, jadi kamu bisa memantau pengeluaran tetap sesuai rencana.',
+			'onboarding.finalTitle' => 'Mulai dengan dompet pertamamu',
+			'onboarding.finalBody' => 'Tambahkan satu dompet, lalu catat transaksi pertamamu. Si tanuki siap memandu kamu di setiap layar.',
 			'onboarding.createWalletAction' => 'Tambah dompet',
 			'onboarding.laterAction' => 'Nanti saja',
 			'onboarding.signInAction' => 'Sudah punya akun? Masuk',
 			'onboarding.restoreAction' => 'Sudah punya cadangan? Pulihkan',
 			'onboarding.backAction' => 'Kembali',
 			'onboarding.currencyTitle' => 'Pilih mata uangmu',
-			'onboarding.currencyBody' => 'Semua nominal di Tanukonomy memakai mata uang ini. Nanti bisa diganti di layar Akun, tapi angka yang sudah dicatat tidak dikonversi.',
+			'onboarding.currencyBody' => 'Semua nominal di Tanukonomy memakai mata uang ini. Bisa diganti nanti di Akun, tapi angka yang sudah dicatat tidak ikut dikonversi.',
 			'onboarding.currencySuggested' => 'Sesuai wilayah perangkatmu',
 			'onboarding.currencyChooseFirst' => 'Pilih mata uang dulu',
 			'onboarding.currencyConfirm' => ({required Object code}) => 'Pakai ${code}',
-			'onboarding.periodTitle' => 'Kapan siklus bulananmu dimulai?',
-			'onboarding.periodBody' => 'Rencana anggaran dan analisis keuangan akan dihitung mulai tanggal ini setiap bulannya. Bisa diubah kapan saja di menu Akun.',
+			'onboarding.periodTitle' => 'Kapan bulan keuanganmu dimulai?',
+			'onboarding.periodBody' => 'Anggaran dan analisis dihitung mulai tanggal ini setiap bulan. Bisa kamu ubah kapan saja di Akun.',
 			'onboarding.periodConfirm' => ({required Object day}) => 'Pakai tanggal ${day}',
 			'onboarding.periodConfirmLast' => 'Pakai hari terakhir bulan',
 			'onboarding.reminderTitle' => 'Ingatkan kamu sebelum jatuh tempo?',
-			'onboarding.reminderBody' => 'Kamu dapat pengingat sebelum rutin jatuh tempo, sesuai setelan tiap rutin.',
+			'onboarding.reminderBody' => 'Dapatkan pengingat sebelum transaksi rutin jatuh tempo, sesuai setelan tiap rutin.',
 			'onboarding.turnOn' => 'Nyalakan',
 			'onboarding.notNow' => 'Tidak sekarang',
-			'onboarding.notificationInfo' => 'Bisa catat otomatis dari notifikasi bank. Nyalakan dari Beranda.',
+			'onboarding.notificationInfo' => 'Transaksi bisa tercatat otomatis dari notifikasi bank. Nyalakan lewat Beranda.',
 			'onboarding.summaryPeriod' => 'Awal bulan keuangan',
 			'onboarding.summaryReminder' => 'Pengingat rutin',
 			'onboarding.languageTitle' => 'Pilih bahasa',
-			'onboarding.languageBody' => 'Dipakai untuk tampilan aplikasi dan saat mencatat dengan suara. Bisa diubah lagi di layar Akun.',
+			'onboarding.languageBody' => 'Dipakai untuk tampilan aplikasi dan saat mencatat dengan suara. Bisa diubah lagi di Akun.',
 			'onboarding.languageConfirm' => 'Lanjut',
 			'tour.nextAction' => 'Lanjut',
 			'tour.doneAction' => 'Selesai',
 			'tour.skipAction' => 'Lewati tur',
 			'tour.stepCounter' => ({required Object current, required Object total}) => '${current}/${total}',
-			'tour.stepSemantics' => ({required Object current, required Object total, required Object title, required Object body}) => 'Langkah ${current} dari ${total}: ${title}. ${body}',
+			'tour.stepSemantics' => ({required Object current, required Object total, required Object title, required Object body}) => 'Langkah ${current}/${total}: ${title}. ${body}',
 			'tour.homeBalanceTitle' => 'Total saldo tercatat',
 			'tour.homeBalanceBody' => 'Jumlah saldo semua dompet aktif — posisi uangmu dalam sekali lihat.',
 			'tour.homeRecordTitle' => 'Satu pintu mencatat',

@@ -76,6 +76,7 @@ class AppIconTile extends StatelessWidget {
     this.tint,
     this.selected = false,
     this.background,
+    this.foreground,
     super.key,
   });
 
@@ -94,6 +95,10 @@ class AppIconTile extends StatelessWidget {
 
   /// Menimpa latar bawaan, mis. `surface` bagi tile di kaki kartu `surface2`.
   final Color? background;
+
+  /// Menimpa warna ikon bawaan, mis. `brandInk` di tile `brandSoft` (kepala
+  /// Sebaran saldo).
+  final Color? foreground;
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +120,7 @@ class AppIconTile extends StatelessWidget {
             side: selected ? BorderSide(color: colors.brand, width: 2) : BorderSide.none,
           ),
         ),
-        child: AppIcon(icon, size: glyph, color: ink),
+        child: AppIcon(icon, size: glyph, color: foreground ?? ink),
       ),
     );
   }

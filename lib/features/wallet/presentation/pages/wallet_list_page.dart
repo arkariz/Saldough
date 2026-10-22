@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:navigation/navigation.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
@@ -14,6 +15,7 @@ import 'package:saldough/features/wallet/presentation/widgets/wallet_card.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_empty_states.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_form_sheet.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_reorder_sheet.dart';
+import 'package:saldough/features/wallet/presentation/widgets/wallet_spread_card.dart';
 import 'package:state_management/state_management.dart';
 
 /// Layar Dompet (T-2.7; FR-WAL-001..003): total saldo dompet aktif, daftar
@@ -37,6 +39,10 @@ class WalletListPage extends StatefulWidget {
 }
 
 class _WalletListPageState extends State<WalletListPage> {
+  /// Dompet yang dipilih di donat Sebaran saldo; barisnya ditandai di daftar.
+  /// Tidak disimpan: meninggalkan layar mengembalikan kartu ke ringkas.
+  String? _linked;
+
   @override
   void initState() {
     super.initState();
@@ -104,6 +110,9 @@ class _WalletListPageState extends State<WalletListPage> {
             final colors = context.appColors;
             final textTheme = Theme.of(context).textTheme;
             final shares = walletShares(active);
+            final multi = active.length > 1;
+            final walletColorMap = walletColors(colors, active);
+            final linked = multi ? _linked : null;
             // TR-WALLET (ADR-021 §3.4): ringkasan, dompet pertama, tambah.
             return TourTrigger(
               tour: TourId.wallet,
@@ -116,29 +125,43 @@ class _WalletListPageState extends State<WalletListPage> {
                 AppSpacing.space12,
               ),
               children: [
-                // Prototipe `Dompet.dc.html`: angka utama di atas `bg` tanpa
-                // kartu, lalu bar sebaran saldo per dompet.
+                // Dompet v2 (`Dompet.dc.html`, B-66): kartu Total saldo, lalu
+                // kartu Sebaran saldo (BalanceSpread) bila dompetnya dua atau
+                // lebih.
                 SpotlightTarget(
                   spotlightKey: SpotlightKey.walletSummary,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(AppSpacing.space1, AppSpacing.space1, AppSpacing.space1, 0),
+                  child: AppCard(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Text(t.home.balanceLabel, style: textTheme.bodyMedium?.copyWith(color: colors.ink2)),
+                        const SizedBox(height: 2),
                         HeroAmount(AppMoneyFormatter.format(state.totalBalance)),
+                        const SizedBox(height: 2),
                         Text(
                           t.wallet.activeBadge(count: active.length),
                           style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
                         ),
-                        const SizedBox(height: AppSpacing.space3),
-                        WalletSpreadBar(wallets: active, shares: shares),
                       ],
                     ),
                   ),
                 ),
-                const SizedBox(height: AppSpacing.space6),
-                AppSectionHeader(t.wallet.listHeading),
+                if (multi && shares.length > 1) ...[
+                  const SizedBox(height: AppSpacing.space4),
+                  WalletSpreadCard(
+                    wallets: active,
+                    shares: shares,
+                    colors: walletColorMap,
+                    total: state.totalBalance,
+                    activeCount: active.length,
+                    onSelected: (id) => setState(() => _linked = id),
+                  ),
+                ],
+                const SizedBox(height: AppSpacing.space4),
+                AppSectionHeader(
+                  t.wallet.listHeading,
+                  badge: AppBadge('${active.length}'),
+                ),
                 const SizedBox(height: AppSpacing.space2),
                 AppListCard(
                   children: [
@@ -148,23 +171,26 @@ class _WalletListPageState extends State<WalletListPage> {
                         spotlightKey: i == 0 ? SpotlightKey.walletCard : null,
                         child: WalletCard(
                           wallet: wallet,
-                          sharePercent: shares[wallet.id],
+                          shareText: multi ? shares[wallet.id]?.text : null,
+                          swatchColor: multi ? walletColorMap[wallet.id] : null,
+                          linked: linked == wallet.id,
                           onTap: () => context.pushRoute(WalletRouteKeys.detail, WalletDetailInput(wallet)),
                         ),
                       ),
                   ],
                 ),
                 if (inactive.isNotEmpty) ...[
-                  const SizedBox(height: AppSpacing.space6),
-                  AppSectionHeader(t.wallet.inactiveHeading),
-                  const SizedBox(height: AppSpacing.space2),
+                  const SizedBox(height: AppSpacing.space4),
                   AppListCard(
                     children: [
-                      for (final wallet in inactive)
-                        WalletCard(
-                          wallet: wallet,
-                          onTap: () => context.pushRoute(WalletRouteKeys.detail, WalletDetailInput(wallet)),
-                        ),
+                      AppListRow(
+                        key: const ValueKey('wallet-inactive-row'),
+                        title: t.wallet.inactiveHeading,
+                        subtitle: t.wallet.inactiveRowSub(n: inactive.length),
+                        compact: true,
+                        chevron: true,
+                        onTap: () => context.pushRoute(WalletRouteKeys.inactive, const EmptyInput()),
+                      ),
                     ],
                   ),
                 ],

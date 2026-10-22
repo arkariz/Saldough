@@ -26,6 +26,7 @@ class AppListRow extends StatelessWidget {
     this.wrapSubtitle = false,
     this.detail,
     this.detailStrong = false,
+    this.subtitleLeading,
     super.key,
   });
 
@@ -70,6 +71,10 @@ class AppListRow extends StatelessWidget {
   /// [detail] bergaya label tebal (`label`, 14px/600) untuk keadaan yang
   /// perlu terlihat; `false` = gaya subjudul biasa.
   final bool detailStrong;
+
+  /// Penanda kecil di depan [subtitle], mis. swatch warna dompet di layar
+  /// Dompet (BalanceSpread).
+  final Widget? subtitleLeading;
 
   @override
   Widget build(BuildContext context) {
@@ -126,14 +131,7 @@ class AppListRow extends StatelessWidget {
                   if (subtitle != null)
                     Padding(
                       padding: const EdgeInsets.only(top: 2),
-                      child: Text(
-                        subtitle!,
-                        maxLines: wrapSubtitle ? null : 1,
-                        overflow: wrapSubtitle ? null : TextOverflow.ellipsis,
-                        style: textTheme.bodyMedium?.copyWith(
-                          color: colors.ink2,
-                        ),
-                      ),
+                      child: _subtitle(textTheme, colors),
                     ),
                   if (detail != null)
                     Padding(
@@ -169,6 +167,23 @@ class AppListRow extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _subtitle(TextTheme textTheme, AppColors colors) {
+    final text = Text(
+      subtitle!,
+      maxLines: wrapSubtitle ? null : 1,
+      overflow: wrapSubtitle ? null : TextOverflow.ellipsis,
+      style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
+    );
+    if (subtitleLeading == null) return text;
+    return Row(
+      children: [
+        subtitleLeading!,
+        const SizedBox(width: 6),
+        Flexible(child: text),
+      ],
     );
   }
 }

@@ -260,6 +260,17 @@ class _Translations$wallet$en extends Translations$wallet$id {
 	@override String get addAction => 'Add wallet';
 	@override String get inactiveHeading => 'Inactive wallets';
 	@override String get inactiveBadge => 'Inactive';
+	@override String get spreadTitle => 'Balance spread';
+	@override String get spreadTapOpen => 'Tap to see the chart';
+	@override String get spreadTapClose => 'Tap to close the chart';
+	@override String spreadOfTotal({required Object percent}) => '${percent} of total balance';
+	@override String get spreadSeeTotal => 'See total';
+	@override String get spreadHide => 'Hide';
+	@override String spreadSemantics({required Object list}) => 'Balance spread: ${list}';
+	@override String inactiveRowSub({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
+		one: '${n} wallet · hidden in Record',
+		other: '${n} wallets · hidden in Record',
+	);
 	@override String get typeBank => 'Bank account';
 	@override String get typeCash => 'Cash';
 	@override String get typeEwallet => 'Digital wallet';
@@ -2032,6 +2043,14 @@ extension on TranslationsEn {
 			'wallet.addAction' => 'Add wallet',
 			'wallet.inactiveHeading' => 'Inactive wallets',
 			'wallet.inactiveBadge' => 'Inactive',
+			'wallet.spreadTitle' => 'Balance spread',
+			'wallet.spreadTapOpen' => 'Tap to see the chart',
+			'wallet.spreadTapClose' => 'Tap to close the chart',
+			'wallet.spreadOfTotal' => ({required Object percent}) => '${percent} of total balance',
+			'wallet.spreadSeeTotal' => 'See total',
+			'wallet.spreadHide' => 'Hide',
+			'wallet.spreadSemantics' => ({required Object list}) => 'Balance spread: ${list}',
+			'wallet.inactiveRowSub' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '${n} wallet · hidden in Record', other: '${n} wallets · hidden in Record', ), 
 			'wallet.typeBank' => 'Bank account',
 			'wallet.typeCash' => 'Cash',
 			'wallet.typeEwallet' => 'Digital wallet',
@@ -2322,6 +2341,8 @@ extension on TranslationsEn {
 			'freelance.receiveNoteDefault' => ({required Object project}) => 'Freelance invoice ${project}',
 			'freelance.receiveAction' => 'Record received',
 			'freelance.paymentReceivedMessage' => 'Invoice recorded as received. Wallet balance increased.',
+			_ => null,
+		} ?? switch (path) {
 			'freelance.receiptCancelAction' => 'Cancel receipt',
 			'freelance.receiptCancelConfirmTitle' => 'Cancel receipt?',
 			'freelance.receiptCancelConfirmMessage' => 'Its income is deleted and the wallet balance goes back down. The invoice is pending again.',
@@ -2330,8 +2351,6 @@ extension on TranslationsEn {
 			'freelance.receiptCancelConfirmAction' => 'Delete income',
 			'freelance.billAction' => ({required Object count}) => 'Bill (${count})',
 			'freelance.entriesEmptyTitle' => 'No work hours yet',
-			_ => null,
-		} ?? switch (path) {
 			'freelance.entriesEmptyBody' => 'The work hours you record become this project\'s invoices.',
 			'freelance.entriesFilteredEmpty' => 'No work hours with this status.',
 			'freelance.entryAddShortAction' => 'Record work hours',
@@ -2836,6 +2855,8 @@ extension on TranslationsEn {
 			'recurring.progressLine' => ({required Object k, required Object n}) => '${k} of ${n} recorded',
 			'recurring.countLine' => ({required Object n}) => '${n} times',
 			'recurring.pausedLine' => 'Paused',
+			_ => null,
+		} ?? switch (path) {
 			'recurring.reminderLine' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: 'I pay it · reminded ${n} day before', other: 'I pay it · reminded ${n} days before', ), 
 			'recurring.autoDebitLine' => 'Auto-debit',
 			'recurring.pausedMessage' => ({required Object name}) => '${name} paused.',
@@ -2844,8 +2865,6 @@ extension on TranslationsEn {
 			'recurring.deletedMessage' => ({required Object name}) => '${name} deleted.',
 			'recurring.skippedMessage' => ({required Object date}) => '${date} skipped.',
 			'recurring.priceUpdateAction' => ({required Object amount}) => 'Update to ${amount}',
-			_ => null,
-		} ?? switch (path) {
 			'recurring.notFound' => 'This recurring no longer exists.',
 			'recurring.noRecorded' => 'Nothing recorded yet.',
 			'recurring.recordedMessage' => ({required Object name}) => '${name} recorded.',

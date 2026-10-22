@@ -477,6 +477,43 @@ lebih dulu dengan uji yang membuktikan peluncuran biasa tidak berubah.
 `docs/03-release/PLAY_DATA_SAFETY.md` (dicek di T-22.6: berkas hanya
 meninggalkan perangkat atas aksi pengguna).
 
+### Kompatibilitas ke depan: akun, cadangan otomatis, sinkronisasi
+
+ADR ini hanya menyiapkan yang murah dan tidak menyiapkan yang belum punya
+rancangan.
+
+**Cadangan otomatis ke Google Drive (B-51, Plus): hanya pengangkut baru.**
+Amplop, `BackupScope`, registri, dan `StageRestore` dipakai ulang tanpa
+perubahan. `StageRestore` menerima byte, jadi sumber berkas (pemilih berkas
+atau unduhan Drive) cukup berupa adaptor baru di belakang `FileTransfer`.
+`summary` ada agar daftar cadangan bisa ditampilkan tanpa membuka isinya.
+Enkripsi menaikkan `formatVersion` (§3.2). Batasan untuk B-51:
+
+- Cadangan otomatis **hanya membuat** cadangan. Pemulihan selalu atas ketukan
+  pengguna, karena memicu `AppReboot` (§3.7).
+- Penjadwal harian, lingkup OAuth Drive, enkripsi, dan rotasi adalah milik B-51.
+
+**Akun:** tidak berubah. Akun tetap opsional dan data lokal milik perangkat
+(ADR-024). Untuk B-51 akun hanya kunci akses ke Drive lewat Google Sign-In,
+bukan pemilik data.
+
+**Sinkronisasi (B-7): tidak disiapkan, sengaja.** Yang berguna darinya hanya
+dua: registri kunci (daftar awal data yang kelak disinkronkan, dijaga uji
+kelengkapan) dan aturan ADR-024 §3.3 (ganti akun = data diganti, tanpa
+penggabungan) yang sudah dipenuhi mesin pemulihan. Sisanya tidak bisa dipakai
+ulang: cadangan menyalin dokumen utuh, sedangkan sinkronisasi butuh perubahan
+per transaksi dan resolusi konflik di atas penyimpanan yang kini satu dokumen
+per bulan tanpa penanda perubahan. ADR B-7 menentukan lapisan datanya sendiri.
+
+Dua risiko yang dicatat untuk saat B-7 dikerjakan:
+
+1. **Cadangan lama harus tetap terbaca.** Bila tata letak penyimpanan berubah,
+   `formatVersion` dan registri naik dan pemulihan cadangan lama wajib lolos;
+   perlu uji kompatibilitas mundur.
+2. **Sinkronisasi latar vs pemulihan.** Penerapan jurnal (§3.4) tidak boleh
+   tertimpa penulisan sinkronisasi; sinkronisasi dijeda selama ada jurnal
+   `applying` atau `applied`. Belum ada pelakunya, jadi belum ada mekanismenya.
+
 ## 8. Kriteria peninjauan ulang
 
 - Uji gangguan T-22.7 #4 menunjukkan data campuran sekali pun: tinjau ulang

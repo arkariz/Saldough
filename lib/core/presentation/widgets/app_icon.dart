@@ -374,6 +374,7 @@ const Map<IconKey, IconData> _symbols = {
   IconKey.record: Symbols.add_rounded,
   IconKey.transactions: Symbols.receipt_long_rounded,
   IconKey.wallets: Symbols.account_balance_wallet_rounded,
+  IconKey.balanceSpread: Icons.donut_small_outlined,
   IconKey.categoryOther: Symbols.more_horiz_rounded,
   IconKey.categoryFamily: Symbols.family_restroom_rounded,
   IconKey.categoryDonation: Symbols.volunteer_activism_rounded,

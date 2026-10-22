@@ -86,7 +86,7 @@ Terakhir diperbarui: 18 Oktober 2026 (Fase 19 selesai dan masuk `main` lewat PR 
 | Persiapan Play Console — draf jawaban [PLAY_DATA_SAFETY.md](../03-release/PLAY_DATA_SAFETY.md) (Keamanan Data) dan [PLAY_STORE_LISTING.md](../03-release/PLAY_STORE_LISTING.md) (setelan toko, ASO) | 2 | 2 | Draf selesai (Keamanan Data 28 Sep, listing 29 Sep 2026); isi formulir persis sebelum build berfitur ini diunggah, jangan sebelum itu. Keputusan pemilik di §1 listing masih terbuka |
 | 20 — Pengumuman pembaruan ([APP_UPDATE.md](../01-product/features/APP_UPDATE.md)) | 8 | 8 | KT-U1–KT-U5 dijawab dan ADR-039 Accepted (15 Okt 2026); T-20.1–T-20.8 selesai dan sudah di `main` (ada di build `0.6.0+12` dan `0.7.0+13`); T-20.4 selesai (rupa v3 diterapkan, selisih diputuskan pemilik); T-20.7 formulir Play Console dan kebijakan privasi dilaporkan pemilik selesai; verifikasi perangkat T-20.8 lulus semua (15 Okt 2026) |
 | 21 — Penemuan fitur ([FEATURE_DISCOVERY.md](../01-product/features/FEATURE_DISCOVERY.md)) | 10 | 0 | Draf PO 18 Okt 2026, direvisi (onboarding wajib, tombol permanen); KT-D1 diputuskan; menunggu rupa (T-21.0) |
-| 22 — Ekspor dan cadangan manual ([EXPORT_BACKUP.md](../01-product/features/EXPORT_BACKUP.md)) | 8 | 0 | Draf PO 22 Okt 2026 (dari B-42); menunggu KT-E1–KT-E5, rupa (T-22.0), dan ADR (T-22.1) |
+| 22 — Ekspor dan cadangan manual ([EXPORT_BACKUP.md](../01-product/features/EXPORT_BACKUP.md)) | 8 | 0 | Spek final 22 Okt 2026 (dari B-42, KT-E1–KT-E5 diputuskan); menunggu rupa (T-22.0) dan ADR (T-22.1) |
 | Antrean (`B-n`, belum dijadwalkan) | 49 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
 
 ## Keputusan terbuka
@@ -109,12 +109,10 @@ diputuskan, dan catat keputusannya di tugas atau ADR yang mengerjakannya.
   §12. Keputusan teknis bukan bagian KT ini; engineer menulisnya sebagai ADR
   di T-20.1.
 
-- **KT-E1–KT-E5** Ekspor dan cadangan (Fase 22): format ekspor (rekomendasi
-  xlsx bawaan + CSV), sandi cadangan (rekomendasi tanpa sandi di R1), cara
-  menyimpan (lembar sistem Simpan ke… dan Bagikan), lama cadangan pengaman
-  (sampai pemulihan berikutnya, maks. 30 hari), dan pengingat mencadangkan
-  (tidak di fase ini). Rincian di
-  [EXPORT_BACKUP.md](../01-product/features/EXPORT_BACKUP.md) §11.
+KT-E1–KT-E5 (ekspor dan cadangan, Fase 22) diputuskan 22 Okt 2026 sesuai
+rekomendasi: xlsx bawaan + CSV, cadangan tanpa sandi di R1, lembar sistem
+Simpan ke… dan Bagikan, cadangan pengaman sampai pemulihan berikutnya (maks.
+30 hari), tanpa pengingat mencadangkan; dicatat di EXPORT_BACKUP §11.
 
 KT-D1 (arti "wajib" di onboarding Fase 21) diputuskan 18 Okt 2026: wajib
 dijawab (Nyalakan atau Tidak sekarang), bukan wajib menyala; dicatat di
@@ -5082,7 +5080,7 @@ ponsel lain (cadangkan dan pulihkan manual ke berkas), gratis, tanpa akun.
 Perilaku, aturan E-/C-/R-, teks, dan kasus tepi di
 [EXPORT_BACKUP.md](../01-product/features/EXPORT_BACKUP.md). **Keputusan
 teknis diserahkan ke engineer** (EXPORT_BACKUP §10) sebagai ADR di T-22.1.
-Menunggu KT-E1–KT-E5. Branch sendiri dari `main`; menyentuh layar Akun,
+KT-E1–KT-E5 diputuskan 22 Okt 2026. Branch sendiri dari `main`; menyentuh layar Akun,
 Riwayat (menu), dan onboarding (tautan pulihkan, bersinggungan dengan Fase
 21).
 

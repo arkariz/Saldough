@@ -1,7 +1,8 @@
 # Ekspor ke spreadsheet, cadangkan dan pulihkan manual
 
 **Tanggal:** 22 Oktober 2026.
-**Status:** Draf PO, menunggu KT-E1–KT-E5 (§11). Tugasnya Fase 22 di
+**Status:** KT-E1–KT-E5 diputuskan pemilik 22 Okt 2026 sesuai rekomendasi
+(§11). Menunggu rupa (T-22.0) dan ADR engineer (T-22.1). Tugasnya Fase 22 di
 TASK_LIST (dari B-42).
 **Berkaitan:** [FREEMIUM_PAYWALL.md](FREEMIUM_PAYWALL.md) §1 butir 7, §6.6,
 §12.1, KT-P7 (gratis, sebelum rilis publik, dasar cadangan otomatis B-51);
@@ -327,9 +328,11 @@ berkas (Storage Access Framework / lembar bagi). Batasannya:
    periode yang sama, termasuk periode peralihan dan gajian maju.
 7. Bila sebuah batasan tidak bisa dipenuhi, berhenti dan lapor ke PO.
 
-## 11. Keputusan untuk pemilik (KT-E1–KT-E5)
+## 11. Keputusan pemilik (KT-E1–KT-E5, 22 Okt 2026)
 
-| # | Pertanyaan | Rekomendasi PO |
+Semua diputuskan sesuai rekomendasi PO.
+
+| # | Pertanyaan | Keputusan |
 |---|---|---|
 | KT-E1 | Format ekspor | **xlsx (bawaan) dan CSV.** xlsx terbuka benar di Excel lokal Indonesia; CSV untuk aplikasi lain. |
 | KT-E2 | Sandi pada berkas cadangan | **Tanpa sandi di R1.** Sandi yang lupa = cadangan tidak bisa dipakai, dan berkas disimpan di tempat pilihan pengguna. Sandi opsional masuk antrean (bersama B-51 yang memang terenkripsi). |

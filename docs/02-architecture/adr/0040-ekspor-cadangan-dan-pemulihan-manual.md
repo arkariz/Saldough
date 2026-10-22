@@ -5,8 +5,9 @@
 - **Decision ID:** ADR-040
 - **Tanggal:** 2026-10-22
 - **Fase roadmap:** Fase 22 (T-22.1)
-- **Status:** Proposed (menunggu persetujuan pemilik; fondasi T-22.1 tidak
-  ditulis sebelum Accepted)
+- **Status:** Accepted (pemilik, 2026-10-22; "Mulai kerjakan" atas usulan
+  ini, sehingga rekomendasi P-1–P-4 dan dependensi langsung baru di §3.9
+  berlaku)
 - **Cakupan:** Fitur baru `data_portability` (`lib/features/data_portability/`),
   glue akar komposisi (`lib/app/data_portability/`, `lib/main.dart`,
   `lib/app/di/root_module.dart`), baris di layar Akun dan tautan di onboarding
@@ -163,8 +164,9 @@ Tahap pemulihan dari Akun:
    pada data sekarang) dan `incoming/*`. **Penulisan inilah pemeriksaan ruang
    penyimpanan**: bila penuh, penulisan gagal sebelum data hidup disentuh;
    box dikosongkan, pengguna melihat `errorSpace`.
-3. Tulis `journal = {id, state: "staged"}`, lalu **balik ke `applying`**.
-   Hanya sampai di sini data hidup masih utuh lama.
+3. Tulis `journal` (`state: "staging"`, memuat daftar kunci lama dan baru)
+   **sebelum** menulis apa pun ke box kedua, lalu **balik ke `applying`**
+   sesudah semuanya tertulis. Hanya sampai di sini data hidup masih utuh lama.
 4. **`AppReboot`** (§3.7) menjalankan ulang bootstrap. Jalur pemulihan
    bootstrap membaca jurnal dan **menerapkan** (langkah 5).
 5. Terapkan, idempoten: `remove` setiap kunci hasil `collect` lama yang tidak ada
@@ -180,7 +182,7 @@ terjadi di setiap bootstrap:
 | Jurnal saat aplikasi dibuka | Tindakan | Hasil |
 |---|---|---|
 | tidak ada | normal | |
-| `staged` | buang `saldough_restore`, jurnal dihapus | data lama utuh |
+| `staging` | buang `saldough_restore`, jurnal dihapus | data lama utuh |
 | `applying` | ulangi langkah 5, lalu 6 | data cadangan utuh |
 | `applied` | finalisasi saja | data cadangan utuh |
 
@@ -464,6 +466,15 @@ UIDocumentPicker sendiri, dua bahasa, untuk fitur yang bukan inti. **Ditolak.**
 
 ### Urutan kerja
 
+Catatan implementasi (22 Okt 2026): keadaan jurnal pertama bernama `staging`
+(bukan `staged`) dan memuat manifes kunci, karena port tidak punya daftar
+kunci untuk membersihkan box kedua. `RestoreEngine.recover` dibungkus
+try/catch di `RootModule` supaya jurnal rusak tidak menghalangi aplikasi
+terbuka; konsekuensinya penerapan yang gagal terus-menerus dibiarkan
+dicoba lagi tiap pembukaan, dan dilaporkan ke Crashlytics. `FileTransfer`
+dan layanan `BackupService` dikerjakan bersama T-22.3 karena adaptor
+`file_picker` baru dibutuhkan di sana.
+
 T-22.1 sesudah Accepted: `BackupRegistry`, `BackupScope`, amplop, jurnal dan
 pemulihan, `AppReboot`, `FileTransfer`, semuanya dengan uji (1)–(2), (4)–(6).
 Lalu T-22.2 (ekspor, uji 3), T-22.3, T-22.4. Pemecahan `main()` dikerjakan
@@ -562,6 +573,6 @@ Dua risiko yang dicatat untuk saat B-7 dikerjakan:
 ---
 
 **Penulis keputusan:** flutter-engineer (agen), usulan untuk pemilik
-**Ditinjau oleh:** (menunggu pemilik)
-**Tanggal disetujui:** (menunggu)
-**Status implementasi:** Belum dimulai; fondasi T-22.1 menunggu Accepted
+**Ditinjau oleh:** pemilik
+**Tanggal disetujui:** 2026-10-22
+**Status implementasi:** Berjalan (T-22.1)

@@ -30,6 +30,13 @@ abstract final class SourceIcons {
     return null;
   }
 
+  /// Mengosongkan cache dan catatan permintaan, dipakai saat aplikasi
+  /// dimulai ulang sesudah pemulihan cadangan (ADR-040 §3.7).
+  static void reset() {
+    _requested.clear();
+    notifier.value = const {};
+  }
+
   /// Mencatat [png] untuk [id] (dipanggil repository sesudah baca/tulis).
   static void put(String id, Uint8List png) {
     if (identical(notifier.value[id], png)) return;

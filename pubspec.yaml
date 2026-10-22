@@ -25,6 +25,8 @@ dependencies:
       url: https://github.com/arkariz/advance-mobile-platform
       path: infrastructure/storage/api_storage
       ref: 275181ec7d43d423d5293ab676445a4e43a736ee  # api_storage-v1.1.0 + fix URL
+  # ADR-040: checksum SHA-256 berkas cadangan (sebelumnya transitif).
+  crypto: ^3.0.7
   dependencies:
     git:
       url: https://github.com/arkariz/advance-mobile-platform

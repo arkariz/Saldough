@@ -3,6 +3,8 @@ import 'package:di/di.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive_storage/hive_storage.dart';
 import 'package:navigation/navigation.dart';
+import 'package:saldough/app/data_portability/app_backup_registry.dart';
+import 'package:saldough/app/data_portability/restore_recovery.dart';
 import 'package:saldough/app/discovery/app_feature_statuses.dart';
 import 'package:saldough/app/shell/account_version_entry.dart';
 import 'package:saldough/app/shell/app_shell_page.dart';
@@ -35,6 +37,7 @@ import 'package:saldough/features/budget/data/repositories/budget_template_repos
 import 'package:saldough/features/budget/domain/repositories/budget_repository.dart';
 import 'package:saldough/features/budget/domain/repositories/budget_template_repository.dart';
 import 'package:saldough/features/budget/presentation/navigation/budget_route_module.dart';
+import 'package:saldough/features/data_portability/data/restore_engine.dart';
 import 'package:saldough/features/freelance/data/adapters/freelance_overview_source_impl.dart';
 import 'package:saldough/features/freelance/data/adapters/plan_freelance_source_impl.dart';
 import 'package:saldough/features/freelance/data/repositories/freelance_repository_impl.dart';
@@ -111,6 +114,15 @@ abstract final class RootModule {
       boxName: 'saldough_kv',
     );
     container.registerSingleton<KeyValueStorage>(storage);
+
+    // ADR-040 §3.4: box kedua untuk jurnal dan salinan pemulihan. Jurnal
+    // diperiksa SEKARANG, sebelum repositori mana pun dibuat, supaya tidak ada
+    // yang membaca data di tengah penggantian.
+    final restoreStorage = await HiveKeyValueStorage.initialize(boxName: 'saldough_restore');
+    final restoreEngine = RestoreEngine(live: storage, staging: restoreStorage, registry: appBackupRegistry);
+    container
+      ..registerSingleton<RestoreEngine>(restoreEngine)
+      ..registerSingleton<RestoreRecoveryOutcome>(RestoreRecoveryOutcome(await recoverRestoreJournal(restoreEngine)));
   }
 
   static void _registerSharedRepositories(GetIt container) {

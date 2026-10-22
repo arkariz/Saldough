@@ -86,7 +86,7 @@ Terakhir diperbarui: 18 Oktober 2026 (Fase 19 selesai dan masuk `main` lewat PR 
 | Persiapan Play Console — draf jawaban [PLAY_DATA_SAFETY.md](../03-release/PLAY_DATA_SAFETY.md) (Keamanan Data) dan [PLAY_STORE_LISTING.md](../03-release/PLAY_STORE_LISTING.md) (setelan toko, ASO) | 2 | 2 | Draf selesai (Keamanan Data 28 Sep, listing 29 Sep 2026); isi formulir persis sebelum build berfitur ini diunggah, jangan sebelum itu. Keputusan pemilik di §1 listing masih terbuka |
 | 20 — Pengumuman pembaruan ([APP_UPDATE.md](../01-product/features/APP_UPDATE.md)) | 8 | 8 | KT-U1–KT-U5 dijawab dan ADR-039 Accepted (15 Okt 2026); T-20.1–T-20.8 selesai dan sudah di `main` (ada di build `0.6.0+12` dan `0.7.0+13`); T-20.4 selesai (rupa v3 diterapkan, selisih diputuskan pemilik); T-20.7 formulir Play Console dan kebijakan privasi dilaporkan pemilik selesai; verifikasi perangkat T-20.8 lulus semua (15 Okt 2026) |
 | 21 — Penemuan fitur ([FEATURE_DISCOVERY.md](../01-product/features/FEATURE_DISCOVERY.md)) | 10 | 0 | Draf PO 18 Okt 2026, direvisi (onboarding wajib, tombol permanen); KT-D1 diputuskan; menunggu rupa (T-21.0) |
-| 22 — Ekspor dan cadangan manual ([EXPORT_BACKUP.md](../01-product/features/EXPORT_BACKUP.md)) | 8 | 0 | Spek final 22 Okt 2026 (dari B-42, KT-E1–KT-E5 diputuskan); ADR-040 ditulis (Proposed, menunggu pemilik); menunggu rupa (T-22.0) |
+| 22 — Ekspor dan cadangan manual ([EXPORT_BACKUP.md](../01-product/features/EXPORT_BACKUP.md)) | 8 | 1 | Spek final 22 Okt 2026 (dari B-42, KT-E1–KT-E5 diputuskan); ADR-040 Accepted dan T-22.1 (fondasi) selesai 22 Okt 2026; rupa sudah ada (T-22.0); berikutnya T-22.2 |
 | Antrean (`B-n`, belum dijadwalkan) | 49 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
 
 ## Keputusan terbuka
@@ -5138,7 +5138,7 @@ onboarding (tautan pulihkan, bersinggungan dengan Fase
       (tidak digambar ulang). (d) Nama berkas cadangan dan ekstensi yang ramah
       pengguna? (e) Catatan isi ekspor boleh, atau cukup baris bantuan format?
       Di luar PRD: rupa; kebutuhannya FR-DAT-001–003.
-- [ ] **T-22.1** ADR teknis cadangan dan ekspor, lalu fondasinya. Engineer
+- [x] **T-22.1** ADR teknis cadangan dan ekspor, lalu fondasinya. Engineer
       menulis ADR (nomor berikutnya, Proposed sampai disetujui pemilik) untuk
       EXPORT_BACKUP §10: format dan versi berkas, checksum, penggantian
       atomik di atas `hive_storage`, cadangan pengaman, pustaka xlsx, cara
@@ -5148,13 +5148,23 @@ onboarding (tautan pulihkan, bersinggungan dengan Fase
       Verifikasi: ADR disetujui; uji bolak-balik cadangkan → pulihkan di
       aplikasi kosong menghasilkan data identik (§10 butir 5).
       Memenuhi FR-DAT-002, FR-DAT-003.
-      **Progres 22 Okt 2026:** [ADR-040](../02-architecture/adr/0040-ekspor-cadangan-dan-pemulihan-manual.md)
-      ditulis (Proposed). Fondasi **belum** dikerjakan; menunggu pemilik
-      menyetujui ADR dan menjawab P-1–P-4 (kunci yang tidak ada di §6.2:
-      `capture_auto_recorded`, `settings_financial_month_offer`,
-      `plan_forecast_snapshots`, `source_icon_*`) serta dependensi langsung
-      baru (`file_picker`; `archive`, `crypto`, `share_plus`, `path_provider`
-      dari transitif menjadi langsung).
+      **Selesai 22 Okt 2026** (ADR-040 Accepted oleh pemilik; P-1–P-4 dan
+      dependensi langsung `crypto` mengikuti rekomendasi). Fondasi:
+      `BackupRegistry`/`BackupScope`, kodek amplop berversi (`.tkbak`,
+      gzip + SHA-256), `BackupValidator` (R-1–R-3), `RestoreEngine` (jurnal
+      tulis-dulu dengan roll-forward, cadangan pengaman 30 hari, Kembalikan),
+      `main()` dipecah menjadi `bootstrapApp()` + `AppReboot`, dan registri di
+      `lib/app/data_portability/`. **Belum:** `FileTransfer` (adaptor
+      `file_picker`) dan layanan `BackupService`, dikerjakan bersama T-22.3.
+      Verifikasi: 49 uji baru lulus, termasuk **sapuan galat di setiap operasi
+      tulis** (proses mati dan galat tunggal, pulihkan dan Kembalikan) yang
+      selalu menghasilkan data lama utuh atau data cadangan utuh; bolak-balik
+      dengan repositori nyata identik (dokumen, saldo, transaksi per bulan,
+      nominal `int` sen); uji kelengkapan registri dan state global; seluruh
+      `flutter test` lulus; peluncuran biasa di emulator tidak berubah.
+      ⚠ Sapuan galat memakai pembungkus penyimpanan, bukan proses yang benar-
+      benar dimatikan: asumsi satu penulisan Hive utuh-atau-tidak diverifikasi
+      QA di T-22.7 #4.
 - [ ] **T-22.2** Ekspor ke spreadsheet: lembar ekspor dari Akun saja, tanpa
       pilihan rentang (selalu seluruh data saat ini), xlsx (lembar Transaksi
       dan Dompet) dan CSV sesuai §5, aturan E-1–E-6.

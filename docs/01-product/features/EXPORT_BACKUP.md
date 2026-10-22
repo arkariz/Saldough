@@ -2,7 +2,9 @@
 
 **Tanggal:** 22 Oktober 2026.
 **Status:** KT-E1–KT-E5 diputuskan pemilik 22 Okt 2026 sesuai rekomendasi
-(§11). Menunggu rupa (T-22.0) dan ADR engineer (T-22.1). Tugasnya Fase 22 di
+(§11). Direvisi 22 Okt 2026: ekspor hanya dari Akun dan selalu berisi seluruh
+data saat ini, tanpa pilihan rentang (§5). Menunggu rupa (T-22.0) dan ADR
+engineer (T-22.1). Tugasnya Fase 22 di
 TASK_LIST (dari B-42).
 **Berkaitan:** [FREEMIUM_PAYWALL.md](FREEMIUM_PAYWALL.md) §1 butir 7, §6.6,
 §12.1, KT-P7 (gratis, sebelum rilis publik, dasar cadangan otomatis B-51);
@@ -79,7 +81,6 @@ fase ini.
 | Pintu | Isi |
 |---|---|
 | **Akun › Data kamu** (utama) | Tiga baris: **Ekspor ke spreadsheet**, **Cadangkan sekarang** (dengan status "Cadangan terakhir: 12 Okt 2026" atau "Belum pernah dicadangkan"), **Pulihkan dari cadangan**. Teks bagian diubah (§9). |
-| **Riwayat** (pintasan) | Menu ⋮ di kepala Riwayat: **Ekspor periode ini**. Membuka lembar ekspor dengan rentang = periode yang sedang dilihat. |
 | **Onboarding** (ganti ponsel) | Tautan **Sudah punya cadangan? Pulihkan** di slide pertama (§7.3). |
 
 Penemuan: baris Akun cukup untuk R1. Pengingat lembut untuk mencadangkan
@@ -90,20 +91,22 @@ status "Cadangan terakhir" di Akun adalah satu-satunya isyarat (KT-E5).
 
 ### 5.1 Alur
 
-1. Pengguna membuka **Ekspor ke spreadsheet** (Akun) atau **Ekspor periode
-   ini** (Riwayat).
+1. Pengguna membuka **Ekspor ke spreadsheet** di Akun (satu-satunya pintu,
+   keputusan pemilik 22 Okt 2026).
 2. Lembar ekspor:
-   - **Rentang**: Periode ini · Periode lalu · Tahun ini · Semua · Pilih
-     rentang (dua tanggal). Periode mengikuti periode keuangan pengguna;
-     "Tahun ini" = 1 Januari s.d. hari ini menurut tanggal transaksi.
+   - **Tanpa pilihan rentang.** Berkas selalu berisi **seluruh data saat
+     ini**: semua transaksi sejak pencatatan pertama sampai hari ini, dan
+     dompet dengan saldo sekarang. Pengguna yang hanya butuh sebagian
+     menyaringnya sendiri di spreadsheet (kolom Tanggal dan Awal periode).
    - **Format**: **Excel (.xlsx)** terpilih bawaan · CSV (KT-E1).
-   - Ringkasan sebelum ekspor: "142 transaksi, 1 Sep – 22 Okt 2026".
+   - Ringkasan sebelum ekspor: "142 transaksi, 3 Jun – 22 Okt 2026".
 3. **Ekspor** → lembar sistem untuk menyimpan atau membagikan (Simpan ke
    Berkas/Drive, kirim ke aplikasi lain) (KT-E3).
-4. Selesai: pesan singkat "Berkas siap: tanukonomy-transaksi-2026-09-01_2026-10-22.xlsx".
+4. Selesai: pesan singkat "Berkas siap: tanukonomy-ekspor-2026-10-22.xlsx"
+   (tanggal = hari ekspor).
 
-Rentang tanpa transaksi: tombol Ekspor nonaktif, teks "Tidak ada transaksi
-di rentang ini."
+Belum ada transaksi sama sekali: tombol Ekspor nonaktif, teks "Belum ada
+transaksi untuk diekspor."
 
 ### 5.2 Isi: lembar **Transaksi** (xlsx) / berkas transaksi (csv)
 
@@ -128,7 +131,7 @@ aplikasi; kolom ID selalu ada di ujung agar baris bisa ditelusuri.
 | ID | ID transaksi | |
 
 Lembar **Dompet** (hanya xlsx): Nama, Saldo awal, Saldo sekarang. Saldo
-sekarang = saldo di aplikasi saat ekspor, tidak dibatasi rentang.
+sekarang = saldo di aplikasi saat ekspor.
 
 **Contoh** (periode mulai tanggal 25, IDR):
 
@@ -289,9 +292,8 @@ Ruang nama `dataPortability.*`; teks akhir disetujui PO, mengikuti
 |---|---|
 | `account.dataBody` (diubah) | Semua catatanmu tersimpan di ponsel ini. Cadangkan ke tempat lain supaya tetap aman, atau ekspor ke spreadsheet. |
 | `dataPortability.exportTitle` | Ekspor ke spreadsheet |
-| `dataPortability.exportRange` | Rentang |
-| `dataPortability.exportSummary` | {n} transaksi, {range} |
-| `dataPortability.exportEmpty` | Tidak ada transaksi di rentang ini. |
+| `dataPortability.exportSummary` | {n} transaksi, {firstDate} – {lastDate} |
+| `dataPortability.exportEmpty` | Belum ada transaksi untuk diekspor. |
 | `dataPortability.exportDone` | Berkas siap: {file} |
 | `dataPortability.backupTitle` | Cadangkan sekarang |
 | `dataPortability.backupLast` / `backupNever` | Cadangan terakhir: {date} / Belum pernah dicadangkan |
@@ -346,7 +348,7 @@ Mengikuti ADR-023: tanpa nominal, nama, atau isi data.
 
 | Peristiwa | Parameter |
 |---|---|
-| `export_created` | `format` (`xlsx`/`csv`), `range` (`period`/`last_period`/`year`/`all`/`custom`), `rows_bucket` (`<100`/`<1000`/`<10000`/`10000+`), `surface` (`account`/`history`) |
+| `export_created` | `format` (`xlsx`/`csv`), `rows_bucket` (`<100`/`<1000`/`<10000`/`10000+`) |
 | `backup_created` | `rows_bucket`, `saved` (`true`/`false`) |
 | `restore_started` / `restore_completed` / `restore_failed` | `surface` (`account`/`onboarding`/`undo`), `reason` untuk gagal (`invalid`/`newer`/`inconsistent`/`space`/`other`) |
 
@@ -362,6 +364,8 @@ Mengikuti ADR-023: tanpa nominal, nama, atau isi data.
 - Impor dari CSV atau dari aplikasi lain.
 - Cadangan otomatis (B-51, Plus) dan sinkronisasi (B-7).
 - Ekspor laporan PDF atau ringkasan Analisis (B-49, Plus).
+- Ekspor dari Riwayat dan pilihan rentang waktu (keputusan pemilik 22 Okt
+  2026: ekspor selalu berisi seluruh data saat ini).
 - Penggabungan data atau pemulihan sebagian.
 - Sandi cadangan (antrean, KT-E2).
 - Pengingat untuk mencadangkan (KT-E5).

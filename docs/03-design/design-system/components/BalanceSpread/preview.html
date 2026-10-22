@@ -1,0 +1,32 @@
+<!-- @dsCard group="Data" height=640 -->
+<!doctype html>
+<html lang="id">
+<head><meta charset="utf-8"><title>BalanceSpread</title></head>
+<body>
+<div class="tk tk-demo tk-demo--col" style="max-width:360px;gap:12px">
+  <section class="tk-card tk-spread">
+    <button class="tk-spread__head" type="button" aria-expanded="false"><span class="tk-tile tk-tile--brandsoft"><span class="tk-icon">donut_small</span></span><span class="tk-spread__main"><span class="tk-spread__title">Sebaran saldo</span><span class="tk-spread__sub">Ketuk untuk melihat diagram</span></span><span class="tk-icon tk-spread__chev" aria-hidden="true">expand_more</span></button>
+    <div class="tk-spread__bar" role="img" aria-label="Sebaran saldo: BCA 54%, Tabungan 44%, Tunai 1%, GoPay 1%"><span style="width:53.8%;background:var(--cat-blue)"></span><span style="width:43.6%;background:var(--cat-amber)"></span><span style="width:1.4%;background:var(--cat-green)"></span><span style="width:1.2%;background:var(--cat-teal)"></span></div>
+    <ul class="tk-spread__keys" aria-hidden="true"><li class="tk-spread__key"><i class="tk-swatch" style="background:var(--cat-blue)"></i>BCA 54%</li><li class="tk-spread__key"><i class="tk-swatch" style="background:var(--cat-amber)"></i>Tabungan 44%</li><li class="tk-spread__key"><i class="tk-swatch" style="background:var(--cat-green)"></i>Tunai 1%</li><li class="tk-spread__key"><i class="tk-swatch" style="background:var(--cat-teal)"></i>GoPay 1%</li></ul>
+  </section>
+  <section class="tk-card tk-spread is-open">
+    <button class="tk-spread__head" type="button" aria-expanded="true"><span class="tk-tile tk-tile--brandsoft"><span class="tk-icon">donut_small</span></span><span class="tk-spread__main"><span class="tk-spread__title">Sebaran saldo</span><span class="tk-spread__sub">Ketuk untuk menutup diagram</span></span><span class="tk-icon tk-spread__chev" aria-hidden="true">expand_more</span></button>
+    <div class="tk-spread__body">
+      <div class="tk-donut"><svg viewBox="0 0 216 216" role="img" aria-label="Sebaran saldo: BCA 54%, Tabungan 44%, Tunai 1%, GoPay 1%">
+        <circle class="tk-donut__seg" cx="108" cy="108" r="96" stroke-width="24" stroke-dasharray="322.1 603.2" stroke-dashoffset="0" style="stroke:var(--cat-blue)"></circle>
+        <circle class="tk-donut__seg is-dim" cx="108" cy="108" r="96" stroke-width="24" stroke-dasharray="260.5 603.2" stroke-dashoffset="-324.6" style="stroke:var(--cat-amber)"></circle>
+        <circle class="tk-donut__seg is-dim" cx="108" cy="108" r="96" stroke-width="24" stroke-dasharray="6 603.2" stroke-dashoffset="-587.6" style="stroke:var(--cat-green)"></circle>
+        <circle class="tk-donut__seg is-dim" cx="108" cy="108" r="96" stroke-width="24" stroke-dasharray="6 603.2" stroke-dashoffset="-595.8" style="stroke:var(--cat-teal)"></circle>
+      </svg><div class="tk-donut__center" aria-live="polite"><span class="tk-donut__label">BCA</span><span class="tk-amt tk-donut__total">Rp14.810.000</span><span class="tk-donut__label">54% dari total saldo</span></div></div>
+      <div class="tk-spread__legend">
+        <button class="tk-legchip is-selected" type="button" aria-pressed="true"><i class="tk-swatch" style="background:var(--cat-blue)"></i><span class="tk-legchip__name">BCA</span><span class="tk-legchip__pct">54%</span></button>
+        <button class="tk-legchip" type="button" aria-pressed="false"><i class="tk-swatch" style="background:var(--cat-amber)"></i><span class="tk-legchip__name">Tabungan</span><span class="tk-legchip__pct">44%</span></button>
+        <button class="tk-legchip" type="button" aria-pressed="false"><i class="tk-swatch" style="background:var(--cat-green)"></i><span class="tk-legchip__name">Tunai</span><span class="tk-legchip__pct">1%</span></button>
+        <button class="tk-legchip" type="button" aria-pressed="false"><i class="tk-swatch" style="background:var(--cat-teal)"></i><span class="tk-legchip__name">GoPay</span><span class="tk-legchip__pct">1%</span></button>
+      </div>
+      <div class="tk-spread__foot"><button class="tk-btn tk-btn--text tk-btn--sm" type="button">Lihat total</button><button class="tk-btn tk-btn--text tk-btn--sm" type="button">Sembunyikan<span class="tk-icon tk-icon--sm">expand_less</span></button></div>
+    </div>
+  </section>
+</div>
+</body>
+</html>

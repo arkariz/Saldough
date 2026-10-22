@@ -41,7 +41,7 @@
 
 - Beranda: total saldo → yang perlu tindakan → bulan ini → anggaran → freelance → transaksi terbaru.
 - Anggaran: sisa → bar dengan penanda waktu → daftar pos → transaksi tertaut.
-- Dompet: total → sebaran per dompet → daftar dompet.
+- Dompet: total → sebaran per dompet (BalanceSpread: ringkas bawaan, bisa dibuka menjadi donat) → daftar dompet.
 
 ## Penanda waktu anggaran
 

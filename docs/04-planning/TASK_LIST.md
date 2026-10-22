@@ -86,7 +86,7 @@ Terakhir diperbarui: 18 Oktober 2026 (Fase 19 selesai dan masuk `main` lewat PR 
 | Persiapan Play Console — draf jawaban [PLAY_DATA_SAFETY.md](../03-release/PLAY_DATA_SAFETY.md) (Keamanan Data) dan [PLAY_STORE_LISTING.md](../03-release/PLAY_STORE_LISTING.md) (setelan toko, ASO) | 2 | 2 | Draf selesai (Keamanan Data 28 Sep, listing 29 Sep 2026); isi formulir persis sebelum build berfitur ini diunggah, jangan sebelum itu. Keputusan pemilik di §1 listing masih terbuka |
 | 20 — Pengumuman pembaruan ([APP_UPDATE.md](../01-product/features/APP_UPDATE.md)) | 8 | 8 | KT-U1–KT-U5 dijawab dan ADR-039 Accepted (15 Okt 2026); T-20.1–T-20.8 selesai dan sudah di `main` (ada di build `0.6.0+12` dan `0.7.0+13`); T-20.4 selesai (rupa v3 diterapkan, selisih diputuskan pemilik); T-20.7 formulir Play Console dan kebijakan privasi dilaporkan pemilik selesai; verifikasi perangkat T-20.8 lulus semua (15 Okt 2026) |
 | 21 — Penemuan fitur ([FEATURE_DISCOVERY.md](../01-product/features/FEATURE_DISCOVERY.md)) | 10 | 0 | Draf PO 18 Okt 2026, direvisi (onboarding wajib, tombol permanen); KT-D1 diputuskan; menunggu rupa (T-21.0) |
-| 22 — Ekspor dan cadangan manual ([EXPORT_BACKUP.md](../01-product/features/EXPORT_BACKUP.md)) | 8 | 5 | Spek final 22 Okt 2026 (dari B-42, KT-E1–KT-E5 diputuskan); ADR-040 Accepted, T-22.1 (fondasi), T-22.2 (ekspor), T-22.3 (cadangkan), dan T-22.4 (pulihkan), dan T-22.5 (pulihkan saat onboarding) selesai 22 Okt 2026; rupa sudah ada (T-22.0); berikutnya T-22.6 |
+| 22 — Ekspor dan cadangan manual ([EXPORT_BACKUP.md](../01-product/features/EXPORT_BACKUP.md)) | 8 | 6 | Spek final 22 Okt 2026 (dari B-42, KT-E1–KT-E5 diputuskan); ADR-040 Accepted, T-22.1 (fondasi), T-22.2 (ekspor), T-22.3 (cadangkan), T-22.4 (pulihkan), T-22.5 (pulihkan saat onboarding), dan T-22.6 (teks dan analitik) selesai 22 Okt 2026; rupa sudah ada (T-22.0); berikutnya T-22.7 (verifikasi perangkat, QA/pemilik) |
 | Antrean (`B-n`, belum dijadwalkan) | 49 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
 
 ## Keputusan terbuka
@@ -5280,11 +5280,25 @@ onboarding (tautan pulihkan, bersinggungan dengan Fase
       ⚠ Belum diuji: cadangan rusak atau lebih baru dari onboarding, cadangan
       dengan pengingat menyala di perangkat, iOS, rupa tautan terhadap
       `OnbPengantar.dc.html` (dibandingkan dari memori, bukan berdampingan).
-- [ ] **T-22.6** Teks `dataPortability.*` id dan en, `account.dataBody`
+- [x] **T-22.6** Teks `dataPortability.*` id dan en, `account.dataBody`
       baru, dan peristiwa analitik §12 tanpa nominal atau nama; catat di
       `PLAY_DATA_SAFETY.md` bila ada yang baru.
       Verifikasi: `translations_test`; uji peristiwa dan parameter.
       Memenuhi FR-DAT-001–003.
+      **Selesai 22 Okt 2026.** Teks `dataPortability.*` (id dan en) dan
+      `account.dataBody` sudah masuk bersama T-22.2–T-22.5 dan lulus
+      `translations_test` (glosarium `writing.md`); T-22.6 menambah peristiwa
+      `DataPortabilityEvents` (`export_created` saat berkas jadi,
+      `backup_created` saat penyimpanan terjawab dengan `saved` benar hanya
+      bila terkonfirmasi, `restore_started` saat dikonfirmasi,
+      `restore_failed` dengan alasan `invalid/newer/inconsistent/space/other`,
+      `restore_completed` sesudah boot ulang menerapkan data), semuanya
+      hanya jenis dan `rows_bucket`. Baris baru di `PLAY_DATA_SAFETY.md`
+      (tanpa jenis data baru).
+      Verifikasi: uji ember, tiap peristiwa dan parameternya, dan bahwa
+      tidak ada peristiwa sebelum dikonfirmasi; `flutter analyze` bersih.
+      ⚠ Belum dilihat di DebugView Firebase; `restore_failed` untuk galat
+      `other` dari alur Kembalikan belum diuji di perangkat.
 - [ ] **T-22.7** Verifikasi perangkat (QA/pemilik): cadangkan di ponsel A,
       pulihkan di ponsel B lewat onboarding, layar identik; pulihkan di atas
       data yang ada lalu Kembalikan; berkas rusak, versi lebih baru, ruang

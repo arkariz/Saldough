@@ -3,6 +3,7 @@ import 'dart:developer' as developer;
 import 'dart:typed_data';
 
 import 'package:dependencies/dependencies.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/features/data_portability/domain/backup_failure_codes.dart';
 import 'package:saldough/features/data_portability/domain/export_gateway.dart';
@@ -51,6 +52,9 @@ final class ExportBloc extends Bloc<ExportEvent, ExportState> {
     _running = null;
     switch (result) {
       case Right(value: final file):
+        AppAnalytics.log(
+          DataPortabilityEvents.exportCreated(format: file.format.name, rows: state.preview?.count ?? 0),
+        );
         emit(state.copyWith(phase: ExportPhase.ready, file: () => file));
       case Left(value: final failure) when failure.code == BackupFailureCodes.emptyExport:
         emit(state.copyWith(phase: ExportPhase.empty));

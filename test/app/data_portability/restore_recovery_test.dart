@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
 import 'package:saldough/app/data_portability/app_backup_registry.dart';
 import 'package:saldough/app/data_portability/restore_recovery.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/data_portability/data/restore_engine.dart';
 import 'package:saldough/features/data_portability/domain/restore_models.dart';
@@ -45,6 +46,14 @@ void main() {
     expect(await isOnboardingDone(), isFalse);
     await restore(RestoreKind.onboarding);
     expect(await isOnboardingDone(), isTrue);
+  });
+
+  test('selesai: restore_completed dengan asalnya, tanpa data lain', () async {
+    final events = <AnalyticsEvent>[];
+    AppAnalytics.debugSink = events.add;
+    addTearDown(() => AppAnalytics.debugSink = null);
+    await restore(RestoreKind.account);
+    expect(events, [const AnalyticsEvent('restore_completed', {'surface': 'account'})]);
   });
 
   test('pemulihan dari Akun tidak menyentuh progres onboarding', () async {

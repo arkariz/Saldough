@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/features/data_portability/domain/backup_failure_codes.dart';
 import 'package:saldough/features/data_portability/domain/file_transfer.dart';
 import 'package:saldough/features/data_portability/domain/restore_gateway.dart';
@@ -53,6 +54,7 @@ final class RestoreBloc extends Bloc<RestoreEvent, RestoreState> {
     switch (result) {
       case Left(value: final failure):
         developer.log('Pemeriksaan cadangan gagal', error: failure.message, name: 'RestoreBloc');
+        _logFailed(failure);
         emit(state.copyWith(phase: RestorePhase.error, error: () => _kindOf(failure)));
       case Right(value: null):
         emit(state.copyWith(phase: RestorePhase.error, error: () => RestoreErrorKind.other));
@@ -65,9 +67,11 @@ final class RestoreBloc extends Bloc<RestoreEvent, RestoreState> {
     final session = state.session;
     if (state.phase != RestorePhase.preview || session == null) return;
     emit(state.copyWith(phase: RestorePhase.running));
+    AppAnalytics.log(DataPortabilityEvents.restoreStarted(surface: state.source.name));
     switch (await _gateway.stage(session)) {
       case Left(value: final failure):
         developer.log('Penyiapan pemulihan gagal', error: failure.message, name: 'RestoreBloc');
+        _logFailed(failure);
         emit(state.copyWith(phase: RestorePhase.error, error: () => _kindOf(failure)));
       case Right():
         // Data hidup belum disentuh sampai di sini. Boot ulang menjalankan
@@ -75,6 +79,19 @@ final class RestoreBloc extends Bloc<RestoreEvent, RestoreState> {
         unawaited(_reboot(onboarding: session.preview.source == RestoreKind.onboarding));
     }
   }
+
+  void _logFailed(Failure failure) => AppAnalytics.log(
+    DataPortabilityEvents.restoreFailed(
+      surface: state.source.name,
+      reason: switch (failure.code) {
+        BackupFailureCodes.invalid => 'invalid',
+        BackupFailureCodes.newer => 'newer',
+        BackupFailureCodes.inconsistent => 'inconsistent',
+        BackupFailureCodes.space => 'space',
+        _ => 'other',
+      },
+    ),
+  );
 
   static RestoreErrorKind _kindOf(Failure failure) => switch (failure.code) {
     BackupFailureCodes.invalid || BackupFailureCodes.inconsistent => RestoreErrorKind.invalid,

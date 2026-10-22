@@ -3,6 +3,7 @@ import 'dart:developer' as developer;
 import 'dart:typed_data';
 
 import 'package:dependencies/dependencies.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/features/data_portability/domain/backup_gateway.dart';
 import 'package:saldough/features/data_portability/domain/export_models.dart';
@@ -77,6 +78,14 @@ final class BackupBloc extends Bloc<BackupEvent, BackupState> {
     if (file == null) return;
     try {
       final outcome = await action(fileName: file.name, bytes: file.bytes, mimeType: backupMimeType);
+      // Dicatat sesudah penyimpanan terjawab, bukan saat berkas dibuat:
+      // `saved` hanya benar bila terkonfirmasi.
+      AppAnalytics.log(
+        DataPortabilityEvents.backupCreated(
+          rows: state.summary?.transactions ?? 0,
+          saved: outcome == TransferOutcome.done,
+        ),
+      );
       switch (outcome) {
         case TransferOutcome.cancelled:
           emit(state.copyWith(notSaved: true));

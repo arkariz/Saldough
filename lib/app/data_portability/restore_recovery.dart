@@ -3,6 +3,7 @@ import 'dart:developer' as developer;
 import 'package:dependencies/dependencies.dart';
 import 'package:di/di.dart';
 import 'package:saldough/app/data_portability/app_reboot.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/foundation/analytics/app_bootstrap_firebase.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/data_portability/data/restore_engine.dart';
@@ -51,6 +52,7 @@ Future<void> finishRestoreIfNeeded(GetIt container) async {
       }
     });
     AppReboot.progress.value = RestoreProgress(step: 4, onboarding: onboarding);
+    AppAnalytics.log(DataPortabilityEvents.restoreCompleted(surface: report.kind.name));
     AppReboot.report.value = report;
   } on Object catch (e, st) {
     developer.log('Finalisasi pemulihan gagal, dicoba lagi nanti', error: e, stackTrace: st, name: 'RestoreEngine');

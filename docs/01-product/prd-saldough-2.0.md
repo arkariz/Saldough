@@ -948,8 +948,8 @@ menggantikan "ekspor-impor data" di daftar §6 yang di luar MVP, untuk bagian
 ekspor saja; impor tetap di luar cakupan.
 
 **FR-DAT-001 — Ekspor ke spreadsheet**
-- [ ] Transaksi bisa diekspor ke xlsx atau CSV untuk rentang berbasis
-      periode keuangan, dari Akun dan Riwayat.
+- [ ] Seluruh transaksi saat ini bisa diekspor ke xlsx atau CSV dari Akun,
+      tanpa pilihan rentang.
 - [ ] Jumlah kolom Arus per periode di berkas sama dengan Arus aplikasi;
       transfer tidak dihitung sebagai pemasukan atau pengeluaran.
 

@@ -118,6 +118,7 @@ final class NotificationPatternBound extends NotificationSettingsEvent {
     required this.packageName,
     required this.patternId,
     required this.patternLabel,
+    required this.patternKind,
     required this.ruleId,
   });
 
@@ -129,6 +130,9 @@ final class NotificationPatternBound extends NotificationSettingsEvent {
 
   /// Nama pola, disimpan di ikatan untuk ditampilkan.
   final String patternLabel;
+
+  /// Jenis pola; rutin tujuan harus berjenis sepadan (ADR-042 §3.4).
+  final NotificationPatternKind patternKind;
 
   /// Rutin tujuan, atau `null`.
   final String? ruleId;

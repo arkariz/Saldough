@@ -87,7 +87,7 @@ Terakhir diperbarui: 18 Oktober 2026 (Fase 19 selesai dan masuk `main` lewat PR 
 | 20 — Pengumuman pembaruan ([APP_UPDATE.md](../01-product/features/APP_UPDATE.md)) | 8 | 8 | KT-U1–KT-U5 dijawab dan ADR-039 Accepted (15 Okt 2026); T-20.1–T-20.8 selesai dan sudah di `main` (ada di build `0.6.0+12` dan `0.7.0+13`); T-20.4 selesai (rupa v3 diterapkan, selisih diputuskan pemilik); T-20.7 formulir Play Console dan kebijakan privasi dilaporkan pemilik selesai; verifikasi perangkat T-20.8 lulus semua (15 Okt 2026) |
 | 21 — Penemuan fitur ([FEATURE_DISCOVERY.md](../01-product/features/FEATURE_DISCOVERY.md)) | 10 | 7 | Kode T-21.1–T-21.7 selesai; T-21.9 (Mulai cepat) sebagian; menunggu T-21.0 (rupa) dan T-21.8 (verifikasi perangkat) |
 | 22 — Ekspor dan cadangan manual ([EXPORT_BACKUP.md](../01-product/features/EXPORT_BACKUP.md)) | 8 | 8 | Selesai 23 Okt 2026 (dari B-42): ADR-040 Accepted, T-22.0–T-22.7 di `main`; QA emulator Android tanpa temuan S1/S2; sisa uji perangkat (iOS, Excel/Sheets, dll.) di B-67 |
-| 23 — Catat notifikasi multi-dompet, contoh, dan rutin lebih awal ([ADR-042](../02-architecture/adr/0042-notifikasi-multi-dompet-sampel-dan-rutin.md)) | 4 | 4 | Kode selesai 23 Okt 2026 di branch `worktree-notif-multi-wallet-recurring` (belum digabung); sisa kompilasi Kotlin, uji emulator, dan pengungkapan privasi situs |
+| 23 — Catat notifikasi multi-dompet, contoh, dan rutin lebih awal ([ADR-042](../02-architecture/adr/0042-notifikasi-multi-dompet-sampel-dan-rutin.md)) | 5 | 5 | Kode selesai 23 Okt 2026 di branch `worktree-notif-multi-wallet-recurring` (belum digabung); sisa kompilasi Kotlin, uji emulator, dan pengungkapan privasi situs |
 | Antrean (`B-n`, belum dijadwalkan) | 65 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
 
 ## Keputusan terbuka
@@ -5350,10 +5350,17 @@ Permintaan pemilik 23 Okt 2026 (kasus Bank Jago).
       `PLAY_DATA_SAFETY.md`.
       Verifikasi: OTP tidak pernah tersimpan, kedaluwarsa, uji backup registry.
 
-**Kode T-23.1–T-23.4 selesai 23 Okt 2026** (branch
+- [x] **T-23.5** Tindak lanjut QA Fase 23 (24 Okt 2026): F23-1 alasan dompet
+      untuk transfer antar dompet tak terpetakan, F23-3 info lint, F23-5 race
+      `state` sebelum `await` di bloc setelan, F23-6 ikatan hanya ke rutin
+      berjenis sama (keputusan pemilik); F23-2 diputuskan pertahankan urutan
+      duplikat dulu. Rincian di `VERIFICATION_PLAN_FASE_23.md` ("Tindak lanjut
+      temuan"). Sisa: uji ulang A9/A10, C1, D2/D3 di perangkat dan baris P1
+      yang belum diuji.
+
+**Kode T-23.1–T-23.4 selesai 23 Okt 2026** (QA alur inti 24 Okt 2026: tanpa temuan S1/S2, 5 temuan S3 sudah ditindaklanjuti di T-23.5; kompilasi Kotlin lulus) (branch
 `worktree-notif-multi-wallet-recurring`, belum digabung). `flutter analyze`
-bersih dan seluruh uji lulus. Belum diverifikasi: kompilasi Kotlin (contoh
-notifikasi), uji emulator Jago asli (pola `{from}`/`{to}` butuh sampel nyata),
+bersih dan seluruh uji lulus. Belum diverifikasi: uji emulator Jago asli (pola `{from}`/`{to}` butuh sampel nyata),
 pembaruan pengungkapan jelas dan kebijakan privasi situs untuk contoh
 notifikasi. Catatan implementasi di ADR-042 §7.
 
@@ -5429,6 +5436,7 @@ menambah dan memindahkannya ada di
 | B-80 | **Perkiraan zakat dari catatan** (**gratis**, keputusan 23 Okt 2026): zakat penghasilan dan zakat mal dari dompet, aset, dan utang; pembayarannya dicatat lewat CATAT. Rujukan nisab dari lembaga amil, harga emas diisi pengguna. Sasaran sebelum Ramadan 2027 bila sempat. | agen + pemilik | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §16, [laporan bisnis](https://claude.ai/artifact/SKsV87e4f7hX8h58Qvv7G5) #14 |
 | B-81 | **Kamar Tanuki** (gratis dasar; barang, kostum, dan tema musiman di Plus lewat B-56): kamar piksel yang bertambah barang saat tonggak nyata tercapai; tidak ada yang hilang saat absen, tanuki tidak pernah sedih. Bisa dimatikan. | pemilik menyerahkan aset, lalu agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §16, [laporan bisnis](https://claude.ai/artifact/SKsV87e4f7hX8h58Qvv7G5) Gamifikasi |
 | B-82 | **Buku Stempel** (gratis; edisi musiman khusus Plus): stempel piksel untuk tonggak (periode lengkap, saldo cocok, rutin tak terlewat, target tercapai) dan edisi Ramadan, 17 Agustus, Tahun Baru; tanpa streak, poin, atau peringkat (KT-R13). | pemilik menyerahkan aset, lalu agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §16, [laporan bisnis](https://claude.ai/artifact/SKsV87e4f7hX8h58Qvv7G5) Gamifikasi |
+| B-83 | **Sisa pengamatan QA Fase 22–23**: (a) halaman "Data dipulihkan" tetap meminta izin notifikasi walau sudah aktif; (b) F23-4: daftar rutin sempat menampilkan kemunculan yang sudah tercatat sebagai "Later" (ulangi di perangkat nyata); (c) uji layar otomatis untuk Aturan dompet, Ikat ke rutin, dan Contoh notifikasi. | agen | [VERIFICATION_PLAN_FASE_23.md](VERIFICATION_PLAN_FASE_23.md) |
 | B-39 | **Pengumuman pembaruan R2**: pembaruan wajib/versi minimum untuk perbaikan kritis (KT-U1), pembaruan untuk iOS (App Store) sesudah iOS dirilis, dan pilihan jalur uji untuk penguji. | agen + pemilik | [APP_UPDATE.md](../01-product/features/APP_UPDATE.md) §14 |
 | B-35 | Uji di perangkat yang belum dilakukan QA PR #43: lebar 360dp (butuh izin mengubah setelan ponsel), Freelance, perekaman suara sungguhan, dan jalur Gemini secara terpisah. | pemilik | QA PR #43 (di luar PR) |
 | B-14 | **Catat lewat Suara**: STT sistem (`speech_to_text`) + parser aturan + Gemma lokal mulai dari model termurah, 270M → 1B → Gemma 4 E2B (unduhan opt-in dari Hugging Face) → form CATAT terisi draf; adaptor Firebase AI sebagai jalur pivot. ADR-027. Riset & rencana di [VOICE_INPUT_RESEARCH.md](../01-product/features/VOICE_INPUT_RESEARCH.md). | dijadwalkan: T-11.2–T-11.9 | riset 30 Sep 2026 |

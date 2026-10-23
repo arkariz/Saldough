@@ -1,6 +1,6 @@
 # Rencana Verifikasi — Fase 23 (Catat notifikasi multi-dompet, contoh, dan rutin lebih awal)
 
-**Dibuat:** 23 Oktober 2026 · **Branch:** `worktree-notif-multi-wallet-recurring` (dari `origin/main`, belum digabung)
+**Dibuat:** 23 Oktober 2026 · **Revisi 1:** 24 Oktober 2026 (hasil QA `c83f3602` / `0.9.0+15`; keputusan pemilik F23-2 dan F23-6; perbaikan F23-1, F23-3, F23-5, F23-6) · **Branch:** `worktree-notif-multi-wallet-recurring` (dari `origin/main`; commit uji `c83f3602` sudah di `main`, perbaikan revisi 1 menyusul)
 **Rujukan:** [ADR-042](../02-architecture/adr/0042-notifikasi-multi-dompet-sampel-dan-rutin.md),
 [ADR-032](../02-architecture/adr/0032-catat-dari-notifikasi.md) (dasar fitur),
 [ADR-035](../02-architecture/adr/0035-transaksi-rutin-rencana-dan-perkiraan.md),
@@ -14,10 +14,10 @@ Android saja (Catat dari notifikasi tidak ada di iOS).
 
 | Pemeriksaan | Hasil |
 |---|---|
-| `flutter analyze` (seluruh proyek) | Bersih, tanpa error, peringatan, atau info |
+| `flutter analyze` (seluruh proyek) | Berkas Fase 23 bersih. Satu info lama di `test/core/currency/active_currency_rebuilder_test.dart` (`unawaited_futures`) bukan dari fase ini. (Versi awal rencana menulis "tanpa info" tanpa memeriksa info; QA menemukan 1 info di berkas uji baru, F23-3, sudah diperbaiki.) |
 | `flutter test` (seluruh proyek) | 2067 uji lulus |
 | Uji baru | `notification_multi_wallet_test` (aturan dompet, ambigu, `{from}`/`{to}`), `occurrence_record_date_test`, `adr042_serialization_test`, `notification_settings_bloc_adr042_test`, grup "rutin terikat ke pola" di `process_captured_notifications_test`, uji "Catat sekarang" di `recurring_pages_test` |
-| Kompilasi Kotlin (`CaptureQueue`, `CaptureConfig`, listener, plugin) | **Belum**: tidak ada Gradle di lingkungan pengembangan. QA wajib membangun APK debug dulu. |
+| Kompilasi Kotlin (`CaptureQueue`, `CaptureConfig`, listener, plugin) | **Lulus** (QA 24 Okt 2026: APK debug terbangun, layanan native menerima konfigurasi, antrean, dan contoh). Versi awal menulis "belum". |
 | Uji layar (widget) bagian Contoh notifikasi, Aturan dompet, Ikat ke rutin | **Belum ada**; hanya bloc dan domain yang diuji otomatis. Semua alur UI di bawah diuji manual. |
 
 ## Risiko utama
@@ -37,9 +37,21 @@ Android saja (Catat dari notifikasi tidak ada di iOS).
 - Dompet: **Jago Utama**, **Liburan**, **Tabungan** (ketiganya aktif), plus satu dompet lain (mis. BRI).
 - Akses notifikasi sistem sudah diberikan, fitur Catat dari notifikasi nyala, aplikasi **Jago** terdaftar sebagai sumber (dompet utama Jago Utama).
 - Tingkat otomatis diatur per skenario (Catat otomatis mati = tingkat 1; nyala = tingkat 2).
-- Untuk notifikasi uji tanpa Jago asli: aplikasi pengirim notifikasi uji (mis. `adb shell cmd notification post -S bigtext -t "Jago" Tag "Pembayaran Rp25.000 ke KOPI dari Kantong Liburan berhasil"`) dari paket yang didaftarkan sebagai sumber; atau gunakan sampel asli bila ada. Bila notifikasi uji memakai paket lain, daftarkan paket itu sebagai sumber.
+- Untuk notifikasi uji tanpa Jago asli: `adb shell cmd notification post -S bigtext -t "Jago" Tag "…"` selalu terkirim dari paket **`com.android.shell`**, jadi daftarkan paket itu sebagai sumber (label bebas, mis. "Jago (uji)"). Alternatif yang dipakai QA 24 Okt: menyuntik sumber, dompet, pola, dan rutin lewat cadangan buatan (`.tkbak`), lalu memulihkannya; cara ini melewati pembuat pola di UI, jadi A7 dan A11 tetap perlu satu putaran lewat UI. **Teks pola harus berawalan judul notifikasi** ("Jago Pindah {amount} …") karena yang dicocokkan adalah "judul\nisi"; pembuat pola di UI membuatnya otomatis. Bahasa perangkat memengaruhi label yang tampil: rencana memakai label Indonesia, perangkat berbahasa Inggris menampilkan padanannya (mis. "Catat sekarang" = "Record now"); gunakan salah satu bahasa secara konsisten dan catat pilihannya di laporan.
 - Rutin uji: **Netflix** Rp65.000 tetap, pengeluaran, dompet Jago Utama, bulanan; **Listrik** kira-kira Rp300.000 (nominal kira-kira).
 - Jam perangkat boleh dimajukan lewat `cmd alarm set-time` (`auto_time 0`), lalu dikembalikan.
+
+## Prioritas
+
+Untuk memutus cakupan tanpa menebak. **P1 = wajib sebelum merge** (menyangkut risiko uang/privasi R1–R4); **P2 = wajib sebelum rilis publik**; **P3 = bila sempat**.
+
+| Prioritas | Baris |
+|---|---|
+| P1 | A4–A6, A8–A10, B2, B4, B8, C5–C10, C12, C14, D2–D5, D10, D12, D13 |
+| P2 | A1–A3, A7, A11, A12, B1, B3, B5–B7, B9, C1–C4, C11, C13, C15, D1, D6–D9, D11, D14–D16, E1–E7 |
+| P3 | Tampilan mode gelap dan bahasa Inggris selain E5; kombinasi layar sempit di luar B1 |
+
+Per 24 Okt 2026 QA menuntaskan 25 baris (P1 sebagian). P1 yang belum diuji: B4, C9, C10, C12, C14, D12, D13 (dan A7/A11 lewat UI pembuat pola).
 
 ## Daftar periksa perangkat
 
@@ -55,8 +67,8 @@ Android saja (Catat dari notifikasi tidak ada di iOS).
 | A6 | Kirim teks yang memuat "Kantong Liburan" **dan** "Kantong Tabungan" | Masuk kotak masuk dengan alasan dompet tidak dikenali; **tidak** tercatat otomatis walau tingkat 2; dompet kosong | |
 | A7 | Buat pola dari contoh "Pindah Rp100.000 dari Kantong Liburan ke Kantong Tabungan": jenis Transfer, tandai Nominal, "Kantong Liburan" = Dari, "Kantong Tabungan" = Ke | Templat jadi `Pindah {amount} dari {from} ke {to}`; teks bantuan "Dari/Ke" tampil; bagian arah dan dompet lawan diganti keterangan; Simpan aktif | |
 | A8 | Kirim notifikasi transfer dari A7 (tingkat 2) | Tercatat sebagai **transfer** Liburan → Tabungan; saldo Liburan turun, Tabungan naik, total tetap; tidak muncul sebagai pemasukan/pengeluaran di Analisis | |
-| A9 | Kirim transfer dengan sisi tujuan tak dikenal ("ke Kantong Misteri") | Kotak masuk; dompet asal terisi, tujuan kosong; tidak tercatat | |
-| A10 | Kirim transfer dengan kedua sisi sama ("dari Kantong Liburan ke Kantong Liburan") | Kotak masuk; kedua dompet kosong | |
+| A9 | Kirim transfer dengan sisi tujuan tak dikenal ("ke Kantong Misteri") | Kotak masuk dengan alasan **dompet tidak dikenali** (bukan "jenis belum jelas"); dompet asal terisi, tujuan kosong; tidak tercatat | |
+| A10 | Kirim transfer dengan kedua sisi sama ("dari Kantong Liburan ke Kantong Liburan") | Kotak masuk dengan alasan **dompet tidak dikenali**; kedua dompet kosong | |
 | A11 | Tandai hanya "Dari" tanpa "Ke" di pembuat pola | Templat tidak sah; Simpan nonaktif dengan alasan | |
 | A12 | Perbarui dari versi lama dengan sumber Jago yang sudah ada | Sumber lama terbaca, tanpa aturan dompet; perilaku lama tidak berubah | |
 
@@ -78,14 +90,15 @@ Android saja (Catat dari notifikasi tidak ada di iOS).
 
 | # | Langkah | Harapan | Hasil |
 |---|---|---|---|
-| C1 | Jago › Filter dan pola › bagian "Ikat ke rutin" | Hanya muncul bila ada rutin aktif dan pola (pengguna atau bawaan terverifikasi yang aktif); tiap pola punya pemilih rutin, bawaannya "Tidak terikat" | |
+| C1 | Jago › Filter dan pola › bagian "Ikat ke rutin" | Hanya muncul bila ada rutin aktif dan pola (pengguna atau bawaan terverifikasi yang aktif); tiap pola punya pemilih rutin, bawaannya "Tidak terikat". **Pemilih hanya menawarkan rutin berjenis sama** (pola pengeluaran → rutin pengeluaran, pemasukan → pemasukan, transfer → transfer); rutin Gaji tidak muncul untuk pola pengeluaran (F23-6) | |
 | C2 | Ikat pola "Netflix" ke rutin Netflix | Pemilih menampilkan nama rutin; tetap setelah keluar-masuk halaman | |
 | C3 | Ikat pola yang sama ke rutin lain | Ikatan pindah (rutin pertama lepas) | |
 | C4 | Ikat rutin Netflix ke pola kedua | Pola kedua menggantikan yang pertama | |
 | C5 | Tingkat 2; kirim notifikasi cocok pola, nominal Rp65.000, satu kemunculan terbuka dalam 7 hari | Tercatat otomatis **dan tertaut** ke kemunculan (log tautan otomatis ada, bisa Lepaskan) | |
 | C6 | Sama seperti C5 tetapi nominal Rp70.000 | Kotak masuk, badge **Rutin belum pasti**; tidak tercatat; tidak tertaut ke rutin lain | |
 | C7 | Pola terikat ke rutin **kira-kira** (Listrik), nominal dalam ±10% | Kotak masuk (tidak dicatat otomatis); saran rutin tampil di item | |
-| C8 | Notifikasi cocok pola terikat tetapi **tidak ada** kemunculan terbuka dalam 7 hari (semua tercatat/dilewati) | Kotak masuk, badge Rutin belum pasti | |
+| C8a | Notifikasi cocok pola terikat, kemunculannya **sudah tercatat di hari yang sama** (transaksi mirip ada) | Kotak masuk dengan badge **"mungkin sudah tercatat"** (deteksi duplikat lebih dulu; keputusan pemilik F23-2); tidak tertaut | |
+| C8b | Notifikasi cocok pola terikat, kemunculan **dilewati** atau tidak ada dalam 7 hari, tanpa transaksi mirip | Kotak masuk dengan badge **"Rutin belum pasti"**; tidak tertaut | |
 | C9 | Dua kemunculan terbuka dalam 7 hari (rutin mingguan) | Kotak masuk (tidak menebak) | |
 | C10 | Tingkat 1 (Catat otomatis mati); notifikasi cocok pola terikat, nominal pas | Kotak masuk dengan saran rutin; Catat dari kotak masuk menautkan ke kemunculan itu | |
 | C11 | Hapus pola yang terikat | Ikatan rutin terlepas (pemilih tidak lagi menampilkan rutin) | |
@@ -99,8 +112,8 @@ Android saja (Catat dari notifikasi tidak ada di iOS).
 | # | Langkah | Harapan | Hasil |
 |---|---|---|---|
 | D1 | Jago › Filter dan pola | Sakelar **Simpan contoh notifikasi** ada dan **mati** secara bawaan | |
-| D2 | Nyalakan sakelar | Dialog pengungkapan (apa disimpan, 7 hari, bukan OTP, tidak dikirim ke server); Batal = tetap mati; Nyalakan = menyala | |
-| D3 | Kirim beberapa notifikasi Jago (transaksi dan non-transaksi bermuatan angka, mis. promo "Diskon 50%") | Muncul di "Notifikasi terbaru", terbaru di atas, maksimum 10 ditampilkan | |
+| D2 | Nyalakan sakelar | Dialog pengungkapan (apa disimpan, 7 hari, bukan OTP, tidak dikirim ke server); Batal = tetap mati; Nyalakan = sakelar **langsung** tampil menyala dan bagian "Notifikasi terbaru" langsung muncul, tanpa perlu membuka ulang halaman (F23-5) | |
+| D3 | Kirim beberapa notifikasi Jago (transaksi dan non-transaksi bermuatan angka, mis. promo "Diskon 50%") | Muncul di "Notifikasi terbaru", terbaru di atas, maksimum 10 ditampilkan; daftar diperbarui saat halaman dibuka ulang | |
 | D4 | Kirim notifikasi berisi kode OTP ("Kode OTP 123456, jangan bagikan") | **Tidak** muncul di daftar (tidak pernah disimpan) | |
 | D5 | Kirim notifikasi tanpa angka | Tidak tersimpan | |
 | D6 | Notifikasi dari aplikasi yang **tidak** terdaftar | Tidak tersimpan | |
@@ -185,7 +198,7 @@ Diuji 23–24 Okt 2026 pada build `c83f3602` (`0.9.0+15`), emulator Android 15 (
 
 | Ringkasan | Jumlah |
 |---|---|
-| Lulus | 26 baris (A1, A2, A4, A5, A6, A8, A9, A10, B1, B2, B8, C1, C2, C5, C6, C7, D1, D2, D3, D4, D5, D7, D10, E1, E7, plus build/test otomatis) |
+| Lulus | 25 baris (A1, A2, A4, A5, A6, A8, A9, A10, B1, B2, B8, C1, C2, C5, C6, C7, D1, D2, D3, D4, D5, D7, D10, E1, E7), ditambah pemeriksaan otomatis dan build. (Penulisan awal "26" tidak cocok dengan daftarnya.) |
 | Sebagian | 1 (C8) |
 | Gagal S1 / S2 / S3 | **0 / 0 / 5** |
 | Tidak diuji | sisanya |
@@ -201,7 +214,18 @@ Diuji 23–24 Okt 2026 pada build `c83f3602` (`0.9.0+15`), emulator Android 15 (
 | F23-5 | D2, D3 | S3 | Tepat setelah sakelar contoh dinyalakan (dan setelah menyetujui dialog), sakelar masih tampil **mati** dan "Recent notifications" tidak muncul walau penyimpanan sudah menyala; baru benar setelah halaman dibuka ulang. Pengguna bisa mengira gagal dan mengulang. |
 | F23-6 | C1 | S3 / keputusan pemilik | Pemilih "Bind to a recurring item" untuk pola pengeluaran (Netflix) menawarkan rutin **Gaji (pemasukan)**. Belum ada aturan tertulis bahwa jenis harus sama; usul: saring daftar menurut jenis pola. |
 
-Catatan: teks pola harus berawalan judul notifikasi ("Jago …") karena yang dicocokkan adalah "judul\nisi". Perilakunya benar, namun membingungkan bila pola diketik tangan; pembuat pola di UI membuatnya otomatis. Pengamatan Fase 22 yang masih ada: halaman "Data dipulihkan" tetap meminta izin notifikasi walau sudah aktif.
+Catatan: teks pola harus berawalan judul notifikasi (lihat Prasyarat data uji). Pengamatan Fase 22 "halaman Data dipulihkan tetap meminta izin notifikasi walau sudah aktif" bukan bagian Fase 23; dipindah ke antrean B-83 di TASK_LIST.
+
+### Tindak lanjut temuan (revisi 1, 24 Okt 2026)
+
+| ID | Keputusan / perbaikan | Status |
+|---|---|---|
+| F23-1 | Transfer antar dompet yang sisinya tak terpetakan atau sama kini bermasalah **dompet** (`walletUnknown`), bukan `transferSourceMissing`/`transferTargetMissing`; alasan kotak masuk "dompet tidak dikenali". Diuji di `notification_multi_wallet_test`. | Diperbaiki, perlu uji ulang A9/A10 di perangkat |
+| F23-2 | Pemilik setuju: **pertahankan urutan** (duplikat dulu). Kemunculan yang sudah tercatat di hari yang sama memang paling mungkin penjelasannya. Harapan C8 dipecah jadi C8a/C8b. | Diputuskan; rencana diperbarui |
+| F23-3 | Info lint di berkas uji Fase 23 dibersihkan (const, urutan impor, argumen redundan). | Diperbaiki |
+| F23-4 | Daftar rutin sempat basi sesaat; belum bisa dipastikan bukan lag emulator. | Terbuka: ulangi di perangkat nyata (B-83) |
+| F23-5 | Penyebab: `emit(state.copyWith(samples: await …))` membaca `state` sebelum `await`, sehingga setelan baru yang tersimpan di antaranya tertimpa. Diperbaiki dengan `await` dulu, lalu `emit` (3 tempat). Uji regresi ditambahkan. | Diperbaiki, perlu uji ulang D2/D3 |
+| F23-6 | Pemilik setuju: jenis pola dan rutin **harus sama**. Pemilih menyaring menurut jenis (ikatan lama lintas jenis tetap tampil agar bisa dilepas), dan bloc menolak event lintas jenis. Diuji. | Diperbaiki, perlu uji ulang C1 |
 
 ### Rekomendasi
 

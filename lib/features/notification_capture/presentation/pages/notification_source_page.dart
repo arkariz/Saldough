@@ -370,12 +370,19 @@ class _SourcePageState extends State<_SourcePage> {
                     wrapLabel: true,
                     allLabel: texts.bindingNone,
                     allIcon: IconKey.close,
-                    options: [for (final r in rules) (value: r.id, label: r.note, icon: IconKey.calendar)],
+                    // Hanya rutin berjenis sama; ikatan lama lintas jenis tetap
+                    // tampil supaya bisa dilepas.
+                    options: [
+                      for (final r in rules)
+                        if (r.kind == pattern.kind.recurringKind || r.id == bound?.id)
+                          (value: r.id, label: r.note, icon: IconKey.calendar),
+                    ],
                     onSelected: (id) => context.read<NotificationSettingsBloc>().add(
                       NotificationPatternBound(
                         packageName: _source.packageName,
                         patternId: pattern.id,
                         patternLabel: pattern.label,
+                        patternKind: pattern.kind,
                         ruleId: id,
                       ),
                     ),

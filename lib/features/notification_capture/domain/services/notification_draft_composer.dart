@@ -243,11 +243,9 @@ final class NotificationDraftComposer {
       return draft.copyWith(
         walletId: () => same ? null : from,
         toWalletId: () => same ? null : to,
-        issues: {
-          ...issues,
-          if (same || from == null) DraftIssue.transferSourceMissing,
-          if (same || to == null) DraftIssue.transferTargetMissing,
-        },
+        // Sisi yang tidak terpetakan adalah masalah dompet (aturan dompet
+        // sumber), bukan jenis yang tidak jelas: alasannya dompet tidak dikenali.
+        issues: {...issues, if (same || from == null || to == null) DraftIssue.walletUnknown},
       );
     }
     if (kind == DraftKind.transfer) {

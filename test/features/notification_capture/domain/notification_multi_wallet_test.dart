@@ -1,7 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:saldough/features/notification_capture/domain/entities/capture_inbox_entry.dart';
 import 'package:saldough/features/notification_capture/domain/entities/captured_notification.dart';
+import 'package:saldough/features/notification_capture/domain/entities/notification_capture_settings.dart';
 import 'package:saldough/features/notification_capture/domain/entities/notification_pattern.dart';
 import 'package:saldough/features/notification_capture/domain/entities/notification_source.dart';
+import 'package:saldough/features/notification_capture/domain/services/auto_record_policy.dart';
 import 'package:saldough/features/notification_capture/domain/services/notification_draft_composer.dart';
 import 'package:saldough/features/notification_capture/domain/services/notification_template.dart';
 import 'package:saldough/shared/capture/capture.dart';
@@ -89,8 +92,10 @@ void main() {
         template: 'Pindah {amount} dari {from} ke {to}',
         kind: NotificationPatternKind.transferBetween,
       );
-      final draft = (await compose('Pindah Rp100.000 dari Kantong Liburan ke Kantong Tabungan', patterns: [pattern]))
-          .draft;
+      final draft = (await compose(
+        'Pindah Rp100.000 dari Kantong Liburan ke Kantong Tabungan',
+        patterns: [pattern],
+      )).draft;
       expect(draft.kind, DraftKind.transfer);
       expect(draft.amountSen, 10000000);
       expect(draft.walletId, 'trip');
@@ -106,11 +111,18 @@ void main() {
         template: 'Pindah {amount} dari {from} ke {to}',
         kind: NotificationPatternKind.transferBetween,
       );
-      final draft = (await compose('Pindah Rp100.000 dari Kantong Liburan ke Kantong Misteri', patterns: [pattern]))
-          .draft;
+      final draft = (await compose(
+        'Pindah Rp100.000 dari Kantong Liburan ke Kantong Misteri',
+        patterns: [pattern],
+      )).draft;
       expect(draft.walletId, 'trip');
       expect(draft.toWalletId, isNull);
-      expect(draft.issues, contains(DraftIssue.transferTargetMissing));
+      expect(draft.issues, contains(DraftIssue.walletUnknown));
+      expect(draft.isConfident, isFalse);
+      expect(
+        const AutoRecordPolicy(AutoRecordLevel.whenComplete).reviewReason(draft, autoEligible: true),
+        CaptureReviewReason.walletUnknown,
+      );
     });
 
     test('kedua sisi dompet sama → keduanya kosong', () async {
@@ -121,10 +133,16 @@ void main() {
         template: 'Pindah {amount} dari {from} ke {to}',
         kind: NotificationPatternKind.transferBetween,
       );
-      final draft = (await compose('Pindah Rp100.000 dari Kantong Liburan ke Kantong Liburan', patterns: [pattern]))
-          .draft;
+      final draft = (await compose(
+        'Pindah Rp100.000 dari Kantong Liburan ke Kantong Liburan',
+        patterns: [pattern],
+      )).draft;
       expect(draft.walletId, isNull);
       expect(draft.toWalletId, isNull);
+      expect(
+        const AutoRecordPolicy(AutoRecordLevel.whenComplete).reviewReason(draft, autoEligible: true),
+        CaptureReviewReason.walletUnknown,
+      );
     });
   });
 

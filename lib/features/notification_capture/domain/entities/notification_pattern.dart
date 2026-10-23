@@ -1,4 +1,5 @@
 import 'package:dependencies/dependencies.dart';
+import 'package:saldough/shared/recurring/recurring.dart';
 
 /// Arti tetap sebuah pola (ADR-032 §3.3).
 enum NotificationPatternKind {
@@ -17,6 +18,19 @@ enum NotificationPatternKind {
   /// Transfer antar dua dompet milik pengguna di aplikasi yang sama
   /// (ADR-042 §3.1): kedua sisi dibaca dari penanda `{from}` dan `{to}`.
   transferBetween,
+}
+
+/// Jenis rutin yang bisa diikat ke pola (ADR-042 §3.4): jenis harus sama,
+/// karena pencocokan kemunculan menolak jenis yang beda.
+extension NotificationPatternKindRecurring on NotificationPatternKind {
+  /// Jenis rutin yang sepadan dengan jenis pola ini.
+  RecurringKind get recurringKind => switch (this) {
+    NotificationPatternKind.expense => RecurringKind.expense,
+    NotificationPatternKind.income => RecurringKind.income,
+    NotificationPatternKind.transferOut ||
+    NotificationPatternKind.transferIn ||
+    NotificationPatternKind.transferBetween => RecurringKind.transfer,
+  };
 }
 
 /// Templat teks notifikasi satu aplikasi (ADR-032 §3.3): teks literal dengan

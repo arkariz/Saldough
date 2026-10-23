@@ -206,7 +206,14 @@ final class ProcessCapturedNotifications {
           AutoRecordPolicy.matchesLedger(draft, date, ledger) ||
           _nearbyCapture(draft, notification, inbox: inbox, auto: auto);
 
-      if (composed.autoEligible && !duplicate && policy.allows(draft)) {
+      // Rutin yang terikat ke pola ini (ADR-042 §3.4). Terikat berarti
+      // pengguna menyatakan notifikasi ini adalah rutin itu, jadi bila
+      // kemunculannya tidak jelas, tangkapan ditinjau -- tidak dicatat tanpa
+      // tautan dan tidak ditautkan ke rutin lain.
+      final boundRule = _boundRule(rules, notification.packageName, composed);      final boundMatch = boundRule == null ? null : await _boundMatch(boundRule, draft, date, ledgers);
+      final boundUnclear = boundRule != null && !(boundMatch != null && boundMatch.exact);
+
+      if (composed.autoEligible && !duplicate && !boundUnclear && policy.allows(draft)) {
         final (entry, linked) = await _record(
           draft,
           notification,
@@ -214,6 +221,7 @@ final class ProcessCapturedNotifications {
           now,
           rules: rules,
           ledger: await _ledgerAround(date, ledgers),
+          forcedMatch: boundMatch,
         );
         linkedAny |= linked;
         if (entry != null) {
@@ -235,7 +243,12 @@ final class ProcessCapturedNotifications {
         draft: draft,
         possibleDuplicate: duplicate,
         iconId: iconId,
-        reviewReason: duplicate ? null : policy.reviewReason(draft, autoEligible: composed.autoEligible),
+        patternId: composed.pattern?.id,
+        reviewReason: duplicate
+            ? null
+            : (boundUnclear && composed.autoEligible && policy.allows(draft)
+                  ? CaptureReviewReason.recurringUnclear
+                  : policy.reviewReason(draft, autoEligible: composed.autoEligible)),
       );
       inbox.insert(0, entry);
       if (!await _save(processed, inbox, auto)) break;
@@ -246,6 +259,40 @@ final class ProcessCapturedNotifications {
     await gateway.acknowledge(handled);
     if (linkedAny) recurringChanges?.notifyChanged(source: this);
     return CaptureProcessResult(recorded: recorded, queued: queued);
+  }
+
+  /// Rutin yang terikat ke pola yang cocok dengan [composed], atau `null`.
+  /// Hanya pola terverifikasi; pola tebakan tidak pernah mengikat.
+  RecurringRule? _boundRule(List<RecurringRule> rules, String packageName, NotificationDraft composed) {
+    final pattern = composed.pattern;
+    if (pattern == null || !pattern.verified) return null;
+    return rules
+        .where((r) => r.notificationBinding?.packageName == packageName && r.notificationBinding?.patternId == pattern.id)
+        .firstOrNull;
+  }
+
+  Future<OccurrenceMatch?> _boundMatch(
+    RecurringRule rule,
+    RecordDraft draft,
+    DateTime date,
+    Map<String, List<Transaction>> ledgers,
+  ) async {
+    final amount = draft.amountSen;
+    final walletId = draft.walletId;
+    if (amount == null || walletId == null) return null;
+    return matchBoundOccurrence(
+      rule,
+      kind: switch (draft.kind) {
+        DraftKind.income => RecurringKind.income,
+        DraftKind.expense => RecurringKind.expense,
+        DraftKind.transfer => RecurringKind.transfer,
+      },
+      walletId: walletId,
+      toWalletId: draft.toWalletId,
+      amount: amount,
+      date: date,
+      transactions: await _ledgerAround(date, ledgers),
+    );
   }
 
   /// Transaksi bulan [date] serta bulan sebelum dan sesudahnya, untuk
@@ -280,10 +327,11 @@ final class ProcessCapturedNotifications {
     DateTime now, {
     required List<RecurringRule> rules,
     required List<Transaction> ledger,
+    OccurrenceMatch? forcedMatch,
   }) async {
     var transaction = transactionFromDraft(draft, id: _newId(), fallbackDate: notification.postedAt);
     if (transaction == null) return (null, false);
-    final match = rules.isEmpty ? null : matchOccurrences(transaction, rules: rules, transactions: ledger);
+    final match = forcedMatch ?? (rules.isEmpty ? null : matchOccurrences(transaction, rules: rules, transactions: ledger));
     final autoLink = match != null && match.exact && matchCandidates(match.rule, match.date, ledger).isEmpty;
     if (autoLink) transaction = transaction.withRecurrence(match.link(linkedBy: RecurrenceLinkedBy.auto));
     final result = await recordTransaction(transaction, source: this);

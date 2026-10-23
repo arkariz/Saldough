@@ -64,6 +64,9 @@ object CaptureQueue {
     private const val ICON_DIR = "notification_capture_icons"
     private const val MAX_ITEMS = 50
     private const val MAX_DEBUG = 20
+    private const val KEY_SAMPLES = "samples"
+    private const val MAX_SAMPLES_PER_PACKAGE = 50
+    private const val SAMPLE_RETENTION_MS = 7L * 24 * 60 * 60 * 1000
     private const val DEDUP_WINDOW_MS = 60L * 60 * 1000
     private const val REPOST_WINDOW_MS = 2L * 60 * 1000
 
@@ -158,6 +161,57 @@ object CaptureQueue {
     fun debugSamples(context: Context): List<CapturedItem> {
         val samples = read(context, KEY_DEBUG)
         return (0 until samples.length()).map { CapturedItem.fromJson(samples.getJSONObject(it)) }.reversed()
+    }
+
+    /**
+     * Contoh notifikasi untuk membuat pola dan filter (ADR-042 §3.2): hanya
+     * dari sumber terdaftar, tidak pernah OTP (dijaga pemanggil), maksimum
+     * [MAX_SAMPLES_PER_PACKAGE] per aplikasi dan 7 hari. Terpisah dari antrean
+     * transaksi: tidak pernah diproses menjadi transaksi.
+     */
+    @Synchronized
+    fun addSample(context: Context, item: CapturedItem, now: Long = System.currentTimeMillis()) {
+        val all = read(context, KEY_SAMPLES)
+        val kept = mutableListOf<JSONObject>()
+        for (i in 0 until all.length()) {
+            val existing = all.getJSONObject(i)
+            if (now - existing.optLong("postedAt") > SAMPLE_RETENTION_MS) continue
+            if (existing.optString("id") == item.id) return
+            kept.add(existing)
+        }
+        kept.add(item.toJson())
+        val samePackage = kept.filter { it.optString("packageName") == item.packageName }
+        val drop = samePackage.size - MAX_SAMPLES_PER_PACKAGE
+        val dropped = if (drop > 0) samePackage.take(drop).toSet() else emptySet()
+        val out = JSONArray()
+        kept.filter { it !in dropped }.forEach { out.put(it) }
+        prefs(context).edit().putString(KEY_SAMPLES, out.toString()).apply()
+    }
+
+    /** Contoh [packageName] yang belum kedaluwarsa, terbaru lebih dulu. */
+    @Synchronized
+    fun samples(context: Context, packageName: String, now: Long = System.currentTimeMillis()): List<CapturedItem> {
+        val all = read(context, KEY_SAMPLES)
+        return (0 until all.length())
+            .mapNotNull { try { CapturedItem.fromJson(all.getJSONObject(it)) } catch (e: Exception) { null } }
+            .filter { it.packageName == packageName && now - it.postedAt <= SAMPLE_RETENTION_MS }
+            .sortedByDescending { it.postedAt }
+    }
+
+    /** Menghapus contoh [packageName], atau semuanya bila `null`. */
+    @Synchronized
+    fun clearSamples(context: Context, packageName: String?) {
+        if (packageName == null) {
+            prefs(context).edit().remove(KEY_SAMPLES).apply()
+            return
+        }
+        val all = read(context, KEY_SAMPLES)
+        val out = JSONArray()
+        for (i in 0 until all.length()) {
+            val existing = all.getJSONObject(i)
+            if (existing.optString("packageName") != packageName) out.put(existing)
+        }
+        prefs(context).edit().putString(KEY_SAMPLES, out.toString()).apply()
     }
 
     private fun trimTail(array: JSONArray, max: Int): JSONArray {

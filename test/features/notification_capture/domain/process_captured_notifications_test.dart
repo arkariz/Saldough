@@ -395,6 +395,110 @@ void main() {
       expect(matches['a']?.date, DateTime(2026, 9, 29));
     });
   });
+
+  group('rutin terikat ke pola (ADR-042 §3.4)', () {
+    const pattern = NotificationPattern(
+      id: 'user.kopi',
+      packageName: 'id.co.bri.brimo',
+      label: 'Kopi',
+      template: 'BRImo Pembayaran {amount} ke KOPI KENANGAN berhasil',
+      kind: NotificationPatternKind.expense,
+    );
+    const binding = NotificationBinding(packageName: 'id.co.bri.brimo', patternId: 'user.kopi', patternLabel: 'Kopi');
+
+    RecurringRule kopi({int amount = 2500000, RecurringAmountMode mode = RecurringAmountMode.fixed}) => RecurringRule(
+      id: 'kopi',
+      kind: RecurringKind.expense,
+      amount: amount,
+      amountMode: mode,
+      walletId: 'bri',
+      note: 'Kopi langganan',
+      categoryId: 'builtin.food',
+      schedule: RecurringSchedule(frequency: RecurringFrequency.monthly, anchorDate: DateTime(2026, 9, 29)),
+      notificationBinding: binding,
+    );
+
+    ProcessCapturedNotifications bound(RecurringRuleRepository rules) => ProcessCapturedNotifications(
+      gateway: gateway,
+      store: store,
+      composer: notificationComposer(),
+      recordTransaction: recordTransaction,
+      walletRepository: wallets,
+      transactionRepository: ledger,
+      categories: () => notificationCategories,
+      currencyCode: () => 'IDR',
+      languageCode: () => 'id',
+      recurringRules: rules,
+      matchLog: RecurrenceMatchLogRepositoryImpl(storage: storage, clock: () => now),
+      clock: () => now,
+      newId: () => 'tx${nextId++}',
+    );
+
+    test('pola terikat, nominal persis, satu kemunculan terbuka: tercatat dan tertaut otomatis', () async {
+      final rules = RecurringRuleRepositoryImpl(storage: storage);
+      await rules.saveRule(kopi());
+      await store.savePatterns([pattern]);
+      await enable(AutoRecordLevel.whenComplete);
+      gateway.queue = [notif('a', 'Pembayaran Rp25.000 ke KOPI KENANGAN berhasil')];
+      await bound(rules)();
+
+      final tx = (await ledgerNow()).single;
+      expect(
+        tx.recurrence,
+        RecurrenceLink(ruleId: 'kopi', occurrenceDate: DateTime(2026, 9, 29), linkedBy: RecurrenceLinkedBy.auto),
+      );
+    });
+
+    test('pola terikat tetapi nominal beda: ke kotak masuk, tidak dicatat dan tidak ditebak', () async {
+      final rules = RecurringRuleRepositoryImpl(storage: storage);
+      await rules.saveRule(kopi(amount: 3000000));
+      await store.savePatterns([pattern]);
+      await enable(AutoRecordLevel.whenComplete);
+      gateway.queue = [notif('a', 'Pembayaran Rp25.000 ke KOPI KENANGAN berhasil')];
+      await bound(rules)();
+
+      expect(await ledgerNow(), isEmpty);
+      final inbox = (await store.loadInbox()).getOrElse((_) => []);
+      expect(inbox.single.reviewReason, CaptureReviewReason.recurringUnclear);
+      expect(inbox.single.patternId, 'user.kopi');
+    });
+
+    test('rutin kira-kira terikat: ke kotak masuk, tidak dicatat otomatis', () async {
+      final rules = RecurringRuleRepositoryImpl(storage: storage);
+      await rules.saveRule(kopi(amount: 2400000, mode: RecurringAmountMode.estimated));
+      await store.savePatterns([pattern]);
+      await enable(AutoRecordLevel.whenComplete);
+      gateway.queue = [notif('a', 'Pembayaran Rp25.000 ke KOPI KENANGAN berhasil')];
+      await bound(rules)();
+
+      expect(await ledgerNow(), isEmpty);
+      expect((await store.loadInbox()).getOrElse((_) => []).single.reviewReason, CaptureReviewReason.recurringUnclear);
+    });
+
+    test('tingkat 1: ke kotak masuk dengan saran rutin dari ikatan', () async {
+      final rules = RecurringRuleRepositoryImpl(storage: storage);
+      await rules.saveRule(kopi());
+      await store.savePatterns([pattern]);
+      await enable(AutoRecordLevel.reviewAll);
+      gateway.queue = [notif('a', 'Pembayaran Rp25.000 ke KOPI KENANGAN berhasil')];
+      await bound(rules)();
+
+      final inbox = (await store.loadInbox()).getOrElse((_) => []);
+      expect(inbox, hasLength(1));
+      final matches = await CaptureInboxActions(
+        store: store,
+        recordTransaction: recordTransaction,
+        transactionRepository: ledger,
+        composer: notificationComposer(),
+        walletRepository: wallets,
+        categories: () => notificationCategories,
+        currencyCode: () => 'IDR',
+        languageCode: () => 'id',
+        recurringRules: rules,
+      ).matchesFor(inbox);
+      expect(matches[inbox.single.id]?.rule.id, 'kopi');
+    });
+  });
 }
 
 /// [NotificationCaptureStore] yang gagal menyimpan kotak masuk selama [fail].

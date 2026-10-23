@@ -49,9 +49,11 @@ final class MethodChannelNotificationCaptureGateway with RepositoryGuard impleme
     required List<NotificationSource> sources,
     required bool remindWhenClosed,
     required ReminderTexts texts,
+    bool saveSamples = false,
   }) => guardVoid(
     () => _methods.invokeMethod<void>('configure', {
       'enabled': enabled,
+      'saveSamples': saveSamples,
       'remindWhenClosed': remindWhenClosed,
       'channelName': texts.channelName,
       'capturedTitle': texts.capturedTitle,
@@ -118,6 +120,27 @@ final class MethodChannelNotificationCaptureGateway with RepositoryGuard impleme
     }
   }
 
+  @override
+  Future<List<CapturedNotification>> samples(String packageName) async {
+    try {
+      final raw =
+          await _methods.invokeListMethod<Map<Object?, Object?>>('samples', {'packageName': packageName}) ??
+          const [];
+      return [for (final item in raw) _toCaptured(item)];
+    } on PlatformException {
+      return const [];
+    }
+  }
+
+  @override
+  Future<void> clearSamples({String? packageName}) async {
+    try {
+      await _methods.invokeMethod<void>('clearSamples', {'packageName': packageName});
+    } on PlatformException {
+      // Tanpa layanan native tidak ada yang perlu dihapus.
+    }
+  }
+
   static CapturedNotification _toCaptured(Map<Object?, Object?> item) => CapturedNotification(
     id: item['id']! as String,
     packageName: item['packageName']! as String,
@@ -158,6 +181,7 @@ final class UnsupportedNotificationCaptureGateway implements NotificationCapture
     required List<NotificationSource> sources,
     required bool remindWhenClosed,
     required ReminderTexts texts,
+    bool saveSamples = false,
   }) async => right(unit);
 
   @override
@@ -188,4 +212,10 @@ final class UnsupportedNotificationCaptureGateway implements NotificationCapture
 
   @override
   Future<List<CapturedNotification>> debugSamples() async => const [];
+
+  @override
+  Future<List<CapturedNotification>> samples(String packageName) async => const [];
+
+  @override
+  Future<void> clearSamples({String? packageName}) async {}
 }

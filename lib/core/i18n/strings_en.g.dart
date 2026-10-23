@@ -1131,6 +1131,33 @@ class _Translations$notificationCapture$en extends Translations$notificationCapt
 	@override String get patternInstructions => 'Tap a marked word again to clear its mark.';
 	@override String get roleAmount => 'Amount';
 	@override String get roleNote => 'Note';
+	@override String get roleFrom => 'From';
+	@override String get roleTo => 'To';
+	@override String get roleFromHelp => 'From: the source wallet name of a transfer, Matched against this app\'s wallet rules.';
+	@override String get roleToHelp => 'To: the destination wallet name of a transfer. Matched against this app\'s wallet rules.';
+	@override String get kindTransferBetween => 'Transfer between wallets';
+	@override String get patternBetweenHint => 'Source and destination wallets are read from the text through the wallet rules on the app page.';
+	@override String get walletRulesTitle => 'Other wallets in this app';
+	@override String get walletRulesHint => 'For apps with several wallets. If the notification contains the keyword, that wallet is used; otherwise the main wallet above.';
+	@override String get walletRuleKeywordsField => 'Keywords, separated by commas';
+	@override String get walletRuleAdd => 'Add wallet';
+	@override String get walletRuleRemove => 'Remove';
+	@override String get walletRuleNeedsKeywords => 'Enter at least one keyword';
+	@override String get bindingTitle => 'Bind to a recurring item';
+	@override String get bindingHint => 'Notifications that match a bound pattern are recorded as that recurring item. If the amount or schedule does not fit, they go to the inbox instead of being guessed.';
+	@override String get bindingNone => 'Not bound';
+	@override String get samplesToggle => 'Save notification samples';
+	@override String get samplesHint => 'To build filters and patterns from this app\'s notifications. Kept on this device for 7 days, never sent anywhere.';
+	@override String get samplesTitle => 'Recent notifications';
+	@override String get samplesEmpty => 'No samples yet. Notifications from this app that arrive from now on will show up here.';
+	@override String get samplesFilter => 'Use as filter';
+	@override String get samplesPattern => 'Create pattern';
+	@override String get samplesFilterTitle => 'Pick a filter phrase';
+	@override String get samplesFilterHint => 'Tap words to build a phrase, or type your own. Choose a phrase that only appears in transaction notifications.';
+	@override String get samplesDisclosureTitle => 'Save notification samples?';
+	@override String get samplesDisclosureBody => 'Tanukonomy will keep the text of notifications from the apps you chose, including non-transaction ones, for 7 days on this device. It is used only to build filters and patterns. OTP codes are never saved, and this text is not sent to any server. You can turn it off at any time; all samples are deleted right away.';
+	@override String get samplesDisclosureCancel => 'Cancel';
+	@override String get samplesDisclosureAgree => 'Turn on';
 	@override String get roleIgnore => 'Ignore';
 	@override String get patternKindLabel => '3. Transaction type';
 	@override String get kindExpense => 'Out';
@@ -1246,6 +1273,7 @@ class _Translations$recurring$en extends Translations$recurring$id {
 	@override String get nextTitle => 'Next';
 	@override String get recordedTitle => 'Recorded';
 	@override String get skipAction => 'Skip';
+	@override String get recordEarlyAction => 'Record now';
 	@override String get unskipAction => 'Undo skip';
 	@override String get editAction => 'Edit';
 	@override String get pauseAction => 'Pause';
@@ -1797,6 +1825,7 @@ class _Translations$notificationCapture$reviewReason$en extends Translations$not
 	@override String get walletUnknown => 'Wallet not recognized';
 	@override String get categoryUnclear => 'Category unclear';
 	@override String get dateUnclear => 'Date unclear';
+	@override String get recurringUnclear => 'Recurring unclear';
 }
 
 // Path: recurring.starters
@@ -2991,7 +3020,36 @@ extension on TranslationsEn {
 			'notificationCapture.patternInstructions' => 'Tap a marked word again to clear its mark.',
 			'notificationCapture.roleAmount' => 'Amount',
 			'notificationCapture.roleNote' => 'Note',
+			'notificationCapture.roleFrom' => 'From',
+			'notificationCapture.roleTo' => 'To',
+			'notificationCapture.roleFromHelp' => 'From: the source wallet name of a transfer, Matched against this app\'s wallet rules.',
+			'notificationCapture.roleToHelp' => 'To: the destination wallet name of a transfer. Matched against this app\'s wallet rules.',
+			'notificationCapture.kindTransferBetween' => 'Transfer between wallets',
+			'notificationCapture.patternBetweenHint' => 'Source and destination wallets are read from the text through the wallet rules on the app page.',
+			'notificationCapture.walletRulesTitle' => 'Other wallets in this app',
+			'notificationCapture.walletRulesHint' => 'For apps with several wallets. If the notification contains the keyword, that wallet is used; otherwise the main wallet above.',
+			'notificationCapture.walletRuleKeywordsField' => 'Keywords, separated by commas',
+			'notificationCapture.walletRuleAdd' => 'Add wallet',
+			'notificationCapture.walletRuleRemove' => 'Remove',
+			'notificationCapture.walletRuleNeedsKeywords' => 'Enter at least one keyword',
+			'notificationCapture.bindingTitle' => 'Bind to a recurring item',
+			'notificationCapture.bindingHint' => 'Notifications that match a bound pattern are recorded as that recurring item. If the amount or schedule does not fit, they go to the inbox instead of being guessed.',
+			'notificationCapture.bindingNone' => 'Not bound',
+			'notificationCapture.samplesToggle' => 'Save notification samples',
+			'notificationCapture.samplesHint' => 'To build filters and patterns from this app\'s notifications. Kept on this device for 7 days, never sent anywhere.',
+			'notificationCapture.samplesTitle' => 'Recent notifications',
+			'notificationCapture.samplesEmpty' => 'No samples yet. Notifications from this app that arrive from now on will show up here.',
+			'notificationCapture.samplesFilter' => 'Use as filter',
+			'notificationCapture.samplesPattern' => 'Create pattern',
+			'notificationCapture.samplesFilterTitle' => 'Pick a filter phrase',
+			'notificationCapture.samplesFilterHint' => 'Tap words to build a phrase, or type your own. Choose a phrase that only appears in transaction notifications.',
+			'notificationCapture.samplesDisclosureTitle' => 'Save notification samples?',
+			'notificationCapture.samplesDisclosureBody' => 'Tanukonomy will keep the text of notifications from the apps you chose, including non-transaction ones, for 7 days on this device. It is used only to build filters and patterns. OTP codes are never saved, and this text is not sent to any server. You can turn it off at any time; all samples are deleted right away.',
+			'notificationCapture.samplesDisclosureCancel' => 'Cancel',
+			'notificationCapture.samplesDisclosureAgree' => 'Turn on',
 			'notificationCapture.roleIgnore' => 'Ignore',
+			_ => null,
+		} ?? switch (path) {
 			'notificationCapture.patternKindLabel' => '3. Transaction type',
 			'notificationCapture.kindExpense' => 'Out',
 			'notificationCapture.kindIncome' => 'In',
@@ -3019,9 +3077,8 @@ extension on TranslationsEn {
 			'notificationCapture.reviewReason.kindUnclear' => 'Type unclear',
 			'notificationCapture.reviewReason.walletUnknown' => 'Wallet not recognized',
 			'notificationCapture.reviewReason.categoryUnclear' => 'Category unclear',
-			_ => null,
-		} ?? switch (path) {
 			'notificationCapture.reviewReason.dateUnclear' => 'Date unclear',
+			'notificationCapture.reviewReason.recurringUnclear' => 'Recurring unclear',
 			'notificationCapture.recordAction' => 'Record',
 			'notificationCapture.dismissAction' => 'Dismiss',
 			'notificationCapture.makePatternAction' => 'Make a pattern from this text',
@@ -3113,6 +3170,7 @@ extension on TranslationsEn {
 			'recurring.nextTitle' => 'Next',
 			'recurring.recordedTitle' => 'Recorded',
 			'recurring.skipAction' => 'Skip',
+			'recurring.recordEarlyAction' => 'Record now',
 			'recurring.unskipAction' => 'Undo skip',
 			'recurring.editAction' => 'Edit',
 			'recurring.pauseAction' => 'Pause',

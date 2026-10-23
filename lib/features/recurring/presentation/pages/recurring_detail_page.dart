@@ -349,6 +349,19 @@ class RecurringDetailPage extends StatelessWidget {
                           amount: rule.amount,
                           kind: moneyKind,
                           skipped: o.status == OccurrenceStatus.skipped,
+                          extraAction: o.status == OccurrenceStatus.skipped
+                              ? null
+                              : (
+                                  t.recurring.recordEarlyAction,
+                                  () => rule.amountMode == RecurringAmountMode.fixed
+                                      ? bloc.add(RecurringOccurrenceRecorded(ruleId: rule.id, date: o.date))
+                                      : unawaited(
+                                          context.pushRoute(
+                                            RecordRouteKeys.sheet,
+                                            RecordSheetInput(occurrenceRule: rule, occurrenceDate: o.date),
+                                          ),
+                                        ),
+                                ),
                           action: o.status == OccurrenceStatus.skipped
                               ? (
                                   t.recurring.unskipAction,
@@ -459,6 +472,7 @@ class _OccurrenceLine extends StatelessWidget {
     this.skipped = false,
     this.muted = false,
     this.action,
+    this.extraAction,
     this.onTap,
   });
 
@@ -470,6 +484,9 @@ class _OccurrenceLine extends StatelessWidget {
   final bool skipped;
   final bool muted;
   final (String, VoidCallback)? action;
+
+  /// Aksi tambahan sebelum [action], mis. Catat sekarang (ADR-042 §3.3).
+  final (String, VoidCallback)? extraAction;
   final VoidCallback? onTap;
 
   @override
@@ -532,6 +549,22 @@ class _OccurrenceLine extends StatelessWidget {
         ),
       ),
     );
-    return onTap == null ? row : AppTappable(label: title, onTap: onTap, child: row);
+    final line = onTap == null ? row : AppTappable(label: title, onTap: onTap, child: row);
+    final extra = extraAction;
+    if (extra == null) return line;
+    // Di bawah baris, bukan di sampingnya: baris sudah penuh di layar sempit.
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        line,
+        Padding(
+          padding: const EdgeInsets.fromLTRB(AppSpacing.space4, 0, AppSpacing.space4, AppSpacing.space2),
+          child: Align(
+            alignment: AlignmentDirectional.centerEnd,
+            child: AppButton.secondary(small: true, label: extra.$1, onPressed: extra.$2),
+          ),
+        ),
+      ],
+    );
   }
 }

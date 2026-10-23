@@ -85,7 +85,9 @@ final class FakeNotificationCaptureGateway implements NotificationCaptureGateway
     required List<NotificationSource> sources,
     required bool remindWhenClosed,
     required ReminderTexts texts,
+    bool saveSamples = false,
   }) async {
+    configuredSaveSamples = saveSamples;
     configuredSources = sources;
     configuredRemind = remindWhenClosed;
     return right(unit);
@@ -104,4 +106,26 @@ final class FakeNotificationCaptureGateway implements NotificationCaptureGateway
 
   @override
   Future<List<CapturedNotification>> debugSamples() async => const [];
+
+  /// Contoh yang "disimpan native" per paket.
+  Map<String, List<CapturedNotification>> sampleStore = {};
+
+  /// Terakhir dikirim lewat [configure].
+  bool configuredSaveSamples = false;
+
+  /// Berapa kali [clearSamples] dipanggil.
+  int clearedSamples = 0;
+
+  @override
+  Future<List<CapturedNotification>> samples(String packageName) async => sampleStore[packageName] ?? const [];
+
+  @override
+  Future<void> clearSamples({String? packageName}) async {
+    clearedSamples++;
+    if (packageName == null) {
+      sampleStore = {};
+    } else {
+      sampleStore.remove(packageName);
+    }
+  }
 }

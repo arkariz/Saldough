@@ -7,6 +7,7 @@ import 'package:saldough/features/notification_capture/domain/usecases/capture_i
 import 'package:saldough/features/notification_capture/presentation/bloc/capture_inbox_bloc.dart';
 import 'package:saldough/features/notification_capture/presentation/bloc/notification_settings_bloc.dart';
 import 'package:saldough/shared/category/category.dart';
+import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
@@ -31,6 +32,12 @@ final class NotificationCaptureScope extends IsolatedScope {
     if (parent.isRegistered<FeatureStatusChanges>()) {
       c.registerSingleton<FeatureStatusChanges>(parent<FeatureStatusChanges>());
     }
+    if (parent.isRegistered<RecurringRuleRepository>()) {
+      c.registerSingleton<RecurringRuleRepository>(parent<RecurringRuleRepository>());
+    }
+    if (parent.isRegistered<RecurringChanges>()) {
+      c.registerSingleton<RecurringChanges>(parent<RecurringChanges>());
+    }
   }
 
   @override
@@ -42,6 +49,8 @@ final class NotificationCaptureScope extends IsolatedScope {
           store: c<NotificationCaptureStore>(),
           walletRepository: c<WalletRepository>(),
           statusChanges: c.isRegistered<FeatureStatusChanges>() ? c<FeatureStatusChanges>() : null,
+          recurringRules: c.isRegistered<RecurringRuleRepository>() ? c<RecurringRuleRepository>() : null,
+          recurringChanges: c.isRegistered<RecurringChanges>() ? c<RecurringChanges>() : null,
         ),
         dispose: (bloc) => bloc.close(),
       )

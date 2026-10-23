@@ -2,6 +2,16 @@ import 'package:saldough/shared/recurring/domain/recurring_overview.dart';
 import 'package:saldough/shared/recurring/domain/recurring_rule.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 
+/// Tanggal transaksi yang mencatat kemunculan [occurrence] pada [now]: tanggal
+/// kemunculan dengan jam dari [now] (E11), kecuali kemunculannya belum tiba
+/// (dicatat lebih awal, ADR-042 §3.3): uang bergerak hari ini, jadi tanggalnya
+/// [now]. Tautannya tetap ke tanggal kemunculan.
+DateTime occurrenceRecordDate(DateTime occurrence, DateTime now) {
+  final day = DateTime(occurrence.year, occurrence.month, occurrence.day);
+  if (day.isAfter(DateTime(now.year, now.month, now.day))) return now;
+  return DateTime(day.year, day.month, day.day, now.hour, now.minute);
+}
+
 /// Transaksi yang mencatat kemunculan [occurrence] dari [rule] (ADR-035
 /// §3.3): isiannya dari rutin, tanggalnya **tanggal kemunculan** (E11, bukan
 /// hari ini) dengan jam dari [now], dan tertaut ke kemunculan itu.
@@ -15,7 +25,7 @@ Transaction transactionForOccurrence(
   int? amount,
   String? budgetItemId,
 }) {
-  final date = DateTime(occurrence.year, occurrence.month, occurrence.day, now.hour, now.minute);
+  final date = occurrenceRecordDate(occurrence, now);
   final link = RecurrenceLink(ruleId: rule.id, occurrenceDate: occurrence);
   final value = amount ?? rule.amount;
   return switch (rule.kind) {

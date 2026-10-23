@@ -125,6 +125,26 @@ final class RecurringEndsAfter extends RecurringEnd {
   List<Object?> get props => [count];
 }
 
+/// Ikatan eksplisit rutin ke satu pola notifikasi (ADR-042 §3.4): notifikasi
+/// yang cocok dengan pola [patternId] dari [packageName] adalah kemunculan
+/// rutin ini. Dibuat pengguna, tidak pernah otomatis.
+final class NotificationBinding extends Equatable {
+  /// Membuat [NotificationBinding].
+  const NotificationBinding({required this.packageName, required this.patternId, required this.patternLabel});
+
+  /// Paket aplikasi sumber notifikasi.
+  final String packageName;
+
+  /// Identitas pola (bawaan atau pengguna).
+  final String patternId;
+
+  /// Nama pola saat diikat, untuk ditampilkan tanpa membaca fitur notifikasi.
+  final String patternLabel;
+
+  @override
+  List<Object?> get props => [packageName, patternId, patternLabel];
+}
+
 /// Transaksi rutin: **rencana** yang dijadwalkan, bukan transaksi. Membuat,
 /// menyunting, menjeda, atau menghapusnya tidak pernah mengubah saldo dompet
 /// (invarian 14). Lihat ADR-035 §3.1 dan DOMAIN_MODEL.md bagian "Transaksi
@@ -159,6 +179,7 @@ final class RecurringRule extends Equatable {
     this.budgetItemKey,
     this.snoozedUntil,
     this.idleDismissedAt,
+    this.notificationBinding,
   }) : skippedDates = Set.unmodifiable(skippedDates.map(_dateOnly)),
        assert(amount > 0, 'Nominal rutin harus positif.'),
        assert(
@@ -231,6 +252,9 @@ final class RecurringRule extends Equatable {
   /// sampai tanggal ini tidak dihitung lagi untuk W6.
   final DateTime? idleDismissedAt;
 
+  /// ADR-042 §3.4: pola notifikasi yang mewakili rutin ini, atau `null`.
+  final NotificationBinding? notificationBinding;
+
   /// Cara bayar efektif; `null` dibaca manual.
   RecurringPaymentMode get effectivePaymentMode => paymentMode ?? RecurringPaymentMode.manual;
 
@@ -257,6 +281,7 @@ final class RecurringRule extends Equatable {
     String? budgetItemKey,
     DateTime? snoozedUntil,
     DateTime? idleDismissedAt,
+    NotificationBinding? notificationBinding,
   }) {
     return RecurringRule(
       id: id,
@@ -278,8 +303,33 @@ final class RecurringRule extends Equatable {
       budgetItemKey: budgetItemKey ?? this.budgetItemKey,
       snoozedUntil: snoozedUntil ?? this.snoozedUntil,
       idleDismissedAt: idleDismissedAt ?? this.idleDismissedAt,
+      notificationBinding: notificationBinding ?? this.notificationBinding,
     );
   }
+
+  /// Salinan dengan ikatan notifikasi [binding]; `null` melepasnya.
+  RecurringRule withNotificationBinding(NotificationBinding? binding) => RecurringRule(
+    id: id,
+    kind: kind,
+    amount: amount,
+    amountMode: amountMode,
+    walletId: walletId,
+    toWalletId: toWalletId,
+    categoryId: categoryId,
+    note: note,
+    schedule: schedule,
+    end: end,
+    paymentMode: paymentMode,
+    remindDaysBefore: remindDaysBefore,
+    reminders: reminders,
+    autoRecord: autoRecord,
+    skippedDates: skippedDates,
+    isPaused: isPaused,
+    budgetItemKey: budgetItemKey,
+    snoozedUntil: snoozedUntil,
+    idleDismissedAt: idleDismissedAt,
+    notificationBinding: binding,
+  );
 
   /// Salinan dengan tautan pos [key] (ADR-036 §3.4); `null` melepasnya.
   RecurringRule withBudgetItemKey(String? key) => RecurringRule(
@@ -302,6 +352,7 @@ final class RecurringRule extends Equatable {
     budgetItemKey: key,
     snoozedUntil: snoozedUntil,
     idleDismissedAt: idleDismissedAt,
+    notificationBinding: notificationBinding,
   );
 
   @override
@@ -325,6 +376,7 @@ final class RecurringRule extends Equatable {
     budgetItemKey,
     snoozedUntil,
     idleDismissedAt,
+    notificationBinding,
   ];
 }
 

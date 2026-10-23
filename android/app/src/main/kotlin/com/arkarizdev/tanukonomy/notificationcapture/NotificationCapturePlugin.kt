@@ -123,6 +123,13 @@ class NotificationCapturePlugin(private val activity: Activity) : MethodChannel.
                     if (apps == null) result.error("installed_apps", "Gagal membaca aplikasi", null) else result.success(apps)
                 }
             }
+            "samples" -> result.success(
+                CaptureQueue.samples(context, call.argument<String>("packageName").orEmpty()).map { it.toMap() },
+            )
+            "clearSamples" -> {
+                CaptureQueue.clearSamples(context, call.argument<String>("packageName"))
+                result.success(null)
+            }
             "debugSamples" -> result.success(CaptureQueue.debugSamples(context).map { it.toMap() })
             else -> result.notImplemented()
         }
@@ -168,6 +175,7 @@ class NotificationCapturePlugin(private val activity: Activity) : MethodChannel.
             channelName = call.argument<String>("channelName").orEmpty(),
             capturedTitle = call.argument<String>("capturedTitle").orEmpty(),
             capturedBody = call.argument<String>("capturedBody").orEmpty(),
+            saveSamples = call.argument<Boolean>("saveSamples") ?: false,
         )
         config.save(context)
         CaptureReminders.ensureChannel(context, config.channelName)

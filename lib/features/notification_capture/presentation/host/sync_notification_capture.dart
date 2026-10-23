@@ -13,6 +13,7 @@ Future<void> syncNotificationCapture(NotificationCaptureGateway gateway, Notific
     enabled: settings.enabled,
     sources: settings.sources,
     remindWhenClosed: settings.delivery == NotificationDelivery.reminderAndInbox,
+    saveSamples: settings.saveSamples,
     texts: ReminderTexts(
       channelName: texts.reminderChannel,
       capturedTitle: texts.reminderCapturedTitle,

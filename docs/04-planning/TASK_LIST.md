@@ -87,6 +87,7 @@ Terakhir diperbarui: 18 Oktober 2026 (Fase 19 selesai dan masuk `main` lewat PR 
 | 20 — Pengumuman pembaruan ([APP_UPDATE.md](../01-product/features/APP_UPDATE.md)) | 8 | 8 | KT-U1–KT-U5 dijawab dan ADR-039 Accepted (15 Okt 2026); T-20.1–T-20.8 selesai dan sudah di `main` (ada di build `0.6.0+12` dan `0.7.0+13`); T-20.4 selesai (rupa v3 diterapkan, selisih diputuskan pemilik); T-20.7 formulir Play Console dan kebijakan privasi dilaporkan pemilik selesai; verifikasi perangkat T-20.8 lulus semua (15 Okt 2026) |
 | 21 — Penemuan fitur ([FEATURE_DISCOVERY.md](../01-product/features/FEATURE_DISCOVERY.md)) | 10 | 7 | Kode T-21.1–T-21.7 selesai; T-21.9 (Mulai cepat) sebagian; menunggu T-21.0 (rupa) dan T-21.8 (verifikasi perangkat) |
 | 22 — Ekspor dan cadangan manual ([EXPORT_BACKUP.md](../01-product/features/EXPORT_BACKUP.md)) | 8 | 8 | Selesai 23 Okt 2026 (dari B-42): ADR-040 Accepted, T-22.0–T-22.7 di `main`; QA emulator Android tanpa temuan S1/S2; sisa uji perangkat (iOS, Excel/Sheets, dll.) di B-67 |
+| 23 — Catat notifikasi multi-dompet, contoh, dan rutin lebih awal ([ADR-042](../02-architecture/adr/0042-notifikasi-multi-dompet-sampel-dan-rutin.md)) | 4 | 4 | Kode selesai 23 Okt 2026 di branch `worktree-notif-multi-wallet-recurring` (belum digabung); sisa kompilasi Kotlin, uji emulator, dan pengungkapan privasi situs |
 | Antrean (`B-n`, belum dijadwalkan) | 65 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
 
 ## Keputusan terbuka
@@ -5320,6 +5321,41 @@ onboarding (tautan pulihkan, bersinggungan dengan Fase
       dan Google Sheets, gajian maju, sumber notifikasi di cadangan, DebugView,
       ruang penuh) dipindah ke B-67. Keputusan PO atas selisih di EXPORT_BACKUP
       §15 (termasuk T-22.5: langkah pengingat tidak ditampilkan ulang).
+
+## Fase 23: Catat notifikasi multi-dompet, sampel, dan rutin lebih awal
+
+Permintaan pemilik 23 Okt 2026 (kasus Bank Jago).
+[ADR-042](../02-architecture/adr/0042-notifikasi-multi-dompet-sampel-dan-rutin.md)
+(Accepted; keputusan §6 dijawab pemilik 23 Okt 2026). Branch sendiri dari `origin/main`.
+
+- [x] **T-23.1** Banyak dompet per sumber (ADR-042 §3.1): `walletRules` di
+      `NotificationSource`, penentuan dompet di penyusun draf (tunggal cocok /
+      bawaan / ambigu ke kotak masuk), penanda `{from}`/`{to}` di pola
+      transfer, UI aturan dompet di halaman sumber.
+      Verifikasi: uji penyusun draf (Kantong A→B, ambigu, tanpa cocok),
+      uji kompatibilitas dokumen lama, `flutter analyze` bersih.
+      Memenuhi FR-NOT-001.
+- [x] **T-23.2** Catat rutin lebih awal (§3.3): aksi Catat sekarang pada
+      kemunculan `upcoming` tanpa batas hari, tanggal transaksi hari ini, tertaut ke
+      kemunculan, pengingat dibatalkan.
+      Verifikasi: uji status, periode (`periodDateOf`), batal mengembalikan.
+- [x] **T-23.3** Ikatan rutin ke pola notifikasi (§3.4):
+      `RecurringRule.notificationBinding`, jendela 7 hari untuk rutin
+      terikat, tautan otomatis hanya bila semua syarat terpenuhi, UI ikat di
+      rincian rutin dan kotak masuk. Daftarkan skema baru di `BackupRegistry`.
+      Verifikasi: uji tiap syarat gagal → kotak masuk, bukan tebakan.
+- [x] **T-23.4** Sampel notifikasi dan filter cepat (§3.2), (privasi disetujui
+      pemilik 23 Okt 2026, bawaan mati): antrean sampel Kotlin, penyimpanan 7 hari,
+      daftar Notifikasi terbaru, ketuk frasa → filter, Buat pola; perbarui
+      `PLAY_DATA_SAFETY.md`.
+      Verifikasi: OTP tidak pernah tersimpan, kedaluwarsa, uji backup registry.
+
+**Kode T-23.1–T-23.4 selesai 23 Okt 2026** (branch
+`worktree-notif-multi-wallet-recurring`, belum digabung). `flutter analyze`
+bersih dan seluruh uji lulus. Belum diverifikasi: kompilasi Kotlin (contoh
+notifikasi), uji emulator Jago asli (pola `{from}`/`{to}` butuh sampel nyata),
+pembaruan pengungkapan jelas dan kebijakan privasi situs untuk contoh
+notifikasi. Catatan implementasi di ADR-042 §7.
 
 ## Antrean (belum dijadwalkan)
 

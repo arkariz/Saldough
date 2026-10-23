@@ -3,7 +3,13 @@ import 'package:saldough/features/notification_capture/domain/entities/notificat
 /// Hasil pencocokan satu templat: kutipan dari teks notifikasi.
 final class NotificationTemplateMatch {
   /// Membuat [NotificationTemplateMatch].
-  const NotificationTemplateMatch({required this.amountText, this.note});
+  const NotificationTemplateMatch({required this.amountText, this.note, this.fromText, this.toText});
+
+  /// Potongan teks dompet asal (`{from}`), atau `null`.
+  final String? fromText;
+
+  /// Potongan teks dompet tujuan (`{to}`), atau `null`.
+  final String? toText;
 
   /// Frasa nominal persis seperti di teks.
   final String amountText;
@@ -25,6 +31,12 @@ enum TemplateWordRole {
 
   /// Bagian yang berubah-ubah.
   ignore,
+
+  /// Dompet asal transfer (ADR-042 §3.1).
+  from,
+
+  /// Dompet tujuan transfer (ADR-042 §3.1).
+  to,
 }
 
 /// Satu kata teks contoh beserta posisinya.
@@ -55,7 +67,7 @@ abstract final class NotificationTemplate {
   /// Pola regex nominal di templat.
   static const amountPattern = r'(?:(?:rp|idr)\.?\s?\d(?:[\d.,]*\d)?|\d{1,3}(?:[.,]\d{3})+(?:[.,]\d{1,2})?)';
 
-  static final _tokens = RegExp(r'\{amount\}|\{note\}|\{\*\}');
+  static final _tokens = RegExp(r'\{amount\}|\{note\}|\{from\}|\{to\}|\{\*\}');
   static final _amountOnly = RegExp('^$amountPattern\$', caseSensitive: false);
 
   /// `true` bila [template] sah: tepat satu nominal, paling banyak satu
@@ -63,8 +75,11 @@ abstract final class NotificationTemplate {
   static bool isValid(String template) {
     final amounts = NotificationPattern.amountToken.allMatchesIn(template);
     final notes = NotificationPattern.noteToken.allMatchesIn(template);
+    final froms = NotificationPattern.fromToken.allMatchesIn(template);
+    final tos = NotificationPattern.toToken.allMatchesIn(template);
     final literal = template.replaceAll(_tokens, '').trim();
-    return amounts == 1 && notes <= 1 && literal.isNotEmpty;
+    // {from} dan {to} selalu berpasangan: transfer antar dompet butuh dua sisi.
+    return amounts == 1 && notes <= 1 && froms <= 1 && tos <= 1 && froms == tos && literal.isNotEmpty;
   }
 
   /// Mencocokkan [template] dengan [text], atau `null`.
@@ -73,6 +88,8 @@ abstract final class NotificationTemplate {
     final buffer = StringBuffer(r'^\s*');
     var amountGroup = 0;
     var noteGroup = 0;
+    var fromGroup = 0;
+    var toGroup = 0;
     var group = 0;
     var cursor = 0;
     for (final token in _tokens.allMatches(template)) {
@@ -83,6 +100,12 @@ abstract final class NotificationTemplate {
           buffer.write('($amountPattern)');
         case NotificationPattern.noteToken:
           noteGroup = ++group;
+          buffer.write('(.+?)');
+        case NotificationPattern.fromToken:
+          fromGroup = ++group;
+          buffer.write('(.+?)');
+        case NotificationPattern.toToken:
+          toGroup = ++group;
           buffer.write('(.+?)');
         default:
           buffer.write('.*?');
@@ -98,6 +121,8 @@ abstract final class NotificationTemplate {
     return NotificationTemplateMatch(
       amountText: found.group(amountGroup)!.trim(),
       note: note == null || note.isEmpty ? null : note,
+      fromText: fromGroup == 0 ? null : found.group(fromGroup)!.trim(),
+      toText: toGroup == 0 ? null : found.group(toGroup)!.trim(),
     );
   }
 
@@ -121,11 +146,23 @@ abstract final class NotificationTemplate {
         if (e.value == TemplateWordRole.amount) e.key,
     ];
     if (amountIndexes.length != 1) return null;
-    final noteIndexes = [
-      for (final e in roles.entries)
-        if (e.value == TemplateWordRole.note) e.key,
-    ]..sort();
-    if (noteIndexes.isNotEmpty && noteIndexes.last - noteIndexes.first + 1 != noteIndexes.length) return null;
+    List<int> indexesOf(TemplateWordRole role) =>
+        [
+          for (final e in roles.entries)
+            if (e.value == role) e.key,
+        ]..sort();
+    // Catatan, dompet asal, dan dompet tujuan boleh beberapa kata, tetapi
+    // harus berurutan.
+    final spans = {
+      TemplateWordRole.note: indexesOf(TemplateWordRole.note),
+      TemplateWordRole.from: indexesOf(TemplateWordRole.from),
+      TemplateWordRole.to: indexesOf(TemplateWordRole.to),
+    };
+    for (final indexes in spans.values) {
+      if (indexes.isNotEmpty && indexes.last - indexes.first + 1 != indexes.length) return null;
+    }
+    // {from} dan {to} selalu berpasangan.
+    if (spans[TemplateWordRole.from]!.isEmpty != spans[TemplateWordRole.to]!.isEmpty) return null;
 
     // Rentang yang diganti penanda: (awal, akhir, penanda).
     final replacements = <(int, int, String)>[];
@@ -137,12 +174,18 @@ abstract final class NotificationTemplate {
           final span = _amountIn(word.text);
           if (span == null) return null;
           replacements.add((word.start + span.$1, word.start + span.$2, NotificationPattern.amountToken));
-        case TemplateWordRole.note:
-          if (i != noteIndexes.first) continue;
-          final last = list[noteIndexes.last];
-          final noteText = text.substring(word.start, last.end);
-          final trimmed = noteText.replaceAll(RegExp(r'[,.;:!?]+$'), '');
-          replacements.add((word.start, word.start + trimmed.length, NotificationPattern.noteToken));
+        case TemplateWordRole.note || TemplateWordRole.from || TemplateWordRole.to:
+          final indexes = spans[role]!;
+          if (i != indexes.first) continue;
+          final last = list[indexes.last];
+          final spanText = text.substring(word.start, last.end);
+          final trimmed = spanText.replaceAll(RegExp(r'[,.;:!?]+$'), '');
+          final token = switch (role) {
+            TemplateWordRole.from => NotificationPattern.fromToken,
+            TemplateWordRole.to => NotificationPattern.toToken,
+            _ => NotificationPattern.noteToken,
+          };
+          replacements.add((word.start, word.start + trimmed.length, token));
         case TemplateWordRole.ignore:
           replacements.add((word.start, word.end, NotificationPattern.anyToken));
         case TemplateWordRole.literal:

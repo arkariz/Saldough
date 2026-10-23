@@ -31,6 +31,7 @@ final class NotificationCaptureSettings extends Equatable {
     this.autoRecordLevel = AutoRecordLevel.reviewAll,
     this.sources = const [],
     this.disabledBuiltInPatternIds = const {},
+    this.saveSamples = false,
   });
 
   /// Pengguna menyalakan fitur ini (izin akses sistem dicek terpisah).
@@ -48,6 +49,11 @@ final class NotificationCaptureSettings extends Equatable {
   /// Pola bawaan yang dinonaktifkan pengguna.
   final Set<String> disabledBuiltInPatternIds;
 
+  /// Simpan contoh notifikasi sumber terdaftar untuk membuat pola dan filter
+  /// (ADR-042 §3.2). Bawaan mati; dinyalakan pengguna setelah membaca
+  /// keterangannya.
+  final bool saveSamples;
+
   /// Sumber aktif untuk [packageName], atau `null`.
   NotificationSource? activeSource(String packageName) {
     for (final source in sources) {
@@ -63,14 +69,16 @@ final class NotificationCaptureSettings extends Equatable {
     AutoRecordLevel? autoRecordLevel,
     List<NotificationSource>? sources,
     Set<String>? disabledBuiltInPatternIds,
+    bool? saveSamples,
   }) => NotificationCaptureSettings(
     enabled: enabled ?? this.enabled,
     delivery: delivery ?? this.delivery,
     autoRecordLevel: autoRecordLevel ?? this.autoRecordLevel,
     sources: sources ?? this.sources,
     disabledBuiltInPatternIds: disabledBuiltInPatternIds ?? this.disabledBuiltInPatternIds,
+    saveSamples: saveSamples ?? this.saveSamples,
   );
 
   @override
-  List<Object?> get props => [enabled, delivery, autoRecordLevel, sources, disabledBuiltInPatternIds];
+  List<Object?> get props => [enabled, delivery, autoRecordLevel, sources, disabledBuiltInPatternIds, saveSamples];
 }

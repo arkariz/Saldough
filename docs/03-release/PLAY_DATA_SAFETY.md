@@ -160,6 +160,13 @@ kebijakan privasi.
   di server kami. Saat build berfitur ini diunggah: tambah baris "Info
   finansial: Info finansial lainnya" (dikumpulkan, diproses sementara, opsional,
   tujuan fungsi aplikasi), dan sebutkan akses notifikasi di pengungkapan jelas.
+  **Contoh notifikasi** (ADR-042 §3.2, T-23.4, bawaan mati): bila pengguna
+  menyalakannya, teks notifikasi aplikasi pilihannya, termasuk yang bukan
+  transaksi, disimpan di perangkat maksimum 50 per aplikasi dan 7 hari, tanpa
+  OTP, tidak dikirim ke server mana pun (tidak ke Gemini), dan terhapus saat
+  dimatikan atau aplikasinya dihapus dari daftar. Tidak mengubah baris Keamanan
+  Data (tetap diproses di perangkat), tetapi pengungkapan jelas dan kebijakan
+  privasi di situs (repo `tanukonomy-web`) perlu menyebutnya sebelum rilis.
 - **Pengingat rutin** (ADR-035 §3.8, T-15.8) — notifikasi lokal lewat
   `flutter_local_notifications`; jadwal disusun di perangkat dari rutin
   pengguna dan tidak ada data yang keluar dari perangkat, jadi **tidak**

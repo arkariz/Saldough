@@ -25,6 +25,8 @@ data class CaptureConfig(
     val channelName: String,
     val capturedTitle: String,
     val capturedBody: String,
+    /** ADR-042 §3.2: simpan contoh notifikasi sumber terdaftar (bawaan mati). */
+    val saveSamples: Boolean = false,
 ) {
     fun source(packageName: String): CaptureSource? = sources.firstOrNull { it.packageName == packageName }
 
@@ -35,6 +37,7 @@ data class CaptureConfig(
             .put("channelName", channelName)
             .put("capturedTitle", capturedTitle)
             .put("capturedBody", capturedBody)
+            .put("saveSamples", saveSamples)
             .put(
                 "sources",
                 JSONArray(sources.map {
@@ -66,6 +69,7 @@ data class CaptureConfig(
                     channelName = json.optString("channelName"),
                     capturedTitle = json.optString("capturedTitle"),
                     capturedBody = json.optString("capturedBody"),
+                    saveSamples = json.optBoolean("saveSamples"),
                     sources = (0 until sources.length()).map { i ->
                         val s = sources.getJSONObject(i)
                         val keywords = s.optJSONArray("keywords") ?: JSONArray()

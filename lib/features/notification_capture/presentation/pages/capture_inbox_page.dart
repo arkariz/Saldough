@@ -395,6 +395,7 @@ String _reasonLabel(CaptureReviewReason reason) {
     CaptureReviewReason.walletUnknown => texts.walletUnknown,
     CaptureReviewReason.categoryUnclear => texts.categoryUnclear,
     CaptureReviewReason.dateUnclear => texts.dateUnclear,
+    CaptureReviewReason.recurringUnclear => texts.recurringUnclear,
   };
 }
 

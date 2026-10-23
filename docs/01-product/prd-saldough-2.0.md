@@ -945,23 +945,25 @@ bisa dibawa pergi dan dipindah ke ponsel lain sebelum rilis publik, gratis,
 tanpa akun. Perilaku dan aturannya di
 [EXPORT_BACKUP.md](features/EXPORT_BACKUP.md); tugasnya Fase 22. Ini
 menggantikan "ekspor-impor data" di daftar §6 yang di luar MVP, untuk bagian
-ekspor saja; impor tetap di luar cakupan.
+ekspor saja; impor tetap di luar cakupan. Fase 22 selesai 23 Okt 2026 dan
+terverifikasi di emulator Android; iOS dan Excel/Google Sheets sungguhan
+masih menunggu (B-67).
 
 **FR-DAT-001 — Ekspor ke spreadsheet**
-- [ ] Seluruh transaksi saat ini bisa diekspor ke xlsx atau CSV dari Akun,
+- [x] Seluruh transaksi saat ini bisa diekspor ke xlsx atau CSV dari Akun,
       tanpa pilihan rentang.
-- [ ] Jumlah kolom Arus per periode di berkas sama dengan Arus aplikasi;
+- [x] Jumlah kolom Arus per periode di berkas sama dengan Arus aplikasi;
       transfer tidak dihitung sebagai pemasukan atau pengeluaran.
 
 **FR-DAT-002 — Cadangkan manual**
-- [ ] Seluruh data dan setelan keuangan bisa dicadangkan ke satu berkas
+- [x] Seluruh data dan setelan keuangan bisa dicadangkan ke satu berkas
       berversi di tempat pilihan pengguna, tanpa akun dan tanpa koneksi.
-- [ ] Akun menampilkan kapan cadangan terakhir disimpan.
+- [x] Akun menampilkan kapan cadangan terakhir disimpan.
 
 **FR-DAT-003 — Pulihkan manual**
-- [ ] Cadangan bisa dipulihkan dari Akun dan dari onboarding; data di
+- [x] Cadangan bisa dipulihkan dari Akun dan dari onboarding; data di
       perangkat diganti seluruhnya tanpa penggabungan, dengan peringatan.
-- [ ] Pemulihan atomik; data sebelumnya disimpan sebagai cadangan pengaman
+- [x] Pemulihan atomik; data sebelumnya disimpan sebagai cadangan pengaman
       yang bisa dikembalikan; saldo dompet dihitung ulang.
 
 ## 8. Kebutuhan non-fungsional

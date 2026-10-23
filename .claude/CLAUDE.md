@@ -1,7 +1,7 @@
 # CLAUDE.md — Konteks proyek Saldough
 
 **Terakhir diperbarui:** 15 Oktober 2026
-**Fase saat ini:** MVP selesai (Fase 0–7), Fase 9 (onboarding, tur spotlight, lapis info) selesai 28 Sep 2026; Fase 8 (tindak lanjut pasca-MVP, persiapan rilis) berjalan; Fase 11 (Catat Cerdas) berjalan; Fase 12 (rapikan batas arsitektur, ADR-030) selesai 1 Okt 2026; Fase 13 (pecah fitur `record`, ADR-033) selesai 1 Okt 2026; Fase 14 (bahasa visual baru, ADR-034) kodenya selesai 9 Okt 2026 (sisa review desain/QA, render situs B-4, verifikasi perangkat); Fase 15 (Rencana dan rutin, ADR-035) berjalan sejak 2 Okt 2026; Fase 16 (Rencana R2, ADR-036) kodenya selesai 4 Okt 2026 (sisa poles T-16.16); Fase 17 (Rencana R3, ADR-037 Accepted) berjalan sejak 4 Okt 2026. Fase 18 (periode keuangan, ADR-038 Accepted) selesai 15 Okt 2026 (rilis `0.7.0+13`, verifikasi perangkat T-18.9 lulus); Fase 19 (Analisis R1, selesai 18 Okt 2026) kodenya selesai 17 Okt 2026 per irisan vertikal yang diverifikasi pemilik (rupa sudah ada, salinan di `docs/03-design`); verifikasi emulator T-19.7 selesai 18 Okt 2026 (tidak ada Gagal S1/S2; tersisa B-40) dan **sudah di `main`** lewat PR #51 (rebase, 18 Okt 2026); sisa Fase 19 hanya B-40 dan R2 (B-38). Fase 20 (pengumuman pembaruan, ADR-039 Accepted) selesai 15 Okt 2026 (kode di `main`, verifikasi perangkat T-20.8 lulus). Fase 21 (penemuan fitur: onboarding dua langkah wajib, pintu permanen Catat dari notifikasi + Mulai cepat) spek final 19 Okt 2026 (KT-D1 diputuskan), menunggu rupa. Fase 22 (ekspor dan cadangan manual, dari B-42) spek final 22 Okt 2026 (KT-E1–KT-E5 diputuskan), menunggu rupa dan ADR engineer. Versi `0.7.0+13` (tag terbaru `0.7.0+13`), belum dirilis publik.
+**Fase saat ini:** MVP selesai (Fase 0–7), Fase 9 (onboarding, tur spotlight, lapis info) selesai 28 Sep 2026; Fase 8 (tindak lanjut pasca-MVP, persiapan rilis) berjalan; Fase 11 (Catat Cerdas) berjalan; Fase 12 (rapikan batas arsitektur, ADR-030) selesai 1 Okt 2026; Fase 13 (pecah fitur `record`, ADR-033) selesai 1 Okt 2026; Fase 14 (bahasa visual baru, ADR-034) kodenya selesai 9 Okt 2026 (sisa review desain/QA, render situs B-4, verifikasi perangkat); Fase 15 (Rencana dan rutin, ADR-035) berjalan sejak 2 Okt 2026; Fase 16 (Rencana R2, ADR-036) kodenya selesai 4 Okt 2026 (sisa poles T-16.16); Fase 17 (Rencana R3, ADR-037 Accepted) berjalan sejak 4 Okt 2026. Fase 18 (periode keuangan, ADR-038 Accepted) selesai 15 Okt 2026 (rilis `0.7.0+13`, verifikasi perangkat T-18.9 lulus); Fase 19 (Analisis R1, selesai 18 Okt 2026) kodenya selesai 17 Okt 2026 per irisan vertikal yang diverifikasi pemilik (rupa sudah ada, salinan di `docs/03-design`); verifikasi emulator T-19.7 selesai 18 Okt 2026 (tidak ada Gagal S1/S2; tersisa B-40) dan **sudah di `main`** lewat PR #51 (rebase, 18 Okt 2026); sisa Fase 19 hanya B-40 dan R2 (B-38). Fase 20 (pengumuman pembaruan, ADR-039 Accepted) selesai 15 Okt 2026 (kode di `main`, verifikasi perangkat T-20.8 lulus). Fase 21 (penemuan fitur: onboarding dua langkah wajib, pintu permanen Catat dari notifikasi + Mulai cepat) spek final 19 Okt 2026 (KT-D1 diputuskan), menunggu rupa. Fase 22 (ekspor dan cadangan manual, ADR-040 Accepted) selesai 23 Okt 2026 (kode di `main`, QA emulator tanpa temuan S1/S2; sisa iOS dan Excel/Sheets di B-67). Versi `0.7.0+13` (tag terbaru `0.7.0+13`), belum dirilis publik.
 
 ## Apa ini
 
@@ -84,6 +84,20 @@ benda tidak diganti, dan kunci i18n `appShell.transactionsTabLabel` tetap.
 Antrean pekerjaan yang sudah diketahui tapi belum dijadwalkan (`B-n`, mis.
 sapuan nama Tanukonomy di dokumen, klaim situs yang basi karena akun/analitik
 sudah ada, ikon iOS, sinkronisasi) ada di TASK_LIST.
+
+**Ekspor dan cadangan manual (Fase 22, ADR-040, selesai 23 Okt 2026):**
+Akun › Data kamu punya **Ekspor ke spreadsheet** (xlsx dan CSV, selalu seluruh
+data saat ini, tanpa pilihan rentang, hanya dari Akun), **Cadangkan sekarang**
+(berkas `.tkbak` berversi: gzip + SHA-256, disimpan lewat Simpan ke… atau
+Bagikan), dan **Pulihkan dari cadangan** (mengganti seluruh data tanpa
+penggabungan, atomik lewat jurnal, cadangan pengaman 30 hari dengan baris
+Kembalikan; juga dari layar geser pertama onboarding). Kode di
+`lib/features/data_portability/` dan `lib/app/data_portability/`.
+**Menambah penyimpanan baru (kunci Hive baru) wajib mendaftarkannya di
+`BackupRegistry`** (`include` dengan `supportedSchema`, atau `exclude` dengan
+alasan); uji kelengkapan registri gagal bila terlewat. Kolom Awal periode di
+ekspor memakai `periodDateOf`, jadi aturan periode keuangan tidak boleh
+disalin di tempat lain. Rincian di `docs/01-product/features/EXPORT_BACKUP.md`.
 
 **Periode keuangan (Fase 18, ADR-038, selesai 15 Okt 2026):** "bulan" di
 aplikasi adalah **periode keuangan** yang dimulai di tanggal pilihan pengguna

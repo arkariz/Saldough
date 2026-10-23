@@ -59,7 +59,7 @@ berarti membangun ringkasan untuk data yang belum ada.
 | 19 | Analisis keuangan R1 | Ke mana uang pergi per kategori, dibanding biasanya, tren enam periode (selesai 18 Okt 2026) |
 | 20 | Pengumuman pembaruan | Versi baru Play Store dan pembaruan kecil Shorebird diumumkan, catatan Apa yang baru (selesai 15 Okt 2026) |
 | 21 | Penemuan fitur | Catat dari notifikasi, pengingat rutin, dan awal bulan keuangan dijadikan langkah wajib onboarding dan tombol permanen (draf 18 Okt 2026, KT-D1 diputuskan, menunggu rupa) |
-| 22 | Ekspor dan cadangan manual | Ekspor transaksi ke xlsx/CSV, cadangkan dan pulihkan manual ke berkas, gratis tanpa akun (dari B-42, spek final 22 Okt 2026) |
+| 22 | Ekspor dan cadangan manual | Ekspor transaksi ke xlsx/CSV, cadangkan dan pulihkan manual ke berkas, gratis tanpa akun (dari B-42, selesai 23 Okt 2026) |
 
 Fase 0 sampai 6 membentuk MVP. Fase 7 dikerjakan setelahnya. Fase 8 dan 9
 lahir dari pemakaian nyata dan persiapan rilis, bukan dari rencana awal.
@@ -517,7 +517,7 @@ Dari B-42, permintaan pemilik 22 Okt 2026, prasyarat rilis publik dan Plus
 bisa dicadangkan ke berkas dan dipulihkan di ponsel lain, gratis dan tanpa
 akun ([EXPORT_BACKUP.md](../01-product/features/EXPORT_BACKUP.md)). Format
 cadangan dipakai ulang cadangan otomatis Drive (B-51). Keputusan teknis di
-ADR engineer (T-22.1). **Status:** spek final 22 Okt 2026 (KT-E1–KT-E5 diputuskan); menunggu rupa dan ADR engineer.
+ADR engineer (T-22.1). **Status:** selesai 23 Okt 2026. Kode T-22.0–T-22.7 di `main` (ADR-040 Accepted); QA emulator Android tanpa temuan S1/S2; sisa uji perangkat (iOS, Excel/Sheets) di B-67.
 
 **Selesai kalau:** cadangan dari satu ponsel dipulihkan di ponsel lain dan
 seluruh layar identik, pemulihan gagal tidak pernah merusak data, dan total

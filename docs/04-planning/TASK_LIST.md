@@ -85,9 +85,9 @@ Terakhir diperbarui: 18 Oktober 2026 (Fase 19 selesai dan masuk `main` lewat PR 
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
 | Persiapan Play Console — draf jawaban [PLAY_DATA_SAFETY.md](../03-release/PLAY_DATA_SAFETY.md) (Keamanan Data) dan [PLAY_STORE_LISTING.md](../03-release/PLAY_STORE_LISTING.md) (setelan toko, ASO) | 2 | 2 | Draf selesai (Keamanan Data 28 Sep, listing 29 Sep 2026); isi formulir persis sebelum build berfitur ini diunggah, jangan sebelum itu. Keputusan pemilik di §1 listing masih terbuka |
 | 20 — Pengumuman pembaruan ([APP_UPDATE.md](../01-product/features/APP_UPDATE.md)) | 8 | 8 | KT-U1–KT-U5 dijawab dan ADR-039 Accepted (15 Okt 2026); T-20.1–T-20.8 selesai dan sudah di `main` (ada di build `0.6.0+12` dan `0.7.0+13`); T-20.4 selesai (rupa v3 diterapkan, selisih diputuskan pemilik); T-20.7 formulir Play Console dan kebijakan privasi dilaporkan pemilik selesai; verifikasi perangkat T-20.8 lulus semua (15 Okt 2026) |
-| 21 — Penemuan fitur ([FEATURE_DISCOVERY.md](../01-product/features/FEATURE_DISCOVERY.md)) | 10 | 0 | Draf PO 18 Okt 2026, direvisi (onboarding wajib, tombol permanen); KT-D1 diputuskan; menunggu rupa (T-21.0) |
-| 22 — Ekspor dan cadangan manual ([EXPORT_BACKUP.md](../01-product/features/EXPORT_BACKUP.md)) | 8 | 6 | Spek final 22 Okt 2026 (dari B-42, KT-E1–KT-E5 diputuskan); ADR-040 Accepted, T-22.1 (fondasi), T-22.2 (ekspor), T-22.3 (cadangkan), T-22.4 (pulihkan), T-22.5 (pulihkan saat onboarding), dan T-22.6 (teks dan analitik) selesai 22 Okt 2026; rupa sudah ada (T-22.0); berikutnya T-22.7 (verifikasi perangkat, QA/pemilik) |
-| Antrean (`B-n`, belum dijadwalkan) | 49 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
+| 21 — Penemuan fitur ([FEATURE_DISCOVERY.md](../01-product/features/FEATURE_DISCOVERY.md)) | 10 | 7 | Kode T-21.1–T-21.7 selesai; T-21.9 (Mulai cepat) sebagian; menunggu T-21.0 (rupa) dan T-21.8 (verifikasi perangkat) |
+| 22 — Ekspor dan cadangan manual ([EXPORT_BACKUP.md](../01-product/features/EXPORT_BACKUP.md)) | 8 | 8 | Selesai 23 Okt 2026 (dari B-42): ADR-040 Accepted, T-22.0–T-22.7 di `main`; QA emulator Android tanpa temuan S1/S2; sisa uji perangkat (iOS, Excel/Sheets, dll.) di B-67 |
+| Antrean (`B-n`, belum dijadwalkan) | 50 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
 
 ## Keputusan terbuka
 
@@ -5084,7 +5084,7 @@ KT-E1–KT-E5 diputuskan 22 Okt 2026. Branch sendiri dari `main`; menyentuh laya
 onboarding (tautan pulihkan, bersinggungan dengan Fase
 21).
 
-- [ ] **T-22.0** Rupa ekspor dan cadangan (designer): bagian Data kamu di
+- [x] **T-22.0** Rupa ekspor dan cadangan (designer): bagian Data kamu di
       Akun (tiga baris, status cadangan terakhir, baris Kembalikan data
       sebelum pemulihan), lembar ekspor (format, ringkasan seluruh data, belum
       ada transaksi, proses), lembar cadangkan, alur pulihkan (pratinjau, peringatan
@@ -5093,7 +5093,7 @@ onboarding (tautan pulihkan, bersinggungan dengan Fase
       Verifikasi: pemilik menyetujui rupa; selisih dari komponen yang ada
       dicatat.
       Di luar PRD: rupa; kebutuhannya FR-DAT-001–003.
-      **Hasil rupa (v2, 22 Okt 2026, menunggu persetujuan pemilik):** 31 papan
+      **Hasil rupa (v2, 22 Okt 2026; diterima pemilik 23 Okt 2026, jawaban PO atas pertanyaan (a)–(e) di EXPORT_BACKUP §15):** 31 papan
       di prototipe 12 layar (F22-1 s.d. F22-31) dan salinan di
       `docs/03-design/` (bagian "Ekspor dan cadangan (Fase 22)"): Akun › Data
       kamu (`AkunData*`; tanpa/ada cadangan, baris Kembalikan, en gelap),
@@ -5129,7 +5129,8 @@ onboarding (tautan pulihkan, bersinggungan dengan Fase
       keterangan baris Kembalikan, "Yang akan berubah", bantuan format dan
       catatan isi ekspor. Contoh data (142 transaksi, 4 dompet, sejak 3 Jun
       2026; cadangan 12 Okt 2026) dan ekstensi `.tnk` adalah anggapan
-      prototipe; ekstensi diputuskan ADR T-22.1.
+      prototipe; ekstensi diputuskan ADR T-22.1 (`.tkbak`; prototipe
+      `LembarCadangkan` dan komponen DataSheet sudah disesuaikan 23 Okt 2026).
       **Pertanyaan untuk PO:** (a) KT-E3: dua tombol di lembar app (rupa ini)
       atau satu lembar sistem langsung? (b) Banner "cadangan lebih lama" di
       pratinjau boleh, atau cukup di dialog? (c) Slide pengantar onboarding
@@ -5299,7 +5300,7 @@ onboarding (tautan pulihkan, bersinggungan dengan Fase
       tidak ada peristiwa sebelum dikonfirmasi; `flutter analyze` bersih.
       ⚠ Belum dilihat di DebugView Firebase; `restore_failed` untuk galat
       `other` dari alur Kembalikan belum diuji di perangkat.
-- [ ] **T-22.7** Verifikasi perangkat (QA/pemilik): cadangkan di ponsel A,
+- [x] **T-22.7** Verifikasi perangkat (QA/pemilik): cadangkan di ponsel A,
       pulihkan di ponsel B lewat onboarding, layar identik; pulihkan di atas
       data yang ada lalu Kembalikan; berkas rusak, versi lebih baru, ruang
       penuh; ekspor dibuka di Excel dan Google Sheets dengan total sama
@@ -5313,6 +5314,12 @@ onboarding (tautan pulihkan, bersinggungan dengan Fase
       sesudahnya akan hilang"); Q5 jumlah memakai pemisah ribuan
       (`CountFormatter`); T1 uji kartu kotak masuk disesuaikan dengan kepala
       kartu yang bisa diketuk. Q4 (posisi tombol bergeser) dibiarkan.
+      **Selesai 23 Okt 2026** (pemilik menyatakan Fase 22 selesai; QA emulator
+      Android 15 tanpa temuan S1/S2: skenario 1–5, 7, 9, 12–14, 17, 18, dan 20
+      sebagian lulus). Sisa uji perangkat yang belum bisa dilakukan (iOS, Excel
+      dan Google Sheets, gajian maju, sumber notifikasi di cadangan, DebugView,
+      ruang penuh) dipindah ke B-67. Keputusan PO atas selisih di EXPORT_BACKUP
+      §15 (termasuk T-22.5: langkah pengingat tidak ditampilkan ulang).
 
 ## Antrean (belum dijadwalkan)
 
@@ -5370,6 +5377,7 @@ menambah dan memindahkannya ada di
 | B-64 | **Pola bawaan Catat dari notifikasi belum terverifikasi** (`builtInNotificationPatterns`, `verified: false`): hanya berjangkar pada kata arah, bukan format asli tiap aplikasi, sehingga drafnya selalu masuk kotak masuk dan tidak pernah dicatat otomatis (ADR-032 §3.4), termasuk dari Mulai cepat. Kumpulkan sampel notifikasi asli per aplikasi (layar sampel debug), ganti dengan templat dari sampel, tandai `verified: true` beserta ujinya. Sampai itu selesai, teks Mulai cepat/onboarding/Beranda tidak boleh menjanjikan pencatatan otomatis. Nama paket di `builtInNotificationApps` juga belum dicek di perangkat. | pemilik menyerahkan sampel, lalu agen | T-21.9, ADR-032 §3.4 |
 | B-65 | **Kegagalan menyimpan mata uang kini muncul di penutup onboarding**, bukan di langkah mata uang (T-21.2): pengguna sudah melewati awal periode dan pengingat, lalu `onFinished` gagal menyimpan dan hanya menampilkan snackbar di penutup. Pertimbangkan menyimpan mata uang saat meninggalkan langkah mata uang (tetap sebelum `markOnboardingDone`), atau mengembalikan pengguna ke langkah itu. Pastikan mata uang tidak jatuh diam-diam ke IDR bila gagal. | agen | T-21.2 |
 | B-66 | **Dompet v2: sebaran saldo interaktif (rupa siap, 22 Okt 2026).** Terapkan rupa `Dompet.dc.html` + varian (D1–D6) dan komponen BalanceSpread (`docs/03-design/design-system/components/BalanceSpread/README.md`) di layar Dompet: kartu Total saldo, kartu Sebaran saldo ringkas yang bisa dibuka menjadi donat, pilih dompet lewat irisan/legenda dengan baris dompet ditandai, "Lihat total", "Sembunyikan"; satu dompet tanpa kartu sebaran. Selisih dari rujukan `docs/03-design/proposals/wallet.html` yang disengaja: (1) "100% Teralokasi"/"Siap dialokasikan" dibuang (aturan 5; saldo bukan alokasi); (2) badge Utama/Terkunci/Fisik/Digital dan baris kedua bunga harian, "+2.4% bln ini", "Siap QRIS" dibuang karena aplikasi tidak punya datanya; (3) persen bulat dan "<1%", bukan 1,4%; (4) "Atur posisi" dan titik hijau berdenyut dibuang; (5) dua chip pintas Tunai/GoPay di atas donat diganti irisan kecil minimal 6px + legenda; (6) warna dompet memakai token `cat-*`, bukan warna merek; (7) navigasi bawah tetap 4 tab + Catat (Rencana). **Pertanyaan PO:** (a) ketuk baris dompet membuka rincian dompet (bawaan app) atau memilih irisan seperti rujukan? Rupa ini memilih yang pertama; (b) urutan dompet manual ("Atur posisi") perlu ada?; (c) dompet bersaldo nol/negatif (kartu kredit) di sebaran: dibuang dari donat dan ditulis di bawahnya, atau tidak?; (d) keadaan terbuka diingat antar kunjungan atau selalu ringkas (rupa: selalu ringkas)?  **✅ Kode selesai 22 Okt 2026** (branch `claude/dompet-v2`): `WalletSpreadCard` (ringkas/donat, pilih lewat irisan/legenda, Lihat total, Sembunyikan), kartu Total saldo, badge jumlah di "Dompet aktif", penanda warna per dompet (`walletColors`: warna jenis untuk dompet pertama tiap jenis, sejenis berikutnya warna `cat-*` lain), baris `is-linked`, persen bulat setengah ke atas + "<1%" (`walletShares` kini `WalletShare`), dan baris "Dompet nonaktif" yang membuka halaman `WalletInactivePage` (rute `wallet.inactive`, keputusan pemilik 22 Okt). Jawaban sementara (a)–(d) mengikuti rupa: (a) ketuk baris membuka rincian, (b) Urutkan B-34 tetap, (c) saldo ≤ 0 tidak ikut tanpa teks tambahan, (d) selalu ringkas. Selisih disengaja: tombol info tur dan Urutkan tetap di app bar; irisan kecil memakai busur minimal `AppDonutChart` (1,5), bukan 6px. Verifikasi: `flutter analyze` tanpa isu baru, seluruh `flutter test` lulus, emulator Android D1–D3 cocok (terang, id); D4–D6 dan gelap/en lewat uji widget saja. | agen (selesai); pemilik menjawab (a)–(d) | `docs/03-design/README.md` "Dompet v2" |
+| B-67 | **Sisa uji perangkat Fase 22**: iOS (ekspor, cadangkan, pulihkan), CSV dan xlsx dibuka di Excel lokal Indonesia dan Google Sheets, gajian maju di perangkat, cadangan yang memuat sumber Catat dari notifikasi dan pengingat menyala, peristiwa `export_created`/`backup_created`/`restore_*` di DebugView, galat ruang penuh (tidak terpicu di Android). | pemilik | T-22.7, [EXPORT_BACKUP.md](../01-product/features/EXPORT_BACKUP.md) §15 |
 | B-39 | **Pengumuman pembaruan R2**: pembaruan wajib/versi minimum untuk perbaikan kritis (KT-U1), pembaruan untuk iOS (App Store) sesudah iOS dirilis, dan pilihan jalur uji untuk penguji. | agen + pemilik | [APP_UPDATE.md](../01-product/features/APP_UPDATE.md) §14 |
 | B-35 | Uji di perangkat yang belum dilakukan QA PR #43: lebar 360dp (butuh izin mengubah setelan ponsel), Freelance, perekaman suara sungguhan, dan jalur Gemini secara terpisah. | pemilik | QA PR #43 (di luar PR) |
 | B-14 | **Catat lewat Suara**: STT sistem (`speech_to_text`) + parser aturan + Gemma lokal mulai dari model termurah, 270M → 1B → Gemma 4 E2B (unduhan opt-in dari Hugging Face) → form CATAT terisi draf; adaptor Firebase AI sebagai jalur pivot. ADR-027. Riset & rencana di [VOICE_INPUT_RESEARCH.md](../01-product/features/VOICE_INPUT_RESEARCH.md). | dijadwalkan: T-11.2–T-11.9 | riset 30 Sep 2026 |

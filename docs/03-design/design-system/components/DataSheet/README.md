@@ -16,7 +16,7 @@ Lembar bawah untuk **ekspor ke spreadsheet** dan **cadangkan sekarang** (Fase 22
 - **Proses**: blok `tk-dsheet__busy` dengan pemutar di dalamnya, satu kalimat catatan (ekspor), dan tombol teks "Batal" sebagai kaki. Tidak ada bar persentase: lama proses tidak terprediksi. Lembar tidak bisa ditutup dengan geser selama proses; tombol tutup sama dengan Batal.
 - **Siap**: tile besar `brand-soft` dengan centang, judul "Berkas siap" / "Cadangan siap", FileCard (ikon berkas, nama, "Excel · 142 transaksi"), lalu dua tombol: **Simpan ke…** (`primary`) dan **Bagikan** (`secondary`). Keduanya membuka lembar sistem; membatalkannya mengembalikan ke Siap tanpa mengubah apa pun, dan status "Cadangan terakhir" hanya berubah bila berkas tersimpan.
 
-**FileCard** (`tk-file`): ikon berkas di tile kecil, nama berkas `body-sm` tebal (boleh membungkus di mana saja), keterangan `label` `ink-2`. Nama berkas: `tanukonomy-ekspor-2026-10-22.xlsx` (tanggal = hari ekspor), `tanukonomy-cadangan-2026-10-22.<ekstensi>` (ekstensi diputuskan ADR T-22.1; prototipe memakai `.tnk` sebagai anggapan).
+**FileCard** (`tk-file`): ikon berkas di tile kecil, nama berkas `body-sm` tebal (boleh membungkus di mana saja), keterangan `label` `ink-2`. Nama berkas: `tanukonomy-ekspor-2026-10-22.xlsx` (tanggal = hari ekspor), `tanukonomy-cadangan-2026-10-22.<ekstensi>` (ekstensi diputuskan ADR T-22.1; prototipe memakai `.tkbak` sebagai anggapan).
 
 **Aturan**
 - Dibuka hanya dari Akun › Data kamu (ekspor, cadangkan); ekspor tidak punya pintu lain. Jangan menumpuk di atas sheet lain.

@@ -87,7 +87,7 @@ Terakhir diperbarui: 29 Oktober 2026 (penyelarasan dokumen dengan `main` di `0.1
 | 20 — Pengumuman pembaruan ([APP_UPDATE.md](../01-product/features/APP_UPDATE.md)) | 8 | 8 | KT-U1–KT-U5 dijawab dan ADR-039 Accepted (15 Okt 2026); T-20.1–T-20.8 selesai dan sudah di `main` (ada di build `0.6.0+12` dan `0.7.0+13`); T-20.4 selesai (rupa v3 diterapkan, selisih diputuskan pemilik); T-20.7 formulir Play Console dan kebijakan privasi dilaporkan pemilik selesai; verifikasi perangkat T-20.8 lulus semua (15 Okt 2026) |
 | 21 — Penemuan fitur ([FEATURE_DISCOVERY.md](../01-product/features/FEATURE_DISCOVERY.md)) | 10 | 7 | Kode T-21.1–T-21.7 selesai; T-21.9 (Mulai cepat) sebagian; menunggu T-21.0 (rupa) dan T-21.8 (verifikasi perangkat) |
 | 22 — Ekspor dan cadangan manual ([EXPORT_BACKUP.md](../01-product/features/EXPORT_BACKUP.md)) | 8 | 8 | Selesai 23 Okt 2026 (dari B-42): ADR-040 Accepted, T-22.0–T-22.7 di `main`; QA emulator Android tanpa temuan S1/S2; sisa uji perangkat (iOS, Excel/Sheets, dll.) di B-67 |
-| 23 — Catat notifikasi multi-dompet, contoh, dan rutin lebih awal ([ADR-042](../02-architecture/adr/0042-notifikasi-multi-dompet-sampel-dan-rutin.md)) | 4 | 4 | **Selesai 23 Okt 2026, di `main`** (commit `c83f360`), dirilis di `0.10.0+16`. QA emulator ([VERIFICATION_PLAN_FASE_23.md](VERIFICATION_PLAN_FASE_23.md)): kompilasi Kotlin lulus, 26 baris lulus, tanpa Gagal S1/S2, 5 temuan S3; sisanya di B-83 |
+| 23 — Catat notifikasi multi-dompet, contoh, dan rutin lebih awal ([ADR-042](../02-architecture/adr/0042-notifikasi-multi-dompet-sampel-dan-rutin.md)) | 5 | 5 | **Selesai 23 Okt 2026, di `main`** (commit `c83f360`), dirilis di `0.10.0+16`. QA emulator ([VERIFICATION_PLAN_FASE_23.md](VERIFICATION_PLAN_FASE_23.md)): kompilasi Kotlin lulus, 26 baris lulus, tanpa Gagal S1/S2, 5 temuan S3; sisanya di B-83; tindak lanjut QA T-23.5 (24 Okt 2026) dibawa ke branch Fase 26 |
 | 24 — Fondasi Plus ([ADR-041](../02-architecture/adr/0041-monetisasi-hak-plus-dan-uji-coba.md), [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md)) | 22 | 21 | Dijadwalkan 23 Okt 2026 (dari B-41); T-24.1 (ADR-041 revisi 2), T-24.2 (fondasi murni), T-24.3 (`AppUser.createdAt`), T-24.4 (penyimpanan hak), T-24.5 (batas dari Remote Config), T-24.6 (`Entitlements` lokal), T-24.7 (pengganti paket uji), T-24.8 (paywall sementara), T-24.9 (gerbang R3), T-24.10 (gerbang notifikasi), T-24.11 (kuota tafsir), T-24.12 (gerbang Analisis), T-24.13 (gerbang template dan proyek), dan T-24.14 (adaptor RevenueCat, uji palsu), dan T-24.15 (kebijakan offering, beli/pulihkan), dan T-24.16 (analitik dan dokumen rilis) selesai; T-24.17a (paywall berparameter, PlanCard, keadaan) T-24.17b (PlusLocked, lencana Plus), dan T-24.17c (status Plus di Akun, halaman fitur), T-24.17d (hadiah uji coba), dan T-24.17e (layar turun, kartu Plus, momen) selesai, jadi T-24.17 selesai; berikutnya T-24.18 (rupa sudah ada, PR #65) dan T-24.18. Uji nyata T-24.14 menunggu akun dan kunci RevenueCat; rilis build bergerbang menunggu penguji bisa masuk akun |
 | 25 — Design system baru dan preset tema ([ADR-043](../02-architecture/adr/0043-design-system-v2-dan-preset-tema.md), Proposed) | 6 | 4 | Berjalan sejak 29 Okt 2026 -- T-25.1 fondasi selesai (spek Tanukonomy Matcha); KT-DS1–KT-DS4 diputuskan; T-25.2 widget komponen dan T-25.5 animasi selesai (animasi belum dinilai di perangkat); T-25.3 terpasang, Beranda dirombak (irisan T-25.4); layar lain menyusul |
 | 26 — Catat dari notifikasi v2 ([ADR-044](../02-architecture/adr/0044-catat-dari-notifikasi-v2.md), Proposed; [NOTIFICATION_CAPTURE_V2.md](../01-product/features/NOTIFICATION_CAPTURE_V2.md)) | 13 | 0 | Direncanakan 4 Nov 2026 bersama pemilik; tanpa saklar build, jalur internal test; tahap 0 → 1a → 1b, spike T-26.9 menentukan Accepted |
@@ -5378,13 +5378,22 @@ Permintaan pemilik 23 Okt 2026 (kasus Bank Jago).
       `PLAY_DATA_SAFETY.md`.
       Verifikasi: OTP tidak pernah tersimpan, kedaluwarsa, uji backup registry.
 
+- [x] **T-23.5** Tindak lanjut QA Fase 23 (24 Okt 2026): F23-1 alasan dompet
+      untuk transfer antar dompet tak terpetakan, F23-3 info lint, F23-5 race
+      `state` sebelum `await` di bloc setelan, F23-6 ikatan hanya ke rutin
+      berjenis sama (keputusan pemilik); F23-2 diputuskan pertahankan urutan
+      duplikat dulu. Rincian di `VERIFICATION_PLAN_FASE_23.md` ("Tindak lanjut
+      temuan"). Sisa: uji ulang A9/A10, C1, D2/D3 di perangkat dan baris P1
+      yang belum diuji.
+
 **Selesai 23 Okt 2026, di `main`** (commit `c83f360`, dirilis di
 `0.10.0+16`). Catatan implementasi di ADR-042 §7. QA emulator (commit
 `9c54afc`, [VERIFICATION_PLAN_FASE_23.md](VERIFICATION_PLAN_FASE_23.md)):
 kompilasi Kotlin dan APK debug lulus, 26 baris lulus, tanpa Gagal S1/S2,
 5 temuan S3 (F23-1, F23-2, F23-4, F23-5, F23-6; F23-3 info analyze).
-Rekomendasi QA: layak digabung dengan catatan. Sisanya (keputusan F23-2 dan
-F23-6, perbaikan F23-5, pengungkapan contoh notifikasi di Keamanan Data dan
+Rekomendasi QA: layak digabung dengan catatan. Keputusan F23-2 dan F23-6
+serta perbaikan F23-1 dan F23-5 sudah masuk lewat T-23.5 (dibawa ke branch
+Fase 26, T-26.1). Sisanya (pengungkapan contoh notifikasi di Keamanan Data dan
 situs, uji layar, uji perangkat dengan notifikasi Jago asli) di B-83.
 
 **Sesudah Fase 23 (di luar fase):** `0.11.0+17` (commit `dd18320`,
@@ -6365,7 +6374,7 @@ menambah dan memindahkannya ada di
 | B-80 | **Perkiraan zakat dari catatan** (**gratis**, keputusan 23 Okt 2026): zakat penghasilan dan zakat mal dari dompet, aset, dan utang; pembayarannya dicatat lewat CATAT. Rujukan nisab dari lembaga amil, harga emas diisi pengguna. Sasaran sebelum Ramadan 2027 bila sempat. | agen + pemilik | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §16, [laporan bisnis](https://claude.ai/artifact/SKsV87e4f7hX8h58Qvv7G5) #14 |
 | B-81 | **Kamar Tanuki** (gratis dasar; barang, kostum, dan tema musiman di Plus lewat B-56): kamar piksel yang bertambah barang saat tonggak nyata tercapai; tidak ada yang hilang saat absen, tanuki tidak pernah sedih. Bisa dimatikan. | pemilik menyerahkan aset, lalu agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §16, [laporan bisnis](https://claude.ai/artifact/SKsV87e4f7hX8h58Qvv7G5) Gamifikasi |
 | B-82 | **Buku Stempel** (gratis; edisi musiman khusus Plus): stempel piksel untuk tonggak (periode lengkap, saldo cocok, rutin tak terlewat, target tercapai) dan edisi Ramadan, 17 Agustus, Tahun Baru; tanpa streak, poin, atau peringkat (KT-R13). | pemilik menyerahkan aset, lalu agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §16, [laporan bisnis](https://claude.ai/artifact/SKsV87e4f7hX8h58Qvv7G5) Gamifikasi |
-| B-83 | Tindak lanjut QA Fase 23 sebelum rilis publik: putuskan F23-2 (badge "Mungkin sudah tercatat" untuk pola terikat tanpa kemunculan terbuka) dan F23-6 (saring pemilih Ikat ke rutin menurut jenis pola); perbaiki F23-5 (sakelar contoh notifikasi tetap tampil mati sampai halaman dibuka ulang) dan F23-1 (alasan kotak masuk transfer); perbarui Keamanan Data Play dan kebijakan privasi situs untuk contoh notifikasi; uji layar Aturan dompet, Ikat ke rutin, dan Contoh notifikasi; ulangi F23-4 dan baris "tidak diuji" di perangkat dengan notifikasi Jago asli. | pemilik (keputusan, Play Console, perangkat) + agen | [VERIFICATION_PLAN_FASE_23.md](VERIFICATION_PLAN_FASE_23.md), ADR-042 |
+| B-83 | **Sisa pengamatan QA Fase 22–23**: (a) halaman "Data dipulihkan" tetap meminta izin notifikasi walau sudah aktif; (b) F23-4: daftar rutin sempat menampilkan kemunculan yang sudah tercatat sebagai "Later" (ulangi di perangkat nyata); (c) uji layar otomatis untuk Aturan dompet, Ikat ke rutin, dan Contoh notifikasi. | agen | [VERIFICATION_PLAN_FASE_23.md](VERIFICATION_PLAN_FASE_23.md) |
 | B-84 | **Arsip proyek freelance**: status aktif/arsip di `FreelanceProject` supaya batas Gratis bisa menghitung proyek aktif saja (sekarang menghitung semua proyek, ADR-041 §3.13 butir 2). Butuh ADR domain kecil dan rupa. | agen | ADR-041 §3.13, T-24.13 |
 | B-85 | **E1 "Ingat" dan bentuk dipelajari**: aturan lahir dari kartu, tanya "Ini transaksi? Ya/Bukan", banyak dompet per aplikasi tanpa formulir. Sesudah gerbang tahap 1. | agen | [NOTIFICATION_CAPTURE_V2.md](../01-product/features/NOTIFICATION_CAPTURE_V2.md) §7–§8, ADR-044 §3.4 |
 | B-86 | **E2 saran pos anggaran** untuk pengeluaran bebas (nama pos di teks atau ingatan pedagang), hanya saran. | agen | NOTIFICATION_CAPTURE_V2.md §5 |

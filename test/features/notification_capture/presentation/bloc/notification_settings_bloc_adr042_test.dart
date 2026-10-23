@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
 import 'package:saldough/features/notification_capture/data/notification_capture_store_impl.dart';
 import 'package:saldough/features/notification_capture/domain/entities/captured_notification.dart';
+import 'package:saldough/features/notification_capture/domain/entities/notification_pattern.dart';
 import 'package:saldough/features/notification_capture/presentation/bloc/notification_settings_bloc.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
@@ -42,10 +43,15 @@ void main() {
     addTearDown(bloc.close);
   });
 
-  NotificationPatternBound bind(String? ruleId, {String patternId = 'p1'}) => NotificationPatternBound(
+  NotificationPatternBound bind(
+    String? ruleId, {
+    String patternId = 'p1',
+    NotificationPatternKind kind = NotificationPatternKind.expense,
+  }) => NotificationPatternBound(
     packageName: 'com.jago',
     patternId: patternId,
     patternLabel: 'Langganan',
+    patternKind: kind,
     ruleId: ruleId,
   );
 
@@ -74,6 +80,31 @@ void main() {
       expect((await stored('netflix')).notificationBinding?.patternId, 'p2');
     });
 
+    test('jenis beda ditolak: pola pengeluaran tidak bisa diikat ke rutin pemasukan (F23-6)', () async {
+      await rules.saveRule(
+        RecurringRule(
+          id: 'gaji',
+          kind: RecurringKind.income,
+          amount: 100000000,
+          walletId: 'bri',
+          note: 'Gaji',
+          schedule: RecurringSchedule(frequency: RecurringFrequency.monthly, anchorDate: DateTime(2026, 9, 25)),
+        ),
+      );
+      bloc.add(bind('gaji'));
+      await pumpEventQueue();
+      expect((await stored('gaji')).notificationBinding, isNull);
+      bloc.add(bind('gaji', kind: NotificationPatternKind.income));
+      await pumpEventQueue();
+      expect((await stored('gaji')).notificationBinding?.patternId, 'p1');
+    });
+
+    test('pola transfer hanya ke rutin transfer', () {
+      expect(NotificationPatternKind.transferBetween.recurringKind, RecurringKind.transfer);
+      expect(NotificationPatternKind.transferOut.recurringKind, RecurringKind.transfer);
+      expect(NotificationPatternKind.income.recurringKind, RecurringKind.income);
+    });
+
     test('Tidak terikat melepas ikatan pola', () async {
       bloc.add(bind('netflix'));
       await pumpEventQueue();
@@ -91,12 +122,26 @@ void main() {
       expect(gateway.configuredSaveSamples, isTrue);
     });
 
+    test('menyalakan lalu langsung memuat contoh: setelan tidak tertimpa (F23-5)', () async {
+      gateway.sampleStore = {
+        'com.jago': [
+          CapturedNotification(id: '1', packageName: 'com.jago', title: 't', body: 'b', postedAt: DateTime(2026, 10)),
+        ],
+      };
+      bloc
+        ..add(const NotificationSamplesToggled(on: true))
+        ..add(const NotificationSamplesRequested('com.jago'));
+      await pumpEventQueue();
+      expect(bloc.state.settings.saveSamples, isTrue);
+      expect(bloc.state.samples, hasLength(1));
+    });
+
     test('mematikan menghapus semua contoh', () async {
       bloc.add(const NotificationSamplesToggled(on: true));
       await pumpEventQueue();
       gateway.sampleStore = {
         'com.jago': [
-          CapturedNotification(id: '1', packageName: 'com.jago', title: 't', body: 'b', postedAt: DateTime(2026, 10, 1)),
+          CapturedNotification(id: '1', packageName: 'com.jago', title: 't', body: 'b', postedAt: DateTime(2026, 10)),
         ],
       };
       bloc.add(const NotificationSamplesRequested('com.jago'));

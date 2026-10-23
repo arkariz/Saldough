@@ -122,6 +122,16 @@ Ditambah **ikatan eksplisit**: `RecurringRule.notificationBinding`
   mengizinkan. Satu saja syarat gagal → kotak masuk dengan saran rutin itu
   (alasan ditampilkan), tidak pernah ditebak.
 - Tanpa ikatan, perilaku ADR-037 §3.3 tetap (±3 hari, nominal persis, tunggal).
+- **Jenis harus sama** (keputusan pemilik 24 Okt 2026, F23-6): pola pengeluaran
+  hanya ke rutin pengeluaran, pemasukan ke pemasukan, `transferOut`/
+  `transferIn`/`transferBetween` ke rutin transfer. Pemilih hanya menawarkan
+  rutin sepadan dan bloc menolak ikatan lintas jenis; ikatan lama yang lintas
+  jenis tetap tampil agar bisa dilepas. Dompet tidak disaring: dompet baru
+  diketahui saat notifikasi datang.
+- **Urutan alasan kotak masuk** (keputusan pemilik 24 Okt 2026, F23-2): deteksi
+  duplikat didahulukan. Pola terikat tanpa kemunculan terbuka karena kemunculan
+  itu sudah tercatat di hari yang sama berbadge "mungkin sudah tercatat";
+  "Rutin belum pasti" untuk kasus lain (dilewati, di luar 7 hari, nominal beda).
 - Satu pola hanya boleh terikat ke satu rutin; mengikat ulang meminta
   konfirmasi. Menghapus pola atau rutin melepas ikatan.
 - Rutin dibuat dari notifikasi (mis. "Jadikan rutin") **tidak** dalam cakupan.
@@ -159,6 +169,10 @@ Ditambah **ikatan eksplisit**: `RecurringRule.notificationBinding`
 ## 7. Revisi
 
 - **Revisi 1 (23 Okt 2026):** §6 dijawab pemilik; batas awal 7 hari dicabut.
+- **Revisi 2 (24 Okt 2026, hasil QA `c83f3602`):** F23-6 dan F23-2 diputuskan
+  (§3.4). Transfer antar dompet yang sisinya tak terpetakan kini bermasalah
+  `walletUnknown` (F23-1). Kode Kotlin sudah terkompilasi dan teruji QA;
+  catatan "belum dikompilasi" di bawah dicabut.
 - **Catatan implementasi (23 Okt 2026):**
   - Contoh notifikasi menyimpan semua notifikasi bermuatan angka dari sumber
     terdaftar (bukan hanya yang tidak lolos filter), supaya daftar berguna
@@ -168,8 +182,8 @@ Ditambah **ikatan eksplisit**: `RecurringRule.notificationBinding`
     terikat yang kemunculannya tidak jelas masuk kotak masuk dengan alasan
     `recurringUnclear`; rutin kira-kira terikat selalu ke kotak masuk.
   - Rutin tidak menampilkan ikatannya di rincian (hanya di halaman sumber).
-  - Kode Kotlin (contoh notifikasi) belum dikompilasi di lingkungan ini;
-    wajib `flutter build apk` dan uji emulator sebelum rilis.
+  - Kode Kotlin (contoh notifikasi) terkompilasi dan lulus uji emulator QA
+    (24 Okt 2026).
 
 ---
 

@@ -198,6 +198,9 @@ final class NotificationSettingsBloc extends Bloc<NotificationSettingsEvent, Not
     final repository = _recurringRules;
     if (repository == null) return;
     final rules = await _loadRules();
+    // Jenis harus sama: ikatan lintas jenis tidak pernah bisa menautkan apa pun.
+    final target = rules.where((r) => r.id == event.ruleId).firstOrNull;
+    if (target != null && target.kind != event.patternKind.recurringKind) return;
     var changed = false;
     for (final rule in rules) {
       final current = rule.notificationBinding;
@@ -216,7 +219,8 @@ final class NotificationSettingsBloc extends Bloc<NotificationSettingsEvent, Not
       changed = true;
     }
     if (changed) _recurringChanges?.notifyChanged(source: this);
-    emit(state.copyWith(recurringRules: await _loadRules()));
+    final refreshed = await _loadRules();
+    emit(state.copyWith(recurringRules: refreshed));
   }
 
   /// Menyalakan atau mematikan penyimpanan contoh (ADR-042 §3.2). Mematikan
@@ -230,7 +234,10 @@ final class NotificationSettingsBloc extends Bloc<NotificationSettingsEvent, Not
   }
 
   Future<void> _onSamplesRequested(NotificationSamplesRequested event, Emitter<NotificationSettingsState> emit) async {
-    emit(state.copyWith(samples: await _gateway.samples(event.packageName)));
+    // `await` dulu, baru `state`: `state.copyWith(x: await ...)` membaca state
+    // sebelum menunggu dan menimpa setelan yang tersimpan selagi menunggu (F23-5).
+    final samples = await _gateway.samples(event.packageName);
+    emit(state.copyWith(samples: samples));
   }
 
   Future<void> _onResumed(NotificationSettingsResumed event, Emitter<NotificationSettingsState> emit) async {
@@ -319,7 +326,8 @@ final class NotificationSettingsBloc extends Bloc<NotificationSettingsEvent, Not
           await repository.saveRule(rule.withNotificationBinding(null));
         }
       }
-      emit(state.copyWith(recurringRules: await _loadRules()));
+      final refreshed = await _loadRules();
+      emit(state.copyWith(recurringRules: refreshed));
     }
     await _savePatterns([
       for (final p in state.userPatterns)

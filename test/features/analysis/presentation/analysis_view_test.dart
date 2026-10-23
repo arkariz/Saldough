@@ -242,7 +242,7 @@ void main() {
           findsOneWidget,
         );
         expect(
-          find.textContaining('Others (3 categories)', findRichText: true),
+          find.textContaining('Other (3 categories)', findRichText: true),
           findsOneWidget,
         );
         expect(find.text('Uncategorized'), findsOneWidget);

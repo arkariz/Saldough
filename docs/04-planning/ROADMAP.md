@@ -94,7 +94,7 @@ baru:
 | B-1 | Sapuan nama "Saldough" → "Tanukonomy" di dokumen | agen |
 | B-5, B-35, B-40 | Verifikasi perangkat yang tertunda: Akun, mata uang, Freelance, suara, lebar 360dp, keadaan kosong Analisis | pemilik |
 | Audit TASK_LIST | Kotak lama yang kemungkinan sudah selesai di kode tapi belum dicentang (T-11.17–11.20, T-15.9, T-15.14, T-15.19, dan B-13/B-14 yang usang) | agen |
-| Fase 22 (dari B-42), B-43 | Ekspor ke spreadsheet dan cadangan/pulihkan manual (Fase 22, [EXPORT_BACKUP.md](../01-product/features/EXPORT_BACKUP.md)), lalu kunci aplikasi (B-43); gratis, prasyarat Plus. Naik ke Now 18 Okt 2026 (KT-P7): data penguji tidak boleh hanya hidup di satu ponsel saat rilis publik | agen |
+| B-43 | Kunci aplikasi sidik jari/PIN (gratis); prasyarat Plus. Pasangannya, ekspor dan cadangan/pulihkan manual (Fase 22, dari B-42), **selesai 23 Okt 2026**; sisa uji perangkatnya di B-67 | agen, pemilik (B-67) |
 
 **Satu fitur yang ikut di Now:** **B-26**, kartu lembut "Ada yang belum dicatat
 sejak …?" (tanpa streak, KT-R13). Paling langsung menjawab ukuran keberhasilan
@@ -136,7 +136,7 @@ Freemium dan paywall dirancang di [FREEMIUM_PAYWALL.md](../01-product/features/F
 dengan alasan lengkap di §13 dokumen itu:
 
 ```
-A. Kepercayaan (gratis)   B-42 ekspor/cadangan manual, B-43 kunci aplikasi
+A. Kepercayaan (gratis)   B-42 ekspor/cadangan manual (selesai, Fase 22), B-43 kunci aplikasi
         │
 B. Fondasi Plus           B-41 billing, hak, paywall, gerbang fitur lama
         │

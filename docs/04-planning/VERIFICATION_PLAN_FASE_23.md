@@ -140,10 +140,69 @@ Tulis tiap temuan dengan: nomor langkah, build/commit, langkah reproduksi, hasil
 
 ## Hasil
 
-*(diisi QA)*
+Diuji 23–24 Okt 2026 pada build `c83f3602` (`0.9.0+15`), emulator Android 15 (`Slim_Pixel`, x86_64). Atas permintaan pemilik, pengujian difokuskan ke **alur inti** (R1–R4); baris yang tidak masuk alur inti tidak dikerjakan dan ditandai "tidak diuji". Data uji disuntik lewat cadangan buatan (sumber `com.android.shell` berlabel "Jago (uji)"; dompet Jago Utama, Liburan, Tabungan; pola dan rutin Netflix/Listrik), jadi pembuatan lewat UI pembuat pola tidak dicoba.
+
+### Otomatis dan build
+
+| Pemeriksaan | Hasil |
+|---|---|
+| `flutter analyze` | 1 info (`avoid_redundant_argument_values`, `notification_settings_bloc_adr042_test.dart:99`); rencana menyebut bersih. S3. |
+| `flutter test` | 2067 lulus, 0 gagal |
+| Kompilasi Kotlin / APK debug (R7) | Lulus; layanan native menerima konfigurasi sumber, antrean, dan contoh |
+| E7 pembaruan `adb install -r` dengan data lama | Lulus. Catatan lingkungan: satu ANR "failed to complete startup" pada peluncuran pertama (emulator terbebani), tidak berulang |
+
+### Daftar periksa perangkat
+
+| # | Hasil |
+|---|---|
+| A1, A2 | Lulus: baris aturan dompet (pemilih, kata pengenal, Remove); dua aturan tetap utuh setelah halaman dibuka ulang |
+| A4 | Lulus: "…dari Kantong Liburan" tercatat otomatis ke Liburan |
+| A5 | Lulus: tanpa penanda tercatat ke Jago Utama (bawaan) |
+| A6 | Lulus: dua dompet cocok, kotak masuk "Wallet not recognized", tidak tercatat |
+| A8 | Lulus: tercatat sebagai transfer Liburan → Tabungan, total tetap, bukan pemasukan/pengeluaran |
+| A9, A10 | Lulus: sisi tujuan tak dikenal / dompet sama, kotak masuk, tidak tercatat. Badge "Type unclear" kurang tepat (F23-1) |
+| B1 | Lulus: "Record now" di tiap kemunculan akan datang |
+| B2 | Lulus: transaksi bertanggal hari ini, Rp65.000, saldo Jago Utama Rp4.870.000; kemunculan 25 Nov masuk Recorded |
+| B8 | Lulus: hapus transaksi, kemunculan kembali ke belum tercatat |
+| C1 | Lulus: bagian "Bind to a recurring item" tampil dengan pemilih per pola (Netflix, Listrik, Pindah Kantong "Not bound") |
+| C2 | Lulus: ikatan Netflix dan Listrik tetap setelah halaman dibuka ulang |
+| C5 | Lulus: nominal pas, tercatat otomatis dan tertaut (25 Okt masuk Recorded) |
+| C6 | Lulus: nominal beda, kotak masuk "Recurring unclear", tidak tertaut |
+| C7 | Lulus: rutin kira-kira, kotak masuk, saran "Matches recurring Listrik · 27 Okt" |
+| C8 | Sebagian: kotak masuk dan tidak tertaut, tetapi badge "May already be recorded" (F23-2) |
+| D1 | Lulus: sakelar "Save notification samples" mati secara bawaan |
+| D2 | Lulus: dialog pengungkapan (apa yang disimpan, 7 hari, OTP tidak pernah, tidak ke server) |
+| D3 | Lulus dengan catatan: daftar "Recent notifications" terbaru di atas setelah halaman dibuka ulang (F23-5) |
+| D4 | Lulus: notifikasi OTP **tidak** tersimpan (diperiksa langsung di penyimpanan native) |
+| D5 | Lulus: notifikasi tanpa angka tidak tersimpan |
+| D7 | Lulus: lembar frasa (kata berangka tidak ditawarkan), "diskon" masuk filter dan tersimpan ke konfigurasi native setelah Save |
+| D10 | Lulus: sakelar dimatikan, `saveSamples:false` dan kunci `samples` terhapus (dalam hitungan detik; terlihat lag emulator) |
+| E1 | Lulus (tercakup A5) |
+| E7 | Lulus |
+| A3, A7, A11, A12, B3–B7, B9, C3, C4, C9–C15, D6, D8, D9, D11–D16, E2–E6 | **Tidak diuji** (di luar fokus alur inti; sebagian butuh pembuat pola lewat UI, jam perangkat, atau perangkat lain) |
+
+### Ringkasan
 
 | Ringkasan | Jumlah |
 |---|---|
-| Lulus | |
-| Gagal S1 / S2 / S3 | |
-| Diblokir | |
+| Lulus | 26 baris (A1, A2, A4, A5, A6, A8, A9, A10, B1, B2, B8, C1, C2, C5, C6, C7, D1, D2, D3, D4, D5, D7, D10, E1, E7, plus build/test otomatis) |
+| Sebagian | 1 (C8) |
+| Gagal S1 / S2 / S3 | **0 / 0 / 5** |
+| Tidak diuji | sisanya |
+
+### Temuan
+
+| ID | Langkah | Sev | Ringkas |
+|---|---|---|---|
+| F23-1 | A9, A10 | S3 | Alasan kotak masuk "Type unclear" untuk transfer yang tujuannya tak dikenal atau sama dengan asal. Harapan: alasan dompet. Hasil transfer (tidak tercatat) sudah benar. |
+| F23-2 | C8 | S3 / keputusan pemilik | Notifikasi cocok pola terikat tanpa kemunculan terbuka berbadge "May already be recorded" (duplikat dideteksi lebih dulu), bukan badge rutin belum pasti. |
+| F23-3 | analyze | S3 | 1 info di berkas uji baru; rencana menyatakan bersih. |
+| F23-4 | Plan › Recurring | S3 / belum pasti | Daftar rutin sempat menampilkan Netflix 25 Okt "Later" saat rincian rutinnya sudah mencatatnya Recorded. Mungkin lag emulator; ulangi di perangkat nyata. |
+| F23-5 | D2, D3 | S3 | Tepat setelah sakelar contoh dinyalakan (dan setelah menyetujui dialog), sakelar masih tampil **mati** dan "Recent notifications" tidak muncul walau penyimpanan sudah menyala; baru benar setelah halaman dibuka ulang. Pengguna bisa mengira gagal dan mengulang. |
+| F23-6 | C1 | S3 / keputusan pemilik | Pemilih "Bind to a recurring item" untuk pola pengeluaran (Netflix) menawarkan rutin **Gaji (pemasukan)**. Belum ada aturan tertulis bahwa jenis harus sama; usul: saring daftar menurut jenis pola. |
+
+Catatan: teks pola harus berawalan judul notifikasi ("Jago …") karena yang dicocokkan adalah "judul\nisi". Perilakunya benar, namun membingungkan bila pola diketik tangan; pembuat pola di UI membuatnya otomatis. Pengamatan Fase 22 yang masih ada: halaman "Data dipulihkan" tetap meminta izin notifikasi walau sudah aktif.
+
+### Rekomendasi
+
+**Layak digabung dengan catatan.** Alur inti lulus tanpa temuan S1 atau S2: dompet dipilih benar atau tidak ditebak (R1, R2), transfer tidak pernah menjadi pemasukan atau pengeluaran, penautan rutin hanya bila pasti (R3), dan contoh notifikasi tidak menyimpan OTP atau teks tanpa angka serta terhapus saat dimatikan (R4). Sebelum rilis publik: (1) putuskan F23-2 dan F23-6; (2) perbaiki F23-5; (3) perbarui Keamanan Data Play dan kebijakan privasi untuk contoh notifikasi (sudah tercatat sebagai keterbatasan); (4) uji layar otomatis untuk Aturan dompet, Ikat ke rutin, dan Contoh notifikasi masih belum ada; (5) uji baris yang ditandai "tidak diuji" saat verifikasi perangkat nyata.

@@ -86,7 +86,7 @@ void main() {
 
     expect(find.text(t.discovery.notification.button), findsOneWidget);
     expect(find.text(t.notificationCapture.accountEntryBody), findsOneWidget);
-    expect(find.byKey(const ValueKey('inbox-card-manage')), findsNothing);
+    expect(find.byKey(const ValueKey('inbox-card-head')), findsNothing);
 
     await tester.tap(action);
     await tester.pumpAndSettle();
@@ -124,18 +124,18 @@ void main() {
     expect(find.text(t.notificationCapture.settingsTitle), findsWidgets);
   });
 
-  testWidgets('aktif tanpa yang menunggu: jumlah aplikasi, Kelola; tanpa Cek; latar tenang', (tester) async {
+  testWidgets('aktif tanpa yang menunggu: jumlah aplikasi, kepala kartu membuka setelan; tanpa Cek; latar tenang', (tester) async {
     statuses.status[DiscoveredFeature.notification] = const FeatureStatus(FeatureState.active, activeCount: 2);
     await pumpCard(tester);
 
     expect(find.text(t.discovery.notification.inboxTitle), findsOneWidget);
     expect(find.text(t.discovery.notification.activeApps(n: 2)), findsOneWidget);
     expect(action, findsNothing);
-    expect(find.byKey(const ValueKey('inbox-card-manage')), findsOneWidget);
+    expect(find.byKey(const ValueKey('inbox-card-head')), findsOneWidget);
     final background = tester.widget<Material>(find.descendant(of: card, matching: find.byType(Material)).first).color;
     expect(background, isNot(PixelTheme.light.extension<AppColors>()!.warningSoft));
 
-    await tester.tap(find.byKey(const ValueKey('inbox-card-manage')));
+    await tester.tap(find.byKey(const ValueKey('inbox-card-head')));
     await tester.pumpAndSettle();
     expect(find.text(t.notificationCapture.settingsTitle), findsWidgets);
   });

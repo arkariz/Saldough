@@ -67,4 +67,38 @@ void main() {
       isFalse,
     );
   });
+
+  testWidgets('Atur lebih lanjut: ketukan di tepi baris, bukan hanya di teksnya, membuka pengaturan (QA Q1)', (
+    tester,
+  ) async {
+    RecurringPattern? value = const RecurringPattern();
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: PixelTheme.light,
+        home: Scaffold(
+          body: SingleChildScrollView(
+            child: StatefulBuilder(
+              builder: (context, setState) => RecordRepeatField(
+                value: value,
+                date: DateTime(2026, 10, 5),
+                kind: TransactionKind.expense,
+                onChanged: (next) => setState(() => value = next),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.tap(find.byKey(const ValueKey('record-repeat')));
+    await tester.pumpAndSettle();
+
+    final more = find.byKey(const ValueKey('repeat-more'));
+    final rect = tester.getRect(more);
+    final label = tester.getRect(find.text(t.record.repeat.moreAction));
+    expect(rect.width, greaterThan(label.width * 1.5), reason: 'selebar baris, bukan seukuran teks');
+    await tester.tapAt(Offset(rect.left + 12, rect.center.dy));
+    await tester.pumpAndSettle();
+
+    expect(more, findsNothing, reason: 'pengaturan lanjutan terbuka menggantikan tombol');
+  });
 }

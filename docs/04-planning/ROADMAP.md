@@ -112,12 +112,12 @@ sejak …?" (tanpa streak, KT-R13). Paling langsung menjawab ukuran keberhasilan
 | B-29 | Penyamaran notifikasi Android 15 | Uji di perangkat Android 15 dengan notifikasi bank nyata |
 | B-41 + B-44 + B-68 | Fondasi Plus (billing, hak, paywall, gerbang fitur lama), **Penjaga + Ringkasan Senin**, dan **Titik terendah sebelum gajian**; angka Aman dipakai hari ini gratis di Rencana (B-69). Plus hanya untuk penguji | ADR monetisasi (semua KT-P diputuskan 18 Okt 2026) |
 | B-45, B-46 + B-70, B-41 | Catat dari foto, Bagaimana kalau dan **Cek sebelum beli**, reverse trial: **Plus mulai dijual** dengan judul tiga janji | B-44 selesai; Blaze (T-11.8) dan Keamanan Data untuk B-45 |
+| B-7 + B-60 | **Sinkronisasi opsional** lalu **Dompet Bersama / Plus Keluarga** (pemilik memutuskan bersaing di sini, KT-P13, 23 Okt 2026); yang tidak memakainya tetap tanpa akun dengan data di ponsel | Sesudah Plus dijual; ADR sinkronisasi, jawaban KT-2, wajib ADR-024 §3.3 |
 
 ### Later: butuh keputusan atau bukti dulu
 
 | Butir | Isi | Kenapa menunggu |
 |---|---|---|
-| B-7 | Sinkronisasi data keuangan ke server | Proyek paling besar; butuh keputusan produk, ADR, dan jawaban KT-2; wajib mematuhi ADR-024 §3.3 |
 | B-15 | Gemma lokal untuk Catat lewat Suara | Ditunda 30 Sep 2026; pemilik menentukan kapan |
 | B-28 | Sisa R3 otomasi (kenaikan harga dari notifikasi, rutin menganggur) | Tunggu pemakaian R3 nyata |
 | B-30 | Horizon perkiraan sampai 12 bulan (KT-R8) | R2 memakai +2 tetap; tunggu kebutuhan nyata |
@@ -134,7 +134,7 @@ sejak …?" (tanpa streak, KT-R13). Paling langsung menjawab ukuran keberhasilan
 | B-79 | Dompet titipan (gratis) | ADR domain bersama utang-piutang (B-48) |
 | B-77, B-78 | Impor mutasi di ponsel, Tanya Tanuki privat | Sesudah pilar utama terukur; B-78 bersama B-15 dan sesudah B-52 |
 | B-81, B-82 | Kamar Tanuki dan Buku Stempel (gamifikasi tanpa streak) | Pemilik menyerahkan aset piksel; diukur dengan uji A/B Remote Config |
-| B-57–B-62 | Patungan dari struk, kartu kredit/paylater sebagai dompet tagihan, kekayaan bersih, Dompet Bersama/Plus Keluarga (butuh B-7), rapor kuartal freelance dan Tanya Tanuki R2, catat dari email | Sesudah pilar Plus terukur; urutan di FREEMIUM_PAYWALL §13.5 |
+| B-57–B-59, B-61, B-62 | Patungan dari struk, kartu kredit/paylater sebagai dompet tagihan, kekayaan bersih, rapor kuartal freelance dan Tanya Tanuki R2, catat dari email | Sesudah pilar Plus terukur; urutan di FREEMIUM_PAYWALL §13.5 |
 
 ### Jalur Plus (urutan disetujui pemilik 18 Okt 2026, KT-P9; tiga janji dan fitur baru 23 Okt 2026)
 
@@ -159,7 +159,8 @@ F. Musiman                B-53 Rapor Tahunan (Des 2027), B-54 Rekap SPT (Jan 202
 
 Kapan saja: B-55 widget, B-56 kosmetik, B-81/B-82 gamifikasi (aset).
 Domain gratis: B-79 dompet titipan bersama B-48.
-Sesudahnya: B-57–B-62, B-77 impor mutasi, B-78 Tanya Tanuki privat, B-7, B-15.
+G. Bersama (KT-P13)       B-7 sinkronisasi opsional ─► B-60 Dompet Bersama / Plus Keluarga
+Sesudahnya: B-57–B-59, B-61, B-62, B-77 impor mutasi, B-78 Tanya Tanuki privat, B-15.
 ```
 
 Prinsipnya: kepercayaan sebelum menagih; Plus baru dijual bila tiga pilar

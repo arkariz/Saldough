@@ -158,7 +158,7 @@ otomasi dan bukan pencatatan:
 | **Mencatat inti** | CATAT lengkap, kalkulator, kategori sendiri, suara dengan parser aturan, Riwayat, Dompet, Beranda, tanpa batas | — (sama) |
 | **Anggaran, Rutin, Rencana** | Tanpa batas: anggaran, pos, 1 template, rutin dan pengingat, kartu Menunggu, catat satu ketuk, total langganan, Bulan ini, uang nganggur, perkiraan +2 bulan | Template tanpa batas; **Otomasi rutin R3** (Fase 17): catat otomatis rutin bernominal tetap, label belum terlihat di notifikasi, kenaikan harga dari notifikasi, rutin menganggur, saran "sepertinya rutin" |
 | **Analisis** | 6 periode terakhir (seluruh R1) | Riwayat penuh, tren 12 bulan, tampilan tahun, tren saldo |
-| **① Tanuki Mencatat** | Notifikasi 1 aplikasi (tinjau semua); 30 tafsir cerdas; **cicip 5 catat dari foto** per periode | **Catat dari foto** (struk, bukti transfer, tangkapan layar QRIS/e-wallet) tanpa kuota; notifikasi semua aplikasi + tingkat otomatis + pola sendiri; rutin tercatat otomatis (R3); tafsir tanpa kuota |
+| **① Tanuki Mencatat** | Notifikasi 1 aplikasi (tinjau semua); **30 tafsir cerdas per periode, dipakai bersama untuk foto struk** (KT-P14) | **Catat dari foto** (struk, bukti transfer, tangkapan layar QRIS/e-wallet) tanpa kuota; notifikasi semua aplikasi + tingkat otomatis + pola sendiri; rutin tercatat otomatis (R3); tafsir tanpa kuota |
 | **② Tanuki Berjaga** | **Cicip 1 peringatan** per periode | **Penjaga**: prediksi anggaran habis, uang nganggur menipis, pengeluaran tak biasa, tagihan besar minggu depan, langganan naik/menganggur; **Ringkasan Senin** |
 | **③ Tanya Tanuki** | **Cicip 3 pertanyaan** per periode | Tanya jawab bahasa sehari-hari tentang uangmu sendiri, ketik atau suara |
 | **④ Tanuki Merencanakan** | — | **Bagaimana kalau** (simulasi), **Target** dengan perkiraan tanggal tercapai, perkiraan 12 bulan |
@@ -383,7 +383,7 @@ dari awal uji coba; "H-n" dihitung mundur dari hari berakhir.
 | Hari 5–10 | Ajakan "Bagaimana kalau" saat membuka perkiraan di Rencana, atau membuat Target | ④ |
 | Tagihan rutin pertama yang jatuh tempo | Tercatat otomatis bila disetel; muncul di daftar Tercatat otomatis | ① |
 | **H-3** | **Rekap nilai:** "Sejak 1 Nov: 14 catatan dari foto dan notifikasi, 3 tagihan rutin tercatat sendiri, 4 peringatan Penjaga, 6 pertanyaan terjawab." Angka dari pemakaian lokal | semua |
-| **Hari pertama periode berikutnya** | **Rapor bulanan bercerita** untuk periode uji coba (sesudah B-49 ada), dibuka sebagai momen Plus terakhir; sesudah ditutup, **layar turun ke Gratis**: yang tetap, yang berubah (dengan angka pemakaiannya), dan tawaran **Harga Pendiri** 48 jam. "Lanjut dengan Gratis" sama jelasnya | ⑤ |
+| **Hari pertama periode berikutnya** | **Rapor bulanan bercerita** untuk periode uji coba (sesudah B-49 ada), dibuka sebagai momen Plus terakhir; sesudah ditutup, **layar turun ke Gratis**: yang tetap, yang berubah (dengan angka pemakaiannya), dan tawaran **harga perkenalan tahun pertama** 48 jam (KT-P12). "Lanjut dengan Gratis" sama jelasnya | ⑤ |
 
 Plus tetap aktif sampai rapor periode itu dibuka atau paling lama 1 hari
 sesudah periode berakhir, supaya rapor pertama tidak terpotong. Sebelum
@@ -425,7 +425,7 @@ itu diam 30 hari; selalu memakai angka milik pengguna; nada mengikuti
 
 | # | Pemicu | Contoh kalimat | Pilar |
 |---|---|---|---|
-| P1 | Jatah cicip catat dari foto habis | "5 foto bulan ini sudah jadi catatan. Dengan Plus, foto berapa pun." | ① |
+| P1 | Kuota tafsir cerdas gratis (termasuk foto) habis | "30 tafsir bulan ini sudah terpakai. Dengan Plus, foto dan tafsir tanpa kuota." | ① |
 | P2 | Memilih aplikasi sumber notifikasi kedua | "Bank utamamu sudah tercatat dari notifikasi. Tambah GoPay dan aplikasi lain dengan Plus." | ① |
 | P3 | Sesudah "Contoh Penjaga" bulanan | "Peringatan ini datang 9 hari sebelum anggaran Makan habis. Plus memberi tahu tiap kali ada yang seperti ini." | ② |
 | P4 | Jatah Tanya Tanuki habis, atau pertanyaan ke-4 diketik | Pertanyaannya tetap tersimpan: "Simpan pertanyaan ini dan jawab sekarang dengan Plus." | ③ |
@@ -482,7 +482,7 @@ sedikit di atas kisaran itu.
 |---|---|---|
 | Bulanan | **Rp25.000** | |
 | Tahunan | **Rp179.000** (setara Rp14.900/bulan, 40% di bawah 12 × Bulanan) | Terpilih bawaan |
-| Harga Pendiri | **Rp129.000/tahun**, terkunci selama tetap berlangganan | Untuk pembeli 90 hari pertama sesudah rilis publik, dan penawaran 48 jam sesudah uji coba berakhir. Mengganti paket seumur hidup |
+| Harga Pendiri | **Rp129.000/tahun**, terkunci selama tetap berlangganan | Untuk pembeli 90 hari pertama sesudah rilis publik. Penawaran 48 jam sesudah uji coba memakai harga perkenalan tahun pertama Rp129.000 lalu Rp179.000 (KT-P12, 23 Okt 2026). Mengganti paket seumur hidup |
 | Penguji closed testing | Plus gratis 12 bulan, lalu Harga Pendiri | Terima kasih, dan sumber ulasan pertama (KT-P5) |
 
 **Tanpa paket seumur hidup:** pilar ①③ memakai Gemini, jadi pembeli seumur
@@ -745,12 +745,17 @@ tanpa streak, poin, level, atau skor (KT-R13, glosarium); semua bisa
 dimatikan; yang dibagikan tidak memuat nominal. Gamifikasi terutama alat
 retensi versi gratis; Plus menjual kosmetiknya (B-56) dan Rapor lengkap.
 
-### 16.3 Masih terbuka
+### 16.3 Keputusan lanjutan (23 Okt 2026, KT-P12–P18)
 
-Dicatat sebagai KT-P12–P18 di "Keputusan terbuka" TASK_LIST: penawaran
-akhir uji coba, posisi terhadap dompet bersama, kuota foto struk gratis,
-Brankas terenkripsi sebagai pengganti cadangan otomatis, Tebak saldo,
-Tipe tanuki di Rapor, serta program Ajak teman dan afiliasi kreator.
+| KT | Keputusan | Akibat |
+|---|---|---|
+| KT-P12 | Penawaran 48 jam sesudah uji coba memakai **harga perkenalan tahun pertama** Rp129.000, lalu Rp179.000 | Harga Pendiri yang terkunci selamanya hanya untuk pembeli 90 hari pertama sesudah rilis publik (§11.2) |
+| KT-P13 | **Bersaing di dompet bersama lewat sinkronisasi** | B-7 (sinkronisasi) dan B-60 (Dompet Bersama, Plus Keluarga) naik prioritas sesudah Plus dijual; sinkronisasi **opsional**, pengguna yang tidak memakainya tetap tanpa akun dengan data di ponsel, sehingga janji 3 tetap benar; wajib ADR-024 §3.3 dan KT-2 |
+| KT-P14 | **Foto struk berbagi kuota 30 tafsir cerdas per periode** di versi gratis | Jatah terpisah 5 foto dihapus; biaya Gemini terburuk ±Rp740 per pengguna gratis per bulan bila semua kuota dipakai untuk foto |
+| KT-P15 | **Cadangan otomatis biasa** (B-51), bukan Brankas terenkripsi | Janji 3 memakai "cadangan otomatis ke Drive milikmu" |
+| KT-P16 | **Tunda** Cocokkan saldo dan Tebak saldo | Fitur cocokkan saldo belum ada di aplikasi; ditinjau lagi setelah Buku Stempel (B-82) berjalan |
+| KT-P17 | **Tipe tanuki ikut desain Rapor** | Masuk B-49 dan B-53; menggambarkan cara mencatat, tidak menilai belanja |
+| KT-P18 | **Ajak teman dan afiliasi kreator ditunda** | Ditinjau di gerbang 90 hari sesudah Plus dijual |
 
 ## 17. Sumber
 

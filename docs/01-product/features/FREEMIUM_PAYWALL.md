@@ -1,6 +1,6 @@
 # Freemium dan paywall: Gratis untuk mencatat, Plus agar Tanuki bekerja untukmu
 
-**Tanggal:** 18 Oktober 2026 (revisi 2, hari yang sama).
+**Tanggal:** 18 Oktober 2026 (revisi 2, hari yang sama); revisi 3 23 Oktober 2026 (§16).
 **Status:** **Diputuskan pemilik 18 Okt 2026** (semua KT-P1–P11, §15).
 Belum ada kode. Uji coba berlaku sampai akhir periode keuangan pertama
 yang penuh (KT-P2, §8).
@@ -481,7 +481,7 @@ sedikit di atas kisaran itu.
 | Paket | Harga | Catatan |
 |---|---|---|
 | Bulanan | **Rp25.000** | |
-| Tahunan | **Rp179.000** (≈ Rp14.900/bln, hemat 40%) | Terpilih bawaan |
+| Tahunan | **Rp179.000** (setara Rp14.900/bulan, 40% di bawah 12 × Bulanan) | Terpilih bawaan |
 | Harga Pendiri | **Rp129.000/tahun**, terkunci selama tetap berlangganan | Untuk pembeli 90 hari pertama sesudah rilis publik, dan penawaran 48 jam sesudah uji coba berakhir. Mengganti paket seumur hidup |
 | Penguji closed testing | Plus gratis 12 bulan, lalu Harga Pendiri | Terima kasih, dan sumber ulasan pertama (KT-P5) |
 
@@ -709,7 +709,50 @@ berakhir uji coba, gerbang R3) ditulis di ADR monetisasi sebelum kode
 (B-41). Angka harga, jatah cicip, dan batas wajar tetap hipotesis yang
 disetel lewat Remote Config dan eksperimen harga Play sesudah ada data.
 
-## 16. Sumber
+## 16. Revisi 3: pesaing lokal, susunan Plus, dan gamifikasi (23 Okt 2026)
+
+Riset dan rancangan lengkapnya ada di laporan bisnis pemilik
+[Tanukonomy Plus: Rencana Bisnis dan Spesifikasi Kerja Paywall](https://claude.ai/artifact/SKsV87e4f7hX8h58Qvv7G5)
+(bagian Pesaing lokal, Eksplorasi fitur Plus, Susunan Plus, Riset
+gamifikasi, Gamifikasi ala Tanukonomy). Bagian ini hanya mencatat
+keputusannya supaya antrean di TASK_LIST punya rujukan di repo.
+
+### 16.1 Temuan yang mengubah arah
+
+Enam pesaing lokal yang dibuka langsung 23 Okt 2026 (Kazz, Finansialku,
+DompetKu, Finku, Sribuu, MELD) sudah punya tanya jawab AI, foto struk,
+tangkap notifikasi, simulasi cicilan, patungan, dompet bersama, dan
+periode berbasis gajian; sebagian gratis. Yang tidak ditemukan: fitur
+pekerja lepas (kerja selesai vs uang diterima, invoice, Rekap SPT),
+peringatan sebelum anggaran habis, uang nganggur yang memperhitungkan
+rutin, dan pemakaian penuh tanpa akun. Harga tahunan lokal berkisar
+Rp100.000 (MELD, belum resmi) sampai Rp350.000 (Finansialku), sehingga
+Rp179.000 berada di tengah.
+
+### 16.2 Keputusan pemilik (23 Okt 2026)
+
+| Keputusan | Isi |
+|---|---|
+| Tiga janji Plus | Judul paywall dan materi pemasaran memakai urutan: **1. Tenang sampai gajian**, **2. Penghasilan tak tetap jadi teratur**, **3. Datamu aman, keluargamu tahu**. Foto struk, Tanya Tanuki, notifikasi otomatis, otomasi R3, dan Analisis penuh tetap Plus sebagai pelengkap |
+| Fitur Plus baru | Titik terendah sebelum gajian (B-68), widget dan sapaan Aman dipakai hari ini (B-69), Cek sebelum beli (B-70), Gaji untuk diri sendiri (B-71), Sisihkan pajak per pembayaran (B-72), Ringkasan penghasilan untuk pengajuan kredit (B-73), Peta Uang Keluarga (B-74), Ringkasan untuk pasangan (B-75), Rencana uang tak terduga (B-76), Impor mutasi di ponsel (B-77), Tanya Tanuki privat (B-78) |
+| Fitur gratis baru | Angka Aman dipakai hari ini di Rencana (B-69), Dompet titipan (B-79), perkiraan zakat dari catatan (B-80) |
+| Ringkasan penghasilan | Disebut "rekap catatan pribadi", tidak pernah sebagai dokumen resmi atau pengganti rekening koran |
+| Gamifikasi | Kamar Tanuki (B-81) dan Buku Stempel (B-82) masuk antrean; aset piksel dari pemilik |
+
+Aturan main gamifikasi: yang dirayakan ketepatan dan kemampuan, bukan
+jumlah transaksi atau belanja; tidak ada yang hilang saat pengguna absen;
+tanpa streak, poin, level, atau skor (KT-R13, glosarium); semua bisa
+dimatikan; yang dibagikan tidak memuat nominal. Gamifikasi terutama alat
+retensi versi gratis; Plus menjual kosmetiknya (B-56) dan Rapor lengkap.
+
+### 16.3 Masih terbuka
+
+Dicatat sebagai KT-P12–P18 di "Keputusan terbuka" TASK_LIST: penawaran
+akhir uji coba, posisi terhadap dompet bersama, kuota foto struk gratis,
+Brankas terenkripsi sebagai pengganti cadangan otomatis, Tebak saldo,
+Tipe tanuki di Rapor, serta program Ajak teman dan afiliasi kreator.
+
+## 17. Sumber
 
 - Spendee: [halaman Premium](https://www.spendee.com/premium).
 - Wallet by BudgetBakers: [dukungan BudgetBakers](https://support.budgetbakers.com/hc/en-us/articles/7151349344018),

@@ -5,7 +5,9 @@
 - **Decision ID:** ADR-041
 - **Tanggal:** 2026-10-23
 - **Fase roadmap:** Plus tahap B (B-41, "Fondasi Plus")
-- **Status:** Proposed (revisi 1, 23 Okt 2026: uji coba hanya untuk yang masuk akun dan pengganti untuk uji/pengembangan/tinjauan toko, atas masukan pemilik; keputusan yang masih diminta di §3.11)
+- **Status:** Accepted (pemilik, 2026-10-23: uji coba wajib masuk akun dan
+  pengganti paket untuk uji/pengembangan/tinjauan toko atas masukan pemilik;
+  P-8, P-9, P-11 disetujui eksplisit, rekomendasi lain di §3.11 berlaku)
 - **Cakupan:** Modul baru `core/foundation/entitlement/`, fitur baru
   `features/premium/` (+ adaptor RevenueCat), glue akar komposisi
   (`lib/app/premium/`, `lib/app/di/root_module.dart`), gerbang di fitur yang
@@ -396,10 +398,10 @@ uji, pengembangan, dan tinjauan toko (§3.10).
 | P-5 | `plus_fair_use_*` memakai angka dokumen | Pakai bawaan dokumen; ukur biaya nyata sejak Plus dijual. |
 | P-6 | Kunci SDK RevenueCat lewat `--dart-define` | Setuju; pemilik memberi kunci ke CI. |
 | P-7 | Akun RevenueCat, langganan dan base plan di Play Console, offering, entitlement promosi peninjau dan penguji | Pekerjaan pemilik; ADR ini hanya memberi nama objek (§3.5, §3.10). |
-| P-8 | Jatah cicip Gratis (3 tanya, 1 Penjaga, 30 tafsir cerdas) tanpa akun | Tetap boleh tanpa akun (itu fitur Gratis, bukan "mencoba premium"); hanya uji coba penuh dan hadiah penguji yang wajib akun. Konfirmasi: bila jatah cicip juga wajib akun, ubah `can()` dan hitung jatah per `uid`. |
-| P-9 | Apakah **membeli** Plus juga wajib masuk akun | Rekomendasi: tidak wajib (kurangi gesekan; hak terikat ke akun Google Play dan bisa dipulihkan), tetapi paywall menawarkan masuk agar hak ikut ke perangkat lain. Bila wajib, pembelian tidak mungkin di build tanpa akun. |
+| P-8 | Jatah cicip Gratis (3 tanya, 1 Penjaga, 30 tafsir cerdas) tanpa akun | **Disetujui:** tetap boleh tanpa akun (itu fitur Gratis, bukan "mencoba premium"); hanya uji coba penuh dan hadiah penguji yang wajib akun. Konfirmasi: bila jatah cicip juga wajib akun, ubah `can()` dan hitung jatah per `uid`. |
+| P-9 | Apakah **membeli** Plus juga wajib masuk akun | **Disetujui:** tidak wajib (kurangi gesekan; hak terikat ke akun Google Play dan bisa dipulihkan), tetapi paywall menawarkan masuk agar hak ikut ke perangkat lain. Bila wajib, pembelian tidak mungkin di build tanpa akun. |
 | P-10 | Pengganti uji: menu pengembang + `PLAN_OVERRIDE` hanya di build non-rilis; penguji dan peninjau lewat entitlement promosi, **tanpa sakelar di build rilis** | Rekomendasi: setuju (§3.10). |
-| P-11 | `trial_not_before` = tanggal rilis publik Plus (Remote Config) | Setuju; diisi pemilik sebelum Plus dijual. |
+| P-11 | `trial_not_before` = tanggal rilis publik Plus (Remote Config) | **Disetujui:** diisi pemilik sebelum Plus dijual. |
 
 ### 3.12 Peristiwa Analytics (ADR-023: tanpa nominal, nama, atau isi)
 

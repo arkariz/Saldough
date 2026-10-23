@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/core/utils/formatters/count_formatter.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/features/data_portability/domain/backup_gateway.dart';
 import 'package:saldough/features/data_portability/domain/backup_summary.dart';
@@ -79,20 +80,20 @@ class BackupSheet extends StatelessWidget {
 
   /// "142 transaksi · 4 dompet".
   static String _countsText(BackupSummary summary) => t.dataPortability.backupFileMeta(
-    transactions: t.dataPortability.countTransactions(n: summary.transactions),
-    wallets: t.dataPortability.countWallets(n: summary.wallets),
+    transactions: t.dataPortability.countTransactions(n: summary.transactions, count: CountFormatter.format(summary.transactions)),
+    wallets: t.dataPortability.countWallets(n: summary.wallets, count: CountFormatter.format(summary.wallets)),
   );
 
   /// "142 transaksi, 4 dompet, sejak 3 Jun 2026".
   static String summaryText(BackupSummary summary) {
-    final wallets = t.dataPortability.countWallets(n: summary.wallets);
+    final wallets = t.dataPortability.countWallets(n: summary.wallets, count: CountFormatter.format(summary.wallets));
     final first = summary.firstDate;
     if (summary.transactions == 0 || first == null) {
       return t.dataPortability.backupSummaryNoTransactions(wallets: wallets);
     }
     final since = DateTime.parse(first);
     return t.dataPortability.backupSummary(
-      transactions: t.dataPortability.countTransactions(n: summary.transactions),
+      transactions: t.dataPortability.countTransactions(n: summary.transactions, count: CountFormatter.format(summary.transactions)),
       wallets: wallets,
       since: CycleMonthFormatter.noBreak(CycleMonthFormatter.formatDateShort(since)),
     );

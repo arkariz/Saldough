@@ -773,16 +773,16 @@ class Translations$dataPortability$id {
 	/// id: 'Untuk aplikasi lain. Hanya transaksi.'
 	String get csvHelp => 'Untuk aplikasi lain. Hanya transaksi.';
 
-	/// id: '(one) {${n} transaksi, $first – $last} (other) {${n} transaksi, $first – $last}'
-	String exportSummary({required num n, required Object first, required Object last}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n,
-		one: '${n} transaksi, ${first} – ${last}',
-		other: '${n} transaksi, ${first} – ${last}',
+	/// id: '(one) {${count} transaksi, $first – $last} (other) {${count} transaksi, $first – $last}'
+	String exportSummary({required num n, required Object count, required Object first, required Object last}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n,
+		one: '${count} transaksi, ${first} – ${last}',
+		other: '${count} transaksi, ${first} – ${last}',
 	);
 
-	/// id: '(one) {${n} transaksi, $date} (other) {${n} transaksi, $date}'
-	String exportSummaryDay({required num n, required Object date}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n,
-		one: '${n} transaksi, ${date}',
-		other: '${n} transaksi, ${date}',
+	/// id: '(one) {${count} transaksi, $date} (other) {${count} transaksi, $date}'
+	String exportSummaryDay({required num n, required Object count, required Object date}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n,
+		one: '${count} transaksi, ${date}',
+		other: '${count} transaksi, ${date}',
 	);
 
 	/// id: 'Belum ada transaksi untuk diekspor.'
@@ -824,16 +824,16 @@ class Translations$dataPortability$id {
 	/// id: 'ekspor'
 	String get fileStem => 'ekspor';
 
-	/// id: '(one) {${n} transaksi} (other) {${n} transaksi}'
-	String countTransactions({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n,
-		one: '${n} transaksi',
-		other: '${n} transaksi',
+	/// id: '(one) {${count} transaksi} (other) {${count} transaksi}'
+	String countTransactions({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n,
+		one: '${count} transaksi',
+		other: '${count} transaksi',
 	);
 
-	/// id: '(one) {${n} dompet} (other) {${n} dompet}'
-	String countWallets({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n,
-		one: '${n} dompet',
-		other: '${n} dompet',
+	/// id: '(one) {${count} dompet} (other) {${count} dompet}'
+	String countWallets({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n,
+		one: '${count} dompet',
+		other: '${count} dompet',
 	);
 
 	/// id: 'Cadangkan sekarang'
@@ -942,8 +942,8 @@ class Translations$dataPortability$id {
 		other: '${n} draf dari notifikasi yang belum ditinjau tidak ikut.',
 	);
 
-	/// id: 'Cadangan ini lebih lama dari data di ponsel ini; catatan sesudah $date akan hilang dari ponsel ini.'
-	String restoreOlder({required Object date}) => 'Cadangan ini lebih lama dari data di ponsel ini; catatan sesudah ${date} akan hilang dari ponsel ini.';
+	/// id: 'Cadangan ini dibuat $date, lebih lama dari data di ponsel ini. Catatan yang kamu buat sesudahnya akan hilang dari ponsel ini.'
+	String restoreOlder({required Object date}) => 'Cadangan ini dibuat ${date}, lebih lama dari data di ponsel ini. Catatan yang kamu buat sesudahnya akan hilang dari ponsel ini.';
 
 	/// id: 'Lanjut'
 	String get restoreNext => 'Lanjut';
@@ -5005,8 +5005,8 @@ extension on Translations {
 			'dataPortability.formatCsv' => 'CSV',
 			'dataPortability.xlsxHelp' => 'Terbuka benar di Excel dan Google Sheets. Memuat lembar Dompet.',
 			'dataPortability.csvHelp' => 'Untuk aplikasi lain. Hanya transaksi.',
-			'dataPortability.exportSummary' => ({required num n, required Object first, required Object last}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n, one: '${n} transaksi, ${first} – ${last}', other: '${n} transaksi, ${first} – ${last}', ), 
-			'dataPortability.exportSummaryDay' => ({required num n, required Object date}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n, one: '${n} transaksi, ${date}', other: '${n} transaksi, ${date}', ), 
+			'dataPortability.exportSummary' => ({required num n, required Object count, required Object first, required Object last}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n, one: '${count} transaksi, ${first} – ${last}', other: '${count} transaksi, ${first} – ${last}', ), 
+			'dataPortability.exportSummaryDay' => ({required num n, required Object count, required Object date}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n, one: '${count} transaksi, ${date}', other: '${count} transaksi, ${date}', ), 
 			'dataPortability.exportEmpty' => 'Belum ada transaksi untuk diekspor.',
 			'dataPortability.exportScope' => 'Berisi seluruh transaksimu dan saldo dompet saat ini. Saring sendiri bagian yang kamu perlukan di spreadsheet.',
 			'dataPortability.exportAction' => 'Ekspor',
@@ -5019,8 +5019,8 @@ extension on Translations {
 			'dataPortability.share' => 'Bagikan',
 			'dataPortability.fileNotSaved' => 'Berkas belum disimpan. Kamu masih bisa menyimpan atau membagikannya.',
 			'dataPortability.fileStem' => 'ekspor',
-			'dataPortability.countTransactions' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n, one: '${n} transaksi', other: '${n} transaksi', ), 
-			'dataPortability.countWallets' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n, one: '${n} dompet', other: '${n} dompet', ), 
+			'dataPortability.countTransactions' => ({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n, one: '${count} transaksi', other: '${count} transaksi', ), 
+			'dataPortability.countWallets' => ({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n, one: '${count} dompet', other: '${count} dompet', ), 
 			'dataPortability.backupTitle' => 'Cadangkan sekarang',
 			'dataPortability.backupLast' => ({required Object date}) => 'Cadangan terakhir: ${date}',
 			'dataPortability.backupNever' => 'Belum pernah dicadangkan',
@@ -5059,7 +5059,7 @@ extension on Translations {
 			'dataPortability.restoreUnchanged' => 'Bahasa dan tampilan di ponsel ini tidak berubah.',
 			'dataPortability.changeCurrency' => ({required Object code}) => 'Mata uang akan menjadi ${code}',
 			'dataPortability.changeDrafts' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n, one: '${n} draf dari notifikasi yang belum ditinjau tidak ikut.', other: '${n} draf dari notifikasi yang belum ditinjau tidak ikut.', ), 
-			'dataPortability.restoreOlder' => ({required Object date}) => 'Cadangan ini lebih lama dari data di ponsel ini; catatan sesudah ${date} akan hilang dari ponsel ini.',
+			'dataPortability.restoreOlder' => ({required Object date}) => 'Cadangan ini dibuat ${date}, lebih lama dari data di ponsel ini. Catatan yang kamu buat sesudahnya akan hilang dari ponsel ini.',
 			'dataPortability.restoreNext' => 'Lanjut',
 			'dataPortability.restoreConfirmTitle' => 'Ganti semua data di ponsel ini?',
 			'dataPortability.restoreConfirmBody' => 'Semua data di ponsel ini akan diganti dengan isi cadangan. Data yang sekarang disimpan dulu sebagai cadangan pengaman.',

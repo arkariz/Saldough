@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/core/utils/formatters/count_formatter.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/features/data_portability/domain/export_gateway.dart';
 import 'package:saldough/features/data_portability/domain/export_models.dart';
@@ -155,13 +156,14 @@ class _Form extends StatelessWidget {
     final lastText = CycleMonthFormatter.noBreak(CycleMonthFormatter.formatDateShort(last));
     // Semua transaksi di satu hari: satu tanggal saja, bukan "22 Okt – 22 Okt".
     if (first.year == last.year && first.month == last.month && first.day == last.day) {
-      return t.dataPortability.exportSummaryDay(n: preview.count, date: lastText);
+      return t.dataPortability.exportSummaryDay(n: preview.count, count: CountFormatter.format(preview.count), date: lastText);
     }
     final firstText = first.year == last.year
         ? CycleMonthFormatter.formatDayMonth(first)
         : CycleMonthFormatter.formatDateShort(first);
     return t.dataPortability.exportSummary(
       n: preview.count,
+      count: CountFormatter.format(preview.count),
       first: CycleMonthFormatter.noBreak(firstText),
       last: lastText,
     );

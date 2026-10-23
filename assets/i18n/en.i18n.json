@@ -311,12 +311,12 @@
     "xlsxHelp": "Opens correctly in Excel and Google Sheets. Includes a Wallets sheet.",
     "csvHelp": "For other apps. Transactions only.",
     "exportSummary": {
-      "one": "${n} transaction, $first – $last",
-      "other": "${n} transactions, $first – $last"
+      "one": "${count} transaction, $first – $last",
+      "other": "${count} transactions, $first – $last"
     },
     "exportSummaryDay": {
-      "one": "${n} transaction, $date",
-      "other": "${n} transactions, $date"
+      "one": "${count} transaction, $date",
+      "other": "${count} transactions, $date"
     },
     "exportEmpty": "No transactions to export yet.",
     "exportScope": "Includes all your transactions and your current wallet balances. Filter what you need in the spreadsheet.",
@@ -334,12 +334,12 @@
     "fileNotSaved": "The file isn't saved yet. You can still save or share it.",
     "fileStem": "export",
     "countTransactions": {
-      "one": "${n} transaction",
-      "other": "${n} transactions"
+      "one": "${count} transaction",
+      "other": "${count} transactions"
     },
     "countWallets": {
-      "one": "${n} wallet",
-      "other": "${n} wallets"
+      "one": "${count} wallet",
+      "other": "${count} wallets"
     },
     "backupTitle": "Back up now",
     "backupLast": "Last backup: $date",
@@ -376,7 +376,7 @@
       "one": "${n} draft from notifications you haven't reviewed won't be kept.",
       "other": "${n} drafts from notifications you haven't reviewed won't be kept."
     },
-    "restoreOlder": "This backup is older than the data on this phone; records after $date will be gone from this phone.",
+    "restoreOlder": "This backup was made on $date, older than the data on this phone. Records you made after it will be gone from this phone.",
     "restoreNext": "Continue",
     "restoreConfirmTitle": "Replace all data on this phone?",
     "restoreConfirmBody": "All data on this phone will be replaced with the backup. Your current data is saved first as a safety backup.",

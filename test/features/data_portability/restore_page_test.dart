@@ -3,16 +3,19 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:saldough/core/discovery/discovery.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/data_portability/domain/backup_failure_codes.dart';
+import 'package:saldough/features/data_portability/domain/backup_summary.dart';
 import 'package:saldough/features/data_portability/domain/restore_models.dart';
 import 'package:saldough/features/data_portability/presentation/bloc/restore_bloc.dart';
 import 'package:saldough/features/data_portability/presentation/pages/restore_done_page.dart';
 import 'package:saldough/features/data_portability/presentation/pages/restore_page.dart';
 import 'package:state_management/state_management.dart';
 
+import '../../helpers/fake_feature_statuses.dart';
 import '../../helpers/fake_file_transfer.dart';
 import '../../helpers/fake_restore_gateway.dart';
 
@@ -67,6 +70,21 @@ void main() {
     expect(find.byKey(const ValueKey('restore-cancel')), findsOneWidget);
   });
 
+  testWidgets('jumlah besar di pratinjau memakai pemisah ribuan (QA Q5)', (tester) async {
+    gateway.preview = RestorePreview(
+      source: RestoreKind.account,
+      backup: const BackupSummary(transactions: 5008, wallets: 4, firstDate: '2026-06-03', currency: 'IDR'),
+      backupCreatedAt: DateTime(2026, 10, 12, 9),
+      current: const BackupSummary(transactions: 12, wallets: 4, firstDate: '2026-06-03', currency: 'IDR'),
+      isOlderThanCurrent: false,
+      newCurrency: null,
+      lostInboxDrafts: 0,
+    );
+    await pump(tester);
+    expect(find.text('5.008 transaksi'), findsOneWidget);
+    expect(find.text('5008 transaksi'), findsNothing);
+  });
+
   testWidgets('cadangan lebih lama: banner; mata uang berbeda dan draf hilang: bagian Yang akan berubah', (
     tester,
   ) async {
@@ -82,7 +100,8 @@ void main() {
     await pump(tester);
 
     expect(find.byType(AppBanner), findsOneWidget);
-    expect(find.textContaining('12 Okt 2026 akan hilang'), findsOneWidget);
+    expect(find.textContaining('dibuat 12 Okt 2026'), findsOneWidget);
+    expect(find.textContaining('sesudahnya akan hilang'), findsOneWidget, reason: 'tanpa klaim tanggal (QA Q3)');
     expect(find.text(t.dataPortability.restoreChanges), findsOneWidget);
     expect(find.text(t.dataPortability.changeCurrency(code: 'USD')), findsOneWidget);
     expect(find.text(t.dataPortability.changeDrafts(n: 3)), findsOneWidget);
@@ -211,32 +230,42 @@ void main() {
   });
 
   group('RestoreDonePage', () {
-    Future<void> pumpDone(WidgetTester tester, RestoreReport report) async {
+    Future<void> pumpDone(WidgetTester tester, RestoreReport report, {FeatureStatuses? statuses}) async {
       tester.view.physicalSize = const Size(360, 800);
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.reset);
       await tester.pumpWidget(
         MaterialApp(
           theme: PixelTheme.light,
-          home: RestoreDonePage(report: report),
+          home: RestoreDonePage(report: report, statuses: statuses),
         ),
       );
       await tester.pump();
     }
 
-    testWidgets('menyebut tanggal cadangan; catatan izin hanya bila cadangan memuat pengingat atau notifikasi', (
-      tester,
-    ) async {
-      await pumpDone(
-        tester,
-        RestoreReport(
-          kind: RestoreKind.account,
-          backupCreatedAt: DateTime(2026, 10, 12),
-          restoredKeys: const ['settings_recurring_reminders'],
-        ),
-      );
+    final withReminders = RestoreReport(
+      kind: RestoreKind.account,
+      backupCreatedAt: DateTime(2026, 10, 12),
+      restoredKeys: const ['settings_recurring_reminders'],
+    );
+
+    testWidgets('catatan izin tampil bila cadangan memuat pengingat dan izinnya memang belum ada', (tester) async {
+      final statuses = FakeFeatureStatuses()
+        ..status[DiscoveredFeature.reminder] = const FeatureStatus(FeatureState.permissionNeeded);
+      await pumpDone(tester, withReminders, statuses: statuses);
+      await tester.pump();
       expect(find.text(t.dataPortability.restoreDoneTitle(date: '12 Okt 2026')), findsOneWidget);
       expect(find.text(t.dataPortability.restoreDoneNote), findsOneWidget);
+      expect(find.byKey(const ValueKey('restore-home')), findsOneWidget);
+    });
+
+    testWidgets('izin sudah aktif di ponsel ini: tanpa catatan (QA Q2)', (tester) async {
+      final statuses = FakeFeatureStatuses()
+        ..status[DiscoveredFeature.reminder] = const FeatureStatus(FeatureState.active, activeCount: 1)
+        ..status[DiscoveredFeature.notification] = const FeatureStatus(FeatureState.active, activeCount: 1);
+      await pumpDone(tester, withReminders, statuses: statuses);
+      await tester.pump();
+      expect(find.text(t.dataPortability.restoreDoneNote), findsNothing);
       expect(find.byKey(const ValueKey('restore-home')), findsOneWidget);
     });
 

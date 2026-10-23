@@ -4,6 +4,7 @@ import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/core/utils/formatters/count_formatter.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/features/app_update/presentation/navigation/app_update_route_keys.dart';
 import 'package:saldough/features/data_portability/domain/backup_summary.dart';
@@ -192,8 +193,8 @@ class _VsColumn extends StatelessWidget {
     final d = t.dataPortability;
     final first = summary.firstDate;
     final lines = [
-      d.countTransactions(n: summary.transactions),
-      d.countWallets(n: summary.wallets),
+      d.countTransactions(n: summary.transactions, count: CountFormatter.format(summary.transactions)),
+      d.countWallets(n: summary.wallets, count: CountFormatter.format(summary.wallets)),
       if (first != null) d.since(date: CycleMonthFormatter.formatDateShort(DateTime.parse(first))),
       summary.currency ?? 'IDR',
     ];

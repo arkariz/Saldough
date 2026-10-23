@@ -5305,6 +5305,14 @@ onboarding (tautan pulihkan, bersinggungan dengan Fase
       penuh; ekspor dibuka di Excel dan Google Sheets dengan total sama
       dengan aplikasi; Android dan iOS. Hasil di rencana verifikasi Fase 22.
       Memenuhi FR-DAT-001–003.
+      Temuan QA 23 Okt 2026 yang sudah diperbaiki (branch
+      `claude/qa-fase22-poles`): Q1 "Atur lebih lanjut" selebar baris; Q2
+      catatan izin di "Data dipulihkan" hanya bila izin memang belum ada
+      (dibaca dari `FeatureStatuses`); Q3 peringatan cadangan lebih lama
+      tanpa klaim tanggal ("dibuat {tanggal} ... catatan yang kamu buat
+      sesudahnya akan hilang"); Q5 jumlah memakai pemisah ribuan
+      (`CountFormatter`); T1 uji kartu kotak masuk disesuaikan dengan kepala
+      kartu yang bisa diketuk. Q4 (posisi tombol bergeser) dibiarkan.
 
 ## Antrean (belum dijadwalkan)
 

@@ -344,13 +344,13 @@ class _Translations$dataPortability$en extends Translations$dataPortability$id {
 	@override String get formatCsv => 'CSV';
 	@override String get xlsxHelp => 'Opens correctly in Excel and Google Sheets. Includes a Wallets sheet.';
 	@override String get csvHelp => 'For other apps. Transactions only.';
-	@override String exportSummary({required num n, required Object first, required Object last}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
-		one: '${n} transaction, ${first} – ${last}',
-		other: '${n} transactions, ${first} – ${last}',
+	@override String exportSummary({required num n, required Object count, required Object first, required Object last}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
+		one: '${count} transaction, ${first} – ${last}',
+		other: '${count} transactions, ${first} – ${last}',
 	);
-	@override String exportSummaryDay({required num n, required Object date}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
-		one: '${n} transaction, ${date}',
-		other: '${n} transactions, ${date}',
+	@override String exportSummaryDay({required num n, required Object count, required Object date}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
+		one: '${count} transaction, ${date}',
+		other: '${count} transactions, ${date}',
 	);
 	@override String get exportEmpty => 'No transactions to export yet.';
 	@override String get exportScope => 'Includes all your transactions and your current wallet balances. Filter what you need in the spreadsheet.';
@@ -367,13 +367,13 @@ class _Translations$dataPortability$en extends Translations$dataPortability$id {
 	@override String get share => 'Share';
 	@override String get fileNotSaved => 'The file isn\'t saved yet. You can still save or share it.';
 	@override String get fileStem => 'export';
-	@override String countTransactions({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
-		one: '${n} transaction',
-		other: '${n} transactions',
+	@override String countTransactions({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
+		one: '${count} transaction',
+		other: '${count} transactions',
 	);
-	@override String countWallets({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
-		one: '${n} wallet',
-		other: '${n} wallets',
+	@override String countWallets({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
+		one: '${count} wallet',
+		other: '${count} wallets',
 	);
 	@override String get backupTitle => 'Back up now';
 	@override String backupLast({required Object date}) => 'Last backup: ${date}';
@@ -420,7 +420,7 @@ class _Translations$dataPortability$en extends Translations$dataPortability$id {
 		one: '${n} draft from notifications you haven\'t reviewed won\'t be kept.',
 		other: '${n} drafts from notifications you haven\'t reviewed won\'t be kept.',
 	);
-	@override String restoreOlder({required Object date}) => 'This backup is older than the data on this phone; records after ${date} will be gone from this phone.';
+	@override String restoreOlder({required Object date}) => 'This backup was made on ${date}, older than the data on this phone. Records you made after it will be gone from this phone.';
 	@override String get restoreNext => 'Continue';
 	@override String get restoreConfirmTitle => 'Replace all data on this phone?';
 	@override String get restoreConfirmBody => 'All data on this phone will be replaced with the backup. Your current data is saved first as a safety backup.';
@@ -2278,8 +2278,8 @@ extension on TranslationsEn {
 			'dataPortability.formatCsv' => 'CSV',
 			'dataPortability.xlsxHelp' => 'Opens correctly in Excel and Google Sheets. Includes a Wallets sheet.',
 			'dataPortability.csvHelp' => 'For other apps. Transactions only.',
-			'dataPortability.exportSummary' => ({required num n, required Object first, required Object last}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '${n} transaction, ${first} – ${last}', other: '${n} transactions, ${first} – ${last}', ), 
-			'dataPortability.exportSummaryDay' => ({required num n, required Object date}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '${n} transaction, ${date}', other: '${n} transactions, ${date}', ), 
+			'dataPortability.exportSummary' => ({required num n, required Object count, required Object first, required Object last}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '${count} transaction, ${first} – ${last}', other: '${count} transactions, ${first} – ${last}', ), 
+			'dataPortability.exportSummaryDay' => ({required num n, required Object count, required Object date}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '${count} transaction, ${date}', other: '${count} transactions, ${date}', ), 
 			'dataPortability.exportEmpty' => 'No transactions to export yet.',
 			'dataPortability.exportScope' => 'Includes all your transactions and your current wallet balances. Filter what you need in the spreadsheet.',
 			'dataPortability.exportAction' => 'Export',
@@ -2292,8 +2292,8 @@ extension on TranslationsEn {
 			'dataPortability.share' => 'Share',
 			'dataPortability.fileNotSaved' => 'The file isn\'t saved yet. You can still save or share it.',
 			'dataPortability.fileStem' => 'export',
-			'dataPortability.countTransactions' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '${n} transaction', other: '${n} transactions', ), 
-			'dataPortability.countWallets' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '${n} wallet', other: '${n} wallets', ), 
+			'dataPortability.countTransactions' => ({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '${count} transaction', other: '${count} transactions', ), 
+			'dataPortability.countWallets' => ({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '${count} wallet', other: '${count} wallets', ), 
 			'dataPortability.backupTitle' => 'Back up now',
 			'dataPortability.backupLast' => ({required Object date}) => 'Last backup: ${date}',
 			'dataPortability.backupNever' => 'Never backed up',
@@ -2332,7 +2332,7 @@ extension on TranslationsEn {
 			'dataPortability.restoreUnchanged' => 'Language and display settings on this phone stay as they are.',
 			'dataPortability.changeCurrency' => ({required Object code}) => 'Currency will become ${code}',
 			'dataPortability.changeDrafts' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '${n} draft from notifications you haven\'t reviewed won\'t be kept.', other: '${n} drafts from notifications you haven\'t reviewed won\'t be kept.', ), 
-			'dataPortability.restoreOlder' => ({required Object date}) => 'This backup is older than the data on this phone; records after ${date} will be gone from this phone.',
+			'dataPortability.restoreOlder' => ({required Object date}) => 'This backup was made on ${date}, older than the data on this phone. Records you made after it will be gone from this phone.',
 			'dataPortability.restoreNext' => 'Continue',
 			'dataPortability.restoreConfirmTitle' => 'Replace all data on this phone?',
 			'dataPortability.restoreConfirmBody' => 'All data on this phone will be replaced with the backup. Your current data is saved first as a safety backup.',

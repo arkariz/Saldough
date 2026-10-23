@@ -1,5 +1,6 @@
 import 'package:di/di.dart';
 import 'package:navigation/navigation.dart';
+import 'package:saldough/core/discovery/discovery.dart';
 import 'package:saldough/features/data_portability/domain/file_transfer.dart';
 import 'package:saldough/features/data_portability/domain/restore_gateway.dart';
 import 'package:saldough/features/data_portability/domain/restore_reboot.dart';
@@ -37,7 +38,10 @@ final class DataPortabilityRouteModule extends FeatureRouteModule {
     ),
     RouteNode.typed<RestoreDoneInput>(
       key: DataPortabilityRouteKeys.restoreDone,
-      builder: (context, input) => RestoreDonePage(report: input.report),
+      builder: (context, input) => RestoreDonePage(
+        report: input.report,
+        statuses: ScopeProvider.of(context)<FeatureStatuses>(),
+      ),
     ),
   ];
 }

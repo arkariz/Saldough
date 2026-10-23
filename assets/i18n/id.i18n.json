@@ -311,12 +311,12 @@
     "xlsxHelp": "Terbuka benar di Excel dan Google Sheets. Memuat lembar Dompet.",
     "csvHelp": "Untuk aplikasi lain. Hanya transaksi.",
     "exportSummary": {
-      "one": "${n} transaksi, $first – $last",
-      "other": "${n} transaksi, $first – $last"
+      "one": "${count} transaksi, $first – $last",
+      "other": "${count} transaksi, $first – $last"
     },
     "exportSummaryDay": {
-      "one": "${n} transaksi, $date",
-      "other": "${n} transaksi, $date"
+      "one": "${count} transaksi, $date",
+      "other": "${count} transaksi, $date"
     },
     "exportEmpty": "Belum ada transaksi untuk diekspor.",
     "exportScope": "Berisi seluruh transaksimu dan saldo dompet saat ini. Saring sendiri bagian yang kamu perlukan di spreadsheet.",
@@ -334,12 +334,12 @@
     "fileNotSaved": "Berkas belum disimpan. Kamu masih bisa menyimpan atau membagikannya.",
     "fileStem": "ekspor",
     "countTransactions": {
-      "one": "${n} transaksi",
-      "other": "${n} transaksi"
+      "one": "${count} transaksi",
+      "other": "${count} transaksi"
     },
     "countWallets": {
-      "one": "${n} dompet",
-      "other": "${n} dompet"
+      "one": "${count} dompet",
+      "other": "${count} dompet"
     },
     "backupTitle": "Cadangkan sekarang",
     "backupLast": "Cadangan terakhir: $date",
@@ -376,7 +376,7 @@
       "one": "${n} draf dari notifikasi yang belum ditinjau tidak ikut.",
       "other": "${n} draf dari notifikasi yang belum ditinjau tidak ikut."
     },
-    "restoreOlder": "Cadangan ini lebih lama dari data di ponsel ini; catatan sesudah $date akan hilang dari ponsel ini.",
+    "restoreOlder": "Cadangan ini dibuat $date, lebih lama dari data di ponsel ini. Catatan yang kamu buat sesudahnya akan hilang dari ponsel ini.",
     "restoreNext": "Lanjut",
     "restoreConfirmTitle": "Ganti semua data di ponsel ini?",
     "restoreConfirmBody": "Semua data di ponsel ini akan diganti dengan isi cadangan. Data yang sekarang disimpan dulu sebagai cadangan pengaman.",

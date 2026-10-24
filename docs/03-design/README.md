@@ -171,6 +171,13 @@ keadaan dibatalkan pemilik (24 Okt 2026) karena terlalu rumit; keadaan lain
 lembar ini disetujui. Komponen baru hanya **PlanCard** (`tk-plan*` di
 `bundle.css`).
 
+**Status Plus di Akun** (`AkunPlus`, `AkunPlusUji`, `AkunPlusAktif`,
+`AkunPlusEnGelap`; `Akun.dc.html` memuat bagian yang sama): bagian "Plus" di
+bawah kartu akun, tanpa komponen baru. Tiga keadaan: Gratis, uji coba (lencana
+`brand`, "Sampai 24 Nov. Tanpa kartu."), aktif ("Tahunan, diperpanjang 22 Okt
+2027", plus baris "Kelola di Play Store"). "Pulihkan pembelian" selalu ada.
+Berakhir, masa tenggang, dan program penguji menyusul.
+
 ## Usulan desain
 
 `proposals/<nama-usulan>/` berisi mockup dan spek dari agen

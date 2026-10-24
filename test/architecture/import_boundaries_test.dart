@@ -103,6 +103,27 @@ void main() {
     );
   });
 
+  test('pengganti paket uji hanya di plan_override.dart; tidak ada di workflow rilis maupun Fastfile (ADR-041 §3.10)', () {
+    const home = 'lib/app/premium/plan_override.dart';
+    const registry = 'lib/app/data_portability/app_backup_registry.dart';
+    final marker = RegExp('PLAN_OVERRIDE|debug_override');
+    final stray = [
+      for (final file in files.keys)
+        if (file != home && file != registry && File(file).readAsStringSync().contains(marker)) file,
+    ];
+    expect(stray, isEmpty, reason: 'PLAN_OVERRIDE dan kunci debug hanya di $home:\n${stray.join('\n')}');
+
+    final pipeline = [
+      'android/fastlane/Fastfile',
+      for (final entity in Directory('.github/workflows').listSync().whereType<File>()) entity.path,
+    ];
+    final leaked = [
+      for (final path in pipeline)
+        if (File(path).readAsStringSync().contains('PLAN_OVERRIDE')) path,
+    ];
+    expect(leaked, isEmpty, reason: 'pipeline rilis tidak boleh memberi PLAN_OVERRIDE:\n${leaked.join('\n')}');
+  });
+
   test('presentation/ tidak mengimpor data/', () {
     expectNone(violations((file, _, to) => inLayer(file, 'presentation') && to != null && inLayer(to, 'data')));
   });

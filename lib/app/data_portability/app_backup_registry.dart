@@ -68,6 +68,7 @@ final appBackupRegistry = BackupRegistry(
     'entitlement_trial': 'uji coba milik akun dan perangkat',
     'entitlement_cache': 'hak dari akun Play/RevenueCat, bukan berkas',
     'entitlement_quota': 'jatah per periode milik perangkat',
+    'entitlement_debug_override': 'pilihan paket uji milik perangkat, hanya dibaca di build non-rilis',
   },
   transactionIndexKey: 'transaction__index',
   transactionPartitionKey: (month) => 'transaction_$month',

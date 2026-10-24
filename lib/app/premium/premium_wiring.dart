@@ -3,6 +3,7 @@ import 'dart:developer' as developer;
 
 import 'package:di/di.dart';
 import 'package:flutter/widgets.dart';
+import 'package:saldough/app/premium/plan_override.dart';
 import 'package:saldough/core/financial_month/financial_period.dart';
 import 'package:saldough/core/foundation/entitlement/entitlement.dart';
 import 'package:saldough/features/premium/data/entitlement_cache_store.dart';
@@ -17,6 +18,9 @@ import 'package:saldough/shared/auth/auth.dart';
 void registerEntitlements(GetIt container) {
   container
     ..registerLazySingleton<EntitlementConfig>(FirebaseEntitlementConfig.new)
+    ..registerLazySingleton<PlanOverrideController>(
+      () => PlanOverrideController(storage: container()),
+    )
     ..registerLazySingleton<LocalEntitlements>(
       () => LocalEntitlements(
         config: container<EntitlementConfig>(),
@@ -24,6 +28,7 @@ void registerEntitlements(GetIt container) {
         cache: EntitlementCacheStore(storage: container()),
         quotas: QuotaStore(storage: container()),
         schedule: () => ActiveFinancialMonth.schedule,
+        override: () => container<PlanOverrideController>().value,
       ),
     )
     ..registerLazySingleton<Entitlements>(() => container<LocalEntitlements>());
@@ -40,6 +45,11 @@ Future<void> startEntitlements(GetIt container) async {
   _lifecycle?.dispose();
 
   final entitlements = container<LocalEntitlements>();
+  // ADR-041 §3.10: pengganti uji (tanpa efek di rilis); perubahannya
+  // menghitung ulang paket.
+  final planOverride = container<PlanOverrideController>();
+  await planOverride.load();
+  planOverride.addListener(() => unawaited(entitlements.recompute()));
   final auth = container<AuthRepository>();
   AppUser? user;
   try {

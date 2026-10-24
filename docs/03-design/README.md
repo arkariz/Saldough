@@ -162,33 +162,6 @@ entri T-22.0 `TASK_LIST.md`.
 | `PulihkanOnbPratinjau`, `PulihkanOnbProses`, `PulihkanOnbSelesai`, `PulihkanOnbGalat` | Jalur pulihkan di onboarding |
 | `OnbPengantar` (+`EnGelap`) | Slide pertama onboarding dengan tautan "Sudah punya cadangan? Pulihkan" |
 
-## Paywall Plus (B-41)
-
-Rupa D-1 s.d. D-10 dari dokumen rencana bisnis dan spek kerja paywall
-(23 Okt 2026) dan [FREEMIUM_PAYWALL](../01-product/features/FREEMIUM_PAYWALL.md)
-§8–§10. Komponen design system baru: **PlusPaywall** (+PlanCard,
-PillarGrid), **PlusPrompts** (kartu konteks, Contoh Penjaga, rekap nilai),
-**PlusLocked** (lencana, kartu terkunci, data buram), **PlusAccount**
-(status Akun, hadiah uji coba, turun ke Gratis, berhasil); kelasnya
-(`tk-pw*`, `tk-plan*`, `tk-pillar*`, `tk-ctx*`, `tk-lock*`, `tk-blur*`,
-`tk-recap*`, `tk-plusst*`, `tk-deal*`, `tk-keep*`, `tk-badge--plus*`) di
-`bundle.css`, pola di `patterns.md`, istilah di `writing.md`. `Akun.dc.html`
-berubah (bagian Plus). Selisih dan pertanyaan untuk PO di entri B-41
-`TASK_LIST.md`.
-
-| Salinan | Isi |
-|---|---|
-| `PlusHadiah` (+`Gajian`, `Gajian10`, `EnGelap`) | D-1 hadiah uji coba; tanya gajian bila belum diatur, pratinjau tanggal berakhir |
-| `PlusLencana` (+`EnGelap`) | D-2 lencana Plus: Gratis, uji coba, Plus |
-| `Paywall` (+`P3`, `P5`, `P7`, `Pendiri`, `Pasca`, `Memuat`, `Luring`, `Memproses`, `Tertunda`, `Galat`, `EnGelap`) | D-3 paywall; properti `pemicu` (P1–P10), `penawaran`, `keadaan`, `paket` |
-| `PlusTerkunci` (+`Notif`, `Otomatis`, `Template`, `Proyek`, `Perkiraan`, `EnGelap`) | D-4 enam titik terkunci; properti `jenis` |
-| `PlusKonteks` (+`EnGelap`) | D-5 kartu konteks P1, P7, P8 |
-| `PlusContohPenjaga` (+`Notif`, `P3`, `EnGelap`) | D-6 kartu Beranda, notifikasi lokal, disusul P3 |
-| `PlusRekap` (+`Sedikit`, `EnGelap`) | D-7 rekap nilai H-3; tanpa kejadian, kartu tidak tampil |
-| `PlusTurun` (+`TanpaPenawaran`, `EnGelap`) | D-8 turun ke Gratis, dengan dan tanpa penawaran |
-| `AkunPlus` (+`Uji`, `Aktif`, `Berakhir`, `Tenggang`, `Penguji`, `EnGelap`) | D-9 status Plus di Akun, enam keadaan |
-| `PlusBerhasil` (+`EnGelap`) | D-10 lembar berhasil berlangganan |
-
 ## Usulan desain
 
 `proposals/<nama-usulan>/` berisi mockup dan spek dari agen

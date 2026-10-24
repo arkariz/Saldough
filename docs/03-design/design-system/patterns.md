@@ -104,15 +104,3 @@ Fase 22 (EXPORT_BACKUP, T-22.0). Semua gratis, tanpa akun, tanpa ajakan Plus.
 4. **Onboarding**: tautan teks "Sudah punya cadangan? Pulihkan" di bawah tombol Lanjut slide pertama. Urutan: bahasa › berkas › pratinjau (satu kolom, tanpa peringatan) › proses › selesai; langkah mata uang dan periode dilewati.
 5. Galat selalu menyebut "Datamu tidak berubah." dan tidak memakai warna `danger`.
 
-## Plus dan paywall
-
-Tanukonomy Plus (B-41, rencana paywall 23 Okt 2026). Plus menjual pekerjaan yang dilakukan Tanuki, tidak pernah menahan pencatatan atau data.
-
-1. **Tiga lapis, makin tenang ke makin tegas**: lencana Plus di fitur (PlusLocked) › kartu konteks sesudah tindakan berhasil (PlusPrompts) › paywall (PlusPaywall). Pencatatan, CATAT, dan data pengguna tidak punya cabang hak.
-2. **Paywall** adalah lembar hampir penuh di atas layar pemicu. Tombol "Nanti saja" sama besar dengan tombol beli. Harga selalu string toko; wajib ada harga per periode, perpanjangan otomatis, dan cara membatalkan.
-3. **Batas Gratis** ditunjukkan oleh kartu terkunci yang menyebut yang tetap berjalan, dengan jalan gratis bila ada. Hanya Analisis di luar 6 periode dan perkiraan lewat +2 bulan yang diburamkan, dengan data asli.
-4. **Uji coba terbalik**: hadiah di akhir onboarding menyebut tanggal berakhir (bukan jumlah hari); rekap nilai H-3 hanya memuat yang benar-benar terjadi; layar turun ke Gratis menyebut yang tetap dan yang berubah dengan angka pengguna, dengan "Lanjut dengan Gratis" sama jelasnya.
-5. **Akun** memuat bagian "Plus": kartu status enam keadaan, "Kelola di Play Store", "Pulihkan pembelian".
-6. Frekuensi: paywall kontekstual paling banyak sekali sehari dan tiga kali per periode; tiga "Nanti saja" pada pemicu yang sama membuatnya diam 30 hari. Tidak pernah di tengah CATAT.
-7. Tanpa streak, poin, skor, hitung mundur detik, atau urgensi palsu. Warna peringatan hanya untuk masa tenggang pembayaran.
-

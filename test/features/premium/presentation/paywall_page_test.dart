@@ -6,7 +6,7 @@ import 'package:saldough/features/premium/domain/paywall_trigger.dart';
 import 'package:saldough/features/premium/presentation/navigation/premium_route_module.dart';
 import 'package:saldough/features/premium/presentation/pages/paywall_page.dart';
 
-/// Paywall sementara (T-23.8) sampai rupa final (T-23.17).
+/// Paywall sementara (T-24.8) sampai rupa final (T-24.17).
 void main() {
   Future<void> pump(
     WidgetTester tester, {

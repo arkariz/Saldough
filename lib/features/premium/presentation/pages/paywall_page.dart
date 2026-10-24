@@ -5,7 +5,7 @@ import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/premium/domain/paywall_trigger.dart';
 
-/// Paywall sementara (T-23.8) sampai rupa final ada (T-23.17): memberi tahu
+/// Paywall sementara (T-24.8) sampai rupa final ada (T-24.17): memberi tahu
 /// bahwa fitur ini bagian dari Plus dan, untuk yang belum masuk akun,
 /// mengajak masuk (Plus untuk penguji dan uji coba memerlukan akun, ADR-041
 /// §3.4, §3.13). Tidak pernah mengubah data dan tidak menghalangi pencatatan.

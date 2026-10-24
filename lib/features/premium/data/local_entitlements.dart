@@ -26,7 +26,7 @@ final class EntitlementAccount extends Equatable {
 
 /// [Entitlements] dari sumber lokal (ADR-041 §3.3, §3.4, §3.7, §3.13): batas
 /// dari [EntitlementConfig], uji coba dan jatah dari penyimpanan, hak
-/// RevenueCat dari cache (pengisinya menyusul di T-23.14), dan akun yang
+/// RevenueCat dari cache (pengisinya menyusul di T-24.14), dan akun yang
 /// diberikan akar komposisi lewat [setAccount].
 ///
 /// Tidak pernah melempar: galat penyimpanan dicatat dan diperlakukan sebagai

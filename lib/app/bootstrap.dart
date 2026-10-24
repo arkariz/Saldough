@@ -16,6 +16,7 @@ import 'package:saldough/core/foundation/analytics/app_bootstrap_firebase.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/language/language.dart';
+import 'package:saldough/core/presentation/plan/active_plan.dart';
 import 'package:saldough/features/data_portability/data/platform_file_transfer.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/transaction/source_icons.dart';
@@ -126,4 +127,5 @@ void _resetGlobalState() {
   SourceIcons.reset();
   HistoryPeriod.reset();
   ActiveCategories.notifier.value = const [];
+  ActivePlan.reset();
 }

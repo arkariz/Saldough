@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/plan/active_plan.dart';
 import 'package:saldough/core/presentation/widgets/app_action_snack_bar.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
@@ -55,6 +56,8 @@ class _AutoRecordHostState extends State<AutoRecordHost> {
       ),
     );
     ActiveDay.notifier.addListener(_run);
+    // Otomasi R3 hanya untuk Plus (ADR-041 §3.8); berjalan ulang saat paket berubah.
+    ActivePlan.notifier.addListener(_run);
     WidgetsBinding.instance.addPostFrameCallback((_) => _run());
   }
 
@@ -62,7 +65,7 @@ class _AutoRecordHostState extends State<AutoRecordHost> {
 
   Future<void> _recordDue() async {
     final log = _log;
-    if (_running || log == null) return;
+    if (_running || log == null || !ActivePlan.isPlus) return;
     _running = true;
     try {
       final now = DateTime.now();
@@ -149,7 +152,10 @@ class _AutoRecordHostState extends State<AutoRecordHost> {
 
   @override
   void dispose() {
-    if (_log != null) ActiveDay.notifier.removeListener(_run);
+    if (_log != null) {
+      ActiveDay.notifier.removeListener(_run);
+      ActivePlan.notifier.removeListener(_run);
+    }
     super.dispose();
   }
 

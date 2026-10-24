@@ -415,6 +415,18 @@ uji, pengembangan, dan tinjauan toko (§3.10).
 | P-10 | Pengganti uji: menu pengembang + `PLAN_OVERRIDE` hanya di build non-rilis; penguji dan peninjau lewat entitlement promosi, **tanpa sakelar di build rilis** | Rekomendasi: setuju (§3.10). |
 | P-11 | `plus_launch_at` = tanggal rilis publik Plus (Remote Config) | **Disetujui:** diisi pemilik sebelum Plus dijual. |
 
+### 3.13a Gerbang tampilan lewat `ActivePlan` (T-23.9)
+
+Gerbang yang cukup tahu "Plus atau bukan" (otomasi R3: sakelar Catat otomatis,
+kartu, dan label) membaca `ActivePlan.notifier`
+(`lib/core/presentation/plan/active_plan.dart`), pola yang sama dengan
+`ActiveCurrency` dan `ActiveFinancialMonth`: diisi `startEntitlements` dari
+`Entitlements.changes`, dikembalikan ke Gratis di `_resetGlobalState` saat boot
+ulang, dan **bawaannya Gratis** supaya kabel yang terlewat mengunci, bukan
+membuka. Gerbang yang butuh batas atau jatah (`allows`, `quota`, `tryUse`)
+tetap memakai `Entitlements` yang disuntikkan. Modul `core/foundation/entitlement/`
+tetap murni (tanpa Flutter); `ActivePlan` hidup di `core/presentation/plan/`.
+
 ### 3.13 Revisi 2: hasil pemeriksaan kode dan keputusan pemilik (23 Okt 2026)
 
 Rencana implementasi Fase 23 memeriksa ADR ini terhadap kode `origin/main`.

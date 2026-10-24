@@ -13,4 +13,6 @@ Kartu pilihan paket di paywall Tanukonomy Plus. Dipakai dua kartu bersusun di le
 
 **Paywall (lembar)**: ikon dan judul "Tanukonomy Plus" + "Tanuki bekerja untukmu.", tiga manfaat (`tk-row` dengan tile), dua PlanCard, tombol beli `primary` ("Berlangganan Tahunan"), **"Nanti saja" `secondary` sama besar dengan tombol beli**, dan satu kalimat wajib: harga per periode, perpanjangan otomatis, cara membatalkan di Play Store. Di atas layar pemicu yang diredupkan. Tidak pernah muncul di dalam CATAT.
 
+**Pesan berparameter:** paywall satu untuk semua pemicu (batas Gratis); hanya judul dan satu kalimat yang berganti, selalu menyebut yang tetap gratis. Pemicu selain umum menambah lencana "Tanukonomy Plus" di atas judul.
+
 **Disediakan pemakai:** string harga dan satuan, paket terpilih, handler beli.

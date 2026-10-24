@@ -23,8 +23,9 @@ body{margin:0}
     <div class="tk-sheet__handle"></div>
     <div style="display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center; padding-top: 8px">
       <span class="tk-tile tk-tile--brandsoft" aria-hidden="true"><span class="tk-icon">workspace_premium</span></span>
-      <h1 class="tk-sheet__title" id="pw-title" style="flex: none; font-size: 20px; line-height: 28px">{{t.title}}</h1>
-      <p class="tk-t-body-sm tk-ink-2" style="margin: 0">{{t.sub}}</p>
+      <sc-if value="{{hasKicker}}" hint-placeholder-val="{{false}}"><span class="tk-badge tk-badge--brand">Tanukonomy Plus</span></sc-if>
+      <h1 class="tk-sheet__title" id="pw-title" style="flex: none; font-size: 20px; line-height: 28px; text-wrap: balance">{{msg.title}}</h1>
+      <p class="tk-t-body-sm tk-ink-2" style="margin: 0; text-wrap: balance">{{msg.body}}</p>
     </div>
     <div class="tk-list tk-list--icon" style="background: transparent; margin: 0 -16px">
       <sc-for list="{{benefits}}" as="b" hint-placeholder-count="3"><div class="tk-row tk-row--compact"><span class="tk-tile tk-tile--sm tk-tile--brandsoft" aria-hidden="true"><span class="tk-icon">{{b.icon}}</span></span><span class="tk-row__main"><span class="tk-row__title" style="white-space: normal">{{b.title}}</span></span></div></sc-for>
@@ -43,29 +44,51 @@ body{margin:0}
   </div>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"en":{"editor":"boolean","default":false,"section":"Tampilan"},"dark":{"editor":"boolean","default":false,"section":"Tampilan"},"$preview":{"width":360,"height":800}}'>
+<script type="text/x-dc" data-dc-script data-props='{"pemicu":{"editor":"enum","options":["umum","analisis","notifikasi","otomatis","template","proyek","perkiraan","tafsir"],"default":"umum","section":"Pemicu"},"en":{"editor":"boolean","default":false,"section":"Tampilan"},"dark":{"editor":"boolean","default":false,"section":"Tampilan"},"$preview":{"width":360,"height":800}}'>
 class Component extends DCLogic {
   renderVals() {
     const s = this.state || {};
     const en = !!this.props.en;
     // Harga contoh. Di aplikasi selalu string dari toko (Play Billing lewat RevenueCat).
     const T = en ? {
-      close: 'Close', title: 'Tanukonomy Plus', sub: 'Tanuki works for you.', plans: 'Plans', later: 'Not now', all: 'See all Plus features',
+      msgs: {
+        umum: ['Tanukonomy Plus', 'Tanuki works for you.'],
+        analisis: ['Analysis beyond 6 periods is in Plus', 'History stays complete. Free Analysis shows your latest 6 periods.'],
+        notifikasi: ['A second notification app is in Plus', 'Your first app keeps working. Add GoPay and other apps with Plus.'],
+        otomatis: ['Auto-record is in Plus', 'For free, every due date is still recorded with one tap.'],
+        template: ['A second template is in Plus', 'The template you have stays saved and keeps working.'],
+        proyek: ['A third active project is in Plus', 'Your projects and their payments stay as they are.'],
+        perkiraan: ['The 12-month forecast is in Plus', 'The next 2 months stay free.'],
+        tafsir: ['30 smart readings are used up this month', 'With Plus, photos and readings have no quota.']
+      },
+      close: 'Close', plans: 'Plans', later: 'Not now', all: 'See all Plus features',
       benefits: [['photo_camera', 'Record from photos and every bank notification'], ['notifications_active', 'Warnings before a budget runs out'], ['chat_bubble', 'Ask, plan, and get reports']],
       annual: 'Yearly', monthly: 'Monthly', equiv: 'about Rp14,900 a month', cancel: 'Cancel anytime', yearPrice: 'Rp179,000', monthPrice: 'Rp25,000', perYear: '/year', perMonth: '/month',
       buy: (p) => 'Subscribe ' + (p === 'annual' ? 'yearly' : 'monthly'),
       fine: (p) => (p === 'annual' ? 'Rp179,000 per year' : 'Rp25,000 per month') + ', renews automatically. Cancel anytime in the Play Store.'
     } : {
-      close: 'Tutup', title: 'Tanukonomy Plus', sub: 'Tanuki bekerja untukmu.', plans: 'Paket', later: 'Nanti saja', all: 'Lihat semua fitur Plus',
+      msgs: {
+        umum: ['Tanukonomy Plus', 'Tanuki bekerja untukmu.'],
+        analisis: ['Analisis lebih dari 6 periode ada di Plus', 'Riwayat tetap lengkap. Analisis gratis menampilkan 6 periode terakhir.'],
+        notifikasi: ['Aplikasi notifikasi kedua ada di Plus', 'Aplikasi pertamamu tetap berjalan. Tambah GoPay dan aplikasi lain dengan Plus.'],
+        otomatis: ['Catat otomatis ada di Plus', 'Gratis: tiap jatuh tempo tetap tercatat dengan satu ketuk.'],
+        template: ['Template kedua ada di Plus', 'Template yang sudah ada tetap tersimpan dan bisa dipakai.'],
+        proyek: ['Proyek aktif ketiga ada di Plus', 'Proyek dan pembayarannya tetap seperti sekarang.'],
+        perkiraan: ['Perkiraan 12 bulan ada di Plus', 'Perkiraan 2 bulan ke depan tetap gratis.'],
+        tafsir: ['30 tafsir bulan ini sudah terpakai', 'Dengan Plus, foto dan tafsir tanpa kuota.']
+      },
+      close: 'Tutup', plans: 'Paket', later: 'Nanti saja', all: 'Lihat semua fitur Plus',
       benefits: [['photo_camera', 'Catat dari foto dan semua notifikasi bank'], ['notifications_active', 'Peringatan sebelum anggaran habis'], ['chat_bubble', 'Tanya, rencanakan, dan lapor']],
       annual: 'Tahunan', monthly: 'Bulanan', equiv: 'setara Rp14.900/bulan', cancel: 'Bisa dibatalkan kapan saja', yearPrice: 'Rp179.000', monthPrice: 'Rp25.000', perYear: '/tahun', perMonth: '/bulan',
       buy: (p) => 'Berlangganan ' + (p === 'annual' ? 'Tahunan' : 'Bulanan'),
       fine: (p) => (p === 'annual' ? 'Rp179.000 per tahun' : 'Rp25.000 per bulan') + ', diperpanjang otomatis. Batalkan kapan saja di Play Store.'
     };
+    const pk = this.props.pemicu || 'umum';
+    const msg = { title: T.msgs[pk][0], body: T.msgs[pk][1] };
     const plan = s.plan || 'annual';
     const mk = (k, name, sub, price, unit) => ({ name: name, sub: sub, price: price, unit: unit, cls: plan === k ? 'is-selected' : '', checked: plan === k ? 'true' : 'false', pick: () => this.setState({ plan: k }) });
     return {
-      theme: this.props.dark ? 'dark' : 'light', dark: !!this.props.dark, t: T,
+      theme: this.props.dark ? 'dark' : 'light', dark: !!this.props.dark, t: T, msg: msg, hasKicker: pk !== 'umum',
       benefits: T.benefits.map((b) => ({ icon: b[0], title: b[1] })),
       plans: [mk('annual', T.annual, T.equiv, T.yearPrice, T.perYear), mk('monthly', T.monthly, T.cancel, T.monthPrice, T.perMonth)],
       buy: T.buy(plan), fine: T.fine(plan)

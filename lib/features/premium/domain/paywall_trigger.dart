@@ -1,5 +1,5 @@
 /// Tempat paywall dibuka (FREEMIUM_PAYWALL §9, ADR-041 §3.8). Nama P1–P10
-/// mengikuti tabel §9; tiga pemicu terakhir untuk gerbang fitur lama yang
+/// mengikuti tabel §9; empat pemicu terakhir untuk gerbang fitur lama yang
 /// belum punya baris di tabel itu.
 enum PaywallTrigger {
   /// P1: kuota tafsir cerdas (termasuk foto) habis.
@@ -38,8 +38,11 @@ enum PaywallTrigger {
   /// Analisis lebih dari batas periode Gratis.
   analysisHistory('analysis_history'),
 
-  /// Batas jumlah template anggaran atau proyek freelance.
-  limit('limit');
+  /// Batas jumlah template anggaran.
+  templateLimit('template_limit'),
+
+  /// Batas jumlah proyek freelance.
+  projectLimit('project_limit');
 
   const PaywallTrigger(this.analyticsName);
 

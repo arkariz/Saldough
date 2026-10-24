@@ -21,7 +21,7 @@ Future<void> addProject(BuildContext context) async {
   // Gratis: proyek ke-3 membuka paywall; yang ada tetap dipakai. Semua proyek
   // dihitung karena proyek belum punya status arsip (ADR-041 §3.8, §3.13).
   if (!ActivePlan.isPlus && bloc.state.projects.length >= ActivePlan.limits.value.freeProjects) {
-    await context.pushRoute(PremiumRouteKeys.paywall, const PaywallInput(PaywallTrigger.limit));
+    await context.pushRoute(PremiumRouteKeys.paywall, const PaywallInput(PaywallTrigger.projectLimit));
     return;
   }
   final result = await showFullScreenSheet<ProjectFormResult>(context, builder: (_) => const ProjectFormSheet());

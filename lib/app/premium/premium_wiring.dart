@@ -16,6 +16,7 @@ import 'package:saldough/features/premium/data/purchases_gateway.dart';
 import 'package:saldough/features/premium/data/quota_store.dart';
 import 'package:saldough/features/premium/data/revenuecat_plan_source.dart';
 import 'package:saldough/features/premium/data/trial_store.dart';
+import 'package:saldough/features/premium/domain/plus_purchasing.dart';
 import 'package:saldough/shared/auth/auth.dart';
 
 /// Kunci SDK RevenueCat (publik), disuntikkan lewat
@@ -52,7 +53,10 @@ void registerEntitlements(
           config: container<EntitlementConfig>(),
           uid: () => container<LocalEntitlements>().account?.uid,
         ),
-      );
+      )
+      ..registerLazySingleton<PlusPurchasing>(() => container<PremiumPurchases>());
+  } else {
+    container.registerLazySingleton<PlusPurchasing>(() => const NoPurchasing());
   }
   container
     ..registerLazySingleton<EntitlementConfig>(FirebaseEntitlementConfig.new)

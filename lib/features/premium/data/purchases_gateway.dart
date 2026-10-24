@@ -102,8 +102,22 @@ final class PurchasesFlutterGateway implements PurchasesGateway {
     return [
       for (final package in offering?.availablePackages ?? const <Package>[])
         if (PlusPlanKind.fromId(package.identifier) case final kind?)
-          PlanOption(kind: kind, priceText: package.storeProduct.priceString, handle: package),
+          _optionOf(kind, package),
     ];
+  }
+
+  /// Harga perkenalan menggantikan harga biasa hanya di paket `yearly_intro`;
+  /// harga biasa tetap ditampilkan (dicoret) di sampingnya.
+  PlanOption _optionOf(PlusPlanKind kind, Package package) {
+    final product = package.storeProduct;
+    final intro = kind == PlusPlanKind.yearlyIntro ? product.introductoryPrice : null;
+    return PlanOption(
+      kind: kind,
+      priceText: intro?.priceString ?? product.priceString,
+      regularPriceText: intro == null ? null : product.priceString,
+      perMonthText: product.pricePerMonthString,
+      handle: package,
+    );
   }
 
   @override
@@ -122,11 +136,11 @@ final class PurchasesFlutterGateway implements PurchasesGateway {
 /// Memetakan kode galat SDK ke hasil beli: pembatalan pengguna bukan galat.
 BuyResult purchaseResultOfCode(PurchasesErrorCode code) => switch (code) {
   PurchasesErrorCode.purchaseCancelledError => const BuyCancelled(),
+  PurchasesErrorCode.paymentPendingError => const BuyPending(),
   PurchasesErrorCode.networkError || PurchasesErrorCode.offlineConnectionError => const BuyFailed(
     PurchaseFailure.network,
   ),
   PurchasesErrorCode.storeProblemError ||
-  PurchasesErrorCode.paymentPendingError ||
   PurchasesErrorCode.purchaseNotAllowedError ||
   PurchasesErrorCode.purchaseInvalidError ||
   PurchasesErrorCode.productAlreadyPurchasedError => const BuyFailed(PurchaseFailure.billing),

@@ -3932,6 +3932,8 @@ class Translations$premium$id {
 
 	/// id: 'Berlangganan Plus belum tersedia. Mencatat tetap gratis.'
 	String get plusOnlyBody => 'Berlangganan Plus belum tersedia. Mencatat tetap gratis.';
+
+	late final Translations$premium$paywall$id paywall = Translations$premium$paywall$id.internal(_root);
 }
 
 // Path: record.draftIssue
@@ -4818,6 +4820,117 @@ class Translations$analysis$category$id {
 	String get moreHint => '20 transaksi terbaru';
 }
 
+// Path: premium.paywall
+class Translations$premium$paywall$id {
+	Translations$premium$paywall$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Tutup'
+	String get close => 'Tutup';
+
+	/// id: 'Paket'
+	String get plans => 'Paket';
+
+	/// id: 'Nanti saja'
+	String get later => 'Nanti saja';
+
+	/// id: 'Tanukonomy Plus'
+	String get kicker => 'Tanukonomy Plus';
+
+	late final Translations$premium$paywall$messages$id messages = Translations$premium$paywall$messages$id.internal(_root);
+	late final Translations$premium$paywall$benefits$id benefits = Translations$premium$paywall$benefits$id.internal(_root);
+
+	/// id: 'Harga belum bisa dimuat'
+	String get offlineTitle => 'Harga belum bisa dimuat';
+
+	/// id: 'Sambungkan ke internet untuk melihat harga, lalu coba lagi.'
+	String get offlineBody => 'Sambungkan ke internet untuk melihat harga, lalu coba lagi.';
+
+	/// id: 'Coba lagi'
+	String get retry => 'Coba lagi';
+
+	/// id: 'Tahunan'
+	String get yearly => 'Tahunan';
+
+	/// id: 'Bulanan'
+	String get monthly => 'Bulanan';
+
+	/// id: '/tahun'
+	String get perYear => '/tahun';
+
+	/// id: '/bulan'
+	String get perMonth => '/bulan';
+
+	/// id: 'setara $price/bulan'
+	String yearlyEquiv({required Object price}) => 'setara ${price}/bulan';
+
+	/// id: 'Bisa dibatalkan kapan saja'
+	String get cancelAnytime => 'Bisa dibatalkan kapan saja';
+
+	/// id: 'Harga Pendiri'
+	String get founderName => 'Harga Pendiri';
+
+	/// id: 'Terkunci selagi berlangganan · sampai $date'
+	String founderSub({required Object date}) => 'Terkunci selagi berlangganan · sampai ${date}';
+
+	/// id: 'Harga perkenalan'
+	String get introName => 'Harga perkenalan';
+
+	/// id: 'Tahun pertama, lalu $price/tahun · sampai $until'
+	String introSub({required Object price, required Object until}) => 'Tahun pertama, lalu ${price}/tahun · sampai ${until}';
+
+	/// id: 'Berlangganan Tahunan'
+	String get buyYearly => 'Berlangganan Tahunan';
+
+	/// id: 'Berlangganan Bulanan'
+	String get buyMonthly => 'Berlangganan Bulanan';
+
+	/// id: 'Berlangganan'
+	String get subscribe => 'Berlangganan';
+
+	/// id: 'Memproses…'
+	String get processing => 'Memproses…';
+
+	/// id: 'Menunggu persetujuan'
+	String get waiting => 'Menunggu persetujuan';
+
+	/// id: 'Pembayaran tertunda. Plus aktif begitu disetujui.'
+	String get pending => 'Pembayaran tertunda. Plus aktif begitu disetujui.';
+
+	/// id: 'Pembayaran belum berhasil. Cek metode bayarmu di Play Store, lalu coba lagi.'
+	String get failed => 'Pembayaran belum berhasil. Cek metode bayarmu di Play Store, lalu coba lagi.';
+
+	/// id: '$price per tahun, diperpanjang otomatis. Batalkan kapan saja di Play Store.'
+	String fineYearly({required Object price}) => '${price} per tahun, diperpanjang otomatis. Batalkan kapan saja di Play Store.';
+
+	/// id: '$price per bulan, diperpanjang otomatis. Batalkan kapan saja di Play Store.'
+	String fineMonthly({required Object price}) => '${price} per bulan, diperpanjang otomatis. Batalkan kapan saja di Play Store.';
+
+	/// id: '$price untuk tahun pertama, lalu $regular per tahun, diperpanjang otomatis. Batalkan kapan saja di Play Store.'
+	String fineIntro({required Object price, required Object regular}) => '${price} untuk tahun pertama, lalu ${regular} per tahun, diperpanjang otomatis. Batalkan kapan saja di Play Store.';
+
+	/// id: 'Plus aktif'
+	String get doneTitle => 'Plus aktif';
+
+	/// id: 'Tanuki mulai bekerja untukmu.'
+	String get doneBody => 'Tanuki mulai bekerja untukmu.';
+
+	/// id: 'Paket $plan, diperpanjang $date. Tanuki mulai bekerja untukmu.'
+	String doneBodyPlan({required Object plan, required Object date}) => 'Paket ${plan}, diperpanjang ${date}. Tanuki mulai bekerja untukmu.';
+
+	/// id: 'Selesai'
+	String get done => 'Selesai';
+
+	/// id: 'Plus belum dijual'
+	String get notSellingTitle => 'Plus belum dijual';
+
+	/// id: 'Berlangganan Plus belum tersedia. Mencatat tetap gratis.'
+	String get notSellingBody => 'Berlangganan Plus belum tersedia. Mencatat tetap gratis.';
+}
+
 // Path: record.voice.failure
 class Translations$record$voice$failure$id {
 	Translations$record$voice$failure$id.internal(this._root);
@@ -4843,6 +4956,161 @@ class Translations$record$voice$failure$id {
 
 	/// id: 'Ada yang salah. Coba lagi.'
 	String get other => 'Ada yang salah. Coba lagi.';
+}
+
+// Path: premium.paywall.messages
+class Translations$premium$paywall$messages$id {
+	Translations$premium$paywall$messages$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+	late final Translations$premium$paywall$messages$general$id general = Translations$premium$paywall$messages$general$id.internal(_root);
+	late final Translations$premium$paywall$messages$analysis$id analysis = Translations$premium$paywall$messages$analysis$id.internal(_root);
+	late final Translations$premium$paywall$messages$notification$id notification = Translations$premium$paywall$messages$notification$id.internal(_root);
+	late final Translations$premium$paywall$messages$auto$id auto = Translations$premium$paywall$messages$auto$id.internal(_root);
+	late final Translations$premium$paywall$messages$template$id template = Translations$premium$paywall$messages$template$id.internal(_root);
+	late final Translations$premium$paywall$messages$project$id project = Translations$premium$paywall$messages$project$id.internal(_root);
+	late final Translations$premium$paywall$messages$forecast$id forecast = Translations$premium$paywall$messages$forecast$id.internal(_root);
+	late final Translations$premium$paywall$messages$reading$id reading = Translations$premium$paywall$messages$reading$id.internal(_root);
+}
+
+// Path: premium.paywall.benefits
+class Translations$premium$paywall$benefits$id {
+	Translations$premium$paywall$benefits$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Catat dari foto dan semua notifikasi bank'
+	String get photo => 'Catat dari foto dan semua notifikasi bank';
+
+	/// id: 'Peringatan sebelum anggaran habis'
+	String get warn => 'Peringatan sebelum anggaran habis';
+
+	/// id: 'Tanya, rencanakan, dan lapor'
+	String get ask => 'Tanya, rencanakan, dan lapor';
+}
+
+// Path: premium.paywall.messages.general
+class Translations$premium$paywall$messages$general$id {
+	Translations$premium$paywall$messages$general$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Tanukonomy Plus'
+	String get title => 'Tanukonomy Plus';
+
+	/// id: 'Tanuki bekerja untukmu.'
+	String get body => 'Tanuki bekerja untukmu.';
+}
+
+// Path: premium.paywall.messages.analysis
+class Translations$premium$paywall$messages$analysis$id {
+	Translations$premium$paywall$messages$analysis$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Analisis lebih dari 6 periode ada di Plus'
+	String get title => 'Analisis lebih dari 6 periode ada di Plus';
+
+	/// id: 'Riwayat tetap lengkap. Analisis gratis menampilkan 6 periode terakhir.'
+	String get body => 'Riwayat tetap lengkap. Analisis gratis menampilkan 6 periode terakhir.';
+}
+
+// Path: premium.paywall.messages.notification
+class Translations$premium$paywall$messages$notification$id {
+	Translations$premium$paywall$messages$notification$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Aplikasi notifikasi kedua ada di Plus'
+	String get title => 'Aplikasi notifikasi kedua ada di Plus';
+
+	/// id: 'Aplikasi pertamamu tetap berjalan. Tambah GoPay dan aplikasi lain dengan Plus.'
+	String get body => 'Aplikasi pertamamu tetap berjalan. Tambah GoPay dan aplikasi lain dengan Plus.';
+}
+
+// Path: premium.paywall.messages.auto
+class Translations$premium$paywall$messages$auto$id {
+	Translations$premium$paywall$messages$auto$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Catat otomatis ada di Plus'
+	String get title => 'Catat otomatis ada di Plus';
+
+	/// id: 'Gratis: tiap jatuh tempo tetap tercatat dengan satu ketuk.'
+	String get body => 'Gratis: tiap jatuh tempo tetap tercatat dengan satu ketuk.';
+}
+
+// Path: premium.paywall.messages.template
+class Translations$premium$paywall$messages$template$id {
+	Translations$premium$paywall$messages$template$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Template kedua ada di Plus'
+	String get title => 'Template kedua ada di Plus';
+
+	/// id: 'Template yang sudah ada tetap tersimpan dan bisa dipakai.'
+	String get body => 'Template yang sudah ada tetap tersimpan dan bisa dipakai.';
+}
+
+// Path: premium.paywall.messages.project
+class Translations$premium$paywall$messages$project$id {
+	Translations$premium$paywall$messages$project$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Proyek aktif ketiga ada di Plus'
+	String get title => 'Proyek aktif ketiga ada di Plus';
+
+	/// id: 'Proyek dan pembayarannya tetap seperti sekarang.'
+	String get body => 'Proyek dan pembayarannya tetap seperti sekarang.';
+}
+
+// Path: premium.paywall.messages.forecast
+class Translations$premium$paywall$messages$forecast$id {
+	Translations$premium$paywall$messages$forecast$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Perkiraan 12 bulan ada di Plus'
+	String get title => 'Perkiraan 12 bulan ada di Plus';
+
+	/// id: 'Perkiraan 2 bulan ke depan tetap gratis.'
+	String get body => 'Perkiraan 2 bulan ke depan tetap gratis.';
+}
+
+// Path: premium.paywall.messages.reading
+class Translations$premium$paywall$messages$reading$id {
+	Translations$premium$paywall$messages$reading$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: '$n tafsir bulan ini sudah terpakai'
+	String title({required Object n}) => '${n} tafsir bulan ini sudah terpakai';
+
+	/// id: 'Dengan Plus, foto dan tafsir tanpa kuota.'
+	String get body => 'Dengan Plus, foto dan tafsir tanpa kuota.';
 }
 
 /// The flat map containing all translations for locale <id>.
@@ -6284,6 +6552,58 @@ extension on Translations {
 			'premium.unlockAction' => 'Buka dengan Plus',
 			'premium.plusOnlyTitle' => 'Fitur ini bagian dari Plus',
 			'premium.plusOnlyBody' => 'Berlangganan Plus belum tersedia. Mencatat tetap gratis.',
+			'premium.paywall.close' => 'Tutup',
+			'premium.paywall.plans' => 'Paket',
+			'premium.paywall.later' => 'Nanti saja',
+			'premium.paywall.kicker' => 'Tanukonomy Plus',
+			'premium.paywall.messages.general.title' => 'Tanukonomy Plus',
+			'premium.paywall.messages.general.body' => 'Tanuki bekerja untukmu.',
+			'premium.paywall.messages.analysis.title' => 'Analisis lebih dari 6 periode ada di Plus',
+			'premium.paywall.messages.analysis.body' => 'Riwayat tetap lengkap. Analisis gratis menampilkan 6 periode terakhir.',
+			'premium.paywall.messages.notification.title' => 'Aplikasi notifikasi kedua ada di Plus',
+			'premium.paywall.messages.notification.body' => 'Aplikasi pertamamu tetap berjalan. Tambah GoPay dan aplikasi lain dengan Plus.',
+			'premium.paywall.messages.auto.title' => 'Catat otomatis ada di Plus',
+			'premium.paywall.messages.auto.body' => 'Gratis: tiap jatuh tempo tetap tercatat dengan satu ketuk.',
+			'premium.paywall.messages.template.title' => 'Template kedua ada di Plus',
+			'premium.paywall.messages.template.body' => 'Template yang sudah ada tetap tersimpan dan bisa dipakai.',
+			'premium.paywall.messages.project.title' => 'Proyek aktif ketiga ada di Plus',
+			'premium.paywall.messages.project.body' => 'Proyek dan pembayarannya tetap seperti sekarang.',
+			'premium.paywall.messages.forecast.title' => 'Perkiraan 12 bulan ada di Plus',
+			'premium.paywall.messages.forecast.body' => 'Perkiraan 2 bulan ke depan tetap gratis.',
+			'premium.paywall.messages.reading.title' => ({required Object n}) => '${n} tafsir bulan ini sudah terpakai',
+			'premium.paywall.messages.reading.body' => 'Dengan Plus, foto dan tafsir tanpa kuota.',
+			'premium.paywall.benefits.photo' => 'Catat dari foto dan semua notifikasi bank',
+			'premium.paywall.benefits.warn' => 'Peringatan sebelum anggaran habis',
+			'premium.paywall.benefits.ask' => 'Tanya, rencanakan, dan lapor',
+			'premium.paywall.offlineTitle' => 'Harga belum bisa dimuat',
+			'premium.paywall.offlineBody' => 'Sambungkan ke internet untuk melihat harga, lalu coba lagi.',
+			'premium.paywall.retry' => 'Coba lagi',
+			'premium.paywall.yearly' => 'Tahunan',
+			'premium.paywall.monthly' => 'Bulanan',
+			'premium.paywall.perYear' => '/tahun',
+			'premium.paywall.perMonth' => '/bulan',
+			'premium.paywall.yearlyEquiv' => ({required Object price}) => 'setara ${price}/bulan',
+			'premium.paywall.cancelAnytime' => 'Bisa dibatalkan kapan saja',
+			'premium.paywall.founderName' => 'Harga Pendiri',
+			'premium.paywall.founderSub' => ({required Object date}) => 'Terkunci selagi berlangganan · sampai ${date}',
+			'premium.paywall.introName' => 'Harga perkenalan',
+			'premium.paywall.introSub' => ({required Object price, required Object until}) => 'Tahun pertama, lalu ${price}/tahun · sampai ${until}',
+			'premium.paywall.buyYearly' => 'Berlangganan Tahunan',
+			'premium.paywall.buyMonthly' => 'Berlangganan Bulanan',
+			'premium.paywall.subscribe' => 'Berlangganan',
+			'premium.paywall.processing' => 'Memproses…',
+			'premium.paywall.waiting' => 'Menunggu persetujuan',
+			'premium.paywall.pending' => 'Pembayaran tertunda. Plus aktif begitu disetujui.',
+			'premium.paywall.failed' => 'Pembayaran belum berhasil. Cek metode bayarmu di Play Store, lalu coba lagi.',
+			'premium.paywall.fineYearly' => ({required Object price}) => '${price} per tahun, diperpanjang otomatis. Batalkan kapan saja di Play Store.',
+			'premium.paywall.fineMonthly' => ({required Object price}) => '${price} per bulan, diperpanjang otomatis. Batalkan kapan saja di Play Store.',
+			'premium.paywall.fineIntro' => ({required Object price, required Object regular}) => '${price} untuk tahun pertama, lalu ${regular} per tahun, diperpanjang otomatis. Batalkan kapan saja di Play Store.',
+			'premium.paywall.doneTitle' => 'Plus aktif',
+			'premium.paywall.doneBody' => 'Tanuki mulai bekerja untukmu.',
+			'premium.paywall.doneBodyPlan' => ({required Object plan, required Object date}) => 'Paket ${plan}, diperpanjang ${date}. Tanuki mulai bekerja untukmu.',
+			'premium.paywall.done' => 'Selesai',
+			'premium.paywall.notSellingTitle' => 'Plus belum dijual',
+			'premium.paywall.notSellingBody' => 'Berlangganan Plus belum tersedia. Mencatat tetap gratis.',
 			_ => null,
 		};
 	}

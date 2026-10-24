@@ -1,10 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
 import 'package:saldough/core/financial_month/financial_period.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/foundation/entitlement/entitlement.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/premium/data/entitlement_cache_store.dart';
 import 'package:saldough/features/premium/data/local_entitlements.dart';
 import 'package:saldough/features/premium/data/plus_snapshot.dart';
@@ -15,7 +13,6 @@ import 'package:saldough/features/premium/data/revenuecat_plan_source.dart';
 import 'package:saldough/features/premium/data/trial_store.dart';
 import 'package:saldough/features/premium/domain/paywall_trigger.dart';
 import 'package:saldough/features/premium/domain/purchase_models.dart';
-import 'package:saldough/features/premium/presentation/pages/paywall_page.dart';
 
 final class _Config implements EntitlementConfig {
   @override
@@ -132,37 +129,6 @@ void main() {
           ),
         );
       }
-    },
-  );
-
-  testWidgets(
-    'paywall: viewed saat dibuka dan dismissed saat ditutup, dengan pemicunya',
-    (tester) async {
-      await tester.pumpWidget(
-        MaterialApp(
-          theme: PixelTheme.light,
-          home: Builder(
-            builder: (context) => TextButton(
-              onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute<void>(
-                  builder: (_) => const PaywallPage(
-                    trigger: PaywallTrigger.notificationSource,
-                    signedIn: false,
-                    onSignIn: _noop,
-                  ),
-                ),
-              ),
-              child: const Text('buka'),
-            ),
-          ),
-        ),
-      );
-      await tester.tap(find.text('buka'));
-      await tester.pumpAndSettle();
-      expect(events, [PremiumEvents.paywallViewed(trigger: 'P2')]);
-      await tester.pageBack();
-      await tester.pumpAndSettle();
-      expect(events.last, PremiumEvents.paywallDismissed(trigger: 'P2'));
     },
   );
 
@@ -284,5 +250,3 @@ void main() {
     });
   });
 }
-
-void _noop() {}

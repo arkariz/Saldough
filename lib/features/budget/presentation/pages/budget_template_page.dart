@@ -73,7 +73,7 @@ class _BudgetTemplatePageState extends State<BudgetTemplatePage> {
       !ActivePlan.isPlus && bloc.state.templates.length >= ActivePlan.limits.value.freeBudgetTemplates;
 
   Future<void> _paywall() =>
-      context.pushRoute(PremiumRouteKeys.paywall, const PaywallInput(PaywallTrigger.limit));
+      context.pushRoute(PremiumRouteKeys.paywall, const PaywallInput(PaywallTrigger.templateLimit));
 
   Future<void> _add() async {
     final bloc = context.read<BudgetTemplateBloc>();

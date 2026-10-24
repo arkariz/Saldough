@@ -150,7 +150,20 @@ void main() {
         'plus_launch_at': '2026-12-01',
         'founder_until': '2027-03-01T23:59:00',
       });
-      expect((await purchases.offered()).offering, OfferingId.founder);
+      final offered = await purchases.offered();
+      expect(offered.offering, OfferingId.founder);
+      expect(offered.deadline, DateTime(2027, 3, 1, 23, 59));
+    });
+
+    test('Harga Pendiri membawa harga tahunan biasa untuk dicoret', () async {
+      config.current = limits({
+        'plus_launch_at': '2026-12-01',
+        'founder_until': '2027-03-01T23:59:00',
+      });
+      final founder = (await purchases.offered()).options.singleWhere(
+        (o) => o.kind == PlusPlanKind.yearlyFounder,
+      );
+      expect(founder.regularPriceText, 'Rp179.000');
     });
 
     test(
@@ -164,9 +177,14 @@ void main() {
             endsOn: DateTime(2026, 12, 9),
           ),
         );
-        expect((await purchases.offered()).offering, OfferingId.postTrial);
+        final offered = await purchases.offered();
+        expect(offered.offering, OfferingId.postTrial);
+        // Hari terakhir uji coba 9 Des, jadi 10 Des 00.00 + 48 jam.
+        expect(offered.deadline, DateTime(2026, 12, 12));
         now = DateTime(2026, 12, 12);
-        expect((await purchases.offered()).offering, OfferingId.standard);
+        final later = await purchases.offered();
+        expect(later.offering, OfferingId.standard);
+        expect(later.deadline, isNull);
       },
     );
 
@@ -243,6 +261,10 @@ void main() {
     expect(
       purchaseResultOfCode(PurchasesErrorCode.purchaseCancelledError),
       isA<BuyCancelled>(),
+    );
+    expect(
+      purchaseResultOfCode(PurchasesErrorCode.paymentPendingError),
+      isA<BuyPending>(),
     );
     expect(
       (purchaseResultOfCode(PurchasesErrorCode.networkError) as BuyFailed)

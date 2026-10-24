@@ -7,11 +7,13 @@ import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/plan/active_plan.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/features/premium/domain/plus_purchasing.dart';
 import 'package:saldough/features/record/presentation/widgets/record_repeat_field.dart';
 import 'package:saldough/shared/auth/auth.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 
 import '../../../../helpers/fake_auth_repository.dart';
+import '../../../../helpers/fake_plus_purchasing.dart';
 import '../../../../helpers/routes.dart';
 
 /// Sakelar Catat otomatis di "Atur lebih lanjut" (T-17.4, ADR-037 §3.2).
@@ -68,6 +70,7 @@ void main() {
     RecurringPattern? value = const RecurringPattern();
     final container = GetIt.asNewInstance()
       ..registerSingleton<RouteRegistry>(appRouteRegistry())
+      ..registerSingleton<PlusPurchasing>(FakePlusPurchasing(selling: false))
       ..registerSingleton<AuthRepository>(FakeAuthRepository());
     await tester.pumpWidget(
       ScopeProvider(

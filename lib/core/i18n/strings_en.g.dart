@@ -1556,6 +1556,7 @@ class _Translations$premium$en extends Translations$premium$id {
 	@override String get unlockAction => 'Unlock with Plus';
 	@override String get plusOnlyTitle => 'This feature is part of Plus';
 	@override String get plusOnlyBody => 'Plus subscriptions aren\'t available yet. Recording stays free.';
+	@override late final _Translations$premium$paywall$en paywall = _Translations$premium$paywall$en._(_root);
 }
 
 // Path: record.draftIssue
@@ -2021,6 +2022,50 @@ class _Translations$analysis$category$en extends Translations$analysis$category$
 	@override String get moreHint => 'Latest 20 transactions';
 }
 
+// Path: premium.paywall
+class _Translations$premium$paywall$en extends Translations$premium$paywall$id {
+	_Translations$premium$paywall$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get close => 'Close';
+	@override String get plans => 'Plans';
+	@override String get later => 'Not now';
+	@override String get kicker => 'Tanukonomy Plus';
+	@override late final _Translations$premium$paywall$messages$en messages = _Translations$premium$paywall$messages$en._(_root);
+	@override late final _Translations$premium$paywall$benefits$en benefits = _Translations$premium$paywall$benefits$en._(_root);
+	@override String get offlineTitle => 'Prices could not load';
+	@override String get offlineBody => 'Connect to the internet to see the prices, then try again.';
+	@override String get retry => 'Try again';
+	@override String get yearly => 'Yearly';
+	@override String get monthly => 'Monthly';
+	@override String get perYear => '/year';
+	@override String get perMonth => '/month';
+	@override String yearlyEquiv({required Object price}) => 'about ${price} a month';
+	@override String get cancelAnytime => 'Cancel anytime';
+	@override String get founderName => 'Founder price';
+	@override String founderSub({required Object date}) => 'Locked while subscribed · until ${date}';
+	@override String get introName => 'Intro price';
+	@override String introSub({required Object price, required Object until}) => 'First year, then ${price} a year · until ${until}';
+	@override String get buyYearly => 'Subscribe yearly';
+	@override String get buyMonthly => 'Subscribe monthly';
+	@override String get subscribe => 'Subscribe';
+	@override String get processing => 'Processing…';
+	@override String get waiting => 'Waiting for approval';
+	@override String get pending => 'Payment pending. Plus turns on as soon as it is approved.';
+	@override String get failed => 'Payment did not go through. Check your payment method in the Play Store, then try again.';
+	@override String fineYearly({required Object price}) => '${price} per year, renews automatically. Cancel anytime in the Play Store.';
+	@override String fineMonthly({required Object price}) => '${price} per month, renews automatically. Cancel anytime in the Play Store.';
+	@override String fineIntro({required Object price, required Object regular}) => '${price} for the first year, then ${regular} a year, renews automatically. Cancel anytime in the Play Store.';
+	@override String get doneTitle => 'Plus is on';
+	@override String get doneBody => 'Tanuki starts working for you.';
+	@override String doneBodyPlan({required Object plan, required Object date}) => '${plan} plan, renews on ${date}. Tanuki starts working for you.';
+	@override String get done => 'Done';
+	@override String get notSellingTitle => 'Plus is not on sale yet';
+	@override String get notSellingBody => 'Subscribing to Plus is not available yet. Recording stays free.';
+}
+
 // Path: record.voice.failure
 class _Translations$record$voice$failure$en extends Translations$record$voice$failure$id {
 	_Translations$record$voice$failure$en._(TranslationsEn root) : this._root = root, super.internal(root);
@@ -2034,6 +2079,123 @@ class _Translations$record$voice$failure$en extends Translations$record$voice$fa
 	@override String get noMatch => 'We didn\'t hear anything. Try again.';
 	@override String get network => 'Speech recognition needs an internet connection. Connect and try again, or type instead.';
 	@override String get other => 'Something went wrong. Try again.';
+}
+
+// Path: premium.paywall.messages
+class _Translations$premium$paywall$messages$en extends Translations$premium$paywall$messages$id {
+	_Translations$premium$paywall$messages$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override late final _Translations$premium$paywall$messages$general$en general = _Translations$premium$paywall$messages$general$en._(_root);
+	@override late final _Translations$premium$paywall$messages$analysis$en analysis = _Translations$premium$paywall$messages$analysis$en._(_root);
+	@override late final _Translations$premium$paywall$messages$notification$en notification = _Translations$premium$paywall$messages$notification$en._(_root);
+	@override late final _Translations$premium$paywall$messages$auto$en auto = _Translations$premium$paywall$messages$auto$en._(_root);
+	@override late final _Translations$premium$paywall$messages$template$en template = _Translations$premium$paywall$messages$template$en._(_root);
+	@override late final _Translations$premium$paywall$messages$project$en project = _Translations$premium$paywall$messages$project$en._(_root);
+	@override late final _Translations$premium$paywall$messages$forecast$en forecast = _Translations$premium$paywall$messages$forecast$en._(_root);
+	@override late final _Translations$premium$paywall$messages$reading$en reading = _Translations$premium$paywall$messages$reading$en._(_root);
+}
+
+// Path: premium.paywall.benefits
+class _Translations$premium$paywall$benefits$en extends Translations$premium$paywall$benefits$id {
+	_Translations$premium$paywall$benefits$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get photo => 'Record from photos and every bank notification';
+	@override String get warn => 'Warnings before a budget runs out';
+	@override String get ask => 'Ask, plan, and get reports';
+}
+
+// Path: premium.paywall.messages.general
+class _Translations$premium$paywall$messages$general$en extends Translations$premium$paywall$messages$general$id {
+	_Translations$premium$paywall$messages$general$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Tanukonomy Plus';
+	@override String get body => 'Tanuki works for you.';
+}
+
+// Path: premium.paywall.messages.analysis
+class _Translations$premium$paywall$messages$analysis$en extends Translations$premium$paywall$messages$analysis$id {
+	_Translations$premium$paywall$messages$analysis$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Analysis beyond 6 periods is in Plus';
+	@override String get body => 'History stays complete. Free Analysis shows your latest 6 periods.';
+}
+
+// Path: premium.paywall.messages.notification
+class _Translations$premium$paywall$messages$notification$en extends Translations$premium$paywall$messages$notification$id {
+	_Translations$premium$paywall$messages$notification$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'A second notification app is in Plus';
+	@override String get body => 'Your first app keeps working. Add GoPay and other apps with Plus.';
+}
+
+// Path: premium.paywall.messages.auto
+class _Translations$premium$paywall$messages$auto$en extends Translations$premium$paywall$messages$auto$id {
+	_Translations$premium$paywall$messages$auto$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Auto-record is in Plus';
+	@override String get body => 'For free, every due date is still recorded with one tap.';
+}
+
+// Path: premium.paywall.messages.template
+class _Translations$premium$paywall$messages$template$en extends Translations$premium$paywall$messages$template$id {
+	_Translations$premium$paywall$messages$template$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'A second template is in Plus';
+	@override String get body => 'The template you have stays saved and keeps working.';
+}
+
+// Path: premium.paywall.messages.project
+class _Translations$premium$paywall$messages$project$en extends Translations$premium$paywall$messages$project$id {
+	_Translations$premium$paywall$messages$project$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'A third active project is in Plus';
+	@override String get body => 'Your projects and their payments stay as they are.';
+}
+
+// Path: premium.paywall.messages.forecast
+class _Translations$premium$paywall$messages$forecast$en extends Translations$premium$paywall$messages$forecast$id {
+	_Translations$premium$paywall$messages$forecast$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'The 12-month forecast is in Plus';
+	@override String get body => 'The next 2 months stay free.';
+}
+
+// Path: premium.paywall.messages.reading
+class _Translations$premium$paywall$messages$reading$en extends Translations$premium$paywall$messages$reading$id {
+	_Translations$premium$paywall$messages$reading$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String title({required Object n}) => '${n} smart readings are used up this month';
+	@override String get body => 'With Plus, photos and readings have no quota.';
 }
 
 /// The flat map containing all translations for locale <en>.
@@ -3475,6 +3637,58 @@ extension on TranslationsEn {
 			'premium.unlockAction' => 'Unlock with Plus',
 			'premium.plusOnlyTitle' => 'This feature is part of Plus',
 			'premium.plusOnlyBody' => 'Plus subscriptions aren\'t available yet. Recording stays free.',
+			'premium.paywall.close' => 'Close',
+			'premium.paywall.plans' => 'Plans',
+			'premium.paywall.later' => 'Not now',
+			'premium.paywall.kicker' => 'Tanukonomy Plus',
+			'premium.paywall.messages.general.title' => 'Tanukonomy Plus',
+			'premium.paywall.messages.general.body' => 'Tanuki works for you.',
+			'premium.paywall.messages.analysis.title' => 'Analysis beyond 6 periods is in Plus',
+			'premium.paywall.messages.analysis.body' => 'History stays complete. Free Analysis shows your latest 6 periods.',
+			'premium.paywall.messages.notification.title' => 'A second notification app is in Plus',
+			'premium.paywall.messages.notification.body' => 'Your first app keeps working. Add GoPay and other apps with Plus.',
+			'premium.paywall.messages.auto.title' => 'Auto-record is in Plus',
+			'premium.paywall.messages.auto.body' => 'For free, every due date is still recorded with one tap.',
+			'premium.paywall.messages.template.title' => 'A second template is in Plus',
+			'premium.paywall.messages.template.body' => 'The template you have stays saved and keeps working.',
+			'premium.paywall.messages.project.title' => 'A third active project is in Plus',
+			'premium.paywall.messages.project.body' => 'Your projects and their payments stay as they are.',
+			'premium.paywall.messages.forecast.title' => 'The 12-month forecast is in Plus',
+			'premium.paywall.messages.forecast.body' => 'The next 2 months stay free.',
+			'premium.paywall.messages.reading.title' => ({required Object n}) => '${n} smart readings are used up this month',
+			'premium.paywall.messages.reading.body' => 'With Plus, photos and readings have no quota.',
+			'premium.paywall.benefits.photo' => 'Record from photos and every bank notification',
+			'premium.paywall.benefits.warn' => 'Warnings before a budget runs out',
+			'premium.paywall.benefits.ask' => 'Ask, plan, and get reports',
+			'premium.paywall.offlineTitle' => 'Prices could not load',
+			'premium.paywall.offlineBody' => 'Connect to the internet to see the prices, then try again.',
+			'premium.paywall.retry' => 'Try again',
+			'premium.paywall.yearly' => 'Yearly',
+			'premium.paywall.monthly' => 'Monthly',
+			'premium.paywall.perYear' => '/year',
+			'premium.paywall.perMonth' => '/month',
+			'premium.paywall.yearlyEquiv' => ({required Object price}) => 'about ${price} a month',
+			'premium.paywall.cancelAnytime' => 'Cancel anytime',
+			'premium.paywall.founderName' => 'Founder price',
+			'premium.paywall.founderSub' => ({required Object date}) => 'Locked while subscribed · until ${date}',
+			'premium.paywall.introName' => 'Intro price',
+			'premium.paywall.introSub' => ({required Object price, required Object until}) => 'First year, then ${price} a year · until ${until}',
+			'premium.paywall.buyYearly' => 'Subscribe yearly',
+			'premium.paywall.buyMonthly' => 'Subscribe monthly',
+			'premium.paywall.subscribe' => 'Subscribe',
+			'premium.paywall.processing' => 'Processing…',
+			'premium.paywall.waiting' => 'Waiting for approval',
+			'premium.paywall.pending' => 'Payment pending. Plus turns on as soon as it is approved.',
+			'premium.paywall.failed' => 'Payment did not go through. Check your payment method in the Play Store, then try again.',
+			'premium.paywall.fineYearly' => ({required Object price}) => '${price} per year, renews automatically. Cancel anytime in the Play Store.',
+			'premium.paywall.fineMonthly' => ({required Object price}) => '${price} per month, renews automatically. Cancel anytime in the Play Store.',
+			'premium.paywall.fineIntro' => ({required Object price, required Object regular}) => '${price} for the first year, then ${regular} a year, renews automatically. Cancel anytime in the Play Store.',
+			'premium.paywall.doneTitle' => 'Plus is on',
+			'premium.paywall.doneBody' => 'Tanuki starts working for you.',
+			'premium.paywall.doneBodyPlan' => ({required Object plan, required Object date}) => '${plan} plan, renews on ${date}. Tanuki starts working for you.',
+			'premium.paywall.done' => 'Done',
+			'premium.paywall.notSellingTitle' => 'Plus is not on sale yet',
+			'premium.paywall.notSellingBody' => 'Subscribing to Plus is not available yet. Recording stays free.',
 			_ => null,
 		};
 	}

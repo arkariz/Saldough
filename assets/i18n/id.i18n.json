@@ -1550,6 +1550,80 @@
     "analysisLockedBody": "Riwayatmu tetap utuh dan bisa dilihat di Riwayat.",
     "unlockAction": "Buka dengan Plus",
     "plusOnlyTitle": "Fitur ini bagian dari Plus",
-    "plusOnlyBody": "Berlangganan Plus belum tersedia. Mencatat tetap gratis."
+    "plusOnlyBody": "Berlangganan Plus belum tersedia. Mencatat tetap gratis.",
+    "paywall": {
+      "close": "Tutup",
+      "plans": "Paket",
+      "later": "Nanti saja",
+      "kicker": "Tanukonomy Plus",
+      "messages": {
+        "general": {
+          "title": "Tanukonomy Plus",
+          "body": "Tanuki bekerja untukmu."
+        },
+        "analysis": {
+          "title": "Analisis lebih dari 6 periode ada di Plus",
+          "body": "Riwayat tetap lengkap. Analisis gratis menampilkan 6 periode terakhir."
+        },
+        "notification": {
+          "title": "Aplikasi notifikasi kedua ada di Plus",
+          "body": "Aplikasi pertamamu tetap berjalan. Tambah GoPay dan aplikasi lain dengan Plus."
+        },
+        "auto": {
+          "title": "Catat otomatis ada di Plus",
+          "body": "Gratis: tiap jatuh tempo tetap tercatat dengan satu ketuk."
+        },
+        "template": {
+          "title": "Template kedua ada di Plus",
+          "body": "Template yang sudah ada tetap tersimpan dan bisa dipakai."
+        },
+        "project": {
+          "title": "Proyek aktif ketiga ada di Plus",
+          "body": "Proyek dan pembayarannya tetap seperti sekarang."
+        },
+        "forecast": {
+          "title": "Perkiraan 12 bulan ada di Plus",
+          "body": "Perkiraan 2 bulan ke depan tetap gratis."
+        },
+        "reading": {
+          "title": "$n tafsir bulan ini sudah terpakai",
+          "body": "Dengan Plus, foto dan tafsir tanpa kuota."
+        }
+      },
+      "benefits": {
+        "photo": "Catat dari foto dan semua notifikasi bank",
+        "warn": "Peringatan sebelum anggaran habis",
+        "ask": "Tanya, rencanakan, dan lapor"
+      },
+      "offlineTitle": "Harga belum bisa dimuat",
+      "offlineBody": "Sambungkan ke internet untuk melihat harga, lalu coba lagi.",
+      "retry": "Coba lagi",
+      "yearly": "Tahunan",
+      "monthly": "Bulanan",
+      "perYear": "/tahun",
+      "perMonth": "/bulan",
+      "yearlyEquiv": "setara $price/bulan",
+      "cancelAnytime": "Bisa dibatalkan kapan saja",
+      "founderName": "Harga Pendiri",
+      "founderSub": "Terkunci selagi berlangganan · sampai $date",
+      "introName": "Harga perkenalan",
+      "introSub": "Tahun pertama, lalu $price/tahun · sampai $until",
+      "buyYearly": "Berlangganan Tahunan",
+      "buyMonthly": "Berlangganan Bulanan",
+      "subscribe": "Berlangganan",
+      "processing": "Memproses…",
+      "waiting": "Menunggu persetujuan",
+      "pending": "Pembayaran tertunda. Plus aktif begitu disetujui.",
+      "failed": "Pembayaran belum berhasil. Cek metode bayarmu di Play Store, lalu coba lagi.",
+      "fineYearly": "$price per tahun, diperpanjang otomatis. Batalkan kapan saja di Play Store.",
+      "fineMonthly": "$price per bulan, diperpanjang otomatis. Batalkan kapan saja di Play Store.",
+      "fineIntro": "$price untuk tahun pertama, lalu $regular per tahun, diperpanjang otomatis. Batalkan kapan saja di Play Store.",
+      "doneTitle": "Plus aktif",
+      "doneBody": "Tanuki mulai bekerja untukmu.",
+      "doneBodyPlan": "Paket $plan, diperpanjang $date. Tanuki mulai bekerja untukmu.",
+      "done": "Selesai",
+      "notSellingTitle": "Plus belum dijual",
+      "notSellingBody": "Berlangganan Plus belum tersedia. Mencatat tetap gratis."
+    }
   }
 }

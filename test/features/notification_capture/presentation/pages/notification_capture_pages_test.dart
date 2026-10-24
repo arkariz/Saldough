@@ -25,6 +25,7 @@ import 'package:saldough/features/notification_capture/domain/repositories/notif
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_store.dart';
 import 'package:saldough/features/notification_capture/presentation/navigation/notification_capture_route_keys.dart';
 import 'package:saldough/features/notification_capture/presentation/pages/notification_pattern_page.dart';
+import 'package:saldough/features/premium/domain/plus_purchasing.dart';
 import 'package:saldough/shared/auth/auth.dart';
 import 'package:saldough/shared/capture/capture.dart';
 import 'package:saldough/shared/category/category.dart';
@@ -33,6 +34,7 @@ import 'package:saldough/shared/wallet/wallet.dart';
 
 import '../../../../helpers/fake_auth_repository.dart';
 import '../../../../helpers/fake_notification_capture_gateway.dart';
+import '../../../../helpers/fake_plus_purchasing.dart';
 import '../../../../helpers/routes.dart';
 
 void main() {
@@ -60,6 +62,7 @@ void main() {
       ..registerSingleton<TransactionRepository>(ledger)
       ..registerSingleton<LedgerChanges>(LedgerChanges())
       ..registerSingleton<CategoryRepository>(CategoryRepositoryImpl(storage: storage))
+      ..registerSingleton<PlusPurchasing>(FakePlusPurchasing(selling: false))
       ..registerSingleton<AuthRepository>(FakeAuthRepository());
     NotificationCaptureModule.register(container, gateway: gateway);
     store = container<NotificationCaptureStore>();

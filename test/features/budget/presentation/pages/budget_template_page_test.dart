@@ -25,6 +25,7 @@ import 'package:saldough/features/budget/presentation/widgets/budget_form_sheet.
 import 'package:saldough/features/home/domain/budget_overview_source.dart';
 import 'package:saldough/features/home/domain/freelance_overview_source.dart';
 import 'package:saldough/features/plan/domain/plan_sources.dart';
+import 'package:saldough/features/premium/domain/plus_purchasing.dart';
 import 'package:saldough/shared/auth/auth.dart';
 import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/shared/category/category.dart';
@@ -33,6 +34,7 @@ import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
 import '../../../../helpers/fake_auth_repository.dart';
+import '../../../../helpers/fake_plus_purchasing.dart';
 import '../../../../helpers/mocks.dart';
 import '../../../../helpers/plan_sources.dart';
 import '../../../../helpers/routes.dart';
@@ -65,6 +67,7 @@ void main() {
     budgetRepository = BudgetRepositoryImpl(storage: storage);
     templateRepository = BudgetTemplateRepositoryImpl(storage: storage);
     container = GetIt.asNewInstance()
+      ..registerLazySingleton<PlusPurchasing>(() => FakePlusPurchasing(selling: false))
       ..registerLazySingleton<AuthRepository>(FakeAuthRepository.new)
       ..registerLazySingleton<BudgetOverviewSource>(stubBudgetOverviewSource)
       ..registerLazySingleton<FreelanceOverviewSource>(stubFreelanceOverviewSource)

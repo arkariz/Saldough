@@ -34,6 +34,8 @@ final class PlanOption extends Equatable {
     required this.kind,
     required this.priceText,
     required this.handle,
+    this.regularPriceText,
+    this.perMonthText,
   });
 
   /// Jenis paket.
@@ -45,8 +47,25 @@ final class PlanOption extends Equatable {
   /// Rujukan buram untuk gateway.
   final Object handle;
 
+  /// Harga biasa yang dicoret di samping [priceText] (Harga Pendiri dan harga
+  /// perkenalan); `null` bila tidak ada.
+  final String? regularPriceText;
+
+  /// Setara per bulan dari toko untuk paket tahunan, mis. "Rp14.917"; `null`
+  /// bila toko tidak memberikannya.
+  final String? perMonthText;
+
+  /// Salinan dengan [regularPriceText] diisi.
+  PlanOption withRegularPrice(String? text) => PlanOption(
+    kind: kind,
+    priceText: priceText,
+    handle: handle,
+    regularPriceText: text,
+    perMonthText: perMonthText,
+  );
+
   @override
-  List<Object?> get props => [kind, priceText, handle];
+  List<Object?> get props => [kind, priceText, handle, regularPriceText, perMonthText];
 }
 
 /// Alasan pembelian gagal (ADR-041 §3.12, `purchase_failed.reason`).
@@ -83,6 +102,13 @@ final class BuyCancelled extends BuyResult {
   const BuyCancelled();
 }
 
+/// Play menunggu persetujuan pembayaran (mis. orang tua atau tunai). Bukan
+/// galat: Plus aktif begitu disetujui.
+final class BuyPending extends BuyResult {
+  /// Membuat [BuyPending].
+  const BuyPending();
+}
+
 /// Pembelian gagal.
 final class BuyFailed extends BuyResult {
   /// Membuat [BuyFailed].
@@ -95,7 +121,7 @@ final class BuyFailed extends BuyResult {
 /// Pilihan yang ditawarkan sekarang: offering terpilih dan paketnya.
 final class OfferedPlans extends Equatable {
   /// Membuat [OfferedPlans].
-  const OfferedPlans({required this.offering, required this.options});
+  const OfferedPlans({required this.offering, required this.options, this.deadline});
 
   /// Belum dijual atau tidak ada yang bisa ditawarkan.
   static const none = OfferedPlans(offering: null, options: []);
@@ -106,9 +132,13 @@ final class OfferedPlans extends Equatable {
   /// Paket yang bisa dibeli, bulanan lebih dulu.
   final List<PlanOption> options;
 
+  /// Kapan penawaran khusus (Pendiri atau sesudah uji coba) berakhir; `null`
+  /// untuk harga biasa.
+  final DateTime? deadline;
+
   /// Tidak ada yang ditawarkan.
   bool get isEmpty => options.isEmpty;
 
   @override
-  List<Object?> get props => [offering, options];
+  List<Object?> get props => [offering, options, deadline];
 }

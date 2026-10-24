@@ -301,6 +301,27 @@ enum IconKey {
   /// Kembalikan data sebelum pemulihan (Akun › Data kamu).
   undo,
 
+  /// Tanda Tanukonomy Plus (lencana, paywall, status di Akun; ADR-041).
+  plus,
+
+  /// Tanpa koneksi (harga paywall belum bisa dimuat).
+  wifiOff,
+
+  /// Catat dari foto (manfaat Plus).
+  photoCamera,
+
+  /// Peringatan sebelum anggaran habis (manfaat Plus).
+  notificationsActive,
+
+  /// Tanya, rencanakan, dan lapor (manfaat Plus).
+  chatBubble,
+
+  /// Membuka layar di luar aplikasi, mis. Play Store.
+  openInNew,
+
+  /// Pulihkan pembelian (Akun › Plus).
+  restorePurchases,
+
   /// Langkah proses yang belum dimulai (daftar langkah pemulihan).
   stepWaiting,
 
@@ -447,6 +468,13 @@ const Map<IconKey, IconData> _symbols = {
   IconKey.backup: Symbols.backup_rounded,
   IconKey.restoreBackup: Symbols.settings_backup_restore_rounded,
   IconKey.undo: Symbols.undo_rounded,
+  IconKey.plus: Symbols.workspace_premium_rounded,
+  IconKey.wifiOff: Symbols.wifi_off_rounded,
+  IconKey.photoCamera: Symbols.photo_camera_rounded,
+  IconKey.notificationsActive: Symbols.notifications_active_rounded,
+  IconKey.chatBubble: Symbols.chat_bubble_rounded,
+  IconKey.openInNew: Symbols.open_in_new_rounded,
+  IconKey.restorePurchases: Symbols.restore_rounded,
   IconKey.stepWaiting: Symbols.radio_button_unchecked_rounded,
   IconKey.appUpdate: Symbols.system_update_rounded,
   IconKey.label: Symbols.label_rounded,

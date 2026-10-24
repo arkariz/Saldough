@@ -94,6 +94,15 @@ void main() {
     );
   });
 
+  test('core/foundation/entitlement/ murni: tanpa Flutter, SDK pembelian, maupun Firebase (ADR-041 §3.1)', () {
+    const forbidden = ['package:flutter/', 'package:purchases_flutter', 'package:firebase'];
+    expectNone(
+      violations(
+        (file, uri, _) => file.startsWith('lib/core/foundation/entitlement/') && forbidden.any(uri.startsWith),
+      ),
+    );
+  });
+
   test('presentation/ tidak mengimpor data/', () {
     expectNone(violations((file, _, to) => inLayer(file, 'presentation') && to != null && inLayer(to, 'data')));
   });

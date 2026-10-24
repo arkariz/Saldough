@@ -88,7 +88,8 @@ Terakhir diperbarui: 29 Oktober 2026 (penyelarasan dokumen dengan `main` di `0.1
 | 21 — Penemuan fitur ([FEATURE_DISCOVERY.md](../01-product/features/FEATURE_DISCOVERY.md)) | 10 | 7 | Kode T-21.1–T-21.7 selesai; T-21.9 (Mulai cepat) sebagian; menunggu T-21.0 (rupa) dan T-21.8 (verifikasi perangkat) |
 | 22 — Ekspor dan cadangan manual ([EXPORT_BACKUP.md](../01-product/features/EXPORT_BACKUP.md)) | 8 | 8 | Selesai 23 Okt 2026 (dari B-42): ADR-040 Accepted, T-22.0–T-22.7 di `main`; QA emulator Android tanpa temuan S1/S2; sisa uji perangkat (iOS, Excel/Sheets, dll.) di B-67 |
 | 23 — Catat notifikasi multi-dompet, contoh, dan rutin lebih awal ([ADR-042](../02-architecture/adr/0042-notifikasi-multi-dompet-sampel-dan-rutin.md)) | 4 | 4 | **Selesai 23 Okt 2026, di `main`** (commit `c83f360`), dirilis di `0.10.0+16`. QA emulator ([VERIFICATION_PLAN_FASE_23.md](VERIFICATION_PLAN_FASE_23.md)): kompilasi Kotlin lulus, 26 baris lulus, tanpa Gagal S1/S2, 5 temuan S3; sisanya di B-83 |
-| Antrean (`B-n`, belum dijadwalkan) | 66 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
+| 24 — Fondasi Plus ([ADR-041](../02-architecture/adr/0041-monetisasi-hak-plus-dan-uji-coba.md), [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md)) | 18 | 16 | Dijadwalkan 23 Okt 2026 (dari B-41); T-24.1 (ADR-041 revisi 2), T-24.2 (fondasi murni), T-24.3 (`AppUser.createdAt`), T-24.4 (penyimpanan hak), T-24.5 (batas dari Remote Config), T-24.6 (`Entitlements` lokal), T-24.7 (pengganti paket uji), T-24.8 (paywall sementara), T-24.9 (gerbang R3), T-24.10 (gerbang notifikasi), T-24.11 (kuota tafsir), T-24.12 (gerbang Analisis), T-24.13 (gerbang template dan proyek), dan T-24.14 (adaptor RevenueCat, uji palsu), dan T-24.15 (kebijakan offering, beli/pulihkan), dan T-24.16 (analitik dan dokumen rilis) selesai; berikutnya T-24.17 (menunggu rupa) dan T-24.18. T-24.17 menunggu rupa, uji nyata T-24.14 menunggu akun dan kunci RevenueCat; rilis build bergerbang menunggu penguji bisa masuk akun |
+| Antrean (`B-n`, belum dijadwalkan) | 67 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
 
 ## Keputusan terbuka
 
@@ -5373,6 +5374,346 @@ situs, uji layar, uji perangkat dengan notifikasi Jago asli) di B-83.
 dan saldo awal digeser diam-diam. Dikerjakan tanpa tugas atau ADR; keputusan
 domainnya terbuka di KT-W1. Build ini belum ditandai tag.
 
+## Fase 24: Fondasi Plus
+
+Dari B-41, dijadwalkan 23 Okt 2026. Keputusan teknis di
+[ADR-041](../02-architecture/adr/0041-monetisasi-hak-plus-dan-uji-coba.md)
+(Accepted, revisi 2 §3.13); perilaku produk di
+[FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md). Fitur Plus
+baru (B-44 Penjaga, B-45 foto, B-46 Bagaimana kalau) di luar fase ini. Selama
+`plus_launch_at` kosong berlaku **pra-peluncuran: masuk akun = Plus**, tanpa
+akun = Gratis; gerbang dibiarkan mengunci (keputusan pemilik). **Merilis build
+bergerbang (T-24.9–T-24.13) menunggu** semua penguji bisa masuk akun dan
+catatan rilis/email memberi tahu. Satu tugas satu commit, branch dari `main`.
+Jalur kritis: T-24.2 → T-24.4 → T-24.6 → T-24.14 → T-24.18.
+
+- [x] **T-24.1** ADR-041 revisi 2 dan pembukaan fase (dokumen, 23 Okt 2026).
+      Hasil pemeriksaan kode masuk ADR §3.13: pra-peluncuran (`plus_launch_at`
+      menggantikan `trial_not_before`), semua proyek dan semua template dihitung,
+      sumber notifikasi pertama tetap, gerbang Rencana ditunda ke B-30/B-46,
+      `trialAnchor` primitif, kunci RevenueCat di kedua lane Shorebird, menu
+      pengembang lewat `DevEntry`, setelan Remote Config bersama.
+      `purchase_restored` masuk FREEMIUM_PAYWALL §12.5. B-41 dipindah ke fase
+      ini; B-84 (arsip proyek) ditambah.
+      Verifikasi: tinjauan dokumen; tidak ada kode.
+- [x] **T-24.2** Fondasi murni di `lib/core/foundation/entitlement/`:
+      `PlanState` (sealed; `PlanSource` purchase/promotional/override/prelaunch),
+      `PlusFeature`, `EntitlementLimits` (bawaan + parse dengan fallback),
+      `trialEndsOn` dan `trialAnchor`, `resolvePlan` (override → pra-peluncuran →
+      Plus RevenueCat + tenggang luring 3 hari → uji coba → Gratis/Ditahan),
+      barrel `entitlement.dart`. Memakai `financialPeriodOf`.
+      Verifikasi: uji tabel (batas 13/14 hari, periode tanggal 25, peralihan,
+      akhir bulan, tenggang tepat 3 hari, akun baru/lama, `plus_launch_at`
+      kosong); uji arsitektur: entitlement tanpa SDK dan tanpa fitur.
+      Di luar PRD: fondasi monetisasi (FREEMIUM_PAYWALL §12).
+      **Selesai 23 Okt 2026.** `plan_state.dart` (`FreePlan`, `TrialPlan`,
+      `PlusPlan`, `OnHoldPlan`; nama kelas berakhiran `Plan` supaya tidak
+      bentrok), `plus_feature.dart`, `entitlement_limits.dart` (16 kunci Remote
+      Config, `fromValues` dengan fallback; nol dari server dihormati),
+      `trial_rules.dart`, `entitlement_resolver.dart` (`PlanOverride`,
+      `CachedPlus`, `TrialRecord`, `resolvePlan`). Hak cache yang sudah
+      diverifikasi sesudah `until` tanpa perpanjangan langsung berakhir (tanpa
+      tenggang luring). Pra-peluncuran ditaruh sesudah hak RevenueCat, jadi hak
+      promosi tetap dihormati. Verifikasi: 29 uji baru (termasuk sifat untuk
+      setiap hari 2026 di empat jadwal, salah satunya berperalihan) dan aturan
+      arsitektur entitlement tanpa Flutter/SDK/Firebase; seluruh `flutter test`
+      2068 lulus; `flutter analyze` bersih.
+- [x] **T-24.3** `AppUser.createdAt` dari `fb.User.metadata.creationTime`
+      (`shared/auth`).
+      ⚠ Nilai sungguhan baru terlihat di perangkat.
+      Verifikasi: uji pemetaan dan `props`.
+      **Selesai 23 Okt 2026.** Field opsional `createdAt` (ikut `props`),
+      dipetakan di `FirebaseAuthRepositoryImpl._toAppUser`. `FakeAuthRepository`
+      sengaja belum diubah; T-24.6 mengisinya saat butuh jangkar uji coba.
+      Verifikasi: uji pemetaan baru di `firebase_auth_repository_impl_test`
+      (11 lulus); seluruh `flutter test` lulus; `flutter analyze` bersih.
+- [x] **T-24.4** Penyimpanan hak di `lib/features/premium/data/`
+      (`entitlement_trial`, `entitlement_cache`, `entitlement_quota`), semuanya
+      `exclude` dengan alasan di `BackupRegistry`.
+      Verifikasi: uji store (rusak, ganti periode, refund); uji kelengkapan
+      registri; pulihkan data tidak menyentuh `entitlement_*`.
+      **Selesai 23 Okt 2026.** `TrialStore` (rekaman per akun dalam satu
+      dokumen: `firstSeen`, `start`, `endsOn`; uji coba dan `firstSeen` hanya
+      ditulis sekali), `EntitlementCacheStore` (menolak sumber `override` dan
+      `prelaunch`), `QuotaStore` (`QuotaScope.freePeriod` per periode dan
+      `plusMonth` per bulan, satu ember terakhir per satuan, refund tidak di
+      bawah nol); dokumen rusak dibaca sebagai `Left` dan ditimpa saat menulis
+      (pola `TutorialProgressRepositoryImpl`). Tiga kunci `exclude` di
+      `app_backup_registry.dart`; `restore_engine_test` kini memastikan
+      pemulihan tidak menyentuh ketiganya. Verifikasi: 15 uji store baru, uji
+      kelengkapan registri lulus; seluruh `flutter test` 2084 lulus;
+      `flutter analyze` bersih.
+- [x] **T-24.5** `EntitlementConfig` (port di core) dan gateway Remote Config
+      premium terpisah dari `app_update`, setelan ambil sama.
+      ⚠ Belum dicoba terhadap Remote Config sungguhan.
+      Verifikasi: uji nilai tidak sah dan gagal memakai bawaan.
+      **Selesai 23 Okt 2026.** Port `EntitlementConfig` (`current`, `changes`,
+      `refresh`; tidak pernah melempar) di `core/foundation/entitlement/`;
+      `FirebaseEntitlementConfig` di `features/premium/data/` memakai singleton
+      dan setelan ambil yang sama dengan `app_update` (30 menit, 10 detik;
+      nilainya diulang karena fitur tidak boleh saling mengimpor), hanya
+      membaca kunci di `EntitlementLimits.keys`, tidak menyetel nilai bawaan
+      SDK, dan mendengar `onConfigUpdated`. Verifikasi: 8 uji dengan Remote
+      Config palsu (bawaan, filter kunci, nilai tidak sah, luring, Firebase
+      belum siap, pembaruan langsung, tanpa pancaran ganda); seluruh
+      `flutter test` lulus; `flutter analyze` bersih.
+- [x] **T-24.6** Port `Entitlements` (`current`, `changes`, `can`, `quota`,
+      `tryUse`, `refund`), implementasi lokal, kabel di akar komposisi (dengar
+      status masuk akun, mulai uji coba sesudah peluncuran), `FakeEntitlements`.
+      Verifikasi: pra-peluncuran (masuk = Plus, tanpa akun = Gratis), sesudah
+      peluncuran, masuk/keluar/ganti akun, galat tidak melempar.
+      **Selesai 23 Okt 2026.** Port `Entitlements` + `QuotaStatus` di core
+      (tambah `allows(feature, count:)` untuk batas jumlah dan `refresh`);
+      `LocalEntitlements` (`features/premium/data/`) menggabungkan batas,
+      uji coba, cache, jatah, dan akun dari `setAccount`; uji coba dimulai saat
+      akun masuk sesudah peluncuran, juga bila peluncuran datang lewat Remote
+      Config saat aplikasi terbuka. `lib/app/premium/premium_wiring.dart`:
+      `registerEntitlements` (malas, dari `RootModule`) dan `startEntitlements`
+      (bootstrap, sesudah jadwal periode dimuat: akun awal, `authStateChanges`,
+      `refresh` saat kembali dibuka). `test/helpers/fake_entitlements.dart`.
+      Peristiwa `trial_started` ikut T-24.16.
+      ⚠ Bootstrap dengan kabel baru belum dijalankan di emulator (emulator
+      tidak menyala saat dicoba); dicek bersama gerbang pertama.
+      Verifikasi: 14 uji `LocalEntitlements` (pra-peluncuran, uji coba akun
+      baru/lama, sekali saja, peluncuran saat terbuka, cache promosi,
+      pengganti, batas, jatah per periode dan reset, batas wajar Plus,
+      penyimpanan rusak tidak melempar); seluruh `flutter test` 2106 lulus;
+      `flutter analyze` bersih.
+- [x] **T-24.7** `PlanOverride` (`lib/app/premium/plan_override.dart`,
+      `PLAN_OVERRIDE` + kunci `entitlement_debug_override`, mati di
+      `kReleaseMode`) dan halaman pilih paket di menu pengembang (`DevEntry`).
+      Verifikasi: rilis menolak override; uji arsitektur (define dan kunci hanya
+      di satu berkas, tidak ada di workflow maupun Fastfile).
+      **Selesai 24 Okt 2026.** `PlanOverrideController` (`lib/app/premium/
+      plan_override.dart`: define `PLAN_OVERRIDE` sebagai nilai awal, pilihan
+      tersimpan di `entitlement_debug_override` menang atas define, mati total
+      bila `isRelease`), `DebugPlanRouteModule` + `DebugPlanPage`
+      (`debug_plan_page.dart`; tanpa rute dan tanpa `DevEntry` di rilis; teks
+      Indonesia polos karena hanya untuk pengembang), dikabelkan di
+      `premium_wiring.dart` (`load` sebelum akun dihitung, perubahan memicu
+      `LocalEntitlements.recompute`) dan `featureModules`. Kunci keempat
+      `exclude` di `app_backup_registry.dart`. Verifikasi: 11 uji baru
+      (define, prioritas pilihan tersimpan, rilis mengabaikan define dan
+      pilihan, dokumen rusak, modul rute rilis/non-rilis, halaman); uji
+      arsitektur: `PLAN_OVERRIDE` dan `debug_override` hanya di
+      `plan_override.dart` (+ registri cadangan) dan tidak ada di workflow
+      maupun Fastfile; seluruh `flutter test` lulus; `flutter analyze` bersih.
+      ⚠ Menu pengembang belum dibuka di emulator (emulator tidak menyala).
+- [x] **T-24.8** Rute paywall sementara (`PremiumRouteKeys.paywall`,
+      `PaywallTrigger` P1–P10) berisi "Masuk untuk membuka fitur Plus" ke
+      `AccountRouteKeys.page`; teks i18n id+en.
+      Verifikasi: uji widget; registri rute.
+      **Selesai 24 Okt 2026.** `PremiumRouteKeys.paywall` + `PaywallInput`
+      (`premium_route_keys.dart`, satu-satunya berkas premium yang boleh
+      diimpor fitur lain), `PremiumRouteModule`, `PaywallPage` (ajakan masuk
+      ke Akun bila belum masuk; bila sudah masuk "Berlangganan Plus belum
+      tersedia"; digulir supaya teks 200% di 360dp tidak overflow), blok i18n
+      `premium.*` id+en. `PaywallTrigger` mengikuti tabel FREEMIUM_PAYWALL §9
+      (P1–P10) ditambah `recurringAutomation`, `analysisHistory`, `limit`
+      untuk gerbang lama yang tidak punya baris di tabel itu; penomoran P-n
+      lama di ADR-041 §3.8 tidak cocok dengan §9 dan sudah diperbaiki.
+      Verifikasi: 5 uji (tanpa akun, sudah masuk, 360dp teks 200%, modul rute,
+      nama pemicu); registri rute; `flutter analyze` bersih; seluruh
+      `flutter test` lulus.
+      ⚠ Belum dilihat di emulator.
+- [x] **T-24.9** Gerbang otomasi R3: `AutoRecordHost` memeriksa hak sebelum
+      mencatat dan berjalan ulang saat hak berubah; sakelar Catat otomatis
+      membuka paywall tanpa mengubah `autoRecord`; kartu R3 disembunyikan di
+      Gratis. `RecordTransaction` tidak disentuh.
+      Verifikasi: uji Gratis/Plus/pra-peluncuran.
+      **Selesai 24 Okt 2026.** `ActivePlan` (`core/presentation/plan/`, pola
+      `ActiveCurrency`; bawaan Gratis; diisi `startEntitlements`; direset saat
+      boot ulang dan terdaftar di `app_reboot_state_test`) dipakai untuk
+      gerbang tampilan (ADR-041 §3.13a). Titik: `AutoRecordHost` (tidak mencatat
+      di Gratis, berjalan saat paket menjadi Plus), sakelar Catat otomatis di
+      formulir (`record_repeat_field`) dan rincian rutin (judul berlabel
+      "· Plus", ketukan membuka paywall `recurringAutomation`, nilai tidak
+      berubah), saran Sepertinya rutin dan kartu rutin menganggur, label
+      "Belum terlihat di notifikasi" dan tautan harga naik di kelompok
+      Menunggu. Tetap di Gratis: daftar Tercatat otomatis, konfirmasi satu
+      ketuk (aturan 8), dan `autoRecord` yang sudah disetel.
+      Verifikasi: uji host (Gratis tidak mencatat, lalu mencatat saat Plus),
+      sakelar formulir Gratis (label Plus, paywall terbuka, nilai tetap),
+      halaman Rutin Gratis (label, harga naik, saran hilang); uji R3 lama
+      dipasang Plus; seluruh `flutter test` 2124 lulus; `flutter analyze`
+      bersih.
+      ⚠ Sakelar di rincian rutin belum punya uji sendiri (logikanya sama dengan
+      formulir) dan belum dilihat di emulator. Begitu build ini dirilis,
+      pengguna tanpa akun langsung kehilangan otomasi R3 (keputusan pemilik).
+- [x] **T-24.10** Gerbang Catat dari notifikasi: di Gratis hanya sumber pertama
+      diproses, tingkat otomatis efektif "tinjau semua", tambah sumber ke-2 dan
+      pola baru membuka paywall; pola lama tetap.
+      Verifikasi: uji pemrosesan dan halaman.
+      **Selesai 24 Okt 2026.** Penegakan di `ProcessCapturedNotifications`
+      (parameter `isPlus` dan `freeSources`, diisi modul DI dari `ActivePlan`):
+      di Gratis hanya `freeSources` sumber pertama di daftar yang diproses
+      (sisanya di-ack tanpa masuk kotak masuk, setelannya utuh), dan tingkat
+      otomatis diperlakukan "tinjau semua" tanpa mengubah setelan. Gerbang UI
+      (`widgets/plus_gate.dart`, paywall `notificationSource`): tambah sumber ke
+      daftar yang sudah penuh (`pickAndOpenNotificationSource`), Mulai cepat
+      dengan lebih dari satu aplikasi tercentang, dua sakelar Catat otomatis di
+      setelan, dan pola baru (`openNotificationPatternPage`; menyunting pola
+      yang ada tetap boleh). `ActivePlan.limits` membawa batas Gratis dari
+      Remote Config. Verifikasi: 4 uji pemroses (Gratis: tinjau semua, hanya
+      sumber pertama, batas dari Remote Config; Plus: dihormati) dan 3 uji
+      halaman (sakelar, sumber kedua, Ajari pola); uji lama dipasang Plus;
+      seluruh `flutter test` 2131 lulus; `flutter analyze` bersih.
+      ⚠ Mulai cepat dengan >1 aplikasi belum diuji sendiri; sumber yang sudah
+      lebih dari batas tidak diberi tanda di daftar (rupa di T-24.17).
+
+- [x] **T-24.11** Kuota tafsir cerdas: dekorator `TransactionInterpreter` yang
+      gagal saat jatah habis (jatuh ke aturan) dan mengonsumsi hanya saat
+      berhasil; dipasang di notifikasi dan suara (kuota bersama, KT-P14).
+      Verifikasi: uji dekorator dan komposer.
+      **Selesai 24 Okt 2026.** `QuotaGatedInterpreter`
+      (`shared/capture/data/`, diekspor barrel `capture.dart`) membungkus
+      `FirebaseAiTransactionInterpreter` dengan jatah
+      `PlusFeature.smartInterpretation`: jatah diambil sebelum memanggil cloud,
+      dikembalikan bila hasilnya `Left` atau melempar; habis = `Left` berkode
+      `CAPTURE_QUOTA_EXHAUSTED`, jadi `CaptureDraftComposer` memakai hasil aturan
+      dan pencatatan tidak pernah gagal. Dipasang di notifikasi
+      (`NotificationCaptureModule`) dan suara (`VoiceCaptureScope`, `Entitlements`
+      dijembatani dari induk); kuotanya satu kunci, jadi bersama (KT-P14).
+      Tanpa `Entitlements` terdaftar (uji) cloud tidak dibatasi.
+      Verifikasi: 6 uji (di bawah jatah, habis, hasil galat, melempar, Plus
+      dengan batas wajar, integrasi dengan penyusun draf); seluruh
+      `flutter test` 2137 lulus; `flutter analyze` bersih.
+      ⚠ Timeout cloud di penyusun draf tetap menghabiskan jatah (panggilannya
+      sudah berjalan); foto struk belum ada, jadi kunci bersama baru dipakai
+      suara dan notifikasi. Belum dicoba dengan Gemini sungguhan.
+
+- [x] **T-24.12** Gerbang Analisis > 6 periode (terkunci + kartu P6); Riwayat
+      Daftar tidak berubah.
+      Verifikasi: uji bloc dan widget.
+      **Selesai 24 Okt 2026.** `isAnalysisPeriodLocked`
+      (`features/analysis/domain/analysis_access.dart`, murni): Gratis melihat
+      periode berjalan dan `freeAnalysisPeriods` - 1 sebelumnya (bawaan 6),
+      mengikuti jadwal periode keuangan; batas minimal satu periode.
+      `AnalysisView` menukar isi periode terkunci dengan kartu
+      `analysis-locked` (judul "Analisis lebih dari 6 periode ada di Plus",
+      tombol membuka paywall `analysisHistory`) sementara pemilih periode tetap
+      berfungsi; tampilan memperbarui diri saat paket berubah. Memakai `today`
+      bloc (jam yang sama dengan penentu periode berjalan). Riwayat Daftar tidak
+      berubah. Tren 12 bulan belum ada, jadi tidak digerbang.
+      Verifikasi: 3 uji fungsi (batas, minimal satu, jadwal tanggal 25 dan
+      peralihan) dan 2 uji widget (Gratis: periode keenam terbuka, ketujuh
+      terkunci, kembali maju terbuka; Plus membuka); seluruh `flutter test`
+      lulus; `flutter analyze` bersih.
+      ⚠ Efek buram dari FREEMIUM §9 belum dipakai (placeholder kartu sampai
+      rupa di T-24.17); tombol "Buka dengan Plus" belum diuji sampai membuka
+      paywall di halaman Analisis.
+
+- [x] **T-24.13** Gerbang template ke-2 dan proyek ke-3 (semua dihitung); yang
+      ada tetap dipakai.
+      Verifikasi: uji membuat baru di Gratis/Plus.
+      **Selesai 24 Okt 2026.** Template: `_limited` di
+      `budget_template_page.dart` menghitung semua template
+      (`freeBudgetTemplates`, bawaan 1); Tambah template dan Gandakan membuka
+      paywall `limit` bila sudah penuh, "Gunakan template" dan menyunting yang
+      ada tetap. Proyek: `addProject` (`freelance_actions.dart`) membuka paywall
+      bila proyek sudah `freeProjects` (bawaan 2); menyunting dan menghapus
+      tetap. Batas dibaca dari `ActivePlan.limits`.
+      Verifikasi: 4 uji template (paywall untuk tambah dan gandakan tanpa
+      mengubah data, template pertama boleh, Plus boleh gandakan) dan 2 uji
+      freelance (dua proyek: paywall dan tidak ada proyek baru; satu proyek:
+      formulir terbuka); seluruh `flutter test` lulus; `flutter analyze` bersih.
+      ⚠ Pengguna yang sudah punya lebih dari batas (mis. 4 template) tetap
+      memakainya; belum ada tanda di daftar (rupa di T-24.17). Anggaran dari
+      template di tempat lain (mis. "Gunakan template" dari daftar Anggaran) tidak
+      dibatasi, sesuai keputusan "yang ada tetap dipakai".
+
+- [x] **T-24.14** Adaptor RevenueCat (`purchases_flutter` di balik gateway
+      palsu-able; `logIn`/`logOut`, `restorePurchases`, peta `CustomerInfo` ke
+      cache), kunci lewat `REVENUECAT_ANDROID_KEY` di kedua lane Fastfile.
+      ⚠ Pembelian, tenggang, dan ditahan hanya bisa dicek di jalur uji Play;
+      butuh akun dan kunci dari pemilik.
+      Verifikasi: uji dengan SDK palsu; uji arsitektur `purchases_flutter`.
+      **Selesai (kode dan uji palsu) 24 Okt 2026.** `purchases_flutter ^10.18.1`
+      ditambahkan (pubspec.lock di-gitignore). `PurchasesGateway`
+      (`purchases_gateway.dart`; hanya berkas ini yang mengimpor SDK) dengan
+      `PurchasesFlutterGateway` dan pemeta murni `snapshotOfEntitlement` ke
+      `PlusSnapshot` (aktif, promosi, tanggal berakhir, masalah pembayaran).
+      `RevenueCatPlanSource` menyalin entitlement `plus` ke
+      `EntitlementCacheStore`: aktif = `purchase`/`promotional`; aktif dengan
+      masalah pembayaran = tenggang; tidak aktif dengan masalah = ditahan;
+      kedaluwarsa atau tanpa entitlement = cache dihapus; gagal membaca = cache
+      lama dibiarkan. Kabel (`premium_wiring.dart`): terdaftar hanya di Android
+      dengan `REVENUECAT_ANDROID_KEY`; `logIn(uid)`/`logOut` mengikuti status
+      masuk akun, `refresh` saat aplikasi kembali dibuka, pembaruan SDK langsung
+      disalin. Fastfile: `revenuecat_args` diteruskan ke `shorebird_release`
+      DAN `shorebird_patch` (setelah `--`), workflow memberi secret ke kedua
+      langkah; tanpa secret build berjalan tanpa RevenueCat (peringatan).
+      Verifikasi: 4 uji pemeta, 10 uji sumber dengan gateway palsu, 3 uji
+      pendaftaran, 2 uji pipeline (kedua lane dan kedua langkah workflow), uji
+      arsitektur `purchases_flutter` hanya di `features/premium/data/`; build
+      APK debug x64 berhasil (plugin native terkompilasi); seluruh
+      `flutter test` 2167 lulus; `flutter analyze` bersih.
+      ⚠ Belum dicoba terhadap RevenueCat sungguhan: menunggu akun, kunci SDK,
+      entitlement `plus`, dan produk Play dari pemilik. ⚠ Sintaks `args: "--
+      --dart-define=..."` di plugin `fastlane-plugin-shorebird` untuk rilis dan
+      patch belum dijalankan; cek pada rilis/patch pertama (Shorebird mensyaratkan
+      define yang sama di rilis dan patch). ⚠ `restore`/pembelian belum punya UI
+      (T-24.15 dan T-24.17).
+
+- [x] **T-24.15** `OfferingPolicy` (founder, post_trial 48 jam, default) dan use
+      case beli/pulihkan, tanpa UI.
+      Verifikasi: uji murni.
+      **Selesai 24 Okt 2026.** `selectOffering` (`premium/domain/
+      offering_policy.dart`, murni): Pendiri sampai `founder_until` (inklusif),
+      lalu `post_trial` dari tengah malam sesudah hari terakhir uji coba selama
+      `post_trial_offer_hours` (48), selain itu `default`; Pendiri didahulukan.
+      `PlusPlanKind`, `PlanOption`, `BuyResult` (`BuyDone/BuyCancelled/
+      BuyFailed`), `PurchaseFailure`, `OfferedPlans` di
+      `purchase_models.dart` (nama `Buy*` karena `PurchaseResult` milik SDK).
+      `PurchasesGateway` ditambah `options(offeringId)` dan `purchase(option)`
+      (pembatalan pengguna = hasil, bukan galat; `purchaseResultOfCode`).
+      `PremiumPurchases` (`data/premium_purchases.dart`): `offered()` (kosong
+      sebelum `plus_launch_at`; offering khusus kosong jatuh ke biasa; tidak
+      pernah melempar), `buy()` (menyalin hak baru ke cache lewat
+      `RevenueCatPlanSource.apply`), `restore()` (juga sebelum dijual); tanpa
+      syarat akun (P-9). Terdaftar bersama sumber RevenueCat. Konvensi package
+      di RevenueCat dicatat di ADR §3.5.
+      Verifikasi: uji kebijakan (batas Pendiri, jendela 48 jam, lama dari
+      Remote Config, prioritas), 7 uji `PremiumPurchases` (belum dijual,
+      harga biasa, Pendiri, sesudah uji coba, jatuh ke biasa, luring; beli
+      berhasil/batal/gagal/melempar/ditolak; pulihkan), pemetaan kode galat SDK;
+      seluruh `flutter test` 2185 lulus; `flutter analyze` bersih.
+      ⚠ `PurchasesFlutterGateway.options`/`purchase` (SDK nyata) hanya
+      terkompilasi, belum dijalankan; harga Rp129.000 sesudah uji coba adalah
+      isi offering di RevenueCat, bukan di kode. Tanpa UI sampai T-24.17.
+
+- [x] **T-24.16** `PremiumEvents`, `PLAY_DATA_SAFETY.md` (RevenueCat, riwayat
+      pembelian), daftar periksa rilis di `RELEASE_NOTES.md` (hak promo
+      peninjau, kunci di kedua lane).
+      Verifikasi: uji peristiwa dan parameter.
+      **Selesai 24 Okt 2026.** `PremiumEvents` di `app_analytics.dart` (12
+      peristiwa ADR §3.12; `purchase_restored`, bukan `restore_completed`).
+      Terpicu sekarang: `trial_started{days}` (sekali, saat uji coba dibuat),
+      `paywall_viewed/dismissed{trigger}` (`PaywallPage` jadi stateful),
+      `purchase_started/completed/failed/restored` (`PremiumPurchases`;
+      pembatalan pengguna bukan kegagalan), `taste_quota_exhausted` (jatah
+      Gratis habis) dan `plus_feature_used` (pengguna Plus memakai jatah/fitur)
+      di `LocalEntitlements.tryUse`. `trial_moment`, `trial_value_recap_shown`,
+      dan `trial_ended` sudah didefinisikan tetapi dipicu layar T-24.17.
+      Dokumen: `PLAY_DATA_SAFETY.md` bagian Fase 24 (RevenueCat, Play Billing,
+      peristiwa, Remote Config; **App access berubah**: peninjau butuh akun
+      dengan hak promosi) dan daftar periksa rilis berfitur Plus di
+      `RELEASE_NOTES.md` (9 butir).
+      Verifikasi: uji nama dan parameter, paywall viewed/dismissed dengan
+      pemicunya, empat jalur pembelian, uji coba sekali dengan jumlah hari,
+      jatah habis, plus_feature_used; seluruh `flutter test` 2195 lulus;
+      `flutter analyze` bersih.
+      ⚠ Belum dilihat di DebugView Firebase. Daftar jenis data RevenueCat di
+      `PLAY_DATA_SAFETY.md` berasal dari rancangan, bukan dari halaman resmi
+      penyedia: periksa sebelum mengisi formulir Play.
+
+- [ ] **T-24.17** Layar premium: paywall P1–P10, hadiah uji coba, rekap H-3,
+      layar turun, status Plus di Akun, momen terjadwal.
+      ⚠ Terblokir: butuh rupa dari designer; dipecah jadi tugas sendiri.
+- [ ] **T-24.18** Verifikasi perangkat (QA/pemilik): beli bulanan/tahunan, uji
+      coba berakhir, penawaran 48 jam, tenggang/ditahan, mode pesawat 3 hari,
+      pulihkan pembelian di ponsel kedua, akun peninjau email/sandi.
+
 ## Antrean (belum dijadwalkan)
 
 Hal yang sudah diketahui perlu dikerjakan tapi belum masuk fase. Cara
@@ -5404,7 +5745,6 @@ menambah dan memindahkannya ada di
 | B-32 | R3d: rutin lewat suara ("tiap bulan", "tiap tanggal 5" menyalakan Ulangi di draf CATAT) dan KT-R7 kartu menunggu gabungan (ADR-037 §3.4), sesudah Fase 14. | agen + pemilik | T-17.9 |
 | B-38 | **Analisis R2**: tampilan tahun, tren total saldo (butuh `Wallet.createdAt`, ADR baru, KT-A5), porsi pengeluaran rutin, baris "Di luar rencana" di Bulan ini membuka Analisis tersaring, sorotan Analisis bersaing di slot wawasan Beranda (§7B aturan 2). | agen | [FINANCIAL_ANALYSIS.md](../01-product/features/FINANCIAL_ANALYSIS.md), FR-ANL-006 |
 | B-40 | Tindak lanjut kecil QA T-19.7 (S4 dan celah uji): tombol "Catat transaksi" di keadaan kosong Analisis sebagian tertutup bilah bawah pada 360dp sampai digulir; belum teruji di perangkat: keadaan galat dan memuat Analisis, keadaan kosong bahasa en, pembayaran Freelance di Pemasukan, sorotan `from=highlight`, `category=freelance`. | agen (S4) + pemilik (uji perangkat) | QA T-19.7 |
-| B-41 | **Fondasi Plus** (FREEMIUM_PAYWALL §13 B1, B2, C4): ADR monetisasi; billing (RevenueCat), `Entitlements`, layar paywall, jatah cicip dari Remote Config, peristiwa Analytics; gerbang fitur yang sudah ada (notifikasi 1 aplikasi, kuota tafsir, Analisis > 6 periode, template ke-2, proyek ke-3, seluruh otomasi rutin R3 Fase 17 sesuai KT-P11); lalu reverse trial, momen terjadwal, rekap nilai, pemicu paywall. Plus dinyalakan untuk penguji dulu, **dijual sesudah B-44–B-46**. Judul paywall dan pemasaran memakai tiga janji (FREEMIUM_PAYWALL §16.2, 23 Okt 2026). Semua KT-P diputuskan 18 Okt 2026 (§15): Tanukonomy Plus, uji coba sampai akhir periode keuangan pertama yang penuh (§8.1), dompet tanpa batas, harga §11.2 tanpa seumur hidup, penguji Plus 12 bulan, RevenueCat, notifikasi gratis 1 aplikasi. | pemilik memutuskan, lalu agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §13, PRD §13; keputusan teknis di [ADR-041](../02-architecture/adr/0041-monetisasi-hak-plus-dan-uji-coba.md) (Accepted, 23 Okt 2026) |
 | B-43 | Kunci aplikasi sidik jari/PIN (**gratis**, `local_auth`). | agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §13 A2 |
 | B-44 | **Penjaga + Ringkasan Senin** (Plus, cicip 1 per periode): prediksi anggaran habis, uang nganggur menipis, pengeluaran tak biasa, tagihan pekan depan, sinyal R3 sebagai notifikasi; dihitung lokal. Usulan dibangun pertama (KT-P9). Pertanyaan ADR: hitung di latar atau saat dibuka. | agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §6.2, §13 C1 |
 | B-45 | **Catat dari foto** (Plus; gratis berbagi kuota 30 tafsir cerdas per periode, KT-P14): struk, bukti transfer, tangkapan layar QRIS/e-wallet → draf CATAT lewat `shared/capture/` dan Gemini multimodal; terima bagi dari aplikasi lain. Butuh Blaze (T-11.8) dan pembaruan Keamanan Data/B-20. | agen + pemilik | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §6.1, §13 C2 |
@@ -5446,6 +5786,7 @@ menambah dan memindahkannya ada di
 | B-81 | **Kamar Tanuki** (gratis dasar; barang, kostum, dan tema musiman di Plus lewat B-56): kamar piksel yang bertambah barang saat tonggak nyata tercapai; tidak ada yang hilang saat absen, tanuki tidak pernah sedih. Bisa dimatikan. | pemilik menyerahkan aset, lalu agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §16, [laporan bisnis](https://claude.ai/artifact/SKsV87e4f7hX8h58Qvv7G5) Gamifikasi |
 | B-82 | **Buku Stempel** (gratis; edisi musiman khusus Plus): stempel piksel untuk tonggak (periode lengkap, saldo cocok, rutin tak terlewat, target tercapai) dan edisi Ramadan, 17 Agustus, Tahun Baru; tanpa streak, poin, atau peringkat (KT-R13). | pemilik menyerahkan aset, lalu agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §16, [laporan bisnis](https://claude.ai/artifact/SKsV87e4f7hX8h58Qvv7G5) Gamifikasi |
 | B-83 | Tindak lanjut QA Fase 23 sebelum rilis publik: putuskan F23-2 (badge "Mungkin sudah tercatat" untuk pola terikat tanpa kemunculan terbuka) dan F23-6 (saring pemilih Ikat ke rutin menurut jenis pola); perbaiki F23-5 (sakelar contoh notifikasi tetap tampil mati sampai halaman dibuka ulang) dan F23-1 (alasan kotak masuk transfer); perbarui Keamanan Data Play dan kebijakan privasi situs untuk contoh notifikasi; uji layar Aturan dompet, Ikat ke rutin, dan Contoh notifikasi; ulangi F23-4 dan baris "tidak diuji" di perangkat dengan notifikasi Jago asli. | pemilik (keputusan, Play Console, perangkat) + agen | [VERIFICATION_PLAN_FASE_23.md](VERIFICATION_PLAN_FASE_23.md), ADR-042 |
+| B-84 | **Arsip proyek freelance**: status aktif/arsip di `FreelanceProject` supaya batas Gratis bisa menghitung proyek aktif saja (sekarang menghitung semua proyek, ADR-041 §3.13 butir 2). Butuh ADR domain kecil dan rupa. | agen | ADR-041 §3.13, T-24.13 |
 | B-39 | **Pengumuman pembaruan R2**: pembaruan wajib/versi minimum untuk perbaikan kritis (KT-U1), pembaruan untuk iOS (App Store) sesudah iOS dirilis, dan pilihan jalur uji untuk penguji. | agen + pemilik | [APP_UPDATE.md](../01-product/features/APP_UPDATE.md) §14 |
 | B-35 | Uji di perangkat yang belum dilakukan QA PR #43: lebar 360dp (butuh izin mengubah setelan ponsel), Freelance, perekaman suara sungguhan, dan jalur Gemini secara terpisah. | pemilik | QA PR #43 (di luar PR) |
 | B-14 | **Catat lewat Suara**: STT sistem (`speech_to_text`) + parser aturan + Gemma lokal mulai dari model termurah, 270M → 1B → Gemma 4 E2B (unduhan opt-in dari Hugging Face) → form CATAT terisi draf; adaptor Firebase AI sebagai jalur pivot. ADR-027. Riset & rencana di [VOICE_INPUT_RESEARCH.md](../01-product/features/VOICE_INPUT_RESEARCH.md). | dijadwalkan: T-11.2–T-11.9 | riset 30 Sep 2026 |

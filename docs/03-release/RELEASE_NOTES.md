@@ -102,10 +102,10 @@ fvm flutter test test/release              # penjaga berkas (sisi Dart)
 
 `publish` dan `cleanup` butuh `FIREBASE_SERVICE_ACCOUNT_KEY` (rahasia CI).
 
-## Daftar periksa rilis berfitur Plus (Fase 23, ADR-041)
+## Daftar periksa rilis berfitur Plus (Fase 24, ADR-041)
 
 Sebelum membangun dan mengunggah build yang memuat gerbang Plus
-(T-23.9 sampai T-23.13), pemilik memeriksa:
+(T-24.9 sampai T-24.13), pemilik memeriksa:
 
 1. **Penguji bisa masuk akun.** Sebelum Plus dijual, masuk akun = Plus dan
    tanpa akun = Gratis (gerbang mengunci otomasi rutin, sumber notifikasi
@@ -135,7 +135,7 @@ Sebelum membangun dan mengunggah build yang memuat gerbang Plus
    (kosong = pra-peluncuran; mengisinya memulai uji coba dan tombol beli);
    `founder_until` = 90 hari sesudah rilis publik.
 8. **Keamanan Data dan kebijakan privasi** sudah memuat RevenueCat dan
-   riwayat pembelian (`PLAY_DATA_SAFETY.md`, bagian Fase 23) sebelum build
+   riwayat pembelian (`PLAY_DATA_SAFETY.md`, bagian Fase 24) sebelum build
    berfitur ini diunggah.
 9. **Build rilis tanpa sakelar uji**: pipeline tidak pernah memberi
    `PLAN_OVERRIDE` (dijaga uji arsitektur).

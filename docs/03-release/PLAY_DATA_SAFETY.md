@@ -143,7 +143,7 @@ pemilik; dokumen ini hanya menyiapkan.
 ulang formulir (build berbeda = formulir per rilis), dan memperbarui
 kebijakan privasi.
 
-### Fase 23: Plus, RevenueCat, dan riwayat pembelian (T-23.16)
+### Fase 24: Plus, RevenueCat, dan riwayat pembelian (T-24.16)
 
 Dari ADR-041. **Draf; isi formulir persis sebelum build berfitur ini
 diunggah**, dan periksa halaman pengungkapan data resmi RevenueCat
@@ -172,7 +172,7 @@ pemroses langganan (ID pengguna, riwayat pembelian), Google Play sebagai
 pemroses pembayaran, dan bahwa fitur Plus memerlukan masuk akun untuk uji coba
 (B-20).
 
-**App access (peninjau Play) berubah mulai Fase 23.** Pernyataan lama "peninjau
+**App access (peninjau Play) berubah mulai Fase 24.** Pernyataan lama "peninjau
 tidak perlu kredensial" tidak lagi benar untuk fitur Plus: otomasi rutin R3,
 sumber notifikasi ke-2, tingkat otomatis, Analisis lebih dari 6 periode,
 template ke-2, dan proyek ke-3 terkunci tanpa akun (pra-peluncuran: masuk akun
@@ -189,7 +189,7 @@ diuji tanpa akun.
   status opsional, dan pilih "Dibagikan: Tidak" kalau backend tetap
   Firebase/Google, atau "Ya" kalau pindah ke penyedia lain.
 - **Info pembayaran** (langganan premium/freemium) — sudah dijawab di bagian
-  "Fase 23: Plus, RevenueCat" di atas (pembayaran diproses Google Play; yang
+  "Fase 24: Plus, RevenueCat" di atas (pembayaran diproses Google Play; yang
   dideklarasikan adalah riwayat pembelian dan ID pengguna lewat RevenueCat).
 - **Catat dari notifikasi** (ADR-032, T-11.21) — isi notifikasi aplikasi
   bank/e-wallet yang dipilih pengguna dibaca di perangkat; teks yang ragu

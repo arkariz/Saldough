@@ -9,7 +9,7 @@ import 'package:saldough/features/premium/domain/offering_policy.dart';
 import 'package:saldough/features/premium/domain/purchase_models.dart';
 
 /// Beli dan pulihkan langganan Plus (ADR-041 §3.5, P-9): tanpa UI, dipakai
-/// layar paywall (T-23.17). Tidak mensyaratkan akun; hak terikat ke akun Google
+/// layar paywall (T-24.17). Tidak mensyaratkan akun; hak terikat ke akun Google
 /// Play dan bisa dipulihkan, dan ikut berpindah bila pengguna kemudian masuk
 /// (RevenueCat memindahkan hak anonim).
 ///

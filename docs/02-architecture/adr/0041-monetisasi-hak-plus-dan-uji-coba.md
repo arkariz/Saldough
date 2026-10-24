@@ -8,7 +8,7 @@
 - **Status:** Accepted (pemilik, 2026-10-23: uji coba wajib masuk akun dan
   pengganti paket untuk uji/pengembangan/tinjauan toko atas masukan pemilik;
   P-8, P-9, P-11 disetujui eksplisit, rekomendasi lain di §3.11 berlaku).
-  **Revisi 2 (2026-10-23, T-23.1):** hasil pemeriksaan kode dan keputusan
+  **Revisi 2 (2026-10-23, T-24.1):** hasil pemeriksaan kode dan keputusan
   pemilik atasnya di §3.13; aturan pra-peluncuran, batas proyek, sumber
   notifikasi, dan penundaan gerbang Rencana menggantikan teks yang
   bertentangan di bagian lain.
@@ -217,7 +217,7 @@ trialEndsOn(DateTime start, FinancialMonthSchedule schedule, {int minDays = 14})
 | Offer | `intro-first-year` pada `yearly` (KT-P12: harga perkenalan tahun pertama Rp129.000, lalu Rp179.000) |
 | Offering | `default`, `founder`, `post_trial` |
 
-- **Identifier package di RevenueCat (T-23.15):** setiap offering berisi package
+- **Identifier package di RevenueCat (T-24.15):** setiap offering berisi package
   dengan identifier `monthly`, `yearly`, `yearly_founder`, atau `yearly_intro`
   (`PlusPlanKind.id`; package lain diabaikan aplikasi). `default` memuat
   `monthly` + `yearly`; `founder` memuat `yearly_founder` + `monthly`;
@@ -304,7 +304,7 @@ FREEMIUM_PAYWALL §9 (P1 kuota tafsir, P2 sumber notifikasi, P3 contoh Penjaga,
 P4 jatah Tanya Tanuki, P5 perkiraan, P6 rapor, P7 freelance terlambat, P8
 cadangan, P9 musim laporan, P10 Akun); gerbang fitur lama yang belum punya baris
 di tabel itu memakai `recurringAutomation`, `analysisHistory`, dan `limit`.
-Revisi 2 (T-23.8) memperbaiki penomoran P-n lama di kolom ini yang tidak cocok
+Revisi 2 (T-24.8) memperbaiki penomoran P-n lama di kolom ini yang tidak cocok
 dengan §9.
 
 | Titik | Modul | Perilaku di Gratis | Trigger |
@@ -421,7 +421,7 @@ uji, pengembangan, dan tinjauan toko (§3.10).
 | P-10 | Pengganti uji: menu pengembang + `PLAN_OVERRIDE` hanya di build non-rilis; penguji dan peninjau lewat entitlement promosi, **tanpa sakelar di build rilis** | Rekomendasi: setuju (§3.10). |
 | P-11 | `plus_launch_at` = tanggal rilis publik Plus (Remote Config) | **Disetujui:** diisi pemilik sebelum Plus dijual. |
 
-### 3.13a Gerbang tampilan lewat `ActivePlan` (T-23.9)
+### 3.13a Gerbang tampilan lewat `ActivePlan` (T-24.9)
 
 Gerbang yang cukup tahu "Plus atau bukan" (otomasi R3: sakelar Catat otomatis,
 kartu, dan label) membaca `ActivePlan.notifier`
@@ -435,7 +435,7 @@ tetap murni (tanpa Flutter); `ActivePlan` hidup di `core/presentation/plan/`.
 
 ### 3.13 Revisi 2: hasil pemeriksaan kode dan keputusan pemilik (23 Okt 2026)
 
-Rencana implementasi Fase 23 memeriksa ADR ini terhadap kode `origin/main`.
+Rencana implementasi Fase 24 memeriksa ADR ini terhadap kode `origin/main`.
 Temuan dan keputusannya:
 
 1. **Pra-peluncuran: masuk akun = Plus (diputuskan pemilik).** Gerbang yang

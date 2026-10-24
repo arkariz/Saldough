@@ -293,17 +293,23 @@ gagal, nilai bawaan dipakai** (tidak pernah nol atau tak terbatas).
 ### 3.8 Titik gerbang yang sudah ada
 
 Satu pola: UI/use case otomasi memanggil `Entitlements`; bila `!can`, tampil
-`PaywallTrigger` (tidak pernah mengubah data).
+`PaywallTrigger` (tidak pernah mengubah data). Nama pemicu mengikuti tabel
+FREEMIUM_PAYWALL §9 (P1 kuota tafsir, P2 sumber notifikasi, P3 contoh Penjaga,
+P4 jatah Tanya Tanuki, P5 perkiraan, P6 rapor, P7 freelance terlambat, P8
+cadangan, P9 musim laporan, P10 Akun); gerbang fitur lama yang belum punya baris
+di tabel itu memakai `recurringAutomation`, `analysisHistory`, dan `limit`.
+Revisi 2 (T-23.8) memperbaiki penomoran P-n lama di kolom ini yang tidak cocok
+dengan §9.
 
 | Titik | Modul | Perilaku di Gratis | Trigger |
 |---|---|---|---|
-| Aplikasi sumber notifikasi ke-2 dst. | `notification_capture` | Paywall; **sumber pertama di daftar** tetap diproses, sisanya tidak (§3.13) | P2 |
-| Tingkat otomatis, pola baru | `notification_capture` | Kembali ke "tinjau semua"; pola lama tetap dipakai | P3 |
-| Kuota tafsir Gemini | `shared/capture` (port) | Sesudah habis, parser aturan saja | P4 |
-| Otomasi rutin R3 (Catat otomatis, belum terlihat, kenaikan harga dari notifikasi, menganggur, saran) | `recurring`, `notification_capture` | Rutin yang `autoRecord` kembali menunggu konfirmasi satu ketuk; label R3 tidak tampil; satu deteksi boleh jadi Contoh Penjaga | P1 |
-| Analisis > 6 periode (tren 12 bulan belum ada) | `analysis` | Tampilan buram + kartu; Riwayat tetap penuh | P6 |
-| Template ke-2, proyek ke-3 | `budget`, `freelance` | Yang ada tetap dipakai; membuat baru terhalang. Semua template dan semua proyek dihitung (§3.13) | P7 |
-| ~~Perkiraan lewat +2 bulan, Bagaimana kalau~~ | `plan` | Ditunda ke B-30/B-46 (§3.13) | P5 |
+| Aplikasi sumber notifikasi ke-2 dst. | `notification_capture` | Paywall; **sumber pertama di daftar** tetap diproses, sisanya tidak (§3.13) | `notificationSource` (P2) |
+| Tingkat otomatis, pola baru | `notification_capture` | Kembali ke "tinjau semua"; pola lama tetap dipakai | `notificationSource` (P2) |
+| Kuota tafsir Gemini | `shared/capture` (port) | Sesudah habis, parser aturan saja | `smartQuota` (P1) |
+| Otomasi rutin R3 (Catat otomatis, belum terlihat, kenaikan harga dari notifikasi, menganggur, saran) | `recurring`, `notification_capture` | Rutin yang `autoRecord` kembali menunggu konfirmasi satu ketuk; label R3 tidak tampil; satu deteksi boleh jadi Contoh Penjaga | `recurringAutomation` |
+| Analisis > 6 periode (tren 12 bulan belum ada) | `analysis` | Tampilan buram + kartu; Riwayat tetap penuh | `analysisHistory` |
+| Template ke-2, proyek ke-3 | `budget`, `freelance` | Yang ada tetap dipakai; membuat baru terhalang. Semua template dan semua proyek dihitung (§3.13) | `limit` |
+| ~~Perkiraan lewat +2 bulan, Bagaimana kalau~~ | `plan` | Ditunda ke B-30/B-46 (§3.13) | `forecast` (P5) |
 
 - **Gerbang R3 (ADR-037):** `RecurringRule.autoRecord` **tidak dihapus** saat
   turun ke Gratis; setelan disimpan untuk bila berlangganan lagi. Yang berubah
@@ -312,7 +318,7 @@ Satu pola: UI/use case otomasi memanggil `Entitlements`; bila `!can`, tampil
   mencatat; bila tidak, kemunculan dibiarkan berstatus menunggu seolah
   `autoRecord == false` (kartu Menunggu, konfirmasi satu ketuk). Sakelar
   Catat otomatis di "Atur lebih lanjut" tetap tampil dengan label Plus dan
-  membuka paywall P1; nilainya tidak ditulis ulang.
+  membuka paywall `recurringAutomation`; nilainya tidak ditulis ulang.
   Transaksi yang sudah tercatat otomatis tetap ada (data tidak dikunci).
 - **Pengecualian aturan 8 tetap berlaku:** kemunculan rutin bernominal tetap
   yang dikonfirmasi pengguna satu ketuk memakai `RecordTransaction` di Gratis
@@ -463,7 +469,7 @@ Temuan dan keputusannya:
 `taste_quota_exhausted{feature}`.
 
 - `plan` ∈ `monthly | yearly | yearly_founder | yearly_intro`; `reason` ∈
-  `cancelled | network | billing | other`; `trigger` ∈ `P1..P10`;
+  `cancelled | network | billing | other`; `trigger` = `PaywallTrigger.analyticsName` (`P1`–`P10` mengikuti FREEMIUM_PAYWALL §9, ditambah `recurring_automation`, `analysis_history`, `limit`);
   `outcome` ∈ `purchased | lapsed`.
 - Dikelompokkan di `PremiumEvents` (seperti `DataPortabilityEvents`) dengan uji
   parameter. `PLAY_DATA_SAFETY.md` diperbarui: **riwayat pembelian** dan ID

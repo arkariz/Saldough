@@ -64,6 +64,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$plan$id plan = Translations$plan$id.internal(_root);
 	late final Translations$appUpdate$id appUpdate = Translations$appUpdate$id.internal(_root);
 	late final Translations$analysis$id analysis = Translations$analysis$id.internal(_root);
+	late final Translations$premium$id premium = Translations$premium$id.internal(_root);
 }
 
 // Path: app
@@ -3894,6 +3895,33 @@ class Translations$analysis$id {
 	late final Translations$analysis$category$id category = Translations$analysis$category$id.internal(_root);
 }
 
+// Path: premium
+class Translations$premium$id {
+	Translations$premium$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Tanukonomy Plus'
+	String get title => 'Tanukonomy Plus';
+
+	/// id: 'Masuk untuk membuka fitur Plus'
+	String get signInTitle => 'Masuk untuk membuka fitur Plus';
+
+	/// id: 'Fitur ini bagian dari Plus. Masuk dengan akunmu untuk memakainya. Mencatat tetap gratis dan tanpa akun.'
+	String get signInBody => 'Fitur ini bagian dari Plus. Masuk dengan akunmu untuk memakainya. Mencatat tetap gratis dan tanpa akun.';
+
+	/// id: 'Masuk'
+	String get signInAction => 'Masuk';
+
+	/// id: 'Fitur ini bagian dari Plus'
+	String get plusOnlyTitle => 'Fitur ini bagian dari Plus';
+
+	/// id: 'Berlangganan Plus belum tersedia. Mencatat tetap gratis.'
+	String get plusOnlyBody => 'Berlangganan Plus belum tersedia. Mencatat tetap gratis.';
+}
+
 // Path: record.draftIssue
 class Translations$record$draftIssue$id {
 	Translations$record$draftIssue$id.internal(this._root);
@@ -6234,6 +6262,12 @@ extension on Translations {
 			'analysis.category.belowAvg' => ({required Object amount}) => '${amount} di bawah rata-rata',
 			'analysis.category.avgLine' => ({required Object n}) => 'rata-rata ${n} bulan',
 			'analysis.category.moreHint' => '20 transaksi terbaru',
+			'premium.title' => 'Tanukonomy Plus',
+			'premium.signInTitle' => 'Masuk untuk membuka fitur Plus',
+			'premium.signInBody' => 'Fitur ini bagian dari Plus. Masuk dengan akunmu untuk memakainya. Mencatat tetap gratis dan tanpa akun.',
+			'premium.signInAction' => 'Masuk',
+			'premium.plusOnlyTitle' => 'Fitur ini bagian dari Plus',
+			'premium.plusOnlyBody' => 'Berlangganan Plus belum tersedia. Mencatat tetap gratis.',
 			_ => null,
 		};
 	}

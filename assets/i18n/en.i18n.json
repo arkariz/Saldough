@@ -1542,5 +1542,13 @@
       "avgLine": "$n-month average",
       "moreHint": "Latest 20 transactions"
     }
+  },
+  "premium": {
+    "title": "Tanukonomy Plus",
+    "signInTitle": "Sign in to unlock Plus features",
+    "signInBody": "This feature is part of Plus. Sign in with your account to use it. Recording stays free and works without an account.",
+    "signInAction": "Sign in",
+    "plusOnlyTitle": "This feature is part of Plus",
+    "plusOnlyBody": "Plus subscriptions aren't available yet. Recording stays free."
   }
 }

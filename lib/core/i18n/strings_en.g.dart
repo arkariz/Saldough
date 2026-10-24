@@ -62,6 +62,7 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$plan$en plan = _Translations$plan$en._(_root);
 	@override late final _Translations$appUpdate$en appUpdate = _Translations$appUpdate$en._(_root);
 	@override late final _Translations$analysis$en analysis = _Translations$analysis$en._(_root);
+	@override late final _Translations$premium$en premium = _Translations$premium$en._(_root);
 }
 
 // Path: app
@@ -1536,6 +1537,21 @@ class _Translations$analysis$en extends Translations$analysis$id {
 	@override late final _Translations$analysis$highlight$en highlight = _Translations$analysis$highlight$en._(_root);
 	@override late final _Translations$analysis$trend$en trend = _Translations$analysis$trend$en._(_root);
 	@override late final _Translations$analysis$category$en category = _Translations$analysis$category$en._(_root);
+}
+
+// Path: premium
+class _Translations$premium$en extends Translations$premium$id {
+	_Translations$premium$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Tanukonomy Plus';
+	@override String get signInTitle => 'Sign in to unlock Plus features';
+	@override String get signInBody => 'This feature is part of Plus. Sign in with your account to use it. Recording stays free and works without an account.';
+	@override String get signInAction => 'Sign in';
+	@override String get plusOnlyTitle => 'This feature is part of Plus';
+	@override String get plusOnlyBody => 'Plus subscriptions aren\'t available yet. Recording stays free.';
 }
 
 // Path: record.draftIssue
@@ -3445,6 +3461,12 @@ extension on TranslationsEn {
 			'analysis.category.belowAvg' => ({required Object amount}) => '${amount} below average',
 			'analysis.category.avgLine' => ({required Object n}) => '${n}-month average',
 			'analysis.category.moreHint' => 'Latest 20 transactions',
+			'premium.title' => 'Tanukonomy Plus',
+			'premium.signInTitle' => 'Sign in to unlock Plus features',
+			'premium.signInBody' => 'This feature is part of Plus. Sign in with your account to use it. Recording stays free and works without an account.',
+			'premium.signInAction' => 'Sign in',
+			'premium.plusOnlyTitle' => 'This feature is part of Plus',
+			'premium.plusOnlyBody' => 'Plus subscriptions aren\'t available yet. Recording stays free.',
 			_ => null,
 		};
 	}

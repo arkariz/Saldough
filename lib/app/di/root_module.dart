@@ -72,6 +72,7 @@ import 'package:saldough/features/onboarding/presentation/pages/onboarding_page.
 import 'package:saldough/features/plan/data/month_review_repository_impl.dart';
 import 'package:saldough/features/plan/domain/month_review.dart';
 import 'package:saldough/features/plan/domain/plan_sources.dart';
+import 'package:saldough/features/premium/presentation/navigation/premium_route_module.dart';
 import 'package:saldough/features/record/presentation/navigation/record_route_module.dart';
 import 'package:saldough/features/recurring/data/local_notification_reminder_scheduler.dart';
 import 'package:saldough/features/recurring/data/reminder_settings_repository_impl.dart';
@@ -112,6 +113,7 @@ abstract final class RootModule {
     BudgetRouteModule(),
     DataPortabilityRouteModule(reboot: restoreReboot),
     DebugPlanRouteModule(),
+    PremiumRouteModule(),
     FreelanceRouteModule(),
     NotificationCaptureRouteModule(),
     RecordRouteModule(),

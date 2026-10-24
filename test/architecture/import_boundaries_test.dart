@@ -124,6 +124,15 @@ void main() {
     expect(leaked, isEmpty, reason: 'pipeline rilis tidak boleh memberi PLAN_OVERRIDE:\n${leaked.join('\n')}');
   });
 
+  test('SDK pembelian (purchases_flutter) hanya di features/premium/data/ (ADR-041 §3.1)', () {
+    expectNone(
+      violations(
+        (file, uri, _) =>
+            uri.startsWith('package:purchases_flutter') && !file.startsWith('lib/features/premium/data/'),
+      ),
+    );
+  });
+
   test('presentation/ tidak mengimpor data/', () {
     expectNone(violations((file, _, to) => inLayer(file, 'presentation') && to != null && inLayer(to, 'data')));
   });

@@ -1,4 +1,5 @@
 import 'package:di/di.dart';
+import 'package:saldough/core/foundation/entitlement/entitlement.dart';
 import 'package:saldough/core/language/language.dart';
 import 'package:saldough/features/voice_capture/data/system_speech_transcriber.dart';
 import 'package:saldough/features/voice_capture/domain/speech_transcriber.dart';
@@ -17,6 +18,8 @@ final class VoiceCaptureScope extends IsolatedScope {
     c.registerSingleton<WalletRepository>(parent<WalletRepository>());
     // Opsional: kontainer induk yang tidak menyediakannya (mis. uji) berarti
     // suara dibuka tanpa bertanya bahasa.
+    // Jatah tafsir cerdas (ADR-041 §3.7); tanpa hak (uji) cloud tidak dibatasi.
+    if (parent.isRegistered<Entitlements>()) c.registerSingleton<Entitlements>(parent<Entitlements>());
     if (parent.isRegistered<SpeechLanguagePrompt>()) {
       c.registerSingleton<SpeechLanguagePrompt>(parent<SpeechLanguagePrompt>());
     }
@@ -34,7 +37,9 @@ final class VoiceCaptureScope extends IsolatedScope {
             language: language,
             categories: () => ActiveCategories.notifier.value,
           ),
-          cloudInterpreter: FirebaseAiTransactionInterpreter(),
+          cloudInterpreter: c.isRegistered<Entitlements>()
+              ? QuotaGatedInterpreter(inner: FirebaseAiTransactionInterpreter(), entitlements: c<Entitlements>())
+              : FirebaseAiTransactionInterpreter(),
         ),
       )
       // Satu bloc per lembar rekam; lembarnya yang menutup bloc.

@@ -4,6 +4,7 @@
 library;
 
 export 'data/firebase_ai_transaction_interpreter.dart';
+export 'data/quota_gated_interpreter.dart';
 export 'data/rule_based_transaction_interpreter.dart';
 export 'domain/capture_draft_composer.dart';
 export 'domain/capture_draft_resolver.dart';

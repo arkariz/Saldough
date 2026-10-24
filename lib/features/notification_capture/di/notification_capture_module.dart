@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:api_storage/api_storage.dart';
 import 'package:di/di.dart';
 import 'package:saldough/core/currency/currency.dart';
+import 'package:saldough/core/foundation/entitlement/entitlement.dart';
 import 'package:saldough/core/language/language.dart';
 import 'package:saldough/core/presentation/plan/active_plan.dart';
 import 'package:saldough/features/notification_capture/data/method_channel_notification_capture_gateway.dart';
@@ -57,7 +58,10 @@ abstract final class NotificationCaptureModule {
         () => NotificationDraftComposer(
           composer: CaptureDraftComposer(
             ruleInterpreterFor: rules,
-            cloudInterpreter: FirebaseAiTransactionInterpreter(),
+            // Jatah tafsir cerdas bersama suara (ADR-041 §3.7, KT-P14).
+            cloudInterpreter: c.isRegistered<Entitlements>()
+                ? QuotaGatedInterpreter(inner: FirebaseAiTransactionInterpreter(), entitlements: c<Entitlements>())
+                : FirebaseAiTransactionInterpreter(),
           ),
           ruleInterpreterFor: rules,
         ),

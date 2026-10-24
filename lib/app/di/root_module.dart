@@ -9,6 +9,7 @@ import 'package:saldough/app/data_portability/app_export_data_source.dart';
 import 'package:saldough/app/data_portability/restore_reboot.dart';
 import 'package:saldough/app/data_portability/restore_recovery.dart';
 import 'package:saldough/app/discovery/app_feature_statuses.dart';
+import 'package:saldough/app/premium/premium_wiring.dart';
 import 'package:saldough/app/shell/account_data_section.dart';
 import 'package:saldough/app/shell/account_version_entry.dart';
 import 'package:saldough/app/shell/app_shell_page.dart';
@@ -123,6 +124,8 @@ abstract final class RootModule {
     await _registerStorage(container);
     _registerSharedRepositories(container);
     _registerDataPortability(container);
+    // Hak Plus (ADR-041 §3.1); dihubungkan ke akun di bootstrap.
+    registerEntitlements(container);
     final registry = _registerRouteRegistry(container);
     await _registerRouter(container, registry);
   }

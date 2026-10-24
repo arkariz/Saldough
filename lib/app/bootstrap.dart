@@ -9,6 +9,7 @@ import 'package:saldough/app/app.dart';
 import 'package:saldough/app/data_portability/app_reboot.dart';
 import 'package:saldough/app/data_portability/restore_recovery.dart';
 import 'package:saldough/app/di/di.dart';
+import 'package:saldough/app/premium/premium_wiring.dart';
 import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/foundation/analytics/app_bootstrap_firebase.dart';
@@ -76,6 +77,11 @@ Future<void> bootstrapApp() async {
   ActiveFinancialMonth.notifier.value = (await rootGetIt<FinancialMonthPreferenceRepository>().load()).getOrElse(
     (_) => FinancialMonthSchedule.initial,
   );
+
+  // ADR-041 §3.4: hak Plus memakai jadwal periode (uji coba) dan status masuk
+  // akun; dimulai sebelum layar pertama supaya gerbang membaca keadaan yang
+  // benar.
+  await startEntitlements(rootGetIt);
 
   // ADR-026 §3.4: kategori bawaan + migrasi label lama, sebelum layar pertama
   // membaca judul transaksi. Gagal tidak menghalangi aplikasi terbuka

@@ -5,6 +5,7 @@ library;
 export 'entitlement_config.dart';
 export 'entitlement_limits.dart';
 export 'entitlement_resolver.dart';
+export 'entitlements.dart';
 export 'plan_state.dart';
 export 'plus_feature.dart';
 export 'trial_rules.dart';

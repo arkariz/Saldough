@@ -15,6 +15,10 @@ abstract final class ActivePlan {
   /// Pemegang nilai.
   static final ValueNotifier<PlanState> notifier = ValueNotifier(const FreePlan());
 
+  /// Batas dan jatah yang berlaku (Remote Config, bawaan lokal); gerbang
+  /// tampilan membaca batas Gratis di sini.
+  static final ValueNotifier<EntitlementLimits> limits = ValueNotifier(EntitlementLimits.defaults);
+
   /// Paket berlaku.
   static PlanState get state => notifier.value;
 
@@ -22,5 +26,8 @@ abstract final class ActivePlan {
   static bool get isPlus => notifier.value.isPlus;
 
   /// Mengembalikan ke Gratis (boot ulang).
-  static void reset() => notifier.value = const FreePlan();
+  static void reset() {
+    notifier.value = const FreePlan();
+    limits.value = EntitlementLimits.defaults;
+  }
 }

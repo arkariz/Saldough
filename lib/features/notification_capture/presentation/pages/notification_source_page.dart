@@ -13,6 +13,7 @@ import 'package:saldough/features/notification_capture/presentation/bloc/notific
 import 'package:saldough/features/notification_capture/presentation/pages/notification_pattern_page.dart';
 import 'package:saldough/features/notification_capture/presentation/widgets/app_picker_sheet.dart';
 import 'package:saldough/features/notification_capture/presentation/widgets/notification_widgets.dart';
+import 'package:saldough/features/notification_capture/presentation/widgets/plus_gate.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 import 'package:saldough/shared/wallet/wallet_presentation.dart';
 import 'package:state_management/state_management.dart';
@@ -41,6 +42,11 @@ Future<void> pickAndOpenNotificationSource(BuildContext context, {required Notif
   final app = await showAppPickerSheet(context, load: bloc.loadInstalledApps);
   if (app == null || !context.mounted) return;
   final existing = bloc.state.settings.sources.where((s) => s.packageName == app.packageName).firstOrNull;
+  // Gratis: hanya sumber pertama (ADR-041 §3.8).
+  if (existing == null && exceedsFreeSources(bloc.state.settings.sources.length)) {
+    await openNotificationPaywall(context);
+    return;
+  }
   await openNotificationSourcePage(
     context,
     bloc: bloc,

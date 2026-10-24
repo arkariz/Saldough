@@ -13,6 +13,7 @@ import 'package:saldough/features/notification_capture/domain/services/quick_sta
 import 'package:saldough/features/notification_capture/presentation/bloc/notification_settings_bloc.dart';
 import 'package:saldough/features/notification_capture/presentation/pages/notification_source_page.dart';
 import 'package:saldough/features/notification_capture/presentation/widgets/access_disclosure.dart';
+import 'package:saldough/features/notification_capture/presentation/widgets/plus_gate.dart';
 import 'package:state_management/state_management.dart';
 
 /// Mulai cepat Catat dari notifikasi (FEATURE_DISCOVERY §5.1): daftar pendek
@@ -68,6 +69,13 @@ class _QuickStartPageState extends State<QuickStartPage> with WidgetsBindingObse
         for (final app in candidates)
           if (_selected?.contains(app.packageName) ?? false) quickStartSource(app),
       ];
+      // Gratis: hanya satu aplikasi (ADR-041 §3.8); lebih dari itu membuka
+      // paywall dan pengguna mengurangi pilihannya.
+      if (exceedsFreeSources(picked.length - 1)) {
+        setState(() => _busy = false);
+        await openNotificationPaywall(context);
+        return;
+      }
       final result = await bloc.applyQuickStart(picked);
       if (!mounted) return;
       setState(() => _busy = false);

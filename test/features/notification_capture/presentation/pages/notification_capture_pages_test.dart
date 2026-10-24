@@ -10,8 +10,10 @@ import 'package:memory_storage/memory_storage.dart';
 import 'package:navigation/navigation.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
+import 'package:saldough/core/foundation/entitlement/entitlement.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/plan/active_plan.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/notification_capture/di/notification_capture_module.dart';
@@ -23,15 +25,21 @@ import 'package:saldough/features/notification_capture/domain/repositories/notif
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_store.dart';
 import 'package:saldough/features/notification_capture/presentation/navigation/notification_capture_route_keys.dart';
 import 'package:saldough/features/notification_capture/presentation/pages/notification_pattern_page.dart';
+import 'package:saldough/shared/auth/auth.dart';
 import 'package:saldough/shared/capture/capture.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
+import '../../../../helpers/fake_auth_repository.dart';
 import '../../../../helpers/fake_notification_capture_gateway.dart';
 import '../../../../helpers/routes.dart';
 
 void main() {
+  // Gerbang Plus (ADR-041 §3.8): uji ini menguji perilaku Plus.
+  setUp(() => ActivePlan.notifier.value = const PlusPlan(source: PlanSource.prelaunch));
+  tearDown(ActivePlan.reset);
+
   late GetIt container;
   late FakeNotificationCaptureGateway gateway;
   late NotificationCaptureStore store;
@@ -51,7 +59,8 @@ void main() {
       ..registerSingleton<WalletRepository>(wallets)
       ..registerSingleton<TransactionRepository>(ledger)
       ..registerSingleton<LedgerChanges>(LedgerChanges())
-      ..registerSingleton<CategoryRepository>(CategoryRepositoryImpl(storage: storage));
+      ..registerSingleton<CategoryRepository>(CategoryRepositoryImpl(storage: storage))
+      ..registerSingleton<AuthRepository>(FakeAuthRepository());
     NotificationCaptureModule.register(container, gateway: gateway);
     store = container<NotificationCaptureStore>();
     await wallets.saveWallet(
@@ -699,6 +708,71 @@ void main() {
 
       expect(find.byKey(const ValueKey('pattern-template')), findsOneWidget);
       expect(find.text(t.notificationCapture.patternTemplateLabel), findsOneWidget);
+    });
+  });
+
+  group('Gratis (ADR-041 §3.8)', () {
+    setUp(() => ActivePlan.notifier.value = const FreePlan());
+
+    testWidgets('sakelar Catat otomatis membuka paywall dan setelannya tidak berubah', (tester) async {
+      await store.saveSettings(const NotificationCaptureSettings(enabled: true));
+      await open(tester, NotificationCaptureRouteKeys.settings);
+
+      final autoRecord = find.descendant(
+        of: find.byKey(const ValueKey('notification-auto-record')),
+        matching: find.byType(Switch),
+      );
+      await tester.scrollUntilVisible(autoRecord, 200);
+      await tester.tap(autoRecord);
+      await tester.pumpAndSettle();
+
+      expect(find.text(t.premium.signInTitle), findsOneWidget);
+      final saved = (await store.loadSettings()).getOrElse((_) => throw StateError(''));
+      expect(saved.autoRecordLevel, AutoRecordLevel.reviewAll);
+    });
+
+    testWidgets('menambah sumber kedua membuka paywall; sumber pertama tetap boleh', (tester) async {
+      gateway.apps = const [
+        InstalledApp(packageName: 'id.co.bri.brimo', label: 'BRImo'),
+        InstalledApp(packageName: 'com.gojek.gopay', label: 'GoPay'),
+      ];
+      await store.saveSettings(const NotificationCaptureSettings(enabled: true));
+      await open(tester, NotificationCaptureRouteKeys.settings);
+      await tester.scrollUntilVisible(find.text(t.notificationCapture.addSource), 200);
+      await tester.tap(find.text(t.notificationCapture.addSource));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('BRImo'));
+      await tester.pumpAndSettle();
+      expect(find.text(t.notificationCapture.save), findsOneWidget, reason: 'sumber pertama membuka halaman sumber');
+      await tester.tap(find.text(t.notificationCapture.save));
+      await tester.pumpAndSettle();
+
+      await tester.scrollUntilVisible(find.text(t.notificationCapture.addSource), 200);
+      await tester.tap(find.text(t.notificationCapture.addSource));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('GoPay'));
+      await tester.pumpAndSettle();
+      expect(find.text(t.premium.signInTitle), findsOneWidget);
+      final saved = (await store.loadSettings()).getOrElse((_) => throw StateError(''));
+      expect(saved.sources.map((e) => e.packageName), ['id.co.bri.brimo']);
+    });
+
+    testWidgets('Ajari pola membuka paywall, bukan pembuat pola', (tester) async {
+      await store.saveInbox([
+        CaptureInboxEntry(
+          id: 'u',
+          packageName: 'id.co.bri.brimo',
+          appLabel: 'BRImo',
+          text: 'Transfer masuk dari ANDI',
+          capturedAt: DateTime(2026, 10, 1, 14),
+          draft: const RecordDraft(kind: DraftKind.income),
+        ),
+      ]);
+      await open(tester, NotificationCaptureRouteKeys.inbox);
+      await tester.tap(find.byKey(const ValueKey('inbox-teach-u')));
+      await tester.pumpAndSettle();
+      expect(find.byType(NotificationPatternPage), findsNothing);
+      expect(find.text(t.premium.signInTitle), findsOneWidget);
     });
   });
 }

@@ -16,6 +16,7 @@ import 'package:saldough/features/notification_capture/presentation/navigation/n
 import 'package:saldough/features/notification_capture/presentation/pages/notification_source_page.dart';
 import 'package:saldough/features/notification_capture/presentation/widgets/access_disclosure.dart';
 import 'package:saldough/features/notification_capture/presentation/widgets/notification_widgets.dart';
+import 'package:saldough/features/notification_capture/presentation/widgets/plus_gate.dart';
 import 'package:state_management/state_management.dart';
 
 /// Paket sumber uji `adb shell cmd notification post` (build debug saja).
@@ -176,7 +177,14 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> wit
                           title: texts.autoRecordLabel,
                           subtitle: autoRecord ? texts.autoRecordOnHint : texts.autoRecordOffHint,
                           value: autoRecord,
-                          onChanged: (on) => bloc.add(AutoRecordToggled(on: on)),
+                          onChanged: (on) {
+                            // Tingkat otomatis hanya untuk Plus (ADR-041 §3.8).
+                            if (on && plusLocked) {
+                              unawaited(openNotificationPaywall(context));
+                              return;
+                            }
+                            bloc.add(AutoRecordToggled(on: on));
+                          },
                         ),
                         if (autoRecord)
                           Padding(
@@ -188,11 +196,17 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> wit
                               title: texts.autoRecordAnyCategoryLabel,
                               subtitle: texts.autoRecordAnyCategoryHint,
                               value: settings.autoRecordLevel == AutoRecordLevel.whenAmountAndWallet,
-                              onChanged: (on) => bloc.add(
-                                AutoRecordLevelChanged(
-                                  on ? AutoRecordLevel.whenAmountAndWallet : AutoRecordLevel.whenComplete,
-                                ),
-                              ),
+                              onChanged: (on) {
+                                if (plusLocked) {
+                                  unawaited(openNotificationPaywall(context));
+                                  return;
+                                }
+                                bloc.add(
+                                  AutoRecordLevelChanged(
+                                    on ? AutoRecordLevel.whenAmountAndWallet : AutoRecordLevel.whenComplete,
+                                  ),
+                                );
+                              },
                             ),
                           ),
                         Divider(color: colors.line, height: AppSpacing.space2),

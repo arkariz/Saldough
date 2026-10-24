@@ -38,6 +38,21 @@ body{margin:0}
     </div>
 
     <section class="tk-section">
+      <div class="tk-section__head"><h2 class="tk-section__title">{{pl.sectionTitle}}</h2></div>
+      <div class="tk-plusst {{pl.cls}}" role="region" aria-label="{{pl.sectionTitle}}">
+        <div class="tk-plusst__top">
+          <span class="tk-tile tk-tile--brandsoft" aria-hidden="true"><span class="tk-icon">workspace_premium</span></span>
+          <div class="tk-plusst__main"><span class="tk-plusst__title">Tanukonomy Plus<sc-if value="{{pl.hasBadge}}" hint-placeholder-val="{{false}}"><span class="{{pl.badgeCls}}">{{pl.badge}}</span></sc-if></span><span class="tk-plusst__sub">{{pl.sub}}</span></div>
+        </div>
+        <sc-if value="{{pl.hasCta}}" hint-placeholder-val="{{true}}"><a class="{{pl.ctaCls}}" href="{{pl.ctaHref}}" style="align-self: flex-start">{{pl.cta}}</a></sc-if>
+      </div>
+      <div class="tk-list tk-list--icon" style="margin-top: 8px">
+        <sc-if value="{{pl.hasManage}}" hint-placeholder-val="{{true}}"><button class="tk-row tk-row--compact" type="button"><span class="tk-icon tk-ink-2" aria-hidden="true">open_in_new</span><span class="tk-row__main"><span class="tk-row__title">{{pl.manage}}</span></span><span class="tk-icon tk-row__chev">chevron_right</span></button></sc-if>
+        <button class="tk-row tk-row--compact" type="button"><span class="tk-icon tk-ink-2" aria-hidden="true">restore</span><span class="tk-row__main"><span class="tk-row__title">{{pl.restore}}</span></span><span class="tk-icon tk-row__chev">chevron_right</span></button>
+      </div>
+    </section>
+
+    <section class="tk-section">
       <div class="tk-section__head"><h2 class="tk-section__title">Pencatatan</h2></div>
       <div class="tk-list tk-list--icon">
         <button class="tk-row tk-row--compact" type="button"><span class="tk-icon tk-ink-2">label</span><span class="tk-row__main"><span class="tk-row__title">Kategori</span><span class="tk-row__sub">17 kategori</span></span><span class="tk-icon tk-row__chev">chevron_right</span></button>
@@ -82,10 +97,31 @@ body{margin:0}
   </main>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"notif":{"editor":"enum","options":["nyala","mati","izin"],"default":"nyala","section":"Status Pencatatan"},"ingat":{"editor":"enum","options":["nyala","mati","izin"],"default":"mati","section":"Status Pencatatan"},"versi":{"editor":"enum","options":["terbaru","tersedia","mengunduh","diunduh","kecil","tidak"],"default":"tersedia","section":"Versi aplikasi"},"cadangan":{"editor":"enum","options":["belum","ada"],"default":"belum","section":"Data kamu"},"kembalikan":{"editor":"boolean","default":false,"section":"Data kamu"},"dark":{"editor":"boolean","default":false,"section":"Tampilan"},"$preview":{"width":360,"height":800}}'>
+<script type="text/x-dc" data-dc-script data-props='{"notif":{"editor":"enum","options":["nyala","mati","izin"],"default":"nyala","section":"Status Pencatatan"},"ingat":{"editor":"enum","options":["nyala","mati","izin"],"default":"mati","section":"Status Pencatatan"},"versi":{"editor":"enum","options":["terbaru","tersedia","mengunduh","diunduh","kecil","tidak"],"default":"tersedia","section":"Versi aplikasi"},"plus":{"editor":"enum","options":["gratis","uji","aktif","berakhir","tenggang","penguji"],"default":"gratis","section":"Status Plus"},"cadangan":{"editor":"enum","options":["belum","ada"],"default":"belum","section":"Data kamu"},"kembalikan":{"editor":"boolean","default":false,"section":"Data kamu"},"dark":{"editor":"boolean","default":false,"section":"Tampilan"},"$preview":{"width":360,"height":800}}'>
 class Component extends DCLogic {
   renderVals() {
     const en = false;
+    const PT = en ? {
+      section: 'Plus', see: 'See Plus', manage: 'Manage in the Play Store', restore: 'Restore purchases', renew: 'Continue Plus', fix: 'Update payment',
+      gratis: 'Free. See what Tanuki can do for you.', uji: 'Plus is on until 24 Nov. No card, no automatic subscription.', aktif: 'Yearly, renews on 22 Oct 2027',
+      berakhir: 'Yearly, active until 22 Oct 2027, not renewing', tenggang: 'Your payment did not go through. Plus stays on until 25 Oct.', penguji: 'Plus from the tester program until 22 Oct 2027',
+      trial: 'Trial', on: 'Plus'
+    } : {
+      section: 'Plus', see: 'Lihat Plus', manage: 'Kelola di Play Store', restore: 'Pulihkan pembelian', renew: 'Lanjutkan Plus', fix: 'Perbarui pembayaran',
+      gratis: 'Gratis. Lihat apa yang bisa dikerjakan Tanuki untukmu.', uji: 'Plus aktif sampai 24 Nov. Tanpa kartu, tanpa langganan otomatis.', aktif: 'Tahunan, diperpanjang 22 Okt 2027',
+      berakhir: 'Tahunan, aktif sampai 22 Okt 2027, tidak diperpanjang', tenggang: 'Pembayaran belum berhasil. Plus tetap aktif sampai 25 Okt.', penguji: 'Plus dari program penguji sampai 22 Okt 2027',
+      trial: 'Uji coba', on: 'Plus'
+    };
+    const pk = this.props.plus || 'gratis';
+    const M = {
+      gratis: { sub: PT.gratis, cta: PT.see, ctaCls: 'tk-btn tk-btn--primary tk-btn--sm', href: 'Paywall.dc.html?pemicu=P10', manage: false },
+      uji: { sub: PT.uji, badge: PT.trial, badgeCls: 'tk-badge tk-badge--plus-trial', cta: PT.see, ctaCls: 'tk-btn tk-btn--secondary tk-btn--sm', href: 'Paywall.dc.html?pemicu=P10', manage: false },
+      aktif: { sub: PT.aktif, badge: PT.on, badgeCls: 'tk-badge tk-badge--plus', manage: true },
+      berakhir: { sub: PT.berakhir, badge: PT.on, badgeCls: 'tk-badge tk-badge--plus', cta: PT.renew, ctaCls: 'tk-btn tk-btn--secondary tk-btn--sm', href: 'Paywall.dc.html?pemicu=P10', manage: true },
+      tenggang: { sub: PT.tenggang, badge: PT.on, badgeCls: 'tk-badge tk-badge--plus', warn: true, cta: PT.fix, ctaCls: 'tk-btn tk-btn--primary tk-btn--sm', href: 'Main.dc.html', manage: true },
+      penguji: { sub: PT.penguji, badge: PT.on, badgeCls: 'tk-badge tk-badge--plus', manage: false }
+    }[pk];
+    const pl = { sectionTitle: PT.section, cls: M.warn ? 'is-warn' : '', hasBadge: !!M.badge, badge: M.badge || '', badgeCls: M.badgeCls || '', sub: M.sub, hasCta: !!M.cta, cta: M.cta || '', ctaCls: M.ctaCls || '', ctaHref: M.href || '', hasManage: M.manage, manage: PT.manage, restore: PT.restore };
     const DK = en ? {
       title: 'Your data', body: 'All your records are stored on this phone. Back them up somewhere else to keep them safe, or export to a spreadsheet.',
       export: 'Export to spreadsheet', exportSub: 'Excel or CSV', backup: 'Back up now', last: 'Last backup: 12 Oct 2026', never: 'Never backed up',
@@ -106,6 +142,7 @@ class Component extends DCLogic {
     return {
       ak: { n: { text: an[1], cls: an[2], hasDetail: (this.props.notif || 'nyala') === 'nyala' }, i: { text: ai[1], cls: ai[2] } },
       dk: dk,
+      pl: pl,
       theme: this.props.dark ? 'dark' : 'light',
       ver: { value: value, status: status, hasStatus: !!status, cls: 'tk-row__sub' + (k === 'terbaru' || k === 'tidak' ? '' : ' tk-t-label') }
     };

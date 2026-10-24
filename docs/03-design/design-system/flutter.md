@@ -50,6 +50,15 @@ Sistem ini menggantikan bahasa visual pixel (ADR-015, ADR-016, ADR-020) dan `Pix
 | (baru) | `AppFileCard` | Ikon berkas + nama (membungkus) + keterangan di blok `surface-2` |
 | (baru) | `AppRestoreSummary` | Kartu perbandingan dua kolom (cadangan vs ponsel ini), satu kolom di onboarding |
 | (baru) | `AppProgressSteps` | Daftar langkah dengan keadaan selesai, berjalan, menunggu; `aria-live` |
+| (baru) | `AppPaywall` | Lembar hampir penuh: tutup, hero, `AppPillarGrid`, `AppPlanCard` x2 (radiogroup), jaminan, kaki menempel (beli, Nanti saja `secondary` sama besar, kalimat wajib); keadaan memuat, luring, memproses, tertunda, galat |
+| (baru) | `AppPlanCard` | Kartu pilihan paket: radio, nama + lencana, keterangan, harga (string toko) + satuan, harga coret opsional |
+| (baru) | `AppPillarGrid` | Kisi 2 kolom enam pilar; pilar pemicu `is-lead` |
+| (baru) | `AppPlusBadge` | `AppBadge` varian `plus` (terisi) dan `plusTrial` (berbingkai) dengan ikon `workspace_premium` |
+| (baru) | `AppContextCard` | Kartu konteks: tile + satu kalimat + "Nanti saja" + satu tombol; juga dasar Contoh Penjaga |
+| (baru) | `AppRecapCard` | Rekap nilai H-3: kepala, daftar angka besar, dua tombol |
+| (baru) | `AppLockedCard` | Kartu terkunci + `AppBlur` untuk data buram (blur 5px, `ExcludeSemantics`) |
+| (baru) | `AppPlusStatusCard` | Status Plus di Akun, enam keadaan, varian peringatan masa tenggang |
+| (baru) | `AppDealCard` | Kartu penawaran di layar turun ke Gratis |
 
 ## Urutan pengerjaan yang disarankan
 

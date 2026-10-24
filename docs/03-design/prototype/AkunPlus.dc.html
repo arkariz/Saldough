@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Akun, status Plus</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tanukonomy/components/bundle.css">
+<link rel="stylesheet" href="tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0&icon_names=account_balance,account_balance_wallet,account_circle,add,alarm,arrow_back,arrow_downward,arrow_upward,backspace,backup,bolt,calendar_today,chat_bubble,check,check_circle,chevron_left,chevron_right,close,credit_card,dark_mode,delete,donut_small,edit,edit_note,error,event_busy,expand_less,expand_more,family_restroom,home,hourglass_top,inbox,info,label,label_off,local_cafe,lock,logout,medical_services,mic,more_horiz,more_vert,notifications,notifications_active,open_in_new,payments,photo_camera,progress_activity,radio_button_unchecked,receipt_long,redeem,restart_alt,restaurant,restore,savings,schedule,school,search,shopping_bag,shopping_cart,sports_esports,stars,sticky_note_2,summarize,swap_horiz,system_update,task_alt,translate,trending_up,tune,two_wheeler,undo,visibility,visibility_off,volunteer_activism,warning,wifi,wifi_off,work,workspace_premium&display=block">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="tk tk-screen" data-theme="{{theme}}" style="width: 360px; height: 800px; font-family: 'Plus Jakarta Sans', Roboto, sans-serif; color: var(--ink); background: var(--bg)">
+  <header class="tk-topbar tk-topbar--sub"><a class="tk-iconbtn" href="Main.dc.html" aria-label="{{t.back}}"><span class="tk-icon">arrow_back</span></a><h1 class="tk-topbar__title">{{t.account}}</h1></header>
+  <main class="tk-body tk-scroll" style="gap: 24px; padding: 0 16px 32px">
+    <div class="tk-card" style="display: flex; align-items: center; gap: 16px"><img src="/_blob/f544a8e4c6b6329a9497cbf4860ef099" alt="" width="56" height="45" style="image-rendering: pixelated; flex: none"><div class="tk-stat"><span class="tk-t-body-strong">{{t.noAccount}}</span><span class="tk-t-body-sm tk-ink-2">{{t.noAccountSub}}</span></div></div>
+    <section class="tk-section">
+      <div class="tk-section__head"><h2 class="tk-section__title">{{pl.sectionTitle}}</h2></div>
+      <div class="tk-plusst {{pl.cls}}" role="region" aria-label="{{pl.sectionTitle}}">
+        <div class="tk-plusst__top">
+          <span class="tk-tile tk-tile--brandsoft" aria-hidden="true"><span class="tk-icon">workspace_premium</span></span>
+          <div class="tk-plusst__main"><span class="tk-plusst__title">Tanukonomy Plus<sc-if value="{{pl.hasBadge}}" hint-placeholder-val="{{false}}"><span class="{{pl.badgeCls}}">{{pl.badge}}</span></sc-if></span><span class="tk-plusst__sub">{{pl.sub}}</span></div>
+        </div>
+        <sc-if value="{{pl.hasCta}}" hint-placeholder-val="{{true}}"><a class="{{pl.ctaCls}}" href="{{pl.ctaHref}}" style="align-self: flex-start">{{pl.cta}}</a></sc-if>
+      </div>
+      <div class="tk-list tk-list--icon" style="margin-top: 8px">
+        <sc-if value="{{pl.hasManage}}" hint-placeholder-val="{{true}}"><button class="tk-row tk-row--compact" type="button"><span class="tk-icon tk-ink-2" aria-hidden="true">open_in_new</span><span class="tk-row__main"><span class="tk-row__title">{{pl.manage}}</span></span><span class="tk-icon tk-row__chev">chevron_right</span></button></sc-if>
+        <button class="tk-row tk-row--compact" type="button"><span class="tk-icon tk-ink-2" aria-hidden="true">restore</span><span class="tk-row__main"><span class="tk-row__title">{{pl.restore}}</span></span><span class="tk-icon tk-row__chev">chevron_right</span></button>
+      </div>
+    </section>
+
+    <section class="tk-section">
+      <div class="tk-section__head"><h2 class="tk-section__title">{{t.recording}}</h2></div>
+      <div class="tk-list tk-list--icon"><button class="tk-row tk-row--compact" type="button"><span class="tk-icon tk-ink-2" aria-hidden="true">label</span><span class="tk-row__main"><span class="tk-row__title">{{t.categories}}</span><span class="tk-row__sub">17</span></span><span class="tk-icon tk-row__chev">chevron_right</span></button></div>
+    </section>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"plus":{"editor":"enum","options":["gratis","uji","aktif","berakhir","tenggang","penguji"],"default":"gratis","section":"Status Plus"},"en":{"editor":"boolean","default":false,"section":"Tampilan"},"dark":{"editor":"boolean","default":false,"section":"Tampilan"},"$preview":{"width":360,"height":800}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const en = !!this.props.en;
+    const PT = en ? {
+      section: 'Plus', see: 'See Plus', manage: 'Manage in the Play Store', restore: 'Restore purchases', renew: 'Continue Plus', fix: 'Update payment',
+      gratis: 'Free. See what Tanuki can do for you.', uji: 'Plus is on until 24 Nov. No card, no automatic subscription.', aktif: 'Yearly, renews on 22 Oct 2027',
+      berakhir: 'Yearly, active until 22 Oct 2027, not renewing', tenggang: 'Your payment did not go through. Plus stays on until 25 Oct.', penguji: 'Plus from the tester program until 22 Oct 2027',
+      trial: 'Trial', on: 'Plus'
+    } : {
+      section: 'Plus', see: 'Lihat Plus', manage: 'Kelola di Play Store', restore: 'Pulihkan pembelian', renew: 'Lanjutkan Plus', fix: 'Perbarui pembayaran',
+      gratis: 'Gratis. Lihat apa yang bisa dikerjakan Tanuki untukmu.', uji: 'Plus aktif sampai 24 Nov. Tanpa kartu, tanpa langganan otomatis.', aktif: 'Tahunan, diperpanjang 22 Okt 2027',
+      berakhir: 'Tahunan, aktif sampai 22 Okt 2027, tidak diperpanjang', tenggang: 'Pembayaran belum berhasil. Plus tetap aktif sampai 25 Okt.', penguji: 'Plus dari program penguji sampai 22 Okt 2027',
+      trial: 'Uji coba', on: 'Plus'
+    };
+    const pk = this.props.plus || 'gratis';
+    const M = {
+      gratis: { sub: PT.gratis, cta: PT.see, ctaCls: 'tk-btn tk-btn--primary tk-btn--sm', href: 'Paywall.dc.html?pemicu=P10', manage: false },
+      uji: { sub: PT.uji, badge: PT.trial, badgeCls: 'tk-badge tk-badge--plus-trial', cta: PT.see, ctaCls: 'tk-btn tk-btn--secondary tk-btn--sm', href: 'Paywall.dc.html?pemicu=P10', manage: false },
+      aktif: { sub: PT.aktif, badge: PT.on, badgeCls: 'tk-badge tk-badge--plus', manage: true },
+      berakhir: { sub: PT.berakhir, badge: PT.on, badgeCls: 'tk-badge tk-badge--plus', cta: PT.renew, ctaCls: 'tk-btn tk-btn--secondary tk-btn--sm', href: 'Paywall.dc.html?pemicu=P10', manage: true },
+      tenggang: { sub: PT.tenggang, badge: PT.on, badgeCls: 'tk-badge tk-badge--plus', warn: true, cta: PT.fix, ctaCls: 'tk-btn tk-btn--primary tk-btn--sm', href: 'Main.dc.html', manage: true },
+      penguji: { sub: PT.penguji, badge: PT.on, badgeCls: 'tk-badge tk-badge--plus', manage: false }
+    }[pk];
+    const pl = { sectionTitle: PT.section, cls: M.warn ? 'is-warn' : '', hasBadge: !!M.badge, badge: M.badge || '', badgeCls: M.badgeCls || '', sub: M.sub, hasCta: !!M.cta, cta: M.cta || '', ctaCls: M.ctaCls || '', ctaHref: M.href || '', hasManage: M.manage, manage: PT.manage, restore: PT.restore };
+    const t = en ? { back: 'Back', account: 'Account', noAccount: 'Not signed in', noAccountSub: 'Recording works fully without an account.', recording: 'Recording', categories: 'Categories' }
+      : { back: 'Kembali', account: 'Akun', noAccount: 'Belum masuk', noAccountSub: 'Pencatatan tetap berjalan penuh tanpa akun.', recording: 'Pencatatan', categories: 'Kategori' };
+    return { theme: this.props.dark ? 'dark' : 'light', t: t, pl: pl };
+  }
+}
+</script>
+</body>
+</html>

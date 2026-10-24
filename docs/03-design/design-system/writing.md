@@ -22,6 +22,14 @@ Teks Tanukonomy ditulis seperti teman yang rapi mencatat: hangat, pendek, dan te
 | Pulihkan | restore, impor, kembalikan semua | Mengganti seluruh data dengan isi cadangan; tanpa penggabungan |
 | Cadangan pengaman | cadangan otomatis, salinan lama | Data sebelum pemulihan, disimpan sementara untuk dikembalikan |
 | Berkas | file | Hasil ekspor atau cadangan |
+| Plus, Tanukonomy Plus | Premium, Pro, VIP, upgrade | Satu-satunya paket berbayar; "Freelance Pro" tetap nama fitur di Plus |
+| Gratis | Free, versi dasar, versi biasa | Paket tanpa bayar; tidak pernah disebut "terbatas" |
+| Uji coba | Trial, gratis dulu | Plus penuh tanpa kartu sampai akhir periode keuangan pertama |
+| Berlangganan | Beli, upgrade | Tombol: "Berlangganan Tahunan"; bukan "Beli Plus" |
+| Pulihkan pembelian | Restore, klaim ulang | Mengembalikan Plus di perangkat baru dari akun Play yang sama |
+| Nanti saja | Tutup, Tidak, Lewati | Tombol tolak di paywall dan kartu konteks |
+| Setara Rp14.900/bulan | Hemat 40%, diskon | Harga bulanan setara dari toko; kata "hemat" terlarang |
+| Contoh Penjaga | Demo, gratisan | Peringatan sungguhan satu kali per periode untuk Gratis |
 | Transaksi | log, entri, catatan kas | Pemasukan, pengeluaran, atau transfer |
 | Pemasukan / Pengeluaran | uang masuk / uang keluar, masuk / keluar (di judul) | "Masuk" dan "Keluar" boleh di ruang sempit seperti badge |
 | Transfer | mutasi, mutasi internal | Uang pindah antardompet; tidak mengubah total saldo |
@@ -88,6 +96,11 @@ Teks Tanukonomy ditulis seperti teman yang rapi mencatat: hangat, pendek, dan te
 **Penggantian data.** Judul pertanyaan, isi menyebut cadangan pengaman, tombol menyebut tindakannya.
 > Ganti semua data di ponsel ini?
 > [Batal] [Ganti data]
+
+**Paywall.** Judul menyebut kejadian pengguna, satu kalimat manfaat, harga dari toko. Wajib: harga per periode, perpanjangan otomatis, cara membatalkan. Tanpa tanda seru, tanpa hitung mundur detik; penawaran menyebut tanggal dan jam berakhir.
+> 30 tafsir bulan ini sudah terpakai
+> Dengan Plus, foto dan tafsir tanpa kuota.
+> [Berlangganan Tahunan] [Nanti saja]
 
 **Versi.** "0.6.0 (7)" (nama versi, nomor build); dengan pembaruan kecil "0.6.0 (7), pembaruan 1".
 

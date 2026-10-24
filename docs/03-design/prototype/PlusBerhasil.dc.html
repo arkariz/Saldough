@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Plus aktif</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tanukonomy/components/bundle.css">
+<link rel="stylesheet" href="tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0&icon_names=account_balance,account_balance_wallet,account_circle,add,alarm,arrow_back,arrow_downward,arrow_upward,backspace,backup,bolt,calendar_today,chat_bubble,check,check_circle,chevron_left,chevron_right,close,credit_card,dark_mode,delete,donut_small,edit,edit_note,error,event_busy,expand_less,expand_more,family_restroom,home,hourglass_top,inbox,info,label,label_off,local_cafe,lock,logout,medical_services,mic,more_horiz,more_vert,notifications,notifications_active,open_in_new,payments,photo_camera,progress_activity,radio_button_unchecked,receipt_long,redeem,restart_alt,restaurant,restore,savings,schedule,school,search,shopping_bag,shopping_cart,sports_esports,stars,sticky_note_2,summarize,swap_horiz,system_update,task_alt,translate,trending_up,tune,two_wheeler,undo,visibility,visibility_off,volunteer_activism,warning,wifi,wifi_off,work,workspace_premium&display=block">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="tk" data-theme="{{theme}}" style="position: relative; width: 360px; height: 800px; overflow: hidden; font-family: 'Plus Jakarta Sans', Roboto, sans-serif; color: var(--ink); background: var(--bg)">
+  <dc-import name="Main" banner="tidak" dark="{{dark}}" hint-size="360px,800px"></dc-import>
+  <sc-if value="{{open}}" hint-placeholder-val="{{true}}">
+    <button class="tk-scrim" type="button" aria-label="{{t.close}}" onClick="{{close}}" style="border: 0; padding: 0; cursor: pointer"></button>
+    <div class="tk-sheet" role="dialog" aria-modal="true" aria-labelledby="ok-title" style="position: absolute; left: 0; right: 0; bottom: 0">
+      <div class="tk-sheet__handle"></div>
+      <div class="tk-dsheet" style="padding: 12px 0 0">
+        <div class="tk-dsheet__ok">
+          <span class="tk-tile tk-tile--lg tk-tile--brandsoft" aria-hidden="true"><span class="tk-icon">workspace_premium</span></span>
+          <h2 class="tk-dsheet__ok-title" id="ok-title">{{t.title}}</h2>
+          <p class="tk-onb__text">{{t.body}}</p>
+        </div>
+        <div class="tk-list tk-list--icon"><div class="tk-row tk-row--compact tk-row--wrap"><span class="tk-icon tk-ink-2" aria-hidden="true">photo_camera</span><span class="tk-row__main"><span class="tk-row__title" style="white-space: normal">{{t.step}}</span></span></div></div>
+      </div>
+      <div class="tk-dsheet__foot">
+        <a class="tk-btn tk-btn--primary tk-btn--block" href="Catat.dc.html">{{t.go}}</a>
+        <button class="tk-btn tk-btn--text tk-btn--block" type="button" onClick="{{close}}">{{t.later}}</button>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"en":{"editor":"boolean","default":false,"section":"Tampilan"},"dark":{"editor":"boolean","default":false,"section":"Tampilan"},"$preview":{"width":360,"height":800}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const s = this.state || {};
+    const en = !!this.props.en;
+    const T = en ? { close: 'Close', title: 'Plus is on', body: 'Yearly plan, renews on 22 Oct 2027. Tanuki starts working for you.', step: 'Try a photo of your latest receipt or transfer slip.', go: 'Try a receipt photo', later: 'Not now' }
+      : { close: 'Tutup', title: 'Plus aktif', body: 'Paket Tahunan, diperpanjang 22 Okt 2027. Tanuki mulai bekerja untukmu.', step: 'Coba foto struk atau bukti transfer terakhirmu.', go: 'Coba foto struk', later: 'Nanti saja' };
+    return { theme: this.props.dark ? 'dark' : 'light', dark: !!this.props.dark, t: T, open: !s.closed, close: () => this.setState({ closed: true }) };
+  }
+}
+</script>
+</body>
+</html>

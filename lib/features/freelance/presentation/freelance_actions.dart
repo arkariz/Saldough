@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/plan/active_plan.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/features/freelance/domain/entities/freelance_payment.dart';
 import 'package:saldough/features/freelance/domain/entities/freelance_project.dart';
@@ -9,12 +11,19 @@ import 'package:saldough/features/freelance/presentation/widgets/entry_form_shee
 import 'package:saldough/features/freelance/presentation/widgets/payment_form_sheet.dart';
 import 'package:saldough/features/freelance/presentation/widgets/project_form_sheet.dart';
 import 'package:saldough/features/freelance/presentation/widgets/receive_payment_sheet.dart';
+import 'package:saldough/features/premium/presentation/navigation/premium_route_keys.dart';
 import 'package:state_management/state_management.dart';
 
 /// Membuka formulir TAMBAH proyek, lalu mengirim hasilnya ke
 /// `FreelanceBloc`.
 Future<void> addProject(BuildContext context) async {
   final bloc = context.read<FreelanceBloc>();
+  // Gratis: proyek ke-3 membuka paywall; yang ada tetap dipakai. Semua proyek
+  // dihitung karena proyek belum punya status arsip (ADR-041 §3.8, §3.13).
+  if (!ActivePlan.isPlus && bloc.state.projects.length >= ActivePlan.limits.value.freeProjects) {
+    await context.pushRoute(PremiumRouteKeys.paywall, const PaywallInput(PaywallTrigger.limit));
+    return;
+  }
   final result = await showFullScreenSheet<ProjectFormResult>(context, builder: (_) => const ProjectFormSheet());
   if (result case ProjectFormSaved(:final name, :final hourlyRate, :final deductionRules)) {
     bloc.add(FreelanceProjectAdded(name: name, hourlyRate: hourlyRate, deductionRules: deductionRules));

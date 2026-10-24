@@ -1,6 +1,10 @@
+import 'dart:async';
+
 import 'package:di/di.dart';
 import 'package:flutter/material.dart';
+import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/plan/active_plan.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
@@ -13,6 +17,7 @@ import 'package:saldough/features/budget/presentation/bloc/budget_template_state
 import 'package:saldough/features/budget/presentation/budget_actions.dart';
 import 'package:saldough/features/budget/presentation/budget_display.dart';
 import 'package:saldough/features/budget/presentation/widgets/budget_template_form_sheet.dart';
+import 'package:saldough/features/premium/presentation/navigation/premium_route_keys.dart';
 import 'package:state_management/state_management.dart';
 
 /// Membuka layar Template Anggaran (T-7.2) di atas layar Anggaran, dengan
@@ -62,8 +67,20 @@ class _BudgetTemplatePageState extends State<BudgetTemplatePage> {
     context.read<BudgetTemplateBloc>().add(const BudgetTemplatesStarted());
   }
 
+  /// Gratis: template ke-2 dan seterusnya (termasuk gandakan) membuka paywall;
+  /// yang sudah ada tetap dipakai (ADR-041 §3.8). Semua template dihitung.
+  bool _limited(BudgetTemplateBloc bloc) =>
+      !ActivePlan.isPlus && bloc.state.templates.length >= ActivePlan.limits.value.freeBudgetTemplates;
+
+  Future<void> _paywall() =>
+      context.pushRoute(PremiumRouteKeys.paywall, const PaywallInput(PaywallTrigger.limit));
+
   Future<void> _add() async {
     final bloc = context.read<BudgetTemplateBloc>();
+    if (_limited(bloc)) {
+      await _paywall();
+      return;
+    }
     final result = await showFullScreenSheet<BudgetTemplateFormResult>(
       context,
       builder: (_) => BudgetTemplateFormSheet(wallets: bloc.state.wallets),
@@ -143,7 +160,14 @@ class _BudgetTemplatePageState extends State<BudgetTemplatePage> {
                         canUse: canUse,
                         onUse: () => _use(template),
                         onEdit: () => _edit(template),
-                        onDuplicate: () => context.read<BudgetTemplateBloc>().add(BudgetTemplateDuplicated(template)),
+                        onDuplicate: () {
+                          final bloc = context.read<BudgetTemplateBloc>();
+                          if (_limited(bloc)) {
+                            unawaited(_paywall());
+                          } else {
+                            bloc.add(BudgetTemplateDuplicated(template));
+                          }
+                        },
                       ),
                       const SizedBox(height: AppSpacing.space4),
                     ],

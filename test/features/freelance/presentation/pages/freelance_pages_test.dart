@@ -7,7 +7,9 @@ import 'package:memory_storage/memory_storage.dart';
 import 'package:navigation/navigation.dart';
 import 'package:saldough/app/shell/app_shell_page.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
+import 'package:saldough/core/foundation/entitlement/entitlement.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/plan/active_plan.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
@@ -370,5 +372,44 @@ void main() {
     final progress = (await tutorials.load()).getOrElse((_) => TutorialProgress.empty);
     expect(progress.hasCompleted(TourId.freelance), isTrue);
     expect(progress.hasCompleted(TourId.freelanceProject), isTrue);
+  });
+
+  group('Gratis: proyek ke-3 (ADR-041 §3.8, §3.13)', () {
+    setUp(() => ActivePlan.notifier.value = const FreePlan());
+    tearDown(ActivePlan.reset);
+
+    Future<void> seedProjects(int count) async {
+      for (var i = 0; i < count; i++) {
+        await freelanceRepository.saveProject(
+          FreelanceProject(id: 'p$i', name: 'Proyek $i', hourlyRate: project.hourlyRate, deductionRules: project.deductionRules),
+        );
+      }
+    }
+
+    testWidgets('dua proyek tersimpan: Tambah proyek membuka paywall dan tidak membuat proyek', (tester) async {
+      tallViewport(tester);
+      await seedProjects(2);
+      await openShell(tester);
+      await openFreelanceThroughRecord(tester);
+
+      await tester.ensureVisible(find.byType(AddProjectCard));
+      await tester.tap(find.byType(AddProjectCard));
+      await tester.pumpAndSettle();
+      expect(find.text(t.premium.signInTitle), findsOneWidget);
+      expect((await freelanceRepository.listProjects()).getOrElse((_) => const []), hasLength(2));
+    });
+
+    testWidgets('satu proyek tersimpan: formulir tambah terbuka seperti biasa', (tester) async {
+      tallViewport(tester);
+      await seedProjects(1);
+      await openShell(tester);
+      await openFreelanceThroughRecord(tester);
+
+      await tester.ensureVisible(find.byType(AddProjectCard));
+      await tester.tap(find.byType(AddProjectCard));
+      await tester.pumpAndSettle();
+      expect(find.text(t.premium.signInTitle), findsNothing);
+      expect(find.text(t.freelance.projectAddTitle), findsWidgets);
+    });
   });
 }

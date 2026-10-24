@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Turun ke Gratis</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tanukonomy/components/bundle.css">
+<link rel="stylesheet" href="tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0&icon_names=account_balance,account_balance_wallet,account_circle,add,alarm,arrow_back,arrow_downward,arrow_upward,backspace,bolt,calendar_today,chat_bubble,check,check_circle,chevron_left,chevron_right,close,credit_card,dark_mode,delete,donut_small,edit,edit_note,error,expand_less,expand_more,family_restroom,home,hourglass_top,inbox,info,label,label_off,local_cafe,lock,logout,medical_services,mic,more_horiz,more_vert,notifications,notifications_active,payments,photo_camera,progress_activity,receipt_long,redeem,restart_alt,restaurant,savings,schedule,school,search,shopping_bag,shopping_cart,sports_esports,stars,sticky_note_2,swap_horiz,system_update,task_alt,translate,tune,two_wheeler,undo,visibility,visibility_off,volunteer_activism,warning,wifi,wifi_off,work,workspace_premium&display=block">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="tk tk-screen" data-theme="{{theme}}" style="width: 360px; height: 800px; font-family: 'Plus Jakarta Sans', Roboto, sans-serif; color: var(--ink); background: var(--bg)">
+  <header class="tk-topbar"><h1 class="tk-topbar__title">{{t.title}}</h1></header>
+  <main class="tk-body tk-scroll" style="gap: 16px; padding: 0 16px 16px">
+    <p class="tk-t-body" style="margin: 0 4px; flex: none">{{t.intro}}</p>
+    <section class="tk-section" style="flex: none"><div class="tk-section__head"><h2 class="tk-section__title">{{t.keepTitle}}</h2></div>
+      <div class="tk-list tk-list--icon" style="flex: none"><sc-for list="{{keep}}" as="r" hint-placeholder-count="3"><div class="tk-row tk-row--compact tk-row--wrap" style="flex: none"><span class="tk-icon tk-ink-2" aria-hidden="true">{{r.icon}}</span><span class="tk-row__main"><span class="tk-row__title" style="white-space: normal">{{r.title}}</span><span class="tk-row__sub" style="white-space: normal">{{r.sub}}</span></span></div></sc-for></div></section>
+    <section class="tk-section" style="flex: none"><div class="tk-section__head"><h2 class="tk-section__title">{{t.changeTitle}}</h2></div>
+      <div class="tk-list tk-list--icon" style="flex: none"><sc-for list="{{change}}" as="r" hint-placeholder-count="3"><div class="tk-row tk-row--compact tk-row--wrap" style="flex: none"><span class="tk-icon tk-ink-2" aria-hidden="true">{{r.icon}}</span><span class="tk-row__main"><span class="tk-row__title" style="white-space: normal">{{r.title}}</span><span class="tk-row__sub" style="white-space: normal">{{r.sub}}</span></span></div></sc-for></div></section>
+    <sc-if value="{{hasDeal}}" hint-placeholder-val="{{true}}">
+      <div class="tk-card" role="region" aria-label="{{t.dealKicker}}" style="background: var(--brand-soft); display: flex; flex-direction: column; gap: 4px; flex: none"><span class="tk-t-label" style="color: var(--brand-ink)">{{t.dealKicker}}</span><span class="tk-t-amount-lg">{{t.dealPrice}}</span><span class="tk-t-body-sm">{{t.dealLine}}</span></div>
+    </sc-if>
+  </main>
+  <div class="tk-sticky-action" style="display: flex; flex-direction: column; gap: 8px">
+    <a class="tk-btn tk-btn--primary tk-btn--block" href="Paywall.dc.html?penawaran=pasca">{{cta}}</a>
+    <a class="tk-btn tk-btn--secondary tk-btn--block" href="Main.dc.html">{{t.free}}</a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"penawaran":{"editor":"enum","options":["ada","tidak"],"default":"ada","section":"Keadaan"},"en":{"editor":"boolean","default":false,"section":"Tampilan"},"dark":{"editor":"boolean","default":false,"section":"Tampilan"},"$preview":{"width":360,"height":800}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const en = !!this.props.en;
+    const T = en ? {
+      title: 'Your Plus trial ended', intro: 'Thanks for trying it. Everything you recorded stays, and you keep recording for free.', keepTitle: 'What stays', changeTitle: 'What changes',
+      keep: [['check_circle', 'All your entries', 'Nothing is deleted or locked'], ['check_circle', 'Recording, History, Wallets, Budgets, recurring', 'Same as before']],
+      change: [['inbox', 'Notification apps', '3 apps become 1 app of your choice'], ['bolt', 'Auto-record', '4 recurring items go back to one-tap confirmation'], ['donut_small', 'Analysis', 'Your latest 6 periods; History stays complete']],
+      dealKicker: 'Offer until 26 Nov, 9:00 pm', dealPrice: 'Rp129,000', dealLine: 'for the first year, then Rp179,000 a year. Renews automatically; cancel anytime in the Play Store.',
+      plus: 'Continue with Plus', plusNoDeal: 'See Plus', free: 'Continue with Free'
+    } : {
+      title: 'Uji coba Plus selesai', intro: 'Terima kasih sudah mencoba. Semua yang kamu catat tetap ada, dan kamu tetap mencatat gratis.', keepTitle: 'Yang tetap', changeTitle: 'Yang berubah',
+      keep: [['check_circle', 'Semua catatanmu', 'Tidak ada yang dihapus atau dikunci'], ['check_circle', 'Pencatatan, Riwayat, Dompet, Anggaran, rutin', 'Sama seperti sebelumnya']],
+      change: [['inbox', 'Aplikasi notifikasi', '3 aplikasi menjadi 1 aplikasi pilihanmu'], ['bolt', 'Catat otomatis', '4 rutin kembali ke konfirmasi satu ketuk'], ['donut_small', 'Analisis', '6 periode terakhir; Riwayat tetap lengkap']],
+      dealKicker: 'Penawaran sampai 26 Nov, 21.00', dealPrice: 'Rp129.000', dealLine: 'untuk tahun pertama, lalu Rp179.000 per tahun. Diperpanjang otomatis; batalkan kapan saja di Play Store.',
+      plus: 'Lanjutkan dengan Plus', plusNoDeal: 'Lihat Plus', free: 'Lanjut dengan Gratis'
+    };
+    const deal = this.props.penawaran !== 'tidak';
+    const m = (a) => a.map((k) => ({ icon: k[0], title: k[1], sub: k[2] }));
+    return { theme: this.props.dark ? 'dark' : 'light', t: T, hasDeal: deal, cta: deal ? T.plus : T.plusNoDeal, keep: m(T.keep), change: m(T.change) };
+  }
+}
+</script>
+</body>
+</html>

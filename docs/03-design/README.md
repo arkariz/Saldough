@@ -192,7 +192,31 @@ menambah layar.
 bawah kartu akun, tanpa komponen baru. Tiga keadaan: Gratis, uji coba (lencana
 `brand`, "Sampai 24 Nov. Tanpa kartu."), aktif ("Tahunan, diperpanjang 22 Okt
 2027", plus baris "Kelola di Play Store"). "Pulihkan pembelian" selalu ada.
-Berakhir, masa tenggang, dan program penguji menyusul.
+Tiga keadaan lain: berakhir (lencana "Berakhir", ke paywall), masa tenggang
+(lencana peringatan "Cek", ke Akun) dan penguji (ke `FiturPlus`):
+`AkunPlusBerakhir`, `AkunPlusTenggang`, `AkunPlusPenguji`.
+
+**Keadaan paywall** (properti `keadaan` dan `penawaran` pada `Paywall`):
+memuat harga (skeleton), luring ("Coba lagi"), memproses, tertunda, galat,
+Harga Pendiri ("sampai 21 Jan 2027") dan penawaran sesudah uji coba (harga
+perkenalan tahun pertama, tanggal dan jam berakhir). Papan: `PaywallMemuat`,
+`PaywallLuring`, `PaywallMemproses`, `PaywallTertunda`, `PaywallGalat`,
+`PaywallPendiri`, `PaywallPasca`. Harga selalu string dari toko.
+
+**Sesudah beli dan hadiah** : `PlusBerhasil` (D-10, "Plus aktif", tombol
+Selesai); `PlusHadiah`, `PlusHadiahGajian`, `PlusHadiahGajian10`
+(D-1, uji coba berakhir bersama periode keuangan pertama, aturan KT-P2:
+sisa 14 hari atau lebih berakhir di periode berjalan, selain itu periode
+berikutnya; kisi tanggal gajian bila belum diatur).
+
+**Turun ke Gratis** (`PlusTurun`, `PlusTurunTanpaPenawaran`; D-8): "Yang
+tetap" dan "Yang berubah" dengan angka contoh, kartu penawaran bila ada, dua
+tombol sama besar ("Lanjutkan dengan Plus", "Lanjut dengan Gratis").
+
+**Kartu Plus di Beranda** (`PlusKartu`, properti `jenis`; D-5, D-6, D-7):
+satu kartu untuk tiga tempat, yaitu konteks (pesan pemicu), Contoh Penjaga
+(peringatan anggaran), dan rekap nilai saat Plus hampir berakhir. Satu
+kalimat, satu tombol, bisa ditutup, tidak pernah menghalangi CATAT.
 
 ## Usulan desain
 

@@ -11,7 +11,7 @@
 <x-dc>
 <helmet>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0&icon_names=account_balance,account_balance_wallet,account_circle,add,alarm,arrow_back,arrow_downward,arrow_upward,backspace,bolt,calendar_today,chat_bubble,check,check_circle,chevron_left,chevron_right,close,credit_card,dark_mode,delete,donut_small,edit,edit_note,error,expand_less,expand_more,family_restroom,home,hourglass_top,inbox,info,label,label_off,local_cafe,lock,logout,medical_services,mic,more_horiz,more_vert,notifications,notifications_active,payments,photo_camera,progress_activity,receipt_long,redeem,restart_alt,restaurant,savings,schedule,school,search,shopping_bag,shopping_cart,sports_esports,stars,sticky_note_2,swap_horiz,system_update,task_alt,translate,tune,two_wheeler,undo,visibility,visibility_off,volunteer_activism,warning,wifi,work,workspace_premium&display=block">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0&icon_names=account_balance,account_balance_wallet,account_circle,add,alarm,arrow_back,arrow_downward,arrow_upward,backspace,bolt,calendar_today,chat_bubble,check,check_circle,chevron_left,chevron_right,close,credit_card,dark_mode,delete,donut_small,edit,edit_note,error,expand_less,expand_more,family_restroom,home,hourglass_top,inbox,info,label,label_off,local_cafe,lock,logout,medical_services,mic,more_horiz,more_vert,notifications,notifications_active,payments,photo_camera,progress_activity,receipt_long,redeem,restart_alt,restaurant,savings,schedule,school,search,shopping_bag,shopping_cart,sports_esports,stars,sticky_note_2,swap_horiz,system_update,task_alt,translate,tune,two_wheeler,undo,visibility,visibility_off,volunteer_activism,warning,wifi,wifi_off,work,workspace_premium&display=block">
 <style>
 body{margin:0}
 </style>
@@ -27,24 +27,33 @@ body{margin:0}
       <h1 class="tk-sheet__title" id="pw-title" style="flex: none; font-size: 20px; line-height: 28px; text-wrap: balance">{{msg.title}}</h1>
       <p class="tk-t-body-sm tk-ink-2" style="margin: 0; text-wrap: balance">{{msg.body}}</p>
     </div>
+    <sc-if value="{{hasBanner}}" hint-placeholder-val="{{false}}"><div class="{{bannerCls}}" role="status" style="flex: none"><span class="tk-icon" aria-hidden="true">{{bannerIcon}}</span><span class="tk-banner__text">{{bannerText}}</span></div></sc-if>
     <div class="tk-list tk-list--icon" style="background: transparent; margin: 0 -16px">
       <sc-for list="{{benefits}}" as="b" hint-placeholder-count="3"><div class="tk-row tk-row--compact"><span class="tk-tile tk-tile--sm tk-tile--brandsoft" aria-hidden="true"><span class="tk-icon">{{b.icon}}</span></span><span class="tk-row__main"><span class="tk-row__title" style="white-space: normal">{{b.title}}</span></span></div></sc-for>
     </div>
     <a class="tk-link" href="FiturPlus.dc.html" style="align-self: center; margin-top: -8px">{{t.all}}<span class="tk-icon tk-icon--sm">chevron_right</span></a>
-    <div class="tk-plans" role="radiogroup" aria-label="{{t.plans}}">
-      <sc-for list="{{plans}}" as="p" hint-placeholder-count="2">
-        <button class="tk-plan {{p.cls}}" type="button" role="radio" aria-checked="{{p.checked}}" onClick="{{p.pick}}"><span class="tk-plan__radio" aria-hidden="true"></span><span class="tk-plan__main"><span class="tk-plan__title">{{p.name}}</span><span class="tk-plan__sub">{{p.sub}}</span></span><span class="tk-plan__price"><span>{{p.price}}</span><span class="tk-plan__unit">{{p.unit}}</span></span></button>
-      </sc-for>
-    </div>
+    <sc-if value="{{isPlans}}" hint-placeholder-val="{{true}}">
+      <div class="tk-plans" role="radiogroup" aria-label="{{t.plans}}">
+        <sc-for list="{{plans}}" as="p" hint-placeholder-count="2">
+          <button class="tk-plan {{p.cls}}" type="button" role="radio" aria-checked="{{p.checked}}" onClick="{{p.pick}}"><span class="tk-plan__radio" aria-hidden="true"></span><span class="tk-plan__main"><span class="tk-plan__title">{{p.name}}</span><sc-if value="{{p.hasTag}}" hint-placeholder-val="{{false}}"><span class="tk-badge tk-badge--plus" style="align-self: flex-start">{{p.tag}}</span></sc-if><span class="tk-plan__sub">{{p.sub}}</span></span><sc-if value="{{p.hasPrice}}" hint-placeholder-val="{{true}}"><span class="tk-plan__price"><sc-if value="{{p.hasWas}}" hint-placeholder-val="{{false}}"><span class="tk-plan__unit" style="text-decoration: line-through">{{p.was}}</span></sc-if><span>{{p.price}}</span><span class="tk-plan__unit">{{p.unit}}</span></span></sc-if><sc-if value="{{p.skel}}" hint-placeholder-val="{{false}}"><span class="tk-skel" aria-hidden="true" style="width: 84px; height: 20px"></span></sc-if></button>
+        </sc-for>
+      </div>
+    </sc-if>
+    <sc-if value="{{isOffline}}" hint-placeholder-val="{{false}}">
+      <div class="tk-card" style="display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; flex: none"><span class="tk-icon tk-ink-2" aria-hidden="true">wifi_off</span><span class="tk-t-body-strong">{{t.offTitle}}</span><span class="tk-t-body-sm tk-ink-2">{{t.offBody}}</span><button class="tk-btn tk-btn--secondary tk-btn--sm" type="button">{{t.retry}}</button></div>
+    </sc-if>
     <div style="display: flex; flex-direction: column; gap: 8px">
-      <button class="tk-btn tk-btn--primary tk-btn--block" type="button">{{buy}}</button>
+      <sc-if value="{{buyLink}}" hint-placeholder-val="{{true}}"><a class="tk-btn tk-btn--primary tk-btn--block" href="PlusBerhasil.dc.html">{{buy}}</a></sc-if>
+      <sc-if value="{{buyBusy}}" hint-placeholder-val="{{false}}"><button class="tk-btn tk-btn--primary tk-btn--block" type="button" disabled><span class="tk-icon tk-icon--spin" aria-hidden="true">progress_activity</span>{{buy}}</button></sc-if>
+      <sc-if value="{{buyOff}}" hint-placeholder-val="{{false}}"><button class="tk-btn tk-btn--primary tk-btn--block is-disabled" type="button" disabled>{{buy}}</button></sc-if>
+      <sc-if value="{{buyRetry}}" hint-placeholder-val="{{false}}"><button class="tk-btn tk-btn--primary tk-btn--block" type="button">{{buy}}</button></sc-if>
       <a class="tk-btn tk-btn--secondary tk-btn--block" href="Main.dc.html">{{t.later}}</a>
       <p class="tk-t-caption tk-ink-2" style="margin: 0; text-align: center">{{fine}}</p>
     </div>
   </div>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"pemicu":{"editor":"enum","options":["umum","analisis","notifikasi","otomatis","template","proyek","perkiraan","tafsir"],"default":"umum","section":"Pemicu"},"en":{"editor":"boolean","default":false,"section":"Tampilan"},"dark":{"editor":"boolean","default":false,"section":"Tampilan"},"$preview":{"width":360,"height":800}}'>
+<script type="text/x-dc" data-dc-script data-props='{"keadaan":{"editor":"enum","options":["awal","memuat","luring","memproses","tertunda","galat"],"default":"awal","section":"Keadaan"},"penawaran":{"editor":"enum","options":["biasa","pendiri","pasca"],"default":"biasa","section":"Keadaan"},"pemicu":{"editor":"enum","options":["umum","analisis","notifikasi","otomatis","template","proyek","perkiraan","tafsir"],"default":"umum","section":"Pemicu"},"en":{"editor":"boolean","default":false,"section":"Tampilan"},"dark":{"editor":"boolean","default":false,"section":"Tampilan"},"$preview":{"width":360,"height":800}}'>
 class Component extends DCLogic {
   renderVals() {
     const s = this.state || {};
@@ -62,6 +71,9 @@ class Component extends DCLogic {
         tafsir: ['30 smart readings are used up this month', 'With Plus, photos and readings have no quota.']
       },
       close: 'Close', plans: 'Plans', later: 'Not now', all: 'See all Plus features',
+      offTitle: 'Prices could not load', offBody: 'Connect to the internet to see the prices, then try again.', retry: 'Try again', loadingBuy: 'Subscribe', buying: 'Processing…', waiting: 'Waiting for approval', retryBuy: 'Try again',
+      pending: 'Payment pending. Plus turns on as soon as it is approved.', failed: 'Payment did not go through. Check your payment method in the Play Store, then try again.',
+      founder: 'Founder price', intro: 'Intro price', founderSub: 'Locked while subscribed · until 21 Jan 2027', introSub: 'First year, then Rp179,000 a year · until 26 Nov, 9:00 pm', yearWas: 'Rp179,000',
       benefits: [['photo_camera', 'Record from photos and every bank notification'], ['notifications_active', 'Warnings before a budget runs out'], ['chat_bubble', 'Ask, plan, and get reports']],
       annual: 'Yearly', monthly: 'Monthly', equiv: 'about Rp14,900 a month', cancel: 'Cancel anytime', yearPrice: 'Rp179,000', monthPrice: 'Rp25,000', perYear: '/year', perMonth: '/month',
       buy: (p) => 'Subscribe ' + (p === 'annual' ? 'yearly' : 'monthly'),
@@ -78,6 +90,9 @@ class Component extends DCLogic {
         tafsir: ['30 tafsir bulan ini sudah terpakai', 'Dengan Plus, foto dan tafsir tanpa kuota.']
       },
       close: 'Tutup', plans: 'Paket', later: 'Nanti saja', all: 'Lihat semua fitur Plus',
+      offTitle: 'Harga belum bisa dimuat', offBody: 'Sambungkan ke internet untuk melihat harga, lalu coba lagi.', retry: 'Coba lagi', loadingBuy: 'Berlangganan', buying: 'Memproses…', waiting: 'Menunggu persetujuan', retryBuy: 'Coba lagi',
+      pending: 'Pembayaran tertunda. Plus aktif begitu disetujui.', failed: 'Pembayaran belum berhasil. Cek metode bayarmu di Play Store, lalu coba lagi.',
+      founder: 'Harga Pendiri', intro: 'Harga perkenalan', founderSub: 'Terkunci selagi berlangganan · sampai 21 Jan 2027', introSub: 'Tahun pertama, lalu Rp179.000/tahun · sampai 26 Nov, 21.00', yearWas: 'Rp179.000',
       benefits: [['photo_camera', 'Catat dari foto dan semua notifikasi bank'], ['notifications_active', 'Peringatan sebelum anggaran habis'], ['chat_bubble', 'Tanya, rencanakan, dan lapor']],
       annual: 'Tahunan', monthly: 'Bulanan', equiv: 'setara Rp14.900/bulan', cancel: 'Bisa dibatalkan kapan saja', yearPrice: 'Rp179.000', monthPrice: 'Rp25.000', perYear: '/tahun', perMonth: '/bulan',
       buy: (p) => 'Berlangganan ' + (p === 'annual' ? 'Tahunan' : 'Bulanan'),
@@ -86,12 +101,23 @@ class Component extends DCLogic {
     const pk = this.props.pemicu || 'umum';
     const msg = { title: T.msgs[pk][0], body: T.msgs[pk][1] };
     const plan = s.plan || 'annual';
-    const mk = (k, name, sub, price, unit) => ({ name: name, sub: sub, price: price, unit: unit, cls: plan === k ? 'is-selected' : '', checked: plan === k ? 'true' : 'false', pick: () => this.setState({ plan: k }) });
+    const st = this.props.keadaan || 'awal', offer = this.props.penawaran || 'biasa';
+    const loading = st === 'memuat', offline = st === 'luring', busy = st === 'memproses', pending = st === 'tertunda', failed = st === 'galat';
+    const mk = (k, name, sub, price, unit, tag, was) => ({
+      name: name, sub: loading ? T.cancel : sub, price: price, unit: unit, tag: tag, hasTag: !!tag && !loading, was: was, hasWas: !!was && !loading, hasPrice: !loading, skel: loading,
+      cls: (plan === k ? 'is-selected' : '') + (busy || pending ? ' is-disabled' : ''), checked: plan === k ? 'true' : 'false', pick: () => this.setState({ plan: k })
+    });
+    const yr = offer === 'pendiri' ? mk('annual', T.annual, T.founderSub, en ? 'Rp129,000' : 'Rp129.000', T.perYear, T.founder, T.yearWas)
+      : offer === 'pasca' ? mk('annual', T.annual, T.introSub, en ? 'Rp129,000' : 'Rp129.000', T.perYear, T.intro, T.yearWas)
+      : mk('annual', T.annual, T.equiv, T.yearPrice, T.perYear, '', '');
+    const buyLabel = busy ? T.buying : pending ? T.waiting : (loading || offline) ? T.loadingBuy : failed ? T.retryBuy : T.buy(plan);
     return {
       theme: this.props.dark ? 'dark' : 'light', dark: !!this.props.dark, t: T, msg: msg, hasKicker: pk !== 'umum',
       benefits: T.benefits.map((b) => ({ icon: b[0], title: b[1] })),
-      plans: [mk('annual', T.annual, T.equiv, T.yearPrice, T.perYear), mk('monthly', T.monthly, T.cancel, T.monthPrice, T.perMonth)],
-      buy: T.buy(plan), fine: T.fine(plan)
+      plans: [yr, mk('monthly', T.monthly, T.cancel, T.monthPrice, T.perMonth, '', '')],
+      isPlans: !offline, isOffline: offline, hasBanner: pending || failed, bannerCls: failed ? 'tk-banner tk-banner--danger' : 'tk-banner tk-banner--info', bannerIcon: failed ? 'error' : 'info', bannerText: failed ? T.failed : T.pending,
+      buyLink: st === 'awal', buyBusy: busy, buyOff: loading || offline || pending, buyRetry: failed, buy: buyLabel,
+      fine: T.fine(plan)
     };
   }
 }

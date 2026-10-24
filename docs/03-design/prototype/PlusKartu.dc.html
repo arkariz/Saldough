@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Kartu Plus di Beranda</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tanukonomy/components/bundle.css">
+<link rel="stylesheet" href="tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0&icon_names=account_balance,account_balance_wallet,account_circle,add,alarm,arrow_back,arrow_downward,arrow_upward,backspace,bolt,calendar_today,chat_bubble,check,check_circle,chevron_left,chevron_right,close,credit_card,dark_mode,delete,donut_small,edit,edit_note,error,expand_less,expand_more,family_restroom,home,hourglass_top,inbox,info,label,label_off,local_cafe,lock,logout,medical_services,mic,more_horiz,more_vert,notifications,notifications_active,payments,photo_camera,progress_activity,receipt_long,redeem,restart_alt,restaurant,savings,schedule,school,search,shopping_bag,shopping_cart,sports_esports,stars,sticky_note_2,swap_horiz,system_update,task_alt,translate,tune,two_wheeler,undo,visibility,visibility_off,volunteer_activism,warning,wifi,wifi_off,work,workspace_premium&display=block">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="tk tk-screen" data-theme="{{theme}}" style="width: 360px; height: 800px; font-family: 'Plus Jakarta Sans', Roboto, sans-serif; color: var(--ink); background: var(--bg)">
+  <header class="tk-topbar"><h1 class="tk-topbar__title">{{t.home}}</h1></header>
+  <main class="tk-body tk-scroll" style="gap: 12px; padding: 0 16px 32px">
+    <div class="tk-card" role="region" aria-label="{{k.title}}" style="display: flex; flex-direction: column; gap: 12px; flex: none">
+      <div style="display: flex; gap: 12px; align-items: flex-start"><span class="tk-tile tk-tile--sm tk-tile--brandsoft" aria-hidden="true"><span class="tk-icon">{{k.icon}}</span></span>
+        <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px">
+          <sc-if value="{{k.hasBadge}}" hint-placeholder-val="{{false}}"><span class="tk-badge tk-badge--plus" style="align-self: flex-start">{{k.badge}}</span></sc-if>
+          <span class="tk-t-body-strong">{{k.title}}</span>
+          <span class="tk-t-body-sm tk-ink-2">{{k.sub}}</span>
+        </div></div>
+      <sc-if value="{{k.hasLines}}" hint-placeholder-val="{{false}}"><ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px"><sc-for list="{{k.lines}}" as="l" hint-placeholder-count="2"><li style="display: flex; gap: 12px; align-items: baseline"><span class="tk-t-amount" style="min-width: 28px">{{l.n}}</span><span class="tk-t-body-sm">{{l.text}}</span></li></sc-for></ul></sc-if>
+      <div style="display: flex; justify-content: flex-end; gap: 4px; margin-right: -8px"><button class="tk-btn tk-btn--text tk-btn--sm" type="button">{{k.dismiss}}</button><a class="tk-btn tk-btn--primary tk-btn--sm" href="{{k.href}}">{{k.cta}}</a></div>
+    </div>
+    <div class="tk-card" style="display: flex; flex-direction: column; gap: 4px; flex: none"><span class="tk-t-body-sm tk-ink-2">{{t.total}}</span><span class="tk-amt tk-t-amount-hero">Rp27.522.000</span></div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"jenis":{"editor":"enum","options":["konteks","penjaga","rekap"],"default":"konteks","section":"Keadaan"},"en":{"editor":"boolean","default":false,"section":"Tampilan"},"dark":{"editor":"boolean","default":false,"section":"Tampilan"},"$preview":{"width":360,"height":800}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const en = !!this.props.en;
+    // Satu kartu untuk tiga tempat: konteks (P-tafsir), Contoh Penjaga, rekap nilai H-3. Satu per layar, satu kalimat, satu tombol.
+    const T = en ? {
+      home: 'Home', total: 'Total balance', later: 'Not now', close: 'Close', see: 'See Plus',
+      konteks: { icon: 'photo_camera', title: '30 smart readings are used up this month', sub: 'With Plus, photos and readings have no quota.', cta: 'See Plus', dismiss: 'Not now', href: 'Paywall.dc.html?pemicu=tafsir' },
+      penjaga: { icon: 'notifications_active', badge: 'Watcher sample', title: 'The Food budget is expected to run out 9 days before the period ends.', sub: 'You have spent 71% and 14 of 30 days have passed.', cta: 'See Food budget', dismiss: 'Close', href: 'RincianAnggaran.dc.html' },
+      rekap: { icon: 'workspace_premium', title: 'Plus ends on 24 Nov', sub: 'Since 1 Nov, Tanuki has:', lines: [[14, 'entries from photos and notifications'], [4, 'Watcher warnings']], cta: 'See Plus', dismiss: 'Not now', href: 'Paywall.dc.html' }
+    } : {
+      home: 'Beranda', total: 'Total saldo', later: 'Nanti saja', close: 'Tutup', see: 'Lihat Plus',
+      konteks: { icon: 'photo_camera', title: '30 tafsir bulan ini sudah terpakai', sub: 'Dengan Plus, foto dan tafsir tanpa kuota.', cta: 'Lihat Plus', dismiss: 'Nanti saja', href: 'Paywall.dc.html?pemicu=tafsir' },
+      penjaga: { icon: 'notifications_active', badge: 'Contoh Penjaga', title: 'Anggaran Makan diperkirakan habis 9 hari sebelum periode berakhir.', sub: 'Terpakai 71%, baru 14 dari 30 hari berjalan.', cta: 'Lihat anggaran', dismiss: 'Tutup', href: 'RincianAnggaran.dc.html' },
+      rekap: { icon: 'workspace_premium', title: 'Plus berakhir 24 Nov', sub: 'Sejak 1 Nov, Tanuki sudah:', lines: [[14, 'catatan dari foto dan notifikasi'], [4, 'peringatan Penjaga']], cta: 'Lihat Plus', dismiss: 'Nanti saja', href: 'Paywall.dc.html' }
+    };
+    const v = T[this.props.jenis || 'konteks'];
+    const k = Object.assign({}, v, { hasBadge: !!v.badge, badge: v.badge || '', hasLines: !!v.lines, lines: (v.lines || []).map((l) => ({ n: l[0], text: l[1] })) });
+    return { theme: this.props.dark ? 'dark' : 'light', t: T, k: k };
+  }
+}
+</script>
+</body>
+</html>

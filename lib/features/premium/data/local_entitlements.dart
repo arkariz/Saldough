@@ -85,6 +85,9 @@ final class LocalEntitlements implements Entitlements {
   /// Memuat ulang cache hak RevenueCat; dipanggil sesudah adaptor menulisnya.
   Future<void> reloadCache() => _recompute();
 
+  /// Menghitung ulang keadaan, mis. sesudah pengganti uji berubah.
+  Future<void> recompute() => _recompute();
+
   @override
   bool can(PlusFeature feature) => _current.isPlus;
 

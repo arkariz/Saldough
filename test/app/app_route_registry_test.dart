@@ -32,6 +32,8 @@ void main() {
       'wallet.inactive',
       'dataPortability.restore',
       'dataPortability.restoreDone',
+      // Halaman paket uji (ADR-041 §3.10): hanya di build non-rilis.
+      'app.debugPlan',
     });
   });
 

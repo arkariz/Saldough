@@ -26,7 +26,7 @@ void main() {
           ).copyWith(textScaler: TextScaler.linear(scale)),
           child: child!,
         ),
-        home: PaywallPage(signedIn: signedIn, onSignIn: onSignIn ?? () {}),
+        home: PaywallPage(trigger: PaywallTrigger.account, signedIn: signedIn, onSignIn: onSignIn ?? () {}),
       ),
     );
     await tester.pump();

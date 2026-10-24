@@ -101,3 +101,41 @@ fvm flutter test test/release              # penjaga berkas (sisi Dart)
 ```
 
 `publish` dan `cleanup` butuh `FIREBASE_SERVICE_ACCOUNT_KEY` (rahasia CI).
+
+## Daftar periksa rilis berfitur Plus (Fase 23, ADR-041)
+
+Sebelum membangun dan mengunggah build yang memuat gerbang Plus
+(T-23.9 sampai T-23.13), pemilik memeriksa:
+
+1. **Penguji bisa masuk akun.** Sebelum Plus dijual, masuk akun = Plus dan
+   tanpa akun = Gratis (gerbang mengunci otomasi rutin, sumber notifikasi
+   ke-2, tingkat otomatis, Analisis lebih dari 6 periode, template ke-2, dan
+   proyek ke-3). Daftarkan tiap penguji sebagai tester OAuth Google (selama
+   layar consent belum terverifikasi) atau beri akun email/sandi.
+2. **Catatan rilis dan email penguji memberi tahu** bahwa fitur Plus
+   memerlukan masuk akun ("masuk akun untuk tetap memakai fitur ini"); tanpa
+   itu pengguna yang tidak masuk merasa fiturnya hilang.
+3. **Kunci SDK RevenueCat** ada sebagai secret GitHub
+   `REVENUECAT_ANDROID_KEY` dan sampai ke **rilis dan patch** Shorebird
+   (`android/fastlane/Fastfile`, `.github/workflows/deploy.yaml`; dijaga
+   `test/architecture/release_pipeline_test.dart`). Tanpa secret, build
+   berjalan tanpa RevenueCat dan Fastlane memberi peringatan.
+4. **Akun peninjau Play**: akun email/sandi diberi entitlement promosi
+   RevenueCat tanpa tanggal berakhir; kredensial dan instruksinya di kolom
+   App access (lihat `PLAY_DATA_SAFETY.md`). Periksa ulang tiap rilis publik.
+5. **Penguji closed testing** diberi entitlement promosi 12 bulan per
+   `firebaseUid` di dasbor RevenueCat (KT-P5); penguji pembelian memakai akun
+   penguji lisensi Play.
+6. **Objek di RevenueCat dan Play Console** sesuai ADR-041 §3.5: entitlement
+   `plus`; langganan `plus` dengan base plan `monthly`, `yearly`,
+   `yearly-founder`; offering `default`, `founder`, `post_trial` yang berisi
+   package berindentifier `monthly`, `yearly`, `yearly_founder`,
+   `yearly_intro` (lihat ADR).
+7. **Remote Config**: `plus_launch_at` **kosong** sampai Plus siap dijual
+   (kosong = pra-peluncuran; mengisinya memulai uji coba dan tombol beli);
+   `founder_until` = 90 hari sesudah rilis publik.
+8. **Keamanan Data dan kebijakan privasi** sudah memuat RevenueCat dan
+   riwayat pembelian (`PLAY_DATA_SAFETY.md`, bagian Fase 23) sebelum build
+   berfitur ini diunggah.
+9. **Build rilis tanpa sakelar uji**: pipeline tidak pernah memberi
+   `PLAN_OVERRIDE` (dijaga uji arsitektur).

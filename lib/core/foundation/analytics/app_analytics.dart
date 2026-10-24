@@ -372,3 +372,53 @@ abstract final class DataPortabilityEvents {
   static AnalyticsEvent restoreFailed({required String surface, required String reason}) =>
       AnalyticsEvent('restore_failed', {'surface': surface, 'reason': reason});
 }
+
+/// Peristiwa Plus (ADR-041 §3.12, FREEMIUM_PAYWALL §12.5). Hanya jenis, paket,
+/// pemicu, dan jumlah hari; tanpa nominal, harga, ID akun, atau isi data
+/// (ADR-023).
+abstract final class PremiumEvents {
+  PremiumEvents._();
+
+  /// Uji coba akun dimulai; [days] = panjangnya (14 sampai sekitar 45).
+  static AnalyticsEvent trialStarted({required int days}) => AnalyticsEvent('trial_started', {'days': days});
+
+  /// Momen terjadwal uji coba; [pillar] nama pilar.
+  static AnalyticsEvent trialMoment({required String pillar}) => AnalyticsEvent('trial_moment', {'pillar': pillar});
+
+  /// Rekap nilai uji coba tampil.
+  static const AnalyticsEvent trialValueRecapShown = AnalyticsEvent('trial_value_recap_shown');
+
+  /// Uji coba berakhir; [outcome] `purchased` atau `lapsed`.
+  static AnalyticsEvent trialEnded({required String outcome}) => AnalyticsEvent('trial_ended', {'outcome': outcome});
+
+  /// Paywall tampil; [trigger] = `PaywallTrigger.analyticsName`.
+  static AnalyticsEvent paywallViewed({required String trigger}) =>
+      AnalyticsEvent('paywall_viewed', {'trigger': trigger});
+
+  /// Paywall ditutup tanpa membeli.
+  static AnalyticsEvent paywallDismissed({required String trigger}) =>
+      AnalyticsEvent('paywall_dismissed', {'trigger': trigger});
+
+  /// Pembelian dimulai; [plan] = `PlusPlanKind.id`.
+  static AnalyticsEvent purchaseStarted({required String plan}) => AnalyticsEvent('purchase_started', {'plan': plan});
+
+  /// Pembelian berhasil.
+  static AnalyticsEvent purchaseCompleted({required String plan}) =>
+      AnalyticsEvent('purchase_completed', {'plan': plan});
+
+  /// Pembelian gagal; [reason] `network`, `billing`, atau `other`. Pembatalan
+  /// pengguna bukan kegagalan dan tidak dicatat di sini.
+  static AnalyticsEvent purchaseFailed({required String reason}) => AnalyticsEvent('purchase_failed', {'reason': reason});
+
+  /// Pemulihan pembelian dijalankan. Bukan `restore_completed`, nama itu
+  /// milik pemulihan data (Fase 22).
+  static const AnalyticsEvent purchaseRestored = AnalyticsEvent('purchase_restored');
+
+  /// Pengguna Plus memakai fitur Plus; [feature] = `PlusFeature.name`.
+  static AnalyticsEvent plusFeatureUsed({required String feature}) =>
+      AnalyticsEvent('plus_feature_used', {'feature': feature});
+
+  /// Jatah Gratis habis; [feature] = `PlusFeature.name`.
+  static AnalyticsEvent tasteQuotaExhausted({required String feature}) =>
+      AnalyticsEvent('taste_quota_exhausted', {'feature': feature});
+}

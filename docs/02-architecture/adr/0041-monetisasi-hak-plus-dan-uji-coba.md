@@ -217,6 +217,12 @@ trialEndsOn(DateTime start, FinancialMonthSchedule schedule, {int minDays = 14})
 | Offer | `intro-first-year` pada `yearly` (KT-P12: harga perkenalan tahun pertama Rp129.000, lalu Rp179.000) |
 | Offering | `default`, `founder`, `post_trial` |
 
+- **Identifier package di RevenueCat (T-23.15):** setiap offering berisi package
+  dengan identifier `monthly`, `yearly`, `yearly_founder`, atau `yearly_intro`
+  (`PlusPlanKind.id`; package lain diabaikan aplikasi). `default` memuat
+  `monthly` + `yearly`; `founder` memuat `yearly_founder` + `monthly`;
+  `post_trial` memuat `yearly_intro` + `monthly`. Offering khusus yang kosong
+  jatuh ke `default`. Pemilih memberi Pendiri didahulukan atas `post_trial`.
 - **Memilih offering** ada di `OfferingPolicy` (domain `premium`, murni):
   `founder` bila `now ≤ founder_until`, `post_trial` dalam 48 jam sesudah uji
   coba berakhir (`post_trial_offer_hours`), selain itu `default`. Harga

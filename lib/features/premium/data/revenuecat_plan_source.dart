@@ -46,7 +46,7 @@ final class RevenueCatPlanSource {
     if (_started) return;
     try {
       await gateway.configure();
-      _updates = gateway.updates.listen((snapshot) => unawaited(_apply(snapshot)));
+      _updates = gateway.updates.listen((snapshot) => unawaited(apply(snapshot)));
       _started = true;
     } on Object catch (e) {
       developer.log('RevenueCat gagal disiapkan', error: e, name: 'Purchases');
@@ -71,10 +71,11 @@ final class RevenueCatPlanSource {
       developer.log('RevenueCat gagal dibaca; hak lama dipakai', error: e, name: 'Purchases');
       return;
     }
-    await _apply(snapshot);
+    await apply(snapshot);
   }
 
-  Future<void> _apply(PlusSnapshot? snapshot) async {
+  /// Menerapkan [snapshot] (mis. hasil pembelian) ke cache hak.
+  Future<void> apply(PlusSnapshot? snapshot) async {
     if (snapshot == null || (!snapshot.isActive && !snapshot.onHold)) {
       await cache.clear();
     } else {

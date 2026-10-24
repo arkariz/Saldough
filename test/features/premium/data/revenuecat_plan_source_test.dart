@@ -9,6 +9,7 @@ import 'package:saldough/features/premium/data/entitlement_cache_store.dart';
 import 'package:saldough/features/premium/data/plus_snapshot.dart';
 import 'package:saldough/features/premium/data/purchases_gateway.dart';
 import 'package:saldough/features/premium/data/revenuecat_plan_source.dart';
+import 'package:saldough/features/premium/domain/purchase_models.dart';
 
 final class _FakeGateway implements PurchasesGateway {
   final controller = StreamController<PlusSnapshot?>.broadcast();
@@ -46,6 +47,13 @@ final class _FakeGateway implements PurchasesGateway {
 
   @override
   Stream<PlusSnapshot?> get updates => controller.stream;
+
+  @override
+  Future<List<PlanOption>> options(String offeringId) async => const [];
+
+  @override
+  Future<({BuyResult result, PlusSnapshot? snapshot})> purchase(PlanOption option) async =>
+      (result: const BuyDone(), snapshot: next);
 }
 
 EntitlementInfo _info({

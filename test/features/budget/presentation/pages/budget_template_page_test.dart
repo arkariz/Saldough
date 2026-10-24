@@ -7,7 +7,9 @@ import 'package:memory_storage/memory_storage.dart';
 import 'package:navigation/navigation.dart';
 import 'package:saldough/app/shell/app_shell_page.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
+import 'package:saldough/core/foundation/entitlement/entitlement.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/plan/active_plan.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/budget/data/adapters/budget_item_catalog_impl.dart';
@@ -170,5 +172,45 @@ void main() {
     expect(find.text(t.budget.templateInactiveBadge), findsOneWidget);
     final use = tester.widget<AppButton>(find.widgetWithText(AppButton, t.budget.templateUseAction));
     expect(use.onPressed, isNull);
+  });
+
+  group('Gratis: template ke-2 (ADR-041 §3.8)', () {
+    setUp(() => ActivePlan.notifier.value = const FreePlan());
+    tearDown(ActivePlan.reset);
+
+    testWidgets('Tambah template dan Gandakan membuka paywall; yang ada tidak berubah', (tester) async {
+      await templateRepository.saveTemplate(template);
+      await openTemplates(tester);
+
+      await tester.tap(find.text(t.budget.templateAddAction));
+      await tester.pumpAndSettle();
+      expect(find.text(t.premium.signInTitle), findsOneWidget);
+      expect(_right(await templateRepository.listTemplates()), [template]);
+
+      await tester.pageBack();
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(t.budget.templateDuplicateAction));
+      await tester.pumpAndSettle();
+      expect(find.text(t.premium.signInTitle), findsOneWidget);
+      expect(_right(await templateRepository.listTemplates()), [template]);
+    });
+
+    testWidgets('template pertama boleh dibuat (belum ada yang tersimpan)', (tester) async {
+      await openTemplates(tester);
+      await tester.tap(find.text(t.budget.templateAddAction));
+      await tester.pumpAndSettle();
+      expect(find.text(t.premium.signInTitle), findsNothing);
+      expect(find.byType(BudgetTemplatePage), findsOneWidget);
+    });
+
+    testWidgets('Plus: Gandakan tidak dibatasi', (tester) async {
+      ActivePlan.notifier.value = const PlusPlan(source: PlanSource.prelaunch);
+      await templateRepository.saveTemplate(template);
+      await openTemplates(tester);
+      await tester.tap(find.text(t.budget.templateDuplicateAction));
+      await tester.pumpAndSettle();
+      expect(find.text(t.premium.signInTitle), findsNothing);
+      expect(_right(await templateRepository.listTemplates()), hasLength(2));
+    });
   });
 }

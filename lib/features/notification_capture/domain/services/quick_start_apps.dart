@@ -36,6 +36,7 @@ List<NotificationSource> mergeQuickStartSources(
         appLabel: old.appLabel,
         keywords: old.keywords,
         walletId: old.walletId,
+        walletRules: old.walletRules,
       );
     }
   }

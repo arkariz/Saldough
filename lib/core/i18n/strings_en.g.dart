@@ -45,6 +45,7 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$record$en record = _Translations$record$en._(_root);
 	@override late final _Translations$transaction$en transaction = _Translations$transaction$en._(_root);
 	@override late final _Translations$wallet$en wallet = _Translations$wallet$en._(_root);
+	@override late final _Translations$dataPortability$en dataPortability = _Translations$dataPortability$en._(_root);
 	@override late final _Translations$budget$en budget = _Translations$budget$en._(_root);
 	@override late final _Translations$freelance$en freelance = _Translations$freelance$en._(_root);
 	@override late final _Translations$home$en home = _Translations$home$en._(_root);
@@ -175,7 +176,7 @@ class _Translations$transaction$en extends Translations$transaction$id {
 
 	// Translations
 	@override String get pageTitle => 'History';
-	@override String get searchHint => 'Search this period: notes / categories...';
+	@override String get searchHint => 'Search notes or categories in this period...';
 	@override String allFilterLabel({required Object count}) => 'All ${count}';
 	@override String incomeFilterLabel({required Object count}) => 'Income ${count}';
 	@override String expenseFilterLabel({required Object count}) => 'Expenses ${count}';
@@ -196,20 +197,20 @@ class _Translations$transaction$en extends Translations$transaction$id {
 	@override String get emptyGuideIncomeTitle => 'Income';
 	@override String get emptyGuideIncomeDescription => 'Adds to the balance of the wallet you choose.';
 	@override String get emptyGuideExpenseTitle => 'Expense';
-	@override String get emptyGuideExpenseDescription => 'Lowers the wallet balance and fills the linked budget item.';
+	@override String get emptyGuideExpenseDescription => 'Lowers the wallet balance and counts toward the linked budget item.';
 	@override String get emptyGuideTransferTitle => 'Transfer between wallets';
-	@override String get emptyGuideTransferDescription => 'Moves the recorded balance between wallets without changing your total net worth.';
-	@override String get trustFooterMessage => 'Your complete history, kept safe on your device';
-	@override String get emptyFilterTitle => 'No transactions this month match the filter';
-	@override String get emptyFilterSubtitle => 'Search and filters only cover the month that is open. Change the month, or change or clear the filters.';
+	@override String get emptyGuideTransferDescription => 'Moves money between wallets without changing your total balance.';
+	@override String get trustFooterMessage => 'Your full history, safe on your device.';
+	@override String get emptyFilterTitle => 'No transactions match your filters';
+	@override String get emptyFilterSubtitle => 'Search and filters only cover the period that\'s open. Try another period or clear the filters.';
 	@override String get clearFiltersButton => 'Clear filters';
 	@override String get crossMonthSearchButton => 'Search other months';
 	@override String get crossMonthSearchingLabel => 'Searching earlier months...';
 	@override String get crossMonthResultsHeader => 'Found in other months';
 	@override String get crossMonthLoadMoreButton => 'Search further back';
 	@override String get crossMonthNoMoreResults => 'Not found in earlier months.';
-	@override String get loadErrorTitle => 'Failed to load transactions';
-	@override String get loadErrorSubtitle => 'Check and try loading again.';
+	@override String get loadErrorTitle => 'Couldn\'t load transactions';
+	@override String get loadErrorSubtitle => 'Please try again in a moment.';
 	@override String get detailBackLabel => 'Back';
 	@override String get detailIncomeTitle => 'Income recorded';
 	@override String get detailExpenseTitle => 'Expense recorded';
@@ -226,7 +227,7 @@ class _Translations$transaction$en extends Translations$transaction$id {
 	@override String get detailFromLabel => 'From';
 	@override String get detailToLabel => 'To';
 	@override String get detailAmountLabel => 'Amount';
-	@override String get detailManualNote => 'Kept safe on your device. Wallet balances follow every record, so when you edit or delete it, balances adjust with it.';
+	@override String get detailManualNote => 'Stored safely on your device. Wallet balances follow your transactions, so editing or deleting one updates them.';
 	@override String get editAction => 'Edit';
 	@override String get recordAgainAction => 'Record again';
 	@override String get deleteAction => 'Delete transaction';
@@ -238,13 +239,13 @@ class _Translations$transaction$en extends Translations$transaction$id {
 	@override String get restoredMessage => 'Transaction restored.';
 	@override String get budgetLabel => 'Budget';
 	@override String get openBudgetAction => 'View budget';
-	@override String get detailFreelanceNote => 'This income was recorded from a freelance payment. To change it, cancel its receipt in Freelance.';
+	@override String get detailFreelanceNote => 'This income came from a freelance payment. To change it, undo the payment in Freelance.';
 	@override String get makeRecurringAction => 'Make recurring';
 	@override String get previousMonth => 'Previous month';
 	@override String get nextMonth => 'Next month';
 	@override String get listSegment => 'List';
 	@override String filteredCount({required Object count}) => '${count} transactions';
-	@override String get filteredEmpty => 'No transactions left here.';
+	@override String get filteredEmpty => 'No more transactions here.';
 }
 
 // Path: wallet
@@ -276,8 +277,8 @@ class _Translations$wallet$en extends Translations$wallet$id {
 	@override String get typeEwallet => 'Digital wallet';
 	@override String get typeSavings => 'Savings';
 	@override String get typeCard => 'Card';
-	@override String get emptyTitle => 'No wallets recorded yet';
-	@override String get emptyBody => 'Add your first wallet to start recording where your money is. It can be a bank account, an e-wallet, or cash in your pocket.';
+	@override String get emptyTitle => 'No wallets yet';
+	@override String get emptyBody => 'Add your first wallet to start tracking your money. It can be a bank account, an e-wallet, or cash.';
 	@override String get loadErrorTitle => 'Couldn\'t load wallets';
 	@override String get loadErrorSubtitle => 'Wallet data couldn\'t be read. Try again.';
 	@override String get addTitle => 'Add wallet';
@@ -289,28 +290,28 @@ class _Translations$wallet$en extends Translations$wallet$id {
 	@override String get nameRequiredHint => 'Required';
 	@override String get nameMaxHint => 'Max. 24 characters';
 	@override String get iconLabel => 'Pick an icon';
-	@override String get initialBalanceLabel => 'Starting balance right now';
-	@override String get initialBalanceHelp => 'The starting balance is the money in this wallet right now, the starting point of your records. Every transaction after it counts from here.';
-	@override String get currentBalanceLabel => 'Recorded balance right now';
-	@override String get editBalanceNote => 'Changing the starting balance recomputes the recorded balance. For a gap with real money, record an income or expense via Record.';
+	@override String get initialBalanceLabel => 'Starting balance';
+	@override String get initialBalanceHelp => 'Enter the money in this wallet right now. Every transaction after that is counted from here.';
+	@override String get currentBalanceLabel => 'Current balance';
+	@override String get editBalanceNote => 'Changing the starting balance recalculates the wallet balance. If it doesn\'t match your real money, record an income or expense with Record.';
 	@override String get activeSwitchLabel => 'Wallet is active';
 	@override String get activeSwitchHelp => 'Inactive wallets don\'t appear in wallet pickers. Their transactions stay saved and counted.';
 	@override String get saveAddAction => 'Save wallet';
 	@override String get deleteAction => 'Delete wallet';
-	@override String get deleteHelp => 'Can only be deleted if it has no transactions at all. Otherwise, deactivate it.';
+	@override String get deleteHelp => 'You can only delete a wallet with no transactions. Otherwise, deactivate it.';
 	@override String get deleteConfirmTitle => 'Delete wallet?';
-	@override String deleteConfirmMessage({required Object name}) => 'Wallet ${name} will be deleted permanently. This can\'t be undone.';
+	@override String deleteConfirmMessage({required Object name}) => '${name} will be permanently deleted. This can\'t be undone.';
 	@override String get savedMessage => 'Wallet saved.';
 	@override String get updatedMessage => 'Wallet updated.';
 	@override String get deletedMessage => 'Wallet deleted.';
 	@override String get reorderAction => 'Reorder wallets';
 	@override String get reorderTitle => 'Reorder wallets';
-	@override String get reorderHint => 'Press and drag a wallet to change its order. This order is used in every wallet list and picker.';
+	@override String get reorderHint => 'Press and hold, then drag to reorder. This order applies to every wallet list and picker.';
 	@override String reorderHandleLabel({required Object name}) => 'Drag to move ${name}';
 	@override String get reorderSaveAction => 'Save order';
 	@override String get reorderedMessage => 'Wallet order saved.';
 	@override String get deleteBlockedMessage => 'This wallet already has transactions, so it can\'t be deleted. Deactivate it instead.';
-	@override String get privacyNote => 'Data is stored locally and privately on your device.';
+	@override String get privacyNote => 'Your data is stored privately on your device.';
 	@override String get detailBackLabel => 'Back';
 	@override String get detailEditAction => 'Edit';
 	@override String get detailRecentHeading => 'This month\'s transactions';
@@ -323,6 +324,132 @@ class _Translations$wallet$en extends Translations$wallet$id {
 	@override String get detailTransferInLabel => 'Transfers in';
 	@override String get detailTransferOutLabel => 'Transfers out';
 	@override String get detailBalanceChangeLabel => 'Balance change';
+}
+
+// Path: dataPortability
+class _Translations$dataPortability$en extends Translations$dataPortability$id {
+	_Translations$dataPortability$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get sectionTitle => 'Your data';
+	@override String get sectionBody => 'Everything is stored on this phone. Back it up elsewhere to keep it safe, or export to a spreadsheet.';
+	@override String get close => 'Close';
+	@override String get cancel => 'Cancel';
+	@override String get exportTitle => 'Export to spreadsheet';
+	@override String get exportSub => 'Excel or CSV';
+	@override String get exportFormat => 'Format';
+	@override String get formatXlsx => 'Excel (.xlsx)';
+	@override String get formatCsv => 'CSV';
+	@override String get xlsxHelp => 'Works in Excel and Google Sheets. Includes a Wallets sheet.';
+	@override String get csvHelp => 'For other apps. Transactions only.';
+	@override String exportSummary({required num n, required Object count, required Object first, required Object last}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
+		one: '${count} transaction, ${first} – ${last}',
+		other: '${count} transactions, ${first} – ${last}',
+	);
+	@override String exportSummaryDay({required num n, required Object count, required Object date}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
+		one: '${count} transaction, ${date}',
+		other: '${count} transactions, ${date}',
+	);
+	@override String get exportEmpty => 'No transactions to export yet.';
+	@override String get exportScope => 'Includes all your transactions and your current wallet balances. Filter what you need in the spreadsheet.';
+	@override String get exportAction => 'Export';
+	@override String get exportBusy => 'Preparing the file…';
+	@override String get exportBusyNote => 'This may take a while if you have a lot of data. You can cancel.';
+	@override String get exportError => 'Couldn\'t create the file. Your data hasn\'t changed.';
+	@override String get fileReady => 'File ready';
+	@override String fileMeta({required num n, required Object format}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
+		one: '${format} · ${n} transaction',
+		other: '${format} · ${n} transactions',
+	);
+	@override String get saveTo => 'Save to…';
+	@override String get share => 'Share';
+	@override String get fileNotSaved => 'The file isn\'t saved yet. You can still save or share it.';
+	@override String get fileStem => 'export';
+	@override String countTransactions({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
+		one: '${count} transaction',
+		other: '${count} transactions',
+	);
+	@override String countWallets({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
+		one: '${count} wallet',
+		other: '${count} wallets',
+	);
+	@override String get backupTitle => 'Back up now';
+	@override String backupLast({required Object date}) => 'Last backup: ${date}';
+	@override String get backupNever => 'Never backed up';
+	@override String backupSummary({required Object transactions, required Object wallets, required Object since}) => '${transactions}, ${wallets}, since ${since}';
+	@override String backupSummaryNoTransactions({required Object wallets}) => 'No transactions yet, ${wallets}';
+	@override String get backupIncluded => 'Included';
+	@override String get backupExcluded => 'Not included';
+	@override List<String> get backupIn => [
+		'Wallets and transactions',
+		'Budgets and categories',
+		'Freelance and recurring',
+		'Money settings and reminders',
+	];
+	@override List<String> get backupOut => [
+		'Notification text',
+		'System permissions',
+		'Account',
+		'Language and display',
+	];
+	@override String get backupHint => 'Save it somewhere outside this phone, such as Google Drive, so it stays safe if the phone is lost. This file contains your financial records.';
+	@override String get backupAction => 'Back up';
+	@override String get backupBusy => 'Creating the backup…';
+	@override String get backupReady => 'Backup ready';
+	@override String get backupNotSaved => 'Not saved yet. Pick a place to keep it so your backup is safe.';
+	@override String get backupError => 'Couldn\'t create the backup. Your data hasn\'t changed.';
+	@override String get backupFileStem => 'backup';
+	@override String backupFileMeta({required Object transactions, required Object wallets}) => '${transactions} · ${wallets}';
+	@override String get restoreTitle => 'Restore from backup';
+	@override String get restoreSub => 'Replace data with a backup';
+	@override String undoTitle({required Object date}) => 'Undo restore (${date})';
+	@override String get undoSub => 'Kept on this phone until the next restore, 30 days at most';
+	@override String get undoPageTitle => 'Undo restore';
+	@override String get restoreRunTitle => 'Restoring data';
+	@override String get kickBackup => 'Backup';
+	@override String get kickSafety => 'Safety backup';
+	@override String get kickNow => 'On this phone';
+	@override String get nowLabel => 'Now';
+	@override String since({required Object date}) => 'Since ${date}';
+	@override String get restoreChanges => 'What will change';
+	@override String get restoreUnchanged => 'Language and display settings on this phone stay as they are.';
+	@override String changeCurrency({required Object code}) => 'Currency will become ${code}';
+	@override String changeDrafts({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
+		one: '${n} draft from notifications you haven\'t reviewed won\'t be kept.',
+		other: '${n} drafts from notifications you haven\'t reviewed won\'t be kept.',
+	);
+	@override String restoreOlder({required Object date}) => 'This backup is from ${date} and is older than the data on this phone. Anything you recorded after that date will be lost.';
+	@override String get restoreNext => 'Continue';
+	@override String get restoreConfirmTitle => 'Replace all data on this phone?';
+	@override String get restoreConfirmBody => 'All data on this phone will be replaced with the backup. Your current data is saved first as a safety backup.';
+	@override String get restoreConfirmAction => 'Replace data';
+	@override String get restoreNoCancel => 'This can\'t be canceled. If the app closes midway, your data stays safe.';
+	@override List<String> get restoreSteps => [
+		'Saving current data as a safety backup',
+		'Replacing data with the backup',
+		'Recalculating wallet balances',
+		'Rescheduling reminders',
+	];
+	@override String restoreDoneTitle({required Object date}) => 'Data restored from the ${date} backup.';
+	@override String get undoDoneTitle => 'Your data is back to how it was before the restore.';
+	@override String get restoreDoneNote => 'You\'ll need to allow notifications again on this phone. You can turn them on from Home.';
+	@override String get goHome => 'Back to Home';
+	@override String get chooseOtherFile => 'Choose another file';
+	@override String get updateApp => 'Update app';
+	@override String get errorInvalidTitle => 'This file can\'t be used';
+	@override String get errorInvalidBody => 'This isn\'t a Tanukonomy backup, or the file is damaged. Your data hasn\'t changed.';
+	@override String get errorNewerTitle => 'Backup from a newer version';
+	@override String get errorNewerBody => 'This backup was made by a newer version of Tanukonomy. Update the app and try again. Your data hasn\'t changed.';
+	@override String get errorSpaceTitle => 'Not enough storage';
+	@override String get errorSpaceBody => 'Free up some space and try again. Your data hasn\'t changed.';
+	@override String get errorOtherTitle => 'Restore couldn\'t start';
+	@override String get errorOtherBody => 'Couldn\'t prepare the restore. Try again. Your data hasn\'t changed.';
+	@override String get sheetTransactions => 'Transactions';
+	@override String get sheetWallets => 'Wallets';
+	@override late final _Translations$dataPortability$columns$en columns = _Translations$dataPortability$columns$en._(_root);
+	@override late final _Translations$dataPortability$types$en types = _Translations$dataPortability$types$en._(_root);
 }
 
 // Path: budget
@@ -350,14 +477,14 @@ class _Translations$budget$en extends Translations$budget$id {
 	@override String get itemStatusOverspent => 'Over budget';
 	@override String itemCount({required Object count}) => 'Items: ${count}';
 	@override String get emptyTitle => 'No budgets yet';
-	@override String get emptyBody => 'Plan a weekly or monthly spending limit for one wallet, then keep an eye on how much is used.';
+	@override String get emptyBody => 'Set a weekly or monthly spending limit for a wallet, then track how much you\'ve used.';
 	@override String get emptyFilteredTitle => 'No matching budgets';
 	@override String get emptyFilteredBody => 'No budget has the selected status and wallet.';
 	@override String get resetFilterAction => 'Show all budgets';
 	@override String get noWalletTitle => 'Create a wallet first';
 	@override String get noWalletBody => 'Every budget belongs to one wallet. Add a wallet in the Wallets tab, then come back here.';
-	@override String get loadErrorTitle => 'Budgets failed to load';
-	@override String get loadErrorSubtitle => 'Budget data could not be read. Try again.';
+	@override String get loadErrorTitle => 'Couldn\'t load budgets';
+	@override String get loadErrorSubtitle => 'Budget data couldn\'t be read. Try again.';
 	@override String get savedMessage => 'Budget saved.';
 	@override String get updatedMessage => 'Budget changes saved.';
 	@override String get deletedMessage => 'Budget deleted.';
@@ -368,7 +495,7 @@ class _Translations$budget$en extends Translations$budget$id {
 	@override String get addTitle => 'Create budget';
 	@override String get editTitle => 'Edit budget';
 	@override String get ruleTitle => 'Budget rule';
-	@override String get ruleBody => 'This plan is your spending guide. Wallet balances move with the transactions you record.';
+	@override String get ruleBody => 'A budget is a spending guide. Wallet balances only change when you record transactions.';
 	@override String get nameLabel => 'Budget name';
 	@override String get nameHint => 'Example: Household Needs';
 	@override String get requiredHint => 'Required';
@@ -380,7 +507,7 @@ class _Translations$budget$en extends Translations$budget$id {
 	@override String periodRange({required Object start, required Object end}) => '${start} – ${end}';
 	@override String periodStartRow({required Object date, required Object range}) => 'Starts ${date} · ${range}';
 	@override String get itemsLabel => 'Budget items';
-	@override String get itemsHelp => 'Planned purchases or planned transfers. The budget total is the sum of all items.';
+	@override String get itemsHelp => 'Planned spending or transfers. The budget total is the sum of all items.';
 	@override String get addItemAction => 'Add item';
 	@override String get saveAddAction => 'Save budget';
 	@override String get archiveAction => 'Archive budget';
@@ -413,7 +540,7 @@ class _Translations$budget$en extends Translations$budget$id {
 	@override String get detailHowTitle => 'How budget items work';
 	@override String get unknownWallet => 'Wallet not found';
 	@override String get totalPlannedLabel => 'Planned total';
-	@override String get itemsRequiredHint => 'Add at least one item. Transactions are recorded against items, so a budget without items cannot track spending.';
+	@override String get itemsRequiredHint => 'Add at least one item. Spending is tracked per item, so a budget without items can\'t track anything.';
 	@override String walletUnchangedNote({required Object wallet}) => '${wallet} balance unchanged';
 	@override String get itemKindLabel => 'Item type';
 	@override String get itemKindExpense => 'Expense';
@@ -421,7 +548,7 @@ class _Translations$budget$en extends Translations$budget$id {
 	@override String get itemKindLockedHint => 'The type can\'t be changed because this item already has linked transactions.';
 	@override String get itemTargetWalletLabel => 'Destination wallet';
 	@override String get itemTargetWalletHelp => 'Only transfers from the budget wallet to this wallet count toward the item.';
-	@override String get itemNoTargetWallet => 'You need another active wallet as the transfer destination.';
+	@override String get itemNoTargetWallet => 'Add another active wallet to use as the transfer destination.';
 	@override String itemTransferTo({required Object wallet}) => 'To ${wallet}';
 	@override String itemTargetConflict({required Object name}) => 'Transfer item "${name}" points to the budget\'s own wallet. Change the item\'s destination or the budget wallet.';
 	@override String get templatesAction => 'Budget templates';
@@ -442,7 +569,7 @@ class _Translations$budget$en extends Translations$budget$id {
 	@override String get templatesEmptyTitle => 'No templates yet';
 	@override String get templatesEmptyBody => 'Save item sets you use often, such as monthly groceries, so your next budget is one tap away.';
 	@override String get templateNeedsWallet => 'Create an active wallet first to use a template.';
-	@override String get templatesLoadError => 'Templates failed to load';
+	@override String get templatesLoadError => 'Couldn\'t load templates';
 	@override String get templateAddTitle => 'Create template';
 	@override String get templateEditTitle => 'Edit template';
 	@override String get templateRuleBody => 'A template keeps your set of plan items. The wallet and period are chosen when you use it.';
@@ -460,8 +587,8 @@ class _Translations$budget$en extends Translations$budget$id {
 	@override String templateCopyName({required Object name}) => '${name} (copy)';
 	@override String get templateNameLabel => 'Template name';
 	@override String get repeatLabel => 'Repeat every period';
-	@override String repeatHelpMonthly({required Object date}) => 'Starts again every month from ${date} with the same items.';
-	@override String repeatHelpWeekly({required Object date}) => 'Starts again every week from ${date} with the same items.';
+	@override String repeatHelpMonthly({required Object date}) => 'Repeats every month from ${date} with the same items.';
+	@override String repeatHelpWeekly({required Object date}) => 'Repeats every week from ${date} with the same items.';
 	@override String get repeatUnavailable => 'Monthly budgets can repeat when they start on the 1st–28th.';
 	@override String get repeatPastNote => 'This period has ended. Changes here don\'t affect later periods.';
 	@override String get scopeTitle => 'Apply to';
@@ -470,7 +597,7 @@ class _Translations$budget$en extends Translations$budget$id {
 	@override String get recurringBadge => 'Repeats';
 	@override String templateScheduledMonthly({required Object wallet}) => 'Repeats monthly · ${wallet}';
 	@override String templateScheduledWeekly({required Object wallet}) => 'Repeats weekly · ${wallet}';
-	@override String dayOfPeriod({required Object day, required Object total}) => 'Day ${day} of ${total}';
+	@override String dayOfPeriod({required Object day, required Object total}) => 'Day ${day}/${total}';
 }
 
 // Path: freelance
@@ -483,17 +610,17 @@ class _Translations$freelance$en extends Translations$freelance$id {
 	@override String get title => 'Freelance';
 	@override String worklogTab({required Object count}) => 'Work hours (${count})';
 	@override String paymentsTab({required Object count}) => 'Invoices (${count})';
-	@override String get loadErrorTitle => 'Freelance data failed to load';
+	@override String get loadErrorTitle => 'Couldn\'t load Freelance data';
 	@override String get ruleTitle => 'How Freelance records';
-	@override String get ruleBody => 'Work hours add up to an invoice, and your wallet balance grows when the invoice is recorded as received.';
+	@override String get ruleBody => 'Work hours add up to an invoice, and your wallet balance goes up when you record the invoice as paid.';
 	@override String hoursValue({required Object hours}) => '${hours} h';
 	@override String get hourShort => 'h';
 	@override String projectCount({required Object count}) => 'Projects: ${count}';
 	@override String get earnedLabel => 'Total earned';
-	@override String get paidLabel => 'Received';
-	@override String get unpaidLabel => 'Not received';
+	@override String get paidLabel => 'Paid';
+	@override String get unpaidLabel => 'Unpaid';
 	@override String get projectsLabel => 'Projects';
-	@override String get projectsEmpty => 'No projects yet. Add a client or project with its hourly rate first.';
+	@override String get projectsEmpty => 'No projects yet. Add a client or project and its hourly rate to get started.';
 	@override String get projectAddTitle => 'Add project';
 	@override String get projectEditTitle => 'Edit project';
 	@override String get projectNameLabel => 'Client or project name';
@@ -516,10 +643,10 @@ class _Translations$freelance$en extends Translations$freelance$id {
 	@override String get deductionRemoveAction => 'Remove deduction';
 	@override String get projectSaveAction => 'Save project';
 	@override String get projectDeleteAction => 'Delete project';
-	@override String get projectDeleteLockedHint => 'A project with recorded work hours cannot be deleted.';
+	@override String get projectDeleteLockedHint => 'Projects with recorded work hours can\'t be deleted.';
 	@override String get projectDeleteConfirmTitle => 'Delete project?';
 	@override String projectDeleteConfirmMessage({required Object name}) => 'Project "${name}" will be deleted.';
-	@override String get projectDeleteRefused => 'This project has recorded work hours, so it cannot be deleted.';
+	@override String get projectDeleteRefused => 'This project has recorded work hours, so it can\'t be deleted.';
 	@override String get projectSavedMessage => 'Project saved.';
 	@override String get projectUpdatedMessage => 'Project changes saved.';
 	@override String get projectDeletedMessage => 'Project deleted.';
@@ -527,35 +654,35 @@ class _Translations$freelance$en extends Translations$freelance$id {
 	@override String get projectPick => 'Choose a project';
 	@override String get entryAddTitle => 'Record work hours';
 	@override String get entryEditTitle => 'Edit work hours';
-	@override String get entryRuleBody => 'Work hours add up to an invoice. The money reaches your balance when the invoice is recorded as received.';
+	@override String get entryRuleBody => 'Work hours add up to an invoice. The money reaches your balance when you record the invoice as paid.';
 	@override String get workDateLabel => 'Work date';
 	@override String get hoursLabel => 'Duration';
-	@override String get entryRateHelp => 'Filled from the project rate. Change it if this rate is different.';
+	@override String get entryRateHelp => 'Pre-filled from the project rate. Edit it if this one\'s different.';
 	@override String get noteLabel => 'Note';
 	@override String get noteHint => 'What was done (optional)';
 	@override String get entrySaveAction => 'Save work hours';
-	@override String get entrySaveHint => 'This amount is recorded as earned, not yet received.';
+	@override String get entrySaveHint => 'Counted as earned, not paid yet.';
 	@override String get entryDeleteAction => 'Delete work hours';
 	@override String get entryDeleteConfirmTitle => 'Delete these work hours?';
 	@override String get entryDeleteConfirmMessage => 'These work hours are deleted. Wallet balances do not change.';
-	@override String get entryLockedMessage => 'Work hours already on an invoice cannot be edited or deleted.';
+	@override String get entryLockedMessage => 'Work hours already on an invoice can\'t be edited or deleted.';
 	@override String get entrySavedMessage => 'Work hours recorded.';
 	@override String get entryUpdatedMessage => 'Work hours changes saved.';
 	@override String get entryDeletedMessage => 'Work hours deleted.';
 	@override String hoursTimesRate({required Object hours, required Object rate}) => '${hours} h × ${rate}';
 	@override String get statusUnbilled => 'Unbilled';
 	@override String get statusPending => 'Pending';
-	@override String get statusPaid => 'Received';
+	@override String get statusPaid => 'Paid';
 	@override String expectedOn({required Object date}) => 'Expected ${date}';
-	@override String receivedOn({required Object date, required Object wallet}) => 'Received ${date} in ${wallet}';
+	@override String receivedOn({required Object date, required Object wallet}) => 'Paid ${date} to ${wallet}';
 	@override String get unknownProject => 'Deleted project';
 	@override String get unknownWallet => 'deleted wallet';
 	@override String get pendingTotalLabel => 'Pending (net)';
 	@override String get paymentAddTitle => 'Create invoice';
-	@override String get paymentCreateRuleBody => 'An invoice groups unbilled work hours. Once it is recorded as received, your wallet balance grows.';
+	@override String get paymentCreateRuleBody => 'An invoice groups unbilled work hours. Once you record it as paid, your wallet balance goes up.';
 	@override String paymentEntriesLabel({required Object count, required Object hours}) => 'Invoiced: ${count} records, ${hours} h';
 	@override String paymentEntriesSummary({required Object count, required Object hours}) => '${count} records · ${hours} h';
-	@override String get expectedDateLabel => 'Expected date received';
+	@override String get expectedDateLabel => 'Expected payment date';
 	@override String get grossPayLabel => 'Gross pay';
 	@override String get netPayLabel => 'Net pay';
 	@override String get netPayNotPositive => 'Deductions cannot equal or exceed gross pay.';
@@ -565,27 +692,27 @@ class _Translations$freelance$en extends Translations$freelance$id {
 	@override String get paymentDeleteConfirmTitle => 'Delete invoice?';
 	@override String get paymentDeleteConfirmMessage => 'This pending invoice is deleted and its work hours become unbilled again. Wallet balances do not change.';
 	@override String get paymentEntriesInvalid => 'The selected work hours are already invoiced or belong to another project.';
-	@override String get paymentPaidLocked => 'A received invoice cannot be deleted. Cancel its receipt first.';
-	@override String get paymentAlreadyPaid => 'This invoice is already recorded as received.';
+	@override String get paymentPaidLocked => 'A paid invoice can\'t be deleted. Undo its payment first.';
+	@override String get paymentAlreadyPaid => 'This invoice is already marked as paid.';
 	@override String get paymentCreatedMessage => 'Invoice created.';
 	@override String get paymentUpdatedMessage => 'Invoice date updated.';
 	@override String get paymentDeletedMessage => 'Invoice deleted.';
-	@override String get receiveTitle => 'Record invoice received';
+	@override String get receiveTitle => 'Record payment';
 	@override String get receiveRuleTitle => 'Payment received';
-	@override String get receiveRuleBody => 'Record it once the money has reached you. The chosen wallet grows by the net pay, and this invoice is marked paid.';
+	@override String get receiveRuleBody => 'Record it once the money arrives. The wallet you choose goes up by the net pay, and the invoice is marked as paid.';
 	@override String get receiveAmountLabel => 'Amount received';
 	@override String get receiveWalletLabel => 'Receiving wallet';
-	@override String get receiveDateLabel => 'Date received';
+	@override String get receiveDateLabel => 'Payment date';
 	@override String receiveNoteDefault({required Object project}) => 'Freelance invoice ${project}';
-	@override String get receiveAction => 'Record received';
-	@override String get paymentReceivedMessage => 'Invoice recorded as received. Wallet balance increased.';
-	@override String get receiptCancelAction => 'Cancel receipt';
-	@override String get receiptCancelConfirmTitle => 'Cancel receipt?';
-	@override String get receiptCancelConfirmMessage => 'Its income is deleted and the wallet balance goes back down. The invoice is pending again.';
-	@override String get receiptCancelledMessage => 'Receipt cancelled. The invoice is pending again.';
+	@override String get receiveAction => 'Record payment';
+	@override String get paymentReceivedMessage => 'Invoice marked as paid. Wallet balance updated.';
+	@override String get receiptCancelAction => 'Undo payment';
+	@override String get receiptCancelConfirmTitle => 'Undo payment?';
+	@override String get receiptCancelConfirmMessage => 'The income is deleted and your wallet balance goes back down. The invoice becomes pending again.';
+	@override String get receiptCancelledMessage => 'Payment undone. The invoice is pending again.';
 	@override String get changeAction => 'Change';
 	@override String get receiptCancelConfirmAction => 'Delete income';
-	@override String billAction({required Object count}) => 'Bill (${count})';
+	@override String billAction({required Object count}) => 'Invoice (${count})';
 	@override String get entriesEmptyTitle => 'No work hours yet';
 	@override String get entriesEmptyBody => 'The work hours you record become this project\'s invoices.';
 	@override String get entriesFilteredEmpty => 'No work hours with this status.';
@@ -596,11 +723,11 @@ class _Translations$freelance$en extends Translations$freelance$id {
 	@override String get projectsEmptyTitle => 'No projects yet';
 	@override String get unbilledLabel => 'Unbilled';
 	@override String get paymentsEmptyTitle => 'No invoices yet';
-	@override String get paymentsEmptyBody => 'Group unbilled work hours into one invoice, then record it when you are paid.';
+	@override String get paymentsEmptyBody => 'Group unbilled work hours into one invoice, then record it when you get paid.';
 	@override String get paymentsFilteredEmpty => 'No invoices with this status.';
 	@override String nextExpected({required Object count, required Object date}) => 'Invoices: ${count} · next ${date}';
 	@override String paymentWorkRange({required Object range}) => 'Work ${range}';
-	@override String get paidOffBadge => 'Paid off';
+	@override String get paidOffBadge => 'Paid';
 }
 
 // Path: home
@@ -611,7 +738,7 @@ class _Translations$home$en extends Translations$home$id {
 
 	// Translations
 	@override String flowTitle({required Object period}) => 'Flow ${period}';
-	@override String get loadErrorTitle => 'Home failed to load';
+	@override String get loadErrorTitle => 'Couldn\'t load Home';
 	@override String get balanceLabel => 'Total balance';
 	@override String walletCount({required Object count}) => 'Active wallets: ${count}';
 	@override String get budgetTitle => 'Active budgets';
@@ -645,7 +772,7 @@ class _Translations$home$en extends Translations$home$id {
 	@override String get budgetSafe => 'On track';
 	@override String get budgetNearlyOut => 'Almost used up';
 	@override String budgetOverBy({required Object amount}) => 'Over by ${amount}';
-	@override String get freelanceRowTitle => 'Not yet received';
+	@override String get freelanceRowTitle => 'Awaiting payment';
 	@override String freelanceRowSub({required Object count, required Object date}) => '${count} invoices, expected ${date}';
 	@override String get incomeStat => 'Income';
 	@override String get expenseStat => 'Expenses';
@@ -662,39 +789,40 @@ class _Translations$onboarding$en extends Translations$onboarding$id {
 	@override String get skipAction => 'Skip';
 	@override String get nextAction => 'Next';
 	@override String get closeAction => 'Close';
-	@override String pageIndicatorLabel({required Object current, required Object total}) => 'Page ${current} of ${total}';
-	@override String get page1Title => 'All your money, one book';
-	@override String get page1Body => 'See where your money is, what happens to it, and where you plan for it to go — all in one notebook.';
-	@override String get page2Title => 'Know where your money is';
-	@override String get page2Body => 'Bank accounts, e-wallets, and cash become wallets. Each wallet\'s balance and the total are always in view.';
+	@override String pageIndicatorLabel({required Object current, required Object total}) => 'Page ${current}/${total}';
+	@override String get page1Title => 'All your finances, right in your pocket';
+	@override String get page1Body => 'See where your money is, track your transactions, and plan your spending, all in one app.';
+	@override String get page2Title => 'Track all your balances with ease';
+	@override String get page2Body => 'Add your bank accounts, e-wallets, and cash as wallets. Each balance and your total are always in view.';
 	@override String get page3Title => 'Record in seconds';
-	@override String get page3Body => 'Income, expense, or moving between wallets — tap Record. Your usual wallets and favorite categories are ready.';
-	@override String get page4Title => 'Plan, then track';
-	@override String get page4Body => 'Set weekly or monthly budgets with your spending items. Your balance stays intact, and you see how much of the plan is used.';
+	@override String get page3Body => 'Income, expense, or a transfer between wallets? Just tap Record. Your usual wallets and favorite categories are ready.';
+	@override String get page4Title => 'Set budgets, track spending';
+	@override String get page4Body => 'Set weekly or monthly budgets with your spending items, then see how much you\'ve used. Budgets don\'t change your wallet balances, so you stay on plan.';
 	@override String get finalTitle => 'Start with your first wallet';
-	@override String get finalBody => 'Add one wallet, then record your first transaction. On every screen, the tanuki will show you the way.';
+	@override String get finalBody => 'Add one wallet, then record your first transaction. The tanuki will guide you on every screen.';
 	@override String get createWalletAction => 'Add wallet';
 	@override String get laterAction => 'Maybe later';
 	@override String get signInAction => 'Have an account? Sign in';
+	@override String get restoreAction => 'Have a backup? Restore it';
 	@override String get backAction => 'Back';
 	@override String get currencyTitle => 'Choose your currency';
-	@override String get currencyBody => 'Every amount in Tanukonomy uses this currency. You can change it later on the Account screen, but amounts you\'ve already recorded aren\'t converted.';
+	@override String get currencyBody => 'Every amount in Tanukonomy uses this currency. You can change it later in Account, but amounts you\'ve already recorded won\'t be converted.';
 	@override String get currencySuggested => 'Matches your device region';
 	@override String get currencyChooseFirst => 'Choose a currency first';
 	@override String currencyConfirm({required Object code}) => 'Use ${code}';
-	@override String get periodTitle => 'When does your monthly cycle start?';
-	@override String get periodBody => 'Your budget plan and financial analysis will start on this date each month. You can change this anytime in Account.';
+	@override String get periodTitle => 'When does your financial month start?';
+	@override String get periodBody => 'Budgets and analysis start on this date each month. You can change it anytime in Account.';
 	@override String periodConfirm({required Object day}) => 'Use day ${day}';
 	@override String get periodConfirmLast => 'Use the last day';
-	@override String get reminderTitle => 'Remind you before things are due?';
-	@override String get reminderBody => 'You get a reminder before a recurring item is due, based on each item\'s settings.';
+	@override String get reminderTitle => 'Get reminded before bills are due?';
+	@override String get reminderBody => 'We\'ll remind you before recurring bills are due, based on each one\'s settings.';
 	@override String get turnOn => 'Turn on';
 	@override String get notNow => 'Not now';
-	@override String get notificationInfo => 'You can record automatically from bank notifications. Turn it on from Home.';
+	@override String get notificationInfo => 'Transactions can be recorded automatically from bank notifications. Turn it on from Home.';
 	@override String get summaryPeriod => 'Financial month start';
 	@override String get summaryReminder => 'Recurring reminders';
 	@override String get languageTitle => 'Choose your language';
-	@override String get languageBody => 'Used for the app and when recording by voice. You can change it later on the Account screen.';
+	@override String get languageBody => 'Used for the app and voice recording. You can change it later in Account.';
 	@override String get languageConfirm => 'Continue';
 }
 
@@ -709,7 +837,7 @@ class _Translations$tour$en extends Translations$tour$id {
 	@override String get doneAction => 'Done';
 	@override String get skipAction => 'Skip tour';
 	@override String stepCounter({required Object current, required Object total}) => '${current}/${total}';
-	@override String stepSemantics({required Object current, required Object total, required Object title, required Object body}) => 'Step ${current} of ${total}: ${title}. ${body}';
+	@override String stepSemantics({required Object current, required Object total, required Object title, required Object body}) => 'Step ${current}/${total}: ${title}. ${body}';
 	@override String get homeBalanceTitle => 'Total recorded balance';
 	@override String get homeBalanceBody => 'The sum of all active wallets — where your money stands at a glance.';
 	@override String get homeRecordTitle => 'One door for recording';
@@ -719,49 +847,49 @@ class _Translations$tour$en extends Translations$tour$id {
 	@override String get homeBudgetTitle => 'Active budget left';
 	@override String get homeBudgetBody => 'What\'s left of the plan in budgets running now. Tap for details.';
 	@override String get homeFreelanceTitle => 'Freelance summary';
-	@override String get homeFreelanceBody => 'Income you\'ve earned and what\'s still pending. A wallet balance only goes up when an invoice is recorded as received.';
+	@override String get homeFreelanceBody => 'Income you\'ve earned and what\'s still pending. A wallet balance only goes up when you record an invoice as paid.';
 	@override String get homeRecentTitle => 'Recent transactions';
 	@override String get homeRecentBody => 'Your latest records. Tap one for details, or See all for the month-by-month history.';
 	@override String get recordKindTitle => 'Pick the kind';
 	@override String get recordKindBody => 'An expense lowers a balance, income raises it, and a transfer only moves money between your wallets — your total stays the same.';
 	@override String get recordFreelanceTitle => 'Freelance pay has its own path';
-	@override String get recordFreelanceBody => 'Project pay is recorded as a received invoice in Freelance, so its work hours and invoice are settled too.';
+	@override String get recordFreelanceBody => 'Record project pay as a paid invoice in Freelance, so its work hours and invoice are settled too.';
 	@override String get recordAmountTitle => 'Amount';
-	@override String get recordAmountBody => 'Type the amount on the keypad.';
-	@override String get recordWalletTitle => 'Wallet filled in for you';
+	@override String get recordAmountBody => 'Enter the amount on the keypad.';
+	@override String get recordWalletTitle => 'Wallet pre-selected';
 	@override String get recordWalletBody => 'The wallet you used last is already selected. Change it if needed.';
 	@override String get recordBudgetItemTitle => 'Link to a budget';
-	@override String get recordBudgetItemBody => 'Optional. A linked expense adds to that item\'s used amount, as long as its date is inside the budget period.';
+	@override String get recordBudgetItemBody => 'Optional. A linked expense counts toward that item\'s spent amount, as long as its date falls within the budget period.';
 	@override String get walletSummaryTitle => 'Total across wallets';
 	@override String get walletSummaryBody => 'The sum of recorded balances of active wallets.';
 	@override String get walletCardTitle => 'Wallet details';
 	@override String get walletCardBody => 'Tap to see this wallet\'s history and record straight from there.';
 	@override String get walletAddTitle => 'Add a wallet';
-	@override String get walletAddBody => 'Bank account, e-wallet, or cash. Its starting balance can be changed anytime, and the recorded balance follows.';
+	@override String get walletAddBody => 'Bank account, e-wallet, or cash. You can change its starting balance anytime, and the balance updates with it.';
 	@override String get txnMonthTitle => 'One period per view';
 	@override String get txnMonthBody => 'Switch periods to see other history. List and Analysis always use the same period.';
 	@override String get txnFilterTitle => 'Search and filter';
 	@override String get txnFilterBody => 'Search notes or categories, then filter by wallet and category with Filter. If this month has no match, the search can continue into other months.';
 	@override String get txnRowTitle => 'Edit or delete';
-	@override String get txnRowBody => 'Tap a transaction for its details; from there you can edit, record it again, or delete it, and balances are recalculated.';
+	@override String get txnRowBody => 'Tap a transaction to see its details. From there you can edit, record it again, or delete it, and balances update automatically.';
 	@override String get budgetSummaryTitle => 'Left across active budgets';
-	@override String get budgetSummaryBody => 'Plan minus used — the spending room left across your active budgets.';
+	@override String get budgetSummaryBody => 'Planned minus spent: what you have left across your active budgets.';
 	@override String get budgetFilterTitle => 'Active first';
 	@override String get budgetFilterBody => 'The list shows active budgets. Choose Finished or Inactive to see older ones.';
 	@override String get budgetTemplatesTitle => 'Use templates';
 	@override String get budgetTemplatesBody => 'Save a recurring set of items, then create new budgets from it.';
 	@override String get budgetDetailItemTitle => 'Budget item';
-	@override String get budgetDetailItemBody => 'Used goes up from transactions linked to this item within the budget period.';
+	@override String get budgetDetailItemBody => 'Spent goes up with transactions linked to this item within the budget period.';
 	@override String get budgetDetailRecordTitle => 'Record from an item';
 	@override String get budgetDetailRecordBody => 'Opens Record with this item already selected.';
 	@override String get freelanceProjectTitle => 'Projects and rates';
 	@override String get freelanceProjectBody => 'Each project has an hourly rate and deductions. Tap a project to record hours and invoices.';
 	@override String get freelanceWorklogTitle => 'Hours worked';
 	@override String get freelanceWorklogBody => 'Work hours are income you\'ve earned. Group them into an invoice, then record it when you\'re paid.';
-	@override String get freelanceReceiveTitle => 'Money actually arrives';
-	@override String get freelanceReceiveBody => 'Record it when the pay arrives: your wallet balance grows and the invoice is settled.';
+	@override String get freelanceReceiveTitle => 'When the money arrives';
+	@override String get freelanceReceiveBody => 'Record it when you get paid: your wallet balance goes up and the invoice is settled.';
 	@override String get accountStatusTitle => 'Recording status';
-	@override String get accountStatusBody => 'See whether recording from notifications and recurring reminders are on. Tap a row to change it.';
+	@override String get accountStatusBody => 'See if recording from notifications and recurring reminders are on. Tap a row to change it.';
 	@override String get homeVoiceTitle => 'Record by voice';
 	@override String get homeVoiceBody => 'Long-press the Record button, say one transaction, then check the form before recording it.';
 	@override String get planTabsTitle => 'Plan';
@@ -769,35 +897,35 @@ class _Translations$tour$en extends Translations$tour$id {
 	@override String get planUnplannedTitle => 'Unplanned money';
 	@override String get planUnplannedBody => 'This month’s income minus everything already committed.';
 	@override String get planForecastTitle => 'Wallet balance ≈';
-	@override String get planForecastBody => 'Forecast balance to month end, including its lowest point.';
+	@override String get planForecastBody => 'Forecast balance through month end, including the lowest it\'s expected to reach.';
 	@override String get homeForecastTitle => 'Balance forecast';
 	@override String get homeForecastBody => 'Your forecast wallet balance at month end and its lowest point. Tap for the breakdown in Plan.';
 	@override String get homePendingTitle => 'Waiting to record';
 	@override String get homePendingBody => 'Recurring bills and income that are due. Record in one tap, edit first, or Skip.';
 	@override String get homeNotificationTitle => 'Record from notifications';
-	@override String get homeNotificationBody => 'Pick your bank or e-wallet apps and their transaction notifications become draft entries. This card is always here.';
+	@override String get homeNotificationBody => 'Pick your bank or e-wallet apps and their transaction notifications become draft transactions. This card is always here.';
 	@override String get homeReminderTitle => 'Recurring reminders';
 	@override String get homeReminderBody => 'Turn them on to get reminded before bills are due. This card goes away once reminders are on.';
 	@override String get recordRepeatTitle => 'Repeat';
-	@override String get recordRepeatBody => 'For bills, salary, or subscriptions. Each next occurrence waits for you to record it; nothing is recorded silently.';
+	@override String get recordRepeatBody => 'For bills, salary, or subscriptions. The next one waits for your confirmation; nothing is recorded silently.';
 	@override String get recurringStartersTitle => 'Quick start';
 	@override String get recurringStartersBody => 'Pick a common one, like salary or electricity. The form is filled in; just adjust it.';
 	@override String get recurringSummaryTitle => 'Recurring still to go out';
-	@override String get recurringSummaryBody => 'Recurring bills not yet recorded this month — money that already has somewhere to go.';
+	@override String get recurringSummaryBody => 'Recurring bills not yet recorded this month: money that\'s already spoken for.';
 	@override String get recurringPendingTitle => 'Waiting to record';
-	@override String get recurringPendingBody => 'Occurrences that are due. Record in one tap, edit first, or Skip this one.';
+	@override String get recurringPendingBody => 'Recurring items that are due. Record in one tap, edit first, or Skip this one.';
 	@override String get recurringAddTitle => 'Add recurring';
 	@override String get recurringAddBody => 'You can also use Repeat in Record, or Make recurring in a transaction\'s details.';
 	@override String get budgetRepeatTitle => 'Repeat every period';
-	@override String get budgetRepeatBody => 'Turn on to start this budget again every month with the same items. No money is moved.';
+	@override String get budgetRepeatBody => 'Turn on to repeat this budget every month with the same items. No money is moved.';
 	@override String get planMonthPickerTitle => 'Next months';
 	@override String get planMonthPickerBody => 'See the forecast for the next two months. Each month shows its estimated month-end figure.';
 	@override String get planPeriodHeaderTitle => 'Your financial month';
 	@override String get planPeriodHeaderBody => 'Tap to start the month on your payday. Plan and Analysis follow it.';
 	@override String get planTransitionTitle => 'Transition period';
-	@override String get planTransitionBody => 'This period is longer or shorter once because your month start changed. The next one is a full month again.';
+	@override String get planTransitionBody => 'This period is longer or shorter than usual because your month start changed. The next one goes back to a full month.';
 	@override String get txnAnalysisSegmentTitle => 'Analysis';
-	@override String get txnAnalysisSegmentBody => 'See where your money goes by category and compare it with usual.';
+	@override String get txnAnalysisSegmentBody => 'See your spending by category and compare it with usual.';
 	@override String get analysisCategoriesTitle => 'By category';
 	@override String get analysisCategoriesBody => 'Tap a slice or row to see one category, then open its details.';
 	@override String get analysisUncategorizedTitle => 'Uncategorized';
@@ -832,10 +960,10 @@ class _Translations$account$en extends Translations$account$id {
 	// Translations
 	@override String get title => 'Account';
 	@override String get signedOutTitle => 'Set up your account';
-	@override String get signedOutBody => 'Everything you record works fully without an account. An account prepares you for the backup and cross-device sync we\'re building.';
+	@override String get signedOutBody => 'Everything you record works fully without an account. An account will be used for backup and cross-device sync, which we\'re building.';
 	@override String get googleSignInAction => 'Sign in with Google';
 	@override String get emailSignInToggle => 'Sign in with email';
-	@override String get emailFormHint => 'For accounts that were created for you.';
+	@override String get emailFormHint => 'For accounts we\'ve set up for you.';
 	@override String get emailLabel => 'Email';
 	@override String get passwordLabel => 'Password';
 	@override String get emailSignInAction => 'Sign in';
@@ -844,21 +972,19 @@ class _Translations$account$en extends Translations$account$id {
 	@override String get signedOutMessage => 'You\'re signed out.';
 	@override String get methodGoogle => 'Signed in with Google';
 	@override String get methodPassword => 'Signed in with email';
-	@override String get dataTitle => 'Your data';
-	@override String get dataBody => 'Wallets, transactions, and budgets are stored on this device. Signing out or deleting your account doesn\'t touch them.';
 	@override String get signOutAction => 'Sign out';
 	@override String get dangerTitle => 'Danger zone';
 	@override String get dangerBody => 'Deleting your account is permanent and can\'t be undone.';
 	@override String get deleteAction => 'Delete account';
 	@override String get deleteConfirmTitle => 'Delete account?';
-	@override String get deleteConfirmBody => 'Your account is permanently deleted. Wallets, transactions, and budgets on this device stay.';
+	@override String get deleteConfirmBody => 'Your account will be permanently deleted. Wallets, transactions, and budgets on this device stay.';
 	@override String get deletePasswordTitle => 'Enter your password';
 	@override String get deletePasswordBody => 'For your security, enter your password again to delete your account.';
 	@override String get deletedMessage => 'Account deleted.';
 	@override late final _Translations$account$errors$en errors = _Translations$account$errors$en._(_root);
 	@override String get recordingSection => 'Recording';
 	@override String get displaySection => 'Display';
-	@override String get hideAmountsBody => 'Replace numbers with dots on every screen, e.g. when opening the app around others.';
+	@override String get hideAmountsBody => 'Replace numbers with dots on every screen, handy when you open the app around others.';
 	@override String get appSection => 'App';
 	@override late final _Translations$account$version$en version = _Translations$account$version$en._(_root);
 }
@@ -920,7 +1046,7 @@ class _Translations$category$en extends Translations$category$id {
 	@override String get archiveAction => 'Archive';
 	@override String get restoreAction => 'Restore';
 	@override String get archivedSection => 'Archived';
-	@override String get archivedHint => 'Not offered when recording, but old transactions keep it.';
+	@override String get archivedHint => 'Won\'t appear when recording, but old transactions keep it.';
 	@override String get emptyActive => 'No active categories yet.';
 	@override String archivedMessage({required Object name}) => '"${name}" archived.';
 	@override String restoredMessage({required Object name}) => '"${name}" restored.';
@@ -968,12 +1094,12 @@ class _Translations$notificationCapture$en extends Translations$notificationCapt
 	@override String get enableLabel => 'Turn on';
 	@override String get accessMissingTitle => 'Permission needed to read notifications';
 	@override String get accessMissingBody => 'Without it, Tanukonomy can\'t see your bank notifications.';
-	@override String get accessAction => 'Grant permission';
+	@override String get accessAction => 'Allow access';
 	@override String get accessGranted => 'Notification permission is on';
 	@override String get disclosureTitle => 'Before you grant permission';
 	@override String get disclosureBody => 'Tanukonomy will be able to read notifications on your phone.\n\n• Only from apps you pick that match their filter.\n• OTP notifications are never stored.\n• Text that is hard to read may be sent to Gemini (Google).\n• Notification text stays on your phone for at most 7 days.';
 	@override String get disclosureAccept => 'Continue';
-	@override String get reminderPermissionDenied => 'Notification permission was denied. Turn it on in Android settings to get notified.';
+	@override String get reminderPermissionDenied => 'Notification permission was denied. Turn it on in Android settings to get reminders.';
 	@override String get sourcesTitle => 'Apps';
 	@override String get sourcesEmpty => 'Pick the bank or e-wallet apps whose notifications you want recorded.';
 	@override String get addSource => 'Add app';
@@ -984,7 +1110,7 @@ class _Translations$notificationCapture$en extends Translations$notificationCapt
 	@override String get builtInPatternsBadge => 'Built-in patterns';
 	@override String get appsLoadFailed => 'Couldn\'t read the app list.';
 	@override String get appsEmpty => 'No matching apps.';
-	@override String get sourceEnabled => 'Listen to this app';
+	@override String get sourceEnabled => 'Read this app\'s notifications';
 	@override String get walletLabel => 'Wallet';
 	@override String get keywordsLabel => 'Filter';
 	@override String get keywordsHint => 'Only notifications containing one of these phrases are read.';
@@ -993,7 +1119,7 @@ class _Translations$notificationCapture$en extends Translations$notificationCapt
 	@override String get patternsTitle => 'Patterns';
 	@override String get patternsHint => 'Teach Tanukonomy how to read this app\'s notification format.';
 	@override String get patternsEmpty => 'No patterns yet. Tanukonomy still reads with general rules.';
-	@override String get builtInUnverified => 'Built-in · you always check the result';
+	@override String get builtInUnverified => 'Built-in · you review the results';
 	@override String get builtInVerified => 'Built-in';
 	@override String get newPattern => 'Make a pattern from an example';
 	@override String get removeSource => 'Remove this app';
@@ -1005,6 +1131,33 @@ class _Translations$notificationCapture$en extends Translations$notificationCapt
 	@override String get patternInstructions => 'Tap a marked word again to clear its mark.';
 	@override String get roleAmount => 'Amount';
 	@override String get roleNote => 'Note';
+	@override String get roleFrom => 'From';
+	@override String get roleTo => 'To';
+	@override String get roleFromHelp => 'From: the source wallet name of a transfer, Matched against this app\'s wallet rules.';
+	@override String get roleToHelp => 'To: the destination wallet name of a transfer. Matched against this app\'s wallet rules.';
+	@override String get kindTransferBetween => 'Transfer between wallets';
+	@override String get patternBetweenHint => 'Source and destination wallets are read from the text through the wallet rules on the app page.';
+	@override String get walletRulesTitle => 'Other wallets in this app';
+	@override String get walletRulesHint => 'For apps with several wallets. If the notification contains the keyword, that wallet is used; otherwise the main wallet above.';
+	@override String get walletRuleKeywordsField => 'Keywords, separated by commas';
+	@override String get walletRuleAdd => 'Add wallet';
+	@override String get walletRuleRemove => 'Remove';
+	@override String get walletRuleNeedsKeywords => 'Enter at least one keyword';
+	@override String get bindingTitle => 'Bind to a recurring item';
+	@override String get bindingHint => 'Notifications that match a bound pattern are recorded as that recurring item. If the amount or schedule does not fit, they go to the inbox instead of being guessed.';
+	@override String get bindingNone => 'Not bound';
+	@override String get samplesToggle => 'Save notification samples';
+	@override String get samplesHint => 'To build filters and patterns from this app\'s notifications. Kept on this device for 7 days, never sent anywhere.';
+	@override String get samplesTitle => 'Recent notifications';
+	@override String get samplesEmpty => 'No samples yet. Notifications from this app that arrive from now on will show up here.';
+	@override String get samplesFilter => 'Use as filter';
+	@override String get samplesPattern => 'Create pattern';
+	@override String get samplesFilterTitle => 'Pick a filter phrase';
+	@override String get samplesFilterHint => 'Tap words to build a phrase, or type your own. Choose a phrase that only appears in transaction notifications.';
+	@override String get samplesDisclosureTitle => 'Save notification samples?';
+	@override String get samplesDisclosureBody => 'Tanukonomy will keep the text of notifications from the apps you chose, including non-transaction ones, for 7 days on this device. It is used only to build filters and patterns. OTP codes are never saved, and this text is not sent to any server. You can turn it off at any time; all samples are deleted right away.';
+	@override String get samplesDisclosureCancel => 'Cancel';
+	@override String get samplesDisclosureAgree => 'Turn on';
 	@override String get roleIgnore => 'Ignore';
 	@override String get patternKindLabel => '3. Transaction type';
 	@override String get kindExpense => 'Out';
@@ -1044,7 +1197,7 @@ class _Translations$notificationCapture$en extends Translations$notificationCapt
 	@override String autoRecordedSnack({required Object amount, required Object app}) => 'Recorded automatically: ${amount} · ${app}';
 	@override String autoRecordedSnackMany({required Object n}) => '${n} transactions recorded automatically from notifications';
 	@override String get reminderChannel => 'Record from notifications';
-	@override String get reminderCapturedTitle => 'Transaction from {app} captured';
+	@override String get reminderCapturedTitle => 'New transaction from {app}';
 	@override String get reminderCapturedBody => 'Tap to view.';
 	@override String reminderReviewTitle({required Object amount, required Object app}) => 'Check ${amount} from ${app}';
 	@override String get reminderReviewBody => 'Tap to record it.';
@@ -1061,14 +1214,14 @@ class _Translations$notificationCapture$en extends Translations$notificationCapt
 	@override String get enableHint => 'Transactions from the bank and e-wallet notifications you pick are recorded for you.';
 	@override String get inboxEntryTitle => 'Inbox';
 	@override String get inboxEntryBody => 'Check transactions from notifications and undo automatic ones.';
-	@override String get behaviorTitle => 'When a transaction is caught';
+	@override String get behaviorTitle => 'When a transaction is detected';
 	@override String get autoRecordLabel => 'Record automatically';
 	@override String get autoRecordOffHint => 'Everything waits for you to check in the inbox.';
-	@override String get autoRecordOnHint => 'Clear ones are saved right away. Unsure ones still wait for you.';
+	@override String get autoRecordOnHint => 'Clear ones are saved right away. Anything uncertain waits for your review.';
 	@override String get autoRecordAnyCategoryLabel => 'Even if the category isn\'t clear';
 	@override String get autoRecordAnyCategoryHint => 'You can fill in the category later.';
 	@override String get reminderLabel => 'Notify me';
-	@override String get reminderHint => 'Get a notification each time a transaction is caught.';
+	@override String get reminderHint => 'Get a notification each time a transaction is detected.';
 	@override String sourceWallet({required Object name}) => '${name} wallet';
 	@override String get walletHelp => 'Transactions from this app are recorded in this wallet.';
 	@override String get advancedTitle => 'Filter and patterns';
@@ -1110,16 +1263,17 @@ class _Translations$recurring$en extends Translations$recurring$id {
 	@override String get paymentAutoDebit => 'auto-debit';
 	@override String get paymentManual => 'I pay it';
 	@override String priceUp({required Object amount, required Object usual}) => '${amount}, usually ${usual}';
-	@override String get emptyTitle => 'No recurring yet';
-	@override String get emptyBody => 'Add what comes every month, then see what is truly free.';
+	@override String get emptyTitle => 'No recurring transactions yet';
+	@override String get emptyBody => 'Add your regular monthly bills and income, then see what\'s really free.';
 	@override String get filteredEmpty => 'Nothing here yet.';
 	@override String get showAllAction => 'Show all';
-	@override String get addAction => 'Add recurring';
-	@override String get loadError => 'Could not load recurring.';
+	@override String get addAction => 'Add recurring transaction';
+	@override String get loadError => 'Couldn\'t load recurring transactions.';
 	@override String get retryAction => 'Try again';
 	@override String get nextTitle => 'Next';
 	@override String get recordedTitle => 'Recorded';
 	@override String get skipAction => 'Skip';
+	@override String get recordEarlyAction => 'Record now';
 	@override String get unskipAction => 'Undo skip';
 	@override String get editAction => 'Edit';
 	@override String get pauseAction => 'Pause';
@@ -1127,7 +1281,7 @@ class _Translations$recurring$en extends Translations$recurring$id {
 	@override String get endAction => 'End';
 	@override String get deleteAction => 'Delete';
 	@override String get moreActions => 'More actions';
-	@override String get deleteTitle => 'Delete recurring?';
+	@override String get deleteTitle => 'Delete recurring transaction?';
 	@override String get deleteBody => 'Recorded transactions are kept.';
 	@override String get detailSchedule => 'Schedule';
 	@override String get detailWallet => 'Wallet';
@@ -1149,10 +1303,10 @@ class _Translations$recurring$en extends Translations$recurring$id {
 	@override String deletedMessage({required Object name}) => '${name} deleted.';
 	@override String skippedMessage({required Object date}) => '${date} skipped.';
 	@override String priceUpdateAction({required Object amount}) => 'Update to ${amount}';
-	@override String get notFound => 'This recurring no longer exists.';
+	@override String get notFound => 'This recurring transaction no longer exists.';
 	@override String get noRecorded => 'Nothing recorded yet.';
 	@override String recordedMessage({required Object name}) => '${name} recorded.';
-	@override String recordedAllMessage({required Object n}) => '${n} recurring recorded.';
+	@override String recordedAllMessage({required Object n}) => '${n} recurring transactions recorded.';
 	@override String linkedMessage({required Object name}) => '${name} linked.';
 	@override String get undoAction => 'Undo';
 	@override String get similarTitle => 'Already recorded?';
@@ -1168,9 +1322,9 @@ class _Translations$recurring$en extends Translations$recurring$id {
 	@override String farDateNotice({required Object date}) => 'Scheduled for ${date}. Make sure the date is right.';
 	@override String occurrenceNotice({required Object name, required Object date}) => 'Recording ${name} · ${date}';
 	@override String matchLabel({required Object name, required Object date}) => 'Matches recurring ${name} · ${date}';
-	@override String get linkedTitle => 'Matched to recurring';
+	@override String get linkedTitle => 'Matched to a recurring transaction';
 	@override String get unlinkAction => 'Unlink';
-	@override String get unlinkedMessage => 'Unlinked. The occurrence is waiting again.';
+	@override String get unlinkedMessage => 'Unlinked. It\'s waiting to be recorded again.';
 	@override String get reminderChannelName => 'Recurring reminders';
 	@override String get reminderChannelDescription => 'Recurring bills and income that are due.';
 	@override String reminderSoonTitle({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
@@ -1178,7 +1332,7 @@ class _Translations$recurring$en extends Translations$recurring$id {
 		other: 'In ${n} days',
 	);
 	@override String get reminderTodayTitle => 'Due today';
-	@override String reminderTodayManyTitle({required Object n}) => '${n} recurring due today';
+	@override String reminderTodayManyTitle({required Object n}) => '${n} recurring transactions due today';
 	@override String alreadyRecordedMessage({required Object name}) => '${name} is already recorded.';
 	@override String get remindersTitle => 'Recurring reminders';
 	@override String get remindersBody => 'Reminded a day before bills you pay yourself, and on the due day.';
@@ -1186,7 +1340,7 @@ class _Translations$recurring$en extends Translations$recurring$id {
 	@override String get ruleRemindersLabel => 'Remind me';
 	@override String positionMeta({required Object k, required Object n}) => '${k} of ${n}';
 	@override String toWalletMeta({required Object wallet}) => 'to ${wallet}';
-	@override String remainingTitle({required Object month}) => 'Recurring still to go out · ${month}';
+	@override String remainingTitle({required Object month}) => 'Recurring bills still to pay · ${month}';
 	@override String get plannedLabel => 'Planned';
 	@override String get outLabel => 'Already out';
 	@override String get chipAll => 'All';
@@ -1201,24 +1355,24 @@ class _Translations$recurring$en extends Translations$recurring$id {
 	@override String get budgetLinkEmpty => 'No repeating budget items in this wallet yet.';
 	@override String budgetLinkedMessage({required Object name, required Object item}) => '${name} is linked to ${item}.';
 	@override String budgetUnlinkedMessage({required Object name}) => '${name} is no longer linked to a budget item.';
-	@override String fundingTitle({required Object wallet}) => 'Prepare funds in ${wallet}';
-	@override String fundingBody({required Object name, required Object amount, required Object date, required Object shortfall}) => '${name} ${amount} on ${date}. Expected short ≈${shortfall}.';
-	@override String installmentFreeLine({required Object month, required Object amount}) => 'From ${month} you free up +${amount}/mo.';
+	@override String fundingTitle({required Object wallet}) => 'Funds needed in ${wallet}';
+	@override String fundingBody({required Object name, required Object amount, required Object date, required Object shortfall}) => '${name} ${amount} on ${date}. Expected shortfall ≈${shortfall}.';
+	@override String installmentFreeLine({required Object month, required Object amount}) => 'From ${month} you\'ll free up +${amount}/mo.';
 	@override String get unseenLabel => 'Not seen in notifications yet';
 	@override String get notYetAction => 'Not yet';
 	@override String snoozedMessage({required Object name}) => 'We\'ll ask about ${name} again in 2 days.';
 	@override String idleTitle({required Object name}) => 'Still using ${name}?';
-	@override String get idleBody => 'The last two were skipped or not seen.';
+	@override String get idleBody => 'The last two were skipped or not detected.';
 	@override String get idleKeep => 'Keep';
 	@override String autoRecordedOne({required Object name}) => '${name} recorded automatically.';
-	@override String autoRecordedMany({required Object n}) => '${n} repeating items recorded automatically.';
+	@override String autoRecordedMany({required Object n}) => '${n} recurring transactions recorded automatically.';
 	@override String priceUpFound({required Object name, required Object amount}) => '${name} came in at ${amount}, higher than planned. Link it?';
-	@override String get priceUpUpdate => 'Update item';
+	@override String get priceUpUpdate => 'Update amount';
 	@override String get priceUpKeep => 'Keep amount';
-	@override String get suggestTitle => 'Looks repeating';
-	@override String suggestLine({required Object name, required Object amount, required Object day}) => '${name} ${amount}, around day ${day} for the last three months.';
-	@override String get suggestAccept => 'Make repeating';
-	@override String get suggestDismiss => 'Not repeating';
+	@override String get suggestTitle => 'Looks like a recurring transaction';
+	@override String suggestLine({required Object name, required Object amount, required Object day}) => '${name} ${amount}, around day ${day} each of the last three months.';
+	@override String get suggestAccept => 'Make recurring';
+	@override String get suggestDismiss => 'Not recurring';
 	@override String get autoRecordedTitle => 'Recorded automatically';
 }
 
@@ -1235,14 +1389,14 @@ class _Translations$plan$en extends Translations$plan$id {
 	@override String get financialMonthLastDay => 'Last day of the month';
 	@override String get financialMonthChange => 'Change financial month start';
 	@override String get financialMonthHint => 'Usually your payday.';
-	@override String financialMonthOfferScheduled({required Object start}) => 'Recurring scheduled. Start your financial month on ${start}?';
+	@override String financialMonthOfferScheduled({required Object start}) => 'Recurring transaction scheduled. Start your financial month on ${start}?';
 	@override String get financialMonthOfferAction => 'Set';
 	@override String financialMonthPreviewTitle({required Object day}) => 'Start on day ${day}';
 	@override String get financialMonthPreviewTitleLastDay => 'Start on the last day';
 	@override String financialMonthPreviewTransition({required Object range, required Object days, required Object next}) => 'This period becomes ${range} (${days} days), then ${next}.';
 	@override String financialMonthPreviewTransitionPast({required Object range, required Object current}) => '${range} becomes a completed transition period. This period is ${current}.';
 	@override String get financialMonthPreviewPast => 'Earlier periods stay the same.';
-	@override String get financialMonthBudgetsTitle => 'Recurring budgets';
+	@override String get financialMonthBudgetsTitle => 'Repeating budgets';
 	@override String financialMonthBudgetsHelp({required Object next, required Object previous}) => 'Checked ones also start on ${next}. The rest still start on ${previous}.';
 	@override String financialMonthOnDay({required Object day}) => 'day ${day}';
 	@override String get financialMonthOnLastDay => 'the last day';
@@ -1288,7 +1442,7 @@ class _Translations$plan$en extends Translations$plan$id {
 	@override String get nextTitle => 'Next';
 	@override String get seeAllRecurring => 'All in Recurring';
 	@override String get emptyTitle => 'Plan this month';
-	@override String get emptyBody => 'Add what comes every month, then see what is truly free.';
+	@override String get emptyBody => 'Add your regular monthly bills and income, then see what\'s really free.';
 	@override String chartSemantics({required Object low, required Object date, required Object end}) => 'Balance forecast, lowest ${low} on ${date}, month end ${end}';
 	@override String chartPoint({required Object date, required Object amount}) => '${date} · ${amount}';
 	@override String forecastEndLabel({required Object date}) => 'Balance forecast ${date}';
@@ -1299,8 +1453,8 @@ class _Translations$plan$en extends Translations$plan$id {
 	@override String startOf({required Object date}) => 'Start ${date}';
 	@override String compactMillion({required Object value}) => '${value}M';
 	@override String compactThousand({required Object value}) => '${value}K';
-	@override String get fundingTitle => 'Prepare funds';
-	@override String fundingBody({required Object wallet, required Object shortfall, required Object name, required Object date}) => '${wallet} is expected to be short by ≈${shortfall} for ${name} on ${date}. Add funds to ${wallet} before then.';
+	@override String get fundingTitle => 'Funds needed';
+	@override String fundingBody({required Object wallet, required Object shortfall, required Object name, required Object date}) => '${wallet} is expected to run short by ≈${shortfall} for ${name} on ${date}. Add funds to ${wallet} before then.';
 	@override String fundingAction({required Object wallet}) => 'See ${wallet} forecast';
 	@override String fundingMore({required Object n}) => '+${n} more';
 	@override String reviewTitle({required Object month}) => '${month} has started';
@@ -1317,12 +1471,12 @@ class _Translations$plan$en extends Translations$plan$id {
 	@override String reviewCollapsed({required Object month, required Object done, required Object total}) => 'Review ${month} plan (${done}/${total})';
 	@override String reviewDoneMessage({required Object month}) => '${month} plan is ready.';
 	@override String homeReviewBody({required Object income, required Object committed, required Object free}) => 'Scheduled income ${income}, committed ${committed}, free ${free}.';
-	@override String get homeReviewEstimates => 'Some repeating amounts are estimates worth checking.';
+	@override String get homeReviewEstimates => 'Some recurring amounts are estimates. Worth a check.';
 	@override String get homeReviewAction => 'Review plan';
 	@override String lookbackTitle({required Object month}) => '${month} look back';
 	@override String get lookbackPlanned => 'Plan';
 	@override String get lookbackActual => 'Actual';
-	@override String get lookbackFree => 'Free money';
+	@override String get lookbackFree => 'Unplanned money';
 	@override String lookbackBiggest({required Object line}) => 'Biggest difference: ${line}.';
 	@override String accuracyExact({required Object month}) => 'The ${month} forecast was spot on.';
 	@override String accuracyMissed({required Object month, required Object amount}) => 'The ${month} forecast was off by ${amount}.';
@@ -1360,7 +1514,7 @@ class _Translations$analysis$en extends Translations$analysis$id {
 	@override String get nextPeriod => 'Next period';
 	@override String get uncategorized => 'Uncategorized';
 	@override String get freelanceGroup => 'Freelance';
-	@override String others({required Object n}) => 'Others (${n} categories)';
+	@override String others({required Object n}) => 'Other (${n} categories)';
 	@override String get archived => 'archived';
 	@override String get transferTitle => 'Moved between wallets';
 	@override String get transferSub => 'Doesn\'t change your total';
@@ -1391,17 +1545,17 @@ class _Translations$record$draftIssue$en extends Translations$record$draftIssue$
 	final TranslationsEn _root; // ignore: unused_field
 
 	// Translations
-	@override String get amountMissing => 'Couldn\'t catch the amount. Enter it yourself.';
+	@override String get amountMissing => 'Couldn\'t read the amount. Enter it manually.';
 	@override String get amountMultiple => 'More than one amount was mentioned. Enter the right one.';
-	@override String get amountWithoutUnit => 'A number without a unit (thousand/million). Check the amount.';
+	@override String get amountWithoutUnit => 'No unit found (thousand/million). Please check the amount.';
 	@override String get amountAmbiguous => 'The amount can be read two ways. Check it.';
-	@override String get currencyUnsupported => 'The currency mentioned differs from the app currency.';
-	@override String get walletUnknown => 'The wallet mentioned doesn\'t exist. Pick a wallet.';
-	@override String get transferSourceMissing => 'The source wallet is unclear. Pick where it came from.';
-	@override String get transferTargetMissing => 'The destination wallet is unclear. Pick where it went.';
-	@override String get categoryUnknown => 'The category mentioned doesn\'t exist. Pick a category.';
-	@override String get dateUnclear => 'The date mentioned can\'t be used. Pick the date.';
-	@override String get kindUnclear => 'The direction isn\'t clear. Choose Out or In.';
+	@override String get currencyUnsupported => 'That currency doesn\'t match your app currency.';
+	@override String get walletUnknown => 'We couldn\'t find that wallet. Pick one.';
+	@override String get transferSourceMissing => 'Pick the source wallet.';
+	@override String get transferTargetMissing => 'Pick the destination wallet.';
+	@override String get categoryUnknown => 'We couldn\'t find that category. Pick one.';
+	@override String get dateUnclear => 'We couldn\'t use that date. Pick a date.';
+	@override String get kindUnclear => 'Not sure if this is money in or out. Choose Out or In.';
 }
 
 // Path: record.voice
@@ -1413,19 +1567,19 @@ class _Translations$record$voice$en extends Translations$record$voice$id {
 	// Translations
 	@override String get title => 'Record by voice';
 	@override String get micLabel => 'Record by voice';
-	@override String get listening => 'Go ahead, speak.';
+	@override String get listening => 'Go ahead, I\'m listening.';
 	@override String get autoStopHint => 'Stops by itself when you pause.';
 	@override String get example => 'Example: “lunch 35 thousand with BCA”';
-	@override String get interpreting => 'Understanding…';
+	@override String get interpreting => 'Processing…';
 	@override String get typeInstead => 'Type instead';
 	@override late final _Translations$record$voice$failure$en failure = _Translations$record$voice$failure$en._(_root);
-	@override String get idleHint => 'Tap the microphone, then say one transaction.';
+	@override String get idleHint => 'Tap the mic, then say a transaction.';
 	@override String get recordingBadge => 'Rec';
 	@override String get startAction => 'Start recording';
 	@override String get listeningButtonLabel => 'Listening';
 	@override String get retryAction => 'Record again';
 	@override String get languageTitle => 'Which language will you speak?';
-	@override String get languageBody => 'Used to recognize your speech and for the app display. You can change it in Account.';
+	@override String get languageBody => 'Used for speech recognition and the app language. You can change it in Account.';
 	@override String get languageContinue => 'Continue';
 }
 
@@ -1437,7 +1591,7 @@ class _Translations$record$repeat$en extends Translations$record$repeat$id {
 
 	// Translations
 	@override String get label => 'Repeat';
-	@override String get off => 'No';
+	@override String get off => 'Off';
 	@override String get weekly => 'Weekly';
 	@override String get monthly => 'Monthly';
 	@override String get yearly => 'Yearly';
@@ -1460,7 +1614,7 @@ class _Translations$record$repeat$en extends Translations$record$repeat$id {
 	@override String get amountFixed => 'Fixed';
 	@override String get amountEstimated => 'Varies';
 	@override String get paymentLabel => 'Payment';
-	@override String get paymentManual => 'I pay it';
+	@override String get paymentManual => 'Pay manually';
 	@override String get paymentAutoDebit => 'Auto-debit';
 	@override String get recordAndScheduleAction => 'Record and schedule';
 	@override String get saveScheduleAction => 'Save schedule';
@@ -1471,7 +1625,7 @@ class _Translations$record$repeat$en extends Translations$record$repeat$id {
 	@override String updatedMessage({required Object name}) => '${name} updated.';
 	@override String linkSuggestionAction({required Object item}) => 'Link to ${item}';
 	@override String get autoRecordLabel => 'Record automatically';
-	@override String get autoRecordHint => 'Recorded for you when you open the app on the date; auto-debit waits a day. You can undo it.';
+	@override String get autoRecordHint => 'Recorded automatically when you open the app on the due date; auto-debit waits a day. You can undo it.';
 	@override String get noBalanceChange => 'No new transaction; balances stay the same.';
 }
 
@@ -1486,6 +1640,44 @@ class _Translations$record$calc$en extends Translations$record$calc$id {
 	@override String get notPositive => 'The result must be more than 0';
 	@override String get divideByZero => 'Cannot divide by 0';
 	@override String get tooLarge => 'The result is too large';
+}
+
+// Path: dataPortability.columns
+class _Translations$dataPortability$columns$en extends Translations$dataPortability$columns$id {
+	_Translations$dataPortability$columns$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get date => 'Date';
+	@override String get periodStart => 'Period start';
+	@override String get type => 'Type';
+	@override String get amount => 'Amount';
+	@override String get flow => 'Flow';
+	@override String get currency => 'Currency';
+	@override String get wallet => 'Wallet';
+	@override String get toWallet => 'To wallet';
+	@override String get category => 'Category';
+	@override String get note => 'Note';
+	@override String get budgetItem => 'Budget item';
+	@override String get recurring => 'Recurring';
+	@override String get freelanceProject => 'Freelance project';
+	@override String get id => 'ID';
+	@override String get walletName => 'Name';
+	@override String get openingBalance => 'Opening balance';
+	@override String get currentBalance => 'Current balance';
+}
+
+// Path: dataPortability.types
+class _Translations$dataPortability$types$en extends Translations$dataPortability$types$id {
+	_Translations$dataPortability$types$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get income => 'Income';
+	@override String get expense => 'Expense';
+	@override String get transfer => 'Transfer';
 }
 
 // Path: account.errors
@@ -1600,8 +1792,8 @@ class _Translations$discovery$reminder$en extends Translations$discovery$reminde
 
 	// Translations
 	@override String get button => 'Turn on recurring reminders';
-	@override String get body => 'Reminded before bills are due.';
-	@override String get rowNote => 'Reminders aren\'t on for all recurring items yet.';
+	@override String get body => 'Get reminded before bills are due.';
+	@override String get rowNote => 'Reminders aren\'t on for every recurring item yet.';
 }
 
 // Path: discovery.quickStart
@@ -1612,7 +1804,7 @@ class _Translations$discovery$quickStart$en extends Translations$discovery$quick
 
 	// Translations
 	@override String get title => 'Pick your bank or e-wallet apps';
-	@override String get body => 'Notifications from the apps you pick are read on this device and become draft entries. You review them first.';
+	@override String get body => 'Notifications from the apps you pick are read on this device and become draft transactions. You review them first.';
 	@override String get other => 'Other apps';
 	@override String get turnOn => 'Turn on';
 	@override String get noBuiltIn => 'No known bank or e-wallet apps on this device. Pick your own app.';
@@ -1633,6 +1825,7 @@ class _Translations$notificationCapture$reviewReason$en extends Translations$not
 	@override String get walletUnknown => 'Wallet not recognized';
 	@override String get categoryUnclear => 'Category unclear';
 	@override String get dateUnclear => 'Date unclear';
+	@override String get recurringUnclear => 'Recurring unclear';
 }
 
 // Path: recurring.starters
@@ -1814,10 +2007,10 @@ class _Translations$record$voice$failure$en extends Translations$record$voice$fa
 
 	// Translations
 	@override String get permissionDenied => 'Microphone access was denied. Allow it in device settings.';
-	@override String get unavailable => 'This device doesn\'t have a speech recognizer yet.';
-	@override String get languageOffline => 'This language can\'t be recognized offline on this phone yet. Connect to the internet, or download its language pack in the device\'s speech recognition settings.';
-	@override String get noMatch => 'Didn\'t catch anything. Try again.';
-	@override String get network => 'Recognizing speech needs internet on this device. Connect and record again, or type instead.';
+	@override String get unavailable => 'This device doesn\'t support speech recognition yet.';
+	@override String get languageOffline => 'This language isn\'t available offline on this phone. Connect to the internet, or download its language pack in your speech recognition settings.';
+	@override String get noMatch => 'We didn\'t hear anything. Try again.';
+	@override String get network => 'Speech recognition needs an internet connection. Connect and try again, or type instead.';
 	@override String get other => 'Something went wrong. Try again.';
 }
 
@@ -1890,40 +2083,40 @@ extension on TranslationsEn {
 			'record.kindTransfer' => 'Transfer',
 			'record.categoryAddLabel' => 'Add category',
 			'record.draftCheckTitle' => 'Check before recording',
-			'record.draftIssue.amountMissing' => 'Couldn\'t catch the amount. Enter it yourself.',
+			'record.draftIssue.amountMissing' => 'Couldn\'t read the amount. Enter it manually.',
 			'record.draftIssue.amountMultiple' => 'More than one amount was mentioned. Enter the right one.',
-			'record.draftIssue.amountWithoutUnit' => 'A number without a unit (thousand/million). Check the amount.',
+			'record.draftIssue.amountWithoutUnit' => 'No unit found (thousand/million). Please check the amount.',
 			'record.draftIssue.amountAmbiguous' => 'The amount can be read two ways. Check it.',
-			'record.draftIssue.currencyUnsupported' => 'The currency mentioned differs from the app currency.',
-			'record.draftIssue.walletUnknown' => 'The wallet mentioned doesn\'t exist. Pick a wallet.',
-			'record.draftIssue.transferSourceMissing' => 'The source wallet is unclear. Pick where it came from.',
-			'record.draftIssue.transferTargetMissing' => 'The destination wallet is unclear. Pick where it went.',
-			'record.draftIssue.categoryUnknown' => 'The category mentioned doesn\'t exist. Pick a category.',
-			'record.draftIssue.dateUnclear' => 'The date mentioned can\'t be used. Pick the date.',
-			'record.draftIssue.kindUnclear' => 'The direction isn\'t clear. Choose Out or In.',
+			'record.draftIssue.currencyUnsupported' => 'That currency doesn\'t match your app currency.',
+			'record.draftIssue.walletUnknown' => 'We couldn\'t find that wallet. Pick one.',
+			'record.draftIssue.transferSourceMissing' => 'Pick the source wallet.',
+			'record.draftIssue.transferTargetMissing' => 'Pick the destination wallet.',
+			'record.draftIssue.categoryUnknown' => 'We couldn\'t find that category. Pick one.',
+			'record.draftIssue.dateUnclear' => 'We couldn\'t use that date. Pick a date.',
+			'record.draftIssue.kindUnclear' => 'Not sure if this is money in or out. Choose Out or In.',
 			'record.voice.title' => 'Record by voice',
 			'record.voice.micLabel' => 'Record by voice',
-			'record.voice.listening' => 'Go ahead, speak.',
+			'record.voice.listening' => 'Go ahead, I\'m listening.',
 			'record.voice.autoStopHint' => 'Stops by itself when you pause.',
 			'record.voice.example' => 'Example: “lunch 35 thousand with BCA”',
-			'record.voice.interpreting' => 'Understanding…',
+			'record.voice.interpreting' => 'Processing…',
 			'record.voice.typeInstead' => 'Type instead',
 			'record.voice.failure.permissionDenied' => 'Microphone access was denied. Allow it in device settings.',
-			'record.voice.failure.unavailable' => 'This device doesn\'t have a speech recognizer yet.',
-			'record.voice.failure.languageOffline' => 'This language can\'t be recognized offline on this phone yet. Connect to the internet, or download its language pack in the device\'s speech recognition settings.',
-			'record.voice.failure.noMatch' => 'Didn\'t catch anything. Try again.',
-			'record.voice.failure.network' => 'Recognizing speech needs internet on this device. Connect and record again, or type instead.',
+			'record.voice.failure.unavailable' => 'This device doesn\'t support speech recognition yet.',
+			'record.voice.failure.languageOffline' => 'This language isn\'t available offline on this phone. Connect to the internet, or download its language pack in your speech recognition settings.',
+			'record.voice.failure.noMatch' => 'We didn\'t hear anything. Try again.',
+			'record.voice.failure.network' => 'Speech recognition needs an internet connection. Connect and try again, or type instead.',
 			'record.voice.failure.other' => 'Something went wrong. Try again.',
-			'record.voice.idleHint' => 'Tap the microphone, then say one transaction.',
+			'record.voice.idleHint' => 'Tap the mic, then say a transaction.',
 			'record.voice.recordingBadge' => 'Rec',
 			'record.voice.startAction' => 'Start recording',
 			'record.voice.listeningButtonLabel' => 'Listening',
 			'record.voice.retryAction' => 'Record again',
 			'record.voice.languageTitle' => 'Which language will you speak?',
-			'record.voice.languageBody' => 'Used to recognize your speech and for the app display. You can change it in Account.',
+			'record.voice.languageBody' => 'Used for speech recognition and the app language. You can change it in Account.',
 			'record.voice.languageContinue' => 'Continue',
 			'record.repeat.label' => 'Repeat',
-			'record.repeat.off' => 'No',
+			'record.repeat.off' => 'Off',
 			'record.repeat.weekly' => 'Weekly',
 			'record.repeat.monthly' => 'Monthly',
 			'record.repeat.yearly' => 'Yearly',
@@ -1946,7 +2139,7 @@ extension on TranslationsEn {
 			'record.repeat.amountFixed' => 'Fixed',
 			'record.repeat.amountEstimated' => 'Varies',
 			'record.repeat.paymentLabel' => 'Payment',
-			'record.repeat.paymentManual' => 'I pay it',
+			'record.repeat.paymentManual' => 'Pay manually',
 			'record.repeat.paymentAutoDebit' => 'Auto-debit',
 			'record.repeat.recordAndScheduleAction' => 'Record and schedule',
 			'record.repeat.saveScheduleAction' => 'Save schedule',
@@ -1957,7 +2150,7 @@ extension on TranslationsEn {
 			'record.repeat.updatedMessage' => ({required Object name}) => '${name} updated.',
 			'record.repeat.linkSuggestionAction' => ({required Object item}) => 'Link to ${item}',
 			'record.repeat.autoRecordLabel' => 'Record automatically',
-			'record.repeat.autoRecordHint' => 'Recorded for you when you open the app on the date; auto-debit waits a day. You can undo it.',
+			'record.repeat.autoRecordHint' => 'Recorded automatically when you open the app on the due date; auto-debit waits a day. You can undo it.',
 			'record.repeat.noBalanceChange' => 'No new transaction; balances stay the same.',
 			'record.balanceAfter' => ({required Object amount}) => 'Balance becomes ${amount}',
 			'record.allCategories' => 'All categories',
@@ -1967,7 +2160,7 @@ extension on TranslationsEn {
 			'record.calc.tooLarge' => 'The result is too large',
 			'record.amountSemantics' => ({required Object amount}) => 'Amount ${amount}',
 			'transaction.pageTitle' => 'History',
-			'transaction.searchHint' => 'Search this period: notes / categories...',
+			'transaction.searchHint' => 'Search notes or categories in this period...',
 			'transaction.allFilterLabel' => ({required Object count}) => 'All ${count}',
 			'transaction.incomeFilterLabel' => ({required Object count}) => 'Income ${count}',
 			'transaction.expenseFilterLabel' => ({required Object count}) => 'Expenses ${count}',
@@ -1988,20 +2181,20 @@ extension on TranslationsEn {
 			'transaction.emptyGuideIncomeTitle' => 'Income',
 			'transaction.emptyGuideIncomeDescription' => 'Adds to the balance of the wallet you choose.',
 			'transaction.emptyGuideExpenseTitle' => 'Expense',
-			'transaction.emptyGuideExpenseDescription' => 'Lowers the wallet balance and fills the linked budget item.',
+			'transaction.emptyGuideExpenseDescription' => 'Lowers the wallet balance and counts toward the linked budget item.',
 			'transaction.emptyGuideTransferTitle' => 'Transfer between wallets',
-			'transaction.emptyGuideTransferDescription' => 'Moves the recorded balance between wallets without changing your total net worth.',
-			'transaction.trustFooterMessage' => 'Your complete history, kept safe on your device',
-			'transaction.emptyFilterTitle' => 'No transactions this month match the filter',
-			'transaction.emptyFilterSubtitle' => 'Search and filters only cover the month that is open. Change the month, or change or clear the filters.',
+			'transaction.emptyGuideTransferDescription' => 'Moves money between wallets without changing your total balance.',
+			'transaction.trustFooterMessage' => 'Your full history, safe on your device.',
+			'transaction.emptyFilterTitle' => 'No transactions match your filters',
+			'transaction.emptyFilterSubtitle' => 'Search and filters only cover the period that\'s open. Try another period or clear the filters.',
 			'transaction.clearFiltersButton' => 'Clear filters',
 			'transaction.crossMonthSearchButton' => 'Search other months',
 			'transaction.crossMonthSearchingLabel' => 'Searching earlier months...',
 			'transaction.crossMonthResultsHeader' => 'Found in other months',
 			'transaction.crossMonthLoadMoreButton' => 'Search further back',
 			'transaction.crossMonthNoMoreResults' => 'Not found in earlier months.',
-			'transaction.loadErrorTitle' => 'Failed to load transactions',
-			'transaction.loadErrorSubtitle' => 'Check and try loading again.',
+			'transaction.loadErrorTitle' => 'Couldn\'t load transactions',
+			'transaction.loadErrorSubtitle' => 'Please try again in a moment.',
 			'transaction.detailBackLabel' => 'Back',
 			'transaction.detailIncomeTitle' => 'Income recorded',
 			'transaction.detailExpenseTitle' => 'Expense recorded',
@@ -2018,7 +2211,7 @@ extension on TranslationsEn {
 			'transaction.detailFromLabel' => 'From',
 			'transaction.detailToLabel' => 'To',
 			'transaction.detailAmountLabel' => 'Amount',
-			'transaction.detailManualNote' => 'Kept safe on your device. Wallet balances follow every record, so when you edit or delete it, balances adjust with it.',
+			'transaction.detailManualNote' => 'Stored safely on your device. Wallet balances follow your transactions, so editing or deleting one updates them.',
 			'transaction.editAction' => 'Edit',
 			'transaction.recordAgainAction' => 'Record again',
 			'transaction.deleteAction' => 'Delete transaction',
@@ -2030,13 +2223,13 @@ extension on TranslationsEn {
 			'transaction.restoredMessage' => 'Transaction restored.',
 			'transaction.budgetLabel' => 'Budget',
 			'transaction.openBudgetAction' => 'View budget',
-			'transaction.detailFreelanceNote' => 'This income was recorded from a freelance payment. To change it, cancel its receipt in Freelance.',
+			'transaction.detailFreelanceNote' => 'This income came from a freelance payment. To change it, undo the payment in Freelance.',
 			'transaction.makeRecurringAction' => 'Make recurring',
 			'transaction.previousMonth' => 'Previous month',
 			'transaction.nextMonth' => 'Next month',
 			'transaction.listSegment' => 'List',
 			'transaction.filteredCount' => ({required Object count}) => '${count} transactions',
-			'transaction.filteredEmpty' => 'No transactions left here.',
+			'transaction.filteredEmpty' => 'No more transactions here.',
 			'wallet.subtitle' => 'Total balance of all active wallets',
 			'wallet.activeBadge' => ({required Object count}) => '${count} active wallets',
 			'wallet.listHeading' => 'Active wallets',
@@ -2056,8 +2249,8 @@ extension on TranslationsEn {
 			'wallet.typeEwallet' => 'Digital wallet',
 			'wallet.typeSavings' => 'Savings',
 			'wallet.typeCard' => 'Card',
-			'wallet.emptyTitle' => 'No wallets recorded yet',
-			'wallet.emptyBody' => 'Add your first wallet to start recording where your money is. It can be a bank account, an e-wallet, or cash in your pocket.',
+			'wallet.emptyTitle' => 'No wallets yet',
+			'wallet.emptyBody' => 'Add your first wallet to start tracking your money. It can be a bank account, an e-wallet, or cash.',
 			'wallet.loadErrorTitle' => 'Couldn\'t load wallets',
 			'wallet.loadErrorSubtitle' => 'Wallet data couldn\'t be read. Try again.',
 			'wallet.addTitle' => 'Add wallet',
@@ -2069,28 +2262,28 @@ extension on TranslationsEn {
 			'wallet.nameRequiredHint' => 'Required',
 			'wallet.nameMaxHint' => 'Max. 24 characters',
 			'wallet.iconLabel' => 'Pick an icon',
-			'wallet.initialBalanceLabel' => 'Starting balance right now',
-			'wallet.initialBalanceHelp' => 'The starting balance is the money in this wallet right now, the starting point of your records. Every transaction after it counts from here.',
-			'wallet.currentBalanceLabel' => 'Recorded balance right now',
-			'wallet.editBalanceNote' => 'Changing the starting balance recomputes the recorded balance. For a gap with real money, record an income or expense via Record.',
+			'wallet.initialBalanceLabel' => 'Starting balance',
+			'wallet.initialBalanceHelp' => 'Enter the money in this wallet right now. Every transaction after that is counted from here.',
+			'wallet.currentBalanceLabel' => 'Current balance',
+			'wallet.editBalanceNote' => 'Changing the starting balance recalculates the wallet balance. If it doesn\'t match your real money, record an income or expense with Record.',
 			'wallet.activeSwitchLabel' => 'Wallet is active',
 			'wallet.activeSwitchHelp' => 'Inactive wallets don\'t appear in wallet pickers. Their transactions stay saved and counted.',
 			'wallet.saveAddAction' => 'Save wallet',
 			'wallet.deleteAction' => 'Delete wallet',
-			'wallet.deleteHelp' => 'Can only be deleted if it has no transactions at all. Otherwise, deactivate it.',
+			'wallet.deleteHelp' => 'You can only delete a wallet with no transactions. Otherwise, deactivate it.',
 			'wallet.deleteConfirmTitle' => 'Delete wallet?',
-			'wallet.deleteConfirmMessage' => ({required Object name}) => 'Wallet ${name} will be deleted permanently. This can\'t be undone.',
+			'wallet.deleteConfirmMessage' => ({required Object name}) => '${name} will be permanently deleted. This can\'t be undone.',
 			'wallet.savedMessage' => 'Wallet saved.',
 			'wallet.updatedMessage' => 'Wallet updated.',
 			'wallet.deletedMessage' => 'Wallet deleted.',
 			'wallet.reorderAction' => 'Reorder wallets',
 			'wallet.reorderTitle' => 'Reorder wallets',
-			'wallet.reorderHint' => 'Press and drag a wallet to change its order. This order is used in every wallet list and picker.',
+			'wallet.reorderHint' => 'Press and hold, then drag to reorder. This order applies to every wallet list and picker.',
 			'wallet.reorderHandleLabel' => ({required Object name}) => 'Drag to move ${name}',
 			'wallet.reorderSaveAction' => 'Save order',
 			'wallet.reorderedMessage' => 'Wallet order saved.',
 			'wallet.deleteBlockedMessage' => 'This wallet already has transactions, so it can\'t be deleted. Deactivate it instead.',
-			'wallet.privacyNote' => 'Data is stored locally and privately on your device.',
+			'wallet.privacyNote' => 'Your data is stored privately on your device.',
 			'wallet.detailBackLabel' => 'Back',
 			'wallet.detailEditAction' => 'Edit',
 			'wallet.detailRecentHeading' => 'This month\'s transactions',
@@ -2103,6 +2296,117 @@ extension on TranslationsEn {
 			'wallet.detailTransferInLabel' => 'Transfers in',
 			'wallet.detailTransferOutLabel' => 'Transfers out',
 			'wallet.detailBalanceChangeLabel' => 'Balance change',
+			'dataPortability.sectionTitle' => 'Your data',
+			'dataPortability.sectionBody' => 'Everything is stored on this phone. Back it up elsewhere to keep it safe, or export to a spreadsheet.',
+			'dataPortability.close' => 'Close',
+			'dataPortability.cancel' => 'Cancel',
+			'dataPortability.exportTitle' => 'Export to spreadsheet',
+			'dataPortability.exportSub' => 'Excel or CSV',
+			'dataPortability.exportFormat' => 'Format',
+			'dataPortability.formatXlsx' => 'Excel (.xlsx)',
+			'dataPortability.formatCsv' => 'CSV',
+			'dataPortability.xlsxHelp' => 'Works in Excel and Google Sheets. Includes a Wallets sheet.',
+			'dataPortability.csvHelp' => 'For other apps. Transactions only.',
+			'dataPortability.exportSummary' => ({required num n, required Object count, required Object first, required Object last}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '${count} transaction, ${first} – ${last}', other: '${count} transactions, ${first} – ${last}', ), 
+			'dataPortability.exportSummaryDay' => ({required num n, required Object count, required Object date}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '${count} transaction, ${date}', other: '${count} transactions, ${date}', ), 
+			'dataPortability.exportEmpty' => 'No transactions to export yet.',
+			'dataPortability.exportScope' => 'Includes all your transactions and your current wallet balances. Filter what you need in the spreadsheet.',
+			'dataPortability.exportAction' => 'Export',
+			'dataPortability.exportBusy' => 'Preparing the file…',
+			'dataPortability.exportBusyNote' => 'This may take a while if you have a lot of data. You can cancel.',
+			'dataPortability.exportError' => 'Couldn\'t create the file. Your data hasn\'t changed.',
+			'dataPortability.fileReady' => 'File ready',
+			'dataPortability.fileMeta' => ({required num n, required Object format}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '${format} · ${n} transaction', other: '${format} · ${n} transactions', ), 
+			'dataPortability.saveTo' => 'Save to…',
+			'dataPortability.share' => 'Share',
+			'dataPortability.fileNotSaved' => 'The file isn\'t saved yet. You can still save or share it.',
+			'dataPortability.fileStem' => 'export',
+			'dataPortability.countTransactions' => ({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '${count} transaction', other: '${count} transactions', ), 
+			'dataPortability.countWallets' => ({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '${count} wallet', other: '${count} wallets', ), 
+			'dataPortability.backupTitle' => 'Back up now',
+			'dataPortability.backupLast' => ({required Object date}) => 'Last backup: ${date}',
+			'dataPortability.backupNever' => 'Never backed up',
+			'dataPortability.backupSummary' => ({required Object transactions, required Object wallets, required Object since}) => '${transactions}, ${wallets}, since ${since}',
+			'dataPortability.backupSummaryNoTransactions' => ({required Object wallets}) => 'No transactions yet, ${wallets}',
+			'dataPortability.backupIncluded' => 'Included',
+			'dataPortability.backupExcluded' => 'Not included',
+			'dataPortability.backupIn.0' => 'Wallets and transactions',
+			'dataPortability.backupIn.1' => 'Budgets and categories',
+			'dataPortability.backupIn.2' => 'Freelance and recurring',
+			'dataPortability.backupIn.3' => 'Money settings and reminders',
+			'dataPortability.backupOut.0' => 'Notification text',
+			'dataPortability.backupOut.1' => 'System permissions',
+			'dataPortability.backupOut.2' => 'Account',
+			'dataPortability.backupOut.3' => 'Language and display',
+			'dataPortability.backupHint' => 'Save it somewhere outside this phone, such as Google Drive, so it stays safe if the phone is lost. This file contains your financial records.',
+			'dataPortability.backupAction' => 'Back up',
+			'dataPortability.backupBusy' => 'Creating the backup…',
+			'dataPortability.backupReady' => 'Backup ready',
+			'dataPortability.backupNotSaved' => 'Not saved yet. Pick a place to keep it so your backup is safe.',
+			'dataPortability.backupError' => 'Couldn\'t create the backup. Your data hasn\'t changed.',
+			'dataPortability.backupFileStem' => 'backup',
+			'dataPortability.backupFileMeta' => ({required Object transactions, required Object wallets}) => '${transactions} · ${wallets}',
+			'dataPortability.restoreTitle' => 'Restore from backup',
+			'dataPortability.restoreSub' => 'Replace data with a backup',
+			'dataPortability.undoTitle' => ({required Object date}) => 'Undo restore (${date})',
+			'dataPortability.undoSub' => 'Kept on this phone until the next restore, 30 days at most',
+			'dataPortability.undoPageTitle' => 'Undo restore',
+			'dataPortability.restoreRunTitle' => 'Restoring data',
+			'dataPortability.kickBackup' => 'Backup',
+			'dataPortability.kickSafety' => 'Safety backup',
+			'dataPortability.kickNow' => 'On this phone',
+			'dataPortability.nowLabel' => 'Now',
+			'dataPortability.since' => ({required Object date}) => 'Since ${date}',
+			'dataPortability.restoreChanges' => 'What will change',
+			'dataPortability.restoreUnchanged' => 'Language and display settings on this phone stay as they are.',
+			'dataPortability.changeCurrency' => ({required Object code}) => 'Currency will become ${code}',
+			'dataPortability.changeDrafts' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '${n} draft from notifications you haven\'t reviewed won\'t be kept.', other: '${n} drafts from notifications you haven\'t reviewed won\'t be kept.', ), 
+			'dataPortability.restoreOlder' => ({required Object date}) => 'This backup is from ${date} and is older than the data on this phone. Anything you recorded after that date will be lost.',
+			'dataPortability.restoreNext' => 'Continue',
+			'dataPortability.restoreConfirmTitle' => 'Replace all data on this phone?',
+			'dataPortability.restoreConfirmBody' => 'All data on this phone will be replaced with the backup. Your current data is saved first as a safety backup.',
+			'dataPortability.restoreConfirmAction' => 'Replace data',
+			'dataPortability.restoreNoCancel' => 'This can\'t be canceled. If the app closes midway, your data stays safe.',
+			'dataPortability.restoreSteps.0' => 'Saving current data as a safety backup',
+			'dataPortability.restoreSteps.1' => 'Replacing data with the backup',
+			'dataPortability.restoreSteps.2' => 'Recalculating wallet balances',
+			'dataPortability.restoreSteps.3' => 'Rescheduling reminders',
+			'dataPortability.restoreDoneTitle' => ({required Object date}) => 'Data restored from the ${date} backup.',
+			'dataPortability.undoDoneTitle' => 'Your data is back to how it was before the restore.',
+			'dataPortability.restoreDoneNote' => 'You\'ll need to allow notifications again on this phone. You can turn them on from Home.',
+			'dataPortability.goHome' => 'Back to Home',
+			'dataPortability.chooseOtherFile' => 'Choose another file',
+			'dataPortability.updateApp' => 'Update app',
+			'dataPortability.errorInvalidTitle' => 'This file can\'t be used',
+			'dataPortability.errorInvalidBody' => 'This isn\'t a Tanukonomy backup, or the file is damaged. Your data hasn\'t changed.',
+			'dataPortability.errorNewerTitle' => 'Backup from a newer version',
+			'dataPortability.errorNewerBody' => 'This backup was made by a newer version of Tanukonomy. Update the app and try again. Your data hasn\'t changed.',
+			'dataPortability.errorSpaceTitle' => 'Not enough storage',
+			'dataPortability.errorSpaceBody' => 'Free up some space and try again. Your data hasn\'t changed.',
+			'dataPortability.errorOtherTitle' => 'Restore couldn\'t start',
+			'dataPortability.errorOtherBody' => 'Couldn\'t prepare the restore. Try again. Your data hasn\'t changed.',
+			'dataPortability.sheetTransactions' => 'Transactions',
+			'dataPortability.sheetWallets' => 'Wallets',
+			'dataPortability.columns.date' => 'Date',
+			'dataPortability.columns.periodStart' => 'Period start',
+			'dataPortability.columns.type' => 'Type',
+			'dataPortability.columns.amount' => 'Amount',
+			'dataPortability.columns.flow' => 'Flow',
+			'dataPortability.columns.currency' => 'Currency',
+			'dataPortability.columns.wallet' => 'Wallet',
+			'dataPortability.columns.toWallet' => 'To wallet',
+			'dataPortability.columns.category' => 'Category',
+			'dataPortability.columns.note' => 'Note',
+			'dataPortability.columns.budgetItem' => 'Budget item',
+			'dataPortability.columns.recurring' => 'Recurring',
+			'dataPortability.columns.freelanceProject' => 'Freelance project',
+			'dataPortability.columns.id' => 'ID',
+			'dataPortability.columns.walletName' => 'Name',
+			'dataPortability.columns.openingBalance' => 'Opening balance',
+			'dataPortability.columns.currentBalance' => 'Current balance',
+			'dataPortability.types.income' => 'Income',
+			'dataPortability.types.expense' => 'Expense',
+			'dataPortability.types.transfer' => 'Transfer',
 			'budget.activeBadge' => ({required Object count}) => '${count} active',
 			'budget.plannedLabel' => 'Planned',
 			'budget.spentLabel' => 'Spent',
@@ -2121,14 +2425,14 @@ extension on TranslationsEn {
 			'budget.itemStatusOverspent' => 'Over budget',
 			'budget.itemCount' => ({required Object count}) => 'Items: ${count}',
 			'budget.emptyTitle' => 'No budgets yet',
-			'budget.emptyBody' => 'Plan a weekly or monthly spending limit for one wallet, then keep an eye on how much is used.',
+			'budget.emptyBody' => 'Set a weekly or monthly spending limit for a wallet, then track how much you\'ve used.',
 			'budget.emptyFilteredTitle' => 'No matching budgets',
 			'budget.emptyFilteredBody' => 'No budget has the selected status and wallet.',
 			'budget.resetFilterAction' => 'Show all budgets',
 			'budget.noWalletTitle' => 'Create a wallet first',
 			'budget.noWalletBody' => 'Every budget belongs to one wallet. Add a wallet in the Wallets tab, then come back here.',
-			'budget.loadErrorTitle' => 'Budgets failed to load',
-			'budget.loadErrorSubtitle' => 'Budget data could not be read. Try again.',
+			'budget.loadErrorTitle' => 'Couldn\'t load budgets',
+			'budget.loadErrorSubtitle' => 'Budget data couldn\'t be read. Try again.',
 			'budget.savedMessage' => 'Budget saved.',
 			'budget.updatedMessage' => 'Budget changes saved.',
 			'budget.deletedMessage' => 'Budget deleted.',
@@ -2139,7 +2443,7 @@ extension on TranslationsEn {
 			'budget.addTitle' => 'Create budget',
 			'budget.editTitle' => 'Edit budget',
 			'budget.ruleTitle' => 'Budget rule',
-			'budget.ruleBody' => 'This plan is your spending guide. Wallet balances move with the transactions you record.',
+			'budget.ruleBody' => 'A budget is a spending guide. Wallet balances only change when you record transactions.',
 			'budget.nameLabel' => 'Budget name',
 			'budget.nameHint' => 'Example: Household Needs',
 			'budget.requiredHint' => 'Required',
@@ -2151,7 +2455,7 @@ extension on TranslationsEn {
 			'budget.periodRange' => ({required Object start, required Object end}) => '${start} – ${end}',
 			'budget.periodStartRow' => ({required Object date, required Object range}) => 'Starts ${date} · ${range}',
 			'budget.itemsLabel' => 'Budget items',
-			'budget.itemsHelp' => 'Planned purchases or planned transfers. The budget total is the sum of all items.',
+			'budget.itemsHelp' => 'Planned spending or transfers. The budget total is the sum of all items.',
 			'budget.addItemAction' => 'Add item',
 			'budget.saveAddAction' => 'Save budget',
 			'budget.archiveAction' => 'Archive budget',
@@ -2184,7 +2488,7 @@ extension on TranslationsEn {
 			'budget.detailHowTitle' => 'How budget items work',
 			'budget.unknownWallet' => 'Wallet not found',
 			'budget.totalPlannedLabel' => 'Planned total',
-			'budget.itemsRequiredHint' => 'Add at least one item. Transactions are recorded against items, so a budget without items cannot track spending.',
+			'budget.itemsRequiredHint' => 'Add at least one item. Spending is tracked per item, so a budget without items can\'t track anything.',
 			'budget.walletUnchangedNote' => ({required Object wallet}) => '${wallet} balance unchanged',
 			'budget.itemKindLabel' => 'Item type',
 			'budget.itemKindExpense' => 'Expense',
@@ -2192,7 +2496,7 @@ extension on TranslationsEn {
 			'budget.itemKindLockedHint' => 'The type can\'t be changed because this item already has linked transactions.',
 			'budget.itemTargetWalletLabel' => 'Destination wallet',
 			'budget.itemTargetWalletHelp' => 'Only transfers from the budget wallet to this wallet count toward the item.',
-			'budget.itemNoTargetWallet' => 'You need another active wallet as the transfer destination.',
+			'budget.itemNoTargetWallet' => 'Add another active wallet to use as the transfer destination.',
 			'budget.itemTransferTo' => ({required Object wallet}) => 'To ${wallet}',
 			'budget.itemTargetConflict' => ({required Object name}) => 'Transfer item "${name}" points to the budget\'s own wallet. Change the item\'s destination or the budget wallet.',
 			'budget.templatesAction' => 'Budget templates',
@@ -2213,7 +2517,7 @@ extension on TranslationsEn {
 			'budget.templatesEmptyTitle' => 'No templates yet',
 			'budget.templatesEmptyBody' => 'Save item sets you use often, such as monthly groceries, so your next budget is one tap away.',
 			'budget.templateNeedsWallet' => 'Create an active wallet first to use a template.',
-			'budget.templatesLoadError' => 'Templates failed to load',
+			'budget.templatesLoadError' => 'Couldn\'t load templates',
 			'budget.templateAddTitle' => 'Create template',
 			'budget.templateEditTitle' => 'Edit template',
 			'budget.templateRuleBody' => 'A template keeps your set of plan items. The wallet and period are chosen when you use it.',
@@ -2230,9 +2534,11 @@ extension on TranslationsEn {
 			'budget.templateDuplicatedMessage' => 'Template duplicated.',
 			'budget.templateCopyName' => ({required Object name}) => '${name} (copy)',
 			'budget.templateNameLabel' => 'Template name',
+			_ => null,
+		} ?? switch (path) {
 			'budget.repeatLabel' => 'Repeat every period',
-			'budget.repeatHelpMonthly' => ({required Object date}) => 'Starts again every month from ${date} with the same items.',
-			'budget.repeatHelpWeekly' => ({required Object date}) => 'Starts again every week from ${date} with the same items.',
+			'budget.repeatHelpMonthly' => ({required Object date}) => 'Repeats every month from ${date} with the same items.',
+			'budget.repeatHelpWeekly' => ({required Object date}) => 'Repeats every week from ${date} with the same items.',
 			'budget.repeatUnavailable' => 'Monthly budgets can repeat when they start on the 1st–28th.',
 			'budget.repeatPastNote' => 'This period has ended. Changes here don\'t affect later periods.',
 			'budget.scopeTitle' => 'Apply to',
@@ -2241,21 +2547,21 @@ extension on TranslationsEn {
 			'budget.recurringBadge' => 'Repeats',
 			'budget.templateScheduledMonthly' => ({required Object wallet}) => 'Repeats monthly · ${wallet}',
 			'budget.templateScheduledWeekly' => ({required Object wallet}) => 'Repeats weekly · ${wallet}',
-			'budget.dayOfPeriod' => ({required Object day, required Object total}) => 'Day ${day} of ${total}',
+			'budget.dayOfPeriod' => ({required Object day, required Object total}) => 'Day ${day}/${total}',
 			'freelance.title' => 'Freelance',
 			'freelance.worklogTab' => ({required Object count}) => 'Work hours (${count})',
 			'freelance.paymentsTab' => ({required Object count}) => 'Invoices (${count})',
-			'freelance.loadErrorTitle' => 'Freelance data failed to load',
+			'freelance.loadErrorTitle' => 'Couldn\'t load Freelance data',
 			'freelance.ruleTitle' => 'How Freelance records',
-			'freelance.ruleBody' => 'Work hours add up to an invoice, and your wallet balance grows when the invoice is recorded as received.',
+			'freelance.ruleBody' => 'Work hours add up to an invoice, and your wallet balance goes up when you record the invoice as paid.',
 			'freelance.hoursValue' => ({required Object hours}) => '${hours} h',
 			'freelance.hourShort' => 'h',
 			'freelance.projectCount' => ({required Object count}) => 'Projects: ${count}',
 			'freelance.earnedLabel' => 'Total earned',
-			'freelance.paidLabel' => 'Received',
-			'freelance.unpaidLabel' => 'Not received',
+			'freelance.paidLabel' => 'Paid',
+			'freelance.unpaidLabel' => 'Unpaid',
 			'freelance.projectsLabel' => 'Projects',
-			'freelance.projectsEmpty' => 'No projects yet. Add a client or project with its hourly rate first.',
+			'freelance.projectsEmpty' => 'No projects yet. Add a client or project and its hourly rate to get started.',
 			'freelance.projectAddTitle' => 'Add project',
 			'freelance.projectEditTitle' => 'Edit project',
 			'freelance.projectNameLabel' => 'Client or project name',
@@ -2278,10 +2584,10 @@ extension on TranslationsEn {
 			'freelance.deductionRemoveAction' => 'Remove deduction',
 			'freelance.projectSaveAction' => 'Save project',
 			'freelance.projectDeleteAction' => 'Delete project',
-			'freelance.projectDeleteLockedHint' => 'A project with recorded work hours cannot be deleted.',
+			'freelance.projectDeleteLockedHint' => 'Projects with recorded work hours can\'t be deleted.',
 			'freelance.projectDeleteConfirmTitle' => 'Delete project?',
 			'freelance.projectDeleteConfirmMessage' => ({required Object name}) => 'Project "${name}" will be deleted.',
-			'freelance.projectDeleteRefused' => 'This project has recorded work hours, so it cannot be deleted.',
+			'freelance.projectDeleteRefused' => 'This project has recorded work hours, so it can\'t be deleted.',
 			'freelance.projectSavedMessage' => 'Project saved.',
 			'freelance.projectUpdatedMessage' => 'Project changes saved.',
 			'freelance.projectDeletedMessage' => 'Project deleted.',
@@ -2289,35 +2595,35 @@ extension on TranslationsEn {
 			'freelance.projectPick' => 'Choose a project',
 			'freelance.entryAddTitle' => 'Record work hours',
 			'freelance.entryEditTitle' => 'Edit work hours',
-			'freelance.entryRuleBody' => 'Work hours add up to an invoice. The money reaches your balance when the invoice is recorded as received.',
+			'freelance.entryRuleBody' => 'Work hours add up to an invoice. The money reaches your balance when you record the invoice as paid.',
 			'freelance.workDateLabel' => 'Work date',
 			'freelance.hoursLabel' => 'Duration',
-			'freelance.entryRateHelp' => 'Filled from the project rate. Change it if this rate is different.',
+			'freelance.entryRateHelp' => 'Pre-filled from the project rate. Edit it if this one\'s different.',
 			'freelance.noteLabel' => 'Note',
 			'freelance.noteHint' => 'What was done (optional)',
 			'freelance.entrySaveAction' => 'Save work hours',
-			'freelance.entrySaveHint' => 'This amount is recorded as earned, not yet received.',
+			'freelance.entrySaveHint' => 'Counted as earned, not paid yet.',
 			'freelance.entryDeleteAction' => 'Delete work hours',
 			'freelance.entryDeleteConfirmTitle' => 'Delete these work hours?',
 			'freelance.entryDeleteConfirmMessage' => 'These work hours are deleted. Wallet balances do not change.',
-			'freelance.entryLockedMessage' => 'Work hours already on an invoice cannot be edited or deleted.',
+			'freelance.entryLockedMessage' => 'Work hours already on an invoice can\'t be edited or deleted.',
 			'freelance.entrySavedMessage' => 'Work hours recorded.',
 			'freelance.entryUpdatedMessage' => 'Work hours changes saved.',
 			'freelance.entryDeletedMessage' => 'Work hours deleted.',
 			'freelance.hoursTimesRate' => ({required Object hours, required Object rate}) => '${hours} h × ${rate}',
 			'freelance.statusUnbilled' => 'Unbilled',
 			'freelance.statusPending' => 'Pending',
-			'freelance.statusPaid' => 'Received',
+			'freelance.statusPaid' => 'Paid',
 			'freelance.expectedOn' => ({required Object date}) => 'Expected ${date}',
-			'freelance.receivedOn' => ({required Object date, required Object wallet}) => 'Received ${date} in ${wallet}',
+			'freelance.receivedOn' => ({required Object date, required Object wallet}) => 'Paid ${date} to ${wallet}',
 			'freelance.unknownProject' => 'Deleted project',
 			'freelance.unknownWallet' => 'deleted wallet',
 			'freelance.pendingTotalLabel' => 'Pending (net)',
 			'freelance.paymentAddTitle' => 'Create invoice',
-			'freelance.paymentCreateRuleBody' => 'An invoice groups unbilled work hours. Once it is recorded as received, your wallet balance grows.',
+			'freelance.paymentCreateRuleBody' => 'An invoice groups unbilled work hours. Once you record it as paid, your wallet balance goes up.',
 			'freelance.paymentEntriesLabel' => ({required Object count, required Object hours}) => 'Invoiced: ${count} records, ${hours} h',
 			'freelance.paymentEntriesSummary' => ({required Object count, required Object hours}) => '${count} records · ${hours} h',
-			'freelance.expectedDateLabel' => 'Expected date received',
+			'freelance.expectedDateLabel' => 'Expected payment date',
 			'freelance.grossPayLabel' => 'Gross pay',
 			'freelance.netPayLabel' => 'Net pay',
 			'freelance.netPayNotPositive' => 'Deductions cannot equal or exceed gross pay.',
@@ -2327,29 +2633,27 @@ extension on TranslationsEn {
 			'freelance.paymentDeleteConfirmTitle' => 'Delete invoice?',
 			'freelance.paymentDeleteConfirmMessage' => 'This pending invoice is deleted and its work hours become unbilled again. Wallet balances do not change.',
 			'freelance.paymentEntriesInvalid' => 'The selected work hours are already invoiced or belong to another project.',
-			'freelance.paymentPaidLocked' => 'A received invoice cannot be deleted. Cancel its receipt first.',
-			'freelance.paymentAlreadyPaid' => 'This invoice is already recorded as received.',
+			'freelance.paymentPaidLocked' => 'A paid invoice can\'t be deleted. Undo its payment first.',
+			'freelance.paymentAlreadyPaid' => 'This invoice is already marked as paid.',
 			'freelance.paymentCreatedMessage' => 'Invoice created.',
 			'freelance.paymentUpdatedMessage' => 'Invoice date updated.',
 			'freelance.paymentDeletedMessage' => 'Invoice deleted.',
-			'freelance.receiveTitle' => 'Record invoice received',
+			'freelance.receiveTitle' => 'Record payment',
 			'freelance.receiveRuleTitle' => 'Payment received',
-			'freelance.receiveRuleBody' => 'Record it once the money has reached you. The chosen wallet grows by the net pay, and this invoice is marked paid.',
+			'freelance.receiveRuleBody' => 'Record it once the money arrives. The wallet you choose goes up by the net pay, and the invoice is marked as paid.',
 			'freelance.receiveAmountLabel' => 'Amount received',
 			'freelance.receiveWalletLabel' => 'Receiving wallet',
-			'freelance.receiveDateLabel' => 'Date received',
+			'freelance.receiveDateLabel' => 'Payment date',
 			'freelance.receiveNoteDefault' => ({required Object project}) => 'Freelance invoice ${project}',
-			'freelance.receiveAction' => 'Record received',
-			'freelance.paymentReceivedMessage' => 'Invoice recorded as received. Wallet balance increased.',
-			_ => null,
-		} ?? switch (path) {
-			'freelance.receiptCancelAction' => 'Cancel receipt',
-			'freelance.receiptCancelConfirmTitle' => 'Cancel receipt?',
-			'freelance.receiptCancelConfirmMessage' => 'Its income is deleted and the wallet balance goes back down. The invoice is pending again.',
-			'freelance.receiptCancelledMessage' => 'Receipt cancelled. The invoice is pending again.',
+			'freelance.receiveAction' => 'Record payment',
+			'freelance.paymentReceivedMessage' => 'Invoice marked as paid. Wallet balance updated.',
+			'freelance.receiptCancelAction' => 'Undo payment',
+			'freelance.receiptCancelConfirmTitle' => 'Undo payment?',
+			'freelance.receiptCancelConfirmMessage' => 'The income is deleted and your wallet balance goes back down. The invoice becomes pending again.',
+			'freelance.receiptCancelledMessage' => 'Payment undone. The invoice is pending again.',
 			'freelance.changeAction' => 'Change',
 			'freelance.receiptCancelConfirmAction' => 'Delete income',
-			'freelance.billAction' => ({required Object count}) => 'Bill (${count})',
+			'freelance.billAction' => ({required Object count}) => 'Invoice (${count})',
 			'freelance.entriesEmptyTitle' => 'No work hours yet',
 			'freelance.entriesEmptyBody' => 'The work hours you record become this project\'s invoices.',
 			'freelance.entriesFilteredEmpty' => 'No work hours with this status.',
@@ -2360,13 +2664,13 @@ extension on TranslationsEn {
 			'freelance.projectsEmptyTitle' => 'No projects yet',
 			'freelance.unbilledLabel' => 'Unbilled',
 			'freelance.paymentsEmptyTitle' => 'No invoices yet',
-			'freelance.paymentsEmptyBody' => 'Group unbilled work hours into one invoice, then record it when you are paid.',
+			'freelance.paymentsEmptyBody' => 'Group unbilled work hours into one invoice, then record it when you get paid.',
 			'freelance.paymentsFilteredEmpty' => 'No invoices with this status.',
 			'freelance.nextExpected' => ({required Object count, required Object date}) => 'Invoices: ${count} · next ${date}',
 			'freelance.paymentWorkRange' => ({required Object range}) => 'Work ${range}',
-			'freelance.paidOffBadge' => 'Paid off',
+			'freelance.paidOffBadge' => 'Paid',
 			'home.flowTitle' => ({required Object period}) => 'Flow ${period}',
-			'home.loadErrorTitle' => 'Home failed to load',
+			'home.loadErrorTitle' => 'Couldn\'t load Home',
 			'home.balanceLabel' => 'Total balance',
 			'home.walletCount' => ({required Object count}) => 'Active wallets: ${count}',
 			'home.budgetTitle' => 'Active budgets',
@@ -2400,7 +2704,7 @@ extension on TranslationsEn {
 			'home.budgetSafe' => 'On track',
 			'home.budgetNearlyOut' => 'Almost used up',
 			'home.budgetOverBy' => ({required Object amount}) => 'Over by ${amount}',
-			'home.freelanceRowTitle' => 'Not yet received',
+			'home.freelanceRowTitle' => 'Awaiting payment',
 			'home.freelanceRowSub' => ({required Object count, required Object date}) => '${count} invoices, expected ${date}',
 			'home.incomeStat' => 'Income',
 			'home.expenseStat' => 'Expenses',
@@ -2408,45 +2712,46 @@ extension on TranslationsEn {
 			'onboarding.skipAction' => 'Skip',
 			'onboarding.nextAction' => 'Next',
 			'onboarding.closeAction' => 'Close',
-			'onboarding.pageIndicatorLabel' => ({required Object current, required Object total}) => 'Page ${current} of ${total}',
-			'onboarding.page1Title' => 'All your money, one book',
-			'onboarding.page1Body' => 'See where your money is, what happens to it, and where you plan for it to go — all in one notebook.',
-			'onboarding.page2Title' => 'Know where your money is',
-			'onboarding.page2Body' => 'Bank accounts, e-wallets, and cash become wallets. Each wallet\'s balance and the total are always in view.',
+			'onboarding.pageIndicatorLabel' => ({required Object current, required Object total}) => 'Page ${current}/${total}',
+			'onboarding.page1Title' => 'All your finances, right in your pocket',
+			'onboarding.page1Body' => 'See where your money is, track your transactions, and plan your spending, all in one app.',
+			'onboarding.page2Title' => 'Track all your balances with ease',
+			'onboarding.page2Body' => 'Add your bank accounts, e-wallets, and cash as wallets. Each balance and your total are always in view.',
 			'onboarding.page3Title' => 'Record in seconds',
-			'onboarding.page3Body' => 'Income, expense, or moving between wallets — tap Record. Your usual wallets and favorite categories are ready.',
-			'onboarding.page4Title' => 'Plan, then track',
-			'onboarding.page4Body' => 'Set weekly or monthly budgets with your spending items. Your balance stays intact, and you see how much of the plan is used.',
+			'onboarding.page3Body' => 'Income, expense, or a transfer between wallets? Just tap Record. Your usual wallets and favorite categories are ready.',
+			'onboarding.page4Title' => 'Set budgets, track spending',
+			'onboarding.page4Body' => 'Set weekly or monthly budgets with your spending items, then see how much you\'ve used. Budgets don\'t change your wallet balances, so you stay on plan.',
 			'onboarding.finalTitle' => 'Start with your first wallet',
-			'onboarding.finalBody' => 'Add one wallet, then record your first transaction. On every screen, the tanuki will show you the way.',
+			'onboarding.finalBody' => 'Add one wallet, then record your first transaction. The tanuki will guide you on every screen.',
 			'onboarding.createWalletAction' => 'Add wallet',
 			'onboarding.laterAction' => 'Maybe later',
 			'onboarding.signInAction' => 'Have an account? Sign in',
+			'onboarding.restoreAction' => 'Have a backup? Restore it',
 			'onboarding.backAction' => 'Back',
 			'onboarding.currencyTitle' => 'Choose your currency',
-			'onboarding.currencyBody' => 'Every amount in Tanukonomy uses this currency. You can change it later on the Account screen, but amounts you\'ve already recorded aren\'t converted.',
+			'onboarding.currencyBody' => 'Every amount in Tanukonomy uses this currency. You can change it later in Account, but amounts you\'ve already recorded won\'t be converted.',
 			'onboarding.currencySuggested' => 'Matches your device region',
 			'onboarding.currencyChooseFirst' => 'Choose a currency first',
 			'onboarding.currencyConfirm' => ({required Object code}) => 'Use ${code}',
-			'onboarding.periodTitle' => 'When does your monthly cycle start?',
-			'onboarding.periodBody' => 'Your budget plan and financial analysis will start on this date each month. You can change this anytime in Account.',
+			'onboarding.periodTitle' => 'When does your financial month start?',
+			'onboarding.periodBody' => 'Budgets and analysis start on this date each month. You can change it anytime in Account.',
 			'onboarding.periodConfirm' => ({required Object day}) => 'Use day ${day}',
 			'onboarding.periodConfirmLast' => 'Use the last day',
-			'onboarding.reminderTitle' => 'Remind you before things are due?',
-			'onboarding.reminderBody' => 'You get a reminder before a recurring item is due, based on each item\'s settings.',
+			'onboarding.reminderTitle' => 'Get reminded before bills are due?',
+			'onboarding.reminderBody' => 'We\'ll remind you before recurring bills are due, based on each one\'s settings.',
 			'onboarding.turnOn' => 'Turn on',
 			'onboarding.notNow' => 'Not now',
-			'onboarding.notificationInfo' => 'You can record automatically from bank notifications. Turn it on from Home.',
+			'onboarding.notificationInfo' => 'Transactions can be recorded automatically from bank notifications. Turn it on from Home.',
 			'onboarding.summaryPeriod' => 'Financial month start',
 			'onboarding.summaryReminder' => 'Recurring reminders',
 			'onboarding.languageTitle' => 'Choose your language',
-			'onboarding.languageBody' => 'Used for the app and when recording by voice. You can change it later on the Account screen.',
+			'onboarding.languageBody' => 'Used for the app and voice recording. You can change it later in Account.',
 			'onboarding.languageConfirm' => 'Continue',
 			'tour.nextAction' => 'Next',
 			'tour.doneAction' => 'Done',
 			'tour.skipAction' => 'Skip tour',
 			'tour.stepCounter' => ({required Object current, required Object total}) => '${current}/${total}',
-			'tour.stepSemantics' => ({required Object current, required Object total, required Object title, required Object body}) => 'Step ${current} of ${total}: ${title}. ${body}',
+			'tour.stepSemantics' => ({required Object current, required Object total, required Object title, required Object body}) => 'Step ${current}/${total}: ${title}. ${body}',
 			'tour.homeBalanceTitle' => 'Total recorded balance',
 			'tour.homeBalanceBody' => 'The sum of all active wallets — where your money stands at a glance.',
 			'tour.homeRecordTitle' => 'One door for recording',
@@ -2456,49 +2761,49 @@ extension on TranslationsEn {
 			'tour.homeBudgetTitle' => 'Active budget left',
 			'tour.homeBudgetBody' => 'What\'s left of the plan in budgets running now. Tap for details.',
 			'tour.homeFreelanceTitle' => 'Freelance summary',
-			'tour.homeFreelanceBody' => 'Income you\'ve earned and what\'s still pending. A wallet balance only goes up when an invoice is recorded as received.',
+			'tour.homeFreelanceBody' => 'Income you\'ve earned and what\'s still pending. A wallet balance only goes up when you record an invoice as paid.',
 			'tour.homeRecentTitle' => 'Recent transactions',
 			'tour.homeRecentBody' => 'Your latest records. Tap one for details, or See all for the month-by-month history.',
 			'tour.recordKindTitle' => 'Pick the kind',
 			'tour.recordKindBody' => 'An expense lowers a balance, income raises it, and a transfer only moves money between your wallets — your total stays the same.',
 			'tour.recordFreelanceTitle' => 'Freelance pay has its own path',
-			'tour.recordFreelanceBody' => 'Project pay is recorded as a received invoice in Freelance, so its work hours and invoice are settled too.',
+			'tour.recordFreelanceBody' => 'Record project pay as a paid invoice in Freelance, so its work hours and invoice are settled too.',
 			'tour.recordAmountTitle' => 'Amount',
-			'tour.recordAmountBody' => 'Type the amount on the keypad.',
-			'tour.recordWalletTitle' => 'Wallet filled in for you',
+			'tour.recordAmountBody' => 'Enter the amount on the keypad.',
+			'tour.recordWalletTitle' => 'Wallet pre-selected',
 			'tour.recordWalletBody' => 'The wallet you used last is already selected. Change it if needed.',
 			'tour.recordBudgetItemTitle' => 'Link to a budget',
-			'tour.recordBudgetItemBody' => 'Optional. A linked expense adds to that item\'s used amount, as long as its date is inside the budget period.',
+			'tour.recordBudgetItemBody' => 'Optional. A linked expense counts toward that item\'s spent amount, as long as its date falls within the budget period.',
 			'tour.walletSummaryTitle' => 'Total across wallets',
 			'tour.walletSummaryBody' => 'The sum of recorded balances of active wallets.',
 			'tour.walletCardTitle' => 'Wallet details',
 			'tour.walletCardBody' => 'Tap to see this wallet\'s history and record straight from there.',
 			'tour.walletAddTitle' => 'Add a wallet',
-			'tour.walletAddBody' => 'Bank account, e-wallet, or cash. Its starting balance can be changed anytime, and the recorded balance follows.',
+			'tour.walletAddBody' => 'Bank account, e-wallet, or cash. You can change its starting balance anytime, and the balance updates with it.',
 			'tour.txnMonthTitle' => 'One period per view',
 			'tour.txnMonthBody' => 'Switch periods to see other history. List and Analysis always use the same period.',
 			'tour.txnFilterTitle' => 'Search and filter',
 			'tour.txnFilterBody' => 'Search notes or categories, then filter by wallet and category with Filter. If this month has no match, the search can continue into other months.',
 			'tour.txnRowTitle' => 'Edit or delete',
-			'tour.txnRowBody' => 'Tap a transaction for its details; from there you can edit, record it again, or delete it, and balances are recalculated.',
+			'tour.txnRowBody' => 'Tap a transaction to see its details. From there you can edit, record it again, or delete it, and balances update automatically.',
 			'tour.budgetSummaryTitle' => 'Left across active budgets',
-			'tour.budgetSummaryBody' => 'Plan minus used — the spending room left across your active budgets.',
+			'tour.budgetSummaryBody' => 'Planned minus spent: what you have left across your active budgets.',
 			'tour.budgetFilterTitle' => 'Active first',
 			'tour.budgetFilterBody' => 'The list shows active budgets. Choose Finished or Inactive to see older ones.',
 			'tour.budgetTemplatesTitle' => 'Use templates',
 			'tour.budgetTemplatesBody' => 'Save a recurring set of items, then create new budgets from it.',
 			'tour.budgetDetailItemTitle' => 'Budget item',
-			'tour.budgetDetailItemBody' => 'Used goes up from transactions linked to this item within the budget period.',
+			'tour.budgetDetailItemBody' => 'Spent goes up with transactions linked to this item within the budget period.',
 			'tour.budgetDetailRecordTitle' => 'Record from an item',
 			'tour.budgetDetailRecordBody' => 'Opens Record with this item already selected.',
 			'tour.freelanceProjectTitle' => 'Projects and rates',
 			'tour.freelanceProjectBody' => 'Each project has an hourly rate and deductions. Tap a project to record hours and invoices.',
 			'tour.freelanceWorklogTitle' => 'Hours worked',
 			'tour.freelanceWorklogBody' => 'Work hours are income you\'ve earned. Group them into an invoice, then record it when you\'re paid.',
-			'tour.freelanceReceiveTitle' => 'Money actually arrives',
-			'tour.freelanceReceiveBody' => 'Record it when the pay arrives: your wallet balance grows and the invoice is settled.',
+			'tour.freelanceReceiveTitle' => 'When the money arrives',
+			'tour.freelanceReceiveBody' => 'Record it when you get paid: your wallet balance goes up and the invoice is settled.',
 			'tour.accountStatusTitle' => 'Recording status',
-			'tour.accountStatusBody' => 'See whether recording from notifications and recurring reminders are on. Tap a row to change it.',
+			'tour.accountStatusBody' => 'See if recording from notifications and recurring reminders are on. Tap a row to change it.',
 			'tour.homeVoiceTitle' => 'Record by voice',
 			'tour.homeVoiceBody' => 'Long-press the Record button, say one transaction, then check the form before recording it.',
 			'tour.planTabsTitle' => 'Plan',
@@ -2506,35 +2811,35 @@ extension on TranslationsEn {
 			'tour.planUnplannedTitle' => 'Unplanned money',
 			'tour.planUnplannedBody' => 'This month’s income minus everything already committed.',
 			'tour.planForecastTitle' => 'Wallet balance ≈',
-			'tour.planForecastBody' => 'Forecast balance to month end, including its lowest point.',
+			'tour.planForecastBody' => 'Forecast balance through month end, including the lowest it\'s expected to reach.',
 			'tour.homeForecastTitle' => 'Balance forecast',
 			'tour.homeForecastBody' => 'Your forecast wallet balance at month end and its lowest point. Tap for the breakdown in Plan.',
 			'tour.homePendingTitle' => 'Waiting to record',
 			'tour.homePendingBody' => 'Recurring bills and income that are due. Record in one tap, edit first, or Skip.',
 			'tour.homeNotificationTitle' => 'Record from notifications',
-			'tour.homeNotificationBody' => 'Pick your bank or e-wallet apps and their transaction notifications become draft entries. This card is always here.',
+			'tour.homeNotificationBody' => 'Pick your bank or e-wallet apps and their transaction notifications become draft transactions. This card is always here.',
 			'tour.homeReminderTitle' => 'Recurring reminders',
 			'tour.homeReminderBody' => 'Turn them on to get reminded before bills are due. This card goes away once reminders are on.',
 			'tour.recordRepeatTitle' => 'Repeat',
-			'tour.recordRepeatBody' => 'For bills, salary, or subscriptions. Each next occurrence waits for you to record it; nothing is recorded silently.',
+			'tour.recordRepeatBody' => 'For bills, salary, or subscriptions. The next one waits for your confirmation; nothing is recorded silently.',
 			'tour.recurringStartersTitle' => 'Quick start',
 			'tour.recurringStartersBody' => 'Pick a common one, like salary or electricity. The form is filled in; just adjust it.',
 			'tour.recurringSummaryTitle' => 'Recurring still to go out',
-			'tour.recurringSummaryBody' => 'Recurring bills not yet recorded this month — money that already has somewhere to go.',
+			'tour.recurringSummaryBody' => 'Recurring bills not yet recorded this month: money that\'s already spoken for.',
 			'tour.recurringPendingTitle' => 'Waiting to record',
-			'tour.recurringPendingBody' => 'Occurrences that are due. Record in one tap, edit first, or Skip this one.',
+			'tour.recurringPendingBody' => 'Recurring items that are due. Record in one tap, edit first, or Skip this one.',
 			'tour.recurringAddTitle' => 'Add recurring',
 			'tour.recurringAddBody' => 'You can also use Repeat in Record, or Make recurring in a transaction\'s details.',
 			'tour.budgetRepeatTitle' => 'Repeat every period',
-			'tour.budgetRepeatBody' => 'Turn on to start this budget again every month with the same items. No money is moved.',
+			'tour.budgetRepeatBody' => 'Turn on to repeat this budget every month with the same items. No money is moved.',
 			'tour.planMonthPickerTitle' => 'Next months',
 			'tour.planMonthPickerBody' => 'See the forecast for the next two months. Each month shows its estimated month-end figure.',
 			'tour.planPeriodHeaderTitle' => 'Your financial month',
 			'tour.planPeriodHeaderBody' => 'Tap to start the month on your payday. Plan and Analysis follow it.',
 			'tour.planTransitionTitle' => 'Transition period',
-			'tour.planTransitionBody' => 'This period is longer or shorter once because your month start changed. The next one is a full month again.',
+			'tour.planTransitionBody' => 'This period is longer or shorter than usual because your month start changed. The next one goes back to a full month.',
 			'tour.txnAnalysisSegmentTitle' => 'Analysis',
-			'tour.txnAnalysisSegmentBody' => 'See where your money goes by category and compare it with usual.',
+			'tour.txnAnalysisSegmentBody' => 'See your spending by category and compare it with usual.',
 			'tour.analysisCategoriesTitle' => 'By category',
 			'tour.analysisCategoriesBody' => 'Tap a slice or row to see one category, then open its details.',
 			'tour.analysisUncategorizedTitle' => 'Uncategorized',
@@ -2551,10 +2856,10 @@ extension on TranslationsEn {
 			'info.resetDoneMessage' => 'Tutorials reset.',
 			'account.title' => 'Account',
 			'account.signedOutTitle' => 'Set up your account',
-			'account.signedOutBody' => 'Everything you record works fully without an account. An account prepares you for the backup and cross-device sync we\'re building.',
+			'account.signedOutBody' => 'Everything you record works fully without an account. An account will be used for backup and cross-device sync, which we\'re building.',
 			'account.googleSignInAction' => 'Sign in with Google',
 			'account.emailSignInToggle' => 'Sign in with email',
-			'account.emailFormHint' => 'For accounts that were created for you.',
+			'account.emailFormHint' => 'For accounts we\'ve set up for you.',
 			'account.emailLabel' => 'Email',
 			'account.passwordLabel' => 'Password',
 			'account.emailSignInAction' => 'Sign in',
@@ -2563,14 +2868,12 @@ extension on TranslationsEn {
 			'account.signedOutMessage' => 'You\'re signed out.',
 			'account.methodGoogle' => 'Signed in with Google',
 			'account.methodPassword' => 'Signed in with email',
-			'account.dataTitle' => 'Your data',
-			'account.dataBody' => 'Wallets, transactions, and budgets are stored on this device. Signing out or deleting your account doesn\'t touch them.',
 			'account.signOutAction' => 'Sign out',
 			'account.dangerTitle' => 'Danger zone',
 			'account.dangerBody' => 'Deleting your account is permanent and can\'t be undone.',
 			'account.deleteAction' => 'Delete account',
 			'account.deleteConfirmTitle' => 'Delete account?',
-			'account.deleteConfirmBody' => 'Your account is permanently deleted. Wallets, transactions, and budgets on this device stay.',
+			'account.deleteConfirmBody' => 'Your account will be permanently deleted. Wallets, transactions, and budgets on this device stay.',
 			'account.deletePasswordTitle' => 'Enter your password',
 			'account.deletePasswordBody' => 'For your security, enter your password again to delete your account.',
 			'account.deletedMessage' => 'Account deleted.',
@@ -2581,7 +2884,7 @@ extension on TranslationsEn {
 			'account.errors.other' => 'Couldn\'t sign in. Try again.',
 			'account.recordingSection' => 'Recording',
 			'account.displaySection' => 'Display',
-			'account.hideAmountsBody' => 'Replace numbers with dots on every screen, e.g. when opening the app around others.',
+			'account.hideAmountsBody' => 'Replace numbers with dots on every screen, handy when you open the app around others.',
 			'account.appSection' => 'App',
 			'account.version.label' => 'App version',
 			'account.version.value' => ({required Object version, required Object build}) => '${version} (${build})',
@@ -2643,7 +2946,7 @@ extension on TranslationsEn {
 			'category.archiveAction' => 'Archive',
 			'category.restoreAction' => 'Restore',
 			'category.archivedSection' => 'Archived',
-			'category.archivedHint' => 'Not offered when recording, but old transactions keep it.',
+			'category.archivedHint' => 'Won\'t appear when recording, but old transactions keep it.',
 			'category.emptyActive' => 'No active categories yet.',
 			'category.archivedMessage' => ({required Object name}) => '"${name}" archived.',
 			'category.restoredMessage' => ({required Object name}) => '"${name}" restored.',
@@ -2666,11 +2969,11 @@ extension on TranslationsEn {
 			'discovery.notification.manageSources' => 'Manage apps & patterns',
 			'discovery.notification.teachPattern' => 'Teach pattern',
 			'discovery.reminder.button' => 'Turn on recurring reminders',
-			'discovery.reminder.body' => 'Reminded before bills are due.',
-			'discovery.reminder.rowNote' => 'Reminders aren\'t on for all recurring items yet.',
+			'discovery.reminder.body' => 'Get reminded before bills are due.',
+			'discovery.reminder.rowNote' => 'Reminders aren\'t on for every recurring item yet.',
 			'discovery.allowAccess' => 'Allow',
 			'discovery.quickStart.title' => 'Pick your bank or e-wallet apps',
-			'discovery.quickStart.body' => 'Notifications from the apps you pick are read on this device and become draft entries. You review them first.',
+			'discovery.quickStart.body' => 'Notifications from the apps you pick are read on this device and become draft transactions. You review them first.',
 			'discovery.quickStart.other' => 'Other apps',
 			'discovery.quickStart.turnOn' => 'Turn on',
 			'discovery.quickStart.noBuiltIn' => 'No known bank or e-wallet apps on this device. Pick your own app.',
@@ -2680,12 +2983,12 @@ extension on TranslationsEn {
 			'notificationCapture.enableLabel' => 'Turn on',
 			'notificationCapture.accessMissingTitle' => 'Permission needed to read notifications',
 			'notificationCapture.accessMissingBody' => 'Without it, Tanukonomy can\'t see your bank notifications.',
-			'notificationCapture.accessAction' => 'Grant permission',
+			'notificationCapture.accessAction' => 'Allow access',
 			'notificationCapture.accessGranted' => 'Notification permission is on',
 			'notificationCapture.disclosureTitle' => 'Before you grant permission',
 			'notificationCapture.disclosureBody' => 'Tanukonomy will be able to read notifications on your phone.\n\n• Only from apps you pick that match their filter.\n• OTP notifications are never stored.\n• Text that is hard to read may be sent to Gemini (Google).\n• Notification text stays on your phone for at most 7 days.',
 			'notificationCapture.disclosureAccept' => 'Continue',
-			'notificationCapture.reminderPermissionDenied' => 'Notification permission was denied. Turn it on in Android settings to get notified.',
+			'notificationCapture.reminderPermissionDenied' => 'Notification permission was denied. Turn it on in Android settings to get reminders.',
 			'notificationCapture.sourcesTitle' => 'Apps',
 			'notificationCapture.sourcesEmpty' => 'Pick the bank or e-wallet apps whose notifications you want recorded.',
 			'notificationCapture.addSource' => 'Add app',
@@ -2696,7 +2999,7 @@ extension on TranslationsEn {
 			'notificationCapture.builtInPatternsBadge' => 'Built-in patterns',
 			'notificationCapture.appsLoadFailed' => 'Couldn\'t read the app list.',
 			'notificationCapture.appsEmpty' => 'No matching apps.',
-			'notificationCapture.sourceEnabled' => 'Listen to this app',
+			'notificationCapture.sourceEnabled' => 'Read this app\'s notifications',
 			'notificationCapture.walletLabel' => 'Wallet',
 			'notificationCapture.keywordsLabel' => 'Filter',
 			'notificationCapture.keywordsHint' => 'Only notifications containing one of these phrases are read.',
@@ -2705,7 +3008,7 @@ extension on TranslationsEn {
 			'notificationCapture.patternsTitle' => 'Patterns',
 			'notificationCapture.patternsHint' => 'Teach Tanukonomy how to read this app\'s notification format.',
 			'notificationCapture.patternsEmpty' => 'No patterns yet. Tanukonomy still reads with general rules.',
-			'notificationCapture.builtInUnverified' => 'Built-in · you always check the result',
+			'notificationCapture.builtInUnverified' => 'Built-in · you review the results',
 			'notificationCapture.builtInVerified' => 'Built-in',
 			'notificationCapture.newPattern' => 'Make a pattern from an example',
 			'notificationCapture.removeSource' => 'Remove this app',
@@ -2717,7 +3020,36 @@ extension on TranslationsEn {
 			'notificationCapture.patternInstructions' => 'Tap a marked word again to clear its mark.',
 			'notificationCapture.roleAmount' => 'Amount',
 			'notificationCapture.roleNote' => 'Note',
+			'notificationCapture.roleFrom' => 'From',
+			'notificationCapture.roleTo' => 'To',
+			'notificationCapture.roleFromHelp' => 'From: the source wallet name of a transfer, Matched against this app\'s wallet rules.',
+			'notificationCapture.roleToHelp' => 'To: the destination wallet name of a transfer. Matched against this app\'s wallet rules.',
+			'notificationCapture.kindTransferBetween' => 'Transfer between wallets',
+			'notificationCapture.patternBetweenHint' => 'Source and destination wallets are read from the text through the wallet rules on the app page.',
+			'notificationCapture.walletRulesTitle' => 'Other wallets in this app',
+			'notificationCapture.walletRulesHint' => 'For apps with several wallets. If the notification contains the keyword, that wallet is used; otherwise the main wallet above.',
+			'notificationCapture.walletRuleKeywordsField' => 'Keywords, separated by commas',
+			'notificationCapture.walletRuleAdd' => 'Add wallet',
+			'notificationCapture.walletRuleRemove' => 'Remove',
+			'notificationCapture.walletRuleNeedsKeywords' => 'Enter at least one keyword',
+			'notificationCapture.bindingTitle' => 'Bind to a recurring item',
+			'notificationCapture.bindingHint' => 'Notifications that match a bound pattern are recorded as that recurring item. If the amount or schedule does not fit, they go to the inbox instead of being guessed.',
+			'notificationCapture.bindingNone' => 'Not bound',
+			'notificationCapture.samplesToggle' => 'Save notification samples',
+			'notificationCapture.samplesHint' => 'To build filters and patterns from this app\'s notifications. Kept on this device for 7 days, never sent anywhere.',
+			'notificationCapture.samplesTitle' => 'Recent notifications',
+			'notificationCapture.samplesEmpty' => 'No samples yet. Notifications from this app that arrive from now on will show up here.',
+			'notificationCapture.samplesFilter' => 'Use as filter',
+			'notificationCapture.samplesPattern' => 'Create pattern',
+			'notificationCapture.samplesFilterTitle' => 'Pick a filter phrase',
+			'notificationCapture.samplesFilterHint' => 'Tap words to build a phrase, or type your own. Choose a phrase that only appears in transaction notifications.',
+			'notificationCapture.samplesDisclosureTitle' => 'Save notification samples?',
+			'notificationCapture.samplesDisclosureBody' => 'Tanukonomy will keep the text of notifications from the apps you chose, including non-transaction ones, for 7 days on this device. It is used only to build filters and patterns. OTP codes are never saved, and this text is not sent to any server. You can turn it off at any time; all samples are deleted right away.',
+			'notificationCapture.samplesDisclosureCancel' => 'Cancel',
+			'notificationCapture.samplesDisclosureAgree' => 'Turn on',
 			'notificationCapture.roleIgnore' => 'Ignore',
+			_ => null,
+		} ?? switch (path) {
 			'notificationCapture.patternKindLabel' => '3. Transaction type',
 			'notificationCapture.kindExpense' => 'Out',
 			'notificationCapture.kindIncome' => 'In',
@@ -2746,6 +3078,7 @@ extension on TranslationsEn {
 			'notificationCapture.reviewReason.walletUnknown' => 'Wallet not recognized',
 			'notificationCapture.reviewReason.categoryUnclear' => 'Category unclear',
 			'notificationCapture.reviewReason.dateUnclear' => 'Date unclear',
+			'notificationCapture.reviewReason.recurringUnclear' => 'Recurring unclear',
 			'notificationCapture.recordAction' => 'Record',
 			'notificationCapture.dismissAction' => 'Dismiss',
 			'notificationCapture.makePatternAction' => 'Make a pattern from this text',
@@ -2760,7 +3093,7 @@ extension on TranslationsEn {
 			'notificationCapture.autoRecordedSnack' => ({required Object amount, required Object app}) => 'Recorded automatically: ${amount} · ${app}',
 			'notificationCapture.autoRecordedSnackMany' => ({required Object n}) => '${n} transactions recorded automatically from notifications',
 			'notificationCapture.reminderChannel' => 'Record from notifications',
-			'notificationCapture.reminderCapturedTitle' => 'Transaction from {app} captured',
+			'notificationCapture.reminderCapturedTitle' => 'New transaction from {app}',
 			'notificationCapture.reminderCapturedBody' => 'Tap to view.',
 			'notificationCapture.reminderReviewTitle' => ({required Object amount, required Object app}) => 'Check ${amount} from ${app}',
 			'notificationCapture.reminderReviewBody' => 'Tap to record it.',
@@ -2777,14 +3110,14 @@ extension on TranslationsEn {
 			'notificationCapture.enableHint' => 'Transactions from the bank and e-wallet notifications you pick are recorded for you.',
 			'notificationCapture.inboxEntryTitle' => 'Inbox',
 			'notificationCapture.inboxEntryBody' => 'Check transactions from notifications and undo automatic ones.',
-			'notificationCapture.behaviorTitle' => 'When a transaction is caught',
+			'notificationCapture.behaviorTitle' => 'When a transaction is detected',
 			'notificationCapture.autoRecordLabel' => 'Record automatically',
 			'notificationCapture.autoRecordOffHint' => 'Everything waits for you to check in the inbox.',
-			'notificationCapture.autoRecordOnHint' => 'Clear ones are saved right away. Unsure ones still wait for you.',
+			'notificationCapture.autoRecordOnHint' => 'Clear ones are saved right away. Anything uncertain waits for your review.',
 			'notificationCapture.autoRecordAnyCategoryLabel' => 'Even if the category isn\'t clear',
 			'notificationCapture.autoRecordAnyCategoryHint' => 'You can fill in the category later.',
 			'notificationCapture.reminderLabel' => 'Notify me',
-			'notificationCapture.reminderHint' => 'Get a notification each time a transaction is caught.',
+			'notificationCapture.reminderHint' => 'Get a notification each time a transaction is detected.',
 			'notificationCapture.sourceWallet' => ({required Object name}) => '${name} wallet',
 			'notificationCapture.walletHelp' => 'Transactions from this app are recorded in this wallet.',
 			'notificationCapture.advancedTitle' => 'Filter and patterns',
@@ -2827,16 +3160,17 @@ extension on TranslationsEn {
 			'recurring.paymentAutoDebit' => 'auto-debit',
 			'recurring.paymentManual' => 'I pay it',
 			'recurring.priceUp' => ({required Object amount, required Object usual}) => '${amount}, usually ${usual}',
-			'recurring.emptyTitle' => 'No recurring yet',
-			'recurring.emptyBody' => 'Add what comes every month, then see what is truly free.',
+			'recurring.emptyTitle' => 'No recurring transactions yet',
+			'recurring.emptyBody' => 'Add your regular monthly bills and income, then see what\'s really free.',
 			'recurring.filteredEmpty' => 'Nothing here yet.',
 			'recurring.showAllAction' => 'Show all',
-			'recurring.addAction' => 'Add recurring',
-			'recurring.loadError' => 'Could not load recurring.',
+			'recurring.addAction' => 'Add recurring transaction',
+			'recurring.loadError' => 'Couldn\'t load recurring transactions.',
 			'recurring.retryAction' => 'Try again',
 			'recurring.nextTitle' => 'Next',
 			'recurring.recordedTitle' => 'Recorded',
 			'recurring.skipAction' => 'Skip',
+			'recurring.recordEarlyAction' => 'Record now',
 			'recurring.unskipAction' => 'Undo skip',
 			'recurring.editAction' => 'Edit',
 			'recurring.pauseAction' => 'Pause',
@@ -2844,7 +3178,7 @@ extension on TranslationsEn {
 			'recurring.endAction' => 'End',
 			'recurring.deleteAction' => 'Delete',
 			'recurring.moreActions' => 'More actions',
-			'recurring.deleteTitle' => 'Delete recurring?',
+			'recurring.deleteTitle' => 'Delete recurring transaction?',
 			'recurring.deleteBody' => 'Recorded transactions are kept.',
 			'recurring.detailSchedule' => 'Schedule',
 			'recurring.detailWallet' => 'Wallet',
@@ -2855,8 +3189,6 @@ extension on TranslationsEn {
 			'recurring.progressLine' => ({required Object k, required Object n}) => '${k} of ${n} recorded',
 			'recurring.countLine' => ({required Object n}) => '${n} times',
 			'recurring.pausedLine' => 'Paused',
-			_ => null,
-		} ?? switch (path) {
 			'recurring.reminderLine' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: 'I pay it · reminded ${n} day before', other: 'I pay it · reminded ${n} days before', ), 
 			'recurring.autoDebitLine' => 'Auto-debit',
 			'recurring.pausedMessage' => ({required Object name}) => '${name} paused.',
@@ -2865,10 +3197,10 @@ extension on TranslationsEn {
 			'recurring.deletedMessage' => ({required Object name}) => '${name} deleted.',
 			'recurring.skippedMessage' => ({required Object date}) => '${date} skipped.',
 			'recurring.priceUpdateAction' => ({required Object amount}) => 'Update to ${amount}',
-			'recurring.notFound' => 'This recurring no longer exists.',
+			'recurring.notFound' => 'This recurring transaction no longer exists.',
 			'recurring.noRecorded' => 'Nothing recorded yet.',
 			'recurring.recordedMessage' => ({required Object name}) => '${name} recorded.',
-			'recurring.recordedAllMessage' => ({required Object n}) => '${n} recurring recorded.',
+			'recurring.recordedAllMessage' => ({required Object n}) => '${n} recurring transactions recorded.',
 			'recurring.linkedMessage' => ({required Object name}) => '${name} linked.',
 			'recurring.undoAction' => 'Undo',
 			'recurring.similarTitle' => 'Already recorded?',
@@ -2884,14 +3216,14 @@ extension on TranslationsEn {
 			'recurring.farDateNotice' => ({required Object date}) => 'Scheduled for ${date}. Make sure the date is right.',
 			'recurring.occurrenceNotice' => ({required Object name, required Object date}) => 'Recording ${name} · ${date}',
 			'recurring.matchLabel' => ({required Object name, required Object date}) => 'Matches recurring ${name} · ${date}',
-			'recurring.linkedTitle' => 'Matched to recurring',
+			'recurring.linkedTitle' => 'Matched to a recurring transaction',
 			'recurring.unlinkAction' => 'Unlink',
-			'recurring.unlinkedMessage' => 'Unlinked. The occurrence is waiting again.',
+			'recurring.unlinkedMessage' => 'Unlinked. It\'s waiting to be recorded again.',
 			'recurring.reminderChannelName' => 'Recurring reminders',
 			'recurring.reminderChannelDescription' => 'Recurring bills and income that are due.',
 			'recurring.reminderSoonTitle' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: 'In ${n} day', other: 'In ${n} days', ), 
 			'recurring.reminderTodayTitle' => 'Due today',
-			'recurring.reminderTodayManyTitle' => ({required Object n}) => '${n} recurring due today',
+			'recurring.reminderTodayManyTitle' => ({required Object n}) => '${n} recurring transactions due today',
 			'recurring.alreadyRecordedMessage' => ({required Object name}) => '${name} is already recorded.',
 			'recurring.remindersTitle' => 'Recurring reminders',
 			'recurring.remindersBody' => 'Reminded a day before bills you pay yourself, and on the due day.',
@@ -2899,7 +3231,7 @@ extension on TranslationsEn {
 			'recurring.ruleRemindersLabel' => 'Remind me',
 			'recurring.positionMeta' => ({required Object k, required Object n}) => '${k} of ${n}',
 			'recurring.toWalletMeta' => ({required Object wallet}) => 'to ${wallet}',
-			'recurring.remainingTitle' => ({required Object month}) => 'Recurring still to go out · ${month}',
+			'recurring.remainingTitle' => ({required Object month}) => 'Recurring bills still to pay · ${month}',
 			'recurring.plannedLabel' => 'Planned',
 			'recurring.outLabel' => 'Already out',
 			'recurring.chipAll' => 'All',
@@ -2914,24 +3246,24 @@ extension on TranslationsEn {
 			'recurring.budgetLinkEmpty' => 'No repeating budget items in this wallet yet.',
 			'recurring.budgetLinkedMessage' => ({required Object name, required Object item}) => '${name} is linked to ${item}.',
 			'recurring.budgetUnlinkedMessage' => ({required Object name}) => '${name} is no longer linked to a budget item.',
-			'recurring.fundingTitle' => ({required Object wallet}) => 'Prepare funds in ${wallet}',
-			'recurring.fundingBody' => ({required Object name, required Object amount, required Object date, required Object shortfall}) => '${name} ${amount} on ${date}. Expected short ≈${shortfall}.',
-			'recurring.installmentFreeLine' => ({required Object month, required Object amount}) => 'From ${month} you free up +${amount}/mo.',
+			'recurring.fundingTitle' => ({required Object wallet}) => 'Funds needed in ${wallet}',
+			'recurring.fundingBody' => ({required Object name, required Object amount, required Object date, required Object shortfall}) => '${name} ${amount} on ${date}. Expected shortfall ≈${shortfall}.',
+			'recurring.installmentFreeLine' => ({required Object month, required Object amount}) => 'From ${month} you\'ll free up +${amount}/mo.',
 			'recurring.unseenLabel' => 'Not seen in notifications yet',
 			'recurring.notYetAction' => 'Not yet',
 			'recurring.snoozedMessage' => ({required Object name}) => 'We\'ll ask about ${name} again in 2 days.',
 			'recurring.idleTitle' => ({required Object name}) => 'Still using ${name}?',
-			'recurring.idleBody' => 'The last two were skipped or not seen.',
+			'recurring.idleBody' => 'The last two were skipped or not detected.',
 			'recurring.idleKeep' => 'Keep',
 			'recurring.autoRecordedOne' => ({required Object name}) => '${name} recorded automatically.',
-			'recurring.autoRecordedMany' => ({required Object n}) => '${n} repeating items recorded automatically.',
+			'recurring.autoRecordedMany' => ({required Object n}) => '${n} recurring transactions recorded automatically.',
 			'recurring.priceUpFound' => ({required Object name, required Object amount}) => '${name} came in at ${amount}, higher than planned. Link it?',
-			'recurring.priceUpUpdate' => 'Update item',
+			'recurring.priceUpUpdate' => 'Update amount',
 			'recurring.priceUpKeep' => 'Keep amount',
-			'recurring.suggestTitle' => 'Looks repeating',
-			'recurring.suggestLine' => ({required Object name, required Object amount, required Object day}) => '${name} ${amount}, around day ${day} for the last three months.',
-			'recurring.suggestAccept' => 'Make repeating',
-			'recurring.suggestDismiss' => 'Not repeating',
+			'recurring.suggestTitle' => 'Looks like a recurring transaction',
+			'recurring.suggestLine' => ({required Object name, required Object amount, required Object day}) => '${name} ${amount}, around day ${day} each of the last three months.',
+			'recurring.suggestAccept' => 'Make recurring',
+			'recurring.suggestDismiss' => 'Not recurring',
 			'recurring.autoRecordedTitle' => 'Recorded automatically',
 			'plan.recurringSegmentLabel' => 'Recurring',
 			'plan.financialMonthTitle' => 'Financial month start',
@@ -2939,14 +3271,14 @@ extension on TranslationsEn {
 			'plan.financialMonthLastDay' => 'Last day of the month',
 			'plan.financialMonthChange' => 'Change financial month start',
 			'plan.financialMonthHint' => 'Usually your payday.',
-			'plan.financialMonthOfferScheduled' => ({required Object start}) => 'Recurring scheduled. Start your financial month on ${start}?',
+			'plan.financialMonthOfferScheduled' => ({required Object start}) => 'Recurring transaction scheduled. Start your financial month on ${start}?',
 			'plan.financialMonthOfferAction' => 'Set',
 			'plan.financialMonthPreviewTitle' => ({required Object day}) => 'Start on day ${day}',
 			'plan.financialMonthPreviewTitleLastDay' => 'Start on the last day',
 			'plan.financialMonthPreviewTransition' => ({required Object range, required Object days, required Object next}) => 'This period becomes ${range} (${days} days), then ${next}.',
 			'plan.financialMonthPreviewTransitionPast' => ({required Object range, required Object current}) => '${range} becomes a completed transition period. This period is ${current}.',
 			'plan.financialMonthPreviewPast' => 'Earlier periods stay the same.',
-			'plan.financialMonthBudgetsTitle' => 'Recurring budgets',
+			'plan.financialMonthBudgetsTitle' => 'Repeating budgets',
 			'plan.financialMonthBudgetsHelp' => ({required Object next, required Object previous}) => 'Checked ones also start on ${next}. The rest still start on ${previous}.',
 			'plan.financialMonthOnDay' => ({required Object day}) => 'day ${day}',
 			'plan.financialMonthOnLastDay' => 'the last day',
@@ -2992,7 +3324,7 @@ extension on TranslationsEn {
 			'plan.nextTitle' => 'Next',
 			'plan.seeAllRecurring' => 'All in Recurring',
 			'plan.emptyTitle' => 'Plan this month',
-			'plan.emptyBody' => 'Add what comes every month, then see what is truly free.',
+			'plan.emptyBody' => 'Add your regular monthly bills and income, then see what\'s really free.',
 			'plan.chartSemantics' => ({required Object low, required Object date, required Object end}) => 'Balance forecast, lowest ${low} on ${date}, month end ${end}',
 			'plan.chartPoint' => ({required Object date, required Object amount}) => '${date} · ${amount}',
 			'plan.forecastEndLabel' => ({required Object date}) => 'Balance forecast ${date}',
@@ -3003,8 +3335,8 @@ extension on TranslationsEn {
 			'plan.startOf' => ({required Object date}) => 'Start ${date}',
 			'plan.compactMillion' => ({required Object value}) => '${value}M',
 			'plan.compactThousand' => ({required Object value}) => '${value}K',
-			'plan.fundingTitle' => 'Prepare funds',
-			'plan.fundingBody' => ({required Object wallet, required Object shortfall, required Object name, required Object date}) => '${wallet} is expected to be short by ≈${shortfall} for ${name} on ${date}. Add funds to ${wallet} before then.',
+			'plan.fundingTitle' => 'Funds needed',
+			'plan.fundingBody' => ({required Object wallet, required Object shortfall, required Object name, required Object date}) => '${wallet} is expected to run short by ≈${shortfall} for ${name} on ${date}. Add funds to ${wallet} before then.',
 			'plan.fundingAction' => ({required Object wallet}) => 'See ${wallet} forecast',
 			'plan.fundingMore' => ({required Object n}) => '+${n} more',
 			'plan.reviewTitle' => ({required Object month}) => '${month} has started',
@@ -3021,12 +3353,12 @@ extension on TranslationsEn {
 			'plan.reviewCollapsed' => ({required Object month, required Object done, required Object total}) => 'Review ${month} plan (${done}/${total})',
 			'plan.reviewDoneMessage' => ({required Object month}) => '${month} plan is ready.',
 			'plan.homeReviewBody' => ({required Object income, required Object committed, required Object free}) => 'Scheduled income ${income}, committed ${committed}, free ${free}.',
-			'plan.homeReviewEstimates' => 'Some repeating amounts are estimates worth checking.',
+			'plan.homeReviewEstimates' => 'Some recurring amounts are estimates. Worth a check.',
 			'plan.homeReviewAction' => 'Review plan',
 			'plan.lookbackTitle' => ({required Object month}) => '${month} look back',
 			'plan.lookbackPlanned' => 'Plan',
 			'plan.lookbackActual' => 'Actual',
-			'plan.lookbackFree' => 'Free money',
+			'plan.lookbackFree' => 'Unplanned money',
 			'plan.lookbackBiggest' => ({required Object line}) => 'Biggest difference: ${line}.',
 			'plan.accuracyExact' => ({required Object month}) => 'The ${month} forecast was spot on.',
 			'plan.accuracyMissed' => ({required Object month, required Object amount}) => 'The ${month} forecast was off by ${amount}.',
@@ -3061,7 +3393,7 @@ extension on TranslationsEn {
 			'analysis.nextPeriod' => 'Next period',
 			'analysis.uncategorized' => 'Uncategorized',
 			'analysis.freelanceGroup' => 'Freelance',
-			'analysis.others' => ({required Object n}) => 'Others (${n} categories)',
+			'analysis.others' => ({required Object n}) => 'Other (${n} categories)',
 			'analysis.archived' => 'archived',
 			'analysis.transferTitle' => 'Moved between wallets',
 			'analysis.transferSub' => 'Doesn\'t change your total',

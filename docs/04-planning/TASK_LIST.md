@@ -85,9 +85,10 @@ Terakhir diperbarui: 18 Oktober 2026 (Fase 19 selesai dan masuk `main` lewat PR 
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
 | Persiapan Play Console — draf jawaban [PLAY_DATA_SAFETY.md](../03-release/PLAY_DATA_SAFETY.md) (Keamanan Data) dan [PLAY_STORE_LISTING.md](../03-release/PLAY_STORE_LISTING.md) (setelan toko, ASO) | 2 | 2 | Draf selesai (Keamanan Data 28 Sep, listing 29 Sep 2026); isi formulir persis sebelum build berfitur ini diunggah, jangan sebelum itu. Keputusan pemilik di §1 listing masih terbuka |
 | 20 — Pengumuman pembaruan ([APP_UPDATE.md](../01-product/features/APP_UPDATE.md)) | 8 | 8 | KT-U1–KT-U5 dijawab dan ADR-039 Accepted (15 Okt 2026); T-20.1–T-20.8 selesai dan sudah di `main` (ada di build `0.6.0+12` dan `0.7.0+13`); T-20.4 selesai (rupa v3 diterapkan, selisih diputuskan pemilik); T-20.7 formulir Play Console dan kebijakan privasi dilaporkan pemilik selesai; verifikasi perangkat T-20.8 lulus semua (15 Okt 2026) |
-| 21 — Penemuan fitur ([FEATURE_DISCOVERY.md](../01-product/features/FEATURE_DISCOVERY.md)) | 10 | 0 | Draf PO 18 Okt 2026, direvisi (onboarding wajib, tombol permanen); KT-D1 diputuskan; menunggu rupa (T-21.0) |
-| 22 — Ekspor dan cadangan manual ([EXPORT_BACKUP.md](../01-product/features/EXPORT_BACKUP.md)) | 8 | 0 | Spek final 22 Okt 2026 (dari B-42, KT-E1–KT-E5 diputuskan); menunggu rupa (T-22.0) dan ADR (T-22.1) |
-| Antrean (`B-n`, belum dijadwalkan) | 49 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
+| 21 — Penemuan fitur ([FEATURE_DISCOVERY.md](../01-product/features/FEATURE_DISCOVERY.md)) | 10 | 7 | Kode T-21.1–T-21.7 selesai; T-21.9 (Mulai cepat) sebagian; menunggu T-21.0 (rupa) dan T-21.8 (verifikasi perangkat) |
+| 22 — Ekspor dan cadangan manual ([EXPORT_BACKUP.md](../01-product/features/EXPORT_BACKUP.md)) | 8 | 8 | Selesai 23 Okt 2026 (dari B-42): ADR-040 Accepted, T-22.0–T-22.7 di `main`; QA emulator Android tanpa temuan S1/S2; sisa uji perangkat (iOS, Excel/Sheets, dll.) di B-67 |
+| 23 — Catat notifikasi multi-dompet, contoh, dan rutin lebih awal ([ADR-042](../02-architecture/adr/0042-notifikasi-multi-dompet-sampel-dan-rutin.md)) | 4 | 4 | Kode selesai 23 Okt 2026 di branch `worktree-notif-multi-wallet-recurring` (belum digabung); sisa kompilasi Kotlin, uji emulator, dan pengungkapan privasi situs |
+| Antrean (`B-n`, belum dijadwalkan) | 65 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
 
 ## Keputusan terbuka
 
@@ -5084,7 +5085,7 @@ KT-E1–KT-E5 diputuskan 22 Okt 2026. Branch sendiri dari `main`; menyentuh laya
 onboarding (tautan pulihkan, bersinggungan dengan Fase
 21).
 
-- [ ] **T-22.0** Rupa ekspor dan cadangan (designer): bagian Data kamu di
+- [x] **T-22.0** Rupa ekspor dan cadangan (designer): bagian Data kamu di
       Akun (tiga baris, status cadangan terakhir, baris Kembalikan data
       sebelum pemulihan), lembar ekspor (format, ringkasan seluruh data, belum
       ada transaksi, proses), lembar cadangkan, alur pulihkan (pratinjau, peringatan
@@ -5093,7 +5094,7 @@ onboarding (tautan pulihkan, bersinggungan dengan Fase
       Verifikasi: pemilik menyetujui rupa; selisih dari komponen yang ada
       dicatat.
       Di luar PRD: rupa; kebutuhannya FR-DAT-001–003.
-      **Hasil rupa (v2, 22 Okt 2026, menunggu persetujuan pemilik):** 31 papan
+      **Hasil rupa (v2, 22 Okt 2026; diterima pemilik 23 Okt 2026, jawaban PO atas pertanyaan (a)–(e) di EXPORT_BACKUP §15):** 31 papan
       di prototipe 12 layar (F22-1 s.d. F22-31) dan salinan di
       `docs/03-design/` (bagian "Ekspor dan cadangan (Fase 22)"): Akun › Data
       kamu (`AkunData*`; tanpa/ada cadangan, baris Kembalikan, en gelap),
@@ -5129,7 +5130,8 @@ onboarding (tautan pulihkan, bersinggungan dengan Fase
       keterangan baris Kembalikan, "Yang akan berubah", bantuan format dan
       catatan isi ekspor. Contoh data (142 transaksi, 4 dompet, sejak 3 Jun
       2026; cadangan 12 Okt 2026) dan ekstensi `.tnk` adalah anggapan
-      prototipe; ekstensi diputuskan ADR T-22.1.
+      prototipe; ekstensi diputuskan ADR T-22.1 (`.tkbak`; prototipe
+      `LembarCadangkan` dan komponen DataSheet sudah disesuaikan 23 Okt 2026).
       **Pertanyaan untuk PO:** (a) KT-E3: dua tombol di lembar app (rupa ini)
       atau satu lembar sistem langsung? (b) Banner "cadangan lebih lama" di
       pratinjau boleh, atau cukup di dialog? (c) Slide pengantar onboarding
@@ -5138,7 +5140,7 @@ onboarding (tautan pulihkan, bersinggungan dengan Fase
       (tidak digambar ulang). (d) Nama berkas cadangan dan ekstensi yang ramah
       pengguna? (e) Catatan isi ekspor boleh, atau cukup baris bantuan format?
       Di luar PRD: rupa; kebutuhannya FR-DAT-001–003.
-- [ ] **T-22.1** ADR teknis cadangan dan ekspor, lalu fondasinya. Engineer
+- [x] **T-22.1** ADR teknis cadangan dan ekspor, lalu fondasinya. Engineer
       menulis ADR (nomor berikutnya, Proposed sampai disetujui pemilik) untuk
       EXPORT_BACKUP §10: format dan versi berkas, checksum, penggantian
       atomik di atas `hive_storage`, cadangan pengaman, pustaka xlsx, cara
@@ -5148,7 +5150,24 @@ onboarding (tautan pulihkan, bersinggungan dengan Fase
       Verifikasi: ADR disetujui; uji bolak-balik cadangkan → pulihkan di
       aplikasi kosong menghasilkan data identik (§10 butir 5).
       Memenuhi FR-DAT-002, FR-DAT-003.
-- [ ] **T-22.2** Ekspor ke spreadsheet: lembar ekspor dari Akun saja, tanpa
+      **Selesai 22 Okt 2026** (ADR-040 Accepted oleh pemilik; P-1–P-4 dan
+      dependensi langsung `crypto` mengikuti rekomendasi). Fondasi:
+      `BackupRegistry`/`BackupScope`, kodek amplop berversi (`.tkbak`,
+      gzip + SHA-256), `BackupValidator` (R-1–R-3), `RestoreEngine` (jurnal
+      tulis-dulu dengan roll-forward, cadangan pengaman 30 hari, Kembalikan),
+      `main()` dipecah menjadi `bootstrapApp()` + `AppReboot`, dan registri di
+      `lib/app/data_portability/`. **Belum:** `FileTransfer` (adaptor
+      `file_picker`) dan layanan `BackupService`, dikerjakan bersama T-22.3.
+      Verifikasi: 49 uji baru lulus, termasuk **sapuan galat di setiap operasi
+      tulis** (proses mati dan galat tunggal, pulihkan dan Kembalikan) yang
+      selalu menghasilkan data lama utuh atau data cadangan utuh; bolak-balik
+      dengan repositori nyata identik (dokumen, saldo, transaksi per bulan,
+      nominal `int` sen); uji kelengkapan registri dan state global; seluruh
+      `flutter test` lulus; peluncuran biasa di emulator tidak berubah.
+      ⚠ Sapuan galat memakai pembungkus penyimpanan, bukan proses yang benar-
+      benar dimatikan: asumsi satu penulisan Hive utuh-atau-tidak diverifikasi
+      QA di T-22.7 #4.
+- [x] **T-22.2** Ekspor ke spreadsheet: lembar ekspor dari Akun saja, tanpa
       pilihan rentang (selalu seluruh data saat ini), xlsx (lembar Transaksi
       dan Dompet) dan CSV sesuai §5, aturan E-1–E-6.
       ⚠ Kolom Awal periode memakai `periodDateOf`; Arus transfer selalu 0
@@ -5157,12 +5176,52 @@ onboarding (tautan pulihkan, bersinggungan dengan Fase
       periode peralihan dan gajian maju; uji CSV (BOM, kutip, koma di
       catatan); buka berkas di Excel dan Google Sheets.
       Memenuhi FR-DAT-001.
-- [ ] **T-22.3** Cadangkan sekarang: lembar, isi §6.2, simpan/bagikan, status
+      **Selesai 22 Okt 2026.** Lembar ekspor dari Akun › Data kamu (slot
+      baru `dataSection`, tampil sebelum dan sesudah masuk), xlsx (lembar
+      Transaksi dan Dompet; penulis OOXML sendiri di atas `archive`) dan CSV,
+      `FileTransfer` (`file_picker` untuk Simpan ke…, `share_plus` untuk
+      Bagikan), ekspor dibangun di isolate dan bisa dibatalkan.
+      Verifikasi: 98 uji ekspor lulus (baris, `formatSen` tanpa `double`,
+      CSV, xlsx, layanan, bloc, lembar, teks 200% di 360dp); **jumlah Arus
+      per Awal periode sama dengan `CalculateCashFlow` asli** pada data
+      berisi periode peralihan, gajian maju, dan transfer; xlsx dan CSV
+      dibaca ulang oleh `openpyxl` dan parser CSV Python (tanggal bertipe
+      tanggal, nominal bilangan bulat, catatan berisi koma/kutip/baris
+      baru/emoji utuh); seluruh `flutter test` lulus; emulator Android:
+      keadaan kosong dan berisi cocok dengan `LembarEkspor*`, Simpan ke…
+      menulis berkas ke Downloads lewat pemilih sistem (tanpa izin
+      penyimpanan) dan isinya cocok dengan saldo aplikasi, Bagikan membuka
+      lembar bagi sistem dengan nama berkas benar.
+      Catatan: (1) kolom "Pos anggaran" memuat "Anggaran › Pos" dalam satu
+      kolom; (2) kolom teks CSV yang diawali `=`, `+`, `-`, `@` diberi awalan
+      petik supaya Excel tidak menjalankannya sebagai rumus; xlsx memakai sel
+      teks (`inlineStr`), tidak pernah rumus; (3) regresi yang ditemukan di
+      perangkat dan kini diuji: closure `Isolate.run` membawa `this`
+      (kotak Hive tak bisa dikirim antar isolate). ⚠ Belum dibuka di Excel
+      dan Google Sheets sungguhan (hanya `openpyxl`): QA di T-22.7 #10.
+      ⚠ iOS belum dicoba.
+- [x] **T-22.3** Cadangkan sekarang: lembar, isi §6.2, simpan/bagikan, status
       Cadangan terakhir hanya diperbarui bila tersimpan, aturan C-1–C-5.
       Verifikasi: uji isi berkas (versi, jumlah, checksum); batal di lembar
       sistem tidak mengubah status.
       Memenuhi FR-DAT-002.
-- [ ] **T-22.4** Pulihkan dari Akun: pemeriksaan R-1–R-3, pratinjau,
+      **Selesai 22 Okt 2026.** Lembar Cadangkan sekarang
+      (`LembarCadangkan.dc.html`: ringkasan, Ikut dan Tidak ikut, proses yang
+      bisa dibatalkan, siap dengan Simpan ke… dan Bagikan), baris Akun dengan
+      status Cadangan terakhir, `BackupService` (cadangan dibuat dan diperiksa
+      lagi di isolate sebelum diserahkan), `settings_last_backup` (milik
+      perangkat, tidak ikut cadangan). Status hanya diperbarui bila
+      penyimpanan terkonfirmasi (Simpan ke… berhasil atau Bagikan melapor
+      `success`); dibatalkan atau tak terkonfirmasi tidak mengubahnya.
+      Selisih dari desain: ekstensi `.tkbak` (ADR-040), bukan `.tnk` di prototipe.
+      Verifikasi: uji layanan, bloc, lembar (teks 200% di 360dp), dan Akun
+      lulus; seluruh `flutter test` lulus (1981); emulator Android: lembar
+      cocok dengan desain, berkas disimpan ke Downloads lewat pemilih sistem,
+      Akun berubah menjadi "Cadangan terakhir: 22 Okt 2026"; isi berkas
+      diperiksa independen dengan Python (gzip, amplop versi 1, SHA-256 sesuai
+      ADR cocok, tanpa kunci milik perangkat). `createdAt` ditulis UTC.
+      ⚠ Belum dicoba di iOS.
+- [x] **T-22.4** Pulihkan dari Akun: pemeriksaan R-1–R-3, pratinjau,
       peringatan penggantian, cadangan pengaman (R-5) dan baris Kembalikan,
       penggantian atomik (R-4), hitung ulang saldo (R-6), jadwal ulang
       pengingat, izin lewat pintu Fase 21.
@@ -5170,7 +5229,26 @@ onboarding (tautan pulihkan, bersinggungan dengan Fase
       utuh, tidak pernah campuran.
       Verifikasi: uji tiap R-n; uji bolak-balik; verifikasi perangkat.
       Memenuhi FR-DAT-003.
-- [ ] **T-22.5** Pulihkan saat onboarding (§7.3): tautan di slide pertama,
+      **Selesai 22 Okt 2026.** Halaman Pulihkan dari cadangan (pratinjau dua
+      kolom, banner "lebih lama", daftar perubahan, dialog Ganti data, daftar
+      langkah, halaman galat dan halaman selesai), `RestoreService`
+      (pemeriksaan R-1–R-3), cadangan pengaman (R-5) dan baris Kembalikan
+      (mesin yang sama), penggantian atomik lewat jurnal (R-4) dengan
+      `AppReboot` yang menampilkan langkah selama boot ulang, hitung ulang
+      saldo (R-6) dan jadwal ulang pengingat di `restore_recovery`.
+      Selisih dari desain: ekstensi `.tkbak` (ADR-040), bukan `.tnk`.
+      Verifikasi: uji layanan, bloc, halaman, mesin (sapuan galat di setiap
+      operasi tulis), bolak-balik, dan Akun lulus; `flutter analyze` bersih;
+      seluruh `flutter test` 2014 lulus, 1 gagal
+      (`notification_inbox_card_test` "aktif tanpa yang menunggu", berkas
+      tak tersentuh tugas ini; sudah ada sebelumnya). Emulator Android:
+      berkas `.tkbak` dipilih lewat pemilih sistem → pratinjau → dialog →
+      daftar langkah → boot ulang → halaman "Data dipulihkan", dan baris
+      Kembalikan (22 Okt 2026) muncul di Akun.
+      ⚠ Belum diverifikasi di perangkat: banner "lebih lama" dan perubahan
+      mata uang/draf, aksi Kembalikan, galat berkas rusak/lebih baru,
+      penutupan paksa di tengah penggantian, izin lewat pintu Fase 21, iOS.
+- [x] **T-22.5** Pulihkan saat onboarding (§7.3): tautan di slide pertama,
       langkah mata uang dan periode dilewati sesudah berhasil, langkah
       pengingat hanya bila cadangan memuat pengingat menyala.
       ⚠ Bersinggungan dengan T-21.2; kerjakan sesudahnya atau sepakati
@@ -5178,17 +5256,106 @@ onboarding (tautan pulihkan, bersinggungan dengan Fase
       Verifikasi: uji widget jalur berhasil dan gagal; tidak ada periode
       peralihan sesudah pulih.
       Memenuhi FR-DAT-003.
-- [ ] **T-22.6** Teks `dataPortability.*` id dan en, `account.dataBody`
+      **Selesai 22 Okt 2026.** Tautan "Sudah punya cadangan? Pulihkan" di
+      layar geser pertama (mode pertama kali saja; tidak di mode tinjau);
+      memilih berkas lewat `pickBackup` yang dikawat akar komposisi, lalu
+      halaman pulihkan yang sama dengan Akun (`RestoreInput.onboarding`):
+      tanpa dialog penggantian dan tanpa cadangan pengaman. Onboarding
+      ditandai selesai dari jurnal (`markOnboardingDoneIfRestoring`)
+      SEBELUM rute awal ditentukan, jadi sesudah boot ulang pengguna
+      mendarat di halaman "Data dipulihkan" lalu Beranda, bukan di
+      onboarding lagi. Mata uang dan awal periode datang dari cadangan
+      sebagai satu entri, jadi tidak ada periode peralihan.
+      Selisih dari spek §7.3: langkah pengingat TIDAK ditampilkan ulang;
+      izin sistem untuk pengingat dan Catat dari notifikasi diminta lewat
+      catatan di halaman "Data dipulihkan" (sudah ada sejak T-22.4), supaya
+      onboarding tidak perlu mode "sebagian". Perlu keputusan PO bila ingin
+      langkah pengingat tetap tampil.
+      Verifikasi: uji widget tautan (tampil di layar pertama, hilang sesudahnya
+      dan tanpa callback/mode tinjau), uji halaman pulihkan dari onboarding
+      tanpa dialog, uji penandaan onboarding dari jurnal (onboarding vs Akun);
+      `flutter analyze` bersih; seluruh `flutter test` 2020 lulus, 1 gagal
+      (`notification_inbox_card_test`, sudah ada sebelumnya). Emulator
+      Android dengan data aplikasi kosong: onboarding → bahasa → tautan →
+      pilih berkas `.tkbak` → proses → "Data dipulihkan" → Beranda berisi
+      4 dompet dan transaksi cadangan.
+      ⚠ Belum diuji: cadangan rusak atau lebih baru dari onboarding, cadangan
+      dengan pengingat menyala di perangkat, iOS, rupa tautan terhadap
+      `OnbPengantar.dc.html` (dibandingkan dari memori, bukan berdampingan).
+- [x] **T-22.6** Teks `dataPortability.*` id dan en, `account.dataBody`
       baru, dan peristiwa analitik §12 tanpa nominal atau nama; catat di
       `PLAY_DATA_SAFETY.md` bila ada yang baru.
       Verifikasi: `translations_test`; uji peristiwa dan parameter.
       Memenuhi FR-DAT-001–003.
-- [ ] **T-22.7** Verifikasi perangkat (QA/pemilik): cadangkan di ponsel A,
+      **Selesai 22 Okt 2026.** Teks `dataPortability.*` (id dan en) dan
+      `account.dataBody` sudah masuk bersama T-22.2–T-22.5 dan lulus
+      `translations_test` (glosarium `writing.md`); T-22.6 menambah peristiwa
+      `DataPortabilityEvents` (`export_created` saat berkas jadi,
+      `backup_created` saat penyimpanan terjawab dengan `saved` benar hanya
+      bila terkonfirmasi, `restore_started` saat dikonfirmasi,
+      `restore_failed` dengan alasan `invalid/newer/inconsistent/space/other`,
+      `restore_completed` sesudah boot ulang menerapkan data), semuanya
+      hanya jenis dan `rows_bucket`. Baris baru di `PLAY_DATA_SAFETY.md`
+      (tanpa jenis data baru).
+      Verifikasi: uji ember, tiap peristiwa dan parameternya, dan bahwa
+      tidak ada peristiwa sebelum dikonfirmasi; `flutter analyze` bersih.
+      ⚠ Belum dilihat di DebugView Firebase; `restore_failed` untuk galat
+      `other` dari alur Kembalikan belum diuji di perangkat.
+- [x] **T-22.7** Verifikasi perangkat (QA/pemilik): cadangkan di ponsel A,
       pulihkan di ponsel B lewat onboarding, layar identik; pulihkan di atas
       data yang ada lalu Kembalikan; berkas rusak, versi lebih baru, ruang
       penuh; ekspor dibuka di Excel dan Google Sheets dengan total sama
       dengan aplikasi; Android dan iOS. Hasil di rencana verifikasi Fase 22.
       Memenuhi FR-DAT-001–003.
+      Temuan QA 23 Okt 2026 yang sudah diperbaiki (branch
+      `claude/qa-fase22-poles`): Q1 "Atur lebih lanjut" selebar baris; Q2
+      catatan izin di "Data dipulihkan" hanya bila izin memang belum ada
+      (dibaca dari `FeatureStatuses`); Q3 peringatan cadangan lebih lama
+      tanpa klaim tanggal ("dibuat {tanggal} ... catatan yang kamu buat
+      sesudahnya akan hilang"); Q5 jumlah memakai pemisah ribuan
+      (`CountFormatter`); T1 uji kartu kotak masuk disesuaikan dengan kepala
+      kartu yang bisa diketuk. Q4 (posisi tombol bergeser) dibiarkan.
+      **Selesai 23 Okt 2026** (pemilik menyatakan Fase 22 selesai; QA emulator
+      Android 15 tanpa temuan S1/S2: skenario 1–5, 7, 9, 12–14, 17, 18, dan 20
+      sebagian lulus). Sisa uji perangkat yang belum bisa dilakukan (iOS, Excel
+      dan Google Sheets, gajian maju, sumber notifikasi di cadangan, DebugView,
+      ruang penuh) dipindah ke B-67. Keputusan PO atas selisih di EXPORT_BACKUP
+      §15 (termasuk T-22.5: langkah pengingat tidak ditampilkan ulang).
+
+## Fase 23: Catat notifikasi multi-dompet, sampel, dan rutin lebih awal
+
+Permintaan pemilik 23 Okt 2026 (kasus Bank Jago).
+[ADR-042](../02-architecture/adr/0042-notifikasi-multi-dompet-sampel-dan-rutin.md)
+(Accepted; keputusan §6 dijawab pemilik 23 Okt 2026). Branch sendiri dari `origin/main`.
+
+- [x] **T-23.1** Banyak dompet per sumber (ADR-042 §3.1): `walletRules` di
+      `NotificationSource`, penentuan dompet di penyusun draf (tunggal cocok /
+      bawaan / ambigu ke kotak masuk), penanda `{from}`/`{to}` di pola
+      transfer, UI aturan dompet di halaman sumber.
+      Verifikasi: uji penyusun draf (Kantong A→B, ambigu, tanpa cocok),
+      uji kompatibilitas dokumen lama, `flutter analyze` bersih.
+      Memenuhi FR-NOT-001.
+- [x] **T-23.2** Catat rutin lebih awal (§3.3): aksi Catat sekarang pada
+      kemunculan `upcoming` tanpa batas hari, tanggal transaksi hari ini, tertaut ke
+      kemunculan, pengingat dibatalkan.
+      Verifikasi: uji status, periode (`periodDateOf`), batal mengembalikan.
+- [x] **T-23.3** Ikatan rutin ke pola notifikasi (§3.4):
+      `RecurringRule.notificationBinding`, jendela 7 hari untuk rutin
+      terikat, tautan otomatis hanya bila semua syarat terpenuhi, UI ikat di
+      rincian rutin dan kotak masuk. Daftarkan skema baru di `BackupRegistry`.
+      Verifikasi: uji tiap syarat gagal → kotak masuk, bukan tebakan.
+- [x] **T-23.4** Sampel notifikasi dan filter cepat (§3.2), (privasi disetujui
+      pemilik 23 Okt 2026, bawaan mati): antrean sampel Kotlin, penyimpanan 7 hari,
+      daftar Notifikasi terbaru, ketuk frasa → filter, Buat pola; perbarui
+      `PLAY_DATA_SAFETY.md`.
+      Verifikasi: OTP tidak pernah tersimpan, kedaluwarsa, uji backup registry.
+
+**Kode T-23.1–T-23.4 selesai 23 Okt 2026** (branch
+`worktree-notif-multi-wallet-recurring`, belum digabung). `flutter analyze`
+bersih dan seluruh uji lulus. Belum diverifikasi: kompilasi Kotlin (contoh
+notifikasi), uji emulator Jago asli (pola `{from}`/`{to}` butuh sampel nyata),
+pembaruan pengungkapan jelas dan kebijakan privasi situs untuk contoh
+notifikasi. Catatan implementasi di ADR-042 §7.
 
 ## Antrean (belum dijadwalkan)
 
@@ -5203,7 +5370,7 @@ menambah dan memindahkannya ada di
 | B-1 | Sapuan penggantian nama "Saldough" → "Tanukonomy" di README, PRD, glosarium, dan dokumen lain (prasyarat merek dagang/domain/toko sudah dipenuhi pemilik 29 Sep 2026, jadi tidak lagi tertahan). Nama kode repositori dan paket Dart `saldough` tetap. Lakukan dengan sekali sapuan, bukan sepotong-sepotong. | agen | T-8.3, ADR-022 §4 |
 | B-4 | Selaraskan klaim situs `tanukonomy-web` (repo terpisah, `docs/TASKS.md` di sana) dengan aplikasi: **akun opsional dan analitik/Crashlytics sudah ada** (ADR-023, dikonfirmasi pemilik 29 Sep 2026), jadi klaim lama "tanpa akun, tanpa analitik" harus diganti; tambahkan pilihan mata uang (ADR-025). Cocokkan dengan kebijakan privasi dan formulir Keamanan Data yang sudah diisi di Play Console. Render ulang tangkapan layar (label Riwayat/History). | agen | T-8.4, T-8.6, T-8.8 |
 | B-5 | Verifikasi di perangkat/emulator yang belum tercatat: keyboard desimal untuk mata uang berdesimal, layar Akun, langkah mata uang di onboarding, masuk Google/email sungguhan, hapus akun. Catat hasilnya di T-8.5/T-8.6. | pemilik | T-8.5, T-8.6 |
-| B-7 | Rancang **sinkronisasi data keuangan** ke server (ADR baru, `## Fase 10`). Wajib mematuhi ADR-024 §3.3 (ganti akun = data diganti dengan peringatan, tanpa penggabungan) dan menjawab KT-2. Proyek besar: skema, aturan keamanan, resolusi konflik. | pemilik memutuskan, lalu agen | T-8.4, ADR-024 |
+| B-7 | Rancang **sinkronisasi data keuangan** ke server (ADR baru, `## Fase 10`). Diputuskan dikerjakan sesudah Plus dijual, sebagai fitur opsional untuk Dompet Bersama (KT-P13, 23 Okt 2026). Wajib mematuhi ADR-024 §3.3 (ganti akun = data diganti dengan peringatan, tanpa penggabungan) dan menjawab KT-2. Proyek besar: skema, aturan keamanan, resolusi konflik. | pemilik memutuskan, lalu agen | T-8.4, ADR-024 |
 | B-11 | Lanjutan opsional UX-6 di luar T-8.2: pencarian lintas bulan kini memindai 3 bulan per ketukan; pertimbangkan indeks teks kalau riwayat pemakai sudah panjang (NFR-PERF-002). Tunggu data nyata, jangan dikerjakan spekulatif. | agen | T-8.2 |
 | B-12 | Ikon peluncur dan splash **iOS**: belum ada di repo (`flutter_launcher_icons` dan `flutter_native_splash` di `pubspec.yaml` diset `ios: false`); butuh artwork tanpa transparansi karena App Store mengabaikan alfa. Kerjakan begitu artwork diserahkan. | pemilik menyerahkan artwork | T-8.3 |
 | B-13 | **Sistem kategori** (prasyarat Catat lewat Suara): entitas `Category` bawaan + bisa diubah, datar, dipisah per jenis, transfer tanpa kategori, migrasi label `categoryKey` lama, alias bawaan. Butuh ADR-0026. Desain di [VOICE_INPUT_RESEARCH.md](../01-product/features/VOICE_INPUT_RESEARCH.md) §3A dan Fase 1A. | dijadwalkan: T-11.1 | riset 30 Sep 2026 |
@@ -5221,31 +5388,47 @@ menambah dan memindahkannya ada di
 | B-32 | R3d: rutin lewat suara ("tiap bulan", "tiap tanggal 5" menyalakan Ulangi di draf CATAT) dan KT-R7 kartu menunggu gabungan (ADR-037 §3.4), sesudah Fase 14. | agen + pemilik | T-17.9 |
 | B-38 | **Analisis R2**: tampilan tahun, tren total saldo (butuh `Wallet.createdAt`, ADR baru, KT-A5), porsi pengeluaran rutin, baris "Di luar rencana" di Bulan ini membuka Analisis tersaring, sorotan Analisis bersaing di slot wawasan Beranda (§7B aturan 2). | agen | [FINANCIAL_ANALYSIS.md](../01-product/features/FINANCIAL_ANALYSIS.md), FR-ANL-006 |
 | B-40 | Tindak lanjut kecil QA T-19.7 (S4 dan celah uji): tombol "Catat transaksi" di keadaan kosong Analisis sebagian tertutup bilah bawah pada 360dp sampai digulir; belum teruji di perangkat: keadaan galat dan memuat Analisis, keadaan kosong bahasa en, pembayaran Freelance di Pemasukan, sorotan `from=highlight`, `category=freelance`. | agen (S4) + pemilik (uji perangkat) | QA T-19.7 |
-| B-41 | **Fondasi Plus** (FREEMIUM_PAYWALL §13 B1, B2, C4): ADR monetisasi; billing (RevenueCat), `Entitlements`, layar paywall, jatah cicip dari Remote Config, peristiwa Analytics; gerbang fitur yang sudah ada (notifikasi 1 aplikasi, kuota tafsir, Analisis > 6 periode, template ke-2, proyek ke-3, seluruh otomasi rutin R3 Fase 17 sesuai KT-P11); lalu reverse trial, momen terjadwal, rekap nilai, pemicu paywall. Plus dinyalakan untuk penguji dulu, **dijual sesudah B-44–B-46**. Semua KT-P diputuskan 18 Okt 2026 (§15): Tanukonomy Plus, uji coba sampai akhir periode keuangan pertama yang penuh (§8.1), dompet tanpa batas, harga §11.2 tanpa seumur hidup, penguji Plus 12 bulan, RevenueCat, notifikasi gratis 1 aplikasi. | pemilik memutuskan, lalu agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §13, PRD §13 |
+| B-41 | **Fondasi Plus** (FREEMIUM_PAYWALL §13 B1, B2, C4): ADR monetisasi; billing (RevenueCat), `Entitlements`, layar paywall, jatah cicip dari Remote Config, peristiwa Analytics; gerbang fitur yang sudah ada (notifikasi 1 aplikasi, kuota tafsir, Analisis > 6 periode, template ke-2, proyek ke-3, seluruh otomasi rutin R3 Fase 17 sesuai KT-P11); lalu reverse trial, momen terjadwal, rekap nilai, pemicu paywall. Plus dinyalakan untuk penguji dulu, **dijual sesudah B-44–B-46**. Judul paywall dan pemasaran memakai tiga janji (FREEMIUM_PAYWALL §16.2, 23 Okt 2026). Semua KT-P diputuskan 18 Okt 2026 (§15): Tanukonomy Plus, uji coba sampai akhir periode keuangan pertama yang penuh (§8.1), dompet tanpa batas, harga §11.2 tanpa seumur hidup, penguji Plus 12 bulan, RevenueCat, notifikasi gratis 1 aplikasi. | pemilik memutuskan, lalu agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §13, PRD §13; keputusan teknis di [ADR-041](../02-architecture/adr/0041-monetisasi-hak-plus-dan-uji-coba.md) (Accepted, 23 Okt 2026) |
 | B-43 | Kunci aplikasi sidik jari/PIN (**gratis**, `local_auth`). | agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §13 A2 |
 | B-44 | **Penjaga + Ringkasan Senin** (Plus, cicip 1 per periode): prediksi anggaran habis, uang nganggur menipis, pengeluaran tak biasa, tagihan pekan depan, sinyal R3 sebagai notifikasi; dihitung lokal. Usulan dibangun pertama (KT-P9). Pertanyaan ADR: hitung di latar atau saat dibuka. | agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §6.2, §13 C1 |
-| B-45 | **Catat dari foto** (Plus, cicip 5 per periode): struk, bukti transfer, tangkapan layar QRIS/e-wallet → draf CATAT lewat `shared/capture/` dan Gemini multimodal; terima bagi dari aplikasi lain. Butuh Blaze (T-11.8) dan pembaruan Keamanan Data/B-20. | agen + pemilik | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §6.1, §13 C2 |
+| B-45 | **Catat dari foto** (Plus; gratis berbagi kuota 30 tafsir cerdas per periode, KT-P14): struk, bukti transfer, tangkapan layar QRIS/e-wallet → draf CATAT lewat `shared/capture/` dan Gemini multimodal; terima bagi dari aplikasi lain. Butuh Blaze (T-11.8) dan pembaruan Keamanan Data/B-20. | agen + pemilik | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §6.1, §13 C2 |
 | B-46 | **Bagaimana kalau** (Plus): kejadian khayalan di atas `projectCashflow` 12 bulan (bersama B-30), simpan dan bandingkan skenario, tidak pernah menjadi transaksi. | agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §6.4, §13 C3 |
 | B-47 | **Target** (KT-P10 masuk produk): ADR domain dulu (rencana, bukan pemesanan uang, aturan 5), lalu entitas, perkiraan tanggal tercapai, kemajuan dari dompet ditandai atau transfer sisihkan, peringatan meleset lewat Penjaga. Pembagian Gratis/Plus diputuskan di ADR. | agen + pemilik | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §6.4, §13 D1 |
 | B-48 | **Utang-piutang** (KT-P10 masuk produk): ADR domain dulu (pinjamkan mengurangi saldo tapi bukan pengeluaran, dibayar kembali bukan pemasukan, sejalan aturan 7; Analisis mengecualikannya). Dasar gratis (catat, sisa, lunas); Plus: pengingat tagih dengan pesan siap kirim, jadwal cicilan. Prasyarat B-54, B-57, B-59. | agen + pemilik | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §7, §13 D2 |
-| B-49 | **Rapor bulanan bercerita** + ekspor laporan PDF/Excel (Plus; gratis: rapor ringkas). Templat kalimat lokal, mesin PDF dipakai B-50, B-53, B-54. | agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §6.5, §13 E1 |
+| B-49 | **Rapor bulanan bercerita** + ekspor laporan PDF/Excel (Plus; gratis: rapor ringkas), dengan **tipe tanuki** di kartu (KT-P17). Templat kalimat lokal, mesin PDF dipakai B-50, B-53, B-54. | agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §6.5, §13 E1 |
 | B-50 | **Freelance Pro** (Plus): invoice PDF dari worklog, status jatuh tempo dan lewat jatuh tempo (pertanyaan terbuka PRD §13), pengingat tagih, penghasilan per klien dan tarif efektif. Pembayaran tetap lewat CATAT. | agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §6.5, §13 E2 |
-| B-51 | **Cadangan otomatis harian ke Google Drive** pengguna (Plus), format sama dengan B-42; cek klasifikasi lingkup OAuth Drive. | agen + pemilik | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §6.6, §13 E3 |
+| B-51 | **Cadangan otomatis harian ke Google Drive** pengguna (Plus, janji 3; tanpa enkripsi kata sandi, KT-P15), format sama dengan B-42; cek klasifikasi lingkup OAuth Drive. | agen + pemilik | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §6.6, §13 E3 |
 | B-52 | **Tanya Tanuki R1** (Plus, cicip 3 per periode): Gemini memetakan pertanyaan ke kueri terstruktur, angka dihitung lokal, jawaban dari templat; hanya teks pertanyaan dan nama kategori/dompet yang dikirim. Mulai dari 10–15 bentuk kueri. | agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §6.3, §13 E4 |
-| B-53 | **Rapor Tahunan** (Plus): kartu geser yang bisa dibagikan tanpa nominal. Sasaran Desember 2027 (tahun penuh pertama). | agen + designer | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §6.5, §13 F1 |
+| B-53 | **Rapor Tahunan** (Plus): kartu geser yang bisa dibagikan tanpa nominal, dengan tipe tanuki (KT-P17). Sasaran Desember 2027 (tahun penuh pertama). | agen + designer | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §6.5, §13 F1 |
 | B-54 | **Rekap SPT tahunan** (Plus): penghasilan per sumber, potongan pajak freelance, saldo dompet 31 Des, utang (B-48). Rekap catatan, tidak menghitung pajak. Sasaran Januari 2028. | agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §6.5, §13 F2 |
 | B-55 | Widget layar utama: tombol Catat (gratis), ringkasan sisa anggaran/uang nganggur/Menunggu (Plus). `home_widget` + native. | agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §13 K2 |
 | B-56 | Kosmetik Plus: tema warna tambahan, kostum tanuki, ikon aplikasi alternatif, lencana Pendiri. Kode kecil, menunggu aset. | pemilik menyerahkan aset, lalu agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §13 K1 |
 | B-57 | **Patungan dari struk** (Plus): pilih barang per orang dari foto struk → piutang tercatat. | agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §7, butuh B-45 + B-48 |
 | B-58 | Kartu kredit dan paylater sebagai **dompet tagihan** (tagihan berjalan, jatuh tempo); gratis dasar, peringatan jatuh tempo di Penjaga (Plus). Butuh ADR. | agen + pemilik | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §7, PRD §6 |
 | B-59 | **Kekayaan bersih** (Plus): aset dicatat manual (emas, reksa dana, kendaraan) dikurangi utang; bukan koneksi broker. | agen + pemilik | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §7, butuh B-48 |
-| B-60 | **Dompet Bersama / Plus Keluarga** (tingkat kedua, 2–5 orang). Butuh sinkronisasi B-7. | pemilik memutuskan, lalu agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §7 |
+| B-60 | **Dompet Bersama / Plus Keluarga** (tingkat kedua, 2–5 orang). Butuh sinkronisasi B-7. Pemilik memutuskan bersaing di sini (KT-P13, 23 Okt 2026); prioritas sesudah Plus dijual. | pemilik memutuskan, lalu agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §7 |
 | B-61 | Rapor kuartal freelance; Tanya Tanuki R2 (kueri gabungan, perbandingan antar tahun). | agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §7, sesudah B-50 dan B-52 terukur |
 | B-62 | Catat dari email (struk e-commerce, tagihan). Izin Gmail sensitif; dipertimbangkan paling akhir. | pemilik memutuskan | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §7 |
 | B-63 | **Izin notifikasi ditolak permanen di Android 13+**: tombol Izinkan di kartu pengingat (Beranda, segmen Rutin, catatan rincian rutin) dan langkah pengingat onboarding hanya memanggil `requestPermission()`; sesudah ditolak dua kali sistem tidak memunculkan dialog lagi, jadi pengguna hanya melihat snackbar penolakan dan tombol tidak berbuat apa-apa. Putuskan jalurnya (mis. buka setelan notifikasi aplikasi bila permintaan tidak memunculkan dialog) lalu uji di Android 13/14/15. Catat dari notifikasi tidak terkena (izin aksesnya lewat setelan sistem). | pemilik memutuskan, lalu agen | T-21.3, T-21.8 |
 | B-64 | **Pola bawaan Catat dari notifikasi belum terverifikasi** (`builtInNotificationPatterns`, `verified: false`): hanya berjangkar pada kata arah, bukan format asli tiap aplikasi, sehingga drafnya selalu masuk kotak masuk dan tidak pernah dicatat otomatis (ADR-032 §3.4), termasuk dari Mulai cepat. Kumpulkan sampel notifikasi asli per aplikasi (layar sampel debug), ganti dengan templat dari sampel, tandai `verified: true` beserta ujinya. Sampai itu selesai, teks Mulai cepat/onboarding/Beranda tidak boleh menjanjikan pencatatan otomatis. Nama paket di `builtInNotificationApps` juga belum dicek di perangkat. | pemilik menyerahkan sampel, lalu agen | T-21.9, ADR-032 §3.4 |
 | B-65 | **Kegagalan menyimpan mata uang kini muncul di penutup onboarding**, bukan di langkah mata uang (T-21.2): pengguna sudah melewati awal periode dan pengingat, lalu `onFinished` gagal menyimpan dan hanya menampilkan snackbar di penutup. Pertimbangkan menyimpan mata uang saat meninggalkan langkah mata uang (tetap sebelum `markOnboardingDone`), atau mengembalikan pengguna ke langkah itu. Pastikan mata uang tidak jatuh diam-diam ke IDR bila gagal. | agen | T-21.2 |
 | B-66 | **Dompet v2: sebaran saldo interaktif (rupa siap, 22 Okt 2026).** Terapkan rupa `Dompet.dc.html` + varian (D1–D6) dan komponen BalanceSpread (`docs/03-design/design-system/components/BalanceSpread/README.md`) di layar Dompet: kartu Total saldo, kartu Sebaran saldo ringkas yang bisa dibuka menjadi donat, pilih dompet lewat irisan/legenda dengan baris dompet ditandai, "Lihat total", "Sembunyikan"; satu dompet tanpa kartu sebaran. Selisih dari rujukan `docs/03-design/proposals/wallet.html` yang disengaja: (1) "100% Teralokasi"/"Siap dialokasikan" dibuang (aturan 5; saldo bukan alokasi); (2) badge Utama/Terkunci/Fisik/Digital dan baris kedua bunga harian, "+2.4% bln ini", "Siap QRIS" dibuang karena aplikasi tidak punya datanya; (3) persen bulat dan "<1%", bukan 1,4%; (4) "Atur posisi" dan titik hijau berdenyut dibuang; (5) dua chip pintas Tunai/GoPay di atas donat diganti irisan kecil minimal 6px + legenda; (6) warna dompet memakai token `cat-*`, bukan warna merek; (7) navigasi bawah tetap 4 tab + Catat (Rencana). **Pertanyaan PO:** (a) ketuk baris dompet membuka rincian dompet (bawaan app) atau memilih irisan seperti rujukan? Rupa ini memilih yang pertama; (b) urutan dompet manual ("Atur posisi") perlu ada?; (c) dompet bersaldo nol/negatif (kartu kredit) di sebaran: dibuang dari donat dan ditulis di bawahnya, atau tidak?; (d) keadaan terbuka diingat antar kunjungan atau selalu ringkas (rupa: selalu ringkas)?  **✅ Kode selesai 22 Okt 2026** (branch `claude/dompet-v2`): `WalletSpreadCard` (ringkas/donat, pilih lewat irisan/legenda, Lihat total, Sembunyikan), kartu Total saldo, badge jumlah di "Dompet aktif", penanda warna per dompet (`walletColors`: warna jenis untuk dompet pertama tiap jenis, sejenis berikutnya warna `cat-*` lain), baris `is-linked`, persen bulat setengah ke atas + "<1%" (`walletShares` kini `WalletShare`), dan baris "Dompet nonaktif" yang membuka halaman `WalletInactivePage` (rute `wallet.inactive`, keputusan pemilik 22 Okt). Jawaban sementara (a)–(d) mengikuti rupa: (a) ketuk baris membuka rincian, (b) Urutkan B-34 tetap, (c) saldo ≤ 0 tidak ikut tanpa teks tambahan, (d) selalu ringkas. Selisih disengaja: tombol info tur dan Urutkan tetap di app bar; irisan kecil memakai busur minimal `AppDonutChart` (1,5), bukan 6px. Verifikasi: `flutter analyze` tanpa isu baru, seluruh `flutter test` lulus, emulator Android D1–D3 cocok (terang, id); D4–D6 dan gelap/en lewat uji widget saja. | agen (selesai); pemilik menjawab (a)–(d) | `docs/03-design/README.md` "Dompet v2" |
+| B-67 | **Sisa uji perangkat Fase 22**: iOS (ekspor, cadangkan, pulihkan), CSV dan xlsx dibuka di Excel lokal Indonesia dan Google Sheets, gajian maju di perangkat, cadangan yang memuat sumber Catat dari notifikasi dan pengingat menyala, peristiwa `export_created`/`backup_created`/`restore_*` di DebugView, galat ruang penuh (tidak terpicu di Android). | pemilik | T-22.7, [EXPORT_BACKUP.md](../01-product/features/EXPORT_BACKUP.md) §15 |
+| B-68 | **Titik terendah sebelum gajian** (Plus, janji 1): kalender 60 hari berisi gajian, rutin, cicilan, dan hari uang nganggur paling rendah; sumber utama peringatan Penjaga. Kerjakan bersama B-44. | agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §16, [laporan bisnis](https://claude.ai/artifact/SKsV87e4f7hX8h58Qvv7G5) Eksplorasi #1 |
+| B-69 | **Aman dipakai hari ini**: uang nganggur dibagi sisa hari periode. Angkanya **gratis** di Rencana; widget dan sapaan pagi **Plus** (bersama B-55). | agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §16, [laporan bisnis](https://claude.ai/artifact/SKsV87e4f7hX8h58Qvv7G5) #2 |
+| B-70 | **Cek sebelum beli** (Plus, janji 1): satu nominal → sisa anggaran, titik terendah, dan target yang mundur; tidak pernah menjadi transaksi. Kerjakan bersama B-46. | agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §16, [laporan bisnis](https://claude.ai/artifact/SKsV87e4f7hX8h58Qvv7G5) #3 |
+| B-71 | **Gaji untuk diri sendiri** (Plus, janji 2): untuk penghasilan tak tetap, berapa yang aman diambil tiap periode dari rata-rata 6–12 periode, sisanya penyangga. Bagian Freelance Pro (B-50). | agen + pemilik | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §16, [laporan bisnis](https://claude.ai/artifact/SKsV87e4f7hX8h58Qvv7G5) #4 |
+| B-72 | **Sisihkan pajak per pembayaran** (Plus, janji 2): saat pembayaran klien dicatat, tampilkan bagian yang disisihkan sesuai persen pajak proyek (ADR-019); tidak menghitung pajak terutang. Bagian B-50. | agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §16, [laporan bisnis](https://claude.ai/artifact/SKsV87e4f7hX8h58Qvv7G5) #5 |
+| B-73 | **Ringkasan penghasilan untuk pengajuan kredit** (Plus, janji 2): rekap 12 bulan per sumber dalam PDF, disebut "rekap catatan pribadi", bukan dokumen resmi atau pengganti rekening koran (keputusan 23 Okt 2026). Memakai mesin PDF B-49. | agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §16, [laporan bisnis](https://claude.ai/artifact/SKsV87e4f7hX8h58Qvv7G5) #6 |
+| B-74 | **Peta Uang Keluarga** (Plus, janji 3): dokumen dompet, rutin, cicilan, utang, aset, dan kontak penting, dibuat di ponsel dan dibagikan sendiri oleh pengguna. Sesudah B-49 (PDF) dan sebaiknya B-48. | agen + pemilik | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §16, [laporan bisnis](https://claude.ai/artifact/SKsV87e4f7hX8h58Qvv7G5) #7 |
+| B-75 | **Ringkasan untuk pasangan** (Plus, janji 3): Rapor bulanan versi berbagi tanpa nominal sensitif yang tidak dipilih, tanpa akun bersama. Sesudah B-49. | agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §16, [laporan bisnis](https://claude.ai/artifact/SKsV87e4f7hX8h58Qvv7G5) #9 |
+| B-76 | **Rencana uang tak terduga** (Plus, janji 1): THR, bonus, atau pembayaran besar masuk → usulan pembagian ke rutin, target, dan bebas pakai. Sasaran sebelum Ramadan dan THR 2027 (Feb–Mar 2027) bila sempat. | agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §16, [laporan bisnis](https://claude.ai/artifact/SKsV87e4f7hX8h58Qvv7G5) #10 |
+| B-77 | **Impor mutasi di ponsel** (Plus): berkas mutasi CSV/PDF bank dibaca di perangkat lewat `shared/capture`, tanpa dikirim ke server; parser per bank. | agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §16, [laporan bisnis](https://claude.ai/artifact/SKsV87e4f7hX8h58Qvv7G5) #11 |
+| B-78 | **Tanya Tanuki privat** (Plus, janji 3): tanya jawab memakai model di perangkat. Sesudah B-52 dan bersama B-15. | agen + pemilik | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §16, [laporan bisnis](https://claude.ai/artifact/SKsV87e4f7hX8h58Qvv7G5) #12 |
+| B-79 | **Dompet titipan** (**gratis**, keputusan 23 Okt 2026): uang arisan, kas kantor, atau titipan orang tua dipisah dari saldo milik sendiri. ADR domain bersama B-48. | agen + pemilik | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §16, [laporan bisnis](https://claude.ai/artifact/SKsV87e4f7hX8h58Qvv7G5) #13 |
+| B-80 | **Perkiraan zakat dari catatan** (**gratis**, keputusan 23 Okt 2026): zakat penghasilan dan zakat mal dari dompet, aset, dan utang; pembayarannya dicatat lewat CATAT. Rujukan nisab dari lembaga amil, harga emas diisi pengguna. Sasaran sebelum Ramadan 2027 bila sempat. | agen + pemilik | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §16, [laporan bisnis](https://claude.ai/artifact/SKsV87e4f7hX8h58Qvv7G5) #14 |
+| B-81 | **Kamar Tanuki** (gratis dasar; barang, kostum, dan tema musiman di Plus lewat B-56): kamar piksel yang bertambah barang saat tonggak nyata tercapai; tidak ada yang hilang saat absen, tanuki tidak pernah sedih. Bisa dimatikan. | pemilik menyerahkan aset, lalu agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §16, [laporan bisnis](https://claude.ai/artifact/SKsV87e4f7hX8h58Qvv7G5) Gamifikasi |
+| B-82 | **Buku Stempel** (gratis; edisi musiman khusus Plus): stempel piksel untuk tonggak (periode lengkap, saldo cocok, rutin tak terlewat, target tercapai) dan edisi Ramadan, 17 Agustus, Tahun Baru; tanpa streak, poin, atau peringkat (KT-R13). | pemilik menyerahkan aset, lalu agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §16, [laporan bisnis](https://claude.ai/artifact/SKsV87e4f7hX8h58Qvv7G5) Gamifikasi |
 | B-39 | **Pengumuman pembaruan R2**: pembaruan wajib/versi minimum untuk perbaikan kritis (KT-U1), pembaruan untuk iOS (App Store) sesudah iOS dirilis, dan pilihan jalur uji untuk penguji. | agen + pemilik | [APP_UPDATE.md](../01-product/features/APP_UPDATE.md) §14 |
 | B-35 | Uji di perangkat yang belum dilakukan QA PR #43: lebar 360dp (butuh izin mengubah setelan ponsel), Freelance, perekaman suara sungguhan, dan jalur Gemini secara terpisah. | pemilik | QA PR #43 (di luar PR) |
 | B-14 | **Catat lewat Suara**: STT sistem (`speech_to_text`) + parser aturan + Gemma lokal mulai dari model termurah, 270M → 1B → Gemma 4 E2B (unduhan opt-in dari Hugging Face) → form CATAT terisi draf; adaptor Firebase AI sebagai jalur pivot. ADR-027. Riset & rencana di [VOICE_INPUT_RESEARCH.md](../01-product/features/VOICE_INPUT_RESEARCH.md). | dijadwalkan: T-11.2–T-11.9 | riset 30 Sep 2026 |

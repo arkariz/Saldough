@@ -184,6 +184,21 @@ void main() {
     expect(tester.getTopLeft(find.textContaining('Cicilan').first).dy, greaterThan(later));
   });
 
+  testWidgets('rincian: Catat sekarang pada kemunculan yang belum tiba: bertanggal hari ini, tertaut ke kemunculan', (
+    tester,
+  ) async {
+    await rules.saveRule(rule('Netflix', 6500000, DateTime(2026, 9)));
+    await pump(tester, const RecurringDetailPage(ruleId: 'Netflix'));
+
+    await tester.tap(find.text(t.recurring.recordEarlyAction).first);
+    await tester.pumpAndSettle();
+    final recorded = read(await transactions.listTransactionsInMonth(clock)).single;
+    expect(recorded.date, clock);
+    expect(recorded.recurrence?.ruleId, 'Netflix');
+    expect(recorded.recurrence?.occurrenceDate.isAfter(DateTime(clock.year, clock.month, clock.day)), isTrue);
+    expect(recorded.amount, 6500000);
+  });
+
   testWidgets('rincian: Lewati menulis tanggal dilewati; Jeda lewat menu', (tester) async {
     await rules.saveRule(rule('Netflix', 6500000, DateTime(2026, 9)));
     await pump(tester, const RecurringDetailPage(ruleId: 'Netflix'));

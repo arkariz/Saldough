@@ -59,7 +59,7 @@ berarti membangun ringkasan untuk data yang belum ada.
 | 19 | Analisis keuangan R1 | Ke mana uang pergi per kategori, dibanding biasanya, tren enam periode (selesai 18 Okt 2026) |
 | 20 | Pengumuman pembaruan | Versi baru Play Store dan pembaruan kecil Shorebird diumumkan, catatan Apa yang baru (selesai 15 Okt 2026) |
 | 21 | Penemuan fitur | Catat dari notifikasi, pengingat rutin, dan awal bulan keuangan dijadikan langkah wajib onboarding dan tombol permanen (draf 18 Okt 2026, KT-D1 diputuskan, menunggu rupa) |
-| 22 | Ekspor dan cadangan manual | Ekspor transaksi ke xlsx/CSV, cadangkan dan pulihkan manual ke berkas, gratis tanpa akun (dari B-42, spek final 22 Okt 2026) |
+| 22 | Ekspor dan cadangan manual | Ekspor transaksi ke xlsx/CSV, cadangkan dan pulihkan manual ke berkas, gratis tanpa akun (dari B-42, selesai 23 Okt 2026) |
 
 Fase 0 sampai 6 membentuk MVP. Fase 7 dikerjakan setelahnya. Fase 8 dan 9
 lahir dari pemakaian nyata dan persiapan rilis, bukan dari rencana awal.
@@ -94,7 +94,7 @@ baru:
 | B-1 | Sapuan nama "Saldough" → "Tanukonomy" di dokumen | agen |
 | B-5, B-35, B-40 | Verifikasi perangkat yang tertunda: Akun, mata uang, Freelance, suara, lebar 360dp, keadaan kosong Analisis | pemilik |
 | Audit TASK_LIST | Kotak lama yang kemungkinan sudah selesai di kode tapi belum dicentang (T-11.17–11.20, T-15.9, T-15.14, T-15.19, dan B-13/B-14 yang usang) | agen |
-| Fase 22 (dari B-42), B-43 | Ekspor ke spreadsheet dan cadangan/pulihkan manual (Fase 22, [EXPORT_BACKUP.md](../01-product/features/EXPORT_BACKUP.md)), lalu kunci aplikasi (B-43); gratis, prasyarat Plus. Naik ke Now 18 Okt 2026 (KT-P7): data penguji tidak boleh hanya hidup di satu ponsel saat rilis publik | agen |
+| B-43 | Kunci aplikasi sidik jari/PIN (gratis); prasyarat Plus. Pasangannya, ekspor dan cadangan/pulihkan manual (Fase 22, dari B-42), **selesai 23 Okt 2026**; sisa uji perangkatnya di B-67 | agen, pemilik (B-67) |
 
 **Satu fitur yang ikut di Now:** **B-26**, kartu lembut "Ada yang belum dicatat
 sejak …?" (tanpa streak, KT-R13). Paling langsung menjawab ukuran keberhasilan
@@ -110,14 +110,14 @@ sejak …?" (tanpa streak, KT-R13). Paling langsung menjawab ukuran keberhasilan
 | B-12 | Ikon peluncur dan splash iOS | Pemilik menyerahkan artwork, dan keputusan merilis iOS |
 | B-39 | Pengumuman pembaruan R2: pembaruan wajib untuk perbaikan kritis, iOS | Butuh KT-U1 dan iOS |
 | B-29 | Penyamaran notifikasi Android 15 | Uji di perangkat Android 15 dengan notifikasi bank nyata |
-| B-41 + B-44 | Fondasi Plus (billing, hak, paywall, gerbang fitur lama) dan **Penjaga + Ringkasan Senin**, Plus hanya untuk penguji | ADR monetisasi (semua KT-P diputuskan 18 Okt 2026) |
-| B-45, B-46, B-41 | Catat dari foto, Bagaimana kalau, reverse trial: **Plus mulai dijual** | B-44 selesai; Blaze (T-11.8) dan Keamanan Data untuk B-45 |
+| B-41 + B-44 + B-68 | Fondasi Plus (billing, hak, paywall, gerbang fitur lama), **Penjaga + Ringkasan Senin**, dan **Titik terendah sebelum gajian**; angka Aman dipakai hari ini gratis di Rencana (B-69). Plus hanya untuk penguji | ADR monetisasi (semua KT-P diputuskan 18 Okt 2026) |
+| B-45, B-46 + B-70, B-41 | Catat dari foto, Bagaimana kalau dan **Cek sebelum beli**, reverse trial: **Plus mulai dijual** dengan judul tiga janji | B-44 selesai; Blaze (T-11.8) dan Keamanan Data untuk B-45 |
+| B-7 + B-60 | **Sinkronisasi opsional** lalu **Dompet Bersama / Plus Keluarga** (pemilik memutuskan bersaing di sini, KT-P13, 23 Okt 2026); yang tidak memakainya tetap tanpa akun dengan data di ponsel | Sesudah Plus dijual; ADR sinkronisasi, jawaban KT-2, wajib ADR-024 §3.3 |
 
 ### Later: butuh keputusan atau bukti dulu
 
 | Butir | Isi | Kenapa menunggu |
 |---|---|---|
-| B-7 | Sinkronisasi data keuangan ke server | Proyek paling besar; butuh keputusan produk, ADR, dan jawaban KT-2; wajib mematuhi ADR-024 §3.3 |
 | B-15 | Gemma lokal untuk Catat lewat Suara | Ditunda 30 Sep 2026; pemilik menentukan kapan |
 | B-28 | Sisa R3 otomasi (kenaikan harga dari notifikasi, rutin menganggur) | Tunggu pemakaian R3 nyata |
 | B-30 | Horizon perkiraan sampai 12 bulan (KT-R8) | R2 memakai +2 tetap; tunggu kebutuhan nyata |
@@ -127,35 +127,48 @@ sejak …?" (tanpa streak, KT-R13). Paling langsung menjawab ukuran keberhasilan
 | B-49, B-50, B-51 | Rapor bulanan bercerita + ekspor PDF, Freelance Pro, cadangan otomatis Drive | Sesudah Plus dijual; B-51 sesudah B-42 |
 | B-52 | Tanya Tanuki R1 | Sesudah B-47/B-48 supaya bisa menjawab tentang target dan utang; mutu diuji dengan katalog kueri sempit |
 | B-53, B-54 | Rapor Tahunan (Des 2027) dan Rekap SPT (Jan 2028) | Tahun data penuh pertama; B-49, B-50, B-48 |
-| B-55, B-56 | Widget (Catat gratis, ringkasan Plus); kosmetik Plus | Kapan saja; B-56 menunggu aset pemilik |
-| B-57–B-62 | Patungan dari struk, kartu kredit/paylater sebagai dompet tagihan, kekayaan bersih, Dompet Bersama/Plus Keluarga (butuh B-7), rapor kuartal freelance dan Tanya Tanuki R2, catat dari email | Sesudah pilar Plus terukur; urutan di FREEMIUM_PAYWALL §13.5 |
+| B-55, B-56 | Widget (Catat gratis, ringkasan dan Aman dipakai hari ini Plus); kosmetik Plus | Kapan saja; B-56 menunggu aset pemilik |
+| B-71, B-72, B-73 | Gaji untuk diri sendiri, Sisihkan pajak, Ringkasan penghasilan untuk pengajuan kredit (janji 2) | Bersama Freelance Pro (B-50); B-73 butuh mesin PDF B-49 |
+| B-74, B-75 | Peta Uang Keluarga, Ringkasan untuk pasangan (janji 3) | Sesudah B-49; B-74 sebaiknya sesudah B-48 |
+| B-76, B-80 | Rencana uang tak terduga (Plus) dan perkiraan zakat (gratis) | Sasaran sebelum Ramadan dan THR 2027 (Feb–Mar 2027) bila Plus sudah dijual |
+| B-79 | Dompet titipan (gratis) | ADR domain bersama utang-piutang (B-48) |
+| B-77, B-78 | Impor mutasi di ponsel, Tanya Tanuki privat | Sesudah pilar utama terukur; B-78 bersama B-15 dan sesudah B-52 |
+| B-81, B-82 | Kamar Tanuki dan Buku Stempel (gamifikasi tanpa streak) | Pemilik menyerahkan aset piksel; diukur dengan uji A/B Remote Config |
+| B-57–B-59, B-61, B-62 | Patungan dari struk, kartu kredit/paylater sebagai dompet tagihan, kekayaan bersih, rapor kuartal freelance dan Tanya Tanuki R2, catat dari email | Sesudah pilar Plus terukur; urutan di FREEMIUM_PAYWALL §13.5 |
 
-### Jalur Plus (urutan disetujui pemilik 18 Okt 2026, KT-P9)
+### Jalur Plus (urutan disetujui pemilik 18 Okt 2026, KT-P9; tiga janji dan fitur baru 23 Okt 2026)
 
 Freemium dan paywall dirancang di [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) (B-41). Urutan usulannya,
 dengan alasan lengkap di §13 dokumen itu:
 
 ```
-A. Kepercayaan (gratis)   B-42 ekspor/cadangan manual, B-43 kunci aplikasi
+A. Kepercayaan (gratis)   B-42 ekspor/cadangan manual (selesai, Fase 22), B-43 kunci aplikasi
         │
 B. Fondasi Plus           B-41 billing, hak, paywall, gerbang fitur lama
         │
-C. Tiga pilar → dijual    B-44 Penjaga ─► B-45 Catat dari foto ─► B-46 Bagaimana kalau
-        │                 ─► B-41 reverse trial (Plus mulai dijual)
+C. Tiga pilar → dijual    B-44 Penjaga + B-68 Titik terendah ─► B-45 Catat dari foto
+        │                 ─► B-46 Bagaimana kalau + B-70 Cek sebelum beli
+        │                 ─► B-41 reverse trial (Plus mulai dijual, judul tiga janji)
 D. Domain baru            B-47 Target, B-48 utang-piutang (ADR dulu)
         │
-E. Melengkapi pilar       B-49 rapor + PDF ─► B-50 Freelance Pro, B-51 cadangan Drive,
-        │                 B-52 Tanya Tanuki
+E. Melengkapi pilar       B-49 rapor + PDF ─► B-50 Freelance Pro + B-71/72/73,
+        │                 B-74 Peta Uang Keluarga, B-75 Ringkasan pasangan,
+        │                 B-51 cadangan Drive, B-52 Tanya Tanuki
+        │                 (Ramadan 2027: B-76 Rencana THR, B-80 zakat gratis)
 F. Musiman                B-53 Rapor Tahunan (Des 2027), B-54 Rekap SPT (Jan 2028)
 
-Kapan saja: B-55 widget, B-56 kosmetik. Sesudahnya: B-57–B-62, B-7, B-15.
+Kapan saja: B-55 widget, B-56 kosmetik, B-81/B-82 gamifikasi (aset).
+Domain gratis: B-79 dompet titipan bersama B-48.
+G. Bersama (KT-P13)       B-7 sinkronisasi opsional ─► B-60 Dompet Bersama / Plus Keluarga
+Sesudahnya: B-57–B-59, B-61, B-62, B-77 impor mutasi, B-78 Tanya Tanuki privat, B-15.
 ```
 
 Prinsipnya: kepercayaan sebelum menagih; Plus baru dijual bila tiga pilar
 terasa di uji coba; mesin yang sudah ada dan fitur tanpa data keluar lebih
 dulu; aturan uang baru (Target, utang) lewat ADR; fitur AI paling berisiko
-paling akhir. Nomor fase usulan (21–26) ada di FREEMIUM_PAYWALL §13.4 dan
-baru dipakai saat pemilik menaikkan butirnya ke Now.
+paling akhir. Nomor fase ditentukan saat pemilik menaikkan butirnya ke Now
+(usulan lama 21–26 di FREEMIUM_PAYWALL §13.4 sudah terpakai fase lain).
+Tiga janji paywall dan gamifikasinya ada di FREEMIUM_PAYWALL §16.
 
 ### Tidak dikerjakan
 
@@ -517,7 +530,7 @@ Dari B-42, permintaan pemilik 22 Okt 2026, prasyarat rilis publik dan Plus
 bisa dicadangkan ke berkas dan dipulihkan di ponsel lain, gratis dan tanpa
 akun ([EXPORT_BACKUP.md](../01-product/features/EXPORT_BACKUP.md)). Format
 cadangan dipakai ulang cadangan otomatis Drive (B-51). Keputusan teknis di
-ADR engineer (T-22.1). **Status:** spek final 22 Okt 2026 (KT-E1–KT-E5 diputuskan); menunggu rupa dan ADR engineer.
+ADR engineer (T-22.1). **Status:** selesai 23 Okt 2026. Kode T-22.0–T-22.7 di `main` (ADR-040 Accepted); QA emulator Android tanpa temuan S1/S2; sisa uji perangkat (iOS, Excel/Sheets) di B-67.
 
 **Selesai kalau:** cadangan dari satu ponsel dipulihkan di ponsel lain dan
 seluruh layar identik, pemulihan gagal tidak pernah merusak data, dan total

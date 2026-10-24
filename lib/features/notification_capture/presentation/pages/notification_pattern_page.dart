@@ -14,6 +14,7 @@ String patternKindLabel(NotificationPatternKind kind) => switch (kind) {
   NotificationPatternKind.income => t.notificationCapture.kindIncome,
   NotificationPatternKind.transferOut => t.notificationCapture.kindTransferOut,
   NotificationPatternKind.transferIn => t.notificationCapture.kindTransferIn,
+  NotificationPatternKind.transferBetween => t.notificationCapture.kindTransferBetween,
 };
 
 /// Membuka pembuat pola (ADR-032 §3.3): dari [sample] (teks notifikasi asli)
@@ -118,7 +119,14 @@ class _NotificationPatternPageState extends State<NotificationPatternPage> {
 
   bool get _hasAmount => _roles.containsValue(TemplateWordRole.amount);
 
-  bool get _isTransfer => _kind == NotificationPatternKind.transferOut || _kind == NotificationPatternKind.transferIn;
+  bool get _isTransfer =>
+      _kind == NotificationPatternKind.transferOut ||
+      _kind == NotificationPatternKind.transferIn ||
+      _kind == NotificationPatternKind.transferBetween;
+
+  /// Templat memakai `{from}`/`{to}`: transfer antar dompet satu aplikasi
+  /// (ADR-042 §3.1), jadi arah dan dompet lawan tetap tidak berlaku.
+  bool get _between => _template.text.contains(NotificationPattern.fromToken);
 
   NotificationTemplateMatch? get _preview {
     final sample = _sample.text.trim();
@@ -143,9 +151,11 @@ class _NotificationPatternPageState extends State<NotificationPatternPage> {
             ? template.replaceAll(RegExp(r'\{[^}]*\}'), '').trim().split(RegExp(r'\s+')).take(3).join(' ')
             : label,
         template: template,
-        kind: _kind,
+        kind: _between
+            ? NotificationPatternKind.transferBetween
+            : (_kind == NotificationPatternKind.transferBetween ? NotificationPatternKind.transferOut : _kind),
         categoryId: _isTransfer ? null : _categoryId,
-        transferWalletId: _isTransfer ? _transferWalletId : null,
+        transferWalletId: _isTransfer && !_between ? _transferWalletId : null,
       ),
     );
   }
@@ -225,6 +235,10 @@ class _NotificationPatternPageState extends State<NotificationPatternPage> {
                   (TemplateWordRole.amount, texts.roleAmount),
                   (TemplateWordRole.note, texts.roleNote),
                   (TemplateWordRole.ignore, texts.roleIgnore),
+                  if (_isTransfer) ...[
+                    (TemplateWordRole.from, texts.roleFrom),
+                    (TemplateWordRole.to, texts.roleTo),
+                  ],
                 ],
                 selected: _brush,
                 onChanged: (brush) => setState(() => _brush = brush),
@@ -243,6 +257,8 @@ class _NotificationPatternPageState extends State<NotificationPatternPage> {
                 switch (_brush) {
                   TemplateWordRole.amount => texts.roleAmountHelp,
                   TemplateWordRole.note => texts.roleNoteHelp,
+                  TemplateWordRole.from => texts.roleFromHelp,
+                  TemplateWordRole.to => texts.roleToHelp,
                   _ => texts.roleIgnoreHelp,
                 },
                 key: const ValueKey('pattern-brush-help'),
@@ -311,7 +327,9 @@ class _NotificationPatternPageState extends State<NotificationPatternPage> {
               onChanged: _setKind,
             ),
             const SizedBox(height: AppSpacing.space4),
-            if (_isTransfer) ...[
+            if (_isTransfer && _between)
+              Text(texts.patternBetweenHint, style: textTheme.bodySmall?.copyWith(color: colors.ink2))
+            else if (_isTransfer) ...[
               AppSectionLabel(texts.transferDirectionLabel),
               const SizedBox(height: AppSpacing.space1),
               AppSegmentedControl<NotificationPatternKind>(
@@ -381,6 +399,8 @@ class _WordChip extends StatelessWidget {
       TemplateWordRole.amount => (colors.positive, texts.roleAmount),
       TemplateWordRole.note => (colors.ink2, texts.roleNote),
       TemplateWordRole.ignore => (colors.ink2, texts.roleIgnore),
+      TemplateWordRole.from => (colors.ink2, texts.roleFrom),
+      TemplateWordRole.to => (colors.ink2, texts.roleTo),
       TemplateWordRole.literal || null => (null, null),
     };
     return ActionChip(

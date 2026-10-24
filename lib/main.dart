@@ -1,24 +1,14 @@
 import 'dart:async';
 import 'dart:developer' as developer;
 
-import 'package:dependencies/dependencies.dart';
-import 'package:di/di.dart';
 import 'package:flutter/widgets.dart';
-import 'package:go_router/go_router.dart';
-import 'package:saldough/app/app.dart';
-import 'package:saldough/app/di/di.dart';
-import 'package:saldough/core/currency/currency.dart';
+import 'package:saldough/app/bootstrap.dart';
+import 'package:saldough/app/data_portability/app_reboot.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/foundation/analytics/app_bootstrap_firebase.dart';
-import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
-import 'package:saldough/core/language/language.dart';
 import 'package:saldough/core/presentation/widgets/app_icon.dart';
-import 'package:saldough/shared/category/category.dart';
 import 'package:state_management/state_management.dart';
-
-/// Kontainer DI akar. Lihat ARCHITECTURE_OVERVIEW.md bagian "Bootstrap".
-final GetIt rootGetIt = GetIt.instance;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,7 +19,8 @@ Future<void> main() async {
   // jembatan legacy GetX mereka): pasang Bloc.observer -> Firebase ->
   // di.run() -> daftarkan effect handler -> render router -> di.warmUp()
   // setelah frame pertama. Lihat "Dasar keputusan" di
-  // ARCHITECTURE_OVERVIEW.md.
+  // ARCHITECTURE_OVERVIEW.md. Dari `di.run()` sampai `warmUp()` ada di
+  // `bootstrapApp()` supaya bisa dijalankan ulang (ADR-040 §3.7).
   Bloc.observer = AppBlocObserver();
 
   // ADR-023. Dibungkus try/catch di sini, BUKAN di dalam AppBootstrap.run()
@@ -44,54 +35,7 @@ Future<void> main() async {
   }
 
   await LocaleSettings.useDeviceLocale();
-  await di.run(rootGetIt);
 
-  // ADR-028: bahasa pilihan pengguna (kalau ada) menggantikan bahasa
-  // perangkat, sebelum migrasi kategori menanam nama bawaan.
-  final savedLanguage = (await rootGetIt<LanguagePreferenceRepository>().load()).getOrElse((_) => null);
-  if (savedLanguage != null) await LocaleSettings.setLocale(savedLanguage);
-  ActiveLanguage.notifier.value = LocaleSettings.currentLocale;
-
-  // ADR-025 §3.5: mata uang harus sudah terpasang sebelum layar pertama
-  // memformat nominal. Gagal dibaca berarti bawaan (IDR).
-  ActiveCurrency.notifier.value = (await rootGetIt<CurrencyPreferenceRepository>().load()).getOrElse(
-    (_) => AppCurrency.idr,
-  );
-  // Sembunyikan nominal (ADR-034): dibaca sebelum layar pertama, setiap
-  // perubahan disimpan. Gagal dibaca = tampil.
-  final amountVisibility = rootGetIt<AmountVisibilityRepository>();
-  AmountVisibility.notifier.value = (await amountVisibility.load()).getOrElse((_) => false);
-  AmountVisibility.notifier.addListener(
-    () => unawaited(amountVisibility.save(hidden: AmountVisibility.hidden)),
-  );
-
-  // ADR-038: jadwal bulan keuangan berriwayat; gagal dibaca = tanggal 1.
-  ActiveFinancialMonth.notifier.value = (await rootGetIt<FinancialMonthPreferenceRepository>().load()).getOrElse(
-    (_) => FinancialMonthSchedule.initial,
-  );
-
-  // ADR-026 §3.4: kategori bawaan + migrasi label lama, sebelum layar pertama
-  // membaca judul transaksi. Gagal tidak menghalangi aplikasi terbuka
-  // (NFR-REL-001); dicoba lagi pada pembukaan berikutnya.
-  final categoryRepository = rootGetIt<CategoryRepository>();
-  final migrated = await MigrateLegacyCategories(
-    categoryRepository: categoryRepository,
-    legacyLabels: rootGetIt<LegacyCategoryLabels>(),
-  )(builtInName: (key) => t.category.builtIn[key] ?? key);
-  if (migrated case Left(value: final failure)) {
-    developer.log('Migrasi kategori gagal, dicoba lagi nanti', error: failure, name: 'MigrateLegacyCategories');
-    AppBootstrap.recordNonFatal(failure, reason: 'MigrateLegacyCategories');
-  }
-  // Mengisi `ActiveCategories` (lewat repository) untuk judul transaksi.
-  await categoryRepository.listCategories();
-
-  registerEffectHandlers();
-
-  final router = rootGetIt<GoRouter>();
-
-  runApp(TranslationProvider(
-    child: SaldoughApp(getIt: rootGetIt, router: router),
-  ));
-
-  di.warmUp(rootGetIt);
+  AppReboot.install(bootstrapApp);
+  await bootstrapApp();
 }

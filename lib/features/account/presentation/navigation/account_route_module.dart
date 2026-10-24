@@ -13,11 +13,15 @@ import 'package:state_management/state_management.dart';
 /// `AccountScope`-nya sendiri (ADR-023).
 final class AccountRouteModule extends FeatureRouteModule {
   /// Membuat [AccountRouteModule]; [versionEntry] mengisi baris Versi
-  /// aplikasi (dikawat akar komposisi, isinya milik fitur `app_update`).
-  const AccountRouteModule({this.versionEntry});
+  /// aplikasi (dikawat akar komposisi, isinya milik fitur `app_update`) dan
+  /// [dataSection] bagian Data kamu (milik fitur `data_portability`).
+  const AccountRouteModule({this.versionEntry, this.dataSection});
 
   /// Pembuat baris Versi aplikasi dari container akar.
   final Widget Function(GetIt container)? versionEntry;
+
+  /// Pembuat bagian Data kamu (ekspor, cadangkan, pulihkan) dari container akar.
+  final Widget Function(GetIt container)? dataSection;
 
   @override
   List<RouteNode> get routes => [
@@ -34,7 +38,10 @@ final class AccountRouteModule extends FeatureRouteModule {
               BlocProvider.value(value: scope.container<CategoryManagerBloc>()),
             ],
             child: EffectListener<AccountBloc, AccountState>(
-              child: AccountPage(versionEntry: versionEntry?.call(parentContainer)),
+              child: AccountPage(
+                versionEntry: versionEntry?.call(parentContainer),
+                dataSection: dataSection?.call(parentContainer),
+              ),
             ),
           ),
         );

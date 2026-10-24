@@ -156,13 +156,14 @@ class _RepeatSheetState extends State<_RepeatSheet> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4),
                   child: !_advanced
-                      ? Align(
-                          alignment: Alignment.centerLeft,
-                          child: AppButton.text(
-                            small: true,
-                            label: t.record.repeat.moreAction,
-                            onPressed: () => setState(() => _advanced = true),
-                          ),
+                      // Selebar baris: area sentuhnya sama dengan yang dibaca
+                      // aksesibilitas, bukan hanya teksnya (QA Fase 22, Q1).
+                      ? AppButton.text(
+                          key: const ValueKey('repeat-more'),
+                          small: true,
+                          expand: true,
+                          label: t.record.repeat.moreAction,
+                          onPressed: () => setState(() => _advanced = true),
                         )
                       : _Advanced(value: value, kind: widget.kind, date: widget.date, onChanged: _set),
                 ),

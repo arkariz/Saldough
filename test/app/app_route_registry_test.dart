@@ -30,6 +30,8 @@ void main() {
       'voiceCapture.capture',
       'wallet.detail',
       'wallet.inactive',
+      'dataPortability.restore',
+      'dataPortability.restoreDone',
     });
   });
 

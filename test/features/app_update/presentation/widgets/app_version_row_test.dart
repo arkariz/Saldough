@@ -15,10 +15,16 @@ import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/account/presentation/navigation/account_route_keys.dart';
 import 'package:saldough/features/app_update/domain/entities/app_update_memory.dart';
 import 'package:saldough/features/app_update/domain/entities/update_snapshot.dart';
+import 'package:saldough/features/data_portability/domain/backup_gateway.dart';
+import 'package:saldough/features/data_portability/domain/file_transfer.dart';
+import 'package:saldough/features/data_portability/domain/restore_gateway.dart';
 import 'package:saldough/shared/auth/auth.dart';
 import 'package:saldough/shared/category/category.dart';
 
 import '../../../../helpers/fake_auth_repository.dart';
+import '../../../../helpers/fake_backup_gateway.dart';
+import '../../../../helpers/fake_file_transfer.dart';
+import '../../../../helpers/fake_restore_gateway.dart';
 import '../../../../helpers/routes.dart';
 import '../../../../helpers/update_harness.dart';
 
@@ -43,6 +49,9 @@ void main() {
     final container = GetIt.asNewInstance()
       ..registerSingleton<RouteRegistry>(appRouteRegistry())
       ..registerSingleton<AuthRepository>(FakeAuthRepository())
+      ..registerSingleton<BackupGateway>(FakeBackupGateway())
+      ..registerSingleton<RestoreGateway>(FakeRestoreGateway())
+      ..registerSingleton<FileTransfer>(FakeFileTransfer())
       ..registerSingleton<CurrencyPreferenceRepository>(
         CurrencyPreferenceRepositoryImpl(storage: InMemoryKeyValueStorage()),
       )

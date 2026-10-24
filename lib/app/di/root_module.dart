@@ -3,7 +3,13 @@ import 'package:di/di.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive_storage/hive_storage.dart';
 import 'package:navigation/navigation.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:saldough/app/data_portability/app_backup_registry.dart';
+import 'package:saldough/app/data_portability/app_export_data_source.dart';
+import 'package:saldough/app/data_portability/restore_reboot.dart';
+import 'package:saldough/app/data_portability/restore_recovery.dart';
 import 'package:saldough/app/discovery/app_feature_statuses.dart';
+import 'package:saldough/app/shell/account_data_section.dart';
 import 'package:saldough/app/shell/account_version_entry.dart';
 import 'package:saldough/app/shell/app_shell_page.dart';
 import 'package:saldough/core/currency/currency.dart';
@@ -11,6 +17,7 @@ import 'package:saldough/core/discovery/discovery.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/foundation/analytics/app_bootstrap_firebase.dart';
 import 'package:saldough/core/foundation/navigation/app_route_registry.dart';
+import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/language/language.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/account/presentation/navigation/account_route_module.dart';
@@ -35,6 +42,18 @@ import 'package:saldough/features/budget/data/repositories/budget_template_repos
 import 'package:saldough/features/budget/domain/repositories/budget_repository.dart';
 import 'package:saldough/features/budget/domain/repositories/budget_template_repository.dart';
 import 'package:saldough/features/budget/presentation/navigation/budget_route_module.dart';
+import 'package:saldough/features/data_portability/data/backup_service.dart';
+import 'package:saldough/features/data_portability/data/export_service.dart';
+import 'package:saldough/features/data_portability/data/platform_file_transfer.dart';
+import 'package:saldough/features/data_portability/data/restore_engine.dart';
+import 'package:saldough/features/data_portability/data/restore_service.dart';
+import 'package:saldough/features/data_portability/domain/backup_gateway.dart';
+import 'package:saldough/features/data_portability/domain/export_data.dart';
+import 'package:saldough/features/data_portability/domain/export_gateway.dart';
+import 'package:saldough/features/data_portability/domain/file_transfer.dart';
+import 'package:saldough/features/data_portability/domain/restore_gateway.dart';
+import 'package:saldough/features/data_portability/presentation/export_labels_i18n.dart';
+import 'package:saldough/features/data_portability/presentation/navigation/data_portability_route_module.dart';
 import 'package:saldough/features/freelance/data/adapters/freelance_overview_source_impl.dart';
 import 'package:saldough/features/freelance/data/adapters/plan_freelance_source_impl.dart';
 import 'package:saldough/features/freelance/data/repositories/freelance_repository_impl.dart';
@@ -85,10 +104,11 @@ abstract final class RootModule {
   /// ⚠ Daftar ini tumbuh manual tiap fitur baru ditambahkan — tidak ada
   /// penemuan otomatis, sesuai desain `FeatureRouteModule`.
   static const List<FeatureRouteModule> featureModules = [
-    AccountRouteModule(versionEntry: accountVersionEntry),
+    AccountRouteModule(versionEntry: accountVersionEntry, dataSection: accountDataSection),
     AnalysisRouteModule(),
     AppUpdateRouteModule(),
     BudgetRouteModule(),
+    DataPortabilityRouteModule(reboot: restoreReboot),
     FreelanceRouteModule(),
     NotificationCaptureRouteModule(),
     RecordRouteModule(),
@@ -102,6 +122,7 @@ abstract final class RootModule {
   static Future<void> registerAll(GetIt container) async {
     await _registerStorage(container);
     _registerSharedRepositories(container);
+    _registerDataPortability(container);
     final registry = _registerRouteRegistry(container);
     await _registerRouter(container, registry);
   }
@@ -111,6 +132,53 @@ abstract final class RootModule {
       boxName: 'saldough_kv',
     );
     container.registerSingleton<KeyValueStorage>(storage);
+
+    // ADR-040 §3.4: box kedua untuk jurnal dan salinan pemulihan. Jurnal
+    // diperiksa SEKARANG, sebelum repositori mana pun dibuat, supaya tidak ada
+    // yang membaca data di tengah penggantian.
+    final restoreStorage = await HiveKeyValueStorage.initialize(boxName: 'saldough_restore');
+    final restoreEngine = RestoreEngine(live: storage, staging: restoreStorage, registry: appBackupRegistry);
+    container
+      ..registerSingleton<RestoreEngine>(restoreEngine)
+      ..registerSingleton<RestoreRecoveryOutcome>(RestoreRecoveryOutcome(await recoverRestoreJournal(restoreEngine)));
+  }
+
+  /// Ekspor, cadangan, dan pemulihan (ADR-040). Dipanggil sesudah repositori
+  /// bersama dan fitur terdaftar; sumber data dibaca lewat port.
+  static void _registerDataPortability(GetIt container) {
+    container
+      ..registerLazySingleton<ExportDataSource>(
+        () => AppExportDataSource(
+          transactions: container<TransactionRepository>(),
+          wallets: container<WalletRepository>(),
+          categories: container<CategoryRepository>(),
+          budgets: container<BudgetItemCatalog>(),
+          rules: container<RecurringRuleRepository>(),
+          freelance: container<FreelanceRepository>(),
+        ),
+      )
+      ..registerLazySingleton<ExportGateway>(
+        () => ExportService(source: container<ExportDataSource>(), labels: exportLabelsFromI18n),
+      )
+      ..registerLazySingleton<BackupGateway>(
+        () => BackupService(
+          storage: container<KeyValueStorage>(),
+          registry: appBackupRegistry,
+          appInfo: () async {
+            final info = await PackageInfo.fromPlatform();
+            return (version: info.version, build: int.tryParse(info.buildNumber) ?? 0);
+          },
+          fileStem: () => t.dataPortability.backupFileStem,
+        ),
+      )
+      ..registerLazySingleton<RestoreGateway>(
+        () => RestoreService(
+          storage: container<KeyValueStorage>(),
+          engine: container<RestoreEngine>(),
+          registry: appBackupRegistry,
+        ),
+      )
+      ..registerLazySingleton<FileTransfer>(() => const PlatformFileTransfer());
   }
 
   static void _registerSharedRepositories(GetIt container) {
@@ -324,6 +392,7 @@ abstract final class RootModule {
           state,
           // Pengingat rutin di onboarding (FEATURE_DISCOVERY §4.4): alur
           // izin dan sakelar yang sama dengan Akun.
+          pickBackup: container<FileTransfer>().pickBackup,
           enableReminders: () async {
             final granted = await EnableReminders(
               scheduler: container<ReminderScheduler>(),
@@ -351,6 +420,7 @@ abstract final class RootModule {
   // `runApp`, jadi tidak ada frame yang berkedip. Dokumen progres rusak
   // dianggap belum dilihat.
   static Future<String> _initialLocation(GetIt container) async {
+    await markOnboardingDoneIfRestoring(container);
     final progress = (await container<TutorialProgressRepository>().load()).getOrElse((_) => TutorialProgress.empty);
     return progress.onboardingDone ? AppRouteRegistry.homePath : AppRouteRegistry.onboardingPath;
   }

@@ -274,7 +274,7 @@ RecordDraft draftFromTransaction(Transaction transaction) => switch (transaction
 RecordDraft draftFromRule(RecurringRule rule, {DateTime? date}) {
   final now = DateTime.now();
   final day = date ?? nextOccurrence(rule, now) ?? rule.schedule.anchorDate;
-  final when = DateTime(day.year, day.month, day.day, now.hour, now.minute);
+  final when = occurrenceRecordDate(day, now);
   return RecordDraft(
     kind: switch (rule.kind) {
       RecurringKind.income => DraftKind.income,

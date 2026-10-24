@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:di/di.dart';
 import 'package:flutter/material.dart';
 import 'package:navigation/navigation.dart';
+import 'package:saldough/app/data_portability/app_reboot.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
@@ -17,6 +18,7 @@ import 'package:saldough/features/budget/presentation/bloc/budget_bloc.dart';
 import 'package:saldough/features/budget/presentation/bloc/budget_state.dart';
 import 'package:saldough/features/budget/presentation/host/recurring_budget_host.dart';
 import 'package:saldough/features/budget/presentation/pages/budget_list_page.dart';
+import 'package:saldough/features/data_portability/presentation/navigation/data_portability_route_keys.dart';
 import 'package:saldough/features/home/di/home_scope.dart';
 import 'package:saldough/features/home/presentation/bloc/home_bloc.dart';
 import 'package:saldough/features/home/presentation/bloc/home_state.dart';
@@ -82,6 +84,21 @@ class _AppShellPageState extends State<AppShellPage> {
 
   /// [AppShellPage.startAction] sudah dijalankan -- hanya sekali per shell.
   bool _startActionDone = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _showRestoreDone());
+  }
+
+  /// Sesudah pemulihan cadangan, aplikasi dimulai ulang dan shell membuka
+  /// halaman "Data dipulihkan" sekali (ADR-040 §3.7).
+  void _showRestoreDone() {
+    final report = AppReboot.report.value;
+    if (report == null || !mounted) return;
+    AppReboot.report.value = null;
+    unawaited(context.pushRoute(DataPortabilityRouteKeys.restoreDone, RestoreDoneInput(report)));
+  }
 
   /// Segmen tab Rencana yang tampil (T-15.4). Awal sesi Bulan ini, sesudah
   /// itu segmen terakhir selama shell hidup (KT-L4). Tidak disimpan.

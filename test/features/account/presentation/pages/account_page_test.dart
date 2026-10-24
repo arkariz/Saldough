@@ -15,10 +15,17 @@ import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/account/presentation/navigation/account_route_keys.dart';
+import 'package:saldough/features/data_portability/domain/backup_gateway.dart';
+import 'package:saldough/features/data_portability/domain/file_transfer.dart';
+import 'package:saldough/features/data_portability/domain/restore_gateway.dart';
+import 'package:saldough/features/data_portability/domain/restore_models.dart';
 import 'package:saldough/shared/auth/auth.dart';
 import 'package:saldough/shared/category/category.dart';
 
 import '../../../../helpers/fake_auth_repository.dart';
+import '../../../../helpers/fake_backup_gateway.dart';
+import '../../../../helpers/fake_file_transfer.dart';
+import '../../../../helpers/fake_restore_gateway.dart';
 import '../../../../helpers/routes.dart';
 
 void main() {
@@ -26,11 +33,20 @@ void main() {
 
   setUpAll(registerEffectHandlers);
 
-  Future<void> pumpAccount(WidgetTester tester, {AppUser? signedIn, TutorialProgressRepository? tutorials}) async {
+  Future<void> pumpAccount(
+    WidgetTester tester, {
+    AppUser? signedIn,
+    TutorialProgressRepository? tutorials,
+    FakeBackupGateway? backup,
+    FakeRestoreGateway? restore,
+  }) async {
     repository = FakeAuthRepository(signedIn: signedIn);
     final container = GetIt.asNewInstance()
       ..registerSingleton<RouteRegistry>(appRouteRegistry())
       ..registerSingleton<AuthRepository>(repository)
+      ..registerSingleton<BackupGateway>(backup ?? FakeBackupGateway())
+      ..registerSingleton<RestoreGateway>(restore ?? FakeRestoreGateway())
+      ..registerSingleton<FileTransfer>(FakeFileTransfer())
       ..registerSingleton<CurrencyPreferenceRepository>(
         CurrencyPreferenceRepositoryImpl(storage: InMemoryKeyValueStorage()),
       )
@@ -103,7 +119,67 @@ void main() {
     expect(find.byType(TextField), findsNWidgets(2));
   });
 
-  testWidgets('masuk Google menampilkan profil, data kamu, dan zona bahaya', (tester) async {
+  testWidgets('Cadangkan sekarang: belum pernah dicadangkan', (tester) async {
+    tester.view.physicalSize = const Size(800, 3200);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await pumpAccount(tester);
+    expect(find.text(t.dataPortability.backupTitle), findsOneWidget);
+    expect(find.text(t.dataPortability.backupNever), findsOneWidget);
+  });
+
+  testWidgets('Cadangkan sekarang menampilkan Cadangan terakhir bila sudah pernah', (tester) async {
+    tester.view.physicalSize = const Size(800, 3200);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await pumpAccount(tester, backup: FakeBackupGateway(lastBackup: DateTime(2026, 10, 12)));
+    expect(find.text(t.dataPortability.backupLast(date: '12 Okt 2026')), findsOneWidget);
+    expect(find.text(t.dataPortability.backupNever), findsNothing);
+  });
+
+  testWidgets('Pulihkan dari cadangan selalu ada; Kembalikan data sebelum pemulihan tidak ada tanpa cadangan pengaman', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(800, 3200);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await pumpAccount(tester);
+    expect(find.byKey(const ValueKey('data-restore')), findsOneWidget);
+    expect(find.text(t.dataPortability.restoreTitle), findsOneWidget);
+    expect(find.byKey(const ValueKey('data-undo')), findsNothing);
+  });
+
+  testWidgets('Kembalikan data sebelum pemulihan muncul bersama tanggalnya bila ada cadangan pengaman', (tester) async {
+    tester.view.physicalSize = const Size(800, 3200);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await pumpAccount(
+      tester,
+      restore: FakeRestoreGateway(
+        safety: SafetyCopyInfo(createdAt: DateTime(2026, 10, 22), expiresAt: DateTime(2026, 11, 21)),
+      ),
+    );
+    expect(find.byKey(const ValueKey('data-undo')), findsOneWidget);
+    expect(find.text(t.dataPortability.undoTitle(date: '22 Okt 2026')), findsOneWidget);
+    expect(find.text(t.dataPortability.undoSub), findsOneWidget);
+  });
+
+  testWidgets('bagian Data kamu tampil sebelum masuk juga, sesudah setelan Tampilan (AkunData.dc.html)', (tester) async {
+    tester.view.physicalSize = const Size(800, 3200);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await pumpAccount(tester);
+
+    expect(find.text(t.dataPortability.sectionTitle), findsOneWidget);
+    expect(find.text(t.dataPortability.exportTitle), findsOneWidget);
+    final display = tester.getTopLeft(find.text(t.account.displaySection)).dy;
+    final data = tester.getTopLeft(find.text(t.dataPortability.sectionTitle)).dy;
+    final app = tester.getTopLeft(find.text(t.account.appSection)).dy;
+    expect(display, lessThan(data));
+    expect(data, lessThan(app));
+  });
+
+  testWidgets('masuk Google menampilkan profil dan zona bahaya', (tester) async {
     await pumpAccount(tester);
 
     await tester.tap(find.text(t.account.googleSignInAction));
@@ -112,8 +188,8 @@ void main() {
     expect(find.text('Tanu Ki'), findsOneWidget);
     expect(find.text('tanu@example.com'), findsOneWidget);
     expect(find.text(t.account.methodGoogle), findsOneWidget);
-    expect(find.text(t.account.dataTitle), findsOneWidget);
     expect(find.byKey(const ValueKey('account-delete')), findsOneWidget);
+    expect(find.byKey(const ValueKey('data-export')), findsOneWidget, reason: 'bagian Data kamu (ADR-040)');
   });
 
   testWidgets('hapus akun email/sandi dengan sesi lama meminta sandi lalu menghapus', (tester) async {

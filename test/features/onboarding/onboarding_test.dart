@@ -94,6 +94,7 @@ void main() {
       WidgetTester tester, {
       OnboardingMode mode = OnboardingMode.firstRun,
       bool passLanguage = true,
+      Future<void> Function()? onRestoreRequested,
     }) async {
       await tester.pumpWidget(
         MaterialApp(
@@ -102,6 +103,7 @@ void main() {
             mode: mode,
             onFinished: (outcome, currency) async => outcomes.add((outcome, currency)),
             onLanguageSelected: (locale) async => languages.add(locale),
+            onRestoreRequested: onRestoreRequested,
           ),
         ),
       );
@@ -123,6 +125,35 @@ void main() {
 
       await _passLanguage(tester);
       expect(find.text(t.onboarding.page1Title), findsOneWidget);
+    });
+
+    testWidgets('tautan pulihkan hanya di layar geser pertama dan memanggil callback (EXPORT_BACKUP §7.3)', (
+      tester,
+    ) async {
+      var requested = 0;
+      await pumpPage(tester, onRestoreRequested: () async => requested++);
+      final link = find.byKey(const ValueKey('onboarding-restore'));
+      expect(find.text(t.onboarding.restoreAction), findsOneWidget);
+
+      await tester.tap(link);
+      await tester.pumpAndSettle();
+      expect(requested, 1);
+      // Tetap di onboarding sesudah dibatalkan atau gagal.
+      expect(find.text(t.onboarding.page1Title), findsOneWidget);
+
+      await tester.tap(find.text(t.onboarding.nextAction));
+      await tester.pumpAndSettle();
+      expect(link, findsNothing);
+    });
+
+    testWidgets('tanpa callback, tautan pulihkan tidak tampil', (tester) async {
+      await pumpPage(tester);
+      expect(find.byKey(const ValueKey('onboarding-restore')), findsNothing);
+    });
+
+    testWidgets('mode tinjau tidak menampilkan tautan pulihkan', (tester) async {
+      await pumpPage(tester, mode: OnboardingMode.review, onRestoreRequested: () async {});
+      expect(find.byKey(const ValueKey('onboarding-restore')), findsNothing);
     });
 
     testWidgets('mode tinjau tanpa langkah bahasa', (tester) async {

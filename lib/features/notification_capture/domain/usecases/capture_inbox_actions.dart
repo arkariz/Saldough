@@ -138,12 +138,37 @@ final class CaptureInboxActions {
       final walletId = draft.walletId;
       if (amount == null || walletId == null) continue;
       final date = draft.date ?? entry.capturedAt;
+      final kind = switch (draft.kind) {
+        DraftKind.income => RecurringKind.income,
+        DraftKind.expense => RecurringKind.expense,
+        DraftKind.transfer => RecurringKind.transfer,
+      };
+      // Pola yang terikat ke rutin (ADR-042 §3.4) menentukan rutinnya sendiri;
+      // bila kemunculannya tidak jelas, tidak ada saran (tidak menebak).
+      final bound = entry.patternId == null
+          ? null
+          : rules
+                .where(
+                  (r) =>
+                      r.notificationBinding?.packageName == entry.packageName &&
+                      r.notificationBinding?.patternId == entry.patternId,
+                )
+                .firstOrNull;
+      if (bound != null) {
+        final match = matchBoundOccurrence(
+          bound,
+          kind: kind,
+          walletId: walletId,
+          toWalletId: draft.toWalletId,
+          amount: amount,
+          date: date,
+          transactions: await around(date),
+        );
+        if (match != null) result[entry.id] = match;
+        continue;
+      }
       final candidates = occurrenceCandidates(
-        kind: switch (draft.kind) {
-          DraftKind.income => RecurringKind.income,
-          DraftKind.expense => RecurringKind.expense,
-          DraftKind.transfer => RecurringKind.transfer,
-        },
+        kind: kind,
         walletId: walletId,
         toWalletId: draft.toWalletId,
         amount: amount,

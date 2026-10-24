@@ -57,7 +57,7 @@ void main() {
     expect(t.home.flowNet, 'Net');
     expect(
       t.plan.financialMonthOfferScheduled(start: t.plan.financialMonthOnDay(day: 25)),
-      'Recurring scheduled. Start your financial month on day 25?',
+      'Recurring transaction scheduled. Start your financial month on day 25?',
     );
   });
 }

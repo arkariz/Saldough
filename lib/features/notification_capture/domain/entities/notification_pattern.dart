@@ -13,6 +13,10 @@ enum NotificationPatternKind {
 
   /// Transfer dari dompet lain milik pengguna ke dompet sumber.
   transferIn,
+
+  /// Transfer antar dua dompet milik pengguna di aplikasi yang sama
+  /// (ADR-042 §3.1): kedua sisi dibaca dari penanda `{from}` dan `{to}`.
+  transferBetween,
 }
 
 /// Templat teks notifikasi satu aplikasi (ADR-032 §3.3): teks literal dengan
@@ -38,6 +42,12 @@ final class NotificationPattern extends Equatable {
 
   /// Penanda catatan (merchant atau lawan transaksi).
   static const noteToken = '{note}';
+
+  /// Penanda dompet asal transfer (ADR-042 §3.1).
+  static const fromToken = '{from}';
+
+  /// Penanda dompet tujuan transfer (ADR-042 §3.1).
+  static const toToken = '{to}';
 
   /// Penanda bagian yang berubah-ubah (tanggal, jam, no. referensi, saldo).
   static const anyToken = '{*}';

@@ -61,6 +61,11 @@ class TransactionNotificationListener : NotificationListenerService() {
         if (applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0 && !looksLikeOtp(text)) {
             CaptureQueue.addDebugSample(this, item)
         }
+        // Contoh untuk membuat pola dan filter (ADR-042 §3.2): hanya bila pengguna
+        // menyalakannya, bermuatan angka, dan tidak pernah OTP.
+        if (config.saveSamples && text.any { it.isDigit() } && !looksLikeOtp(text)) {
+            CaptureQueue.addSample(this, item)
+        }
         if (text.none { it.isDigit() } || looksLikeOtp(text) || !source.matchesKeywords(text)) return
         val icon = NotificationIcons.forNotification(this, sbn)
         if (!CaptureQueue.add(this, item, sbn.key, notification.`when`, icon)) return

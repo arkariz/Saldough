@@ -59,10 +59,13 @@ final class NotificationDraftComposer {
       languageCode: language?.code ?? languageCode,
       origin: notification.packageName,
     );
-    // Dompet sumber tidak boleh terbaca sebagai lawan transfer.
+    // Dompet sumber untuk teks ini (ADR-042 §3.1): aturan dompet, lalu bawaan;
+    // ambigu = tidak menebak. Dompet sumber tidak boleh terbaca sebagai lawan
+    // transfer, tetapi dompet lain milik aplikasi yang sama boleh.
+    final resolved = source.resolveWallet(notification.text);
     final otherWallets = [
       for (final w in wallets)
-        if (w.id != source.walletId) w,
+        if (w.id != resolved.walletId) w,
     ];
 
     final masked = language == null
@@ -77,6 +80,7 @@ final class NotificationDraftComposer {
         final draft = await _fromPattern(
           pattern,
           match,
+          source,
           evidence,
           language,
           wallets: wallets,
@@ -86,7 +90,14 @@ final class NotificationDraftComposer {
         );
         if (draft.amountSen == null) continue;
         return NotificationDraft(
-          draft: _tidy(_withSourceWallet(draft, source.walletId), source, notification.title, language),
+          draft: _tidy(
+            pattern.kind == NotificationPatternKind.transferBetween
+                ? draft
+                : _withSourceWallet(draft, resolved.walletId, ambiguous: resolved.ambiguous),
+            source,
+            notification.title,
+            language,
+          ),
           autoEligible: pattern.verified,
           pattern: pattern,
         );
@@ -109,7 +120,8 @@ final class NotificationDraftComposer {
           // Saldo, nomor rekening, dan nomor referensi tidak perlu ke cloud.
           cloudText: masked,
         ),
-        source.walletId,
+        resolved.walletId,
+        ambiguous: resolved.ambiguous,
       ),
       source,
       notification.title,
@@ -164,6 +176,7 @@ final class NotificationDraftComposer {
   Future<RecordDraft> _fromPattern(
     NotificationPattern pattern,
     NotificationTemplateMatch match,
+    NotificationSource source,
     CaptureEvidence evidence,
     CaptureLanguage? language, {
     required List<Wallet> wallets,
@@ -174,7 +187,9 @@ final class NotificationDraftComposer {
     final kind = switch (pattern.kind) {
       NotificationPatternKind.expense => DraftKind.expense,
       NotificationPatternKind.income => DraftKind.income,
-      NotificationPatternKind.transferOut || NotificationPatternKind.transferIn => DraftKind.transfer,
+      NotificationPatternKind.transferOut ||
+      NotificationPatternKind.transferIn ||
+      NotificationPatternKind.transferBetween => DraftKind.transfer,
     };
     // Catatan dan kategori dari aturan bila pola tidak menentukannya.
     InterpretedTransaction? rules;
@@ -218,6 +233,23 @@ final class NotificationDraftComposer {
         date: rules?.date,
       ),
     );
+    if (pattern.kind == NotificationPatternKind.transferBetween) {
+      // Kedua sisi dari teks lewat aturan dompet (ADR-042 §3.1); sisi yang
+      // tidak terpetakan dibiarkan kosong, bukan ditebak.
+      final from = _knownWallet(wallets, source.walletForFragment(match.fromText ?? ''));
+      final to = _knownWallet(wallets, source.walletForFragment(match.toText ?? ''));
+      final same = from != null && from == to;
+      final issues = {...draft.issues}..removeAll({DraftIssue.transferSourceMissing, DraftIssue.transferTargetMissing});
+      return draft.copyWith(
+        walletId: () => same ? null : from,
+        toWalletId: () => same ? null : to,
+        issues: {
+          ...issues,
+          if (same || from == null) DraftIssue.transferSourceMissing,
+          if (same || to == null) DraftIssue.transferTargetMissing,
+        },
+      );
+    }
     if (kind == DraftKind.transfer) {
       final other = pattern.transferWalletId;
       final known = other != null && wallets.any((w) => w.id == other);
@@ -237,6 +269,8 @@ final class NotificationDraftComposer {
     return draft;
   }
 
+  String? _knownWallet(List<Wallet> wallets, String? id) => id != null && wallets.any((w) => w.id == id) ? id : null;
+
   Category? _category(List<Category> categories, String? id, DraftKind kind) {
     if (id == null || kind == DraftKind.transfer) return null;
     final wanted = kind == DraftKind.income ? CategoryKind.income : CategoryKind.expense;
@@ -249,7 +283,15 @@ final class NotificationDraftComposer {
   /// Dompet sumber mengisi dompet draf: pemasukan/pengeluaran memakai dompet
   /// sumber (menggantikan sebutan dompet dari teks); transfer mengisi sisi
   /// yang kosong. Tanpa dompet sumber, draf tidak diubah.
-  RecordDraft _withSourceWallet(RecordDraft draft, String? sourceWalletId) {
+  RecordDraft _withSourceWallet(RecordDraft draft, String? sourceWalletId, {bool ambiguous = false}) {
+    if (ambiguous) {
+      // Lebih dari satu dompet cocok: tidak menebak, biarkan pengguna memilih.
+      return draft.copyWith(
+        walletId: () => null,
+        toWalletId: () => null,
+        issues: {...draft.issues, DraftIssue.walletUnknown},
+      );
+    }
     if (sourceWalletId == null) return draft;
     if (draft.kind != DraftKind.transfer) {
       return draft.copyWith(

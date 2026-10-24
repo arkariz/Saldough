@@ -67,6 +67,7 @@ abstract interface class NotificationCaptureGateway {
     required List<NotificationSource> sources,
     required bool remindWhenClosed,
     required ReminderTexts texts,
+    bool saveSamples = false,
   });
 
   /// Tangkapan yang menunggu di antrean native.
@@ -100,4 +101,11 @@ abstract interface class NotificationCaptureGateway {
   /// Build debug: teks mentah terakhir dari paket terdaftar, sebelum saringan
   /// kata kunci (ADR-032 §3.6). Kosong di build rilis.
   Future<List<CapturedNotification>> debugSamples();
+
+  /// Contoh notifikasi aplikasi [packageName] yang disimpan native bila
+  /// `saveSamples` menyala (ADR-042 §3.2), terbaru lebih dulu.
+  Future<List<CapturedNotification>> samples(String packageName);
+
+  /// Menghapus contoh [packageName], atau semuanya bila `null`.
+  Future<void> clearSamples({String? packageName});
 }

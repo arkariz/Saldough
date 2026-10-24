@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:di/di.dart';
 import 'package:flutter/material.dart' show ScaffoldMessenger, SnackBar;
@@ -8,9 +9,11 @@ import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/foundation/navigation/app_route_registry.dart';
+import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/language/language.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
+import 'package:saldough/features/data_portability/presentation/navigation/data_portability_route_keys.dart';
 import 'package:saldough/features/onboarding/presentation/pages/onboarding_page.dart';
 
 /// Membangun rute `/onboarding` (ADR-021 §3.2).
@@ -25,6 +28,11 @@ import 'package:saldough/features/onboarding/presentation/pages/onboarding_page.
 /// [enableReminders] menyalakan pengingat rutin (izin notifikasi lalu
 /// sakelar) dan disambungkan akar komposisi supaya fitur ini tidak mengimpor
 /// `recurring` (ADR-030); `null` = langkah pengingat tidak ditanyakan.
+/// [pickBackup] memilih berkas cadangan lewat pemilih sistem (`null` bila
+/// dibatalkan); `null` = tautan "Sudah punya cadangan? Pulihkan" tidak tampil
+/// (EXPORT_BACKUP §7.3). Pemulihan berhasil memulai ulang aplikasi dan
+/// menandai onboarding selesai di akar komposisi, jadi halaman ini tidak
+/// perlu tahu hasilnya.
 /// Awal periode keuangan disimpan sebagai satu entri sejak awal
 /// (`FinancialMonthSchedule.single`), jadi menetapkannya sebelum ada data
 /// tidak membuat periode peralihan (FINANCIAL_PERIOD). Tiap jawaban dicatat
@@ -33,17 +41,19 @@ Widget buildOnboardingRoute(
   BuildContext context,
   GoRouterState state, {
   Future<bool> Function()? enableReminders,
+  Future<Uint8List?> Function()? pickBackup,
 }) {
   final mode = state.extra is OnboardingMode ? state.extra! as OnboardingMode : OnboardingMode.firstRun;
-  return _OnboardingLoader(mode: mode, enableReminders: enableReminders);
+  return _OnboardingLoader(mode: mode, enableReminders: enableReminders, pickBackup: pickBackup);
 }
 
 /// Memuat progres langkah wajib sebelum menampilkan [OnboardingPage].
 class _OnboardingLoader extends StatefulWidget {
-  const _OnboardingLoader({required this.mode, required this.enableReminders});
+  const _OnboardingLoader({required this.mode, required this.enableReminders, required this.pickBackup});
 
   final OnboardingMode mode;
   final Future<bool> Function()? enableReminders;
+  final Future<Uint8List?> Function()? pickBackup;
 
   @override
   State<_OnboardingLoader> createState() => _OnboardingLoaderState();
@@ -80,6 +90,7 @@ class _OnboardingLoaderState extends State<_OnboardingLoader> {
     final mode = widget.mode;
     final container = ScopeProvider.of(context);
     final enableReminders = widget.enableReminders;
+    final pickBackup = widget.pickBackup;
     Future<void> answered(OnboardingStep step) async {
       await container<TutorialProgressRepository>().markOnboardingStepAnswered(step);
     }
@@ -113,6 +124,13 @@ class _OnboardingLoaderState extends State<_OnboardingLoader> {
               AppAnalytics.log(DiscoveryEvents.stepAnswered(step: 'reminder', choice: 'turned_on'));
               if (on) AppAnalytics.log(DiscoveryEvents.featureEnabled(feature: 'reminder', via: 'onboarding'));
               return on;
+            },
+      onRestoreRequested: mode == OnboardingMode.review || pickBackup == null
+          ? null
+          : () async {
+              final bytes = await pickBackup();
+              if (bytes == null || !context.mounted) return;
+              await context.pushRoute(DataPortabilityRouteKeys.restore, RestoreInput.onboarding(bytes));
             },
       onRemindersDeclined: () async {
         await answered(OnboardingStep.reminder);

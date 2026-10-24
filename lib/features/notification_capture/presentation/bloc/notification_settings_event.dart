@@ -109,3 +109,45 @@ final class DebugSamplesRequested extends NotificationSettingsEvent {
   /// Membuat [DebugSamplesRequested].
   const DebugSamplesRequested();
 }
+
+/// Pola diikat ke rutin [ruleId] (ADR-042 §3.4); [ruleId] `null` melepas
+/// ikatan pola ini.
+final class NotificationPatternBound extends NotificationSettingsEvent {
+  /// Membuat [NotificationPatternBound].
+  const NotificationPatternBound({
+    required this.packageName,
+    required this.patternId,
+    required this.patternLabel,
+    required this.ruleId,
+  });
+
+  /// Paket aplikasi pola.
+  final String packageName;
+
+  /// Id pola (bawaan atau pengguna).
+  final String patternId;
+
+  /// Nama pola, disimpan di ikatan untuk ditampilkan.
+  final String patternLabel;
+
+  /// Rutin tujuan, atau `null`.
+  final String? ruleId;
+}
+
+/// Penyimpanan contoh notifikasi dinyalakan atau dimatikan (ADR-042 §3.2).
+final class NotificationSamplesToggled extends NotificationSettingsEvent {
+  /// Membuat [NotificationSamplesToggled].
+  const NotificationSamplesToggled({required this.on});
+
+  /// Nyala.
+  final bool on;
+}
+
+/// Muat contoh notifikasi aplikasi [packageName].
+final class NotificationSamplesRequested extends NotificationSettingsEvent {
+  /// Membuat [NotificationSamplesRequested].
+  const NotificationSamplesRequested(this.packageName);
+
+  /// Paket aplikasi.
+  final String packageName;
+}

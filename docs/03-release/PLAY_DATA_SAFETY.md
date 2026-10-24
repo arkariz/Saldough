@@ -108,6 +108,7 @@ belum tercatat di formulir**.
 | **Firebase Remote Config** (catatan Apa yang baru, chip versi) | Firebase (Google) | Otomatis oleh SDK: kode negara, kode bahasa, zona waktu, versi platform dan OS, Firebase Android App ID, nama paket, versi SDK; plus Firebase installation ID (FID, per instalasi, tidak mengidentifikasi unik pengguna atau perangkat) | Baru | FID masuk baris **ID perangkat atau ID lain** yang sama |
 | **Analytics**: peristiwa `update_*`, `app_updated`, `whats_new_viewed`, properti `patch_number` | Firebase Analytics | Jenis banner, tindakan, nomor build dan pembaruan kecil | Baru, jenis data sama | Tidak ada baris baru (sudah "Interaksi aplikasi") |
 | **Analytics**: peristiwa penemuan fitur `onboarding_step_answered`, `feature_enabled`, `notification_row_tapped`, `quick_start_completed`, `discovery_button_tapped`, `discovery_payday_card` (Fase 21) | Firebase Analytics | Langkah onboarding yang dijawab, fitur yang dinyalakan, tempat tombol diketuk, jumlah aplikasi (angka saja). Tanpa nominal, nama kategori buatan, nama atau paket aplikasi, dan isi notifikasi | Baru, jenis data sama | Tidak ada baris baru (sudah "Interaksi aplikasi") |
+| **Analytics**: peristiwa ekspor, cadangan, dan pemulihan `export_created`, `backup_created`, `restore_started`, `restore_completed`, `restore_failed` (Fase 22) | Firebase Analytics | Format ekspor, ember jumlah baris (`<100`/`<1000`/`<10000`/`10000+`), asal dan alasan gagal pemulihan. Tanpa nominal, nama, dan isi berkas. Berkas ekspor dan cadangan hanya disimpan atau dibagikan pengguna sendiri; tidak pernah dikirim ke server kami | Baru, jenis data sama | Tidak ada baris baru (sudah "Interaksi aplikasi") |
 | **Crashlytics**: kunci kustom `patch_number` | Firebase Crashlytics | Satu angka | Baru, jenis data sama | Tidak ada baris baru. Crashlytics hanya menambah metadata rollout Remote Config bila ada rollout aktif; kita tidak memakainya. |
 
 **Baris yang perlu ditambah** (usulan, pemilik memutuskan):
@@ -159,6 +160,13 @@ kebijakan privasi.
   di server kami. Saat build berfitur ini diunggah: tambah baris "Info
   finansial: Info finansial lainnya" (dikumpulkan, diproses sementara, opsional,
   tujuan fungsi aplikasi), dan sebutkan akses notifikasi di pengungkapan jelas.
+  **Contoh notifikasi** (ADR-042 §3.2, T-23.4, bawaan mati): bila pengguna
+  menyalakannya, teks notifikasi aplikasi pilihannya, termasuk yang bukan
+  transaksi, disimpan di perangkat maksimum 50 per aplikasi dan 7 hari, tanpa
+  OTP, tidak dikirim ke server mana pun (tidak ke Gemini), dan terhapus saat
+  dimatikan atau aplikasinya dihapus dari daftar. Tidak mengubah baris Keamanan
+  Data (tetap diproses di perangkat), tetapi pengungkapan jelas dan kebijakan
+  privasi di situs (repo `tanukonomy-web`) perlu menyebutnya sebelum rilis.
 - **Pengingat rutin** (ADR-035 §3.8, T-15.8) — notifikasi lokal lewat
   `flutter_local_notifications`; jadwal disusun di perangkat dari rutin
   pengguna dan tidak ada data yang keluar dari perangkat, jadi **tidak**

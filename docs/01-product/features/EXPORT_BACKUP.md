@@ -1,11 +1,11 @@
 # Ekspor ke spreadsheet, cadangkan dan pulihkan manual
 
 **Tanggal:** 22 Oktober 2026.
-**Status:** KT-E1–KT-E5 diputuskan pemilik 22 Okt 2026 sesuai rekomendasi
-(§11). Direvisi 22 Okt 2026: ekspor hanya dari Akun dan selalu berisi seluruh
-data saat ini, tanpa pilihan rentang (§5). Menunggu rupa (T-22.0) dan ADR
-engineer (T-22.1). Tugasnya Fase 22 di
-TASK_LIST (dari B-42).
+**Status:** Selesai 23 Okt 2026 (kode di `main`, ADR-040 Accepted; verifikasi
+emulator lulus tanpa temuan S1/S2). Sisa uji perangkat: lihat B-67. Riwayat
+keputusan: KT-E1–KT-E5 diputuskan 22 Okt 2026; ekspor hanya dari Akun dan
+tanpa pilihan rentang (22 Okt 2026); keputusan atas pertanyaan designer dan
+selisih implementasi di §15.
 **Berkaitan:** [FREEMIUM_PAYWALL.md](FREEMIUM_PAYWALL.md) §1 butir 7, §6.6,
 §12.1, KT-P7 (gratis, sebelum rilis publik, dasar cadangan otomatis B-51);
 [ADR-024](../../02-architecture/adr/0024-kepemilikan-data-lokal-dan-akun.md)
@@ -171,7 +171,7 @@ Jumlah Arus periode itu = 8.455.000, sama dengan kartu Arus.
 2. Lembar: apa yang ikut dan yang tidak (ringkas, §6.2), "142 transaksi,
    4 dompet, sejak 3 Jun 2026", tombol **Cadangkan**.
 3. Berkas dibuat, lalu lembar sistem simpan/bagikan (KT-E3). Nama berkas:
-   `tanukonomy-cadangan-2026-10-22.<ekstensi dari ADR>`.
+   `tanukonomy-cadangan-2026-10-22.tkbak` (ekstensi dari ADR-040).
 4. Hanya bila penyimpanan **berhasil** (bukan dibatalkan): "Cadangan
    terakhir" diperbarui. Bila pengguna membatalkan lembar sistem, status
    tidak berubah.
@@ -266,9 +266,12 @@ data yang tidak jelas masuk kolom mana, berhenti dan tanya PO.
   pulihkan. Tanpa peringatan penggantian karena belum ada data; cadangan
   pengaman tidak dibuat.
 - Sesudah berhasil: langkah mata uang dan awal periode **dilewati** (diambil
-  dari cadangan). Langkah pengingat (Fase 21) tetap tampil hanya bila
-  cadangan memuat pengingat menyala, untuk meminta izin sistem di perangkat
-  ini; selain itu langsung ke Beranda. Onboarding dianggap selesai.
+  dari cadangan), dan onboarding dianggap selesai. **Langkah pengingat tidak
+  ditampilkan ulang** (diputuskan PO 23 Okt 2026, §15): pengguna mendarat di
+  halaman "Data dipulihkan", yang memuat catatan izin sistem bila izin
+  notifikasi atau akses notifikasi memang belum ada di perangkat ini, lalu
+  Beranda. Izin yang belum ada tetap dijangkau tombol permanen Fase 21
+  (Nyalakan/Izinkan), jadi tidak ada fitur yang hilang dari jangkauan.
 - Gagal: kembali ke onboarding biasa dengan pesan §9.
 
 ## 8. Kasus tepi
@@ -304,7 +307,7 @@ Ruang nama `dataPortability.*`; teks akhir disetujui PO, mengikuti
 | `dataPortability.restoreConfirm` | Ganti data |
 | `dataPortability.restoreDone` | Data dipulihkan dari cadangan {date}. |
 | `dataPortability.errorInvalid` | Berkas ini bukan cadangan Tanukonomy atau sudah rusak. Datamu tidak berubah. |
-| `dataPortability.errorNewer` | Cadangan ini dibuat oleh versi Tanukonomy yang lebih baru. Perbarui aplikasi lalu coba lagi. |
+| `dataPortability.errorNewer` | Cadangan ini dibuat oleh versi Tanukonomy yang lebih baru. Perbarui aplikasi lalu coba lagi. Datamu tidak berubah. |
 | `dataPortability.errorSpace` | Ruang penyimpanan tidak cukup. Datamu tidak berubah. |
 | `dataPortability.undoRestore` | Kembalikan data sebelum pemulihan ({date}) |
 | `onboarding.restoreLink` | Sudah punya cadangan? Pulihkan |
@@ -369,3 +372,34 @@ Mengikuti ADR-023: tanpa nominal, nama, atau isi data.
 - Penggabungan data atau pemulihan sebagian.
 - Sandi cadangan (antrean, KT-E2).
 - Pengingat untuk mencadangkan (KT-E5).
+
+## 15. Hasil dan keputusan sesudah implementasi (23 Okt 2026)
+
+Fase 22 selesai: T-22.0–T-22.7 di `main` (ADR-040). Keputusan PO atas
+pertanyaan designer (T-22.0) dan selisih yang ditemukan saat implementasi:
+
+| # | Pertanyaan / selisih | Keputusan |
+|---|---|---|
+| a | KT-E3: dua tombol di lembar app atau satu lembar sistem | **Lembar milik app dengan dua tombol, Simpan ke… dan Bagikan**, masing-masing membuka lembar sistem. Sesuai maksud KT-E3 (dua pilihan) dan memberi tempat untuk ringkasan dan status "Belum tersimpan". |
+| b | Banner "cadangan lebih lama" di pratinjau | **Boleh, di pratinjau dan di dialog.** Pembaca melihatnya sebelum menekan Ganti data. |
+| c | "Lewati" di slide pengantar jalur pulihkan | **Tetap**, mengikuti onboarding sekarang. Langkah bahasa memakai layar bahasa yang ada. |
+| d | Nama dan ekstensi berkas | **`tanukonomy-cadangan-<tanggal>.tkbak`** (ADR-040), bukan `.tnk` di prototipe awal; prototipe dan komponen DataSheet sudah disesuaikan. |
+| e | Catatan isi ekspor | **Boleh.** Tanpa pilihan rentang, pengguna perlu tahu apa yang dibawa berkas. |
+| f | T-22.5: langkah pengingat tidak ditampilkan ulang sesudah pulih dari onboarding | **Diterima** (§7.3 diperbarui): izin lewat catatan di "Data dipulihkan" dan tombol permanen Fase 21. Lebih sederhana dan hasilnya sama. |
+| g | Galat "versi lebih baru" ikut menyebut "Datamu tidak berubah" | **Diterima**; spek `errorNewer` diperbarui dengan kalimat itu. |
+| h | Kolom Pos anggaran memuat "Anggaran › Pos" dalam satu kolom; teks CSV berawalan `= + - @` diberi awalan petik | **Diterima**, baik untuk keamanan Excel. |
+| i | Q4 QA: posisi tombol Ganti data bergeser menurut baris peringatan | **Dibiarkan** (kosmetik, tidak fungsional). |
+
+Hasil verifikasi emulator Android 15 (QA 23 Okt 2026): tanpa temuan S1/S2.
+Lulus: bolak-balik cadangkan → pulihkan lewat Akun dan onboarding (semua
+layar identik, tanpa periode peralihan baru), Kembalikan, henti-paksa di
+tengah penggantian (data lama atau baru utuh, tidak pernah campuran), delapan
+varian berkas ditolak tanpa mengubah data, saldo dihitung ulang dari
+transaksi, jumlah Arus per Awal periode sama dengan Beranda dan Riwayat
+termasuk periode peralihan, 5.008 transaksi, mode pesawat, 360dp terang/gelap
+id/en. Temuan kecil Q1, Q2, Q3, Q5 sudah diperbaiki.
+
+Belum teruji, dicatat sebagai **B-67**: iOS, CSV dan xlsx di Excel lokal
+Indonesia dan Google Sheets sungguhan, gajian maju di perangkat, cadangan
+yang memuat sumber Catat dari notifikasi, peristiwa analitik di DebugView,
+dan galat ruang penyimpanan penuh (tidak terpicu di Android).

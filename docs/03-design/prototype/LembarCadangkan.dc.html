@@ -102,7 +102,7 @@ class Component extends DCLogic {
       isForm: phase === 'form', isBusy: phase === 'busy', isReady: phase === 'ready',
       inList: T.inList.map((x) => ({ text: x })), outList: T.outList.map((x) => ({ text: x })),
       go: () => { this.setState({ phase: 'busy' }); timer(); }, cancel: () => this.setState({ phase: 'form' }),
-      file: { name: 'tanukonomy-' + (en ? 'backup' : 'cadangan') + '-2026-10-22.tnk', meta: '142 ' + (en ? 'transactions' : 'transaksi') + ' · 4 ' + (en ? 'wallets' : 'dompet') },
+      file: { name: 'tanukonomy-' + (en ? 'backup' : 'cadangan') + '-2026-10-22.tkbak', meta: '142 ' + (en ? 'transactions' : 'transaksi') + ' · 4 ' + (en ? 'wallets' : 'dompet') },
       cancelled: this.props.keadaan === 'batal' && !s.phase,
       saveTo: () => this.setState({ closed: true }), share: () => this.setState({ closed: true })
     };

@@ -180,7 +180,7 @@ class WalletSpreadBar extends StatelessWidget {
     ].fold<int>(0, (a, b) => a + b);
     return [
       for (final (i, w) in wallets.indexed)
-        small.contains(i) || restTotal == 0 ? _minSegment : rest * w.currentBalance / restTotal,
+        if (small.contains(i) || restTotal == 0) _minSegment else rest * w.currentBalance / restTotal,
     ];
   }
 }

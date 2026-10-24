@@ -1,0 +1,27 @@
+{
+  "version": "0.9.0",
+  "groups": [
+    {
+      "category": "new",
+      "notes": [
+        {
+          "id": "Di Akun › Data kamu, ekspor semua transaksimu ke spreadsheet (Excel atau CSV) untuk dibuka di aplikasi lain.",
+          "en": "In Account › Your data, export all your transactions to a spreadsheet (Excel or CSV) to open in other apps."
+        },
+        {
+          "id": "Cadangkan semua datamu ke satu berkas, lalu pulihkan dari Akun atau dari awal di ponsel baru; ada juga tombol untuk mengembalikan data sebelum pemulihan.",
+          "en": "Back up all your data to a single file, then restore it from Account or right from the start on a new phone; you can also undo a restore to bring back your earlier data."
+        }
+      ]
+    },
+    {
+      "category": "fixed",
+      "notes": [
+        {
+          "id": "Teks di seluruh aplikasi dirapikan supaya lebih natural, dan Atur lebih lanjut di Ulangi kini bisa diketuk di seluruh barisnya.",
+          "en": "Wording across the app is smoother, and More options in Repeat can now be tapped anywhere on its row."
+        }
+      ]
+    }
+  ]
+}

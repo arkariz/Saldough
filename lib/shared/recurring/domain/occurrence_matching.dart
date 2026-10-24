@@ -60,6 +60,44 @@ List<OccurrenceMatch> occurrenceCandidates({
   return matches;
 }
 
+/// Jendela pencocokan rutin yang terikat pola notifikasi (ADR-042 §3.4).
+const boundMatchWindowDays = 7;
+
+/// Kemunculan [rule] yang cocok dengan notifikasi yang sudah dikenali
+/// polanya milik [rule] (ADR-042 §3.4): rutin tidak dijeda, jenis, dompet,
+/// dan (untuk transfer) dompet tujuan sama, nominal persis (tetap) atau ±10%
+/// (kira-kira, `exact` false), dan **tepat satu** kemunculan terbuka dalam
+/// ±[boundMatchWindowDays] hari dari [date]. `null` bila salah satu tidak
+/// terpenuhi -- tidak pernah menebak.
+OccurrenceMatch? matchBoundOccurrence(
+  RecurringRule rule, {
+  required RecurringKind kind,
+  required String walletId,
+  required int amount,
+  required DateTime date,
+  required Iterable<Transaction> transactions,
+  String? toWalletId,
+}) {
+  if (rule.isPaused || rule.kind != kind || rule.walletId != walletId) return null;
+  if (kind == RecurringKind.transfer && rule.toWalletId != toWalletId) return null;
+  final fixed = rule.amountMode == RecurringAmountMode.fixed;
+  final amountOk = fixed ? amount == rule.amount : (amount - rule.amount).abs() * 10 <= rule.amount;
+  if (!amountOk) return null;
+  final day = DateTime(date.year, date.month, date.day);
+  final open = [
+    for (final o in occurrenceStatusesOf(
+      rule,
+      from: DateTime(day.year, day.month, day.day - boundMatchWindowDays),
+      until: DateTime(day.year, day.month, day.day + boundMatchWindowDays + 1),
+      today: day,
+      transactions: transactions,
+    ))
+      if (o.status != OccurrenceStatus.recorded && o.status != OccurrenceStatus.skipped) o,
+  ];
+  if (open.length != 1) return null;
+  return OccurrenceMatch(rule: rule, date: open.single.date, exact: fixed);
+}
+
 /// Kecocokan tunggal untuk [transaction], atau `null` bila tidak ada, ada
 /// lebih dari satu kandidat, atau transaksinya sudah tertaut. Dua kandidat
 /// selalu ditanyakan, tidak ditebak (ADR-035 §3.4).

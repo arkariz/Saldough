@@ -335,3 +335,40 @@ abstract final class DiscoveryEvents {
   /// Kartu tawaran gajian: [action] `shown`, `accepted`, atau `closed`.
   static AnalyticsEvent paydayCard(String action) => AnalyticsEvent('discovery_payday_card', {'action': action});
 }
+
+/// Peristiwa ekspor, cadangan, dan pemulihan (EXPORT_BACKUP §12, Fase 22).
+/// Hanya jenis dan ember jumlah baris; tanpa nominal, nama, atau isi data
+/// (ADR-023).
+abstract final class DataPortabilityEvents {
+  DataPortabilityEvents._();
+
+  /// Ember jumlah baris: `<100`, `<1000`, `<10000`, atau `10000+`.
+  static String rowsBucket(int rows) => switch (rows) {
+    < 100 => '<100',
+    < 1000 => '<1000',
+    < 10000 => '<10000',
+    _ => '10000+',
+  };
+
+  /// Berkas ekspor sudah dibuat. [format] `xlsx` atau `csv`.
+  static AnalyticsEvent exportCreated({required String format, required int rows}) =>
+      AnalyticsEvent('export_created', {'format': format, 'rows_bucket': rowsBucket(rows)});
+
+  /// Berkas cadangan dibuat; [saved] `true` bila penyimpanannya terkonfirmasi.
+  static AnalyticsEvent backupCreated({required int rows, required bool saved}) =>
+      AnalyticsEvent('backup_created', {'rows_bucket': rowsBucket(rows), 'saved': saved});
+
+  /// Pemulihan dimulai (penggantian disiapkan). [surface] `account`,
+  /// `onboarding`, atau `undo`.
+  static AnalyticsEvent restoreStarted({required String surface}) =>
+      AnalyticsEvent('restore_started', {'surface': surface});
+
+  /// Pemulihan selesai dan data sudah diterapkan.
+  static AnalyticsEvent restoreCompleted({required String surface}) =>
+      AnalyticsEvent('restore_completed', {'surface': surface});
+
+  /// Pemulihan gagal; [reason] `invalid`, `newer`, `inconsistent`, `space`,
+  /// atau `other`.
+  static AnalyticsEvent restoreFailed({required String surface, required String reason}) =>
+      AnalyticsEvent('restore_failed', {'surface': surface, 'reason': reason});
+}

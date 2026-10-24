@@ -11,6 +11,7 @@ import 'package:saldough/features/notification_capture/domain/repositories/notif
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_store.dart';
 import 'package:saldough/features/notification_capture/domain/services/quick_start_apps.dart';
 import 'package:saldough/features/notification_capture/presentation/host/sync_notification_capture.dart';
+import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 import 'package:state_management/state_management.dart';
 
@@ -26,6 +27,8 @@ final class NotificationSettingsState extends UiState<NotificationSettingsState>
     this.canPostReminders = false,
     this.wallets = const [],
     this.userPatterns = const [],
+    this.recurringRules = const [],
+    this.samples = const [],
     this.debugSamples = const [],
     super.effect,
   });
@@ -48,6 +51,12 @@ final class NotificationSettingsState extends UiState<NotificationSettingsState>
   /// Pola buatan pengguna.
   final List<NotificationPattern> userPatterns;
 
+  /// Rutin yang bisa diikat ke pola (ADR-042 §3.4).
+  final List<RecurringRule> recurringRules;
+
+  /// Contoh notifikasi aplikasi yang sedang dibuka (ADR-042 §3.2).
+  final List<CapturedNotification> samples;
+
   /// Sampel debug (ADR-032 §3.6).
   final List<CapturedNotification> debugSamples;
 
@@ -59,6 +68,8 @@ final class NotificationSettingsState extends UiState<NotificationSettingsState>
     bool? canPostReminders,
     List<Wallet>? wallets,
     List<NotificationPattern>? userPatterns,
+    List<RecurringRule>? recurringRules,
+    List<CapturedNotification>? samples,
     List<CapturedNotification>? debugSamples,
     UiEffect? effect,
   }) => NotificationSettingsState(
@@ -68,6 +79,8 @@ final class NotificationSettingsState extends UiState<NotificationSettingsState>
     canPostReminders: canPostReminders ?? this.canPostReminders,
     wallets: wallets ?? this.wallets,
     userPatterns: userPatterns ?? this.userPatterns,
+    recurringRules: recurringRules ?? this.recurringRules,
+    samples: samples ?? this.samples,
     debugSamples: debugSamples ?? this.debugSamples,
     effect: effect,
   );
@@ -80,6 +93,8 @@ final class NotificationSettingsState extends UiState<NotificationSettingsState>
     canPostReminders,
     wallets,
     userPatterns,
+    recurringRules,
+    samples,
     debugSamples,
   ];
 }
@@ -105,6 +120,8 @@ final class NotificationSettingsBloc extends Bloc<NotificationSettingsEvent, Not
     required this._store,
     required this._walletRepository,
     this._statusChanges,
+    this._recurringRules,
+    this._recurringChanges,
   }) : super(const NotificationSettingsState()) {
     on<NotificationSettingsStarted>(_onStarted);
     on<NotificationSettingsResumed>(_onResumed);
@@ -123,6 +140,9 @@ final class NotificationSettingsBloc extends Bloc<NotificationSettingsEvent, Not
     on<BuiltInPatternToggled>(_onBuiltInToggled);
     on<NotificationPatternSaved>(_onPatternSaved);
     on<NotificationPatternDeleted>(_onPatternDeleted);
+    on<NotificationPatternBound>(_onPatternBound);
+    on<NotificationSamplesToggled>(_onSamplesToggled);
+    on<NotificationSamplesRequested>(_onSamplesRequested);
     on<DebugSamplesRequested>(_onDebugSamples);
   }
 
@@ -142,6 +162,8 @@ final class NotificationSettingsBloc extends Bloc<NotificationSettingsEvent, Not
   final NotificationCaptureStore _store;
   final FeatureStatusChanges? _statusChanges;
   final WalletRepository _walletRepository;
+  final RecurringRuleRepository? _recurringRules;
+  final RecurringChanges? _recurringChanges;
 
   Future<void> _onStarted(NotificationSettingsStarted event, Emitter<NotificationSettingsState> emit) async {
     final settings = (await _store.loadSettings()).getOrElse((_) => const NotificationCaptureSettings());
@@ -155,12 +177,60 @@ final class NotificationSettingsBloc extends Bloc<NotificationSettingsEvent, Not
         isLoading: false,
         settings: settings,
         userPatterns: patterns,
+        recurringRules: await _loadRules(),
         wallets: wallets,
         accessGranted: await _gateway.isAccessGranted(),
         canPostReminders: await _gateway.canPostReminders(),
         debugSamples: await _gateway.debugSamples(),
       ),
     );
+  }
+
+  Future<List<RecurringRule>> _loadRules() async {
+    final repository = _recurringRules;
+    if (repository == null) return const [];
+    return (await repository.listRules()).getOrElse((_) => const []);
+  }
+
+  /// Mengikat pola ke rutin (ADR-042 §3.4): satu pola ke satu rutin, satu
+  /// rutin ke satu pola. Ikatan lama pola ini dan rutin ini dilepas lebih dulu.
+  Future<void> _onPatternBound(NotificationPatternBound event, Emitter<NotificationSettingsState> emit) async {
+    final repository = _recurringRules;
+    if (repository == null) return;
+    final rules = await _loadRules();
+    var changed = false;
+    for (final rule in rules) {
+      final current = rule.notificationBinding;
+      final holdsPattern = current?.packageName == event.packageName && current?.patternId == event.patternId;
+      final isTarget = rule.id == event.ruleId;
+      if (!holdsPattern && !isTarget) continue;
+      final next = isTarget
+          ? NotificationBinding(
+              packageName: event.packageName,
+              patternId: event.patternId,
+              patternLabel: event.patternLabel,
+            )
+          : null;
+      if (current == next) continue;
+      if ((await repository.saveRule(rule.withNotificationBinding(next))).isLeft()) return;
+      changed = true;
+    }
+    if (changed) _recurringChanges?.notifyChanged(source: this);
+    emit(state.copyWith(recurringRules: await _loadRules()));
+  }
+
+  /// Menyalakan atau mematikan penyimpanan contoh (ADR-042 §3.2). Mematikan
+  /// menghapus semua contoh yang sudah tersimpan.
+  Future<void> _onSamplesToggled(NotificationSamplesToggled event, Emitter<NotificationSettingsState> emit) async {
+    await _saveSettings(state.settings.copyWith(saveSamples: event.on), emit);
+    if (!event.on) {
+      await _gateway.clearSamples();
+      emit(state.copyWith(samples: const []));
+    }
+  }
+
+  Future<void> _onSamplesRequested(NotificationSamplesRequested event, Emitter<NotificationSettingsState> emit) async {
+    emit(state.copyWith(samples: await _gateway.samples(event.packageName)));
   }
 
   Future<void> _onResumed(NotificationSettingsResumed event, Emitter<NotificationSettingsState> emit) async {
@@ -211,6 +281,7 @@ final class NotificationSettingsBloc extends Bloc<NotificationSettingsEvent, Not
       ),
       emit,
     );
+    await _gateway.clearSamples(packageName: event.packageName);
     final patterns = [
       for (final p in state.userPatterns)
         if (p.packageName != event.packageName) p,
@@ -240,6 +311,16 @@ final class NotificationSettingsBloc extends Bloc<NotificationSettingsEvent, Not
   }
 
   Future<void> _onPatternDeleted(NotificationPatternDeleted event, Emitter<NotificationSettingsState> emit) async {
+    // Pola yang dihapus melepas rutin yang terikat padanya (ADR-042 §3.4).
+    final repository = _recurringRules;
+    if (repository != null) {
+      for (final rule in await _loadRules()) {
+        if (rule.notificationBinding?.patternId == event.patternId) {
+          await repository.saveRule(rule.withNotificationBinding(null));
+        }
+      }
+      emit(state.copyWith(recurringRules: await _loadRules()));
+    }
     await _savePatterns([
       for (final p in state.userPatterns)
         if (p.id != event.patternId) p,

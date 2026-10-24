@@ -107,6 +107,7 @@ Map<String, dynamic> _settingsToJson(NotificationCaptureSettings s) => {
   'delivery': s.delivery.name,
   'autoRecordLevel': s.autoRecordLevel.name,
   'disabledBuiltInPatternIds': s.disabledBuiltInPatternIds.toList(),
+  'saveSamples': s.saveSamples,
   'sources': [
     for (final source in s.sources)
       {
@@ -114,6 +115,9 @@ Map<String, dynamic> _settingsToJson(NotificationCaptureSettings s) => {
         'appLabel': source.appLabel,
         'keywords': source.keywords,
         'walletId': source.walletId,
+        'walletRules': [
+          for (final r in source.walletRules) {'walletId': r.walletId, 'keywords': r.keywords},
+        ],
         'enabled': source.enabled,
       },
   ],
@@ -124,6 +128,7 @@ NotificationCaptureSettings _settingsFromJson(Map<String, dynamic> j) => Notific
   delivery: _enum(NotificationDelivery.values, j['delivery'], NotificationDelivery.inboxOnly),
   autoRecordLevel: _enum(AutoRecordLevel.values, j['autoRecordLevel'], AutoRecordLevel.reviewAll),
   disabledBuiltInPatternIds: {for (final id in j['disabledBuiltInPatternIds'] as List? ?? const []) id as String},
+  saveSamples: j['saveSamples'] as bool? ?? false,
   sources: [
     for (final raw in j['sources'] as List? ?? const [])
       if (raw case final Map<dynamic, dynamic> s)
@@ -132,6 +137,14 @@ NotificationCaptureSettings _settingsFromJson(Map<String, dynamic> j) => Notific
           appLabel: s['appLabel'] as String? ?? s['packageName'] as String,
           keywords: [for (final k in s['keywords'] as List? ?? const []) k as String],
           walletId: s['walletId'] as String?,
+          walletRules: [
+            for (final r in s['walletRules'] as List? ?? const [])
+              if (r case final Map<dynamic, dynamic> rule)
+                WalletRule(
+                  walletId: rule['walletId'] as String,
+                  keywords: [for (final k in rule['keywords'] as List? ?? const []) k as String],
+                ),
+          ],
           enabled: s['enabled'] as bool? ?? true,
         ),
   ],
@@ -199,6 +212,7 @@ Map<String, dynamic> _inboxToJson(CaptureInboxEntry e) => {
   'draft': _draftToJson(e.draft),
   'possibleDuplicate': e.possibleDuplicate,
   'iconId': ?e.iconId,
+  'patternId': ?e.patternId,
   'reviewReason': ?e.reviewReason?.name,
 };
 
@@ -211,6 +225,7 @@ CaptureInboxEntry _inboxFromJson(Map<String, dynamic> j) => CaptureInboxEntry(
   draft: _draftFromJson(j['draft'] as Map),
   possibleDuplicate: j['possibleDuplicate'] as bool? ?? false,
   iconId: j['iconId'] as String?,
+  patternId: j['patternId'] as String?,
   reviewReason: CaptureReviewReason.values.where((r) => r.name == j['reviewReason']).firstOrNull,
 );
 

@@ -3932,6 +3932,7 @@ class Translations$premium$id {
 
 	late final Translations$premium$account$id account = Translations$premium$account$id.internal(_root);
 	late final Translations$premium$features$id features = Translations$premium$features$id.internal(_root);
+	late final Translations$premium$gift$id gift = Translations$premium$gift$id.internal(_root);
 	late final Translations$premium$paywall$id paywall = Translations$premium$paywall$id.internal(_root);
 }
 
@@ -4907,6 +4908,42 @@ class Translations$premium$features$id {
 	late final Translations$premium$features$keeps$id keeps = Translations$premium$features$keeps$id.internal(_root);
 }
 
+// Path: premium.gift
+class Translations$premium$gift$id {
+	Translations$premium$gift$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Tanukonomy'
+	String get brand => 'Tanukonomy';
+
+	/// id: 'Biasanya gajian tanggal berapa?'
+	String get askTitle => 'Biasanya gajian tanggal berapa?';
+
+	/// id: 'Uji coba Plus berakhir bersama periode keuangan pertamamu, jadi tanggal ini menentukan lamanya.'
+	String get askBody => 'Uji coba Plus berakhir bersama periode keuangan pertamamu, jadi tanggal ini menentukan lamanya.';
+
+	/// id: 'Pakai tanggal $day'
+	String confirmDay({required Object day}) => 'Pakai tanggal ${day}';
+
+	/// id: 'Pakai hari terakhir bulan'
+	String get confirmLast => 'Pakai hari terakhir bulan';
+
+	/// id: 'Plus aktif sampai $date'
+	String endLine({required Object date}) => 'Plus aktif sampai ${date}';
+
+	/// id: 'Plus aktif sampai $date, akhir periode pertamamu.'
+	String title({required Object date}) => 'Plus aktif sampai ${date}, akhir periode pertamamu.';
+
+	/// id: 'Tanpa kartu, tanpa langganan otomatis. Sesudah itu kamu tetap mencatat gratis.'
+	String get body => 'Tanpa kartu, tanpa langganan otomatis. Sesudah itu kamu tetap mencatat gratis.';
+
+	/// id: 'Mulai mencatat'
+	String get start => 'Mulai mencatat';
+}
+
 // Path: premium.paywall
 class Translations$premium$paywall$id {
 	Translations$premium$paywall$id.internal(this._root);
@@ -4914,6 +4951,9 @@ class Translations$premium$paywall$id {
 	final Translations _root; // ignore: unused_field
 
 	// Translations
+
+	/// id: 'Masuk untuk mencoba Plus'
+	String get signInForTrial => 'Masuk untuk mencoba Plus';
 
 	/// id: 'Tutup'
 	String get close => 'Tutup';
@@ -6761,6 +6801,16 @@ extension on Translations {
 			'premium.features.reports.text' => 'Rapor bulanan yang bercerita, Rekap SPT tahunan, dan invoice Freelance Pro.',
 			'premium.features.keeps.title' => 'Menyimpan',
 			'premium.features.keeps.text' => 'Cadangan otomatis tiap hari ke Google Drive milikmu.',
+			'premium.gift.brand' => 'Tanukonomy',
+			'premium.gift.askTitle' => 'Biasanya gajian tanggal berapa?',
+			'premium.gift.askBody' => 'Uji coba Plus berakhir bersama periode keuangan pertamamu, jadi tanggal ini menentukan lamanya.',
+			'premium.gift.confirmDay' => ({required Object day}) => 'Pakai tanggal ${day}',
+			'premium.gift.confirmLast' => 'Pakai hari terakhir bulan',
+			'premium.gift.endLine' => ({required Object date}) => 'Plus aktif sampai ${date}',
+			'premium.gift.title' => ({required Object date}) => 'Plus aktif sampai ${date}, akhir periode pertamamu.',
+			'premium.gift.body' => 'Tanpa kartu, tanpa langganan otomatis. Sesudah itu kamu tetap mencatat gratis.',
+			'premium.gift.start' => 'Mulai mencatat',
+			'premium.paywall.signInForTrial' => 'Masuk untuk mencoba Plus',
 			'premium.paywall.close' => 'Tutup',
 			'premium.paywall.plans' => 'Paket',
 			'premium.paywall.later' => 'Nanti saja',

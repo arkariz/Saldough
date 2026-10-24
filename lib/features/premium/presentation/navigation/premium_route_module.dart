@@ -3,10 +3,12 @@ import 'package:navigation/navigation.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/features/account/presentation/navigation/account_route_keys.dart';
 import 'package:saldough/features/premium/domain/plus_purchasing.dart';
+import 'package:saldough/features/premium/domain/trial_gift.dart';
 import 'package:saldough/features/premium/presentation/bloc/paywall_bloc.dart';
 import 'package:saldough/features/premium/presentation/navigation/premium_route_keys.dart';
 import 'package:saldough/features/premium/presentation/pages/paywall_page.dart';
 import 'package:saldough/features/premium/presentation/pages/plus_features_page.dart';
+import 'package:saldough/features/premium/presentation/pages/trial_gift_page.dart';
 import 'package:saldough/shared/auth/auth.dart';
 import 'package:state_management/state_management.dart';
 
@@ -38,6 +40,11 @@ final class PremiumRouteModule extends FeatureRouteModule {
       key: PremiumRouteKeys.features,
       defaultInput: () => const PlusFeaturesInput(),
       builder: (context, input) => PlusFeaturesPage(fromPaywall: input.fromPaywall),
+    ),
+    RouteNode.typed<TrialGiftInput>(
+      key: PremiumRouteKeys.trialGift,
+      builder: (context, input) =>
+          TrialGiftPage(info: input.info, gift: ScopeProvider.of(context)<TrialGift>()),
     ),
   ];
 

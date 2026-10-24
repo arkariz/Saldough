@@ -79,6 +79,30 @@ final class TrialStore with RepositoryGuard {
     return seen;
   });
 
+  /// Layar hadiah uji coba akun [uid] sudah ditampilkan.
+  Future<Either<Failure, bool>> giftSeen(String uid) => guard(() async => (await _read())[uid]?.giftSeen ?? false);
+
+  /// Menandai layar hadiah [uid] sudah ditampilkan.
+  Future<Either<Failure, Unit>> markGiftSeen(String uid) => guardVoid(() async {
+    final accounts = await _readForWrite();
+    await _store.write({...accounts, uid: (accounts[uid] ?? const _Account()).copyWith(giftSeen: true)});
+  });
+
+  /// Mengganti hari akhir uji coba [uid] menjadi [endsOn]. Hanya untuk layar
+  /// hadiah, sesaat sesudah uji coba dimulai dan pengguna baru memilih tanggal
+  /// gajian (FREEMIUM_PAYWALL §8.1): menolak bila hadiah sudah ditampilkan,
+  /// supaya tanggal tidak berubah sesudahnya. Mengembalikan rekaman yang berlaku.
+  Future<Either<Failure, TrialRecord?>> reanchor(String uid, DateTime endsOn) => guard(() async {
+    final accounts = await _readForWrite();
+    final existing = accounts[uid];
+    final start = existing?.start;
+    final current = existing?.endsOn;
+    if (existing == null || start == null || current == null) return null;
+    if (existing.giftSeen) return TrialRecord(uid: uid, start: start, endsOn: current);
+    await _store.write({...accounts, uid: existing.copyWith(endsOn: endsOn)});
+    return TrialRecord(uid: uid, start: start, endsOn: endsOn);
+  });
+
   /// Menyimpan [record] bila akunnya belum punya uji coba; uji coba yang sudah
   /// ada tidak pernah ditimpa. Mengembalikan rekaman yang berlaku.
   Future<Either<Failure, TrialRecord>> save(TrialRecord record) => guard(() async {
@@ -96,27 +120,31 @@ final class TrialStore with RepositoryGuard {
 }
 
 final class _Account {
-  const _Account({this.firstSeen, this.start, this.endsOn});
+  const _Account({this.firstSeen, this.start, this.endsOn, this.giftSeen = false});
 
   factory _Account.fromJson(Map<String, dynamic> json) => _Account(
     firstSeen: json['firstSeen'] == null ? null : decodeDay(json['firstSeen']),
     start: json['start'] == null ? null : decodeDay(json['start']),
     endsOn: json['endsOn'] == null ? null : decodeDay(json['endsOn']),
+    giftSeen: json['giftSeen'] == true,
   );
 
   final DateTime? firstSeen;
   final DateTime? start;
   final DateTime? endsOn;
+  final bool giftSeen;
 
-  _Account copyWith({DateTime? firstSeen, DateTime? start, DateTime? endsOn}) => _Account(
+  _Account copyWith({DateTime? firstSeen, DateTime? start, DateTime? endsOn, bool? giftSeen}) => _Account(
     firstSeen: firstSeen ?? this.firstSeen,
     start: start ?? this.start,
     endsOn: endsOn ?? this.endsOn,
+    giftSeen: giftSeen ?? this.giftSeen,
   );
 
   Map<String, Object> toJson() => {
     if (firstSeen case final d?) 'firstSeen': encodeDay(d),
     if (start case final d?) 'start': encodeDay(d),
     if (endsOn case final d?) 'endsOn': encodeDay(d),
+    if (giftSeen) 'giftSeen': true,
   };
 }

@@ -5,18 +5,21 @@ import 'package:di/di.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:saldough/app/premium/plan_override.dart';
-import 'package:saldough/core/financial_month/financial_period.dart';
+import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/foundation/entitlement/entitlement.dart';
 import 'package:saldough/core/presentation/plan/active_plan.dart';
+import 'package:saldough/core/tutorial/tutorial_progress_repository.dart';
 import 'package:saldough/features/premium/data/entitlement_cache_store.dart';
 import 'package:saldough/features/premium/data/firebase_entitlement_config.dart';
 import 'package:saldough/features/premium/data/local_entitlements.dart';
+import 'package:saldough/features/premium/data/local_trial_gift.dart';
 import 'package:saldough/features/premium/data/premium_purchases.dart';
 import 'package:saldough/features/premium/data/purchases_gateway.dart';
 import 'package:saldough/features/premium/data/quota_store.dart';
 import 'package:saldough/features/premium/data/revenuecat_plan_source.dart';
 import 'package:saldough/features/premium/data/trial_store.dart';
 import 'package:saldough/features/premium/domain/plus_purchasing.dart';
+import 'package:saldough/features/premium/domain/trial_gift.dart';
 import 'package:saldough/shared/auth/auth.dart';
 
 /// Kunci SDK RevenueCat (publik), disuntikkan lewat
@@ -73,7 +76,15 @@ void registerEntitlements(
         override: () => container<PlanOverrideController>().value,
       ),
     )
-    ..registerLazySingleton<Entitlements>(() => container<LocalEntitlements>());
+    ..registerLazySingleton<Entitlements>(() => container<LocalEntitlements>())
+    ..registerLazySingleton<TrialGift>(
+      () => LocalTrialGift(
+        entitlements: container<LocalEntitlements>(),
+        trials: TrialStore(storage: container()),
+        preferences: container<FinancialMonthPreferenceRepository>(),
+        progress: container<TutorialProgressRepository>(),
+      ),
+    );
 }
 
 StreamSubscription<AppUser?>? _authSubscription;

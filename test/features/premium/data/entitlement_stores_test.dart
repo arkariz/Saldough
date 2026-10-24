@@ -41,6 +41,20 @@ void main() {
       expect(_right(await store.recordFor('u2')), other);
     });
 
+    test('hadiah: belum tampil, ditandai per akun; reanchor hanya sebelum ditampilkan', () async {
+      await store.save(record);
+      expect(_right(await store.giftSeen('u1')), isFalse);
+      final moved = _right(await store.reanchor('u1', DateTime(2027, 1, 9)));
+      expect(moved?.endsOn, DateTime(2027, 1, 9));
+      expect(_right(await store.recordFor('u1'))?.endsOn, DateTime(2027, 1, 9));
+      await store.markGiftSeen('u1');
+      expect(_right(await store.giftSeen('u1')), isTrue);
+      expect(_right(await store.giftSeen('u2')), isFalse);
+      final kept = _right(await store.reanchor('u1', DateTime(2027, 3)));
+      expect(kept?.endsOn, DateTime(2027, 1, 9), reason: 'sesudah hadiah tampil tanggal tidak bergeser');
+      expect(_right(await store.reanchor('u2', DateTime(2027, 3))), isNull);
+    });
+
     test('firstSeen ditulis sekali, jam dibuang, dan tidak menghapus uji coba', () async {
       await store.save(record);
       expect(_right(await store.markFirstSeen('u1', DateTime(2026, 12, 14, 21))), DateTime(2026, 12, 14));

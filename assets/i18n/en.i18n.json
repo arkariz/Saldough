@@ -1602,7 +1602,19 @@
         "text": "An automatic daily backup to your own Google Drive."
       }
     },
+    "gift": {
+      "brand": "Tanukonomy",
+      "askTitle": "When is payday, usually?",
+      "askBody": "Your Plus trial ends with your first financial period, so this date sets how long it lasts.",
+      "confirmDay": "Use day $day",
+      "confirmLast": "Use the last day of the month",
+      "endLine": "Plus on until $date",
+      "title": "Plus is on until $date, the end of your first period.",
+      "body": "No card, no automatic subscription. After that you keep recording for free.",
+      "start": "Start recording"
+    },
     "paywall": {
+      "signInForTrial": "Sign in to try Plus",
       "close": "Close",
       "plans": "Plans",
       "later": "Not now",

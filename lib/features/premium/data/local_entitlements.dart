@@ -86,6 +86,20 @@ final class LocalEntitlements implements Entitlements {
   /// Memuat ulang cache hak RevenueCat; dipanggil sesudah adaptor menulisnya.
   Future<void> reloadCache() => _recompute();
 
+  /// Menghitung ulang hari akhir uji coba dengan jadwal periode sekarang;
+  /// hanya berlaku sampai layar hadiah ditampilkan (lihat [TrialStore.reanchor]).
+  /// Mengembalikan hari akhir yang berlaku, atau `null` tanpa uji coba.
+  Future<DateTime?> reanchorTrial() async {
+    final account = _account;
+    final trial = _trial;
+    if (account == null || trial == null) return null;
+    final endsOn = trialEndsOn(trial.start, _schedule(), minDays: limits.trialMinDays);
+    final saved = (await _trials.reanchor(account.uid, endsOn)).getOrElse((_) => null);
+    if (saved != null) _trial = saved;
+    await _recompute();
+    return saved?.endsOn;
+  }
+
   /// Menghitung ulang keadaan, mis. sesudah pengganti uji berubah.
   Future<void> recompute() => _recompute();
 

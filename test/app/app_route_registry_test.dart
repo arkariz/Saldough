@@ -34,6 +34,7 @@ void main() {
       'dataPortability.restoreDone',
       'premium.paywall',
       'premium.features',
+      'premium.trialGift',
       // Halaman paket uji (ADR-041 §3.10): hanya di build non-rilis.
       'app.debugPlan',
     });

@@ -1599,7 +1599,19 @@
         "text": "Cadangan otomatis tiap hari ke Google Drive milikmu."
       }
     },
+    "gift": {
+      "brand": "Tanukonomy",
+      "askTitle": "Biasanya gajian tanggal berapa?",
+      "askBody": "Uji coba Plus berakhir bersama periode keuangan pertamamu, jadi tanggal ini menentukan lamanya.",
+      "confirmDay": "Pakai tanggal $day",
+      "confirmLast": "Pakai hari terakhir bulan",
+      "endLine": "Plus aktif sampai $date",
+      "title": "Plus aktif sampai $date, akhir periode pertamamu.",
+      "body": "Tanpa kartu, tanpa langganan otomatis. Sesudah itu kamu tetap mencatat gratis.",
+      "start": "Mulai mencatat"
+    },
     "paywall": {
+      "signInForTrial": "Masuk untuk mencoba Plus",
       "close": "Tutup",
       "plans": "Paket",
       "later": "Nanti saja",

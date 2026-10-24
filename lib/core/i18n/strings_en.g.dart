@@ -1557,6 +1557,7 @@ class _Translations$premium$en extends Translations$premium$id {
 	@override String get plusOnlyBody => 'Plus subscriptions aren\'t available yet. Recording stays free.';
 	@override late final _Translations$premium$account$en account = _Translations$premium$account$en._(_root);
 	@override late final _Translations$premium$features$en features = _Translations$premium$features$en._(_root);
+	@override late final _Translations$premium$gift$en gift = _Translations$premium$gift$en._(_root);
 	@override late final _Translations$premium$paywall$en paywall = _Translations$premium$paywall$en._(_root);
 }
 
@@ -2068,6 +2069,24 @@ class _Translations$premium$features$en extends Translations$premium$features$id
 	@override late final _Translations$premium$features$keeps$en keeps = _Translations$premium$features$keeps$en._(_root);
 }
 
+// Path: premium.gift
+class _Translations$premium$gift$en extends Translations$premium$gift$id {
+	_Translations$premium$gift$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get brand => 'Tanukonomy';
+	@override String get askTitle => 'When is payday, usually?';
+	@override String get askBody => 'Your Plus trial ends with your first financial period, so this date sets how long it lasts.';
+	@override String confirmDay({required Object day}) => 'Use day ${day}';
+	@override String get confirmLast => 'Use the last day of the month';
+	@override String endLine({required Object date}) => 'Plus on until ${date}';
+	@override String title({required Object date}) => 'Plus is on until ${date}, the end of your first period.';
+	@override String get body => 'No card, no automatic subscription. After that you keep recording for free.';
+	@override String get start => 'Start recording';
+}
+
 // Path: premium.paywall
 class _Translations$premium$paywall$en extends Translations$premium$paywall$id {
 	_Translations$premium$paywall$en._(TranslationsEn root) : this._root = root, super.internal(root);
@@ -2075,6 +2094,7 @@ class _Translations$premium$paywall$en extends Translations$premium$paywall$id {
 	final TranslationsEn _root; // ignore: unused_field
 
 	// Translations
+	@override String get signInForTrial => 'Sign in to try Plus';
 	@override String get close => 'Close';
 	@override String get plans => 'Plans';
 	@override String get later => 'Not now';
@@ -3781,6 +3801,16 @@ extension on TranslationsEn {
 			'premium.features.reports.text' => 'Monthly reports with the story behind the numbers, a yearly tax summary, and Freelance Pro invoices.',
 			'premium.features.keeps.title' => 'Keeps safe',
 			'premium.features.keeps.text' => 'An automatic daily backup to your own Google Drive.',
+			'premium.gift.brand' => 'Tanukonomy',
+			'premium.gift.askTitle' => 'When is payday, usually?',
+			'premium.gift.askBody' => 'Your Plus trial ends with your first financial period, so this date sets how long it lasts.',
+			'premium.gift.confirmDay' => ({required Object day}) => 'Use day ${day}',
+			'premium.gift.confirmLast' => 'Use the last day of the month',
+			'premium.gift.endLine' => ({required Object date}) => 'Plus on until ${date}',
+			'premium.gift.title' => ({required Object date}) => 'Plus is on until ${date}, the end of your first period.',
+			'premium.gift.body' => 'No card, no automatic subscription. After that you keep recording for free.',
+			'premium.gift.start' => 'Start recording',
+			'premium.paywall.signInForTrial' => 'Sign in to try Plus',
 			'premium.paywall.close' => 'Close',
 			'premium.paywall.plans' => 'Plans',
 			'premium.paywall.later' => 'Not now',

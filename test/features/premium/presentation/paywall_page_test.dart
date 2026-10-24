@@ -326,6 +326,19 @@ void main() {
     },
   );
 
+  testWidgets('dijual dan belum masuk akun: banner "Masuk untuk mencoba Plus" membuka Akun', (tester) async {
+    var opened = 0;
+    await pump(tester, signedIn: false, onSignIn: () => opened++);
+    expect(find.text(texts.signInForTrial), findsOneWidget);
+    await tester.tap(find.text(t.premium.signInAction));
+    expect(opened, 1);
+  });
+
+  testWidgets('sudah masuk akun: tanpa banner masuk', (tester) async {
+    await pump(tester);
+    expect(find.text(texts.signInForTrial), findsNothing);
+  });
+
   group('Plus belum dijual', () {
     setUp(() => purchasing.selling = false);
 
@@ -392,10 +405,10 @@ void main() {
   });
 
   test(
-    'modul rute: rute paywall dan daftar fitur, satu entri menu pengembang',
+    'modul rute: rute paywall, daftar fitur, dan hadiah; satu entri menu pengembang',
     () {
       const module = PremiumRouteModule();
-      expect(module.routes, hasLength(2));
+      expect(module.routes, hasLength(3));
       expect(module.devEntries, hasLength(1));
     },
   );

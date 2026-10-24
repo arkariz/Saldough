@@ -102,6 +102,15 @@ class _PaywallPageState extends State<PaywallPage> {
                       : IconKey.info,
                 ),
               ],
+              if (!widget.signedIn && state.phase != PaywallPhase.notSelling) ...[
+                const SizedBox(height: AppSpacing.space4),
+                AppBanner(
+                  message: texts.signInForTrial,
+                  tone: AppTone.info,
+                  actionLabel: t.premium.signInAction,
+                  onAction: widget.onSignIn,
+                ),
+              ],
               const SizedBox(height: AppSpacing.space4),
               const _Benefits(),
               Align(

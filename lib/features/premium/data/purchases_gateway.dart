@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:developer' as developer;
 
+import 'package:flutter/services.dart' show PlatformException;
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:saldough/features/premium/data/plus_snapshot.dart';
+import 'package:saldough/features/premium/domain/purchase_models.dart';
 
 /// Pintu ke RevenueCat, dipisah dari SDK supaya [RevenueCatPlanSource] bisa
 /// diuji tanpa platform (ADR-041 §3.1, §3.5). Semua metode melempar bila SDK
@@ -27,6 +29,14 @@ abstract interface class PurchasesGateway {
 
   /// Pembaruan keadaan dari SDK (pembelian, perpanjangan, kedaluwarsa).
   Stream<PlusSnapshot?> get updates;
+
+  /// Paket di offering [offeringId] (identifier RevenueCat); kosong bila
+  /// offering tidak ada atau tidak punya paket yang dikenal.
+  Future<List<PlanOption>> options(String offeringId);
+
+  /// Membeli [option]. Hasil berhasil membawa keadaan terbaru; pembatalan
+  /// pengguna dan galat dikembalikan sebagai hasil, bukan dilempar.
+  Future<({BuyResult result, PlusSnapshot? snapshot})> purchase(PlanOption option);
 }
 
 /// Memetakan [info] (entitlement `plus` dari SDK) ke [PlusSnapshot].
@@ -85,4 +95,40 @@ final class PurchasesFlutterGateway implements PurchasesGateway {
 
   @override
   Future<PlusSnapshot?> restore() async => _of(await Purchases.restorePurchases());
+
+  @override
+  Future<List<PlanOption>> options(String offeringId) async {
+    final offering = (await Purchases.getOfferings()).all[offeringId];
+    return [
+      for (final package in offering?.availablePackages ?? const <Package>[])
+        if (PlusPlanKind.fromId(package.identifier) case final kind?)
+          PlanOption(kind: kind, priceText: package.storeProduct.priceString, handle: package),
+    ];
+  }
+
+  @override
+  Future<({BuyResult result, PlusSnapshot? snapshot})> purchase(PlanOption option) async {
+    final handle = option.handle;
+    if (handle is! Package) return (result: const BuyFailed(PurchaseFailure.other), snapshot: null);
+    try {
+      final done = await Purchases.purchase(PurchaseParams.package(handle));
+      return (result: const BuyDone(), snapshot: _of(done.customerInfo));
+    } on PlatformException catch (e) {
+      return (result: purchaseResultOfCode(PurchasesErrorHelper.getErrorCode(e)), snapshot: null);
+    }
+  }
 }
+
+/// Memetakan kode galat SDK ke hasil beli: pembatalan pengguna bukan galat.
+BuyResult purchaseResultOfCode(PurchasesErrorCode code) => switch (code) {
+  PurchasesErrorCode.purchaseCancelledError => const BuyCancelled(),
+  PurchasesErrorCode.networkError || PurchasesErrorCode.offlineConnectionError => const BuyFailed(
+    PurchaseFailure.network,
+  ),
+  PurchasesErrorCode.storeProblemError ||
+  PurchasesErrorCode.paymentPendingError ||
+  PurchasesErrorCode.purchaseNotAllowedError ||
+  PurchasesErrorCode.purchaseInvalidError ||
+  PurchasesErrorCode.productAlreadyPurchasedError => const BuyFailed(PurchaseFailure.billing),
+  _ => const BuyFailed(PurchaseFailure.other),
+};

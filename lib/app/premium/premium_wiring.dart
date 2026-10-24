@@ -11,6 +11,7 @@ import 'package:saldough/core/presentation/plan/active_plan.dart';
 import 'package:saldough/features/premium/data/entitlement_cache_store.dart';
 import 'package:saldough/features/premium/data/firebase_entitlement_config.dart';
 import 'package:saldough/features/premium/data/local_entitlements.dart';
+import 'package:saldough/features/premium/data/premium_purchases.dart';
 import 'package:saldough/features/premium/data/purchases_gateway.dart';
 import 'package:saldough/features/premium/data/quota_store.dart';
 import 'package:saldough/features/premium/data/revenuecat_plan_source.dart';
@@ -41,6 +42,15 @@ void registerEntitlements(
           gateway: container<PurchasesGateway>(),
           cache: EntitlementCacheStore(storage: container()),
           onChanged: container<LocalEntitlements>().reloadCache,
+        ),
+      )
+      ..registerLazySingleton<PremiumPurchases>(
+        () => PremiumPurchases(
+          gateway: container<PurchasesGateway>(),
+          source: container<RevenueCatPlanSource>(),
+          trials: TrialStore(storage: container()),
+          config: container<EntitlementConfig>(),
+          uid: () => container<LocalEntitlements>().account?.uid,
         ),
       );
   }

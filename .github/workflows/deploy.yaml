@@ -148,6 +148,7 @@ jobs:
         if: github.event.inputs.action_type == 'release'
         env:
           SHOREBIRD_TOKEN: ${{ secrets.SHOREBIRD_TOKEN }}
+          REVENUECAT_ANDROID_KEY: ${{ secrets.REVENUECAT_ANDROID_KEY }}
         working-directory: android
         run: bundle exec fastlane android release_internal
 
@@ -155,6 +156,7 @@ jobs:
         if: github.event.inputs.action_type == 'patch'
         env:
           SHOREBIRD_TOKEN: ${{ secrets.SHOREBIRD_TOKEN }}
+          REVENUECAT_ANDROID_KEY: ${{ secrets.REVENUECAT_ANDROID_KEY }}
         working-directory: android
         run: bundle exec fastlane android patch_ota
     

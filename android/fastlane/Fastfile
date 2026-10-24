@@ -3,11 +3,24 @@ require 'json'
 
 default_platform(:android)
 
+# Kunci SDK RevenueCat (publik) untuk build (ADR-041 §3.5, P-6). Rilis DAN
+# patch harus membawanya: patch tanpa kunci membuang pembelian dari build
+# yang terpasang. Tanpa secret, build berjalan tanpa RevenueCat (hak hanya
+# dari uji coba dan pra-peluncuran).
+def revenuecat_args
+    key = ENV["REVENUECAT_ANDROID_KEY"].to_s.strip
+    if key.empty?
+        UI.important("REVENUECAT_ANDROID_KEY kosong: build tanpa RevenueCat")
+        return ""
+    end
+    "-- --dart-define=REVENUECAT_ANDROID_KEY=#{key}"
+end
+
 platform :android do
 
     desc "Shorebird Release dan Upload ke Play Store Internal"
     lane :release_internal do
-        shorebird_release(platform: "android")
+        shorebird_release(platform: "android", args: revenuecat_args)
 
         # 1. Catatan "What's new" Play dari berkas catatan yang sama dengan
         # aplikasi (ADR-039 §3.3), diformat skrip catatan: judul, kategori
@@ -47,10 +60,7 @@ platform :android do
     lane :patch_ota do
         shorebird_patch(
             platform: "android",
-            args: [
-                "--release-version=latest",
-                "--allow-asset-diffs",
-            ].join(" ")
+            args: "--release-version=latest --allow-asset-diffs #{revenuecat_args}".strip
         )
     end
 

@@ -83,6 +83,7 @@ dependencies:
       ref: navigation-v1.1.1
   package_info_plus: ^10.2.2
   path_provider: ^2.1.6
+  purchases_flutter: ^10.18.1
   share_plus: ^13.3.1
   shorebird_code_push: ^2.0.7
   slang: ^4.7.0

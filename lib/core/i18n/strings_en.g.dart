@@ -1547,6 +1547,7 @@ class _Translations$premium$en extends Translations$premium$id {
 
 	// Translations
 	@override String get title => 'Tanukonomy Plus';
+	@override String get plusBadge => 'Plus';
 	@override String get signInTitle => 'Sign in to unlock Plus features';
 	@override String get signInBody => 'This feature is part of Plus. Sign in with your account to use it. Recording stays free and works without an account.';
 	@override String get signInAction => 'Sign in';
@@ -3458,6 +3459,7 @@ extension on TranslationsEn {
 			'analysis.category.avgLine' => ({required Object n}) => '${n}-month average',
 			'analysis.category.moreHint' => 'Latest 20 transactions',
 			'premium.title' => 'Tanukonomy Plus',
+			'premium.plusBadge' => 'Plus',
 			'premium.signInTitle' => 'Sign in to unlock Plus features',
 			'premium.signInBody' => 'This feature is part of Plus. Sign in with your account to use it. Recording stays free and works without an account.',
 			'premium.signInAction' => 'Sign in',

@@ -1,10 +1,16 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
+import 'package:saldough/core/foundation/entitlement/entitlement.dart';
+import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/plan/active_plan.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
+import 'package:saldough/features/premium/presentation/navigation/premium_route_keys.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 
 /// Baris **Ulangi** di CATAT (T-15.3, J2; QA PR #43 F11): baris form seperti
@@ -284,15 +290,26 @@ class _Advanced extends StatelessWidget {
         ),
         // Catat otomatis hanya untuk nominal tetap (ADR-037 §3.2).
         if (value.amountMode == RecurringAmountMode.fixed)
-          AppSwitchRow(
-            key: const ValueKey('repeat-auto-record'),
-            title: t.record.repeat.autoRecordLabel,
-            subtitle: t.record.repeat.autoRecordHint,
-            value: value.autoRecord,
-            onChanged: (on) {
-              AppAnalytics.log(RecurringEvents.autoRecordToggled(on: on, where: 'form'));
-              onChanged(value.copyWith(autoRecord: on));
-            },
+          ValueListenableBuilder<PlanState>(
+            valueListenable: ActivePlan.notifier,
+            builder: (context, plan, _) => AppSwitchRow(
+              key: const ValueKey('repeat-auto-record'),
+              // Otomasi R3 hanya untuk Plus (ADR-041 §3.8): bukan Plus, sakelar
+              // membuka paywall dan nilainya tidak berubah.
+              title: plan.isPlus
+                  ? t.record.repeat.autoRecordLabel
+                  : '${t.record.repeat.autoRecordLabel} · ${t.premium.plusBadge}',
+              subtitle: t.record.repeat.autoRecordHint,
+              value: value.autoRecord,
+              onChanged: (on) {
+                if (!plan.isPlus) {
+                  unawaited(context.pushRoute(PremiumRouteKeys.paywall, const PaywallInput(PaywallTrigger.recurringAutomation)));
+                  return;
+                }
+                AppAnalytics.log(RecurringEvents.autoRecordToggled(on: on, where: 'form'));
+                onChanged(value.copyWith(autoRecord: on));
+              },
+            ),
           ),
         if (kind != TransactionKind.income) ...[
           const SizedBox(height: AppSpacing.space2),

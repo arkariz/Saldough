@@ -4,10 +4,12 @@ import 'package:di/di.dart';
 import 'package:flutter/material.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/plan/active_plan.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
+import 'package:saldough/features/premium/presentation/navigation/premium_route_keys.dart';
 import 'package:saldough/features/record/presentation/navigation/record_route_keys.dart';
 import 'package:saldough/features/recurring/presentation/bloc/recurring_bloc.dart';
 import 'package:saldough/features/recurring/presentation/bloc/recurring_state.dart';
@@ -310,13 +312,22 @@ class RecurringDetailPage extends StatelessWidget {
                           compact: true,
                           wrapTitle: true,
                           wrapSubtitle: true,
-                          title: t.record.repeat.autoRecordLabel,
+                          title: ActivePlan.isPlus
+                              ? t.record.repeat.autoRecordLabel
+                              : '${t.record.repeat.autoRecordLabel} · ${t.premium.plusBadge}',
                           subtitle: t.record.repeat.autoRecordHint,
                           trailing: Switch(
                             key: const ValueKey('recurring-auto-record'),
                             value: rule.autoRecord,
-                            onChanged: (value) =>
-                                bloc.add(RecurringAutoRecordToggled(ruleId: rule.id, enabled: value)),
+                            // Otomasi R3 hanya untuk Plus (ADR-041 §3.8).
+                            onChanged: (value) => ActivePlan.isPlus
+                                ? bloc.add(RecurringAutoRecordToggled(ruleId: rule.id, enabled: value))
+                                : unawaited(
+                                    context.pushRoute(
+                                      PremiumRouteKeys.paywall,
+                                      const PaywallInput(PaywallTrigger.recurringAutomation),
+                                    ),
+                                  ),
                           ),
                         ),
                       ),

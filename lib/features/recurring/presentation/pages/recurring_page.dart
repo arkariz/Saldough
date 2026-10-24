@@ -3,8 +3,10 @@ import 'dart:async';
 import 'package:di/di.dart';
 import 'package:flutter/material.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
+import 'package:saldough/core/foundation/entitlement/entitlement.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/plan/active_plan.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
@@ -72,6 +74,14 @@ class RecurringSegmentView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Paket berubah: saran dan rutin menganggur (otomasi R3) tampil atau hilang.
+    return ValueListenableBuilder<PlanState>(
+      valueListenable: ActivePlan.notifier,
+      builder: (context, _, _) => _view(context),
+    );
+  }
+
+  Widget _view(BuildContext context) {
     return BlocBuilder<RecurringBloc, RecurringState>(
       builder: (context, state) {
         if (state.isLoading) return const AppSkeletonPage();
@@ -84,12 +94,25 @@ class RecurringSegmentView extends StatelessWidget {
         }
         const padding = EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space4, AppSpacing.space4, AppSpacing.space12);
         // Sepertinya rutin (ADR-037 §3.3), juga saat belum ada rutin.
-        final suggestions = suggestRecurring(
-          state.transactions,
-          today: state.today,
-          rules: state.rules,
-          dismissed: state.dismissedSuggestions,
-        );
+        // Saran dan rutin menganggur bagian otomasi R3: hanya untuk Plus
+        // (ADR-041 §3.8); datanya tidak disentuh.
+        final plus = ActivePlan.isPlus;
+        final idle = !plus
+            ? null
+            : idleRules(
+                state.rules,
+                windowStart: DateTime(state.today.year, state.today.month - 1),
+                today: state.today,
+                transactions: state.transactions,
+              ).firstOrNull;
+        final suggestions = !plus
+            ? const <RecurringSuggestion>[]
+            : suggestRecurring(
+                state.transactions,
+                today: state.today,
+                rules: state.rules,
+                dismissed: state.dismissedSuggestions,
+              );
         if (state.rules.isEmpty) {
           return TourTrigger(
             tour: TourId.recurring,
@@ -159,13 +182,7 @@ class RecurringSegmentView extends StatelessWidget {
               // kartu sisa tagihan, hilang begitu efektif.
               if (rootContainer case final root?) ReminderNudgeCard(container: root, bottomGap: true),
               // W6 rutin menganggur: satu kartu, yang pertama (ADR-037 §3.1).
-              if (idleRules(
-                    state.rules,
-                    windowStart: DateTime(state.today.year, state.today.month - 1),
-                    today: state.today,
-                    transactions: state.transactions,
-                  ).firstOrNull
-                  case final idle?) ...[
+              if (idle != null) ...[
                 _IdleCard(rule: idle),
                 const SizedBox(height: AppSpacing.space4),
               ],

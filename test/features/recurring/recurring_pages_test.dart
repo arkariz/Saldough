@@ -7,7 +7,9 @@ import 'package:mocktail/mocktail.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
+import 'package:saldough/core/foundation/entitlement/entitlement.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/plan/active_plan.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/recurring/presentation/bloc/recurring_bloc.dart';
 import 'package:saldough/features/recurring/presentation/bloc/recurring_state.dart';
@@ -23,6 +25,10 @@ import 'package:state_management/state_management.dart';
 import '../../helpers/mocks.dart';
 
 void main() {
+  // Otomasi R3 hanya untuk Plus (ADR-041 §3.8); uji ini menguji perilakunya.
+  setUp(() => ActivePlan.notifier.value = const PlusPlan(source: PlanSource.prelaunch));
+  tearDown(ActivePlan.reset);
+
   late InMemoryKeyValueStorage storage;
   late RecurringRuleRepositoryImpl rules;
   late TransactionRepositoryImpl transactions;
@@ -422,6 +428,34 @@ void main() {
       await tester.tap(find.text(t.recurring.suggestDismiss));
       await tester.pumpAndSettle();
       expect(find.byKey(const ValueKey('recurring-suggestions')), findsNothing);
+    });
+
+    testWidgets('Gratis: label belum terlihat, tautan harga naik, rutin menganggur, dan saran tidak tampil (ADR-041 §3.8)', (
+      tester,
+    ) async {
+      ActivePlan.notifier.value = const FreePlan();
+      await rules.saveRule(
+        rule('Asuransi', 20000000, DateTime(2026, 9, 30)).copyWith(paymentMode: RecurringPaymentMode.autoDebit),
+      );
+      await rules.saveRule(rule('Netflix', 6500000, DateTime(2026, 10)));
+      await transactions.saveTransaction(
+        ExpenseTransaction(id: 'notif', date: DateTime(2026, 10, 2), amount: 7900000, note: '', walletId: 'bca'),
+      );
+      for (final month in [8, 9, 10]) {
+        await transactions.saveTransaction(
+          ExpenseTransaction(id: 'gym-$month', date: DateTime(2026, month), amount: 30000000, note: 'Gym', walletId: 'bca'),
+        );
+      }
+      await pump(tester, const RecurringSegmentView(), monthsBack: suggestionMonths);
+      expect(find.byKey(const ValueKey('recurring-unseen-Asuransi')), findsNothing);
+      expect(find.byKey(const ValueKey('recurring-price-up-Netflix')), findsNothing);
+      expect(find.byKey(const ValueKey('recurring-suggestions')), findsNothing);
+      // Aturannya tetap tampil dan bisa dicatat satu ketuk (aturan 8).
+      expect(find.text(t.recurring.recordAction), findsWidgets);
+
+      ActivePlan.notifier.value = const PlusPlan(source: PlanSource.prelaunch);
+      await tester.pumpAndSettle();
+      expect(find.byKey(const ValueKey('recurring-suggestions')), findsOneWidget);
     });
 
     testWidgets('analitik: Lewati mengirim occurrence_skipped tanpa nominal (T-17.8)', (tester) async {

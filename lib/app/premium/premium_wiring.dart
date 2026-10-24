@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:saldough/app/premium/plan_override.dart';
 import 'package:saldough/core/financial_month/financial_period.dart';
 import 'package:saldough/core/foundation/entitlement/entitlement.dart';
+import 'package:saldough/core/presentation/plan/active_plan.dart';
 import 'package:saldough/features/premium/data/entitlement_cache_store.dart';
 import 'package:saldough/features/premium/data/firebase_entitlement_config.dart';
 import 'package:saldough/features/premium/data/local_entitlements.dart';
@@ -36,6 +37,7 @@ void registerEntitlements(GetIt container) {
 
 StreamSubscription<AppUser?>? _authSubscription;
 AppLifecycleListener? _lifecycle;
+StreamSubscription<PlanState>? _planSubscription;
 
 /// Menghubungkan hak ke status masuk akun dan siklus hidup aplikasi (ADR-041
 /// §3.3, §3.4). Dipanggil bootstrap sesudah jadwal periode keuangan dimuat;
@@ -47,6 +49,10 @@ Future<void> startEntitlements(GetIt container) async {
   final entitlements = container<LocalEntitlements>();
   // ADR-041 §3.10: pengganti uji (tanpa efek di rilis); perubahannya
   // menghitung ulang paket.
+  // Gerbang tampilan membaca paket lewat `ActivePlan` (ADR-041 §3.8).
+  await _planSubscription?.cancel();
+  ActivePlan.notifier.value = entitlements.current;
+  _planSubscription = entitlements.changes.listen((state) => ActivePlan.notifier.value = state);
   final planOverride = container<PlanOverrideController>();
   await planOverride.load();
   planOverride.addListener(() => unawaited(entitlements.recompute()));

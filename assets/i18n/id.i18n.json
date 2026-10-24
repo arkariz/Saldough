@@ -1540,6 +1540,7 @@
   },
   "premium": {
     "title": "Tanukonomy Plus",
+    "plusBadge": "Plus",
     "signInTitle": "Masuk untuk membuka fitur Plus",
     "signInBody": "Fitur ini bagian dari Plus. Masuk dengan akunmu untuk memakainya. Mencatat tetap gratis dan tanpa akun.",
     "signInAction": "Masuk",

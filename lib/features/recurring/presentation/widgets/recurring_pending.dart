@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/plan/active_plan.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
@@ -46,10 +47,13 @@ class RecurringPendingTile extends StatelessWidget {
     final date = entry.occurrence!.date;
     final fixed = rule.amountMode == RecurringAmountMode.fixed;
     // E3 (ADR-037 §3.1): autodebet H+2 yang belum terlihat.
-    final unseen = isUnseen(entry.occurrence!, today: state.today);
+    // Label dan tautan dari notifikasi bagian otomasi R3: hanya untuk Plus
+    // (ADR-041 §3.8).
+    final plus = ActivePlan.isPlus;
+    final unseen = plus && isUnseen(entry.occurrence!, today: state.today);
     // W3 dari notifikasi (ADR-037 §3.3): transaksinya ada tapi nominalnya
     // naik; Catat di sini akan menggandakannya, jadi tawarkan tautan.
-    final raised = priceIncreaseCandidate(rule, date, state.transactions);
+    final raised = plus ? priceIncreaseCandidate(rule, date, state.transactions) : null;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [

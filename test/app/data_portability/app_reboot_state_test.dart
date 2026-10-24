@@ -17,6 +17,7 @@ void main() {
     'AmountVisibility': 'milik perangkat (R-9), dibaca ulang di bootstrapApp',
     'HistoryPeriod': 'dikosongkan di _resetGlobalState (pilihan layar, bukan data)',
     'ActiveDay': 'jam, bukan data penyimpanan',
+    'ActivePlan': 'dikembalikan ke Gratis di _resetGlobalState, diisi lagi oleh startEntitlements (ADR-041)',
     'SourceIcons': 'dikosongkan di _resetGlobalState, dimuat lagi saat dibutuhkan',
   };
 

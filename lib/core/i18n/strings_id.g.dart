@@ -3906,6 +3906,9 @@ class Translations$premium$id {
 	/// id: 'Tanukonomy Plus'
 	String get title => 'Tanukonomy Plus';
 
+	/// id: 'Plus'
+	String get plusBadge => 'Plus';
+
 	/// id: 'Masuk untuk membuka fitur Plus'
 	String get signInTitle => 'Masuk untuk membuka fitur Plus';
 
@@ -6255,6 +6258,7 @@ extension on Translations {
 			'analysis.category.avgLine' => ({required Object n}) => 'rata-rata ${n} bulan',
 			'analysis.category.moreHint' => '20 transaksi terbaru',
 			'premium.title' => 'Tanukonomy Plus',
+			'premium.plusBadge' => 'Plus',
 			'premium.signInTitle' => 'Masuk untuk membuka fitur Plus',
 			'premium.signInBody' => 'Fitur ini bagian dari Plus. Masuk dengan akunmu untuk memakainya. Mencatat tetap gratis dan tanpa akun.',
 			'premium.signInAction' => 'Masuk',

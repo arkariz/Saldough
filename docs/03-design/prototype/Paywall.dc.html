@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Paywall Plus</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tanukonomy/components/bundle.css">
+<link rel="stylesheet" href="tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0&icon_names=account_balance,account_balance_wallet,account_circle,add,alarm,arrow_back,arrow_downward,arrow_upward,backspace,bolt,calendar_today,chat_bubble,check,check_circle,chevron_left,chevron_right,close,credit_card,dark_mode,delete,donut_small,edit,edit_note,error,expand_less,expand_more,family_restroom,home,hourglass_top,inbox,info,label,label_off,local_cafe,lock,logout,medical_services,mic,more_horiz,more_vert,notifications,notifications_active,payments,photo_camera,progress_activity,receipt_long,redeem,restart_alt,restaurant,savings,schedule,school,search,shopping_bag,shopping_cart,sports_esports,stars,sticky_note_2,swap_horiz,system_update,task_alt,translate,tune,two_wheeler,undo,visibility,visibility_off,volunteer_activism,warning,wifi,work,workspace_premium&display=block">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="tk" data-theme="{{theme}}" style="position: relative; width: 360px; height: 800px; overflow: hidden; font-family: 'Plus Jakarta Sans', Roboto, sans-serif; color: var(--ink); background: var(--bg)">
+  <dc-import name="Main" banner="tidak" dark="{{dark}}" hint-size="360px,800px"></dc-import>
+  <a class="tk-scrim" href="Main.dc.html" aria-label="{{t.close}}"></a>
+  <div class="tk-sheet" role="dialog" aria-modal="true" aria-labelledby="pw-title" style="position: absolute; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; gap: 16px">
+    <div class="tk-sheet__handle"></div>
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center; padding-top: 8px">
+      <span class="tk-tile tk-tile--brandsoft" aria-hidden="true"><span class="tk-icon">workspace_premium</span></span>
+      <h1 class="tk-sheet__title" id="pw-title" style="flex: none; font-size: 20px; line-height: 28px">{{t.title}}</h1>
+      <p class="tk-t-body-sm tk-ink-2" style="margin: 0">{{t.sub}}</p>
+    </div>
+    <div class="tk-list tk-list--icon" style="background: transparent; margin: 0 -16px">
+      <sc-for list="{{benefits}}" as="b" hint-placeholder-count="3"><div class="tk-row tk-row--compact"><span class="tk-tile tk-tile--sm tk-tile--brandsoft" aria-hidden="true"><span class="tk-icon">{{b.icon}}</span></span><span class="tk-row__main"><span class="tk-row__title" style="white-space: normal">{{b.title}}</span></span></div></sc-for>
+    </div>
+    <div class="tk-plans" role="radiogroup" aria-label="{{t.plans}}">
+      <sc-for list="{{plans}}" as="p" hint-placeholder-count="2">
+        <button class="tk-plan {{p.cls}}" type="button" role="radio" aria-checked="{{p.checked}}" onClick="{{p.pick}}"><span class="tk-plan__radio" aria-hidden="true"></span><span class="tk-plan__main"><span class="tk-plan__title">{{p.name}}</span><span class="tk-plan__sub">{{p.sub}}</span></span><span class="tk-plan__price"><span>{{p.price}}</span><span class="tk-plan__unit">{{p.unit}}</span></span></button>
+      </sc-for>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 8px">
+      <button class="tk-btn tk-btn--primary tk-btn--block" type="button">{{buy}}</button>
+      <a class="tk-btn tk-btn--secondary tk-btn--block" href="Main.dc.html">{{t.later}}</a>
+      <p class="tk-t-caption tk-ink-2" style="margin: 0; text-align: center">{{fine}}</p>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"en":{"editor":"boolean","default":false,"section":"Tampilan"},"dark":{"editor":"boolean","default":false,"section":"Tampilan"},"$preview":{"width":360,"height":800}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const s = this.state || {};
+    const en = !!this.props.en;
+    // Harga contoh. Di aplikasi selalu string dari toko (Play Billing lewat RevenueCat).
+    const T = en ? {
+      close: 'Close', title: 'Tanukonomy Plus', sub: 'Tanuki works for you.', plans: 'Plans', later: 'Not now',
+      benefits: [['photo_camera', 'Record from photos and every bank notification'], ['notifications_active', 'Warnings before a budget runs out'], ['chat_bubble', 'Ask, plan, and get reports']],
+      annual: 'Yearly', monthly: 'Monthly', equiv: 'about Rp14,900 a month', cancel: 'Cancel anytime', yearPrice: 'Rp179,000', monthPrice: 'Rp25,000', perYear: '/year', perMonth: '/month',
+      buy: (p) => 'Subscribe ' + (p === 'annual' ? 'yearly' : 'monthly'),
+      fine: (p) => (p === 'annual' ? 'Rp179,000 per year' : 'Rp25,000 per month') + ', renews automatically. Cancel anytime in the Play Store.'
+    } : {
+      close: 'Tutup', title: 'Tanukonomy Plus', sub: 'Tanuki bekerja untukmu.', plans: 'Paket', later: 'Nanti saja',
+      benefits: [['photo_camera', 'Catat dari foto dan semua notifikasi bank'], ['notifications_active', 'Peringatan sebelum anggaran habis'], ['chat_bubble', 'Tanya, rencanakan, dan lapor']],
+      annual: 'Tahunan', monthly: 'Bulanan', equiv: 'setara Rp14.900/bulan', cancel: 'Bisa dibatalkan kapan saja', yearPrice: 'Rp179.000', monthPrice: 'Rp25.000', perYear: '/tahun', perMonth: '/bulan',
+      buy: (p) => 'Berlangganan ' + (p === 'annual' ? 'Tahunan' : 'Bulanan'),
+      fine: (p) => (p === 'annual' ? 'Rp179.000 per tahun' : 'Rp25.000 per bulan') + ', diperpanjang otomatis. Batalkan kapan saja di Play Store.'
+    };
+    const plan = s.plan || 'annual';
+    const mk = (k, name, sub, price, unit) => ({ name: name, sub: sub, price: price, unit: unit, cls: plan === k ? 'is-selected' : '', checked: plan === k ? 'true' : 'false', pick: () => this.setState({ plan: k }) });
+    return {
+      theme: this.props.dark ? 'dark' : 'light', dark: !!this.props.dark, t: T,
+      benefits: T.benefits.map((b) => ({ icon: b[0], title: b[1] })),
+      plans: [mk('annual', T.annual, T.equiv, T.yearPrice, T.perYear), mk('monthly', T.monthly, T.cancel, T.monthPrice, T.perMonth)],
+      buy: T.buy(plan), fine: T.fine(plan)
+    };
+  }
+}
+</script>
+</body>
+</html>

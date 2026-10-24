@@ -162,6 +162,15 @@ entri T-22.0 `TASK_LIST.md`.
 | `PulihkanOnbPratinjau`, `PulihkanOnbProses`, `PulihkanOnbSelesai`, `PulihkanOnbGalat` | Jalur pulihkan di onboarding |
 | `OnbPengantar` (+`EnGelap`) | Slide pertama onboarding dengan tautan "Sudah punya cadangan? Pulihkan" |
 
+## Paywall Plus (B-41), versi sederhana
+
+Satu lembar paywall (`Paywall`, `PaywallEnGelap`), dari dokumen rencana
+paywall (23 Okt 2026). Versi pertama yang berisi sepuluh layar dan puluhan
+keadaan dibatalkan pemilik (24 Okt 2026) karena terlalu rumit; keadaan lain
+(memuat, galat, penawaran, status di Akun) ditambahkan satu per satu sesudah
+lembar ini disetujui. Komponen baru hanya **PlanCard** (`tk-plan*` di
+`bundle.css`).
+
 ## Usulan desain
 
 `proposals/<nama-usulan>/` berisi mockup dan spek dari agen

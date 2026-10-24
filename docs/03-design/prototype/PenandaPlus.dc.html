@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Penanda Plus</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tanukonomy/components/bundle.css">
+<link rel="stylesheet" href="tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0&icon_names=account_balance,account_balance_wallet,account_circle,add,alarm,arrow_back,arrow_downward,arrow_upward,backspace,bolt,calendar_today,chat_bubble,check,check_circle,chevron_left,chevron_right,close,credit_card,dark_mode,delete,donut_small,edit,edit_note,error,expand_less,expand_more,family_restroom,home,hourglass_top,inbox,info,label,label_off,local_cafe,lock,logout,medical_services,mic,more_horiz,more_vert,notifications,notifications_active,payments,photo_camera,progress_activity,receipt_long,redeem,restart_alt,restaurant,savings,schedule,school,search,shopping_bag,shopping_cart,sports_esports,stars,sticky_note_2,swap_horiz,system_update,task_alt,translate,tune,two_wheeler,undo,visibility,visibility_off,volunteer_activism,warning,wifi,work,workspace_premium&display=block">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="tk tk-screen" data-theme="{{theme}}" style="width: 360px; height: 800px; font-family: 'Plus Jakarta Sans', Roboto, sans-serif; color: var(--ink); background: var(--bg)">
+  <header class="tk-topbar tk-topbar--sub"><a class="tk-iconbtn" href="Main.dc.html" aria-label="{{t.back}}"><span class="tk-icon">arrow_back</span></a><h1 class="tk-topbar__title">{{t.title}}</h1></header>
+  <main class="tk-body tk-scroll" style="gap: 20px; padding: 0 16px 32px">
+    <sc-for list="{{groups}}" as="g" hint-placeholder-count="2">
+      <section class="tk-section" style="flex: none">
+        <div class="tk-section__head"><h2 class="tk-section__title">{{g.title}}</h2></div>
+        <p class="tk-t-body-sm tk-ink-2" style="margin: -4px 4px 8px">{{g.note}}</p>
+        <div class="tk-list tk-list--icon" style="flex: none">
+          <a class="tk-row tk-row--compact tk-row--wrap" href="{{g.r1.href}}"><span class="tk-icon tk-ink-2" aria-hidden="true">inbox</span><span class="tk-row__main"><span class="tk-row__title">{{t.r1}}</span><span class="tk-row__sub">{{t.r1s}}</span></span><sc-if value="{{g.mark}}" hint-placeholder-val="{{true}}"><span class="tk-badge tk-badge--plus"><span class="tk-icon" aria-hidden="true">workspace_premium</span>Plus</span></sc-if><span class="tk-icon tk-row__chev">chevron_right</span></a>
+          <a class="tk-row tk-row--compact tk-row--wrap" href="{{g.r2.href}}"><span class="tk-icon tk-ink-2" aria-hidden="true">bolt</span><span class="tk-row__main"><span class="tk-row__title">{{t.r2}}</span><span class="tk-row__sub">{{t.r2s}}</span></span><sc-if value="{{g.mark}}" hint-placeholder-val="{{true}}"><span class="tk-badge tk-badge--plus"><span class="tk-icon" aria-hidden="true">workspace_premium</span>Plus</span></sc-if><span class="tk-switch" aria-hidden="true"><sc-if value="{{g.on}}" hint-placeholder-val="{{false}}"><input type="checkbox" tabindex="-1" checked></sc-if><sc-if value="{{g.off}}" hint-placeholder-val="{{true}}"><input type="checkbox" tabindex="-1"></sc-if><span class="tk-switch__track"></span></span></a>
+        </div>
+        <a class="tk-btn tk-btn--secondary tk-btn--block" href="{{g.r3.href}}" style="margin-top: 8px"><span class="tk-icon">add</span>{{t.r3}}<sc-if value="{{g.mark}}" hint-placeholder-val="{{true}}"><span class="tk-badge tk-badge--plus"><span class="tk-icon" aria-hidden="true">workspace_premium</span>Plus</span></sc-if></a>
+      </section>
+    </sc-for>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"en":{"editor":"boolean","default":false,"section":"Tampilan"},"dark":{"editor":"boolean","default":false,"section":"Tampilan"},"$preview":{"width":360,"height":800}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const en = !!this.props.en;
+    const T = en ? {
+      back: 'Back', title: 'Plus marker', r1: 'Second notification app', r1s: 'GoPay', r2: 'Auto-record', r2s: 'Records fixed bills on the due date', r3: 'New template',
+      free: ['Free', 'A Plus badge sits at the end of the row or button. Tapping it opens the paywall with a matching message.'], paid: ['Subscribed', 'No badge. The same rows work like any other feature.']
+    } : {
+      back: 'Kembali', title: 'Penanda Plus', r1: 'Aplikasi notifikasi kedua', r1s: 'GoPay', r2: 'Catat otomatis', r2s: 'Mencatat tagihan tetap di hari jatuh tempo', r3: 'Template baru',
+      free: ['Gratis', 'Lencana Plus ada di ujung baris atau tombol. Diketuk, membuka paywall dengan pesan yang sesuai.'], paid: ['Berlangganan', 'Tanpa lencana. Baris yang sama bekerja seperti fitur lain.']
+    };
+    const link = (k) => ({ href: 'Paywall.dc.html?pemicu=' + k });
+    const none = (k) => ({ href: 'Main.dc.html' });
+    return {
+      theme: this.props.dark ? 'dark' : 'light', t: T,
+      groups: [
+        { title: T.free[0], note: T.free[1], mark: true, on: false, off: true, r1: link('notifikasi'), r2: link('otomatis'), r3: link('template') },
+        { title: T.paid[0], note: T.paid[1], mark: false, on: true, off: false, r1: none(), r2: none(), r3: none() }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

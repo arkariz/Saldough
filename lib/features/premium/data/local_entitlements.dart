@@ -3,6 +3,7 @@ import 'dart:developer' as developer;
 
 import 'package:dependencies/dependencies.dart';
 import 'package:saldough/core/financial_month/financial_period.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/foundation/entitlement/entitlement.dart';
 import 'package:saldough/features/premium/data/entitlement_cache_store.dart';
 import 'package:saldough/features/premium/data/quota_store.dart';
@@ -109,7 +110,11 @@ final class LocalEntitlements implements Entitlements {
   @override
   Future<bool> tryUse(PlusFeature feature) async {
     final status = await quota(feature);
-    if (status.exhausted) return false;
+    if (status.exhausted) {
+      if (!_current.isPlus) AppAnalytics.log(PremiumEvents.tasteQuotaExhausted(feature: feature.name));
+      return false;
+    }
+    if (_current.isPlus) AppAnalytics.log(PremiumEvents.plusFeatureUsed(feature: feature.name));
     if (status.limit == null) return true;
     final (scope, bucket, _) = _quotaFor(feature);
     final added = await _quotas.add(scope, bucket, feature, 1);
@@ -196,7 +201,12 @@ final class LocalEntitlements implements Entitlements {
       start: start,
       endsOn: trialEndsOn(start, _schedule(), minDays: limits.trialMinDays),
     );
-    return (await _trials.save(record)).getOrElse((_) => record);
+    final saved = (await _trials.save(record)).getOrElse((_) => record);
+    // Hanya uji coba yang baru dibuat; yang sudah ada dikembalikan apa adanya.
+    if (saved == record) {
+      AppAnalytics.log(PremiumEvents.trialStarted(days: record.endsOn.difference(record.start).inDays + 1));
+    }
+    return saved;
   }
 
   PlanState _resolve() => resolvePlan(

@@ -18,6 +18,7 @@ final class PremiumRouteModule extends FeatureRouteModule {
       builder: (context, input) {
         final container = ScopeProvider.of(context);
         return PaywallPage(
+          trigger: input.trigger,
           signedIn: container<AuthRepository>().currentUser != null,
           onSignIn: () =>
               context.pushRoute(AccountRouteKeys.page, const EmptyInput()),

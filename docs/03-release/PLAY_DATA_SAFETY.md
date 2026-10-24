@@ -143,17 +143,54 @@ pemilik; dokumen ini hanya menyiapkan.
 ulang formulir (build berbeda = formulir per rilis), dan memperbarui
 kebijakan privasi.
 
+### Fase 23: Plus, RevenueCat, dan riwayat pembelian (T-23.16)
+
+Dari ADR-041. **Draf; isi formulir persis sebelum build berfitur ini
+diunggah**, dan periksa halaman pengungkapan data resmi RevenueCat
+([revenuecat.com/docs](https://www.revenuecat.com/docs)) serta panduan Data
+safety Google, karena daftar jenis data penyedia bisa berubah. Yang diketahui
+dari rancangan:
+
+| Mekanisme | Ke mana | Data | Status | Dampak ke formulir |
+|---|---|---|---|---|
+| **RevenueCat** (`purchases_flutter`, hanya build Android dengan kunci SDK) | RevenueCat (pihak ketiga) | ID pengguna aplikasi (anonim, atau ID akun Firebase bila masuk; `logIn(uid)`), riwayat dan status langganan, data teknis perangkat/jaringan yang dikirim SDK (mis. alamat IP, versi aplikasi, platform) | Baru | **Perlu baris baru**: "Info keuangan: Riwayat pembelian" dan "Info pengenal: ID pengguna" (sudah ada untuk akun) serta "ID perangkat atau ID lain" |
+| **Google Play Billing** (lewat RevenueCat) | Google Play | Pembayaran diproses Google; aplikasi tidak pernah menerima nomor kartu | Baru | Tidak ada baris "info pembayaran" dari aplikasi |
+| **Analytics**: `trial_started`, `trial_moment`, `trial_value_recap_shown`, `trial_ended`, `paywall_viewed`, `paywall_dismissed`, `purchase_started`, `purchase_completed`, `purchase_failed`, `purchase_restored`, `plus_feature_used`, `taste_quota_exhausted` | Firebase Analytics | Pemicu paywall (P1–P10), jenis paket (`monthly`, `yearly`, ...), alasan gagal, nama fitur, jumlah hari uji coba. **Tanpa** harga, nominal, ID akun, atau isi data | Baru, jenis data sama | Tidak ada baris baru (sudah "Interaksi aplikasi") |
+| **Remote Config**: kunci batas dan jatah Plus (`free_*`, `taste_*`, `plus_launch_at`, ...) | Firebase | Nilai konfigurasi saja, tanpa data pengguna | Baru | Tidak ada |
+
+Yang **tidak** berubah: data keuangan (dompet, transaksi, anggaran) tetap tidak
+pernah keluar perangkat; hak Plus tersimpan lokal (`entitlement_*`, tidak ikut
+cadangan) dan dihitung ulang dari RevenueCat. Berkas ekspor dan cadangan
+manual tidak dikirim ke server kami.
+
+**Kolom "Dibagikan" untuk RevenueCat:** penyedia layanan yang memproses atas
+nama pengembang; konfirmasi dengan panduan Google sebelum mengisi, dan bila
+ragu isi "Dibagikan: Ya".
+
+**Kebijakan privasi (`tanukonomy-web`) perlu menyebut** RevenueCat sebagai
+pemroses langganan (ID pengguna, riwayat pembelian), Google Play sebagai
+pemroses pembayaran, dan bahwa fitur Plus memerlukan masuk akun untuk uji coba
+(B-20).
+
+**App access (peninjau Play) berubah mulai Fase 23.** Pernyataan lama "peninjau
+tidak perlu kredensial" tidak lagi benar untuk fitur Plus: otomasi rutin R3,
+sumber notifikasi ke-2, tingkat otomatis, Analisis lebih dari 6 periode,
+template ke-2, dan proyek ke-3 terkunci tanpa akun (pra-peluncuran: masuk akun
+= Plus). Isi kolom App access dengan **akun email/sandi peninjau** (ADR-023)
+yang diberi **entitlement promosi RevenueCat tanpa tanggal berakhir**, dan
+instruksi: "Ketuk ikon akun di kanan atas Beranda, pilih *Masuk dengan email*,
+masukkan kredensial; seluruh fitur Plus terbuka." Mencatat dasar tetap bisa
+diuji tanpa akun.
+
 ### Belum termasuk di draf ini
 
 - **Sinkronisasi data keuangan ke server** — belum ada di kode. Kalau
   digarap, tambah baris "Info finansial: Info finansial lainnya" dengan
   status opsional, dan pilih "Dibagikan: Tidak" kalau backend tetap
   Firebase/Google, atau "Ya" kalau pindah ke penyedia lain.
-- **Info pembayaran** (langganan premium/freemium) — biasanya lewat Google
-  Play Billing, yang punya jalur deklarasi sendiri di Play Console (tidak
-  perlu dideklarasikan sebagai data yang "dikumpulkan aplikasi", karena
-  diproses Google, bukan kode sendiri) — verifikasi ulang saat langganan
-  digarap.
+- **Info pembayaran** (langganan premium/freemium) — sudah dijawab di bagian
+  "Fase 23: Plus, RevenueCat" di atas (pembayaran diproses Google Play; yang
+  dideklarasikan adalah riwayat pembelian dan ID pengguna lewat RevenueCat).
 - **Catat dari notifikasi** (ADR-032, T-11.21) — isi notifikasi aplikasi
   bank/e-wallet yang dipilih pengguna dibaca di perangkat; teks yang ragu
   dikirim ke Gemini (Firebase AI Logic) untuk ditafsirkan dan tidak disimpan

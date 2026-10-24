@@ -1,5 +1,6 @@
 import 'dart:developer' as developer;
 
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/foundation/entitlement/entitlement.dart';
 import 'package:saldough/features/premium/data/purchases_gateway.dart';
 import 'package:saldough/features/premium/data/revenuecat_plan_source.dart';
@@ -91,17 +92,33 @@ final class PremiumPurchases {
   /// berlaku tanpa menunggu penyegaran.
   Future<BuyResult> buy(PlanOption option) async {
     if (!isSelling) return const BuyFailed(PurchaseFailure.other);
+    final plan = option.kind.id;
+    AppAnalytics.log(PremiumEvents.purchaseStarted(plan: plan));
+    final BuyResult result;
     try {
       final outcome = await gateway.purchase(option);
       if (outcome.result is BuyDone) await source.apply(outcome.snapshot);
-      return outcome.result;
+      result = outcome.result;
     } on Object catch (e) {
       developer.log('Pembelian gagal', error: e, name: 'Purchases');
+      AppAnalytics.log(PremiumEvents.purchaseFailed(reason: PurchaseFailure.other.analyticsName));
       return const BuyFailed(PurchaseFailure.other);
     }
+    switch (result) {
+      case BuyDone():
+        AppAnalytics.log(PremiumEvents.purchaseCompleted(plan: plan));
+      case BuyFailed(:final reason):
+        AppAnalytics.log(PremiumEvents.purchaseFailed(reason: reason.analyticsName));
+      case BuyCancelled():
+        break;
+    }
+    return result;
   }
 
   /// Memulihkan pembelian dari akun Google Play (ponsel baru). Selalu tersedia,
   /// juga sebelum Plus dijual: penguji dengan hak promosi pun terbantu.
-  Future<void> restore() => source.restore();
+  Future<void> restore() async {
+    await source.restore();
+    AppAnalytics.log(PremiumEvents.purchaseRestored);
+  }
 }

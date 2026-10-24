@@ -36,6 +36,7 @@ final class FirebaseAuthRepositoryImpl with RepositoryGuard implements AuthRepos
           email: user.email,
           photoUrl: user.photoURL,
           method: _methodOf(user),
+          createdAt: user.metadata.creationTime,
         );
 
   static AppUser _requireUser(fb.UserCredential result) {

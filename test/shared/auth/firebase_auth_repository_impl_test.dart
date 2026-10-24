@@ -44,6 +44,7 @@ void main() {
     when(() => user.displayName).thenReturn('Tanu');
     when(() => user.email).thenReturn('tanu@example.com');
     when(() => user.photoURL).thenReturn(null);
+    when(() => user.metadata).thenReturn(fb.UserMetadata(DateTime.utc(2026, 9, 29, 3).millisecondsSinceEpoch, null));
     when(() => auth.currentUser).thenReturn(user);
     when(() => google.signOut()).thenAnswer((_) async {});
     when(() => user.reauthenticateWithCredential(any())).thenAnswer((_) async => _MockCredential());
@@ -63,6 +64,11 @@ void main() {
       givenProvider('google.com');
       expect(repository.currentUser?.method, SignInMethod.google);
       expect(repository.currentUser?.email, 'tanu@example.com');
+    });
+
+    test('membawa tanggal pembuatan akun dari server (jangkar uji coba, ADR-041 §3.4)', () {
+      givenProvider('google.com');
+      expect(repository.currentUser?.createdAt?.toUtc(), DateTime.utc(2026, 9, 29, 3));
     });
 
     test('memetakan penyedia password ke SignInMethod.password', () {

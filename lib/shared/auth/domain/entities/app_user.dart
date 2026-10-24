@@ -21,6 +21,7 @@ final class AppUser extends Equatable {
     this.email,
     this.photoUrl,
     this.method,
+    this.createdAt,
   });
 
   /// Pengenal unik dari penyedia identitas (Firebase Auth).
@@ -38,6 +39,11 @@ final class AppUser extends Equatable {
   /// Metode masuk, atau `null` kalau penyedianya tidak dikenali.
   final SignInMethod? method;
 
+  /// Saat akun dibuat menurut server Firebase Auth (sama di semua perangkat);
+  /// jangkar uji coba Plus untuk akun baru (ADR-041 §3.4). `null` bila tidak
+  /// dilaporkan.
+  final DateTime? createdAt;
+
   @override
-  List<Object?> get props => [uid, displayName, email, photoUrl, method];
+  List<Object?> get props => [uid, displayName, email, photoUrl, method, createdAt];
 }

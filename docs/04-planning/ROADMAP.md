@@ -94,6 +94,7 @@ baru:
 | B-1 | Sapuan nama "Saldough" → "Tanukonomy" di dokumen | agen |
 | B-5, B-35, B-40 | Verifikasi perangkat yang tertunda: Akun, mata uang, Freelance, suara, lebar 360dp, keadaan kosong Analisis | pemilik |
 | Audit TASK_LIST | Kotak lama yang kemungkinan sudah selesai di kode tapi belum dicentang (T-11.17–11.20, T-15.9, T-15.14, T-15.19, dan B-13/B-14 yang usang) | agen |
+| Fase 23 (B-41) | **Fondasi Plus** dijadwalkan 23 Okt 2026 ([ADR-041](../02-architecture/adr/0041-monetisasi-hak-plus-dan-uji-coba.md)): hak, uji coba, gerbang fitur lama, RevenueCat. Pra-peluncuran: masuk akun = Plus | agen, pemilik (RevenueCat, Play Console) |
 | B-43 | Kunci aplikasi sidik jari/PIN (gratis); prasyarat Plus. Pasangannya, ekspor dan cadangan/pulihkan manual (Fase 22, dari B-42), **selesai 23 Okt 2026**; sisa uji perangkatnya di B-67 | agen, pemilik (B-67) |
 
 **Satu fitur yang ikut di Now:** **B-26**, kartu lembut "Ada yang belum dicatat
@@ -110,7 +111,7 @@ sejak …?" (tanpa streak, KT-R13). Paling langsung menjawab ukuran keberhasilan
 | B-12 | Ikon peluncur dan splash iOS | Pemilik menyerahkan artwork, dan keputusan merilis iOS |
 | B-39 | Pengumuman pembaruan R2: pembaruan wajib untuk perbaikan kritis, iOS | Butuh KT-U1 dan iOS |
 | B-29 | Penyamaran notifikasi Android 15 | Uji di perangkat Android 15 dengan notifikasi bank nyata |
-| B-41 + B-44 + B-68 | Fondasi Plus (billing, hak, paywall, gerbang fitur lama), **Penjaga + Ringkasan Senin**, dan **Titik terendah sebelum gajian**; angka Aman dipakai hari ini gratis di Rencana (B-69). Plus hanya untuk penguji | ADR monetisasi (semua KT-P diputuskan 18 Okt 2026) |
+| B-44 + B-68 | Sesudah Fondasi Plus (Fase 23): **Penjaga + Ringkasan Senin**, dan **Titik terendah sebelum gajian**; angka Aman dipakai hari ini gratis di Rencana (B-69). Plus hanya untuk penguji | Fase 23 (Fondasi Plus) selesai |
 | B-45, B-46 + B-70, B-41 | Catat dari foto, Bagaimana kalau dan **Cek sebelum beli**, reverse trial: **Plus mulai dijual** dengan judul tiga janji | B-44 selesai; Blaze (T-11.8) dan Keamanan Data untuk B-45 |
 | B-7 + B-60 | **Sinkronisasi opsional** lalu **Dompet Bersama / Plus Keluarga** (pemilik memutuskan bersaing di sini, KT-P13, 23 Okt 2026); yang tidak memakainya tetap tanpa akun dengan data di ponsel | Sesudah Plus dijual; ADR sinkronisasi, jawaban KT-2, wajib ADR-024 §3.3 |
 

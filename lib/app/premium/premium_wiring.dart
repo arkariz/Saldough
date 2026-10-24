@@ -38,6 +38,7 @@ void registerEntitlements(GetIt container) {
 StreamSubscription<AppUser?>? _authSubscription;
 AppLifecycleListener? _lifecycle;
 StreamSubscription<PlanState>? _planSubscription;
+StreamSubscription<EntitlementLimits>? _limitsSubscription;
 
 /// Menghubungkan hak ke status masuk akun dan siklus hidup aplikasi (ADR-041
 /// §3.3, §3.4). Dipanggil bootstrap sesudah jadwal periode keuangan dimuat;
@@ -53,6 +54,9 @@ Future<void> startEntitlements(GetIt container) async {
   await _planSubscription?.cancel();
   ActivePlan.notifier.value = entitlements.current;
   _planSubscription = entitlements.changes.listen((state) => ActivePlan.notifier.value = state);
+  await _limitsSubscription?.cancel();
+  ActivePlan.limits.value = entitlements.limits;
+  _limitsSubscription = container<EntitlementConfig>().changes.listen((limits) => ActivePlan.limits.value = limits);
   final planOverride = container<PlanOverrideController>();
   await planOverride.load();
   planOverride.addListener(() => unawaited(entitlements.recompute()));

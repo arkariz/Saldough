@@ -95,6 +95,59 @@ void main() {
 
   const payment = 'Pembayaran Rp25.000 ke KOPI KENANGAN berhasil. Saldo Rp1.234.567';
 
+  group('Gratis (ADR-041 §3.8)', () {
+    const second = NotificationSource(packageName: 'com.gojek.app', appLabel: 'GoPay', keywords: ['berhasil']);
+
+    ProcessCapturedNotifications freeProcessor({int sources = 1}) => ProcessCapturedNotifications(
+      gateway: gateway,
+      store: store,
+      composer: notificationComposer(),
+      recordTransaction: recordTransaction,
+      walletRepository: wallets,
+      transactionRepository: ledger,
+      categories: () => notificationCategories,
+      currencyCode: () => 'IDR',
+      languageCode: () => 'id',
+      isPlus: () => false,
+      freeSources: () => sources,
+      clock: () => now,
+      newId: () => 'tx${nextId++}',
+    );
+
+    test('tingkat otomatis diperlakukan tinjau semua, setelannya tidak diubah', () async {
+      await enable(AutoRecordLevel.whenAmountAndWallet);
+      gateway.queue = [notif('a', payment)];
+      final result = await freeProcessor()();
+      expect(result.recorded, isEmpty);
+      expect(result.queued.single.reviewReason, CaptureReviewReason.autoRecordOff);
+      expect(await ledgerNow(), isEmpty);
+      final saved = (await store.loadSettings()).getOrElse((_) => const NotificationCaptureSettings());
+      expect(saved.autoRecordLevel, AutoRecordLevel.whenAmountAndWallet);
+    });
+
+    test('hanya sumber pertama di daftar yang diproses; sumber lain di-ack tanpa kotak masuk', () async {
+      await enable(AutoRecordLevel.reviewAll, sources: [brimoSource, second]);
+      gateway.queue = [notif('a', payment), notif('b', payment, pkg: 'com.gojek.app')];
+      final result = await freeProcessor()();
+      expect(result.queued.map((e) => e.id), ['a']);
+      expect(gateway.acked, containsAll(['a', 'b']));
+    });
+
+    test('batas dari Remote Config: dua sumber diproses bila freeSources 2', () async {
+      await enable(AutoRecordLevel.reviewAll, sources: [brimoSource, second]);
+      gateway.queue = [notif('a', payment), notif('b', payment, pkg: 'com.gojek.app')];
+      final result = await freeProcessor(sources: 2)();
+      expect(result.queued.map((e) => e.id).toSet(), {'a', 'b'});
+    });
+
+    test('Plus: semua sumber dan tingkat otomatis dihormati', () async {
+      await enable(AutoRecordLevel.whenAmountAndWallet, sources: [brimoSource, second]);
+      gateway.queue = [notif('a', payment)];
+      final result = await processor()();
+      expect(result.recorded, hasLength(1));
+    });
+  });
+
   test('tingkat 1: semua ke kotak masuk, tidak ada transaksi, antrean di-ack', () async {
     await enable(AutoRecordLevel.reviewAll);
     gateway.queue = [notif('a', payment)];

@@ -61,6 +61,8 @@ final class ProcessCapturedNotifications {
     this.recurringRules,
     this.matchLog,
     this.recurringChanges,
+    this.isPlus,
+    this.freeSources,
     DateTime Function()? clock,
     String Function()? newId,
   }) : _clock = clock ?? DateTime.now,
@@ -107,6 +109,14 @@ final class ProcessCapturedNotifications {
 
   /// Sinyal rutin berubah, sesudah ada yang tertaut.
   final RecurringChanges? recurringChanges;
+
+  /// Paket Plus; `null` = tanpa batas (uji). Di Gratis hanya [freeSources]
+  /// sumber pertama di daftar yang diproses dan tingkat otomatis dianggap
+  /// "tinjau semua" (ADR-041 §3.8, §3.13); setelannya tidak diubah.
+  final bool Function()? isPlus;
+
+  /// Jumlah sumber yang diproses di Gratis; dibaca bila [isPlus] `false`.
+  final int Function()? freeSources;
 
   final DateTime Function() _clock;
   final String Function() _newId;
@@ -163,7 +173,11 @@ final class ProcessCapturedNotifications {
 
     final wallets = await loadActiveWallets(walletRepository);
     final patterns = await loadActivePatterns(store, settings);
-    final policy = AutoRecordPolicy(settings.autoRecordLevel);
+    final plus = isPlus?.call() ?? true;
+    final policy = AutoRecordPolicy(plus ? settings.autoRecordLevel : AutoRecordLevel.reviewAll);
+    final allowedPackages = plus
+        ? null
+        : {for (final s in settings.sources.take(freeSources?.call() ?? 1)) s.packageName};
     final rules = (await recurringRules?.listRules())?.getOrElse((_) => const []) ?? const <RecurringRule>[];
     var linkedAny = false;
     final ledgers = <String, List<Transaction>>{};
@@ -177,7 +191,9 @@ final class ProcessCapturedNotifications {
         continue;
       }
       processed[notification.id] = now;
-      final source = settings.activeSource(notification.packageName);
+      final source = allowedPackages != null && !allowedPackages.contains(notification.packageName)
+          ? null
+          : settings.activeSource(notification.packageName);
       final text = notification.text;
       if (source == null || NotificationText.looksLikeOtp(text) || !source.matchesKeywords(text)) {
         if (!await _save(processed, inbox, auto)) break;

@@ -4,6 +4,7 @@ import 'package:api_storage/api_storage.dart';
 import 'package:di/di.dart';
 import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/language/language.dart';
+import 'package:saldough/core/presentation/plan/active_plan.dart';
 import 'package:saldough/features/notification_capture/data/method_channel_notification_capture_gateway.dart';
 import 'package:saldough/features/notification_capture/data/notification_capture_store_impl.dart';
 import 'package:saldough/features/notification_capture/data/notification_rule_interpreter.dart';
@@ -77,6 +78,9 @@ abstract final class NotificationCaptureModule {
           recurringRules: c.isRegistered<RecurringRuleRepository>() ? c<RecurringRuleRepository>() : null,
           matchLog: c.isRegistered<RecurrenceMatchLogRepository>() ? c<RecurrenceMatchLogRepository>() : null,
           recurringChanges: c.isRegistered<RecurringChanges>() ? c<RecurringChanges>() : null,
+          // Gerbang Plus (ADR-041 §3.8): Gratis hanya sumber pertama dan tinjau semua.
+          isPlus: () => ActivePlan.isPlus,
+          freeSources: () => ActivePlan.limits.value.freeNotificationSources,
         ),
       )
       ..registerLazySingleton<CaptureInboxActions>(

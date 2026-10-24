@@ -7,7 +7,9 @@ import 'package:navigation/navigation.dart';
 import 'package:saldough/core/discovery/discovery.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
+import 'package:saldough/core/foundation/entitlement/entitlement.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/plan/active_plan.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/notification_capture/di/notification_capture_module.dart';
 import 'package:saldough/features/notification_capture/domain/entities/capture_inbox_entry.dart';
@@ -24,6 +26,10 @@ import '../../../../helpers/fake_notification_capture_gateway.dart';
 import '../../../../helpers/routes.dart';
 
 void main() {
+  // Gerbang Plus (ADR-041 §3.8): uji ini menguji perilaku Plus.
+  setUp(() => ActivePlan.notifier.value = const PlusPlan(source: PlanSource.prelaunch));
+  tearDown(ActivePlan.reset);
+
   late GetIt container;
   late FakeNotificationCaptureGateway gateway;
   late NotificationCaptureStore store;

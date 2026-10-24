@@ -4,6 +4,7 @@ import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/notification_capture/domain/entities/notification_pattern.dart';
 import 'package:saldough/features/notification_capture/domain/services/notification_template.dart';
+import 'package:saldough/features/notification_capture/presentation/widgets/plus_gate.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/category/category_presentation.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
@@ -26,12 +27,21 @@ Future<NotificationPattern?> openNotificationPatternPage(
   required List<Wallet> wallets,
   NotificationPattern? initial,
   String sample = '',
-}) => Navigator.of(context).push(
-  MaterialPageRoute<NotificationPattern>(
-    builder: (_) =>
-        NotificationPatternPage(packageName: packageName, wallets: wallets, initial: initial, sample: sample),
-  ),
-);
+}) async {
+  // Pola baru hanya untuk Plus; menyunting pola yang sudah ada tetap boleh
+  // (ADR-041 §3.8).
+  if (initial == null && plusLocked) {
+    await openNotificationPaywall(context);
+    return null;
+  }
+  if (!context.mounted) return null;
+  return Navigator.of(context).push(
+    MaterialPageRoute<NotificationPattern>(
+      builder: (_) =>
+          NotificationPatternPage(packageName: packageName, wallets: wallets, initial: initial, sample: sample),
+    ),
+  );
+}
 
 /// Pembuat pola (ADR-032 §3.9): pilih penanda (Nominal/Catatan/Abaikan),
 /// lalu ketuk kata. Templat dibentuk otomatis; templat mentah terlipat.

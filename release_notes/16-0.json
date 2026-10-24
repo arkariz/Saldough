@@ -1,0 +1,14 @@
+{
+  "version": "0.10.0",
+  "groups": [
+    {
+      "category": "new",
+      "notes": [
+        {
+          "id": "Di rincian transaksi rutin, jadwal yang belum jatuh tempo bisa langsung dicatat lewat Catat sekarang; transaksinya bertanggal hari ini dan tetap tertaut ke jadwalnya.",
+          "en": "In a recurring transaction's details, you can record an upcoming occurrence early with Record now; it is dated today and stays linked to its schedule."
+        }
+      ]
+    }
+  ]
+}

@@ -1551,6 +1551,9 @@ class _Translations$premium$en extends Translations$premium$id {
 	@override String get signInTitle => 'Sign in to unlock Plus features';
 	@override String get signInBody => 'This feature is part of Plus. Sign in with your account to use it. Recording stays free and works without an account.';
 	@override String get signInAction => 'Sign in';
+	@override String analysisLockedTitle({required Object n}) => 'Analysis beyond ${n} periods is part of Plus';
+	@override String get analysisLockedBody => 'Your history stays intact and is available in History.';
+	@override String get unlockAction => 'Unlock with Plus';
 	@override String get plusOnlyTitle => 'This feature is part of Plus';
 	@override String get plusOnlyBody => 'Plus subscriptions aren\'t available yet. Recording stays free.';
 }
@@ -3467,6 +3470,9 @@ extension on TranslationsEn {
 			'premium.signInTitle' => 'Sign in to unlock Plus features',
 			'premium.signInBody' => 'This feature is part of Plus. Sign in with your account to use it. Recording stays free and works without an account.',
 			'premium.signInAction' => 'Sign in',
+			'premium.analysisLockedTitle' => ({required Object n}) => 'Analysis beyond ${n} periods is part of Plus',
+			'premium.analysisLockedBody' => 'Your history stays intact and is available in History.',
+			'premium.unlockAction' => 'Unlock with Plus',
 			'premium.plusOnlyTitle' => 'This feature is part of Plus',
 			'premium.plusOnlyBody' => 'Plus subscriptions aren\'t available yet. Recording stays free.',
 			_ => null,

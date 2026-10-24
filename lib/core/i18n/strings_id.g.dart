@@ -3918,6 +3918,15 @@ class Translations$premium$id {
 	/// id: 'Masuk'
 	String get signInAction => 'Masuk';
 
+	/// id: 'Analisis lebih dari $n periode ada di Plus'
+	String analysisLockedTitle({required Object n}) => 'Analisis lebih dari ${n} periode ada di Plus';
+
+	/// id: 'Riwayatmu tetap utuh dan bisa dilihat di Riwayat.'
+	String get analysisLockedBody => 'Riwayatmu tetap utuh dan bisa dilihat di Riwayat.';
+
+	/// id: 'Buka dengan Plus'
+	String get unlockAction => 'Buka dengan Plus';
+
 	/// id: 'Fitur ini bagian dari Plus'
 	String get plusOnlyTitle => 'Fitur ini bagian dari Plus';
 
@@ -6270,6 +6279,9 @@ extension on Translations {
 			'premium.signInTitle' => 'Masuk untuk membuka fitur Plus',
 			'premium.signInBody' => 'Fitur ini bagian dari Plus. Masuk dengan akunmu untuk memakainya. Mencatat tetap gratis dan tanpa akun.',
 			'premium.signInAction' => 'Masuk',
+			'premium.analysisLockedTitle' => ({required Object n}) => 'Analisis lebih dari ${n} periode ada di Plus',
+			'premium.analysisLockedBody' => 'Riwayatmu tetap utuh dan bisa dilihat di Riwayat.',
+			'premium.unlockAction' => 'Buka dengan Plus',
 			'premium.plusOnlyTitle' => 'Fitur ini bagian dari Plus',
 			'premium.plusOnlyBody' => 'Berlangganan Plus belum tersedia. Mencatat tetap gratis.',
 			_ => null,

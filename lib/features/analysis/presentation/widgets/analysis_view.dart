@@ -2,14 +2,18 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:saldough/core/currency/amount_visibility.dart';
+import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
+import 'package:saldough/core/foundation/entitlement/entitlement.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/plan/active_plan.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
+import 'package:saldough/features/analysis/domain/analysis_access.dart';
 import 'package:saldough/features/analysis/domain/period_comparison.dart';
 import 'package:saldough/features/analysis/domain/period_summary.dart';
 import 'package:saldough/features/analysis/presentation/analysis_colors.dart';
@@ -18,6 +22,7 @@ import 'package:saldough/features/analysis/presentation/bloc/analysis_state.dart
 import 'package:saldough/features/analysis/presentation/navigation/analysis_route_keys.dart';
 import 'package:saldough/features/analysis/presentation/widgets/analysis_trend.dart';
 import 'package:saldough/features/analysis/presentation/widgets/compare_line.dart';
+import 'package:saldough/features/premium/presentation/navigation/premium_route_keys.dart';
 import 'package:saldough/features/record/presentation/navigation/record_route_keys.dart';
 import 'package:saldough/features/transaction/presentation/navigation/transaction_route_keys.dart';
 import 'package:saldough/shared/category/category.dart';
@@ -34,6 +39,14 @@ class AnalysisView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Paket berubah: periode lama terkunci atau terbuka (ADR-041 §3.8).
+    return ValueListenableBuilder<PlanState>(
+      valueListenable: ActivePlan.notifier,
+      builder: (context, _, _) => _view(context),
+    );
+  }
+
+  Widget _view(BuildContext context) {
     return BlocBuilder<AnalysisBloc, AnalysisState>(
       builder: (context, state) {
         final bloc = context.read<AnalysisBloc>();
@@ -89,13 +102,26 @@ class AnalysisView extends StatelessWidget {
     }
     final period = state.period;
     final summary = state.summary;
+    final stepper = AppPeriodStepper(
+      title: period.label,
+      transitionDays: period.isTransition ? period.days : null,
+      onPrevious: state.canGoBack ? () => bloc.add(const AnalysisPeriodStepped(forward: false)) : null,
+      onNext: state.isCurrent ? null : () => bloc.add(const AnalysisPeriodStepped(forward: true)),
+    );
+    // Gratis: periode lebih tua dari batas terkunci; pemilih periode tetap
+    // berfungsi supaya pengguna bisa kembali (ADR-041 §3.8).
+    final freePeriods = ActivePlan.limits.value.freeAnalysisPeriods;
+    if (!ActivePlan.isPlus &&
+        isAnalysisPeriodLocked(
+          period: period,
+          now: bloc.today,
+          schedule: ActiveFinancialMonth.schedule,
+          freePeriods: freePeriods,
+        )) {
+      return [stepper, const SizedBox(height: AppSpacing.space4), _LockedPeriod(freePeriods: freePeriods)];
+    }
     return [
-      AppPeriodStepper(
-        title: period.label,
-        transitionDays: period.isTransition ? period.days : null,
-        onPrevious: state.canGoBack ? () => bloc.add(const AnalysisPeriodStepped(forward: false)) : null,
-        onNext: state.isCurrent ? null : () => bloc.add(const AnalysisPeriodStepped(forward: true)),
-      ),
+      stepper,
       const SizedBox(height: AppSpacing.space3),
       _Controls(state: state),
       const SizedBox(height: AppSpacing.space4),
@@ -123,6 +149,27 @@ class AnalysisView extends StatelessWidget {
         ),
       AnalysisTrendSection(state: state),
     ];
+  }
+}
+
+/// Periode di luar batas Analisis Gratis: kartu ajakan Plus sebagai ganti isi.
+class _LockedPeriod extends StatelessWidget {
+  const _LockedPeriod({required this.freePeriods});
+
+  final int freePeriods;
+
+  @override
+  Widget build(BuildContext context) {
+    return AppEmptyState(
+      key: const ValueKey('analysis-locked'),
+      art: EmptyArt.history,
+      title: t.premium.analysisLockedTitle(n: freePeriods),
+      body: t.premium.analysisLockedBody,
+      actionLabel: t.premium.unlockAction,
+      onAction: () => unawaited(
+        context.pushRoute(PremiumRouteKeys.paywall, const PaywallInput(PaywallTrigger.analysisHistory)),
+      ),
+    );
   }
 }
 

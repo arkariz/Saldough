@@ -9,7 +9,9 @@ import 'package:navigation/navigation.dart';
 import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
+import 'package:saldough/core/foundation/entitlement/entitlement.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/plan/active_plan.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/analysis/presentation/bloc/analysis_bloc.dart';
@@ -1193,6 +1195,57 @@ void main() {
       bloc.add(const AnalysisStarted());
       await tester.pumpAndSettle();
       expect(find.byKey(const ValueKey('analysis-loading')), findsNothing);
+    });
+  });
+
+  group('batas periode Gratis (ADR-041 §3.8)', () {
+    Future<void> seedMonths() => seed([
+      for (var month = 2; month <= 9; month++) expenseOn(DateTime(2026, month, 10), 100000),
+    ]);
+
+    Future<void> back(WidgetTester tester, int times) async {
+      for (var i = 0; i < times; i++) {
+        await tester.tap(find.byKey(const ValueKey('period-previous')));
+        await tester.pumpAndSettle();
+      }
+    }
+
+    testWidgets('Gratis: enam periode terakhir terbuka, periode ketujuh terkunci tetapi pemilih tetap berfungsi', (
+      tester,
+    ) async {
+      ActivePlan.notifier.value = const FreePlan();
+      addTearDown(ActivePlan.reset);
+      await seedMonths();
+      await pump(tester);
+
+      await back(tester, 5);
+      expect(tester.widget<Text>(find.byKey(const ValueKey('period-title'))).data, 'April 2026');
+      expect(find.byKey(const ValueKey('analysis-locked')), findsNothing);
+
+      await back(tester, 1);
+      expect(tester.widget<Text>(find.byKey(const ValueKey('period-title'))).data, 'Maret 2026');
+      expect(find.byKey(const ValueKey('analysis-locked')), findsOneWidget);
+      expect(find.text(t.premium.analysisLockedTitle(n: 6)), findsOneWidget);
+      expect(find.byKey(const ValueKey('analysis-kind')), findsNothing, reason: 'isi periode tidak ditampilkan');
+      expect(find.byKey(const ValueKey('period-next')), findsOneWidget);
+
+      await tester.tap(find.byKey(const ValueKey('period-next')));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const ValueKey('analysis-locked')), findsNothing);
+    });
+
+    testWidgets('Plus: periode lama terbuka; paket berubah menjadi Plus membuka periode terkunci', (tester) async {
+      ActivePlan.notifier.value = const FreePlan();
+      addTearDown(ActivePlan.reset);
+      await seedMonths();
+      await pump(tester);
+      await back(tester, 6);
+      expect(find.byKey(const ValueKey('analysis-locked')), findsOneWidget);
+
+      ActivePlan.notifier.value = const PlusPlan(source: PlanSource.purchase);
+      await tester.pumpAndSettle();
+      expect(find.byKey(const ValueKey('analysis-locked')), findsNothing);
+      expect(find.byKey(const ValueKey('analysis-kind')), findsOneWidget);
     });
   });
 }

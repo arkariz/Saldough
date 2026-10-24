@@ -1546,6 +1546,9 @@
     "signInTitle": "Masuk untuk membuka fitur Plus",
     "signInBody": "Fitur ini bagian dari Plus. Masuk dengan akunmu untuk memakainya. Mencatat tetap gratis dan tanpa akun.",
     "signInAction": "Masuk",
+    "analysisLockedTitle": "Analisis lebih dari $n periode ada di Plus",
+    "analysisLockedBody": "Riwayatmu tetap utuh dan bisa dilihat di Riwayat.",
+    "unlockAction": "Buka dengan Plus",
     "plusOnlyTitle": "Fitur ini bagian dari Plus",
     "plusOnlyBody": "Berlangganan Plus belum tersedia. Mencatat tetap gratis."
   }

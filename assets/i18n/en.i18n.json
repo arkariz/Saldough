@@ -1547,6 +1547,9 @@
     "signInTitle": "Sign in to unlock Plus features",
     "signInBody": "This feature is part of Plus. Sign in with your account to use it. Recording stays free and works without an account.",
     "signInAction": "Sign in",
+    "analysisLockedTitle": "Analysis beyond $n periods is part of Plus",
+    "analysisLockedBody": "Your history stays intact and is available in History.",
+    "unlockAction": "Unlock with Plus",
     "plusOnlyTitle": "This feature is part of Plus",
     "plusOnlyBody": "Plus subscriptions aren't available yet. Recording stays free."
   }

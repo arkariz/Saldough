@@ -97,6 +97,9 @@ final class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
   final Category? Function(String id) _categoryOf;
   final DateTime Function() _now;
 
+  /// Hari ini menurut bloc (jam yang sama dengan penentuan periode berjalan).
+  DateTime get today => _now();
+
   /// Tanggal di dalam periode yang dilihat; `null` = ikut periode berjalan.
   DateTime? _anchor;
 

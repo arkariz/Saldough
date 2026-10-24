@@ -97,7 +97,8 @@ void main() {
     await tester.tap(find.text(t.record.repeat.moreAction));
     await tester.pumpAndSettle();
 
-    expect(find.text('${t.record.repeat.autoRecordLabel} · ${t.premium.plusBadge}'), findsOneWidget);
+    expect(find.text(t.record.repeat.autoRecordLabel), findsOneWidget);
+    expect(find.text(t.premium.plusBadge), findsOneWidget);
     final toggle = find.byKey(const ValueKey('repeat-auto-record'));
     await tester.ensureVisible(toggle);
     await tester.pumpAndSettle();

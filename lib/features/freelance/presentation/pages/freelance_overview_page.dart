@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/plan/active_plan.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
@@ -128,7 +129,10 @@ class _Overview extends StatelessWidget {
             ],
           ),
           const SizedBox(height: AppSpacing.space6),
-          AddProjectCard(onTap: () => addProject(context)),
+          AddProjectCard(
+            onTap: () => addProject(context),
+            limited: state.projects.length >= ActivePlan.limits.value.freeProjects,
+          ),
         ],
       ],
       ),

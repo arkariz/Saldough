@@ -196,14 +196,23 @@ class ProjectCard extends StatelessWidget {
 /// proyek.
 class AddProjectCard extends StatelessWidget {
   /// Membuat [AddProjectCard].
-  const AddProjectCard({required this.onTap, super.key});
+  const AddProjectCard({required this.onTap, this.limited = false, super.key});
 
   /// Membuka formulir proyek baru.
   final VoidCallback onTap;
 
+  /// Batas proyek Gratis sudah tercapai: tombol diberi lencana Plus.
+  final bool limited;
+
   @override
   Widget build(BuildContext context) {
-    return AppButton.secondary(label: t.freelance.projectAddTitle, icon: IconKey.add, expand: true, onPressed: onTap);
+    return AppButton.secondary(
+      label: t.freelance.projectAddTitle,
+      icon: IconKey.add,
+      expand: true,
+      onPressed: onTap,
+      badge: PlusBadge(when: () => limited),
+    );
   }
 }
 

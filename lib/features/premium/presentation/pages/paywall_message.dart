@@ -14,7 +14,7 @@ final class PaywallMessage {
     final m = t.premium.paywall.messages;
     return switch (trigger) {
       PaywallTrigger.analysisHistory => PaywallMessage._(
-        m.analysis.title,
+        m.analysis.title(n: ActivePlan.limits.value.freeAnalysisPeriods),
         m.analysis.body,
         hasKicker: true,
       ),

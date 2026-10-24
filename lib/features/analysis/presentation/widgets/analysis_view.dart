@@ -118,7 +118,10 @@ class AnalysisView extends StatelessWidget {
           schedule: ActiveFinancialMonth.schedule,
           freePeriods: freePeriods,
         )) {
-      return [stepper, const SizedBox(height: AppSpacing.space4), _LockedPeriod(freePeriods: freePeriods)];
+      return [stepper, const SizedBox(height: AppSpacing.space4), _LockedPeriod(
+          freePeriods: freePeriods,
+          onBack: () => bloc.add(AnalysisPeriodJumped(bloc.today)),
+        )];
     }
     return [
       stepper,
@@ -152,22 +155,44 @@ class AnalysisView extends StatelessWidget {
   }
 }
 
-/// Periode di luar batas Analisis Gratis: kartu ajakan Plus sebagai ganti isi.
+/// Periode di luar batas Analisis Gratis: data diburamkan dengan kartu Plus di
+/// atasnya (komponen PlusLocked). Isi di belakangnya hanya kerangka, karena
+/// periode terkunci tidak dimuat. Pesan sama dengan paywall `analysisHistory`.
 class _LockedPeriod extends StatelessWidget {
-  const _LockedPeriod({required this.freePeriods});
+  const _LockedPeriod({required this.freePeriods, required this.onBack});
 
   final int freePeriods;
+  final VoidCallback onBack;
 
   @override
   Widget build(BuildContext context) {
-    return AppEmptyState(
+    final texts = t.premium.paywall.messages.analysis;
+    final colors = context.appColors;
+    return PlusLocked(
       key: const ValueKey('analysis-locked'),
-      art: EmptyArt.history,
-      title: t.premium.analysisLockedTitle(n: freePeriods),
-      body: t.premium.analysisLockedBody,
-      actionLabel: t.premium.unlockAction,
-      onAction: () => unawaited(
+      minHeight: 400,
+      title: texts.title(n: freePeriods),
+      text: texts.body,
+      freeLabel: t.premium.backToLatest,
+      onFree: onBack,
+      onSee: () => unawaited(
         context.pushRoute(PremiumRouteKeys.paywall, const PaywallInput(PaywallTrigger.analysisHistory)),
+      ),
+      preview: AppCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: AppSpacing.space3,
+          children: [
+            for (final width in const [0.9, 0.62, 0.78, 0.45, 0.7, 0.55])
+              FractionallySizedBox(
+                widthFactor: width,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(color: colors.brandSoft, borderRadius: BorderRadius.circular(4)),
+                  child: const SizedBox(height: 20),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }

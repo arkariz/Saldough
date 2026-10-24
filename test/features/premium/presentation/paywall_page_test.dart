@@ -89,7 +89,7 @@ void main() {
     for (final (trigger, title, body) in [
       (
         PaywallTrigger.analysisHistory,
-        t.premium.paywall.messages.analysis.title,
+        t.premium.paywall.messages.analysis.title(n: 6),
         t.premium.paywall.messages.analysis.body,
       ),
       (

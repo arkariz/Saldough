@@ -1547,13 +1547,12 @@ class _Translations$premium$en extends Translations$premium$id {
 
 	// Translations
 	@override String get title => 'Tanukonomy Plus';
+	@override String get backToLatest => 'Back to the latest period';
+	@override String get seePlus => 'See Plus';
 	@override String get plusBadge => 'Plus';
 	@override String get signInTitle => 'Sign in to unlock Plus features';
 	@override String get signInBody => 'This feature is part of Plus. Sign in with your account to use it. Recording stays free and works without an account.';
 	@override String get signInAction => 'Sign in';
-	@override String analysisLockedTitle({required Object n}) => 'Analysis beyond ${n} periods is part of Plus';
-	@override String get analysisLockedBody => 'Your history stays intact and is available in History.';
-	@override String get unlockAction => 'Unlock with Plus';
 	@override String get plusOnlyTitle => 'This feature is part of Plus';
 	@override String get plusOnlyBody => 'Plus subscriptions aren\'t available yet. Recording stays free.';
 	@override late final _Translations$premium$paywall$en paywall = _Translations$premium$paywall$en._(_root);
@@ -2128,7 +2127,7 @@ class _Translations$premium$paywall$messages$analysis$en extends Translations$pr
 	final TranslationsEn _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'Analysis beyond 6 periods is in Plus';
+	@override String title({required Object n}) => 'Analysis beyond ${n} periods is in Plus';
 	@override String get body => 'History stays complete. Free Analysis shows your latest 6 periods.';
 }
 
@@ -3628,13 +3627,12 @@ extension on TranslationsEn {
 			'analysis.category.avgLine' => ({required Object n}) => '${n}-month average',
 			'analysis.category.moreHint' => 'Latest 20 transactions',
 			'premium.title' => 'Tanukonomy Plus',
+			'premium.backToLatest' => 'Back to the latest period',
+			'premium.seePlus' => 'See Plus',
 			'premium.plusBadge' => 'Plus',
 			'premium.signInTitle' => 'Sign in to unlock Plus features',
 			'premium.signInBody' => 'This feature is part of Plus. Sign in with your account to use it. Recording stays free and works without an account.',
 			'premium.signInAction' => 'Sign in',
-			'premium.analysisLockedTitle' => ({required Object n}) => 'Analysis beyond ${n} periods is part of Plus',
-			'premium.analysisLockedBody' => 'Your history stays intact and is available in History.',
-			'premium.unlockAction' => 'Unlock with Plus',
 			'premium.plusOnlyTitle' => 'This feature is part of Plus',
 			'premium.plusOnlyBody' => 'Plus subscriptions aren\'t available yet. Recording stays free.',
 			'premium.paywall.close' => 'Close',
@@ -3643,7 +3641,7 @@ extension on TranslationsEn {
 			'premium.paywall.kicker' => 'Tanukonomy Plus',
 			'premium.paywall.messages.general.title' => 'Tanukonomy Plus',
 			'premium.paywall.messages.general.body' => 'Tanuki works for you.',
-			'premium.paywall.messages.analysis.title' => 'Analysis beyond 6 periods is in Plus',
+			'premium.paywall.messages.analysis.title' => ({required Object n}) => 'Analysis beyond ${n} periods is in Plus',
 			'premium.paywall.messages.analysis.body' => 'History stays complete. Free Analysis shows your latest 6 periods.',
 			'premium.paywall.messages.notification.title' => 'A second notification app is in Plus',
 			'premium.paywall.messages.notification.body' => 'Your first app keeps working. Add GoPay and other apps with Plus.',

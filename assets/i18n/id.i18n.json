@@ -1542,13 +1542,12 @@
   },
   "premium": {
     "title": "Tanukonomy Plus",
+    "backToLatest": "Kembali ke periode terbaru",
+    "seePlus": "Lihat Plus",
     "plusBadge": "Plus",
     "signInTitle": "Masuk untuk membuka fitur Plus",
     "signInBody": "Fitur ini bagian dari Plus. Masuk dengan akunmu untuk memakainya. Mencatat tetap gratis dan tanpa akun.",
     "signInAction": "Masuk",
-    "analysisLockedTitle": "Analisis lebih dari $n periode ada di Plus",
-    "analysisLockedBody": "Riwayatmu tetap utuh dan bisa dilihat di Riwayat.",
-    "unlockAction": "Buka dengan Plus",
     "plusOnlyTitle": "Fitur ini bagian dari Plus",
     "plusOnlyBody": "Berlangganan Plus belum tersedia. Mencatat tetap gratis.",
     "paywall": {
@@ -1562,7 +1561,7 @@
           "body": "Tanuki bekerja untukmu."
         },
         "analysis": {
-          "title": "Analisis lebih dari 6 periode ada di Plus",
+          "title": "Analisis lebih dari $n periode ada di Plus",
           "body": "Riwayat tetap lengkap. Analisis gratis menampilkan 6 periode terakhir."
         },
         "notification": {

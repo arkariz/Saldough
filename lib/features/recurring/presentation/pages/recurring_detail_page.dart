@@ -312,22 +312,26 @@ class RecurringDetailPage extends StatelessWidget {
                           compact: true,
                           wrapTitle: true,
                           wrapSubtitle: true,
-                          title: ActivePlan.isPlus
-                              ? t.record.repeat.autoRecordLabel
-                              : '${t.record.repeat.autoRecordLabel} · ${t.premium.plusBadge}',
+                          title: t.record.repeat.autoRecordLabel,
                           subtitle: t.record.repeat.autoRecordHint,
-                          trailing: Switch(
-                            key: const ValueKey('recurring-auto-record'),
-                            value: rule.autoRecord,
-                            // Otomasi R3 hanya untuk Plus (ADR-041 §3.8).
-                            onChanged: (value) => ActivePlan.isPlus
-                                ? bloc.add(RecurringAutoRecordToggled(ruleId: rule.id, enabled: value))
-                                : unawaited(
-                                    context.pushRoute(
-                                      PremiumRouteKeys.paywall,
-                                      const PaywallInput(PaywallTrigger.recurringAutomation),
-                                    ),
-                                  ),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const PlusBadge(),
+                              Switch(
+                                key: const ValueKey('recurring-auto-record'),
+                                value: rule.autoRecord,
+                                // Otomasi R3 hanya untuk Plus (ADR-041 §3.8).
+                                onChanged: (value) => ActivePlan.isPlus
+                                    ? bloc.add(RecurringAutoRecordToggled(ruleId: rule.id, enabled: value))
+                                    : unawaited(
+                                        context.pushRoute(
+                                          PremiumRouteKeys.paywall,
+                                          const PaywallInput(PaywallTrigger.recurringAutomation),
+                                        ),
+                                      ),
+                              ),
+                            ],
                           ),
                         ),
                       ),

@@ -1225,13 +1225,26 @@ void main() {
       await back(tester, 1);
       expect(tester.widget<Text>(find.byKey(const ValueKey('period-title'))).data, 'Maret 2026');
       expect(find.byKey(const ValueKey('analysis-locked')), findsOneWidget);
-      expect(find.text(t.premium.analysisLockedTitle(n: 6)), findsOneWidget);
+      expect(find.text(t.premium.paywall.messages.analysis.title(n: 6)), findsOneWidget);
       expect(find.byKey(const ValueKey('analysis-kind')), findsNothing, reason: 'isi periode tidak ditampilkan');
       expect(find.byKey(const ValueKey('period-next')), findsOneWidget);
 
       await tester.tap(find.byKey(const ValueKey('period-next')));
       await tester.pumpAndSettle();
       expect(find.byKey(const ValueKey('analysis-locked')), findsNothing);
+    });
+
+    testWidgets('jalan gratis "Kembali ke periode terbaru" memindah ke periode berjalan', (tester) async {
+      ActivePlan.notifier.value = const FreePlan();
+      addTearDown(ActivePlan.reset);
+      await seedMonths();
+      await pump(tester);
+      await back(tester, 6);
+      expect(find.byKey(const ValueKey('analysis-locked')), findsOneWidget);
+      await tester.tap(find.text(t.premium.backToLatest));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const ValueKey('analysis-locked')), findsNothing);
+      expect(find.byKey(const ValueKey('analysis-kind')), findsOneWidget);
     });
 
     testWidgets('Plus: periode lama terbuka; paket berubah menjadi Plus membuka periode terkunci', (tester) async {

@@ -39,6 +39,7 @@ class AppButton extends StatefulWidget {
     this.small = false,
     this.expand = false,
     this.loading = false,
+    this.badge,
     super.key,
   }) : variant = AppButtonVariant.primary;
 
@@ -50,6 +51,7 @@ class AppButton extends StatefulWidget {
     this.small = false,
     this.expand = false,
     this.loading = false,
+    this.badge,
     super.key,
   }) : variant = AppButtonVariant.secondary;
 
@@ -61,6 +63,7 @@ class AppButton extends StatefulWidget {
     this.small = false,
     this.expand = false,
     this.loading = false,
+    this.badge,
     super.key,
   }) : variant = AppButtonVariant.text;
 
@@ -72,6 +75,7 @@ class AppButton extends StatefulWidget {
     this.small = false,
     this.expand = false,
     this.loading = false,
+    this.badge,
     super.key,
   }) : variant = AppButtonVariant.danger;
 
@@ -92,6 +96,9 @@ class AppButton extends StatefulWidget {
 
   /// Sedang menyimpan: pemutar menggantikan teks dan tombol terkunci.
   final bool loading;
+
+  /// Lencana di sisi kanan label, mis. `PlusBadge`.
+  final Widget? badge;
 
   /// Varian, lihat [AppButtonVariant].
   final AppButtonVariant variant;
@@ -140,6 +147,7 @@ class _AppButtonState extends State<AppButton> {
               Flexible(
                 child: Text(widget.label, style: labelStyle, textAlign: TextAlign.center),
               ),
+              if (widget.badge != null) ...[const SizedBox(width: AppSpacing.space2), widget.badge!],
             ],
           );
 

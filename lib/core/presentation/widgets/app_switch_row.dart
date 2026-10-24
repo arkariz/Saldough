@@ -12,6 +12,7 @@ class AppSwitchRow extends StatelessWidget {
     required this.onChanged,
     this.subtitle,
     this.leading,
+    this.badge,
     super.key,
   });
 
@@ -23,6 +24,9 @@ class AppSwitchRow extends StatelessWidget {
 
   /// Ikon atau tile di depan.
   final Widget? leading;
+
+  /// Lencana di depan sakelar, mis. `PlusBadge`.
+  final Widget? badge;
 
   /// Nilai sakelar.
   final bool value;
@@ -42,7 +46,12 @@ class AppSwitchRow extends StatelessWidget {
         title: title,
         subtitle: subtitle,
         onTap: onChanged == null ? null : () => onChanged(!value),
-        trailing: Switch(value: value, onChanged: onChanged),
+        trailing: badge == null
+            ? Switch(value: value, onChanged: onChanged)
+            : Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [badge!, Switch(value: value, onChanged: onChanged)],
+              ),
       ),
     );
   }

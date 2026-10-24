@@ -88,7 +88,7 @@ Terakhir diperbarui: 29 Oktober 2026 (penyelarasan dokumen dengan `main` di `0.1
 | 21 — Penemuan fitur ([FEATURE_DISCOVERY.md](../01-product/features/FEATURE_DISCOVERY.md)) | 10 | 7 | Kode T-21.1–T-21.7 selesai; T-21.9 (Mulai cepat) sebagian; menunggu T-21.0 (rupa) dan T-21.8 (verifikasi perangkat) |
 | 22 — Ekspor dan cadangan manual ([EXPORT_BACKUP.md](../01-product/features/EXPORT_BACKUP.md)) | 8 | 8 | Selesai 23 Okt 2026 (dari B-42): ADR-040 Accepted, T-22.0–T-22.7 di `main`; QA emulator Android tanpa temuan S1/S2; sisa uji perangkat (iOS, Excel/Sheets, dll.) di B-67 |
 | 23 — Catat notifikasi multi-dompet, contoh, dan rutin lebih awal ([ADR-042](../02-architecture/adr/0042-notifikasi-multi-dompet-sampel-dan-rutin.md)) | 4 | 4 | **Selesai 23 Okt 2026, di `main`** (commit `c83f360`), dirilis di `0.10.0+16`. QA emulator ([VERIFICATION_PLAN_FASE_23.md](VERIFICATION_PLAN_FASE_23.md)): kompilasi Kotlin lulus, 26 baris lulus, tanpa Gagal S1/S2, 5 temuan S3; sisanya di B-83 |
-| 24 — Fondasi Plus ([ADR-041](../02-architecture/adr/0041-monetisasi-hak-plus-dan-uji-coba.md), [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md)) | 22 | 17 | Dijadwalkan 23 Okt 2026 (dari B-41); T-24.1 (ADR-041 revisi 2), T-24.2 (fondasi murni), T-24.3 (`AppUser.createdAt`), T-24.4 (penyimpanan hak), T-24.5 (batas dari Remote Config), T-24.6 (`Entitlements` lokal), T-24.7 (pengganti paket uji), T-24.8 (paywall sementara), T-24.9 (gerbang R3), T-24.10 (gerbang notifikasi), T-24.11 (kuota tafsir), T-24.12 (gerbang Analisis), T-24.13 (gerbang template dan proyek), dan T-24.14 (adaptor RevenueCat, uji palsu), dan T-24.15 (kebijakan offering, beli/pulihkan), dan T-24.16 (analitik dan dokumen rilis) selesai; T-24.17a (paywall berparameter, PlanCard, keadaan) selesai; berikutnya T-24.17b–e (rupa sudah ada, PR #65) dan T-24.18. Uji nyata T-24.14 menunggu akun dan kunci RevenueCat; rilis build bergerbang menunggu penguji bisa masuk akun |
+| 24 — Fondasi Plus ([ADR-041](../02-architecture/adr/0041-monetisasi-hak-plus-dan-uji-coba.md), [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md)) | 22 | 18 | Dijadwalkan 23 Okt 2026 (dari B-41); T-24.1 (ADR-041 revisi 2), T-24.2 (fondasi murni), T-24.3 (`AppUser.createdAt`), T-24.4 (penyimpanan hak), T-24.5 (batas dari Remote Config), T-24.6 (`Entitlements` lokal), T-24.7 (pengganti paket uji), T-24.8 (paywall sementara), T-24.9 (gerbang R3), T-24.10 (gerbang notifikasi), T-24.11 (kuota tafsir), T-24.12 (gerbang Analisis), T-24.13 (gerbang template dan proyek), dan T-24.14 (adaptor RevenueCat, uji palsu), dan T-24.15 (kebijakan offering, beli/pulihkan), dan T-24.16 (analitik dan dokumen rilis) selesai; T-24.17a (paywall berparameter, PlanCard, keadaan) dan T-24.17b (PlusLocked, lencana Plus) selesai; berikutnya T-24.17c–e (rupa sudah ada, PR #65) dan T-24.18. Uji nyata T-24.14 menunggu akun dan kunci RevenueCat; rilis build bergerbang menunggu penguji bisa masuk akun |
 | Antrean (`B-n`, belum dijadwalkan) | 67 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
 
 ## Keputusan terbuka
@@ -5740,10 +5740,25 @@ Jalur kritis: T-24.2 → T-24.4 → T-24.6 → T-24.14 → T-24.18.
       ⚠ Belum dilihat di emulator dan belum dibandingkan piksel demi piksel
       dengan prototipe; pemanggilan SDK nyata (harga, `introductoryPrice`,
       `pricePerMonthString`, pembelian tertunda) belum dicoba.
-- [ ] **T-24.17b** `PlusLocked` (data buram + kartu "Lihat Plus" + jalan gratis)
-      untuk Analisis lebih dari 6 periode dan perkiraan lewat 2 bulan, serta
-      lencana Plus (`PenandaPlus`) di titik gerbang baris/tombol (notifikasi
-      ke-2, Catat otomatis, template, proyek); pesan kartu sama dengan paywall.
+- [x] **T-24.17b** `PlusLocked` dan lencana Plus (`lib/core/presentation/widgets/`
+      `plus_locked.dart`, `plus_badge.dart`). `PlusLocked` memburamkan
+      pratinjau (blur 5px, tak terbaca pembaca layar) dengan kartu lencana,
+      judul, satu kalimat gratis, "Lihat Plus", dan jalan gratis; dipakai
+      Analisis di luar 6 periode (menggantikan `AppEmptyState`; jalan gratis
+      "Kembali ke periode terbaru" lewat `AnalysisPeriodJumped(hari ini)`;
+      judulnya kini sama dengan paywall `analysisHistory`, kunci
+      `premium.analysisLocked*` dan `unlockAction` dihapus). `PlusBadge`
+      (hilang bila Plus, `when` untuk syarat batas tercapai) menggantikan
+      sufiks "· Plus" di sakelar Catat otomatis (form Ulangi dan rincian
+      rutin) dan dipasang di sakelar Catat otomatis notifikasi, tombol tambah
+      sumber, tombol tambah template (hanya bila sudah 1), dan tombol tambah
+      proyek (hanya bila sudah 2). `AppSwitchRow.badge` dan `AppButton.badge`
+      baru. Verifikasi 24 Okt 2026: analyze bersih, 2252 uji lulus.
+      Selisih: pratinjau Analisis berupa kerangka, bukan data asli periode
+      terkunci (periode itu tidak dimuat); `PlusLocked` perkiraan lewat 2
+      bulan belum dipasang karena perkiraan 12 bulan belum ada (B-30);
+      lencana belum ada di tombol "Ajari pola" (tersebar di beberapa titik).
+      ⚠ Belum dilihat di emulator.
 - [ ] **T-24.17c** Status Plus di Akun (Gratis, uji coba, aktif, berakhir,
       tenggang, penguji; "Kelola di Play Store"; "Pulihkan pembelian" selalu
       ada) dan halaman "Yang dikerjakan Plus" (FiturPlus) yang disambung ke

@@ -159,6 +159,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> wit
                     AppButton.secondary(
                       label: texts.addSource,
                       onPressed: () => _addSource(context),
+                      badge: PlusBadge(when: () => exceedsFreeSources(settings.sources.length)),
                     ),
                   const SizedBox(height: AppSpacing.space6),
                   AppSectionLabel(texts.behaviorTitle),
@@ -175,6 +176,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> wit
                         AppSwitchRow(
                           key: const ValueKey('notification-auto-record'),
                           title: texts.autoRecordLabel,
+                          badge: const PlusBadge(),
                           subtitle: autoRecord ? texts.autoRecordOnHint : texts.autoRecordOffHint,
                           value: autoRecord,
                           onChanged: (on) {
@@ -194,6 +196,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> wit
                                 'notification-auto-record-any-category',
                               ),
                               title: texts.autoRecordAnyCategoryLabel,
+                              badge: const PlusBadge(),
                               subtitle: texts.autoRecordAnyCategoryHint,
                               value: settings.autoRecordLevel == AutoRecordLevel.whenAmountAndWallet,
                               onChanged: (on) {

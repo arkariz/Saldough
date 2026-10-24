@@ -296,9 +296,8 @@ class _Advanced extends StatelessWidget {
               key: const ValueKey('repeat-auto-record'),
               // Otomasi R3 hanya untuk Plus (ADR-041 §3.8): bukan Plus, sakelar
               // membuka paywall dan nilainya tidak berubah.
-              title: plan.isPlus
-                  ? t.record.repeat.autoRecordLabel
-                  : '${t.record.repeat.autoRecordLabel} · ${t.premium.plusBadge}',
+              title: t.record.repeat.autoRecordLabel,
+              badge: const PlusBadge(),
               subtitle: t.record.repeat.autoRecordHint,
               value: value.autoRecord,
               onChanged: (on) {

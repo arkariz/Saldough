@@ -38,5 +38,7 @@ export 'dismiss_keyboard.dart';
 export 'fit_start.dart';
 export 'full_screen_sheet.dart';
 export 'pixel_corner_border.dart';
+export 'plus_badge.dart';
+export 'plus_locked.dart';
 export 'run_once.dart';
 export 'transaction_kind.dart';

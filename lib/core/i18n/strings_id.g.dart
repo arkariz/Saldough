@@ -3906,6 +3906,12 @@ class Translations$premium$id {
 	/// id: 'Tanukonomy Plus'
 	String get title => 'Tanukonomy Plus';
 
+	/// id: 'Kembali ke periode terbaru'
+	String get backToLatest => 'Kembali ke periode terbaru';
+
+	/// id: 'Lihat Plus'
+	String get seePlus => 'Lihat Plus';
+
 	/// id: 'Plus'
 	String get plusBadge => 'Plus';
 
@@ -3917,15 +3923,6 @@ class Translations$premium$id {
 
 	/// id: 'Masuk'
 	String get signInAction => 'Masuk';
-
-	/// id: 'Analisis lebih dari $n periode ada di Plus'
-	String analysisLockedTitle({required Object n}) => 'Analisis lebih dari ${n} periode ada di Plus';
-
-	/// id: 'Riwayatmu tetap utuh dan bisa dilihat di Riwayat.'
-	String get analysisLockedBody => 'Riwayatmu tetap utuh dan bisa dilihat di Riwayat.';
-
-	/// id: 'Buka dengan Plus'
-	String get unlockAction => 'Buka dengan Plus';
 
 	/// id: 'Fitur ini bagian dari Plus'
 	String get plusOnlyTitle => 'Fitur ini bagian dari Plus';
@@ -5016,8 +5013,8 @@ class Translations$premium$paywall$messages$analysis$id {
 
 	// Translations
 
-	/// id: 'Analisis lebih dari 6 periode ada di Plus'
-	String get title => 'Analisis lebih dari 6 periode ada di Plus';
+	/// id: 'Analisis lebih dari $n periode ada di Plus'
+	String title({required Object n}) => 'Analisis lebih dari ${n} periode ada di Plus';
 
 	/// id: 'Riwayat tetap lengkap. Analisis gratis menampilkan 6 periode terakhir.'
 	String get body => 'Riwayat tetap lengkap. Analisis gratis menampilkan 6 periode terakhir.';
@@ -6543,13 +6540,12 @@ extension on Translations {
 			'analysis.category.avgLine' => ({required Object n}) => 'rata-rata ${n} bulan',
 			'analysis.category.moreHint' => '20 transaksi terbaru',
 			'premium.title' => 'Tanukonomy Plus',
+			'premium.backToLatest' => 'Kembali ke periode terbaru',
+			'premium.seePlus' => 'Lihat Plus',
 			'premium.plusBadge' => 'Plus',
 			'premium.signInTitle' => 'Masuk untuk membuka fitur Plus',
 			'premium.signInBody' => 'Fitur ini bagian dari Plus. Masuk dengan akunmu untuk memakainya. Mencatat tetap gratis dan tanpa akun.',
 			'premium.signInAction' => 'Masuk',
-			'premium.analysisLockedTitle' => ({required Object n}) => 'Analisis lebih dari ${n} periode ada di Plus',
-			'premium.analysisLockedBody' => 'Riwayatmu tetap utuh dan bisa dilihat di Riwayat.',
-			'premium.unlockAction' => 'Buka dengan Plus',
 			'premium.plusOnlyTitle' => 'Fitur ini bagian dari Plus',
 			'premium.plusOnlyBody' => 'Berlangganan Plus belum tersedia. Mencatat tetap gratis.',
 			'premium.paywall.close' => 'Tutup',
@@ -6558,7 +6554,7 @@ extension on Translations {
 			'premium.paywall.kicker' => 'Tanukonomy Plus',
 			'premium.paywall.messages.general.title' => 'Tanukonomy Plus',
 			'premium.paywall.messages.general.body' => 'Tanuki bekerja untukmu.',
-			'premium.paywall.messages.analysis.title' => 'Analisis lebih dari 6 periode ada di Plus',
+			'premium.paywall.messages.analysis.title' => ({required Object n}) => 'Analisis lebih dari ${n} periode ada di Plus',
 			'premium.paywall.messages.analysis.body' => 'Riwayat tetap lengkap. Analisis gratis menampilkan 6 periode terakhir.',
 			'premium.paywall.messages.notification.title' => 'Aplikasi notifikasi kedua ada di Plus',
 			'premium.paywall.messages.notification.body' => 'Aplikasi pertamamu tetap berjalan. Tambah GoPay dan aplikasi lain dengan Plus.',

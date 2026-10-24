@@ -7,7 +7,11 @@
 - **Fase roadmap:** Plus tahap B (B-41, "Fondasi Plus")
 - **Status:** Accepted (pemilik, 2026-10-23: uji coba wajib masuk akun dan
   pengganti paket untuk uji/pengembangan/tinjauan toko atas masukan pemilik;
-  P-8, P-9, P-11 disetujui eksplisit, rekomendasi lain di §3.11 berlaku)
+  P-8, P-9, P-11 disetujui eksplisit, rekomendasi lain di §3.11 berlaku).
+  **Revisi 2 (2026-10-23, T-23.1):** hasil pemeriksaan kode dan keputusan
+  pemilik atasnya di §3.13; aturan pra-peluncuran, batas proyek, sumber
+  notifikasi, dan penundaan gerbang Rencana menggantikan teks yang
+  bertentangan di bagian lain.
 - **Cakupan:** Modul baru `core/foundation/entitlement/`, fitur baru
   `features/premium/` (+ adaptor RevenueCat), glue akar komposisi
   (`lib/app/premium/`, `lib/app/di/root_module.dart`), gerbang di fitur yang
@@ -108,9 +112,10 @@ sealed class PlanState {
   // Uji coba terbalik milik akun yang masuk; berlaku sampai [endsOn]
   // (hari terakhir, inklusif).
   Trial({required DateTime endsOn});
-  // Plus dari RevenueCat. [until] = akhir periode berbayar; [source] =
-  // purchase | promotional | override (hanya build non-rilis, §3.10). [inGrace] = Play melaporkan masa tenggang
-  // pembayaran: tetap Plus.
+  // Plus. [until] = akhir periode berbayar; [source] = purchase | promotional
+  // (RevenueCat) | override (hanya build non-rilis, §3.10) | prelaunch
+  // (masuk akun sebelum Plus dijual, §3.13). [inGrace] = Play melaporkan masa
+  // tenggang pembayaran: tetap Plus.
   Plus({required DateTime until, required PlanSource source, bool inGrace});
   // Langganan ditahan (billing gagal, lewat masa tenggang Play): perilaku
   // Gratis, dengan ajakan memperbaiki pembayaran.
@@ -172,11 +177,11 @@ trialEndsOn(DateTime start, FinancialMonthSchedule schedule, {int minDays = 14})
 **Awal uji coba (`start`) = jangkar akun**, dihitung di
 `TrialAnchor.of(AppUser, {notBefore})`:
 
-- Akun yang **dibuat sesudah** `trial_not_before` (Remote Config, tanggal rilis
+- Akun yang **dibuat sesudah** `plus_launch_at` (Remote Config, tanggal rilis
   Plus): `start` = `UserMetadata.creationTime` Firebase Auth, tanggal setempat.
   Nilai ini disimpan server Google, jadi **sama di semua perangkat dan tidak
   berubah oleh pasang ulang**.
-- Akun yang **sudah ada** sebelum `trial_not_before` (penguji dan pengguna
+- Akun yang **sudah ada** sebelum `plus_launch_at` (penguji dan pengguna
   awal): `start` = **hari pertama akun itu masuk sesudah Plus ada** di perangkat
   ini, disimpan lokal di `entitlement_trial`. Kohort ini kecil dan sebagian besar
   mendapat hadiah penguji (KT-P5); pasang ulang di kohort ini boleh memulai
@@ -253,10 +258,11 @@ gagal, nilai bawaan dipakai** (tidak pernah nol atau tak terbatas).
 | `free_smart_interpretations` | 30 | Tafsir Gemini per periode di Gratis, termasuk foto struk (KT-P14) |
 | `taste_ask` / `taste_guardian` | 3 / 1 | Jatah cicip per periode |
 | `free_analysis_periods` | 6 | Periode Analisis di Gratis |
-| `free_budget_templates` / `free_active_projects` | 1 / 2 | Batas template dan proyek aktif |
+| `free_budget_templates` / `free_projects` | 1 / 2 | Batas template (semua, aktif maupun nonaktif) dan proyek freelance (semua; §3.13) |
 | `plus_fair_use_interpretations` / `_photo` / `_ask` | 1000 / 150 / 300 | Batas wajar bulanan Plus, tidak ditampilkan |
 | `paywall_max_per_day` / `paywall_max_per_period` | 1 / 3 | Batas frekuensi paywall kontekstual |
 | `trial_min_days` | 14 | Sisa hari minimum periode berjalan |
+| `plus_launch_at` | kosong | Saat Plus mulai dijual; kosong = pra-peluncuran (§3.13) |
 | `founder_until` | tanggal | Akhir jendela Harga Pendiri |
 | `post_trial_offer_hours` | 48 | Lama penawaran sesudah uji coba |
 
@@ -291,13 +297,13 @@ Satu pola: UI/use case otomasi memanggil `Entitlements`; bila `!can`, tampil
 
 | Titik | Modul | Perilaku di Gratis | Trigger |
 |---|---|---|---|
-| Aplikasi sumber notifikasi ke-2 dst. | `notification_capture` | Paywall; aplikasi pertama tetap | P2 |
+| Aplikasi sumber notifikasi ke-2 dst. | `notification_capture` | Paywall; **sumber pertama di daftar** tetap diproses, sisanya tidak (§3.13) | P2 |
 | Tingkat otomatis, pola baru | `notification_capture` | Kembali ke "tinjau semua"; pola lama tetap dipakai | P3 |
 | Kuota tafsir Gemini | `shared/capture` (port) | Sesudah habis, parser aturan saja | P4 |
 | Otomasi rutin R3 (Catat otomatis, belum terlihat, kenaikan harga dari notifikasi, menganggur, saran) | `recurring`, `notification_capture` | Rutin yang `autoRecord` kembali menunggu konfirmasi satu ketuk; label R3 tidak tampil; satu deteksi boleh jadi Contoh Penjaga | P1 |
-| Analisis > 6 periode, tren 12 bulan | `analysis` | Tampilan buram + kartu; Riwayat tetap penuh | P6 |
-| Template ke-2, proyek aktif ke-3 | `budget`, `freelance` | Yang ada tetap dipakai; membuat baru terhalang (proyek boleh jadi arsip) | P7 |
-| Perkiraan lewat +2 bulan, Bagaimana kalau | `plan` | Kartu | P5 |
+| Analisis > 6 periode (tren 12 bulan belum ada) | `analysis` | Tampilan buram + kartu; Riwayat tetap penuh | P6 |
+| Template ke-2, proyek ke-3 | `budget`, `freelance` | Yang ada tetap dipakai; membuat baru terhalang. Semua template dan semua proyek dihitung (§3.13) | P7 |
+| ~~Perkiraan lewat +2 bulan, Bagaimana kalau~~ | `plan` | Ditunda ke B-30/B-46 (§3.13) | P5 |
 
 - **Gerbang R3 (ADR-037):** `RecurringRule.autoRecord` **tidak dihapus** saat
   turun ke Gratis; setelan disimpan untuk bila berlangganan lagi. Yang berubah
@@ -401,7 +407,52 @@ uji, pengembangan, dan tinjauan toko (§3.10).
 | P-8 | Jatah cicip Gratis (3 tanya, 1 Penjaga, 30 tafsir cerdas) tanpa akun | **Disetujui:** tetap boleh tanpa akun (itu fitur Gratis, bukan "mencoba premium"); hanya uji coba penuh dan hadiah penguji yang wajib akun. Konfirmasi: bila jatah cicip juga wajib akun, ubah `can()` dan hitung jatah per `uid`. |
 | P-9 | Apakah **membeli** Plus juga wajib masuk akun | **Disetujui:** tidak wajib (kurangi gesekan; hak terikat ke akun Google Play dan bisa dipulihkan), tetapi paywall menawarkan masuk agar hak ikut ke perangkat lain. Bila wajib, pembelian tidak mungkin di build tanpa akun. |
 | P-10 | Pengganti uji: menu pengembang + `PLAN_OVERRIDE` hanya di build non-rilis; penguji dan peninjau lewat entitlement promosi, **tanpa sakelar di build rilis** | Rekomendasi: setuju (§3.10). |
-| P-11 | `trial_not_before` = tanggal rilis publik Plus (Remote Config) | **Disetujui:** diisi pemilik sebelum Plus dijual. |
+| P-11 | `plus_launch_at` = tanggal rilis publik Plus (Remote Config) | **Disetujui:** diisi pemilik sebelum Plus dijual. |
+
+### 3.13 Revisi 2: hasil pemeriksaan kode dan keputusan pemilik (23 Okt 2026)
+
+Rencana implementasi Fase 23 memeriksa ADR ini terhadap kode `origin/main`.
+Temuan dan keputusannya:
+
+1. **Pra-peluncuran: masuk akun = Plus (diputuskan pemilik).** Gerbang yang
+   dirilis sebelum Plus dijual akan menurunkan semua pengguna tanpa uji coba ke
+   Gratis. Pemilik memilih **membiarkan gerbang mengunci** dan meminta penguji
+   **masuk akun**. Selama `plus_launch_at` kosong (bawaan): pengguna yang masuk
+   akun mendapat `Plus(source: prelaunch)` tanpa batas waktu; tanpa akun `Free`;
+   uji coba tidak dimulai dan tombol beli tidak tampil. Aturan ini tidak
+   bergantung RevenueCat. Mengisi `plus_launch_at` mengakhiri pra-peluncuran:
+   sejak itu berlaku §3.4 (uji coba) dan pembelian. Kunci `trial_not_before`
+   lama digantikan `plus_launch_at` (satu tanggal untuk keduanya).
+   **Prasyarat sebelum build bergerbang dirilis (pemilik):** semua penguji bisa
+   masuk (daftar tester OAuth Google atau akun email/sandi, ADR-023), dan catatan
+   rilis serta email penguji memberi tahu "masuk akun untuk tetap memakai fitur
+   Plus". Halaman paywall sementara (sebelum rupa final) menawarkan masuk lewat
+   `AccountRouteKeys.page`.
+2. **Proyek freelance tidak punya status aktif/arsip** (`FreelanceProject` hanya
+   `id, name, hourlyRate, deductionRules`). **Diputuskan:** batas menghitung
+   **semua proyek** (`free_projects`, bawaan 2); arsip proyek jadi antrean baru.
+3. **Sumber notifikasi yang tetap saat turun:** `NotificationCaptureSettings.sources`
+   berurutan tanpa statistik pemakaian. **Diputuskan:** sumber **pertama** di
+   daftar; pengguna mengubahnya dengan menyusun ulang atau memilih ulang sumber.
+4. **Gerbang Rencana ditunda.** `PlanMonthState.horizon` sudah 2 bulan dan
+   horizon 12 bulan (B-30) serta tren 12 bulan Analisis belum ada, jadi tidak
+   ada yang digerbang; gerbangnya ikut B-30/B-46. **Template:** semua template
+   dihitung, aktif maupun nonaktif.
+5. **`trialAnchor` di `core` menerima primitif** (`uid`, `accountCreatedAt`,
+   `firstSeenLocal`, `launchAt`), karena `core` tidak boleh mengimpor `shared`.
+   `AppUser` (`shared/auth`) mendapat field `createdAt` dari
+   `fb.User.metadata.creationTime`.
+6. **Patch Shorebird membawa kunci RevenueCat.** Lane `release_internal` dan
+   `patch_ota` di `android/fastlane/Fastfile` keduanya memberi
+   `--dart-define=REVENUECAT_ANDROID_KEY`; bila hanya rilis, patch pertama
+   membuang kunci dan pembelian berhenti.
+7. **Menu pengembang hanya muncul di `kDebugMode`** (`lib/app/app.dart`) dan
+   isinya `DevEntry` dari `FeatureRouteModule.devEntries` (paket `navigation`).
+   Pilihan `PlanOverride` dipasang sebagai `DevEntry` dari modul rute milik
+   `lib/app/`. Build profile hanya bisa memakai `--dart-define=PLAN_OVERRIDE`.
+8. **Remote Config satu singleton.** Gateway premium memakai setelan ambil yang
+   sama dengan `app_update` (`minimumFetchInterval` 30 menit, `fetchTimeout`
+   10 detik) agar keduanya tidak saling menimpa.
 
 ### 3.12 Peristiwa Analytics (ADR-023: tanpa nominal, nama, atau isi)
 
@@ -489,7 +540,7 @@ uji, pengembangan, dan tinjauan toko (§3.10).
 - **Uji arsitektur:** §3.1(a)–(c); `PLAN_OVERRIDE` dan kunci debug hanya di
   `plan_override.dart`; uji kelengkapan registri (empat kunci `exclude`
   beserta alasannya, termasuk `entitlement_debug_override`).
-- **Uji uji coba:** `TrialAnchor` (akun baru vs akun lama, `trial_not_before`),
+- **Uji uji coba:** `TrialAnchor` (akun baru vs akun lama, `plus_launch_at`),
   keluar dan masuk akun, berganti akun, tanpa akun tetap `Free`.
 - **Uji pengganti:** `auto/free/trial/plus` memengaruhi `resolvePlan` hanya
   bila bukan rilis; di mode rilis `PlanSource.override` ditolak.

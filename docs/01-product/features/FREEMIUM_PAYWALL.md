@@ -561,11 +561,13 @@ dicatat di kebijakan privasi situs (B-20).
 
 ### 12.5 Pengukuran
 
-Peristiwa Analytics: `trial_started`, `trial_moment{pillar}`,
-`trial_value_recap_shown`, `trial_ended{outcome}`,
+Peristiwa Analytics (daftar teknis di ADR-041 §3.12): `trial_started`,
+`trial_moment{pillar}`, `trial_value_recap_shown`, `trial_ended{outcome}`,
 `paywall_viewed{trigger}`, `paywall_dismissed{trigger}`,
-`purchase_completed{plan}`, `plus_feature_used{feature}`,
-`taste_quota_exhausted{feature}`.
+`purchase_started{plan}`, `purchase_completed{plan}`,
+`purchase_failed{reason}`, `purchase_restored`, `plus_feature_used{feature}`,
+`taste_quota_exhausted{feature}`. Pemulihan pembelian sengaja **tidak** memakai
+`restore_completed`, yang sudah dipakai pemulihan data (Fase 22).
 
 | Ukuran | Target awal (hipotesis) |
 |---|---|

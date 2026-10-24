@@ -591,3 +591,7 @@ a.tk-row:active, button.tk-row:active { background: var(--surface-2); }
 .tk-plan__price { flex: none; display: flex; flex-direction: column; align-items: flex-end; font-size: 16px; line-height: 22px; font-weight: 700; font-variant-numeric: tabular-nums; }
 .tk-plan__unit { font-size: 12px; line-height: 16px; font-weight: 500; color: var(--ink-2); }
 .tk-plan { clip-path: polygon(0 calc(var(--u) * 2), var(--u) calc(var(--u) * 2), var(--u) var(--u), calc(var(--u) * 2) var(--u), calc(var(--u) * 2) 0, calc(100% - var(--u) * 2) 0, calc(100% - var(--u) * 2) var(--u), calc(100% - var(--u)) var(--u), calc(100% - var(--u)) calc(var(--u) * 2), 100% calc(var(--u) * 2), 100% calc(100% - var(--u) * 2), calc(100% - var(--u)) calc(100% - var(--u) * 2), calc(100% - var(--u)) calc(100% - var(--u)), calc(100% - var(--u) * 2) calc(100% - var(--u)), calc(100% - var(--u) * 2) 100%, calc(var(--u) * 2) 100%, calc(var(--u) * 2) calc(100% - var(--u)), var(--u) calc(100% - var(--u)), var(--u) calc(100% - var(--u) * 2), 0 calc(100% - var(--u) * 2)); }
+
+/* PlusBadge: penanda fitur Plus */
+.tk-badge--plus { background: var(--brand-soft); color: var(--brand-ink); }
+.tk-badge--plus .tk-icon { font-size: 14px; }

@@ -181,6 +181,8 @@ Manfaat, paket, tombol, dan kalimat wajib sama untuk semua pemicu. Papan:
 Di kode, pemicu membawa dua string i18n (judul, isi), jadi pemicu baru tidak
 menambah layar.
 
+**Penanda fitur Plus** (`PenandaPlus`, `PenandaPlusEnGelap`; komponen PlusBadge): satu pola untuk semua fitur yang dibatasi. Lencana "Plus" (`brand-soft`, ikon `workspace_premium`) di ujung baris atau tombol; baris tetap normal dan bisa diketuk, membuka paywall dengan `pemicu` yang sesuai. Berlangganan: lencana hilang. Papan menunjukkan tiga bentuk (baris, baris bersakelar, tombol) dalam keadaan Gratis dan Berlangganan.
+
 **Penjelasan fitur Plus** (`FiturPlus`, `FiturPlusEnGelap`): halaman "Yang dikerjakan Plus" dari tautan "Lihat semua fitur Plus" di paywall, supaya paywall tetap singkat. Enam pilar (mencatat, berjaga, menjawab, merencanakan, melapor, menyimpan) masing-masing dengan satu penjelasan, kartu "Tetap gratis", dan tombol "Lihat paket" kembali ke paywall. Tanpa komponen baru.
 
 **Status Plus di Akun** (`AkunPlus`, `AkunPlusUji`, `AkunPlusAktif`,

@@ -15,13 +15,16 @@ final class AccountRouteModule extends FeatureRouteModule {
   /// Membuat [AccountRouteModule]; [versionEntry] mengisi baris Versi
   /// aplikasi (dikawat akar komposisi, isinya milik fitur `app_update`) dan
   /// [dataSection] bagian Data kamu (milik fitur `data_portability`).
-  const AccountRouteModule({this.versionEntry, this.dataSection});
+  const AccountRouteModule({this.versionEntry, this.dataSection, this.plusSection});
 
   /// Pembuat baris Versi aplikasi dari container akar.
   final Widget Function(GetIt container)? versionEntry;
 
   /// Pembuat bagian Data kamu (ekspor, cadangkan, pulihkan) dari container akar.
   final Widget Function(GetIt container)? dataSection;
+
+  /// Pembuat bagian Plus (milik fitur `premium`) dari container akar.
+  final Widget Function(GetIt container)? plusSection;
 
   @override
   List<RouteNode> get routes => [
@@ -41,6 +44,7 @@ final class AccountRouteModule extends FeatureRouteModule {
               child: AccountPage(
                 versionEntry: versionEntry?.call(parentContainer),
                 dataSection: dataSection?.call(parentContainer),
+                plusSection: plusSection?.call(parentContainer),
               ),
             ),
           ),

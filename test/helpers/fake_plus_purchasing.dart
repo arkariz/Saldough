@@ -32,6 +32,7 @@ final class FakePlusPurchasing implements PlusPurchasing {
   Completer<BuyResult>? buyGate;
   final bought = <PlanOption>[];
   int offeredCalls = 0;
+  int restored = 0;
 
   @override
   bool get isSelling => selling;
@@ -50,5 +51,5 @@ final class FakePlusPurchasing implements PlusPurchasing {
   }
 
   @override
-  Future<void> restore() async {}
+  Future<void> restore() async => restored++;
 }

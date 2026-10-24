@@ -88,7 +88,7 @@ Terakhir diperbarui: 29 Oktober 2026 (penyelarasan dokumen dengan `main` di `0.1
 | 21 — Penemuan fitur ([FEATURE_DISCOVERY.md](../01-product/features/FEATURE_DISCOVERY.md)) | 10 | 7 | Kode T-21.1–T-21.7 selesai; T-21.9 (Mulai cepat) sebagian; menunggu T-21.0 (rupa) dan T-21.8 (verifikasi perangkat) |
 | 22 — Ekspor dan cadangan manual ([EXPORT_BACKUP.md](../01-product/features/EXPORT_BACKUP.md)) | 8 | 8 | Selesai 23 Okt 2026 (dari B-42): ADR-040 Accepted, T-22.0–T-22.7 di `main`; QA emulator Android tanpa temuan S1/S2; sisa uji perangkat (iOS, Excel/Sheets, dll.) di B-67 |
 | 23 — Catat notifikasi multi-dompet, contoh, dan rutin lebih awal ([ADR-042](../02-architecture/adr/0042-notifikasi-multi-dompet-sampel-dan-rutin.md)) | 4 | 4 | **Selesai 23 Okt 2026, di `main`** (commit `c83f360`), dirilis di `0.10.0+16`. QA emulator ([VERIFICATION_PLAN_FASE_23.md](VERIFICATION_PLAN_FASE_23.md)): kompilasi Kotlin lulus, 26 baris lulus, tanpa Gagal S1/S2, 5 temuan S3; sisanya di B-83 |
-| 24 — Fondasi Plus ([ADR-041](../02-architecture/adr/0041-monetisasi-hak-plus-dan-uji-coba.md), [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md)) | 22 | 18 | Dijadwalkan 23 Okt 2026 (dari B-41); T-24.1 (ADR-041 revisi 2), T-24.2 (fondasi murni), T-24.3 (`AppUser.createdAt`), T-24.4 (penyimpanan hak), T-24.5 (batas dari Remote Config), T-24.6 (`Entitlements` lokal), T-24.7 (pengganti paket uji), T-24.8 (paywall sementara), T-24.9 (gerbang R3), T-24.10 (gerbang notifikasi), T-24.11 (kuota tafsir), T-24.12 (gerbang Analisis), T-24.13 (gerbang template dan proyek), dan T-24.14 (adaptor RevenueCat, uji palsu), dan T-24.15 (kebijakan offering, beli/pulihkan), dan T-24.16 (analitik dan dokumen rilis) selesai; T-24.17a (paywall berparameter, PlanCard, keadaan) dan T-24.17b (PlusLocked, lencana Plus) selesai; berikutnya T-24.17c–e (rupa sudah ada, PR #65) dan T-24.18. Uji nyata T-24.14 menunggu akun dan kunci RevenueCat; rilis build bergerbang menunggu penguji bisa masuk akun |
+| 24 — Fondasi Plus ([ADR-041](../02-architecture/adr/0041-monetisasi-hak-plus-dan-uji-coba.md), [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md)) | 22 | 19 | Dijadwalkan 23 Okt 2026 (dari B-41); T-24.1 (ADR-041 revisi 2), T-24.2 (fondasi murni), T-24.3 (`AppUser.createdAt`), T-24.4 (penyimpanan hak), T-24.5 (batas dari Remote Config), T-24.6 (`Entitlements` lokal), T-24.7 (pengganti paket uji), T-24.8 (paywall sementara), T-24.9 (gerbang R3), T-24.10 (gerbang notifikasi), T-24.11 (kuota tafsir), T-24.12 (gerbang Analisis), T-24.13 (gerbang template dan proyek), dan T-24.14 (adaptor RevenueCat, uji palsu), dan T-24.15 (kebijakan offering, beli/pulihkan), dan T-24.16 (analitik dan dokumen rilis) selesai; T-24.17a (paywall berparameter, PlanCard, keadaan) T-24.17b (PlusLocked, lencana Plus), dan T-24.17c (status Plus di Akun, halaman fitur) selesai; berikutnya T-24.17d–e (rupa sudah ada, PR #65) dan T-24.18. Uji nyata T-24.14 menunggu akun dan kunci RevenueCat; rilis build bergerbang menunggu penguji bisa masuk akun |
 | Antrean (`B-n`, belum dijadwalkan) | 67 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
 
 ## Keputusan terbuka
@@ -5759,10 +5759,28 @@ Jalur kritis: T-24.2 → T-24.4 → T-24.6 → T-24.14 → T-24.18.
       bulan belum dipasang karena perkiraan 12 bulan belum ada (B-30);
       lencana belum ada di tombol "Ajari pola" (tersebar di beberapa titik).
       ⚠ Belum dilihat di emulator.
-- [ ] **T-24.17c** Status Plus di Akun (Gratis, uji coba, aktif, berakhir,
-      tenggang, penguji; "Kelola di Play Store"; "Pulihkan pembelian" selalu
-      ada) dan halaman "Yang dikerjakan Plus" (FiturPlus) yang disambung ke
-      paywall.
+- [x] **T-24.17c** Status Plus di Akun dan halaman "Yang dikerjakan Plus".
+      `AccountPlusSection` (`features/premium/presentation/widgets/`, disisipkan
+      akar komposisi lewat `accountPlusSection` seperti bagian Data kamu; Akun
+      tidak mengimpor `premium`): satu baris status dibaca dari `ActivePlan`
+      (Gratis, uji coba "Sampai … Tanpa kartu.", aktif, tenggang, ditahan,
+      penguji/pra-peluncuran), "Kelola di Play Store" (`url_launcher` ke
+      halaman langganan Play, hanya bila ada langganan) dan "Pulihkan
+      pembelian" (selalu ada, memanggil `PlusPurchasing.restore`). Baris
+      status membuka paywall (Gratis/uji coba) atau daftar fitur (aktif).
+      `PlusFeaturesPage` (rute `premium.features`, enam pilar, kartu "Tetap
+      gratis", "Lihat paket") disambung dari paywall ("Lihat semua fitur
+      Plus"; "Lihat paket" kembali ke paywall bila dibuka dari sana). Dependensi
+      baru `url_launcher`. Verifikasi 24 Okt 2026: analyze bersih (1 info
+      lama), 2261 uji lulus.
+      Selisih: keterangan aktif hanya menyebut "Aktif sampai {tanggal}",
+      belum "Tahunan, diperpanjang …" atau "tidak diperpanjang" karena paket
+      dan status perpanjangan belum disimpan di cache hak (butuh perluasan
+      `CachedPlus`/`PlusSnapshot` bila diinginkan); ditahan memakai teks
+      sendiri karena desain tidak punya keadaan itu. Teks halaman fitur
+      menyalin desain yang memuat fitur Plus yang belum dibangun (Penjaga,
+      Tanya, Rapor): pastikan sebelum rilis publik.
+      ⚠ Belum dilihat di emulator; membuka halaman langganan Play belum dicoba.
 - [ ] **T-24.17d** Hadiah uji coba "Masuk untuk mencoba Plus" (D-1) dengan kisi
       tanggal gajian bila periode keuangan belum diatur.
 - [ ] **T-24.17e** Layar turun (PlusTurun), kartu Plus di Beranda (konteks,

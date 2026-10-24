@@ -16,8 +16,21 @@ final class PaywallInput extends RouteInput {
   final PaywallTrigger trigger;
 }
 
+/// Input halaman "Yang dikerjakan Plus": [fromPaywall] = dibuka dari paywall,
+/// jadi "Lihat paket" cukup kembali ke sana.
+final class PlusFeaturesInput extends RouteInput {
+  /// Membuat [PlusFeaturesInput].
+  const PlusFeaturesInput({this.fromPaywall = false});
+
+  /// Dibuka dari paywall.
+  final bool fromPaywall;
+}
+
 /// Kunci rute fitur `premium`.
 abstract final class PremiumRouteKeys {
   /// Paywall: ajakan masuk akun atau (kelak) berlangganan Plus.
   static const paywall = RouteKey<PaywallInput>('premium.paywall');
+
+  /// Halaman "Yang dikerjakan Plus" (enam pilar dan yang tetap gratis).
+  static const features = RouteKey<PlusFeaturesInput>('premium.features');
 }

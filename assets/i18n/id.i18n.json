@@ -1550,6 +1550,55 @@
     "signInAction": "Masuk",
     "plusOnlyTitle": "Fitur ini bagian dari Plus",
     "plusOnlyBody": "Berlangganan Plus belum tersedia. Mencatat tetap gratis.",
+    "account": {
+      "section": "Plus",
+      "rowTitle": "Tanukonomy Plus",
+      "subFree": "Gratis. Lihat apa yang bisa dikerjakan Tanuki.",
+      "subTrial": "Sampai $date. Tanpa kartu.",
+      "subActive": "Aktif sampai $date",
+      "subActiveOpen": "Aktif",
+      "subGrace": "Pembayaran belum berhasil. Plus tetap aktif sampai $date.",
+      "subOnHold": "Langganan ditahan karena pembayaran belum berhasil. Perbaiki di Play Store.",
+      "subTester": "Dari program penguji sampai $date",
+      "subTesterOpen": "Dari program penguji",
+      "badgeTrial": "Uji coba",
+      "badgeCheck": "Cek",
+      "manage": "Kelola di Play Store",
+      "restore": "Pulihkan pembelian",
+      "restoreDone": "Selesai. Langganan di akun Google Play ini akan aktif kembali bila ada."
+    },
+    "features": {
+      "title": "Yang dikerjakan Plus",
+      "seeAll": "Lihat semua fitur Plus",
+      "intro": "Tanuki yang bekerja, jadi kamu tidak perlu banyak mengetik dan lebih tahu posisi uangmu.",
+      "cta": "Lihat paket",
+      "freeTitle": "Tetap gratis",
+      "free": "Pencatatan, Riwayat, Dompet, Anggaran, rutin, Analisis 6 periode, ekspor, dan cadangan manual.",
+      "records": {
+        "title": "Mencatat untukmu",
+        "text": "Foto struk dan bukti transfer, serta notifikasi dari semua aplikasi, jadi catatan. Rutin bernominal tetap tercatat sendiri."
+      },
+      "watches": {
+        "title": "Berjaga",
+        "text": "Peringatan sebelum anggaran habis atau uang nganggur menipis, plus Ringkasan Senin."
+      },
+      "answers": {
+        "title": "Menjawab pertanyaan",
+        "text": "Tanya soal uangmu dalam bahasa sehari-hari, diketik atau lewat suara."
+      },
+      "plans": {
+        "title": "Merencanakan",
+        "text": "Coba bagaimana kalau, buat Target dengan perkiraan tanggal tercapai, dan lihat 12 bulan ke depan."
+      },
+      "reports": {
+        "title": "Melapor",
+        "text": "Rapor bulanan yang bercerita, Rekap SPT tahunan, dan invoice Freelance Pro."
+      },
+      "keeps": {
+        "title": "Menyimpan",
+        "text": "Cadangan otomatis tiap hari ke Google Drive milikmu."
+      }
+    },
     "paywall": {
       "close": "Tutup",
       "plans": "Paket",

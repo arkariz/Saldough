@@ -3930,6 +3930,8 @@ class Translations$premium$id {
 	/// id: 'Berlangganan Plus belum tersedia. Mencatat tetap gratis.'
 	String get plusOnlyBody => 'Berlangganan Plus belum tersedia. Mencatat tetap gratis.';
 
+	late final Translations$premium$account$id account = Translations$premium$account$id.internal(_root);
+	late final Translations$premium$features$id features = Translations$premium$features$id.internal(_root);
 	late final Translations$premium$paywall$id paywall = Translations$premium$paywall$id.internal(_root);
 }
 
@@ -4817,6 +4819,94 @@ class Translations$analysis$category$id {
 	String get moreHint => '20 transaksi terbaru';
 }
 
+// Path: premium.account
+class Translations$premium$account$id {
+	Translations$premium$account$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Plus'
+	String get section => 'Plus';
+
+	/// id: 'Tanukonomy Plus'
+	String get rowTitle => 'Tanukonomy Plus';
+
+	/// id: 'Gratis. Lihat apa yang bisa dikerjakan Tanuki.'
+	String get subFree => 'Gratis. Lihat apa yang bisa dikerjakan Tanuki.';
+
+	/// id: 'Sampai $date. Tanpa kartu.'
+	String subTrial({required Object date}) => 'Sampai ${date}. Tanpa kartu.';
+
+	/// id: 'Aktif sampai $date'
+	String subActive({required Object date}) => 'Aktif sampai ${date}';
+
+	/// id: 'Aktif'
+	String get subActiveOpen => 'Aktif';
+
+	/// id: 'Pembayaran belum berhasil. Plus tetap aktif sampai $date.'
+	String subGrace({required Object date}) => 'Pembayaran belum berhasil. Plus tetap aktif sampai ${date}.';
+
+	/// id: 'Langganan ditahan karena pembayaran belum berhasil. Perbaiki di Play Store.'
+	String get subOnHold => 'Langganan ditahan karena pembayaran belum berhasil. Perbaiki di Play Store.';
+
+	/// id: 'Dari program penguji sampai $date'
+	String subTester({required Object date}) => 'Dari program penguji sampai ${date}';
+
+	/// id: 'Dari program penguji'
+	String get subTesterOpen => 'Dari program penguji';
+
+	/// id: 'Uji coba'
+	String get badgeTrial => 'Uji coba';
+
+	/// id: 'Cek'
+	String get badgeCheck => 'Cek';
+
+	/// id: 'Kelola di Play Store'
+	String get manage => 'Kelola di Play Store';
+
+	/// id: 'Pulihkan pembelian'
+	String get restore => 'Pulihkan pembelian';
+
+	/// id: 'Selesai. Langganan di akun Google Play ini akan aktif kembali bila ada.'
+	String get restoreDone => 'Selesai. Langganan di akun Google Play ini akan aktif kembali bila ada.';
+}
+
+// Path: premium.features
+class Translations$premium$features$id {
+	Translations$premium$features$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Yang dikerjakan Plus'
+	String get title => 'Yang dikerjakan Plus';
+
+	/// id: 'Lihat semua fitur Plus'
+	String get seeAll => 'Lihat semua fitur Plus';
+
+	/// id: 'Tanuki yang bekerja, jadi kamu tidak perlu banyak mengetik dan lebih tahu posisi uangmu.'
+	String get intro => 'Tanuki yang bekerja, jadi kamu tidak perlu banyak mengetik dan lebih tahu posisi uangmu.';
+
+	/// id: 'Lihat paket'
+	String get cta => 'Lihat paket';
+
+	/// id: 'Tetap gratis'
+	String get freeTitle => 'Tetap gratis';
+
+	/// id: 'Pencatatan, Riwayat, Dompet, Anggaran, rutin, Analisis 6 periode, ekspor, dan cadangan manual.'
+	String get free => 'Pencatatan, Riwayat, Dompet, Anggaran, rutin, Analisis 6 periode, ekspor, dan cadangan manual.';
+
+	late final Translations$premium$features$records$id records = Translations$premium$features$records$id.internal(_root);
+	late final Translations$premium$features$watches$id watches = Translations$premium$features$watches$id.internal(_root);
+	late final Translations$premium$features$answers$id answers = Translations$premium$features$answers$id.internal(_root);
+	late final Translations$premium$features$plans$id plans = Translations$premium$features$plans$id.internal(_root);
+	late final Translations$premium$features$reports$id reports = Translations$premium$features$reports$id.internal(_root);
+	late final Translations$premium$features$keeps$id keeps = Translations$premium$features$keeps$id.internal(_root);
+}
+
 // Path: premium.paywall
 class Translations$premium$paywall$id {
 	Translations$premium$paywall$id.internal(this._root);
@@ -4953,6 +5043,96 @@ class Translations$record$voice$failure$id {
 
 	/// id: 'Ada yang salah. Coba lagi.'
 	String get other => 'Ada yang salah. Coba lagi.';
+}
+
+// Path: premium.features.records
+class Translations$premium$features$records$id {
+	Translations$premium$features$records$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Mencatat untukmu'
+	String get title => 'Mencatat untukmu';
+
+	/// id: 'Foto struk dan bukti transfer, serta notifikasi dari semua aplikasi, jadi catatan. Rutin bernominal tetap tercatat sendiri.'
+	String get text => 'Foto struk dan bukti transfer, serta notifikasi dari semua aplikasi, jadi catatan. Rutin bernominal tetap tercatat sendiri.';
+}
+
+// Path: premium.features.watches
+class Translations$premium$features$watches$id {
+	Translations$premium$features$watches$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Berjaga'
+	String get title => 'Berjaga';
+
+	/// id: 'Peringatan sebelum anggaran habis atau uang nganggur menipis, plus Ringkasan Senin.'
+	String get text => 'Peringatan sebelum anggaran habis atau uang nganggur menipis, plus Ringkasan Senin.';
+}
+
+// Path: premium.features.answers
+class Translations$premium$features$answers$id {
+	Translations$premium$features$answers$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Menjawab pertanyaan'
+	String get title => 'Menjawab pertanyaan';
+
+	/// id: 'Tanya soal uangmu dalam bahasa sehari-hari, diketik atau lewat suara.'
+	String get text => 'Tanya soal uangmu dalam bahasa sehari-hari, diketik atau lewat suara.';
+}
+
+// Path: premium.features.plans
+class Translations$premium$features$plans$id {
+	Translations$premium$features$plans$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Merencanakan'
+	String get title => 'Merencanakan';
+
+	/// id: 'Coba bagaimana kalau, buat Target dengan perkiraan tanggal tercapai, dan lihat 12 bulan ke depan.'
+	String get text => 'Coba bagaimana kalau, buat Target dengan perkiraan tanggal tercapai, dan lihat 12 bulan ke depan.';
+}
+
+// Path: premium.features.reports
+class Translations$premium$features$reports$id {
+	Translations$premium$features$reports$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Melapor'
+	String get title => 'Melapor';
+
+	/// id: 'Rapor bulanan yang bercerita, Rekap SPT tahunan, dan invoice Freelance Pro.'
+	String get text => 'Rapor bulanan yang bercerita, Rekap SPT tahunan, dan invoice Freelance Pro.';
+}
+
+// Path: premium.features.keeps
+class Translations$premium$features$keeps$id {
+	Translations$premium$features$keeps$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Menyimpan'
+	String get title => 'Menyimpan';
+
+	/// id: 'Cadangan otomatis tiap hari ke Google Drive milikmu.'
+	String get text => 'Cadangan otomatis tiap hari ke Google Drive milikmu.';
 }
 
 // Path: premium.paywall.messages
@@ -6548,6 +6728,39 @@ extension on Translations {
 			'premium.signInAction' => 'Masuk',
 			'premium.plusOnlyTitle' => 'Fitur ini bagian dari Plus',
 			'premium.plusOnlyBody' => 'Berlangganan Plus belum tersedia. Mencatat tetap gratis.',
+			'premium.account.section' => 'Plus',
+			'premium.account.rowTitle' => 'Tanukonomy Plus',
+			'premium.account.subFree' => 'Gratis. Lihat apa yang bisa dikerjakan Tanuki.',
+			'premium.account.subTrial' => ({required Object date}) => 'Sampai ${date}. Tanpa kartu.',
+			'premium.account.subActive' => ({required Object date}) => 'Aktif sampai ${date}',
+			'premium.account.subActiveOpen' => 'Aktif',
+			'premium.account.subGrace' => ({required Object date}) => 'Pembayaran belum berhasil. Plus tetap aktif sampai ${date}.',
+			'premium.account.subOnHold' => 'Langganan ditahan karena pembayaran belum berhasil. Perbaiki di Play Store.',
+			'premium.account.subTester' => ({required Object date}) => 'Dari program penguji sampai ${date}',
+			'premium.account.subTesterOpen' => 'Dari program penguji',
+			'premium.account.badgeTrial' => 'Uji coba',
+			'premium.account.badgeCheck' => 'Cek',
+			'premium.account.manage' => 'Kelola di Play Store',
+			'premium.account.restore' => 'Pulihkan pembelian',
+			'premium.account.restoreDone' => 'Selesai. Langganan di akun Google Play ini akan aktif kembali bila ada.',
+			'premium.features.title' => 'Yang dikerjakan Plus',
+			'premium.features.seeAll' => 'Lihat semua fitur Plus',
+			'premium.features.intro' => 'Tanuki yang bekerja, jadi kamu tidak perlu banyak mengetik dan lebih tahu posisi uangmu.',
+			'premium.features.cta' => 'Lihat paket',
+			'premium.features.freeTitle' => 'Tetap gratis',
+			'premium.features.free' => 'Pencatatan, Riwayat, Dompet, Anggaran, rutin, Analisis 6 periode, ekspor, dan cadangan manual.',
+			'premium.features.records.title' => 'Mencatat untukmu',
+			'premium.features.records.text' => 'Foto struk dan bukti transfer, serta notifikasi dari semua aplikasi, jadi catatan. Rutin bernominal tetap tercatat sendiri.',
+			'premium.features.watches.title' => 'Berjaga',
+			'premium.features.watches.text' => 'Peringatan sebelum anggaran habis atau uang nganggur menipis, plus Ringkasan Senin.',
+			'premium.features.answers.title' => 'Menjawab pertanyaan',
+			'premium.features.answers.text' => 'Tanya soal uangmu dalam bahasa sehari-hari, diketik atau lewat suara.',
+			'premium.features.plans.title' => 'Merencanakan',
+			'premium.features.plans.text' => 'Coba bagaimana kalau, buat Target dengan perkiraan tanggal tercapai, dan lihat 12 bulan ke depan.',
+			'premium.features.reports.title' => 'Melapor',
+			'premium.features.reports.text' => 'Rapor bulanan yang bercerita, Rekap SPT tahunan, dan invoice Freelance Pro.',
+			'premium.features.keeps.title' => 'Menyimpan',
+			'premium.features.keeps.text' => 'Cadangan otomatis tiap hari ke Google Drive milikmu.',
 			'premium.paywall.close' => 'Tutup',
 			'premium.paywall.plans' => 'Paket',
 			'premium.paywall.later' => 'Nanti saja',

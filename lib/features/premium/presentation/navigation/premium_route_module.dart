@@ -6,6 +6,7 @@ import 'package:saldough/features/premium/domain/plus_purchasing.dart';
 import 'package:saldough/features/premium/presentation/bloc/paywall_bloc.dart';
 import 'package:saldough/features/premium/presentation/navigation/premium_route_keys.dart';
 import 'package:saldough/features/premium/presentation/pages/paywall_page.dart';
+import 'package:saldough/features/premium/presentation/pages/plus_features_page.dart';
 import 'package:saldough/shared/auth/auth.dart';
 import 'package:state_management/state_management.dart';
 
@@ -32,6 +33,11 @@ final class PremiumRouteModule extends FeatureRouteModule {
           ),
         );
       },
+    ),
+    RouteNode.typed<PlusFeaturesInput>(
+      key: PremiumRouteKeys.features,
+      defaultInput: () => const PlusFeaturesInput(),
+      builder: (context, input) => PlusFeaturesPage(fromPaywall: input.fromPaywall),
     ),
   ];
 

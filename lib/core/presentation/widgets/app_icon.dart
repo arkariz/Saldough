@@ -322,6 +322,12 @@ enum IconKey {
   /// Pulihkan pembelian (Akun › Plus).
   restorePurchases,
 
+  /// Merencanakan (manfaat Plus).
+  trendingUp,
+
+  /// Melapor (manfaat Plus).
+  summarize,
+
   /// Langkah proses yang belum dimulai (daftar langkah pemulihan).
   stepWaiting,
 
@@ -475,6 +481,8 @@ const Map<IconKey, IconData> _symbols = {
   IconKey.chatBubble: Symbols.chat_bubble_rounded,
   IconKey.openInNew: Symbols.open_in_new_rounded,
   IconKey.restorePurchases: Symbols.restore_rounded,
+  IconKey.trendingUp: Symbols.trending_up_rounded,
+  IconKey.summarize: Symbols.summarize_rounded,
   IconKey.stepWaiting: Symbols.radio_button_unchecked_rounded,
   IconKey.appUpdate: Symbols.system_update_rounded,
   IconKey.label: Symbols.label_rounded,

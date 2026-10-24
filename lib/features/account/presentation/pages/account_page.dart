@@ -24,7 +24,7 @@ import 'package:state_management/state_management.dart';
 /// Keduanya memuat bagian "Pengaturan" (mata uang, ADR-025).
 class AccountPage extends StatefulWidget {
   /// Membuat [AccountPage].
-  const AccountPage({this.versionEntry, this.dataSection, super.key});
+  const AccountPage({this.versionEntry, this.dataSection, this.plusSection, super.key});
 
   /// Baris Versi aplikasi di grup paling bawah (APP_UPDATE F4), disisipkan
   /// akar komposisi karena isinya milik fitur lain (ADR-030); `null` = tanpa
@@ -35,6 +35,10 @@ class AccountPage extends StatefulWidget {
   /// komposisi karena isinya milik fitur lain; tampil sesudah setelan, sama
   /// untuk sudah dan belum masuk. `null` = tanpa bagian itu.
   final Widget? dataSection;
+
+  /// Bagian Plus (status paket, kelola, pulihkan; ADR-041), disisipkan akar
+  /// komposisi karena isinya milik fitur `premium`; tampil di atas setelan.
+  final Widget? plusSection;
 
   @override
   State<AccountPage> createState() => _AccountPageState();
@@ -71,9 +75,9 @@ class _AccountPageState extends State<AccountPage> {
                   padding: const EdgeInsets.all(AppSpacing.space4),
                   children: [
                     if (user == null)
-                      _SignedOut(state: state, dataSection: widget.dataSection)
+                      _SignedOut(state: state, dataSection: widget.dataSection, plusSection: widget.plusSection)
                     else
-                      _SignedIn(state: state, user: user, dataSection: widget.dataSection),
+                      _SignedIn(state: state, user: user, dataSection: widget.dataSection, plusSection: widget.plusSection),
                     if (widget.versionEntry case final entry?) ...[
                       const SizedBox(height: AppSpacing.space6),
                       AppSectionHeader(t.account.appSection),
@@ -94,10 +98,11 @@ String _busyLabel(String label, AccountState state, AccountAction action) =>
     state.pending == action ? '$label…' : label;
 
 class _SignedOut extends StatefulWidget {
-  const _SignedOut({required this.state, this.dataSection});
+  const _SignedOut({required this.state, this.dataSection, this.plusSection});
 
   final AccountState state;
   final Widget? dataSection;
+  final Widget? plusSection;
 
   @override
   State<_SignedOut> createState() => _SignedOutState();
@@ -203,7 +208,7 @@ class _SignedOutState extends State<_SignedOut> {
           ),
         ],
         const SizedBox(height: AppSpacing.space6),
-        _Settings(dataSection: widget.dataSection),
+        _Settings(dataSection: widget.dataSection, plusSection: widget.plusSection),
       ],
     );
   }
@@ -213,16 +218,18 @@ class _SignedOutState extends State<_SignedOut> {
 /// dan Tampilan. Sama untuk sudah dan belum masuk -- setelan tidak butuh
 /// akun.
 class _Settings extends StatelessWidget {
-  const _Settings({this.dataSection});
+  const _Settings({this.dataSection, this.plusSection});
 
   /// Bagian Data kamu, sesudah kelompok Tampilan (prototipe `AkunData.dc.html`).
   final Widget? dataSection;
+  final Widget? plusSection;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        if (plusSection case final section?) ...[section, const SizedBox(height: AppSpacing.space6)],
         AppSectionHeader(t.account.recordingSection),
         AppListCard(
           dividerIndent: AppListCard.iconIndent,
@@ -251,9 +258,10 @@ class _Settings extends StatelessWidget {
 }
 
 class _SignedIn extends StatelessWidget {
-  const _SignedIn({required this.state, required this.user, this.dataSection});
+  const _SignedIn({required this.state, required this.user, this.dataSection, this.plusSection});
 
   final Widget? dataSection;
+  final Widget? plusSection;
 
   final AccountState state;
   final AppUser user;
@@ -311,7 +319,7 @@ class _SignedIn extends StatelessWidget {
           onPressed: state.isBusy ? null : () => context.read<AccountBloc>().add(const AccountSignOutRequested()),
         ),
         const SizedBox(height: AppSpacing.space6),
-        _Settings(dataSection: dataSection),
+        _Settings(dataSection: dataSection, plusSection: plusSection),
         const SizedBox(height: AppSpacing.space8),
         Divider(color: colors.line),
         const SizedBox(height: AppSpacing.space4),

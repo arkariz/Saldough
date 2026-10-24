@@ -1553,6 +1553,55 @@
     "signInAction": "Sign in",
     "plusOnlyTitle": "This feature is part of Plus",
     "plusOnlyBody": "Plus subscriptions aren't available yet. Recording stays free.",
+    "account": {
+      "section": "Plus",
+      "rowTitle": "Tanukonomy Plus",
+      "subFree": "Free. See what Tanuki can do for you.",
+      "subTrial": "Until $date. No card needed.",
+      "subActive": "Active until $date",
+      "subActiveOpen": "Active",
+      "subGrace": "Payment did not go through. Plus stays on until $date.",
+      "subOnHold": "Subscription on hold because payment did not go through. Fix it in the Play Store.",
+      "subTester": "From the tester program until $date",
+      "subTesterOpen": "From the tester program",
+      "badgeTrial": "Trial",
+      "badgeCheck": "Check",
+      "manage": "Manage in the Play Store",
+      "restore": "Restore purchases",
+      "restoreDone": "Done. A subscription on this Google Play account will turn on again if there is one."
+    },
+    "features": {
+      "title": "What Plus does",
+      "seeAll": "See all Plus features",
+      "intro": "Tanuki does the work, so you spend less time recording and more time knowing where your money stands.",
+      "cta": "See plans",
+      "freeTitle": "Always free",
+      "free": "Recording, History, Wallets, Budgets, recurring, 6 periods of Analysis, export, and manual backup.",
+      "records": {
+        "title": "Records for you",
+        "text": "Photos of receipts and transfer slips, and notifications from every app, become entries. Fixed recurring bills record themselves."
+      },
+      "watches": {
+        "title": "Keeps watch",
+        "text": "A warning before a budget runs out or free money runs thin, plus a Monday summary."
+      },
+      "answers": {
+        "title": "Answers questions",
+        "text": "Ask about your money in everyday words, typed or spoken."
+      },
+      "plans": {
+        "title": "Plans ahead",
+        "text": "Try what if, set Goals with an expected date, and see 12 months ahead."
+      },
+      "reports": {
+        "title": "Reports",
+        "text": "Monthly reports with the story behind the numbers, a yearly tax summary, and Freelance Pro invoices."
+      },
+      "keeps": {
+        "title": "Keeps safe",
+        "text": "An automatic daily backup to your own Google Drive."
+      }
+    },
     "paywall": {
       "close": "Close",
       "plans": "Plans",

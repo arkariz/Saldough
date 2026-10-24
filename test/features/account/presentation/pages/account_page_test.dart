@@ -19,12 +19,14 @@ import 'package:saldough/features/data_portability/domain/backup_gateway.dart';
 import 'package:saldough/features/data_portability/domain/file_transfer.dart';
 import 'package:saldough/features/data_portability/domain/restore_gateway.dart';
 import 'package:saldough/features/data_portability/domain/restore_models.dart';
+import 'package:saldough/features/premium/domain/plus_purchasing.dart';
 import 'package:saldough/shared/auth/auth.dart';
 import 'package:saldough/shared/category/category.dart';
 
 import '../../../../helpers/fake_auth_repository.dart';
 import '../../../../helpers/fake_backup_gateway.dart';
 import '../../../../helpers/fake_file_transfer.dart';
+import '../../../../helpers/fake_plus_purchasing.dart';
 import '../../../../helpers/fake_restore_gateway.dart';
 import '../../../../helpers/routes.dart';
 
@@ -43,6 +45,7 @@ void main() {
     repository = FakeAuthRepository(signedIn: signedIn);
     final container = GetIt.asNewInstance()
       ..registerSingleton<RouteRegistry>(appRouteRegistry())
+      ..registerSingleton<PlusPurchasing>(FakePlusPurchasing(selling: false))
       ..registerSingleton<AuthRepository>(repository)
       ..registerSingleton<BackupGateway>(backup ?? FakeBackupGateway())
       ..registerSingleton<RestoreGateway>(restore ?? FakeRestoreGateway())

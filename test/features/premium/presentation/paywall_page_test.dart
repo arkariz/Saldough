@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:di/di.dart' show GetIt, ScopeProvider;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:navigation/navigation.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/foundation/entitlement/entitlement.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
@@ -15,6 +17,7 @@ import 'package:saldough/features/premium/presentation/pages/paywall_page.dart';
 import 'package:state_management/state_management.dart';
 
 import '../../../helpers/fake_plus_purchasing.dart';
+import '../../../helpers/routes.dart';
 
 /// Paywall Plus (T-24.17a): pesan per pemicu, PlanCard, dan keadaannya.
 void main() {
@@ -38,23 +41,35 @@ void main() {
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
     await tester.pumpWidget(
-      MaterialApp(
-        theme: theme ?? PixelTheme.light,
-        builder: (context, child) => MediaQuery(
-          data: MediaQuery.of(context).copyWith(textScaler: TextScaler.linear(scale)),
-          child: child!,
-        ),
-        home: Builder(
-          builder: (context) => TextButton(
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute<void>(
-                builder: (_) => BlocProvider(
-                  create: (_) => PaywallBloc(purchasing: purchasing)..add(const PaywallStarted()),
-                  child: PaywallPage(trigger: trigger, signedIn: signedIn, onSignIn: onSignIn ?? () {}),
+      ScopeProvider(
+        container: GetIt.asNewInstance()
+          ..registerSingleton<RouteRegistry>(appRouteRegistry()),
+        child: MaterialApp(
+          theme: theme ?? PixelTheme.light,
+          builder: (context, child) => MediaQuery(
+            data: MediaQuery.of(
+              context,
+            ).copyWith(textScaler: TextScaler.linear(scale)),
+            child: child!,
+          ),
+          home: Builder(
+            builder: (context) => TextButton(
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => BlocProvider(
+                    create: (_) =>
+                        PaywallBloc(purchasing: purchasing)
+                          ..add(const PaywallStarted()),
+                    child: PaywallPage(
+                      trigger: trigger,
+                      signedIn: signedIn,
+                      onSignIn: onSignIn ?? () {},
+                    ),
+                  ),
                 ),
               ),
+              child: const Text('buka'),
             ),
-            child: const Text('buka'),
           ),
         ),
       ),
@@ -112,9 +127,15 @@ void main() {
         t.premium.paywall.messages.project.title,
         t.premium.paywall.messages.project.body,
       ),
-      (PaywallTrigger.forecast, t.premium.paywall.messages.forecast.title, t.premium.paywall.messages.forecast.body),
+      (
+        PaywallTrigger.forecast,
+        t.premium.paywall.messages.forecast.title,
+        t.premium.paywall.messages.forecast.body,
+      ),
     ]) {
-      testWidgets('${trigger.name}: judul, kalimat gratis, dan lencana', (tester) async {
+      testWidgets('${trigger.name}: judul, kalimat gratis, dan lencana', (
+        tester,
+      ) async {
         await pump(tester, trigger: trigger);
         expect(find.text(title), findsOneWidget);
         expect(find.text(body), findsOneWidget);
@@ -122,15 +143,21 @@ void main() {
       });
     }
 
-    testWidgets('kuota tafsir: menyebut jatah Gratis dari batas yang berlaku', (tester) async {
+    testWidgets('kuota tafsir: menyebut jatah Gratis dari batas yang berlaku', (
+      tester,
+    ) async {
       await pump(tester, trigger: PaywallTrigger.smartQuota);
-      final n = ActivePlan.limits.value.freeAllowance(PlusFeature.smartInterpretation);
+      final n = ActivePlan.limits.value.freeAllowance(
+        PlusFeature.smartInterpretation,
+      );
       expect(find.text(texts.messages.reading.title(n: n)), findsOneWidget);
     });
   });
 
   group('paket', () {
-    testWidgets('tahunan terpilih bawaan, harga dari toko, setara per bulan', (tester) async {
+    testWidgets('tahunan terpilih bawaan, harga dari toko, setara per bulan', (
+      tester,
+    ) async {
       await pump(tester);
       expect(find.text('Rp179.000'), findsOneWidget);
       expect(find.text('Rp25.000'), findsOneWidget);
@@ -139,18 +166,23 @@ void main() {
       expect(find.text(texts.fineYearly(price: 'Rp179.000')), findsOneWidget);
     });
 
-    testWidgets('memilih Bulanan mengganti tombol dan kalimat wajib; beli memakai paket itu', (tester) async {
-      await pump(tester);
-      await tapText(tester, texts.monthly);
-      await tester.pump();
-      expect(find.text(texts.buyMonthly), findsOneWidget);
-      expect(find.text(texts.fineMonthly(price: 'Rp25.000')), findsOneWidget);
-      await tester.tap(find.text(texts.buyMonthly));
-      await tester.pumpAndSettle();
-      expect(purchasing.bought.single.kind, PlusPlanKind.monthly);
-    });
+    testWidgets(
+      'memilih Bulanan mengganti tombol dan kalimat wajib; beli memakai paket itu',
+      (tester) async {
+        await pump(tester);
+        await tapText(tester, texts.monthly);
+        await tester.pump();
+        expect(find.text(texts.buyMonthly), findsOneWidget);
+        expect(find.text(texts.fineMonthly(price: 'Rp25.000')), findsOneWidget);
+        await tester.tap(find.text(texts.buyMonthly));
+        await tester.pumpAndSettle();
+        expect(purchasing.bought.single.kind, PlusPlanKind.monthly);
+      },
+    );
 
-    testWidgets('Harga Pendiri: lencana, harga biasa dicoret, batas waktu', (tester) async {
+    testWidgets('Harga Pendiri: lencana, harga biasa dicoret, batas waktu', (
+      tester,
+    ) async {
       purchasing.plans = OfferedPlans(
         offering: null,
         deadline: DateTime(2027, 1, 21, 23, 59),
@@ -170,28 +202,36 @@ void main() {
       expect(find.textContaining('2027'), findsOneWidget);
     });
 
-    testWidgets('penawaran sesudah uji coba: harga perkenalan dan kalimat wajib dua harga', (tester) async {
-      purchasing.plans = OfferedPlans(
-        offering: null,
-        deadline: DateTime(2026, 11, 26, 21),
-        options: const [
-          FakePlusPurchasing.monthly,
-          PlanOption(
-            kind: PlusPlanKind.yearlyIntro,
-            priceText: 'Rp129.000',
-            regularPriceText: 'Rp179.000',
-            handle: 'i',
-          ),
-        ],
-      );
-      await pump(tester);
-      expect(find.text(texts.introName), findsOneWidget);
-      expect(find.text(texts.fineIntro(price: 'Rp129.000', regular: 'Rp179.000')), findsOneWidget);
-    });
+    testWidgets(
+      'penawaran sesudah uji coba: harga perkenalan dan kalimat wajib dua harga',
+      (tester) async {
+        purchasing.plans = OfferedPlans(
+          offering: null,
+          deadline: DateTime(2026, 11, 26, 21),
+          options: const [
+            FakePlusPurchasing.monthly,
+            PlanOption(
+              kind: PlusPlanKind.yearlyIntro,
+              priceText: 'Rp129.000',
+              regularPriceText: 'Rp179.000',
+              handle: 'i',
+            ),
+          ],
+        );
+        await pump(tester);
+        expect(find.text(texts.introName), findsOneWidget);
+        expect(
+          find.text(texts.fineIntro(price: 'Rp129.000', regular: 'Rp179.000')),
+          findsOneWidget,
+        );
+      },
+    );
   });
 
   group('keadaan', () {
-    testWidgets('memuat: kerangka harga dan tombol beli nonaktif', (tester) async {
+    testWidgets('memuat: kerangka harga dan tombol beli nonaktif', (
+      tester,
+    ) async {
       purchasing.gate = Completer<void>();
       await pump(tester, settle: false);
       expect(find.text('Rp179.000'), findsNothing);
@@ -201,7 +241,9 @@ void main() {
       expect(find.text('Rp179.000'), findsOneWidget);
     });
 
-    testWidgets('luring: kartu "Harga belum bisa dimuat" dengan Coba lagi', (tester) async {
+    testWidgets('luring: kartu "Harga belum bisa dimuat" dengan Coba lagi', (
+      tester,
+    ) async {
       purchasing.plans = OfferedPlans.none;
       await pump(tester);
       expect(find.text(texts.offlineTitle), findsOneWidget);
@@ -226,7 +268,9 @@ void main() {
       expect(find.text(texts.buyYearly), findsOneWidget);
     });
 
-    testWidgets('tertunda: banner dan tombol "Menunggu persetujuan"', (tester) async {
+    testWidgets('tertunda: banner dan tombol "Menunggu persetujuan"', (
+      tester,
+    ) async {
       purchasing.result = const BuyPending();
       await pump(tester);
       await tester.tap(find.text(texts.buyYearly));
@@ -235,7 +279,9 @@ void main() {
       expect(find.text(texts.waiting), findsOneWidget);
     });
 
-    testWidgets('gagal: banner galat, tombol Coba lagi membeli ulang', (tester) async {
+    testWidgets('gagal: banner galat, tombol Coba lagi membeli ulang', (
+      tester,
+    ) async {
       purchasing.result = const BuyFailed(PurchaseFailure.billing);
       await pump(tester);
       await tester.tap(find.text(texts.buyYearly));
@@ -266,20 +312,39 @@ void main() {
     });
   });
 
+  testWidgets(
+    '"Lihat semua fitur Plus" membuka daftar fitur; "Lihat paket" kembali ke paywall',
+    (tester) async {
+      await pump(tester);
+      await tester.tap(find.text(t.premium.features.seeAll));
+      await tester.pumpAndSettle();
+      expect(find.text(t.premium.features.title), findsOneWidget);
+      await tester.tap(find.text(t.premium.features.cta));
+      await tester.pumpAndSettle();
+      expect(find.text(t.premium.features.title), findsNothing);
+      expect(find.text(texts.messages.general.title), findsOneWidget);
+    },
+  );
+
   group('Plus belum dijual', () {
     setUp(() => purchasing.selling = false);
 
-    testWidgets('tanpa akun: ajakan masuk; tombol membuka Akun; tanpa tombol beli', (tester) async {
-      var opened = 0;
-      await pump(tester, signedIn: false, onSignIn: () => opened++);
-      expect(find.text(t.premium.signInTitle), findsOneWidget);
-      expect(find.text(texts.buyYearly), findsNothing);
-      await tester.tap(find.text(t.premium.signInAction));
-      expect(opened, 1);
-      expect(purchasing.offeredCalls, 0);
-    });
+    testWidgets(
+      'tanpa akun: ajakan masuk; tombol membuka Akun; tanpa tombol beli',
+      (tester) async {
+        var opened = 0;
+        await pump(tester, signedIn: false, onSignIn: () => opened++);
+        expect(find.text(t.premium.signInTitle), findsOneWidget);
+        expect(find.text(texts.buyYearly), findsNothing);
+        await tester.tap(find.text(t.premium.signInAction));
+        expect(opened, 1);
+        expect(purchasing.offeredCalls, 0);
+      },
+    );
 
-    testWidgets('sudah masuk: Plus belum dijual, tanpa tombol masuk', (tester) async {
+    testWidgets('sudah masuk: Plus belum dijual, tanpa tombol masuk', (
+      tester,
+    ) async {
       await pump(tester);
       expect(find.text(texts.notSellingTitle), findsOneWidget);
       expect(find.text(t.premium.signInAction), findsNothing);
@@ -288,10 +353,17 @@ void main() {
 
   group('tata letak', () {
     for (final dark in [false, true]) {
-      testWidgets('360dp, teks 200%, tema ${dark ? 'gelap' : 'terang'}: tanpa overflow', (tester) async {
-        await pump(tester, scale: 2, theme: dark ? PixelTheme.dark : PixelTheme.light);
-        expect(tester.takeException(), isNull);
-      });
+      testWidgets(
+        '360dp, teks 200%, tema ${dark ? 'gelap' : 'terang'}: tanpa overflow',
+        (tester) async {
+          await pump(
+            tester,
+            scale: 2,
+            theme: dark ? PixelTheme.dark : PixelTheme.light,
+          );
+          expect(tester.takeException(), isNull);
+        },
+      );
     }
 
     testWidgets('keadaan galat di teks 200%: tanpa overflow', (tester) async {
@@ -304,23 +376,29 @@ void main() {
   });
 
   group('analitik', () {
-    testWidgets('viewed saat dibuka dan dismissed saat ditutup, dengan pemicunya', (tester) async {
-      final events = <AnalyticsEvent>[];
-      AppAnalytics.debugSink = events.add;
-      addTearDown(() => AppAnalytics.debugSink = null);
-      await pump(tester, trigger: PaywallTrigger.notificationSource);
-      expect(events, [PremiumEvents.paywallViewed(trigger: 'P2')]);
-      await tester.tap(find.text(texts.later));
-      await tester.pumpAndSettle();
-      expect(events.last, PremiumEvents.paywallDismissed(trigger: 'P2'));
-    });
+    testWidgets(
+      'viewed saat dibuka dan dismissed saat ditutup, dengan pemicunya',
+      (tester) async {
+        final events = <AnalyticsEvent>[];
+        AppAnalytics.debugSink = events.add;
+        addTearDown(() => AppAnalytics.debugSink = null);
+        await pump(tester, trigger: PaywallTrigger.notificationSource);
+        expect(events, [PremiumEvents.paywallViewed(trigger: 'P2')]);
+        await tester.tap(find.text(texts.later));
+        await tester.pumpAndSettle();
+        expect(events.last, PremiumEvents.paywallDismissed(trigger: 'P2'));
+      },
+    );
   });
 
-  test('modul rute: satu rute paywall dan satu entri menu pengembang', () {
-    const module = PremiumRouteModule();
-    expect(module.routes, hasLength(1));
-    expect(module.devEntries, hasLength(1));
-  });
+  test(
+    'modul rute: rute paywall dan daftar fitur, satu entri menu pengembang',
+    () {
+      const module = PremiumRouteModule();
+      expect(module.routes, hasLength(2));
+      expect(module.devEntries, hasLength(1));
+    },
+  );
 
   test('nama pemicu untuk analitik unik dan P1–P10 berurutan', () {
     final names = PaywallTrigger.values.map((t) => t.analyticsName).toList();

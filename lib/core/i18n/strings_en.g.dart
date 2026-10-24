@@ -1555,6 +1555,8 @@ class _Translations$premium$en extends Translations$premium$id {
 	@override String get signInAction => 'Sign in';
 	@override String get plusOnlyTitle => 'This feature is part of Plus';
 	@override String get plusOnlyBody => 'Plus subscriptions aren\'t available yet. Recording stays free.';
+	@override late final _Translations$premium$account$en account = _Translations$premium$account$en._(_root);
+	@override late final _Translations$premium$features$en features = _Translations$premium$features$en._(_root);
 	@override late final _Translations$premium$paywall$en paywall = _Translations$premium$paywall$en._(_root);
 }
 
@@ -2021,6 +2023,51 @@ class _Translations$analysis$category$en extends Translations$analysis$category$
 	@override String get moreHint => 'Latest 20 transactions';
 }
 
+// Path: premium.account
+class _Translations$premium$account$en extends Translations$premium$account$id {
+	_Translations$premium$account$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get section => 'Plus';
+	@override String get rowTitle => 'Tanukonomy Plus';
+	@override String get subFree => 'Free. See what Tanuki can do for you.';
+	@override String subTrial({required Object date}) => 'Until ${date}. No card needed.';
+	@override String subActive({required Object date}) => 'Active until ${date}';
+	@override String get subActiveOpen => 'Active';
+	@override String subGrace({required Object date}) => 'Payment did not go through. Plus stays on until ${date}.';
+	@override String get subOnHold => 'Subscription on hold because payment did not go through. Fix it in the Play Store.';
+	@override String subTester({required Object date}) => 'From the tester program until ${date}';
+	@override String get subTesterOpen => 'From the tester program';
+	@override String get badgeTrial => 'Trial';
+	@override String get badgeCheck => 'Check';
+	@override String get manage => 'Manage in the Play Store';
+	@override String get restore => 'Restore purchases';
+	@override String get restoreDone => 'Done. A subscription on this Google Play account will turn on again if there is one.';
+}
+
+// Path: premium.features
+class _Translations$premium$features$en extends Translations$premium$features$id {
+	_Translations$premium$features$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'What Plus does';
+	@override String get seeAll => 'See all Plus features';
+	@override String get intro => 'Tanuki does the work, so you spend less time recording and more time knowing where your money stands.';
+	@override String get cta => 'See plans';
+	@override String get freeTitle => 'Always free';
+	@override String get free => 'Recording, History, Wallets, Budgets, recurring, 6 periods of Analysis, export, and manual backup.';
+	@override late final _Translations$premium$features$records$en records = _Translations$premium$features$records$en._(_root);
+	@override late final _Translations$premium$features$watches$en watches = _Translations$premium$features$watches$en._(_root);
+	@override late final _Translations$premium$features$answers$en answers = _Translations$premium$features$answers$en._(_root);
+	@override late final _Translations$premium$features$plans$en plans = _Translations$premium$features$plans$en._(_root);
+	@override late final _Translations$premium$features$reports$en reports = _Translations$premium$features$reports$en._(_root);
+	@override late final _Translations$premium$features$keeps$en keeps = _Translations$premium$features$keeps$en._(_root);
+}
+
 // Path: premium.paywall
 class _Translations$premium$paywall$en extends Translations$premium$paywall$id {
 	_Translations$premium$paywall$en._(TranslationsEn root) : this._root = root, super.internal(root);
@@ -2078,6 +2125,72 @@ class _Translations$record$voice$failure$en extends Translations$record$voice$fa
 	@override String get noMatch => 'We didn\'t hear anything. Try again.';
 	@override String get network => 'Speech recognition needs an internet connection. Connect and try again, or type instead.';
 	@override String get other => 'Something went wrong. Try again.';
+}
+
+// Path: premium.features.records
+class _Translations$premium$features$records$en extends Translations$premium$features$records$id {
+	_Translations$premium$features$records$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Records for you';
+	@override String get text => 'Photos of receipts and transfer slips, and notifications from every app, become entries. Fixed recurring bills record themselves.';
+}
+
+// Path: premium.features.watches
+class _Translations$premium$features$watches$en extends Translations$premium$features$watches$id {
+	_Translations$premium$features$watches$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Keeps watch';
+	@override String get text => 'A warning before a budget runs out or free money runs thin, plus a Monday summary.';
+}
+
+// Path: premium.features.answers
+class _Translations$premium$features$answers$en extends Translations$premium$features$answers$id {
+	_Translations$premium$features$answers$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Answers questions';
+	@override String get text => 'Ask about your money in everyday words, typed or spoken.';
+}
+
+// Path: premium.features.plans
+class _Translations$premium$features$plans$en extends Translations$premium$features$plans$id {
+	_Translations$premium$features$plans$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Plans ahead';
+	@override String get text => 'Try what if, set Goals with an expected date, and see 12 months ahead.';
+}
+
+// Path: premium.features.reports
+class _Translations$premium$features$reports$en extends Translations$premium$features$reports$id {
+	_Translations$premium$features$reports$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Reports';
+	@override String get text => 'Monthly reports with the story behind the numbers, a yearly tax summary, and Freelance Pro invoices.';
+}
+
+// Path: premium.features.keeps
+class _Translations$premium$features$keeps$en extends Translations$premium$features$keeps$id {
+	_Translations$premium$features$keeps$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Keeps safe';
+	@override String get text => 'An automatic daily backup to your own Google Drive.';
 }
 
 // Path: premium.paywall.messages
@@ -3635,6 +3748,39 @@ extension on TranslationsEn {
 			'premium.signInAction' => 'Sign in',
 			'premium.plusOnlyTitle' => 'This feature is part of Plus',
 			'premium.plusOnlyBody' => 'Plus subscriptions aren\'t available yet. Recording stays free.',
+			'premium.account.section' => 'Plus',
+			'premium.account.rowTitle' => 'Tanukonomy Plus',
+			'premium.account.subFree' => 'Free. See what Tanuki can do for you.',
+			'premium.account.subTrial' => ({required Object date}) => 'Until ${date}. No card needed.',
+			'premium.account.subActive' => ({required Object date}) => 'Active until ${date}',
+			'premium.account.subActiveOpen' => 'Active',
+			'premium.account.subGrace' => ({required Object date}) => 'Payment did not go through. Plus stays on until ${date}.',
+			'premium.account.subOnHold' => 'Subscription on hold because payment did not go through. Fix it in the Play Store.',
+			'premium.account.subTester' => ({required Object date}) => 'From the tester program until ${date}',
+			'premium.account.subTesterOpen' => 'From the tester program',
+			'premium.account.badgeTrial' => 'Trial',
+			'premium.account.badgeCheck' => 'Check',
+			'premium.account.manage' => 'Manage in the Play Store',
+			'premium.account.restore' => 'Restore purchases',
+			'premium.account.restoreDone' => 'Done. A subscription on this Google Play account will turn on again if there is one.',
+			'premium.features.title' => 'What Plus does',
+			'premium.features.seeAll' => 'See all Plus features',
+			'premium.features.intro' => 'Tanuki does the work, so you spend less time recording and more time knowing where your money stands.',
+			'premium.features.cta' => 'See plans',
+			'premium.features.freeTitle' => 'Always free',
+			'premium.features.free' => 'Recording, History, Wallets, Budgets, recurring, 6 periods of Analysis, export, and manual backup.',
+			'premium.features.records.title' => 'Records for you',
+			'premium.features.records.text' => 'Photos of receipts and transfer slips, and notifications from every app, become entries. Fixed recurring bills record themselves.',
+			'premium.features.watches.title' => 'Keeps watch',
+			'premium.features.watches.text' => 'A warning before a budget runs out or free money runs thin, plus a Monday summary.',
+			'premium.features.answers.title' => 'Answers questions',
+			'premium.features.answers.text' => 'Ask about your money in everyday words, typed or spoken.',
+			'premium.features.plans.title' => 'Plans ahead',
+			'premium.features.plans.text' => 'Try what if, set Goals with an expected date, and see 12 months ahead.',
+			'premium.features.reports.title' => 'Reports',
+			'premium.features.reports.text' => 'Monthly reports with the story behind the numbers, a yearly tax summary, and Freelance Pro invoices.',
+			'premium.features.keeps.title' => 'Keeps safe',
+			'premium.features.keeps.text' => 'An automatic daily backup to your own Google Drive.',
 			'premium.paywall.close' => 'Close',
 			'premium.paywall.plans' => 'Plans',
 			'premium.paywall.later' => 'Not now',

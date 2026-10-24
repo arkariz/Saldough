@@ -1,15 +1,18 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/foundation/entitlement/entitlement.dart';
+import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/plan/active_plan.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
-import 'package:saldough/features/premium/domain/paywall_trigger.dart';
 import 'package:saldough/features/premium/domain/purchase_models.dart';
 import 'package:saldough/features/premium/presentation/bloc/paywall_bloc.dart';
 import 'package:saldough/features/premium/presentation/bloc/paywall_state.dart';
+import 'package:saldough/features/premium/presentation/navigation/premium_route_keys.dart';
 import 'package:saldough/features/premium/presentation/pages/paywall_message.dart';
 import 'package:saldough/features/premium/presentation/widgets/plan_card.dart';
 import 'package:saldough/features/premium/presentation/widgets/plus_tile.dart';
@@ -101,7 +104,17 @@ class _PaywallPageState extends State<PaywallPage> {
               ],
               const SizedBox(height: AppSpacing.space4),
               const _Benefits(),
-              const SizedBox(height: AppSpacing.space4),
+              Align(
+                child: AppButton.text(
+                  label: t.premium.features.seeAll,
+                  icon: IconKey.chevronRight,
+                  small: true,
+                  onPressed: () => unawaited(
+                    context.pushRoute(PremiumRouteKeys.features, const PlusFeaturesInput(fromPaywall: true)),
+                  ),
+                ),
+              ),
+              const SizedBox(height: AppSpacing.space2),
               switch (state.phase) {
                 PaywallPhase.notSelling => _NotSelling(
                   signedIn: widget.signedIn,

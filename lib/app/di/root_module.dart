@@ -12,6 +12,7 @@ import 'package:saldough/app/discovery/app_feature_statuses.dart';
 import 'package:saldough/app/premium/debug_plan_page.dart';
 import 'package:saldough/app/premium/premium_wiring.dart';
 import 'package:saldough/app/shell/account_data_section.dart';
+import 'package:saldough/app/shell/account_plus_section.dart';
 import 'package:saldough/app/shell/account_version_entry.dart';
 import 'package:saldough/app/shell/app_shell_page.dart';
 import 'package:saldough/core/currency/currency.dart';
@@ -107,7 +108,11 @@ abstract final class RootModule {
   /// ⚠ Daftar ini tumbuh manual tiap fitur baru ditambahkan — tidak ada
   /// penemuan otomatis, sesuai desain `FeatureRouteModule`.
   static const List<FeatureRouteModule> featureModules = [
-    AccountRouteModule(versionEntry: accountVersionEntry, dataSection: accountDataSection),
+    AccountRouteModule(
+      versionEntry: accountVersionEntry,
+      dataSection: accountDataSection,
+      plusSection: accountPlusSection,
+    ),
     AnalysisRouteModule(),
     AppUpdateRouteModule(),
     BudgetRouteModule(),

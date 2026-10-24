@@ -327,6 +327,27 @@ tangkapan (`AutoRecordedEntry.capturedAt`, field opsional baru; dokumen lama
 memakai tanggal transaksi), daftar kata OTP Kotlin dijaga uji kesamaan dengan
 Dart, dan `NotificationCapturePlugin.instance` yang tidak terpakai dihapus.
 
+## 11. Penonaktifan sementara (keputusan pemilik 24 Okt 2026)
+
+Fitur dinonaktifkan di **tingkat build** lewat
+`NotificationCaptureAvailability` (`lib/core/discovery/`):
+
+- Bawaan **mati**. Menyalakan: `--dart-define=NOTIFICATION_CAPTURE=true`
+  (`flutter run`, `flutter build`; juga di langkah build `deploy.yaml` bila
+  perlu).
+- Saat mati: `NotificationCaptureModule.register` memakai gateway tidak
+  didukung, sehingga pemroses, host, kotak masuk, banner Beranda, dan status
+  penemuan tidur sendiri; baris Akun dan keterangan onboarding disembunyikan
+  (`NotificationCaptureAvailability.visible`, disetel `RootModule`).
+- Layanan native dimatikan sekali saat aplikasi mulai
+  (`MethodChannelNotificationCaptureGateway.shutDownNative`: konfigurasi
+  `enabled=false`, tanpa sumber, tanpa pengingat, contoh dihapus), supaya
+  pengguna yang dulu menyalakannya tidak terus menampung notifikasi.
+- Setelan, pola, kotak masuk, dan ikatan rutin di Dart **tidak dihapus**;
+  menyalakan lagi memulihkan semuanya.
+- `AndroidManifest` masih mendeklarasikan layanan pendengar notifikasi.
+  Mencabutnya (agar Play tidak menanyakan izinnya) belum dilakukan.
+
 ---
 
 **Penulis keputusan:** Claude (agen), atas keputusan pemilik

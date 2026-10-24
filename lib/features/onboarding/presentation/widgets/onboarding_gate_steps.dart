@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:saldough/core/discovery/discovery.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
@@ -196,7 +197,7 @@ class OnboardingFinale extends StatelessWidget {
             const SizedBox(height: AppSpacing.space4),
             AppListCard(children: rows),
           ],
-          if (defaultTargetPlatform == TargetPlatform.android) ...[
+          if (defaultTargetPlatform == TargetPlatform.android && NotificationCaptureAvailability.visible) ...[
             const SizedBox(height: AppSpacing.space3),
             Row(
               key: const ValueKey('onboarding-notification-info'),

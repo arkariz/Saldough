@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:api_storage/api_storage.dart';
 import 'package:di/di.dart';
 import 'package:saldough/core/currency/currency.dart';
+import 'package:saldough/core/discovery/discovery.dart';
 import 'package:saldough/core/language/language.dart';
 import 'package:saldough/features/notification_capture/data/method_channel_notification_capture_gateway.dart';
 import 'package:saldough/features/notification_capture/data/notification_capture_store_impl.dart';
@@ -30,9 +32,14 @@ abstract final class NotificationCaptureModule {
   /// masuk. [gateway] untuk uji; bawaannya kanal Android, atau tidak
   /// didukung di platform lain.
   static void register(GetIt c, {NotificationCaptureGateway? gateway}) {
+    // Fitur dinonaktifkan di tingkat build: gateway tidak didukung membuat
+    // pemroses, kotak masuk, banner, dan status penemuan tidur sendiri, dan
+    // layanan native dimatikan sekali (lihat `NotificationCaptureAvailability`).
+    final disabled = gateway == null && !NotificationCaptureAvailability.compiledIn;
+    if (disabled && Platform.isAndroid) unawaited(MethodChannelNotificationCaptureGateway.shutDownNative());
     final resolvedGateway =
         gateway ??
-        (Platform.isAndroid
+        (Platform.isAndroid && !disabled
             ? MethodChannelNotificationCaptureGateway()
             : const UnsupportedNotificationCaptureGateway());
     NotificationRuleInterpreter rules(CaptureLanguage language) =>

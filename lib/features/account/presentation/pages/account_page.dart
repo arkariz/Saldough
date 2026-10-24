@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:saldough/core/discovery/discovery.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
@@ -228,7 +229,8 @@ class _Settings extends StatelessWidget {
           dividerIndent: AppListCard.iconIndent,
           children: [
             const CategorySettingEntry(),
-            if (defaultTargetPlatform == TargetPlatform.android) const NotificationCaptureSettingEntry(),
+            if (defaultTargetPlatform == TargetPlatform.android && NotificationCaptureAvailability.visible)
+              const NotificationCaptureSettingEntry(),
             // Baris status yang disorot sekali saat Akun pertama dibuka
             // (T-21.6); ada di Android dan iOS.
             const SpotlightTarget(

@@ -87,7 +87,7 @@ Terakhir diperbarui: 18 Oktober 2026 (Fase 19 selesai dan masuk `main` lewat PR 
 | 20 — Pengumuman pembaruan ([APP_UPDATE.md](../01-product/features/APP_UPDATE.md)) | 8 | 8 | KT-U1–KT-U5 dijawab dan ADR-039 Accepted (15 Okt 2026); T-20.1–T-20.8 selesai dan sudah di `main` (ada di build `0.6.0+12` dan `0.7.0+13`); T-20.4 selesai (rupa v3 diterapkan, selisih diputuskan pemilik); T-20.7 formulir Play Console dan kebijakan privasi dilaporkan pemilik selesai; verifikasi perangkat T-20.8 lulus semua (15 Okt 2026) |
 | 21 — Penemuan fitur ([FEATURE_DISCOVERY.md](../01-product/features/FEATURE_DISCOVERY.md)) | 10 | 7 | Kode T-21.1–T-21.7 selesai; T-21.9 (Mulai cepat) sebagian; menunggu T-21.0 (rupa) dan T-21.8 (verifikasi perangkat) |
 | 22 — Ekspor dan cadangan manual ([EXPORT_BACKUP.md](../01-product/features/EXPORT_BACKUP.md)) | 8 | 8 | Selesai 23 Okt 2026 (dari B-42): ADR-040 Accepted, T-22.0–T-22.7 di `main`; QA emulator Android tanpa temuan S1/S2; sisa uji perangkat (iOS, Excel/Sheets, dll.) di B-67 |
-| 23 — Catat notifikasi multi-dompet, contoh, dan rutin lebih awal ([ADR-042](../02-architecture/adr/0042-notifikasi-multi-dompet-sampel-dan-rutin.md)) | 5 | 5 | Kode selesai 23 Okt 2026 di branch `worktree-notif-multi-wallet-recurring` (belum digabung); sisa kompilasi Kotlin, uji emulator, dan pengungkapan privasi situs |
+| 23 — Catat notifikasi multi-dompet, contoh, dan rutin lebih awal ([ADR-042](../02-architecture/adr/0042-notifikasi-multi-dompet-sampel-dan-rutin.md)) | 6 | 6 | Kode selesai 23 Okt 2026 di branch `worktree-notif-multi-wallet-recurring` (belum digabung); sisa kompilasi Kotlin, uji emulator, dan pengungkapan privasi situs |
 | Antrean (`B-n`, belum dijadwalkan) | 65 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
 
 ## Keputusan terbuka
@@ -5357,6 +5357,15 @@ Permintaan pemilik 23 Okt 2026 (kasus Bank Jago).
       duplikat dulu. Rincian di `VERIFICATION_PLAN_FASE_23.md` ("Tindak lanjut
       temuan"). Sisa: uji ulang A9/A10, C1, D2/D3 di perangkat dan baris P1
       yang belum diuji.
+
+- [x] **T-23.6** Nonaktifkan sementara fitur Catat dari notifikasi (permintaan
+      pemilik 24 Okt 2026): saklar build `NotificationCaptureAvailability`
+      (bawaan mati; `--dart-define=NOTIFICATION_CAPTURE=true` menyalakan),
+      semua pintu disembunyikan, pemrosesan berhenti, layanan native
+      dimatikan, data pengguna utuh. Rincian ADR-032 §11. Sisa: bila akan
+      dirilis tanpa fitur ini, cabut deklarasi layanan pendengar dari
+      `AndroidManifest` dan perbarui Keamanan Data; menyalakan lagi butuh
+      keputusan pemilik.
 
 **Kode T-23.1–T-23.4 selesai 23 Okt 2026** (QA alur inti 24 Okt 2026: tanpa temuan S1/S2, 5 temuan S3 sudah ditindaklanjuti di T-23.5; kompilasi Kotlin lulus) (branch
 `worktree-notif-multi-wallet-recurring`, belum digabung). `flutter analyze`

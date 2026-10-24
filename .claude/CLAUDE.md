@@ -188,6 +188,9 @@ paket bahasa) di `shared/capture/` (barrel `capture.dart`); suara di
 mengimpor isi `record`: draf dibuka lewat `RecordRouteKeys.sheet`.
 
 **Catat dari notifikasi (ADR-032, 1 Okt 2026, berjalan T-11.17–11.21; revisi §10 T-13.1):**
+**Dinonaktifkan sementara di tingkat build sejak 24 Okt 2026** (ADR-032 §11):
+nyalakan dengan `--dart-define=NOTIFICATION_CAPTURE=true`; tanpa itu semua
+pintunya hilang dan layanan native dimatikan, data pengguna tetap utuh.
 Android saja. Layanan native hanya menampung notifikasi dari aplikasi yang
 dipilih pengguna yang lolos filter whitelist-nya (bawaan: frasa pasti transaksi; bukan OTP); Dart memprosesnya saat aplikasi
 hidup/dibuka: pola → aturan → Gemini, lalu tingkat otomatis menentukan

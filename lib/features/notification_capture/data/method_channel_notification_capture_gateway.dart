@@ -21,6 +21,31 @@ final class MethodChannelNotificationCaptureGateway with RepositoryGuard impleme
   /// Nama kanal metode.
   static const channelName = 'tanukonomy/notification_capture';
 
+  /// Mematikan layanan native tanpa membuka gateway penuh (build yang
+  /// menonaktifkan fitur, `NotificationCaptureAvailability`): pengguna yang
+  /// sebelumnya menyalakannya masih punya setelan tersimpan di native, yang
+  /// kalau dibiarkan terus menampung notifikasi dan memunculkan pengingat.
+  /// Setelan di Dart tidak disentuh, jadi menyalakan fitur lagi memulihkannya.
+  static Future<void> shutDownNative() async {
+    const methods = MethodChannel(channelName);
+    try {
+      await methods.invokeMethod<void>('configure', {
+        'enabled': false,
+        'saveSamples': false,
+        'remindWhenClosed': false,
+        'channelName': '',
+        'capturedTitle': '',
+        'capturedBody': '',
+        'sources': const <Map<String, Object?>>[],
+      });
+      await methods.invokeMethod<void>('clearSamples', {'packageName': null});
+    } on PlatformException {
+      // Layanan native belum siap: tidak ada yang perlu dimatikan.
+    } on MissingPluginException {
+      // Platform tanpa plugin (uji, iOS).
+    }
+  }
+
   final MethodChannel _methods;
   final EventChannel _capturedEvents;
   final EventChannel _tapEvents;

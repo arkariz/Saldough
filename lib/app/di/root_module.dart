@@ -353,6 +353,7 @@ abstract final class RootModule {
       ..registerLazySingleton<AuthRepository>(FirebaseAuthRepositoryImpl.new);
     SourceIcons.loader = (id) async => (await container<SourceIconRepository>().read(id)).getOrElse((_) => null);
     // Catat dari notifikasi (ADR-032): pemroses di akar, dipicu shell.
+    NotificationCaptureAvailability.visible = NotificationCaptureAvailability.compiledIn;
     NotificationCaptureModule.register(container);
     // Status efektif fitur untuk pintu permanen (Fase 21): dibaca Beranda,
     // Rutin, dan Akun tanpa saling mengimpor fitur (ADR-030).

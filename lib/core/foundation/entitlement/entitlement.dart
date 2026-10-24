@@ -2,6 +2,7 @@
 /// maupun fitur; adaptornya di `features/premium/data/` dan `lib/app/premium/`.
 library;
 
+export 'entitlement_config.dart';
 export 'entitlement_limits.dart';
 export 'entitlement_resolver.dart';
 export 'plan_state.dart';

@@ -26,6 +26,11 @@ void main() {
     'settings_language': '{"schemaVersion":1,"code":"en"}',
     'tutorial_progress': '{"schemaVersion":3}',
     'settings_hideAmounts': '{"schemaVersion":1,"hidden":true}',
+    // Hak Plus (ADR-041 §3.9): pemulihan tidak boleh memberi, mereset, atau
+    // menghapus hak.
+    'entitlement_trial': '{"schemaVersion":1,"accounts":{"u1":{"start":"2026-12-02","endsOn":"2026-12-24"}}}',
+    'entitlement_cache': '{"schemaVersion":1,"source":"purchase","inGrace":false,"lastVerifiedAt":"2026-12-01T00:00:00.000Z"}',
+    'entitlement_quota': '{"schemaVersion":1,"scopes":{}}',
   };
 
   RestoreEngine engine({KeyValueStorage? liveOverride, KeyValueStorage? stagingOverride}) => RestoreEngine(

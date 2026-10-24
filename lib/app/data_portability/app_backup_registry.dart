@@ -62,6 +62,12 @@ final appBackupRegistry = BackupRegistry(
     'capture_auto_recorded': 'sementara, terkait kotak masuk yang tidak ikut',
     // Mencatat aksi di perangkat ini, bukan data keuangan (ADR-040 §3.5).
     'settings_last_backup': 'status aksi di perangkat ini',
+    // Hak Plus milik akun Play/RevenueCat dan perangkat, bukan data keuangan;
+    // menyalinnya bisa memberi atau memulai ulang hak secara tidak sah
+    // (ADR-041 §3.9).
+    'entitlement_trial': 'uji coba milik akun dan perangkat',
+    'entitlement_cache': 'hak dari akun Play/RevenueCat, bukan berkas',
+    'entitlement_quota': 'jatah per periode milik perangkat',
   },
   transactionIndexKey: 'transaction__index',
   transactionPartitionKey: (month) => 'transaction_$month',

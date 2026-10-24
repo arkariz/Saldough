@@ -16,6 +16,6 @@ Penanda fitur Tanukonomy Plus: satu pola untuk semua fitur yang dibatasi di Grat
 - Satu lencana per baris atau tombol.
 - Aksesibilitas: lencana bagian dari label baris ("Catat otomatis, Plus").
 
-**Tidak tercakup:** data yang diburamkan (Analisis di luar 6 periode, perkiraan lewat 2 bulan) memakai kartu di atas grafik, belum dirancang.
+**Data yang dikunci** (Analisis di luar 6 periode, perkiraan lewat 2 bulan) memakai PlusLocked: data diburamkan dengan kartu di atasnya.
 
 **Disediakan pemakai:** fitur yang dibatasi, status langganan, pemicu paywall.

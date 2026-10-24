@@ -181,6 +181,8 @@ Manfaat, paket, tombol, dan kalimat wajib sama untuk semua pemicu. Papan:
 Di kode, pemicu membawa dua string i18n (judul, isi), jadi pemicu baru tidak
 menambah layar.
 
+**Data terkunci** (`PlusTerkunci`, `PlusTerkunciPerkiraan`, `PlusTerkunciEnGelap`; komponen PlusLocked): Analisis lebih dari 6 periode dan perkiraan lewat 2 bulan. Data asli diburamkan, kartu terkunci di tengahnya memuat lencana Plus, judul, kalimat yang menyebut yang tetap gratis, "Lihat Plus" (paywall dengan pemicu `analisis` atau `perkiraan`), dan jalan gratis ("Kembali ke periode terbaru", "Lihat 2 bulan ke depan"). Pesannya sama dengan pesan paywall.
+
 **Penanda fitur Plus** (`PenandaPlus`, `PenandaPlusEnGelap`; komponen PlusBadge): satu pola untuk semua fitur yang dibatasi. Lencana "Plus" (`brand-soft`, ikon `workspace_premium`) di ujung baris atau tombol; baris tetap normal dan bisa diketuk, membuka paywall dengan `pemicu` yang sesuai. Berlangganan: lencana hilang. Papan menunjukkan tiga bentuk (baris, baris bersakelar, tombol) dalam keadaan Gratis dan Berlangganan.
 
 **Penjelasan fitur Plus** (`FiturPlus`, `FiturPlusEnGelap`): halaman "Yang dikerjakan Plus" dari tautan "Lihat semua fitur Plus" di paywall, supaya paywall tetap singkat. Enam pilar (mencatat, berjaga, menjawab, merencanakan, melapor, menyimpan) masing-masing dengan satu penjelasan, kartu "Tetap gratis", dan tombol "Lihat paket" kembali ke paywall. Tanpa komponen baru.

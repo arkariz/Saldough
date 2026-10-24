@@ -171,6 +171,8 @@ keadaan dibatalkan pemilik (24 Okt 2026) karena terlalu rumit; keadaan lain
 lembar ini disetujui. Komponen baru hanya **PlanCard** (`tk-plan*` di
 `bundle.css`).
 
+**Penjelasan fitur Plus** (`FiturPlus`, `FiturPlusEnGelap`): halaman "Yang dikerjakan Plus" dari tautan "Lihat semua fitur Plus" di paywall, supaya paywall tetap singkat. Enam pilar (mencatat, berjaga, menjawab, merencanakan, melapor, menyimpan) masing-masing dengan satu penjelasan, kartu "Tetap gratis", dan tombol "Lihat paket" kembali ke paywall. Tanpa komponen baru.
+
 **Status Plus di Akun** (`AkunPlus`, `AkunPlusUji`, `AkunPlusAktif`,
 `AkunPlusEnGelap`; `Akun.dc.html` memuat bagian yang sama): bagian "Plus" di
 bawah kartu akun, tanpa komponen baru. Tiga keadaan: Gratis, uji coba (lencana

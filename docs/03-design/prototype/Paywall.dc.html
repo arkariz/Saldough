@@ -29,6 +29,7 @@ body{margin:0}
     <div class="tk-list tk-list--icon" style="background: transparent; margin: 0 -16px">
       <sc-for list="{{benefits}}" as="b" hint-placeholder-count="3"><div class="tk-row tk-row--compact"><span class="tk-tile tk-tile--sm tk-tile--brandsoft" aria-hidden="true"><span class="tk-icon">{{b.icon}}</span></span><span class="tk-row__main"><span class="tk-row__title" style="white-space: normal">{{b.title}}</span></span></div></sc-for>
     </div>
+    <a class="tk-link" href="FiturPlus.dc.html" style="align-self: center; margin-top: -8px">{{t.all}}<span class="tk-icon tk-icon--sm">chevron_right</span></a>
     <div class="tk-plans" role="radiogroup" aria-label="{{t.plans}}">
       <sc-for list="{{plans}}" as="p" hint-placeholder-count="2">
         <button class="tk-plan {{p.cls}}" type="button" role="radio" aria-checked="{{p.checked}}" onClick="{{p.pick}}"><span class="tk-plan__radio" aria-hidden="true"></span><span class="tk-plan__main"><span class="tk-plan__title">{{p.name}}</span><span class="tk-plan__sub">{{p.sub}}</span></span><span class="tk-plan__price"><span>{{p.price}}</span><span class="tk-plan__unit">{{p.unit}}</span></span></button>
@@ -49,13 +50,13 @@ class Component extends DCLogic {
     const en = !!this.props.en;
     // Harga contoh. Di aplikasi selalu string dari toko (Play Billing lewat RevenueCat).
     const T = en ? {
-      close: 'Close', title: 'Tanukonomy Plus', sub: 'Tanuki works for you.', plans: 'Plans', later: 'Not now',
+      close: 'Close', title: 'Tanukonomy Plus', sub: 'Tanuki works for you.', plans: 'Plans', later: 'Not now', all: 'See all Plus features',
       benefits: [['photo_camera', 'Record from photos and every bank notification'], ['notifications_active', 'Warnings before a budget runs out'], ['chat_bubble', 'Ask, plan, and get reports']],
       annual: 'Yearly', monthly: 'Monthly', equiv: 'about Rp14,900 a month', cancel: 'Cancel anytime', yearPrice: 'Rp179,000', monthPrice: 'Rp25,000', perYear: '/year', perMonth: '/month',
       buy: (p) => 'Subscribe ' + (p === 'annual' ? 'yearly' : 'monthly'),
       fine: (p) => (p === 'annual' ? 'Rp179,000 per year' : 'Rp25,000 per month') + ', renews automatically. Cancel anytime in the Play Store.'
     } : {
-      close: 'Tutup', title: 'Tanukonomy Plus', sub: 'Tanuki bekerja untukmu.', plans: 'Paket', later: 'Nanti saja',
+      close: 'Tutup', title: 'Tanukonomy Plus', sub: 'Tanuki bekerja untukmu.', plans: 'Paket', later: 'Nanti saja', all: 'Lihat semua fitur Plus',
       benefits: [['photo_camera', 'Catat dari foto dan semua notifikasi bank'], ['notifications_active', 'Peringatan sebelum anggaran habis'], ['chat_bubble', 'Tanya, rencanakan, dan lapor']],
       annual: 'Tahunan', monthly: 'Bulanan', equiv: 'setara Rp14.900/bulan', cancel: 'Bisa dibatalkan kapan saja', yearPrice: 'Rp179.000', monthPrice: 'Rp25.000', perYear: '/tahun', perMonth: '/bulan',
       buy: (p) => 'Berlangganan ' + (p === 'annual' ? 'Tahunan' : 'Bulanan'),

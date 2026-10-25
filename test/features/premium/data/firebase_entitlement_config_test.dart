@@ -45,6 +45,38 @@ void main() {
     await updates.close();
   });
 
+  group('pengganti nilai uji lokal', () {
+    test('mengurai kunci=nilai; kunci asing dan rusak dilewati', () {
+      expect(
+        parseEntitlementOverrides('plus_launch_at=2026-10-01T09:00:00; asing=1,founder_until=2027-01-21,rusak'),
+        {'plus_launch_at': '2026-10-01T09:00:00', 'founder_until': '2027-01-21'},
+      );
+      expect(parseEntitlementOverrides(''), isEmpty);
+    });
+
+    test('non-rilis: menimpa Remote Config', () async {
+      values = {'plus_launch_at': _value('2030-01-01')};
+      final local = FirebaseEntitlementConfig(
+        remoteConfig: rc,
+        overrides: 'plus_launch_at=2026-10-01',
+      );
+      addTearDown(local.dispose);
+      await local.refresh();
+      expect(local.current.plusLaunchAt, DateTime(2026, 10));
+    });
+
+    test('rilis: diabaikan sepenuhnya', () async {
+      final release = FirebaseEntitlementConfig(
+        remoteConfig: rc,
+        isRelease: true,
+        overrides: 'plus_launch_at=2026-10-01',
+      );
+      addTearDown(release.dispose);
+      await release.refresh();
+      expect(release.current.plusLaunchAt, isNull);
+    });
+  });
+
   test('sebelum diambil: bawaan, pra-peluncuran', () {
     expect(config.current, EntitlementLimits.defaults);
     expect(config.current.plusLaunchAt, isNull);

@@ -119,9 +119,9 @@ void main() {
     ];
     final leaked = [
       for (final path in pipeline)
-        if (File(path).readAsStringSync().contains('PLAN_OVERRIDE')) path,
+        if (File(path).readAsStringSync().contains(RegExp('PLAN_OVERRIDE|ENTITLEMENT_OVERRIDES'))) path,
     ];
-    expect(leaked, isEmpty, reason: 'pipeline rilis tidak boleh memberi PLAN_OVERRIDE:\n${leaked.join('\n')}');
+    expect(leaked, isEmpty, reason: 'pipeline rilis tidak boleh memberi PLAN_OVERRIDE atau ENTITLEMENT_OVERRIDES:\n${leaked.join('\n')}');
   });
 
   test('SDK pembelian (purchases_flutter) hanya di features/premium/data/ (ADR-041 §3.1)', () {

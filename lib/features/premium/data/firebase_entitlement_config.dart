@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer' as developer;
 
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/foundation.dart';
 import 'package:saldough/core/foundation/entitlement/entitlement.dart';
 
 /// [EntitlementConfig] di atas `firebase_remote_config` (ADR-041 §3.6, §3.13
@@ -14,7 +15,19 @@ import 'package:saldough/core/foundation/entitlement/entitlement.dart';
 /// bawaan hidup di [EntitlementLimits.defaults].
 final class FirebaseEntitlementConfig implements EntitlementConfig {
   /// Membuat [FirebaseEntitlementConfig]; [remoteConfig] untuk uji.
-  FirebaseEntitlementConfig({FirebaseRemoteConfig? remoteConfig}) : _injected = remoteConfig;
+  FirebaseEntitlementConfig({
+    FirebaseRemoteConfig? remoteConfig,
+    this.isRelease = kReleaseMode,
+    String overrides = const String.fromEnvironment('ENTITLEMENT_OVERRIDES'),
+  }) : _injected = remoteConfig,
+       _overrides = isRelease ? const {} : parseEntitlementOverrides(overrides);
+
+  /// Build rilis: pengganti nilai dimatikan.
+  final bool isRelease;
+
+  /// Nilai yang menimpa Remote Config di build non-rilis (uji lokal, mis.
+  /// `plus_launch_at` supaya tombol beli hidup tanpa mengubah konsol).
+  final Map<String, String> _overrides;
 
   /// Sama dengan `FirebaseRemoteConfigGateway` (`app_update`); fitur tidak
   /// boleh saling mengimpor (ADR-030), jadi nilainya diulang di sini.
@@ -73,6 +86,7 @@ final class FirebaseEntitlementConfig implements EntitlementConfig {
       next = EntitlementLimits.fromValues({
         for (final MapEntry(:key, :value) in _rc.getAll().entries)
           if (EntitlementLimits.keys.contains(key)) key: value.asString(),
+        ..._overrides,
       });
     } on Object catch (e) {
       developer.log('Remote Config hak gagal dibaca', error: e, name: 'Entitlements');
@@ -89,3 +103,12 @@ final class FirebaseEntitlementConfig implements EntitlementConfig {
     await _changes.close();
   }
 }
+
+/// Mengurai `kunci=nilai` dipisah koma atau titik koma dari
+/// `--dart-define=ENTITLEMENT_OVERRIDES=...`; hanya kunci [EntitlementLimits.keys].
+@visibleForTesting
+Map<String, String> parseEntitlementOverrides(String raw) => {
+  for (final part in raw.split(RegExp('[,;]')))
+    if (part.split('=') case [final key, ...final rest] when EntitlementLimits.keys.contains(key.trim()) && rest.isNotEmpty)
+      key.trim(): rest.join('=').trim(),
+};

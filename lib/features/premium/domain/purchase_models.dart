@@ -21,9 +21,14 @@ enum PlusPlanKind {
   /// Identifier package.
   final String id;
 
-  /// Paket dari identifier package; `null` bila tidak dikenal.
-  static PlusPlanKind? fromId(String id) =>
-      values.where((k) => k.id == id).firstOrNull;
+  /// Paket dari identifier package; `null` bila tidak dikenal. Package bawaan
+  /// RevenueCat (`$rc_monthly`, `$rc_annual`) dikenali sebagai bulanan dan
+  /// tahunan, jadi offering `default` tidak perlu package kustom.
+  static PlusPlanKind? fromId(String id) => switch (id) {
+    r'$rc_monthly' || 'rc_monthly' => monthly,
+    r'$rc_annual' || 'rc_annual' => yearly,
+    _ => values.where((k) => k.id == id).firstOrNull,
+  };
 }
 
 /// Satu pilihan paket di layar beli. Harga ditampilkan dari [priceText] (string

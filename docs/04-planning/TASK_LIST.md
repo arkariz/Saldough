@@ -5837,8 +5837,8 @@ Jalur kritis: T-24.2 → T-24.4 → T-24.6 → T-24.14 → T-24.18.
       `ENTITLEMENT_OVERRIDES=plus_launch_at=2026-10-01` menghidupkan penjualan
       dan uji coba tanpa menyentuh Remote Config; diabaikan di build rilis dan
       dijaga `import_boundaries_test` (tidak boleh ada di workflow/Fastfile).
-      Di dasbor RevenueCat: entitlement `plus`; offering `default` (package
-      `monthly`, `yearly`), `founder` (`yearly_founder`, bulanan), `post_trial`
+      Di dasbor RevenueCat: entitlement `plus`; offering `default` (package bawaan
+      `$rc_monthly` dan `$rc_annual` dikenali, atau `monthly`, `yearly`), `founder` (`yearly_founder`, bulanan), `post_trial`
       (`yearly_intro`, bulanan) yang terhubung ke produk Test Store. Kunci
       `test_…` tidak pernah dipakai di build rilis. Tahap 2 (Play Billing
       sungguhan, kunci `goog_…` sebagai secret GitHub) menyusul.

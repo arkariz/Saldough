@@ -5835,7 +5835,10 @@ Jalur kritis: T-24.2 → T-24.4 → T-24.6 → T-24.14 → T-24.18.
       (cache hak kosong) tidak lagi sempat terlihat sebagai uji coba: sebelum
       membuat uji coba, `LocalEntitlements` menunggu pembacaan langganan
       RevenueCat (`verifyPurchase`, paling lama 4 detik, sekali per akun), dan
-      tidak membuat uji coba bagi yang sudah berlangganan. Analyze bersih, uji lulus.
+      tidak membuat uji coba bagi yang sudah berlangganan. Pembeli yang Plus-nya
+      lewat tenggang luring 3 hari kini turun ke Gratis, tidak berubah menjadi
+      uji coba: akun dan perangkat yang pernah membeli diberi penanda `purchased`
+      (`TrialStore.marks`) dan tidak lagi diberi uji coba. Analyze bersih, uji lulus.
 - [ ] **T-24.18** Verifikasi perangkat (QA/pemilik): beli bulanan/tahunan, uji
       coba berakhir, penawaran 48 jam, tenggang/ditahan, mode pesawat 3 hari,
       pulihkan pembelian di ponsel kedua, akun peninjau email/sandi.

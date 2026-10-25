@@ -186,14 +186,19 @@ final class LocalEntitlements implements Entitlements {
       return _cached;
     }, (cached) => cached);
     if (_verifying) return;
+    await _rememberPurchase(account);
     if (account != null) {
       var record = (await _trials.recordFor(account.uid)).getOrElse((_) => null);
       if (record == null) {
         await _verify(account.uid);
         _trial = null;
-        // Sudah berlangganan (atau hak promosi): tidak membuka uji coba.
+        // Sudah berlangganan (atau hak promosi), atau pernah membeli: tidak
+        // membuka uji coba. Tanpa ini, pembeli yang Plus-nya lewat tenggang
+        // luring tiba-tiba terlihat sebagai uji coba.
+        await _rememberPurchase(account);
         final entitled = _resolve();
-        if (!(entitled is PlusPlan && entitled.source != PlanSource.prelaunch)) {
+        final hasEntitlement = entitled is PlusPlan && entitled.source != PlanSource.prelaunch;
+        if (!hasEntitlement && !await _hasPurchased(account.uid)) {
           record = await _startTrial(account);
         }
       }
@@ -203,6 +208,26 @@ final class LocalEntitlements implements Entitlements {
     if (next == _current) return;
     _current = next;
     _changes.add(next);
+  }
+
+  bool _purchaseRemembered = false;
+
+  /// Mencatat (sekali) bahwa ada langganan yang dibeli, untuk perangkat dan
+  /// akunnya, selama cache hak masih menyimpannya.
+  Future<void> _rememberPurchase(EntitlementAccount? account) async {
+    if (_cached?.source != PlanSource.purchase) return;
+    if (!_purchaseRemembered) {
+      _purchaseRemembered = true;
+      await _trials.addMark(deviceMarkKey, purchasedMark);
+    }
+    if (account != null) await _trials.addMark(account.uid, purchasedMark);
+  }
+
+  Future<bool> _hasPurchased(String uid) async {
+    for (final key in [uid, deviceMarkKey]) {
+      if ((await _trials.marks(key)).getOrElse((_) => const {}).contains(purchasedMark)) return true;
+    }
+    return false;
   }
 
   /// Menunggu RevenueCat membaca langganan [uid] (sekali per akun, paling lama

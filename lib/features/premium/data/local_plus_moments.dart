@@ -7,9 +7,6 @@ import 'package:saldough/features/premium/domain/offering_policy.dart';
 import 'package:saldough/features/premium/domain/plus_moments.dart';
 import 'package:saldough/features/premium/domain/plus_purchasing.dart';
 
-/// Penanda untuk perangkat tanpa akun (kartu konteks Gratis).
-const _deviceKey = '_device';
-
 /// Berapa hari sebelum uji coba berakhir rekap nilai tampil (H-3).
 const recapDaysBefore = 3;
 
@@ -45,7 +42,7 @@ final class LocalPlusMoments implements PlusMoments {
     return DateTime(n.year, n.month, n.day);
   }
 
-  String get _uid => entitlements.account?.uid ?? _deviceKey;
+  String get _uid => entitlements.account?.uid ?? deviceMarkKey;
 
   Future<Set<String>> _marks() async => (await trials.marks(_uid)).getOrElse((_) => const {});
 

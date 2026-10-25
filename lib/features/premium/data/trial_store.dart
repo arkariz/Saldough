@@ -8,6 +8,13 @@ import 'package:saldough/features/premium/data/entitlement_dates.dart';
 /// Kunci rekaman uji coba; tidak ikut cadangan (ADR-041 §3.9).
 const trialStorageKey = StorageKey(namespace: 'entitlement', name: 'trial');
 
+/// Kunci penanda untuk perangkat tanpa akun (dan pembelian anonim).
+const deviceMarkKey = '_device';
+
+/// Penanda: pernah ada langganan yang dibeli. Akun atau perangkat yang pernah
+/// membeli tidak diberi uji coba (uji coba untuk yang belum pernah membayar).
+const purchasedMark = 'purchased';
+
 /// Rekaman uji coba per akun di perangkat ini (ADR-041 §3.4): satu dokumen
 /// `{schemaVersion, accounts: {uid: {firstSeen?, start?, endsOn?}}}`.
 ///

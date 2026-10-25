@@ -221,6 +221,39 @@ void main() {
       });
     });
 
+    test('pembeli yang Plus-nya lewat tenggang luring jadi Gratis, bukan uji coba', () async {
+      final purchase = CachedPlus(
+        source: PlanSource.purchase,
+        until: DateTime(2026, 11, 3, 9, 5),
+        lastVerifiedAt: DateTime(2026, 11, 3, 9),
+      );
+      await EntitlementCacheStore(storage: storage).save(purchase);
+      final buyer = build(verify: (uid) async {});
+      addTearDown(buyer.dispose);
+      await buyer.reloadCache();
+      await buyer.setAccount(EntitlementAccount(uid: 'u1', createdAt: DateTime(2026, 11, 2)));
+      expect(buyer.current, isA<PlusPlan>());
+      now = DateTime(2026, 11, 10);
+      await buyer.recompute();
+      expect(buyer.current, const FreePlan(), reason: 'lewat tenggang 3 hari: Gratis, tidak membuka uji coba');
+      final again = build(verify: (uid) async {});
+      addTearDown(again.dispose);
+      await again.setAccount(EntitlementAccount(uid: 'u1', createdAt: DateTime(2026, 11, 2)));
+      expect(again.current, const FreePlan(), reason: 'penanda pembelian bertahan di sesi baru');
+    });
+
+    test('pembelian anonim lalu masuk akun: tidak ada uji coba bagi akun itu', () async {
+      final anon = build();
+      addTearDown(anon.dispose);
+      await EntitlementCacheStore(storage: storage).save(
+        CachedPlus(source: PlanSource.purchase, until: DateTime(2026, 11, 3, 9, 5), lastVerifiedAt: now),
+      );
+      await anon.reloadCache();
+      now = DateTime(2026, 11, 10);
+      await anon.setAccount(EntitlementAccount(uid: 'u9', createdAt: DateTime(2026, 11, 2)));
+      expect(anon.current, const FreePlan());
+    });
+
     test('tanpa akun tetap Gratis', () async {
       await entitlements.setAccount(null);
       expect(entitlements.current, const FreePlan());

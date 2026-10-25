@@ -405,10 +405,10 @@ void main() {
   });
 
   test(
-    'modul rute: rute paywall, daftar fitur, dan hadiah; satu entri menu pengembang',
+    'modul rute: rute paywall, daftar fitur, hadiah, dan turun; satu entri menu pengembang',
     () {
       const module = PremiumRouteModule();
-      expect(module.routes, hasLength(3));
+      expect(module.routes, hasLength(4));
       expect(module.devEntries, hasLength(1));
     },
   );

@@ -1613,6 +1613,32 @@
       "body": "No card, no automatic subscription. After that you keep recording for free.",
       "start": "Start recording"
     },
+    "card": {
+      "recapTitle": "Plus ends on $date",
+      "recapSince": "Since $date, Tanuki has:",
+      "recapRecorded": "entries from notifications"
+    },
+    "downgrade": {
+      "title": "Your Plus trial ended",
+      "intro": "Thanks for trying it. Everything you recorded stays, and you keep recording for free.",
+      "keepTitle": "What stays",
+      "changeTitle": "What changes",
+      "keepEntries": "All your entries",
+      "keepEntriesSub": "Nothing is deleted or locked",
+      "keepCore": "Recording, History, Wallets, Budgets, recurring",
+      "keepCoreSub": "Same as before",
+      "notifTitle": "Notification apps",
+      "notifSub": "$n apps become 1 app of your choice",
+      "autoTitle": "Auto-record",
+      "autoSub": "$n recurring items go back to one-tap confirmation",
+      "analysisTitle": "Analysis",
+      "analysisSub": "Your latest $n periods; History stays complete",
+      "dealKicker": "Offer until $until",
+      "dealLine": "for the first year, then $regular a year. Renews automatically; cancel anytime in the Play Store.",
+      "ctaDeal": "Continue with Plus",
+      "ctaPlain": "See Plus",
+      "free": "Continue with Free"
+    },
     "paywall": {
       "signInForTrial": "Sign in to try Plus",
       "close": "Close",

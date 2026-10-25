@@ -1610,6 +1610,32 @@
       "body": "Tanpa kartu, tanpa langganan otomatis. Sesudah itu kamu tetap mencatat gratis.",
       "start": "Mulai mencatat"
     },
+    "card": {
+      "recapTitle": "Plus berakhir $date",
+      "recapSince": "Sejak $date, Tanuki sudah:",
+      "recapRecorded": "catatan dari notifikasi"
+    },
+    "downgrade": {
+      "title": "Uji coba Plus selesai",
+      "intro": "Terima kasih sudah mencoba. Semua yang kamu catat tetap ada, dan kamu tetap mencatat gratis.",
+      "keepTitle": "Yang tetap",
+      "changeTitle": "Yang berubah",
+      "keepEntries": "Semua catatanmu",
+      "keepEntriesSub": "Tidak ada yang dihapus atau dikunci",
+      "keepCore": "Pencatatan, Riwayat, Dompet, Anggaran, rutin",
+      "keepCoreSub": "Sama seperti sebelumnya",
+      "notifTitle": "Aplikasi notifikasi",
+      "notifSub": "$n aplikasi menjadi 1 aplikasi pilihanmu",
+      "autoTitle": "Catat otomatis",
+      "autoSub": "$n rutin kembali ke konfirmasi satu ketuk",
+      "analysisTitle": "Analisis",
+      "analysisSub": "$n periode terakhir; Riwayat tetap lengkap",
+      "dealKicker": "Penawaran sampai $until",
+      "dealLine": "untuk tahun pertama, lalu $regular per tahun. Diperpanjang otomatis; batalkan kapan saja di Play Store.",
+      "ctaDeal": "Lanjutkan dengan Plus",
+      "ctaPlain": "Lihat Plus",
+      "free": "Lanjut dengan Gratis"
+    },
     "paywall": {
       "signInForTrial": "Masuk untuk mencoba Plus",
       "close": "Tutup",

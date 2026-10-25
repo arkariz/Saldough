@@ -38,6 +38,9 @@ enum PaywallTrigger {
   /// Analisis lebih dari batas periode Gratis.
   analysisHistory('analysis_history'),
 
+  /// Kartu rekap nilai H-3 atau layar turun sesudah uji coba.
+  trialRecap('trial_recap'),
+
   /// Batas jumlah template anggaran.
   templateLimit('template_limit'),
 

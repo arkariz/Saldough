@@ -1558,6 +1558,8 @@ class _Translations$premium$en extends Translations$premium$id {
 	@override late final _Translations$premium$account$en account = _Translations$premium$account$en._(_root);
 	@override late final _Translations$premium$features$en features = _Translations$premium$features$en._(_root);
 	@override late final _Translations$premium$gift$en gift = _Translations$premium$gift$en._(_root);
+	@override late final _Translations$premium$card$en card = _Translations$premium$card$en._(_root);
+	@override late final _Translations$premium$downgrade$en downgrade = _Translations$premium$downgrade$en._(_root);
 	@override late final _Translations$premium$paywall$en paywall = _Translations$premium$paywall$en._(_root);
 }
 
@@ -2085,6 +2087,46 @@ class _Translations$premium$gift$en extends Translations$premium$gift$id {
 	@override String title({required Object date}) => 'Plus is on until ${date}, the end of your first period.';
 	@override String get body => 'No card, no automatic subscription. After that you keep recording for free.';
 	@override String get start => 'Start recording';
+}
+
+// Path: premium.card
+class _Translations$premium$card$en extends Translations$premium$card$id {
+	_Translations$premium$card$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String recapTitle({required Object date}) => 'Plus ends on ${date}';
+	@override String recapSince({required Object date}) => 'Since ${date}, Tanuki has:';
+	@override String get recapRecorded => 'entries from notifications';
+}
+
+// Path: premium.downgrade
+class _Translations$premium$downgrade$en extends Translations$premium$downgrade$id {
+	_Translations$premium$downgrade$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Your Plus trial ended';
+	@override String get intro => 'Thanks for trying it. Everything you recorded stays, and you keep recording for free.';
+	@override String get keepTitle => 'What stays';
+	@override String get changeTitle => 'What changes';
+	@override String get keepEntries => 'All your entries';
+	@override String get keepEntriesSub => 'Nothing is deleted or locked';
+	@override String get keepCore => 'Recording, History, Wallets, Budgets, recurring';
+	@override String get keepCoreSub => 'Same as before';
+	@override String get notifTitle => 'Notification apps';
+	@override String notifSub({required Object n}) => '${n} apps become 1 app of your choice';
+	@override String get autoTitle => 'Auto-record';
+	@override String autoSub({required Object n}) => '${n} recurring items go back to one-tap confirmation';
+	@override String get analysisTitle => 'Analysis';
+	@override String analysisSub({required Object n}) => 'Your latest ${n} periods; History stays complete';
+	@override String dealKicker({required Object until}) => 'Offer until ${until}';
+	@override String dealLine({required Object regular}) => 'for the first year, then ${regular} a year. Renews automatically; cancel anytime in the Play Store.';
+	@override String get ctaDeal => 'Continue with Plus';
+	@override String get ctaPlain => 'See Plus';
+	@override String get free => 'Continue with Free';
 }
 
 // Path: premium.paywall
@@ -3810,6 +3852,28 @@ extension on TranslationsEn {
 			'premium.gift.title' => ({required Object date}) => 'Plus is on until ${date}, the end of your first period.',
 			'premium.gift.body' => 'No card, no automatic subscription. After that you keep recording for free.',
 			'premium.gift.start' => 'Start recording',
+			'premium.card.recapTitle' => ({required Object date}) => 'Plus ends on ${date}',
+			'premium.card.recapSince' => ({required Object date}) => 'Since ${date}, Tanuki has:',
+			'premium.card.recapRecorded' => 'entries from notifications',
+			'premium.downgrade.title' => 'Your Plus trial ended',
+			'premium.downgrade.intro' => 'Thanks for trying it. Everything you recorded stays, and you keep recording for free.',
+			'premium.downgrade.keepTitle' => 'What stays',
+			'premium.downgrade.changeTitle' => 'What changes',
+			'premium.downgrade.keepEntries' => 'All your entries',
+			'premium.downgrade.keepEntriesSub' => 'Nothing is deleted or locked',
+			'premium.downgrade.keepCore' => 'Recording, History, Wallets, Budgets, recurring',
+			'premium.downgrade.keepCoreSub' => 'Same as before',
+			'premium.downgrade.notifTitle' => 'Notification apps',
+			'premium.downgrade.notifSub' => ({required Object n}) => '${n} apps become 1 app of your choice',
+			'premium.downgrade.autoTitle' => 'Auto-record',
+			'premium.downgrade.autoSub' => ({required Object n}) => '${n} recurring items go back to one-tap confirmation',
+			'premium.downgrade.analysisTitle' => 'Analysis',
+			'premium.downgrade.analysisSub' => ({required Object n}) => 'Your latest ${n} periods; History stays complete',
+			'premium.downgrade.dealKicker' => ({required Object until}) => 'Offer until ${until}',
+			'premium.downgrade.dealLine' => ({required Object regular}) => 'for the first year, then ${regular} a year. Renews automatically; cancel anytime in the Play Store.',
+			'premium.downgrade.ctaDeal' => 'Continue with Plus',
+			'premium.downgrade.ctaPlain' => 'See Plus',
+			'premium.downgrade.free' => 'Continue with Free',
 			'premium.paywall.signInForTrial' => 'Sign in to try Plus',
 			'premium.paywall.close' => 'Close',
 			'premium.paywall.plans' => 'Plans',
@@ -3858,6 +3922,8 @@ extension on TranslationsEn {
 			'premium.paywall.fineMonthly' => ({required Object price}) => '${price} per month, renews automatically. Cancel anytime in the Play Store.',
 			'premium.paywall.fineIntro' => ({required Object price, required Object regular}) => '${price} for the first year, then ${regular} a year, renews automatically. Cancel anytime in the Play Store.',
 			'premium.paywall.doneTitle' => 'Plus is on',
+			_ => null,
+		} ?? switch (path) {
 			'premium.paywall.doneBody' => 'Tanuki starts working for you.',
 			'premium.paywall.doneBodyPlan' => ({required Object plan, required Object date}) => '${plan} plan, renews on ${date}. Tanuki starts working for you.',
 			'premium.paywall.done' => 'Done',

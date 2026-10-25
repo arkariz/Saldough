@@ -35,6 +35,7 @@ void main() {
       'premium.paywall',
       'premium.features',
       'premium.trialGift',
+      'premium.downgrade',
       // Halaman paket uji (ADR-041 §3.10): hanya di build non-rilis.
       'app.debugPlan',
     });

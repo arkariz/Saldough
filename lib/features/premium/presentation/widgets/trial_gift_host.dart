@@ -5,12 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:saldough/core/foundation/entitlement/entitlement.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/presentation/plan/active_plan.dart';
+import 'package:saldough/features/premium/domain/plus_moments.dart';
 import 'package:saldough/features/premium/domain/trial_gift.dart';
 import 'package:saldough/features/premium/presentation/navigation/premium_route_keys.dart';
 
-/// Pemicu layar hadiah uji coba (D-1): tidak menggambar apa pun, hanya membuka
+/// Pemicu layar momen uji coba: tidak menggambar apa pun, hanya membuka
 /// [PremiumRouteKeys.trialGift] sekali begitu uji coba aktif dan hadiahnya
-/// belum pernah ditampilkan. Menunggu bila ada layar atau lembar lain di
+/// belum pernah ditampilkan (D-1), dan [PremiumRouteKeys.downgrade] sekali
+/// sesudah uji coba lewat tanpa membeli (D-8). Menunggu bila ada layar atau lembar lain di
 /// atasnya, lalu mencoba lagi begitu paket atau layar berubah.
 class TrialGiftHost extends StatefulWidget {
   /// Membuat [TrialGiftHost]; [active] true bila Beranda tab yang tampil.
@@ -50,13 +52,25 @@ class _TrialGiftHostState extends State<TrialGiftHost> {
 
   Future<void> _maybeShow() async {
     if (!mounted || _checking || !widget.active) return;
-    if (ActivePlan.state is! TrialPlan || !widget.container.isRegistered<TrialGift>()) return;
     if (!(ModalRoute.of(context)?.isCurrent ?? true)) return;
     _checking = true;
     try {
-      final info = await widget.container<TrialGift>().pending();
-      if (!mounted || info == null || !(ModalRoute.of(context)?.isCurrent ?? true)) return;
-      await context.pushRoute(PremiumRouteKeys.trialGift, TrialGiftInput(info));
+      if (ActivePlan.state is TrialPlan && widget.container.isRegistered<TrialGift>()) {
+        final info = await widget.container<TrialGift>().pending();
+        if (!mounted || info == null || !(ModalRoute.of(context)?.isCurrent ?? true)) return;
+        await context.pushRoute(PremiumRouteKeys.trialGift, TrialGiftInput(info));
+      } else if (!ActivePlan.isPlus && widget.container.isRegistered<PlusMoments>()) {
+        // Uji coba sudah lewat tanpa membeli: layar turun sekali (D-8).
+        final moments = widget.container<PlusMoments>();
+        final data = await moments.downgrade();
+        if (!mounted || data == null || !(ModalRoute.of(context)?.isCurrent ?? true)) return;
+        await moments.markDowngradeShown();
+        if (!mounted) return;
+        await context.pushRoute(PremiumRouteKeys.downgrade, DowngradeInput(data));
+      } else if (ActivePlan.isPlus && widget.container.isRegistered<PlusMoments>()) {
+        // Hanya mencatat `trial_ended` bila uji coba lewat sementara Plus dibeli.
+        await widget.container<PlusMoments>().downgrade();
+      }
     } finally {
       _checking = false;
     }

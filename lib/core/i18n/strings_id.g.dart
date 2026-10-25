@@ -3933,6 +3933,8 @@ class Translations$premium$id {
 	late final Translations$premium$account$id account = Translations$premium$account$id.internal(_root);
 	late final Translations$premium$features$id features = Translations$premium$features$id.internal(_root);
 	late final Translations$premium$gift$id gift = Translations$premium$gift$id.internal(_root);
+	late final Translations$premium$card$id card = Translations$premium$card$id.internal(_root);
+	late final Translations$premium$downgrade$id downgrade = Translations$premium$downgrade$id.internal(_root);
 	late final Translations$premium$paywall$id paywall = Translations$premium$paywall$id.internal(_root);
 }
 
@@ -4942,6 +4944,90 @@ class Translations$premium$gift$id {
 
 	/// id: 'Mulai mencatat'
 	String get start => 'Mulai mencatat';
+}
+
+// Path: premium.card
+class Translations$premium$card$id {
+	Translations$premium$card$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Plus berakhir $date'
+	String recapTitle({required Object date}) => 'Plus berakhir ${date}';
+
+	/// id: 'Sejak $date, Tanuki sudah:'
+	String recapSince({required Object date}) => 'Sejak ${date}, Tanuki sudah:';
+
+	/// id: 'catatan dari notifikasi'
+	String get recapRecorded => 'catatan dari notifikasi';
+}
+
+// Path: premium.downgrade
+class Translations$premium$downgrade$id {
+	Translations$premium$downgrade$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Uji coba Plus selesai'
+	String get title => 'Uji coba Plus selesai';
+
+	/// id: 'Terima kasih sudah mencoba. Semua yang kamu catat tetap ada, dan kamu tetap mencatat gratis.'
+	String get intro => 'Terima kasih sudah mencoba. Semua yang kamu catat tetap ada, dan kamu tetap mencatat gratis.';
+
+	/// id: 'Yang tetap'
+	String get keepTitle => 'Yang tetap';
+
+	/// id: 'Yang berubah'
+	String get changeTitle => 'Yang berubah';
+
+	/// id: 'Semua catatanmu'
+	String get keepEntries => 'Semua catatanmu';
+
+	/// id: 'Tidak ada yang dihapus atau dikunci'
+	String get keepEntriesSub => 'Tidak ada yang dihapus atau dikunci';
+
+	/// id: 'Pencatatan, Riwayat, Dompet, Anggaran, rutin'
+	String get keepCore => 'Pencatatan, Riwayat, Dompet, Anggaran, rutin';
+
+	/// id: 'Sama seperti sebelumnya'
+	String get keepCoreSub => 'Sama seperti sebelumnya';
+
+	/// id: 'Aplikasi notifikasi'
+	String get notifTitle => 'Aplikasi notifikasi';
+
+	/// id: '$n aplikasi menjadi 1 aplikasi pilihanmu'
+	String notifSub({required Object n}) => '${n} aplikasi menjadi 1 aplikasi pilihanmu';
+
+	/// id: 'Catat otomatis'
+	String get autoTitle => 'Catat otomatis';
+
+	/// id: '$n rutin kembali ke konfirmasi satu ketuk'
+	String autoSub({required Object n}) => '${n} rutin kembali ke konfirmasi satu ketuk';
+
+	/// id: 'Analisis'
+	String get analysisTitle => 'Analisis';
+
+	/// id: '$n periode terakhir; Riwayat tetap lengkap'
+	String analysisSub({required Object n}) => '${n} periode terakhir; Riwayat tetap lengkap';
+
+	/// id: 'Penawaran sampai $until'
+	String dealKicker({required Object until}) => 'Penawaran sampai ${until}';
+
+	/// id: 'untuk tahun pertama, lalu $regular per tahun. Diperpanjang otomatis; batalkan kapan saja di Play Store.'
+	String dealLine({required Object regular}) => 'untuk tahun pertama, lalu ${regular} per tahun. Diperpanjang otomatis; batalkan kapan saja di Play Store.';
+
+	/// id: 'Lanjutkan dengan Plus'
+	String get ctaDeal => 'Lanjutkan dengan Plus';
+
+	/// id: 'Lihat Plus'
+	String get ctaPlain => 'Lihat Plus';
+
+	/// id: 'Lanjut dengan Gratis'
+	String get free => 'Lanjut dengan Gratis';
 }
 
 // Path: premium.paywall
@@ -6810,6 +6896,28 @@ extension on Translations {
 			'premium.gift.title' => ({required Object date}) => 'Plus aktif sampai ${date}, akhir periode pertamamu.',
 			'premium.gift.body' => 'Tanpa kartu, tanpa langganan otomatis. Sesudah itu kamu tetap mencatat gratis.',
 			'premium.gift.start' => 'Mulai mencatat',
+			'premium.card.recapTitle' => ({required Object date}) => 'Plus berakhir ${date}',
+			'premium.card.recapSince' => ({required Object date}) => 'Sejak ${date}, Tanuki sudah:',
+			'premium.card.recapRecorded' => 'catatan dari notifikasi',
+			'premium.downgrade.title' => 'Uji coba Plus selesai',
+			'premium.downgrade.intro' => 'Terima kasih sudah mencoba. Semua yang kamu catat tetap ada, dan kamu tetap mencatat gratis.',
+			'premium.downgrade.keepTitle' => 'Yang tetap',
+			'premium.downgrade.changeTitle' => 'Yang berubah',
+			'premium.downgrade.keepEntries' => 'Semua catatanmu',
+			'premium.downgrade.keepEntriesSub' => 'Tidak ada yang dihapus atau dikunci',
+			'premium.downgrade.keepCore' => 'Pencatatan, Riwayat, Dompet, Anggaran, rutin',
+			'premium.downgrade.keepCoreSub' => 'Sama seperti sebelumnya',
+			'premium.downgrade.notifTitle' => 'Aplikasi notifikasi',
+			'premium.downgrade.notifSub' => ({required Object n}) => '${n} aplikasi menjadi 1 aplikasi pilihanmu',
+			'premium.downgrade.autoTitle' => 'Catat otomatis',
+			'premium.downgrade.autoSub' => ({required Object n}) => '${n} rutin kembali ke konfirmasi satu ketuk',
+			'premium.downgrade.analysisTitle' => 'Analisis',
+			'premium.downgrade.analysisSub' => ({required Object n}) => '${n} periode terakhir; Riwayat tetap lengkap',
+			'premium.downgrade.dealKicker' => ({required Object until}) => 'Penawaran sampai ${until}',
+			'premium.downgrade.dealLine' => ({required Object regular}) => 'untuk tahun pertama, lalu ${regular} per tahun. Diperpanjang otomatis; batalkan kapan saja di Play Store.',
+			'premium.downgrade.ctaDeal' => 'Lanjutkan dengan Plus',
+			'premium.downgrade.ctaPlain' => 'Lihat Plus',
+			'premium.downgrade.free' => 'Lanjut dengan Gratis',
 			'premium.paywall.signInForTrial' => 'Masuk untuk mencoba Plus',
 			'premium.paywall.close' => 'Tutup',
 			'premium.paywall.plans' => 'Paket',
@@ -6858,6 +6966,8 @@ extension on Translations {
 			'premium.paywall.fineMonthly' => ({required Object price}) => '${price} per bulan, diperpanjang otomatis. Batalkan kapan saja di Play Store.',
 			'premium.paywall.fineIntro' => ({required Object price, required Object regular}) => '${price} untuk tahun pertama, lalu ${regular} per tahun, diperpanjang otomatis. Batalkan kapan saja di Play Store.',
 			'premium.paywall.doneTitle' => 'Plus aktif',
+			_ => null,
+		} ?? switch (path) {
 			'premium.paywall.doneBody' => 'Tanuki mulai bekerja untukmu.',
 			'premium.paywall.doneBodyPlan' => ({required Object plan, required Object date}) => 'Paket ${plan}, diperpanjang ${date}. Tanuki mulai bekerja untukmu.',
 			'premium.paywall.done' => 'Selesai',

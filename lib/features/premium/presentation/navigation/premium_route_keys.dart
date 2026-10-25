@@ -1,5 +1,6 @@
 import 'package:navigation/navigation.dart';
 import 'package:saldough/features/premium/domain/paywall_trigger.dart';
+import 'package:saldough/features/premium/domain/plus_moments.dart';
 import 'package:saldough/features/premium/domain/trial_gift.dart';
 
 // Satu-satunya berkas fitur `premium` yang boleh diimpor fitur lain
@@ -37,6 +38,15 @@ final class TrialGiftInput extends RouteInput {
   final TrialGiftInfo info;
 }
 
+/// Input layar turun ke Gratis sesudah uji coba.
+final class DowngradeInput extends RouteInput {
+  /// Membuat [DowngradeInput].
+  const DowngradeInput(this.data);
+
+  /// Isi layar.
+  final PlusDowngrade data;
+}
+
 /// Kunci rute fitur `premium`.
 abstract final class PremiumRouteKeys {
   /// Paywall: ajakan masuk akun atau (kelak) berlangganan Plus.
@@ -47,4 +57,7 @@ abstract final class PremiumRouteKeys {
 
   /// Layar hadiah uji coba (D-1), dibuka sekali oleh `TrialGiftHost`.
   static const trialGift = RouteKey<TrialGiftInput>('premium.trialGift');
+
+  /// Layar turun ke Gratis sesudah uji coba (D-8).
+  static const downgrade = RouteKey<DowngradeInput>('premium.downgrade');
 }

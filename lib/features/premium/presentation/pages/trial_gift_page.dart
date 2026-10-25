@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/foundation/entitlement/entitlement.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
@@ -40,7 +41,14 @@ class _TrialGiftPageState extends State<TrialGiftPage> {
   @override
   void initState() {
     super.initState();
-    if (!_asking) unawaited(widget.gift.markSeen());
+    if (!_asking) _shown();
+  }
+
+  /// Layar hadiah tampil: tanggal akhir dikunci dan momen pertama (pilar
+  /// mencatat) dicatat.
+  void _shown() {
+    unawaited(widget.gift.markSeen());
+    AppAnalytics.log(PremiumEvents.trialMoment(pillar: 'record'));
   }
 
   DateTime get _preview => trialEndsOn(
@@ -63,7 +71,7 @@ class _TrialGiftPageState extends State<TrialGiftPage> {
       _asking = false;
       _saving = false;
     });
-    unawaited(widget.gift.markSeen());
+    _shown();
   }
 
   @override

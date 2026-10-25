@@ -30,6 +30,7 @@ import 'package:saldough/features/plan/presentation/funding_loader.dart';
 import 'package:saldough/features/plan/presentation/pages/plan_month_page.dart';
 import 'package:saldough/features/plan/presentation/pages/plan_page.dart';
 import 'package:saldough/features/plan/presentation/widgets/plan_forecast_row.dart';
+import 'package:saldough/features/premium/presentation/widgets/plus_home_card.dart';
 import 'package:saldough/features/premium/presentation/widgets/trial_gift_host.dart';
 import 'package:saldough/features/record/presentation/navigation/record_route_keys.dart';
 import 'package:saldough/features/recurring/presentation/host/auto_record_host.dart';
@@ -174,6 +175,7 @@ class _AppShellPageState extends State<AppShellPage> {
             WhatsNewHost(container: parentContainer, active: _activeTab == _homeTabIndex),
             TrialGiftHost(container: parentContainer, active: _activeTab == _homeTabIndex),
             AppUpdateBanner(container: parentContainer),
+            PlusHomeCard(container: parentContainer),
           ],
         ),
         // Kotak masuk notifikasi (Android): pintu permanen Catat dari

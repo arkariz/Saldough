@@ -5,22 +5,27 @@ import 'package:di/di.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:saldough/app/premium/plan_override.dart';
+import 'package:saldough/app/premium/plus_usage_adapter.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/foundation/entitlement/entitlement.dart';
 import 'package:saldough/core/presentation/plan/active_plan.dart';
 import 'package:saldough/core/tutorial/tutorial_progress_repository.dart';
+import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_store.dart';
 import 'package:saldough/features/premium/data/entitlement_cache_store.dart';
 import 'package:saldough/features/premium/data/firebase_entitlement_config.dart';
 import 'package:saldough/features/premium/data/local_entitlements.dart';
+import 'package:saldough/features/premium/data/local_plus_moments.dart';
 import 'package:saldough/features/premium/data/local_trial_gift.dart';
 import 'package:saldough/features/premium/data/premium_purchases.dart';
 import 'package:saldough/features/premium/data/purchases_gateway.dart';
 import 'package:saldough/features/premium/data/quota_store.dart';
 import 'package:saldough/features/premium/data/revenuecat_plan_source.dart';
 import 'package:saldough/features/premium/data/trial_store.dart';
+import 'package:saldough/features/premium/domain/plus_moments.dart';
 import 'package:saldough/features/premium/domain/plus_purchasing.dart';
 import 'package:saldough/features/premium/domain/trial_gift.dart';
 import 'package:saldough/shared/auth/auth.dart';
+import 'package:saldough/shared/recurring/recurring.dart';
 
 /// Kunci SDK RevenueCat (publik), disuntikkan lewat
 /// `--dart-define=REVENUECAT_ANDROID_KEY=...` di kedua lane rilis (ADR-041
@@ -77,6 +82,17 @@ void registerEntitlements(
       ),
     )
     ..registerLazySingleton<Entitlements>(() => container<LocalEntitlements>())
+    ..registerLazySingleton<PlusUsage>(
+      () => AppPlusUsage(notifications: container<NotificationCaptureStore>(), rules: container<RecurringRuleRepository>()),
+    )
+    ..registerLazySingleton<PlusMoments>(
+      () => LocalPlusMoments(
+        entitlements: container<LocalEntitlements>(),
+        trials: TrialStore(storage: container()),
+        usage: container<PlusUsage>(),
+        purchasing: container<PlusPurchasing>(),
+      ),
+    )
     ..registerLazySingleton<TrialGift>(
       () => LocalTrialGift(
         entitlements: container<LocalEntitlements>(),

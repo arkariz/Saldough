@@ -38,6 +38,14 @@
           }
         },
         {
+          "client_id": "696822782042-pq9emnaj8s1g9chj1qsd9h0qpaluhl79.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.arkarizdev.tanukonomy",
+            "certificate_hash": "2681c4660260845ff427b74998968a46aa82375f"
+          }
+        },
+        {
           "client_id": "696822782042-n1udc0kvopehg7g7td3nqqmcv10urljn.apps.googleusercontent.com",
           "client_type": 3
         }

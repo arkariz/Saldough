@@ -1,7 +1,6 @@
 import 'package:di/di.dart';
+import 'package:go_router/go_router.dart';
 import 'package:navigation/navigation.dart';
-import 'package:saldough/core/foundation/navigation/route_navigation.dart';
-import 'package:saldough/features/account/presentation/navigation/account_route_keys.dart';
 import 'package:saldough/features/premium/domain/plus_purchasing.dart';
 import 'package:saldough/features/premium/domain/trial_gift.dart';
 import 'package:saldough/features/premium/presentation/bloc/paywall_bloc.dart';
@@ -31,8 +30,7 @@ final class PremiumRouteModule extends FeatureRouteModule {
           child: PaywallPage(
             trigger: input.trigger,
             signedIn: container<AuthRepository>().currentUser != null,
-            onSignIn: () =>
-                context.pushRoute(AccountRouteKeys.page, const EmptyInput()),
+            onSignIn: () => context.pop()
           ),
         );
       },

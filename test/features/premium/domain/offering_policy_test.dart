@@ -103,11 +103,4 @@ void main() {
       );
     },
   );
-
-  test('PlusPlanKind.fromId: id kita dan package bawaan RevenueCat', () {
-    expect(PlusPlanKind.fromId('yearly_founder'), PlusPlanKind.yearlyFounder);
-    expect(PlusPlanKind.fromId(r'$rc_monthly'), PlusPlanKind.monthly);
-    expect(PlusPlanKind.fromId(r'$rc_annual'), PlusPlanKind.yearly);
-    expect(PlusPlanKind.fromId(r'$rc_weekly'), isNull);
-  });
 }

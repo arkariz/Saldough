@@ -38,6 +38,25 @@ class _TrialGiftHostState extends State<TrialGiftHost> {
     WidgetsBinding.instance.addPostFrameCallback((_) => _maybeShow());
   }
 
+  Animation<double>? _covered;
+
+  /// Layar lain di atas Beranda (mis. Akun, tempat pengguna masuk akun)
+  /// menunda momen; begitu layar itu ditutup, coba lagi.
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final covered = ModalRoute.of(context)?.secondaryAnimation;
+    if (covered == _covered) return;
+    _covered?.removeStatusListener(_onCovered);
+    _covered = covered?..addStatusListener(_onCovered);
+  }
+
+  void _onCovered(AnimationStatus status) {
+    if (status == AnimationStatus.dismissed) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _maybeShow());
+    }
+  }
+
   @override
   void didUpdateWidget(TrialGiftHost oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -47,6 +66,7 @@ class _TrialGiftHostState extends State<TrialGiftHost> {
   @override
   void dispose() {
     ActivePlan.notifier.removeListener(_maybeShow);
+    _covered?.removeStatusListener(_onCovered);
     super.dispose();
   }
 

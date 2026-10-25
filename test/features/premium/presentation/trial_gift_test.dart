@@ -147,6 +147,46 @@ void main() {
       expect(find.text(texts.askTitle), findsOneWidget);
     });
 
+    testWidgets('uji coba dimulai saat layar lain menutupi Beranda (masuk akun di Akun): terbuka saat kembali', (
+      tester,
+    ) async {
+      final gift = _FakeGift(info);
+      final container = GetIt.asNewInstance()
+        ..registerSingleton<RouteRegistry>(appRouteRegistry())
+        ..registerSingleton<TrialGift>(gift);
+      await tester.pumpWidget(
+        ScopeProvider(
+          container: container,
+          child: MaterialApp(
+            theme: PixelTheme.light,
+            home: Builder(
+              builder: (context) => Scaffold(
+                body: Column(
+                  children: [
+                    TrialGiftHost(container: container, active: true),
+                    TextButton(
+                      onPressed: () => Navigator.of(context).push(
+                        MaterialPageRoute<void>(builder: (_) => const Scaffold(body: Text('Akun'))),
+                      ),
+                      child: const Text('buka akun'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.tap(find.text('buka akun'));
+      await tester.pumpAndSettle();
+      ActivePlan.notifier.value = TrialPlan(endsOn: DateTime(2026, 11, 30));
+      await tester.pumpAndSettle();
+      expect(find.text(texts.askTitle), findsNothing, reason: 'Beranda masih tertutup');
+      Navigator.of(tester.element(find.text('Akun'))).pop();
+      await tester.pumpAndSettle();
+      expect(find.text(texts.askTitle), findsOneWidget);
+    });
+
     testWidgets('bukan uji coba, atau bukan tab Beranda: tidak membuka apa pun', (tester) async {
       final gift = _FakeGift(info);
       await pumpHost(tester, gift);

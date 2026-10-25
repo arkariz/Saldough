@@ -5839,6 +5839,9 @@ Jalur kritis: T-24.2 → T-24.4 → T-24.6 → T-24.14 → T-24.18.
       lewat tenggang luring 3 hari kini turun ke Gratis, tidak berubah menjadi
       uji coba: akun dan perangkat yang pernah membeli diberi penanda `purchased`
       (`TrialStore.marks`) dan tidak lagi diberi uji coba. Analyze bersih, uji lulus.
+      `TrialGiftHost` kini mencoba lagi begitu layar yang menutupi Beranda
+      (mis. Akun, tempat masuk akun) ditutup; sebelumnya layar hadiah tidak
+      pernah muncul bila uji coba dimulai saat masuk dari Akun.
 - [ ] **T-24.18** Verifikasi perangkat (QA/pemilik): beli bulanan/tahunan, uji
       coba berakhir, penawaran 48 jam, tenggang/ditahan, mode pesawat 3 hari,
       pulihkan pembelian di ponsel kedua, akun peninjau email/sandi.

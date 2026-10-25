@@ -41,11 +41,21 @@ final class LocalEntitlements implements Entitlements {
     required this._schedule,
     PlanOverride Function()? override,
     DateTime Function()? now,
+    this._verifyPurchase,
+    this._verifyTimeout = const Duration(seconds: 4),
   }) : _override = override ?? (() => PlanOverride.auto),
        _now = now ?? DateTime.now {
     _current = _resolve();
     _configSub = _config.changes.listen((_) => unawaited(_recompute()));
   }
+
+  /// Memastikan langganan akun sudah dibaca dari RevenueCat sebelum uji coba
+  /// dibuat: di sesi baru cache kosong, dan tanpa ini pembeli sempat
+  /// melihat uji coba sebelum Plus-nya muncul.
+  final Future<void> Function(String uid)? _verifyPurchase;
+  final Duration _verifyTimeout;
+  final _verified = <String>{};
+  bool _verifying = false;
 
   final EntitlementConfig _config;
   final TrialStore _trials;
@@ -175,15 +185,40 @@ final class LocalEntitlements implements Entitlements {
       developer.log('Cache hak gagal dibaca', error: f, name: 'Entitlements');
       return _cached;
     }, (cached) => cached);
+    if (_verifying) return;
     if (account != null) {
-      _trial =
-          (await _trials.recordFor(account.uid)).getOrElse((_) => null) ??
-          await _startTrial(account);
+      var record = (await _trials.recordFor(account.uid)).getOrElse((_) => null);
+      if (record == null) {
+        await _verify(account.uid);
+        _trial = null;
+        // Sudah berlangganan (atau hak promosi): tidak membuka uji coba.
+        final entitled = _resolve();
+        if (!(entitled is PlusPlan && entitled.source != PlanSource.prelaunch)) {
+          record = await _startTrial(account);
+        }
+      }
+      _trial = record;
     }
     final next = _resolve();
     if (next == _current) return;
     _current = next;
     _changes.add(next);
+  }
+
+  /// Menunggu RevenueCat membaca langganan [uid] (sekali per akun, paling lama
+  /// [_verifyTimeout]); gagal atau luring berarti lanjut tanpa hasilnya.
+  Future<void> _verify(String uid) async {
+    final verify = _verifyPurchase;
+    if (verify == null || !_verified.add(uid)) return;
+    _verifying = true;
+    try {
+      await verify(uid).timeout(_verifyTimeout);
+    } on Object catch (e) {
+      developer.log('Langganan belum bisa diperiksa; lanjut', error: e, name: 'Entitlements');
+    } finally {
+      _verifying = false;
+    }
+    _cached = (await _cache.load()).fold((_) => _cached, (cached) => cached);
   }
 
   /// Memulai uji coba [account] bila Plus sudah diluncurkan dan akun belum

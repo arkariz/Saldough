@@ -79,6 +79,14 @@ void registerEntitlements(
         quotas: QuotaStore(storage: container()),
         schedule: () => ActiveFinancialMonth.schedule,
         override: () => container<PlanOverrideController>().value,
+        verifyPurchase: (uid) async {
+          // Pembeli di sesi baru: baca langganan dulu supaya tidak sempat
+          // terlihat sebagai uji coba.
+          if (!container.isRegistered<RevenueCatPlanSource>()) return;
+          final source = container<RevenueCatPlanSource>();
+          await source.start();
+          await source.setUser(uid);
+        },
       ),
     )
     ..registerLazySingleton<Entitlements>(() => container<LocalEntitlements>())

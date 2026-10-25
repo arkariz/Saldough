@@ -63,7 +63,11 @@ void main() {
     'plus_launch_at': '2026-11-01',
   });
 
-  LocalEntitlements build({PlanOverride override = PlanOverride.auto}) =>
+  LocalEntitlements build({
+    PlanOverride override = PlanOverride.auto,
+    Future<void> Function(String uid)? verify,
+    Duration verifyTimeout = const Duration(seconds: 4),
+  }) =>
       LocalEntitlements(
         config: config,
         trials: TrialStore(storage: storage),
@@ -72,6 +76,8 @@ void main() {
         schedule: () => from25,
         override: () => override,
         now: () => now,
+        verifyPurchase: verify,
+        verifyTimeout: verifyTimeout,
       );
 
   setUp(() {
@@ -165,6 +171,55 @@ void main() {
         await again.dispose();
       },
     );
+
+    group('pembeli di sesi baru', () {
+      final account = EntitlementAccount(uid: 'u1', createdAt: DateTime(2026, 11, 2));
+
+      test('langganan terbaca sebelum uji coba: langsung Plus, tanpa uji coba', () async {
+        final emitted = <PlanState>[];
+        final fresh = build(
+          verify: (uid) async => EntitlementCacheStore(storage: storage).save(
+            CachedPlus(source: PlanSource.purchase, until: DateTime(2027, 11), lastVerifiedAt: now),
+          ),
+        );
+        addTearDown(fresh.dispose);
+        final sub = fresh.changes.listen(emitted.add);
+        await fresh.setAccount(account);
+        await Future<void>.delayed(Duration.zero);
+        await sub.cancel();
+        expect(fresh.current, PlusPlan(source: PlanSource.purchase, until: DateTime(2027, 11)));
+        expect(emitted.whereType<TrialPlan>(), isEmpty, reason: 'tidak sempat terlihat sebagai uji coba');
+        expect(
+          (await TrialStore(storage: storage).recordFor('u1')).getOrElse((_) => null),
+          isNull,
+          reason: 'uji coba tidak dibuat bagi pembeli',
+        );
+      });
+
+      test('tanpa langganan: tetap uji coba; pemeriksaan hanya sekali per akun', () async {
+        var calls = 0;
+        final fresh = build(verify: (uid) async => calls++);
+        addTearDown(fresh.dispose);
+        await fresh.setAccount(account);
+        expect(fresh.current, isA<TrialPlan>());
+        await fresh.recompute();
+        expect(calls, 1);
+      });
+
+      test('pemeriksaan gagal atau melewati batas waktu: lanjut ke uji coba', () async {
+        final slow = build(
+          verify: (uid) => Completer<void>().future,
+          verifyTimeout: const Duration(milliseconds: 20),
+        );
+        addTearDown(slow.dispose);
+        await slow.setAccount(account);
+        expect(slow.current, isA<TrialPlan>());
+        final broken = build(verify: (uid) async => throw StateError('luring'));
+        addTearDown(broken.dispose);
+        await broken.setAccount(EntitlementAccount(uid: 'u2', createdAt: DateTime(2026, 11, 2)));
+        expect(broken.current, isA<TrialPlan>());
+      });
+    });
 
     test('tanpa akun tetap Gratis', () async {
       await entitlements.setAccount(null);

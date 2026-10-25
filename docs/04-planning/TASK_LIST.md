@@ -5831,7 +5831,11 @@ Jalur kritis: T-24.2 → T-24.4 → T-24.6 → T-24.14 → T-24.18.
       (`isSubscribed`: hak beli; paywall menyatakan "Plus sudah aktif" dengan
       "Kelola di Play Store"); keluar akun tidak lagi memanggil `logOut` RevenueCat
       (yang membuat pengenal anonim baru tanpa langganan), jadi Plus yang
-      dibeli tetap aktif sesudah keluar akun. Analyze bersih, uji lulus.
+      dibeli tetap aktif sesudah keluar akun. Pembeli yang masuk di sesi baru
+      (cache hak kosong) tidak lagi sempat terlihat sebagai uji coba: sebelum
+      membuat uji coba, `LocalEntitlements` menunggu pembacaan langganan
+      RevenueCat (`verifyPurchase`, paling lama 4 detik, sekali per akun), dan
+      tidak membuat uji coba bagi yang sudah berlangganan. Analyze bersih, uji lulus.
 - [ ] **T-24.18** Verifikasi perangkat (QA/pemilik): beli bulanan/tahunan, uji
       coba berakhir, penawaran 48 jam, tenggang/ditahan, mode pesawat 3 hari,
       pulihkan pembelian di ponsel kedua, akun peninjau email/sandi.

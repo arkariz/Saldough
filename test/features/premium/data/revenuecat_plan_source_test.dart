@@ -239,7 +239,7 @@ void main() {
       gateway.next = const PlusSnapshot(isActive: true, isPromotional: true);
       await source.setUser('u1');
       await source.setUser(null);
-      expect(gateway.calls, ['configure', 'logIn:u1', 'logOut']);
+      expect(gateway.calls, ['configure', 'logIn:u1', 'logOut', 'restore']);
     });
 
     test('pembaruan dari SDK (pembelian) langsung disalin', () async {

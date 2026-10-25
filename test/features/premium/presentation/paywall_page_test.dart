@@ -339,6 +339,34 @@ void main() {
     expect(find.text(texts.signInForTrial), findsNothing);
   });
 
+  group('sudah berlangganan', () {
+    testWidgets('tanpa paket dan tombol beli; Kelola membuka Play Store', (tester) async {
+      ActivePlan.notifier.value = PlusPlan(source: PlanSource.purchase, until: DateTime(2027, 10, 22));
+      await pump(tester);
+      expect(find.text(texts.subscribedTitle), findsOneWidget);
+      expect(find.text(texts.subscribedBody(date: '22 Okt 2027')), findsOneWidget);
+      expect(find.text(texts.buyYearly), findsNothing);
+      expect(find.text('Rp179.000'), findsNothing);
+      expect(find.text(t.premium.account.manage), findsOneWidget);
+    });
+
+    testWidgets('uji coba atau hak promosi bukan langganan: paket tetap tampil', (tester) async {
+      ActivePlan.notifier.value = TrialPlan(endsOn: DateTime(2026, 11, 30));
+      await pump(tester);
+      expect(find.text(texts.buyYearly), findsOneWidget);
+    });
+
+    testWidgets('daftar fitur: tanpa "Lihat paket" bagi yang berlangganan', (tester) async {
+      await pump(tester);
+      await tester.tap(find.text(t.premium.features.seeAll));
+      await tester.pumpAndSettle();
+      expect(find.text(t.premium.features.cta), findsOneWidget);
+      ActivePlan.notifier.value = const PlusPlan(source: PlanSource.purchase);
+      await tester.pump();
+      expect(find.text(t.premium.features.cta), findsNothing);
+    });
+  });
+
   group('Plus belum dijual', () {
     setUp(() => purchasing.selling = false);
 

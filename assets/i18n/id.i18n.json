@@ -1638,6 +1638,9 @@
     },
     "paywall": {
       "signInForTrial": "Masuk untuk mencoba Plus",
+      "subscribedTitle": "Plus sudah aktif",
+      "subscribedBody": "Langgananmu aktif sampai $date.",
+      "subscribedOpen": "Langgananmu sudah aktif.",
       "close": "Tutup",
       "plans": "Paket",
       "later": "Nanti saja",

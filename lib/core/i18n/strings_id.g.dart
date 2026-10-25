@@ -5041,6 +5041,15 @@ class Translations$premium$paywall$id {
 	/// id: 'Masuk untuk mencoba Plus'
 	String get signInForTrial => 'Masuk untuk mencoba Plus';
 
+	/// id: 'Plus sudah aktif'
+	String get subscribedTitle => 'Plus sudah aktif';
+
+	/// id: 'Langgananmu aktif sampai $date.'
+	String subscribedBody({required Object date}) => 'Langgananmu aktif sampai ${date}.';
+
+	/// id: 'Langgananmu sudah aktif.'
+	String get subscribedOpen => 'Langgananmu sudah aktif.';
+
 	/// id: 'Tutup'
 	String get close => 'Tutup';
 
@@ -6919,6 +6928,9 @@ extension on Translations {
 			'premium.downgrade.ctaPlain' => 'Lihat Plus',
 			'premium.downgrade.free' => 'Lanjut dengan Gratis',
 			'premium.paywall.signInForTrial' => 'Masuk untuk mencoba Plus',
+			'premium.paywall.subscribedTitle' => 'Plus sudah aktif',
+			'premium.paywall.subscribedBody' => ({required Object date}) => 'Langgananmu aktif sampai ${date}.',
+			'premium.paywall.subscribedOpen' => 'Langgananmu sudah aktif.',
 			'premium.paywall.close' => 'Tutup',
 			'premium.paywall.plans' => 'Paket',
 			'premium.paywall.later' => 'Nanti saja',
@@ -6963,11 +6975,11 @@ extension on Translations {
 			'premium.paywall.pending' => 'Pembayaran tertunda. Plus aktif begitu disetujui.',
 			'premium.paywall.failed' => 'Pembayaran belum berhasil. Cek metode bayarmu di Play Store, lalu coba lagi.',
 			'premium.paywall.fineYearly' => ({required Object price}) => '${price} per tahun, diperpanjang otomatis. Batalkan kapan saja di Play Store.',
+			_ => null,
+		} ?? switch (path) {
 			'premium.paywall.fineMonthly' => ({required Object price}) => '${price} per bulan, diperpanjang otomatis. Batalkan kapan saja di Play Store.',
 			'premium.paywall.fineIntro' => ({required Object price, required Object regular}) => '${price} untuk tahun pertama, lalu ${regular} per tahun, diperpanjang otomatis. Batalkan kapan saja di Play Store.',
 			'premium.paywall.doneTitle' => 'Plus aktif',
-			_ => null,
-		} ?? switch (path) {
 			'premium.paywall.doneBody' => 'Tanuki mulai bekerja untukmu.',
 			'premium.paywall.doneBodyPlan' => ({required Object plan, required Object date}) => 'Paket ${plan}, diperpanjang ${date}. Tanuki mulai bekerja untukmu.',
 			'premium.paywall.done' => 'Selesai',

@@ -1641,6 +1641,9 @@
     },
     "paywall": {
       "signInForTrial": "Sign in to try Plus",
+      "subscribedTitle": "Plus is already on",
+      "subscribedBody": "Your subscription is active until $date.",
+      "subscribedOpen": "Your subscription is already active.",
       "close": "Close",
       "plans": "Plans",
       "later": "Not now",

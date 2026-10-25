@@ -5826,6 +5826,12 @@ Jalur kritis: T-24.2 → T-24.4 → T-24.6 → T-24.14 → T-24.18.
       ada); momen terjadwal lain di §8.2 (Hari 2–4, 3–7, Senin, 5–10)
       bergantung fitur Plus yang belum dibangun dan ikut fiturnya.
       ⚠ Belum dilihat di emulator.
+- [x] **T-24.17f** Perbaikan temuan uji sandbox 25 Okt 2026: paywall dan daftar
+      fitur tidak lagi menawarkan paket bagi yang sudah berlangganan
+      (`isSubscribed`: hak beli; paywall menyatakan "Plus sudah aktif" dengan
+      "Kelola di Play Store"); keluar akun kini memulihkan pembelian dari akun
+      Google Play sesudah `logOut` RevenueCat, supaya langganan tidak hilang
+      karena pengenal anonim baru. Analyze bersih, uji lulus.
 - [ ] **T-24.18** Verifikasi perangkat (QA/pemilik): beli bulanan/tahunan, uji
       coba berakhir, penawaran 48 jam, tenggang/ditahan, mode pesawat 3 hari,
       pulihkan pembelian di ponsel kedua, akun peninjau email/sandi.

@@ -2137,6 +2137,9 @@ class _Translations$premium$paywall$en extends Translations$premium$paywall$id {
 
 	// Translations
 	@override String get signInForTrial => 'Sign in to try Plus';
+	@override String get subscribedTitle => 'Plus is already on';
+	@override String subscribedBody({required Object date}) => 'Your subscription is active until ${date}.';
+	@override String get subscribedOpen => 'Your subscription is already active.';
 	@override String get close => 'Close';
 	@override String get plans => 'Plans';
 	@override String get later => 'Not now';
@@ -3875,6 +3878,9 @@ extension on TranslationsEn {
 			'premium.downgrade.ctaPlain' => 'See Plus',
 			'premium.downgrade.free' => 'Continue with Free',
 			'premium.paywall.signInForTrial' => 'Sign in to try Plus',
+			'premium.paywall.subscribedTitle' => 'Plus is already on',
+			'premium.paywall.subscribedBody' => ({required Object date}) => 'Your subscription is active until ${date}.',
+			'premium.paywall.subscribedOpen' => 'Your subscription is already active.',
 			'premium.paywall.close' => 'Close',
 			'premium.paywall.plans' => 'Plans',
 			'premium.paywall.later' => 'Not now',
@@ -3919,11 +3925,11 @@ extension on TranslationsEn {
 			'premium.paywall.pending' => 'Payment pending. Plus turns on as soon as it is approved.',
 			'premium.paywall.failed' => 'Payment did not go through. Check your payment method in the Play Store, then try again.',
 			'premium.paywall.fineYearly' => ({required Object price}) => '${price} per year, renews automatically. Cancel anytime in the Play Store.',
+			_ => null,
+		} ?? switch (path) {
 			'premium.paywall.fineMonthly' => ({required Object price}) => '${price} per month, renews automatically. Cancel anytime in the Play Store.',
 			'premium.paywall.fineIntro' => ({required Object price, required Object regular}) => '${price} for the first year, then ${regular} a year, renews automatically. Cancel anytime in the Play Store.',
 			'premium.paywall.doneTitle' => 'Plus is on',
-			_ => null,
-		} ?? switch (path) {
 			'premium.paywall.doneBody' => 'Tanuki starts working for you.',
 			'premium.paywall.doneBodyPlan' => ({required Object plan, required Object date}) => '${plan} plan, renews on ${date}. Tanuki starts working for you.',
 			'premium.paywall.done' => 'Done',

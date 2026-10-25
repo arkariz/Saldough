@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/foundation/entitlement/entitlement.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/plan/active_plan.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/premium/presentation/navigation/premium_route_keys.dart';
+import 'package:saldough/features/premium/presentation/widgets/plus_subscription.dart';
 import 'package:saldough/features/premium/presentation/widgets/plus_tile.dart';
 
 /// "Yang dikerjakan Plus" (design `FiturPlus`): enam pilar, kartu "Tetap
@@ -31,7 +34,12 @@ class PlusFeaturesPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text(texts.title)),
       body: ListView(
-        padding: const EdgeInsets.fromLTRB(AppSpacing.space4, 0, AppSpacing.space4, AppSpacing.space4),
+        padding: const EdgeInsets.fromLTRB(
+          AppSpacing.space4,
+          0,
+          AppSpacing.space4,
+          AppSpacing.space4,
+        ),
         children: [
           Text(texts.intro, style: textTheme.bodyLarge),
           const SizedBox(height: AppSpacing.space4),
@@ -60,7 +68,12 @@ class PlusFeaturesPage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(texts.freeTitle, style: textTheme.titleMedium),
-                      Text(texts.free, style: textTheme.bodyMedium?.copyWith(color: colors.ink2)),
+                      Text(
+                        texts.free,
+                        style: textTheme.bodyMedium?.copyWith(
+                          color: colors.ink2,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -69,14 +82,23 @@ class PlusFeaturesPage extends StatelessWidget {
           ),
         ],
       ),
-      bottomNavigationBar: AppStickyBar(
-        child: AppButton(
-          label: texts.cta,
-          expand: true,
-          onPressed: () => fromPaywall
-              ? Navigator.of(context).pop()
-              : context.pushRoute(PremiumRouteKeys.paywall, const PaywallInput(PaywallTrigger.account)),
-        ),
+      bottomNavigationBar: ValueListenableBuilder<PlanState>(
+        valueListenable: ActivePlan.notifier,
+        // Sudah berlangganan: tidak ada paket untuk dilihat.
+        builder: (context, plan, _) => isSubscribed(plan)
+            ? const SizedBox.shrink()
+            : AppStickyBar(
+                child: AppButton(
+                  label: texts.cta,
+                  expand: true,
+                  onPressed: () => fromPaywall
+                      ? Navigator.of(context).pop()
+                      : context.pushRoute(
+                          PremiumRouteKeys.paywall,
+                          const PaywallInput(PaywallTrigger.account),
+                        ),
+                ),
+              ),
       ),
     );
   }

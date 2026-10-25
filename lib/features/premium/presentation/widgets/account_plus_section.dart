@@ -10,10 +10,7 @@ import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/features/premium/domain/plus_purchasing.dart';
 import 'package:saldough/features/premium/presentation/navigation/premium_route_keys.dart';
-import 'package:url_launcher/url_launcher.dart';
-
-/// Alamat langganan di Play Store untuk "Kelola di Play Store".
-final Uri playSubscriptionsUri = Uri.parse('https://play.google.com/store/account/subscriptions');
+import 'package:saldough/features/premium/presentation/widgets/plus_subscription.dart';
 
 /// Bagian Plus di layar Akun (design `AkunPlus`): satu baris status paket
 /// ("Gratis", uji coba, aktif, tenggang, ditahan, penguji), "Kelola di Play
@@ -24,15 +21,13 @@ final Uri playSubscriptionsUri = Uri.parse('https://play.google.com/store/accoun
 /// hak, jadi keterangan aktif hanya menyebut tanggal akhir periode.
 class AccountPlusSection extends StatelessWidget {
   /// Membuat [AccountPlusSection]; [launch] untuk uji.
-  const AccountPlusSection({required this.purchasing, this.launch = _launch, super.key});
+  const AccountPlusSection({required this.purchasing, this.launch = launchPlaySubscriptions, super.key});
 
   /// Pembelian, untuk memulihkan.
   final PlusPurchasing purchasing;
 
   /// Membuka alamat di luar aplikasi.
   final Future<bool> Function(Uri uri) launch;
-
-  static Future<bool> _launch(Uri uri) => launchUrl(uri, mode: LaunchMode.externalApplication);
 
   @override
   Widget build(BuildContext context) {

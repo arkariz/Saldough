@@ -15,6 +15,7 @@ import 'package:saldough/features/premium/presentation/bloc/paywall_state.dart';
 import 'package:saldough/features/premium/presentation/navigation/premium_route_keys.dart';
 import 'package:saldough/features/premium/presentation/pages/paywall_message.dart';
 import 'package:saldough/features/premium/presentation/widgets/plan_card.dart';
+import 'package:saldough/features/premium/presentation/widgets/plus_subscription.dart';
 import 'package:saldough/features/premium/presentation/widgets/plus_tile.dart';
 import 'package:state_management/state_management.dart';
 
@@ -34,8 +35,12 @@ class PaywallPage extends StatefulWidget {
     required this.trigger,
     required this.signedIn,
     required this.onSignIn,
+    this.launch = launchPlaySubscriptions,
     super.key,
   });
+
+  /// Membuka alamat di luar aplikasi ("Kelola di Play Store"); untuk uji.
+  final Future<bool> Function(Uri uri) launch;
 
   /// Pemicu paywall, untuk pesan dan analitik.
   final PaywallTrigger trigger;
@@ -69,11 +74,22 @@ class _PaywallPageState extends State<PaywallPage> {
 
   @override
   Widget build(BuildContext context) {
+    return ValueListenableBuilder<PlanState>(
+      valueListenable: ActivePlan.notifier,
+      builder: (context, plan, _) => _paywall(context, plan),
+    );
+  }
+
+  Widget _paywall(BuildContext context, PlanState plan) {
     final texts = t.premium.paywall;
     return BlocBuilder<PaywallBloc, PaywallState>(
       builder: (context, state) {
         if (state.phase == PaywallPhase.done) {
           return _DonePage(kind: state.selected);
+        }
+        // Sudah berlangganan: tanpa pilihan paket dan tombol beli.
+        if (isSubscribed(plan)) {
+          return _SubscribedPage(until: (plan as PlusPlan).until, launch: widget.launch);
         }
         final bloc = context.read<PaywallBloc>();
         return Scaffold(
@@ -506,5 +522,60 @@ class _DonePage extends StatelessWidget {
   static DateTime? _untilOf() {
     final plan = ActivePlan.state;
     return plan is PlusPlan ? plan.until : null;
+  }
+}
+
+/// Paywall untuk yang sudah berlangganan: menyatakan Plus aktif dan menawarkan
+/// "Kelola di Play Store" (batalkan atau ganti paket di sana), bukan membeli lagi.
+class _SubscribedPage extends StatelessWidget {
+  const _SubscribedPage({required this.until, required this.launch});
+
+  final DateTime? until;
+  final Future<bool> Function(Uri uri) launch;
+
+  @override
+  Widget build(BuildContext context) {
+    final texts = t.premium.paywall;
+    final textTheme = Theme.of(context).textTheme;
+    return Scaffold(
+      appBar: AppBar(),
+      body: SafeArea(
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.space4),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const PlusTile(IconKey.plus, size: 64),
+                const SizedBox(height: AppSpacing.space4),
+                Text(texts.subscribedTitle, textAlign: TextAlign.center, style: textTheme.titleLarge),
+                const SizedBox(height: AppSpacing.space2),
+                Text(
+                  until == null
+                      ? texts.subscribedOpen
+                      : texts.subscribedBody(date: CycleMonthFormatter.formatDateShort(until!)),
+                  textAlign: TextAlign.center,
+                  style: textTheme.bodyMedium?.copyWith(color: context.appColors.ink2),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+      bottomNavigationBar: AppStickyBar(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            AppButton(
+              label: t.premium.account.manage,
+              expand: true,
+              onPressed: () => unawaited(launch(playSubscriptionsUri)),
+            ),
+            const SizedBox(height: AppSpacing.space2),
+            AppButton.secondary(label: texts.close, expand: true, onPressed: () => Navigator.of(context).maybePop()),
+          ],
+        ),
+      ),
+    );
   }
 }

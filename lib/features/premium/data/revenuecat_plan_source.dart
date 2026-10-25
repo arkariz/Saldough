@@ -53,14 +53,12 @@ final class RevenueCatPlanSource {
     }
   }
 
-  /// Mengikat ke akun [uid] (masuk), atau melepas (`null`, keluar). Keluar
-  /// membuat pengenal anonim baru, jadi langganan yang melekat pada akun
-  /// Google Play dipulihkan lagi supaya Plus tidak hilang karena keluar akun.
-  Future<void> setUser(String? uid) => _run(() async {
-    if (uid != null) return gateway.logIn(uid);
-    await gateway.logOut();
-    return gateway.restore();
-  });
+  /// Mengikat ke akun [uid] (masuk). Keluar (`null`) **tidak** memanggil
+  /// `logOut` RevenueCat: itu membuat pengenal anonim baru yang tidak memegang
+  /// langganan, sehingga Plus yang sudah dibeli hilang hanya karena pengguna
+  /// keluar akun. Pengenal tetap sampai akun lain masuk (`logIn` menggantinya)
+  /// atau aplikasi dipasang ulang; keadaan hak dibaca ulang saja.
+  Future<void> setUser(String? uid) => uid == null ? refresh() : _run(() => gateway.logIn(uid));
 
   /// Membaca ulang keadaan dari server.
   Future<void> refresh() => _run(gateway.fetch);

@@ -235,11 +235,13 @@ void main() {
       },
     );
 
-    test('masuk dan keluar akun mengikat ulang pengguna RevenueCat', () async {
-      gateway.next = const PlusSnapshot(isActive: true, isPromotional: true);
+    test('masuk mengikat pengguna RevenueCat; keluar tidak logOut dan Plus tetap', () async {
+      gateway.next = PlusSnapshot(isActive: true, expiration: DateTime(2027, 2));
       await source.setUser('u1');
+      expect((await cached())?.source, PlanSource.purchase);
       await source.setUser(null);
-      expect(gateway.calls, ['configure', 'logIn:u1', 'logOut', 'restore']);
+      expect(gateway.calls, ['configure', 'logIn:u1', 'fetch']);
+      expect((await cached())?.source, PlanSource.purchase, reason: 'keluar akun tidak mencabut langganan');
     });
 
     test('pembaruan dari SDK (pembelian) langsung disalin', () async {

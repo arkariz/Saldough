@@ -230,8 +230,10 @@ trialEndsOn(DateTime start, FinancialMonthSchedule schedule, {int minDays = 14})
   harga di kode atau Remote Config.
 - **ID pengguna:** anonim RevenueCat sejak pertama dibuka (cukup untuk membaca
   harga dan membeli). Bila pengguna masuk akun (ADR-024),
-  `Purchases.logIn(firebaseUid)`; keluar akun memanggil `Purchases.logOut()`. ID
-  yang sama dipakai untuk hak promosi dan pemulihan lintas perangkat.
+  `Purchases.logIn(firebaseUid)`; keluar akun **tidak** memanggil
+  `Purchases.logOut()` (itu membuat ID anonim baru tanpa langganan sehingga Plus
+  yang dibeli hilang; ID dibiarkan sampai akun lain masuk, ditemukan di uji
+  sandbox 25 Okt 2026). ID yang sama dipakai untuk hak promosi dan pemulihan lintas perangkat.
   **Pemakaian inti tanpa akun tetap penuh.** Membeli tanpa akun tetap
   dimungkinkan (hak terikat ke akun Google Play lewat `restorePurchases`);
   apakah pembelian juga mensyaratkan akun adalah P-9.

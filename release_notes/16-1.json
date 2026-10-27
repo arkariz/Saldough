@@ -1,0 +1,14 @@
+{
+  "version": "0.10.0",
+  "groups": [
+    {
+      "category": "fixed",
+      "notes": [
+        {
+          "id": "Saat mengubah dompet, angka yang kamu isi kini langsung jadi saldo dompet, tidak lagi ditambahkan ke transaksi yang sudah ada.",
+          "en": "When you edit a wallet, the amount you enter now becomes the wallet balance instead of being added on top of existing transactions."
+        }
+      ]
+    }
+  ]
+}

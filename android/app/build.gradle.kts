@@ -41,7 +41,7 @@ android {
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         // Dipin ke 23 (bukan flutter.minSdkVersion) karena flutter_secure_storage 10
         // yang dipakai hive_storage menuntut minSdk 23. Lihat TASK_LIST.md T-0.2.
-        minSdk = flutter.minSdkVersion
+        minSdk = 23
         targetSdk = flutter.targetSdkVersion
         // Uses the version code from pubspec.yaml. When using split APKs, 1000 * ABI_VERSION
         // is added automatically by Flutter. (https://developer.android.com/studio/build/configure-apk-splits#configure-APK-versions)

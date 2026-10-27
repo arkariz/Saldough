@@ -47,7 +47,10 @@ platform :android do
     lane :patch_ota do
         shorebird_patch(
             platform: "android",
-            args: "--allow-asset-diffs"
+            args: [
+                "--release-version=latest",
+                "--allow-asset-diffs",
+            ].join(" ")
         )
     end
 

@@ -65,7 +65,7 @@ class WalletDetailPage extends StatelessWidget {
         :final name,
         :final iconKey,
         :final isActive,
-        :final initialBalance,
+        :final balance,
       ):
         bloc.add(
           WalletEdited(
@@ -73,7 +73,7 @@ class WalletDetailPage extends StatelessWidget {
             name: name,
             iconKey: iconKey,
             isActive: isActive,
-            initialBalance: initialBalance,
+            currentBalance: balance,
           ),
         );
         await bloc.stream.firstWhere((s) => s.effect != null);

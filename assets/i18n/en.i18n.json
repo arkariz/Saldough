@@ -266,7 +266,7 @@
     "initialBalanceLabel": "Starting balance",
     "initialBalanceHelp": "Enter the money in this wallet right now. Every transaction after that is counted from here.",
     "currentBalanceLabel": "Current balance",
-    "editBalanceNote": "Changing the starting balance recalculates the wallet balance. If it doesn't match your real money, record an income or expense with Record.",
+    "editBalanceNote": "Enter the money in this wallet right now. The balance is set to this amount; your transaction history stays as it is and no new transaction is added.",
     "activeSwitchLabel": "Wallet is active",
     "activeSwitchHelp": "Inactive wallets don't appear in wallet pickers. Their transactions stay saved and counted.",
     "saveAddAction": "Save wallet",

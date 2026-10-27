@@ -258,9 +258,9 @@ void main() {
     );
 
     blocTest<WalletBloc, WalletState>(
-      'mengganti saldo awal menghitung ulang saldo tercatat dari seluruh transaksi',
+      'mengganti saldo saat ini menggeser saldo awal supaya saldo tercatat persis sama dengan angka itu',
       setUp: () {
-        // Saldo awal baru (50.000.000) + pemasukan yang sudah ada (10.000.000) = 60.000.000.
+        // Pemasukan 10.000.000 sudah ada; target 50.000.000 -> saldo awal 40.000.000.
         when(
           () => walletRepository.saveWallet(any()),
         ).thenAnswer((_) async => const Right(unit));
@@ -268,7 +268,7 @@ void main() {
           () => walletRepository.listWallets(),
         ).thenAnswer(
           (_) async =>
-              Right([wallet('a', initial: 50000000, current: 50000000)]),
+              Right([wallet('a', initial: 40000000, current: 50000000)]),
         );
         when(() => transactionRepository.listAllTransactions()).thenAnswer(
           (_) async => Right([
@@ -285,11 +285,11 @@ void main() {
       build: buildBloc,
       act: (bloc) => bloc.add(
         WalletEdited(
-          original: wallet('a'),
+          original: wallet('a', current: 10000000),
           name: 'BCA',
           iconKey: 'walletBank',
           isActive: true,
-          initialBalance: 50000000,
+          currentBalance: 50000000,
         ),
       ),
       verify: (bloc) {
@@ -302,12 +302,30 @@ void main() {
           reason: 'sekali dari sunting, sekali dari recompute',
         );
         final recomputed = captured.last as Wallet;
-        expect(recomputed.initialBalance, 50000000);
-        expect(
-          recomputed.currentBalance,
-          60000000,
-          reason: 'saldo awal baru + pemasukan yang sudah ada',
-        );
+        expect(recomputed.initialBalance, 40000000);
+        expect(recomputed.currentBalance, 50000000);
+      },
+    );
+
+    blocTest<WalletBloc, WalletState>(
+      'saldo saat ini yang sama dengan saldo tercatat tidak mengubah apa pun',
+      setUp: () {
+        when(() => walletRepository.saveWallet(any())).thenAnswer((_) async => const Right(unit));
+        when(() => walletRepository.listWallets()).thenAnswer((_) async => Right([wallet('a', current: 10000000)]));
+      },
+      build: buildBloc,
+      act: (bloc) => bloc.add(
+        WalletEdited(
+          original: wallet('a', current: 10000000),
+          name: 'BCA',
+          iconKey: 'walletBank',
+          isActive: true,
+          currentBalance: 10000000,
+        ),
+      ),
+      verify: (bloc) {
+        verify(() => walletRepository.saveWallet(any())).called(1);
+        verifyNever(() => transactionRepository.listAllTransactions());
       },
     );
 

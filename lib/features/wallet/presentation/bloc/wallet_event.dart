@@ -37,10 +37,12 @@ final class WalletAdded extends WalletEvent {
 }
 
 /// Menyunting [original]: nama, ikon, status aktif, dan -- kalau
-/// [initialBalance] tidak `null` -- saldo awal (FR-WAL-001/002).
+/// [currentBalance] tidak `null` -- saldo saat ini (FR-WAL-001/002).
 ///
-/// Mengganti saldo awal menghitung ulang saldo tercatat dari seluruh
-/// transaksi dompet itu; menyunting nama/ikon/status TIDAK menyentuh saldo.
+/// Mengganti saldo saat ini menggeser saldo awal supaya saldo tercatat persis
+/// sama dengan angka itu (saldo awal = angka - netto seluruh transaksi dompet);
+/// tidak ada transaksi yang dibuat. Menyunting nama/ikon/status TIDAK menyentuh
+/// saldo.
 final class WalletEdited extends WalletEvent {
   /// Membuat [WalletEdited].
   const WalletEdited({
@@ -48,7 +50,7 @@ final class WalletEdited extends WalletEvent {
     required this.name,
     required this.iconKey,
     required this.isActive,
-    this.initialBalance,
+    this.currentBalance,
   });
 
   /// Dompet sebelum disunting.
@@ -63,8 +65,8 @@ final class WalletEdited extends WalletEvent {
   /// Status aktif baru.
   final bool isActive;
 
-  /// Saldo awal baru (sen), atau `null` kalau tidak diubah.
-  final int? initialBalance;
+  /// Saldo saat ini yang dikehendaki (sen), atau `null` kalau tidak diubah.
+  final int? currentBalance;
 }
 
 /// Menyusun ulang dompet mengikuti [orderedIds] (B-34). Urutan ini dipakai

@@ -3,7 +3,6 @@ import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
-import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/core/utils/formatters/money_input.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_type.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
@@ -25,7 +24,7 @@ final class WalletFormSaved extends WalletFormResult {
     required this.name,
     required this.iconKey,
     required this.isActive,
-    required this.initialBalance,
+    required this.balance,
   });
 
   /// Nama dompet.
@@ -37,11 +36,11 @@ final class WalletFormSaved extends WalletFormResult {
   /// Status aktif.
   final bool isActive;
 
-  /// Saldo awal (sen). Pada mode sunting `null` berarti TIDAK diubah -- kolom
-  /// saldo awal tidak disentuh pemakai, jadi nilai tersimpannya (yang bisa
-  /// saja negatif atau bersen pecahan, tak terwakili kolom rupiah utuh) tidak
-  /// boleh tertimpa.
-  final int? initialBalance;
+  /// Saldo (sen). Mode tambah: saldo awal. Mode sunting: saldo SAAT INI yang
+  /// dikehendaki, dan `null` berarti TIDAK diubah -- kolom tidak disentuh
+  /// pemakai, jadi nilai tersimpannya (yang bisa saja negatif atau bersen
+  /// pecahan, tak terwakili kolom rupiah utuh) tidak boleh tertimpa.
+  final int? balance;
 }
 
 /// Pemakai menekan "Hapus Dompet" dan sudah mengonfirmasi.
@@ -57,9 +56,9 @@ final class WalletFormDeleted extends WalletFormResult {
 /// sakelar aktif, serta hapus.
 ///
 /// ⚠ Saldo awal adalah pernyataan keadaan, bukan setoran: ia tidak pernah
-/// menjadi transaksi. Menyunting nama/ikon/status TIDAK mengubah saldo tercatat;
-/// hanya mengganti saldo awal yang menghitungnya ulang (dikerjakan
-/// `WalletBloc`, bukan formulir ini).
+/// menjadi transaksi. Saat menyunting, kolom saldo berarti saldo SAAT INI;
+/// menggesernya dari saldo awal dikerjakan `WalletBloc`, bukan formulir ini.
+/// Menyunting nama/ikon/status TIDAK mengubah saldo tercatat.
 ///
 /// ⚠ Bagian rujukan yang sengaja tidak dibangun: "Tipe kategori" (sama dengan
 /// pilihan ikon, jenis diturunkan dari ikon), "Catatan tambahan" dan subjudul
@@ -93,10 +92,10 @@ class _WalletFormSheetState extends State<WalletFormSheet> {
     _nameController.text = wallet.name;
     _iconKey = wallet.iconKey;
     _isActive = wallet.isActive;
-    // Hanya saldo awal yang bisa ditulis utuh di kolom yang diisi; yang lain
+    // Hanya saldo yang bisa ditulis utuh di kolom yang diisi; yang lain
     // dibiarkan kosong dan tidak akan dikirim kecuali disentuh.
-    if (wallet.initialBalance >= 0 && isMoneyInputExact(wallet.initialBalance)) {
-      _balanceController.text = wallet.initialBalance == 0 ? '' : formatMoneyInput(wallet.initialBalance);
+    if (wallet.currentBalance >= 0 && isMoneyInputExact(wallet.currentBalance)) {
+      _balanceController.text = wallet.currentBalance == 0 ? '' : formatMoneyInput(wallet.currentBalance);
     }
   }
 
@@ -128,7 +127,7 @@ class _WalletFormSheetState extends State<WalletFormSheet> {
         name: _nameController.text.trim(),
         iconKey: _iconKey,
         isActive: _isActive,
-        initialBalance: _editing && !_balanceTouched ? null : sen,
+        balance: _editing && !_balanceTouched ? null : sen,
       ),
     );
   }
@@ -217,7 +216,7 @@ class _WalletFormSheetState extends State<WalletFormSheet> {
                 },
               ),
               const SizedBox(height: AppSpacing.space4),
-              AppSectionLabel(t.wallet.initialBalanceLabel),
+              AppSectionLabel(_editing ? t.wallet.currentBalanceLabel : t.wallet.initialBalanceLabel),
               const SizedBox(height: AppSpacing.space1),
               AppCard(
                 child: Column(
@@ -255,7 +254,7 @@ class _WalletFormSheetState extends State<WalletFormSheet> {
                     ),
                     const SizedBox(height: AppSpacing.space2),
                     Text(
-                      t.wallet.initialBalanceHelp,
+                      _editing ? t.wallet.editBalanceNote : t.wallet.initialBalanceHelp,
                       style: textTheme.bodySmall?.copyWith(color: colors.ink2),
                     ),
                   ],
@@ -278,8 +277,6 @@ class _WalletFormSheetState extends State<WalletFormSheet> {
                 ],
               ),
               if (wallet != null) ...[
-                const SizedBox(height: AppSpacing.space4),
-                _CurrentBalanceCard(wallet: wallet),
                 const SizedBox(height: AppSpacing.space4),
                 AppCard(
                   child: Row(
@@ -413,45 +410,6 @@ class _IconChoice extends StatelessWidget {
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: Theme.of(context).textTheme.labelMedium?.copyWith(color: selected ? colors.brandInk : colors.ink2),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/// Saldo tercatat saat ini (hanya baca) beserta catatan bahwa mengubah saldo
-/// awal menghitungnya ulang -- selisih dengan uang nyata dicatat lewat CATAT.
-class _CurrentBalanceCard extends StatelessWidget {
-  const _CurrentBalanceCard({required this.wallet});
-
-  final Wallet wallet;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return AppCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(
-            t.wallet.currentBalanceLabel,
-            style: labelSmStyle(context, color: colors.ink2),
-          ),
-          const SizedBox(height: 2),
-          FitStart(
-            child: Text(
-              AppMoneyFormatter.format(wallet.currentBalance),
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.w700,
-                color: colors.ink,
-              ),
-            ),
-          ),
-          const SizedBox(height: AppSpacing.space1),
-          Text(
-            t.wallet.editBalanceNote,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: colors.ink2),
           ),
         ],
       ),

@@ -83,7 +83,7 @@ void main() {
       final saved = results.single! as WalletFormSaved;
       expect(saved.name, 'Dompet Saku');
       expect(saved.iconKey, 'walletCash');
-      expect(saved.initialBalance, 150000000);
+      expect(saved.balance, 150000000);
       expect(saved.isActive, isTrue);
     });
 
@@ -94,7 +94,7 @@ void main() {
       await tester.pump();
       await save(tester, t.wallet.saveAddAction);
 
-      expect((results.single! as WalletFormSaved).initialBalance, 0);
+      expect((results.single! as WalletFormSaved).balance, 0);
     });
 
     testWidgets('tombol Bersihkan mengosongkan saldo awal', (tester) async {
@@ -107,7 +107,7 @@ void main() {
       await tester.pump();
       await save(tester, t.wallet.saveAddAction);
 
-      expect((results.single! as WalletFormSaved).initialBalance, 0);
+      expect((results.single! as WalletFormSaved).balance, 0);
     });
 
     testWidgets('nama dibatasi $walletNameMaxLength karakter', (tester) async {
@@ -142,8 +142,8 @@ void main() {
       await open(tester, initial: existing);
 
       expect(find.text('BCA'), findsWidgets);
-      expect(find.text('1.000.000'), findsOneWidget, reason: 'saldo awal terisi');
-      expect(find.text('Rp1.300.000'), findsOneWidget, reason: 'saldo tercatat, hanya baca');
+      expect(find.text('1.300.000'), findsOneWidget, reason: 'kolom terisi saldo saat ini, bukan saldo awal');
+      expect(find.text(t.wallet.currentBalanceLabel), findsOneWidget);
       expect(find.widgetWithText(AppButton, t.transaction.saveChangesAction), findsOneWidget);
     });
 
@@ -158,17 +158,17 @@ void main() {
 
       final saved = results.single! as WalletFormSaved;
       expect(saved.name, 'BCA Utama');
-      expect(saved.initialBalance, isNull);
+      expect(saved.balance, isNull);
     });
 
-    testWidgets('saldo awal yang diubah dikirim dalam sen', (tester) async {
+    testWidgets('saldo yang diubah dikirim dalam sen sebagai saldo saat ini', (tester) async {
       final results = await open(tester, initial: existing);
 
       await tester.tap(find.text('+500rb'));
       await tester.pump();
       await save(tester, t.transaction.saveChangesAction);
 
-      expect((results.single! as WalletFormSaved).initialBalance, 150000000);
+      expect((results.single! as WalletFormSaved).balance, 180000000);
     });
 
     testWidgets('saldo awal negatif tidak terwakili kolom: kolom kosong dan tidak dikirim kecuali disentuh', (
@@ -176,13 +176,13 @@ void main() {
     ) async {
       final results = await open(
         tester,
-        initial: existing.copyWith(initialBalance: -5000000),
+        initial: existing.copyWith(currentBalance: -5000000),
       );
       expect(find.text('50.000'), findsNothing, reason: 'tanda minus tidak boleh hilang diam-diam');
 
       await save(tester, t.transaction.saveChangesAction);
 
-      expect((results.single! as WalletFormSaved).initialBalance, isNull);
+      expect((results.single! as WalletFormSaved).balance, isNull);
     });
 
     testWidgets('sakelar aktif menonaktifkan dompet', (tester) async {

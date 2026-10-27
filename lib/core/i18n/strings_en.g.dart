@@ -293,7 +293,7 @@ class _Translations$wallet$en extends Translations$wallet$id {
 	@override String get initialBalanceLabel => 'Starting balance';
 	@override String get initialBalanceHelp => 'Enter the money in this wallet right now. Every transaction after that is counted from here.';
 	@override String get currentBalanceLabel => 'Current balance';
-	@override String get editBalanceNote => 'Changing the starting balance recalculates the wallet balance. If it doesn\'t match your real money, record an income or expense with Record.';
+	@override String get editBalanceNote => 'Enter the money in this wallet right now. The balance is set to this amount; your transaction history stays as it is and no new transaction is added.';
 	@override String get activeSwitchLabel => 'Wallet is active';
 	@override String get activeSwitchHelp => 'Inactive wallets don\'t appear in wallet pickers. Their transactions stay saved and counted.';
 	@override String get saveAddAction => 'Save wallet';
@@ -2265,7 +2265,7 @@ extension on TranslationsEn {
 			'wallet.initialBalanceLabel' => 'Starting balance',
 			'wallet.initialBalanceHelp' => 'Enter the money in this wallet right now. Every transaction after that is counted from here.',
 			'wallet.currentBalanceLabel' => 'Current balance',
-			'wallet.editBalanceNote' => 'Changing the starting balance recalculates the wallet balance. If it doesn\'t match your real money, record an income or expense with Record.',
+			'wallet.editBalanceNote' => 'Enter the money in this wallet right now. The balance is set to this amount; your transaction history stays as it is and no new transaction is added.',
 			'wallet.activeSwitchLabel' => 'Wallet is active',
 			'wallet.activeSwitchHelp' => 'Inactive wallets don\'t appear in wallet pickers. Their transactions stay saved and counted.',
 			'wallet.saveAddAction' => 'Save wallet',

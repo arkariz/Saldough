@@ -638,8 +638,8 @@ class Translations$wallet$id {
 	/// id: 'Saldo saat ini'
 	String get currentBalanceLabel => 'Saldo saat ini';
 
-	/// id: 'Mengubah saldo awal akan menghitung ulang saldo dompet. Kalau saldonya tidak sama dengan uang sebenarnya, catat pemasukan atau pengeluaran lewat Catat.'
-	String get editBalanceNote => 'Mengubah saldo awal akan menghitung ulang saldo dompet. Kalau saldonya tidak sama dengan uang sebenarnya, catat pemasukan atau pengeluaran lewat Catat.';
+	/// id: 'Isi dengan jumlah uang di dompet ini sekarang. Saldo diganti sesuai angka ini; riwayat transaksi tidak berubah dan tidak ada transaksi baru.'
+	String get editBalanceNote => 'Isi dengan jumlah uang di dompet ini sekarang. Saldo diganti sesuai angka ini; riwayat transaksi tidak berubah dan tidak ada transaksi baru.';
 
 	/// id: 'Dompet aktif'
 	String get activeSwitchLabel => 'Dompet aktif';
@@ -5050,7 +5050,7 @@ extension on Translations {
 			'wallet.initialBalanceLabel' => 'Saldo awal',
 			'wallet.initialBalanceHelp' => 'Isi dengan jumlah uang di dompet ini sekarang. Setiap transaksi berikutnya dihitung dari angka ini.',
 			'wallet.currentBalanceLabel' => 'Saldo saat ini',
-			'wallet.editBalanceNote' => 'Mengubah saldo awal akan menghitung ulang saldo dompet. Kalau saldonya tidak sama dengan uang sebenarnya, catat pemasukan atau pengeluaran lewat Catat.',
+			'wallet.editBalanceNote' => 'Isi dengan jumlah uang di dompet ini sekarang. Saldo diganti sesuai angka ini; riwayat transaksi tidak berubah dan tidak ada transaksi baru.',
 			'wallet.activeSwitchLabel' => 'Dompet aktif',
 			'wallet.activeSwitchHelp' => 'Dompet nonaktif tidak muncul di pemilih dompet. Transaksinya tetap tersimpan dan dihitung.',
 			'wallet.saveAddAction' => 'Simpan dompet',

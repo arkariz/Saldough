@@ -12,14 +12,15 @@ part 'wallet_effect.dart';
 part 'wallet_event.dart';
 
 /// Bloc layar Dompet (FR-WAL-001..003): memuat dompet, menambah, menyunting
-/// (nama, ikon, status aktif, saldo awal), dan menghapus dompet yang belum
+/// (nama, ikon, status aktif, saldo saat ini), dan menghapus dompet yang belum
 /// punya transaksi.
 ///
 /// ⚠ Saldo awal adalah PERNYATAAN KEADAAN, bukan transaksi setoran (FR-WAL-002)
 /// -- dompet baru disimpan dengan `currentBalance == initialBalance` dan tidak
-/// ada `Transaction` yang dibuat. Menyunting saldo awal menghitung ulang saldo
-/// tercatat lewat [RecomputeWalletBalances], satu-satunya penyeimbang saldo
-/// tersimpan (ADR-012).
+/// ada `Transaction` yang dibuat. Menyunting saldo saat ini menggeser saldo awal
+/// (saldo awal = angka yang diisi - netto transaksi dompet), lalu menghitung
+/// ulang saldo tercatat lewat [RecomputeWalletBalances], satu-satunya
+/// penyeimbang saldo tersimpan (ADR-012).
 final class WalletBloc extends Bloc<WalletEvent, WalletState> {
   /// Membuat [WalletBloc].
   WalletBloc({
@@ -76,7 +77,18 @@ final class WalletBloc extends Bloc<WalletEvent, WalletState> {
   }
 
   Future<void> _onEdited(WalletEdited event, Emitter<WalletState> emit) async {
-    final newInitial = event.initialBalance;
+    final target = event.currentBalance;
+    int? newInitial;
+    if (target != null && target != event.original.currentBalance) {
+      switch (await _transactionRepository.listAllTransactions()) {
+        case Left(value: final failure):
+          emit(state.copyWith(effect: _effectError(failure)));
+          return;
+        case Right(value: final transactions):
+          final net = const CalculateWalletBalance()(event.original.copyWith(initialBalance: 0), transactions);
+          newInitial = target - net;
+      }
+    }
     final updated = event.original.copyWith(
       name: event.name.trim(),
       iconKey: event.iconKey,
@@ -84,7 +96,7 @@ final class WalletBloc extends Bloc<WalletEvent, WalletState> {
       initialBalance: newInitial,
     );
     var result = await _walletRepository.saveWallet(updated);
-    // Saldo tercatat berubah HANYA kalau saldo awalnya berubah.
+    // Saldo tercatat berubah HANYA kalau saldo awalnya digeser.
     if (result.isRight() && newInitial != null && newInitial != event.original.initialBalance) {
       result = await _recomputeWalletBalances.forWallets({updated.id});
     }

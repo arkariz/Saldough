@@ -227,14 +227,14 @@ Future<void> openAddWalletSheet(BuildContext context) async {
   if (result case WalletFormSaved(
     :final name,
     :final iconKey,
-    :final initialBalance,
+    :final balance,
   )) {
     final processed = bloc.stream.first;
     bloc.add(
       WalletAdded(
         name: name,
         iconKey: iconKey,
-        initialBalance: initialBalance ?? 0,
+        initialBalance: balance ?? 0,
       ),
     );
     await processed;

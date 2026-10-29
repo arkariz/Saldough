@@ -562,12 +562,13 @@ terverifikasi di perangkat dengan notifikasi bank asli.
 
 ## Fase 24: Design system baru dan preset tema
 
-Permintaan pemilik 29 Okt 2026: design system baru dari spek Autumn Kyoto
-Ledger, berdampingan dengan yang lama sampai rombak UI, plus preset tema
-(warna terang/gelap) yang mudah ditambah developer dan dipilih pengguna
-([ADR-043](../02-architecture/adr/0043-design-system-kyoto-dan-preset-tema.md),
-Proposed). **Status:** fondasi selesai 29 Okt 2026; komponen menunggu
-referensi pemilik, pemasangan menunggu keputusan pemilik.
+Permintaan pemilik 29 Okt 2026: design system v2 dari spek Tanukonomy Matcha
+dan referensi komponen Beranda, berdampingan dengan yang lama sampai rombak
+UI, plus preset tema (warna terang/gelap) yang mudah ditambah developer dan
+dipilih pengguna
+([ADR-043](../02-architecture/adr/0043-design-system-v2-dan-preset-tema.md),
+Proposed). **Status:** fondasi selesai 29 Okt 2026; komponen sudah dipetakan,
+widget menunggu permintaan pemilik, pemasangan menunggu keputusan pemilik.
 
 ## Ketergantungan antar fase
 

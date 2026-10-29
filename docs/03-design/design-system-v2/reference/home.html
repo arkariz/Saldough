@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/>
+<meta content="mobile_tab" name="shell-type"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=Space+Mono:wght@700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&amp;display=swap" rel="stylesheet"/>
+<style>
+    @layer base {
+      html, body {
+        width: 100vw;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        overscroll-behavior: none;
+      }
+      .pb-safe {
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+      }
+      .pt-safe {
+        padding-top: env(safe-area-inset-top, 0px);
+      }
+      main > :first-child {
+        margin-top: 0 !important;
+      }
+      main > :last-child {
+        margin-bottom: 0 !important;
+      }
+    }
+    ::-webkit-scrollbar {
+      display: none;
+    }
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface": "#f9f9f8",
+            "surface-dim": "#dadad9",
+            "surface-bright": "#f9f9f8",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-low": "#f3f4f3",
+            "surface-container": "#eeeeed",
+            "surface-container-high": "#e8e8e7",
+            "surface-container-highest": "#e2e2e2",
+            "primary": "#1f4b2c",
+            "primary-container": "#2a613a",
+            "primary-fixed": "#bdefc4",
+            "primary-fixed-dim": "#a2d2a9",
+            "on-primary": "#ffffff",
+            "on-primary-container": "#bdefc4",
+            "secondary": "#54615a",
+            "secondary-container": "#d8e6dc",
+            "on-secondary-container": "#24322b",
+            "secondary-fixed": "#d8e6dc",
+            "tertiary": "#2f2c25",
+            "tertiary-fixed": "#e8e2d7",
+            "tertiary-fixed-dim": "#ccc6bb",
+            "on-surface": "#111827",
+            "on-surface-variant": "#6b7280",
+            "outline": "#e5e7eb",
+            "outline-variant": "#d1d5db"
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "2xl": "1rem",
+            "3xl": "1.5rem",
+            "full": "9999px"
+          },
+          spacing: {
+            "space-xs": "0.25rem",
+            "space-sm": "0.5rem",
+            "space-md": "1rem",
+            "space-lg": "1.5rem",
+            "space-xl": "2rem",
+            "gutter": "1rem"
+          },
+          fontFamily: {
+            "body": ["Plus Jakarta Sans", "sans-serif"],
+            "pixel": ["Space Mono", "monospace"]
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-surface font-body text-body-md text-on-surface antialiased flex flex-col min-h-screen selection:bg-primary-fixed selection:text-primary">
+<!-- Minimalist Clean Header -->
+<header class="fixed top-0 w-full z-50 pt-safe bg-surface/90 backdrop-blur-md border-b border-black/[0.04]">
+<div class="h-14 px-gutter flex items-center justify-between">
+<div class="flex items-center gap-2">
+<img alt="Tanukonomy Brand Logo" class="h-7 w-auto object-contain rounded" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCYS_QiR2RVZQNwfVxPEKpnEfCDhOeEypV47LVnI2UVoPZNaCjKifJKLR1y37D3THm40j-95bpiZuQ77iD-th-6UQY0ARQ3kc9StVtSN7CVnMjHbSIZcn7Ni0e9ia6RQzgbliak3lUYn4HGnUsGZaJ4e_jFLdYKIjC1VvLckkheIm6lcXSMCmXIQ6MAAOHjmWX0PIueZ6PRbck2DUKl5Fj47sQ4VP6Qs7zY5Pb1P7k"/>
+<div class="flex items-center gap-1.5">
+<span class="font-pixel text-[13px] tracking-wide text-primary font-bold lowercase">tanukonomy</span>
+<span class="inline-flex items-center justify-center w-4 h-4 rounded-full bg-emerald-100 text-emerald-800">
+<span class="material-symbols-outlined text-[11px] leading-none">eco</span>
+</span>
+</div>
+</div>
+<div class="flex items-center gap-1">
+<button aria-label="Notifications" class="w-9 h-9 flex items-center justify-center rounded-full text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-[20px]">notifications</span>
+</button>
+<div class="p-0.5 rounded-full border border-black/[0.08] flex items-center justify-center ml-0.5">
+<img alt="Profile" class="w-7 h-7 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBlyH353ejv8EHiaGcT2zzterhtB0H36VIkJuBZhlVjXd8QtddK0aK8BgCLtvKK2s8vvASWCnqEGAvyVjp7RXg3KP83z1e8SNqMyybEIPBQut0WNaqOfFAcZ2yoWeELQ-nVDy9wW5WiWoUo9mPIWkNyzX8A6QxUpPBfBkNIhHAM3m00doaw_YD-uCu1ga2Szan0lrrD-B23y8jmuvOW8eSxue9jYwnbfc7LjVlXhzw"/>
+</div>
+</div>
+</div>
+</header>
+<main class="flex-1 flex flex-col relative w-full pt-16 pb-24 bg-surface">
+<div class="flex flex-col w-full px-gutter pb-6 gap-3.5">
+<!-- Greeting & Guardian Mood Banner -->
+<div class="flex flex-col gap-0.5 mt-1.5">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<h1 class="text-[22px] font-bold tracking-tight text-on-surface">Halo, Kenji!</h1>
+<span class="inline-block animate-bounce select-none text-[18px]">🍃</span>
+</div>
+<div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container border border-black/[0.06] text-on-surface text-[11px] font-pixel font-bold shadow-xs">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>
+<span class="tracking-wide">LVL 12 STEWARD</span>
+</div>
+</div>
+<p class="text-[13px] text-on-surface-variant font-normal">Keseimbangan dompetmu terjaga harmonis hari ini.</p>
+</div>
+<!-- Tanuki Guardian Mood Modern Card -->
+<div class="relative overflow-hidden rounded-2xl bg-surface-container-lowest border border-black/[0.06] p-3.5 shadow-[0_2px_8px_rgba(0,0,0,0.03)] transition-all duration-300" id="guardian-card">
+<div class="flex items-center gap-3">
+<!-- Mascot Pixel Avatar Stage -->
+<div class="relative shrink-0 w-12 h-12 rounded-xl bg-surface-container-low border border-black/[0.05] p-1 flex items-center justify-center">
+<svg class="w-8 h-8" fill="none" viewbox="0 0 48 48">
+<!-- Stylized Tanuki Head -->
+<rect fill="#4b382a" height="8" rx="2" width="8" x="10" y="8"></rect>
+<rect fill="#4b382a" height="8" rx="2" width="8" x="30" y="8"></rect>
+<rect fill="#d8e6dc" height="4" width="4" x="12" y="10"></rect>
+<rect fill="#d8e6dc" height="4" width="4" x="32" y="10"></rect>
+<rect fill="#5e493a" height="24" rx="8" width="32" x="8" y="14"></rect>
+<!-- Eye patches -->
+<rect fill="#1f4b2c" height="12" rx="3" width="11" x="10" y="18"></rect>
+<rect fill="#1f4b2c" height="12" rx="3" width="11" x="27" y="18"></rect>
+<!-- Eyes -->
+<rect fill="#ffffff" height="4" rx="1" width="3" x="14" y="21"></rect>
+<rect fill="#ffffff" height="4" rx="1" width="3" x="31" y="21"></rect>
+<!-- Snout & Cheek -->
+<ellipse cx="24" cy="28" fill="#e8e2d7" rx="6" ry="4"></ellipse>
+<circle cx="24" cy="26" fill="#111827" r="2"></circle>
+<!-- Leaf -->
+<path d="M22 13C22 11 25 9 27 10C29 11 28 14 26 15C24 16 22 15 22 13Z" fill="#a2d2a9"></path>
+<path d="M24 13L26 11" stroke="#1f4b2c" stroke-width="0.8"></path>
+<!-- Coin charm -->
+<circle cx="36" cy="34" fill="#e5c158" r="4.5"></circle>
+<rect fill="#2f2c25" height="2" width="2" x="35" y="33"></rect>
+</svg>
+<span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-white"></span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between gap-1">
+<div class="flex items-center gap-1.5 truncate">
+<span class="font-pixel text-[12px] font-bold text-on-surface truncate">Mood: Santai &amp; Makmur</span>
+<span class="text-xs select-none">✨</span>
+</div>
+<span class="font-pixel text-[10px] font-bold text-primary bg-emerald-50 border border-emerald-200/60 px-1.5 py-0.5 rounded-md shrink-0">84% SEHAT</span>
+</div>
+<!-- Sleek Minimalist Health Meter -->
+<div class="flex items-center gap-1 mt-1.5">
+<div class="h-1.5 flex-1 rounded-full bg-primary"></div>
+<div class="h-1.5 flex-1 rounded-full bg-primary"></div>
+<div class="h-1.5 flex-1 rounded-full bg-primary"></div>
+<div class="h-1.5 flex-1 rounded-full bg-primary"></div>
+<div class="h-1.5 flex-1 rounded-full bg-primary"></div>
+<div class="h-1.5 flex-1 rounded-full bg-primary"></div>
+<div class="h-1.5 flex-1 rounded-full bg-primary"></div>
+<div class="h-1.5 flex-1 rounded-full bg-primary"></div>
+<div class="h-1.5 flex-1 rounded-full bg-surface-container-high"></div>
+<div class="h-1.5 flex-1 rounded-full bg-surface-container-high"></div>
+</div>
+<p class="text-[12px] text-on-surface-variant mt-1.5 flex items-center gap-1">
+<span class="material-symbols-outlined text-primary text-[14px]">psychology_alt</span>
+<span class="truncate">Sisa kuota jajan aman sampai akhir pekan!</span>
+</p>
+</div>
+</div>
+</div>
+<!-- Tanuki Vault: Hero Balance Card (Deep Refined Forest) -->
+<div class="relative overflow-hidden rounded-2xl bg-primary text-white p-4 shadow-sm border border-emerald-900/30">
+<!-- Subtle Minimal Ambient Glow -->
+<div class="absolute -right-8 -top-8 w-36 h-36 rounded-full bg-emerald-500/10 blur-2xl pointer-events-none"></div>
+<div class="absolute left-1/4 -bottom-10 w-32 h-32 rounded-full bg-emerald-300/10 blur-xl pointer-events-none"></div>
+<div class="relative z-10 flex flex-col gap-3.5">
+<!-- Balance Header -->
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5 text-emerald-200/90 font-pixel text-[11px] uppercase tracking-wider font-bold">
+<span class="material-symbols-outlined text-[15px] text-emerald-300">spa</span>
+<span>Total Kekayaan Daun</span>
+</div>
+<button aria-label="Sembunyikan Saldo" class="text-emerald-200/80 hover:text-white transition-colors p-1 rounded-md" id="toggle-balance-btn">
+<span class="material-symbols-outlined text-[18px]" id="eye-icon">visibility</span>
+</button>
+</div>
+<!-- Main Numeric Display -->
+<div class="flex flex-col">
+<div class="flex items-baseline gap-1.5">
+<span class="font-pixel text-[14px] text-emerald-300 font-bold">Rp</span>
+<span class="font-pixel text-[28px] font-bold text-white tracking-tight" id="balance-display">14.850.000</span>
+</div>
+<div class="flex items-center gap-1 mt-0.5">
+<span class="font-pixel text-[11px] text-emerald-200/70">≈ 1.485 Tanuki Koban</span>
+<span class="select-none text-[10px]">🪙</span>
+</div>
+</div>
+<!-- Monthly In/Out Mini Pills (Clean Modern Glass-like) -->
+<div class="grid grid-cols-2 gap-2 pt-0.5">
+<div class="flex items-center gap-2 rounded-xl bg-white/[0.08] border border-white/[0.08] px-2.5 py-2">
+<div class="w-6 h-6 rounded-full bg-emerald-400/20 text-emerald-200 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[14px]">arrow_downward</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-pixel text-[10px] text-emerald-200/70 uppercase">Masuk</span>
+<span class="text-[13px] font-semibold text-white truncate">+Rp 8.500.000</span>
+</div>
+</div>
+<div class="flex items-center gap-2 rounded-xl bg-white/[0.08] border border-white/[0.08] px-2.5 py-2">
+<div class="w-6 h-6 rounded-full bg-amber-400/20 text-amber-200 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[14px]">arrow_upward</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-pixel text-[10px] text-emerald-200/70 uppercase">Keluar</span>
+<span class="text-[13px] font-semibold text-white truncate">-Rp 3.650.000</span>
+</div>
+</div>
+</div>
+<!-- Card Action Buttons -->
+<div class="flex items-center gap-2 pt-0.5">
+<button class="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-white text-primary font-body font-semibold text-[13px] shadow-xs active:scale-[0.98] transition-all">
+<span class="material-symbols-outlined text-[17px]">send</span>
+<span>Kirim Daun</span>
+</button>
+<button class="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-emerald-700/60 hover:bg-emerald-700/80 border border-white/10 text-white font-body font-semibold text-[13px] shadow-xs active:scale-[0.98] transition-all">
+<span class="material-symbols-outlined text-[17px]">add_circle</span>
+<span>Isi Saldo</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Daily Allowance Tracker (Acorn Meter) -->
+<div class="flex flex-col rounded-2xl bg-surface-container-lowest border border-black/[0.06] p-3.5 shadow-[0_2px_8px_rgba(0,0,0,0.03)] gap-2">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-secondary text-[17px]">cloud_download</span>
+<span class="text-[15px] font-semibold text-on-surface">Batas Belanja Hari Ini</span>
+</div>
+<span class="font-pixel text-[10px] font-bold text-secondary bg-surface-container border border-black/[0.04] px-2 py-0.5 rounded-md">74% TERPAKAI</span>
+</div>
+<div class="flex items-baseline justify-between mt-0.5">
+<div class="flex items-baseline gap-1">
+<span class="text-[16px] font-bold text-on-surface">Rp 185.000</span>
+<span class="text-[12px] text-on-surface-variant font-medium">/ Rp 250.000</span>
+</div>
+<span class="text-[12px] text-primary font-semibold">Sisa Rp 65.000</span>
+</div>
+<!-- Sleek Segmented Bar -->
+<div class="grid grid-cols-10 gap-1 mt-1" title="Konsumsi Harian (10 Segmen)">
+<div class="h-2.5 rounded-sm bg-primary flex items-center justify-center">
+<span class="text-[7px] text-white select-none">🌰</span>
+</div>
+<div class="h-2.5 rounded-sm bg-primary flex items-center justify-center">
+<span class="text-[7px] text-white select-none">🌰</span>
+</div>
+<div class="h-2.5 rounded-sm bg-primary flex items-center justify-center">
+<span class="text-[7px] text-white select-none">🌰</span>
+</div>
+<div class="h-2.5 rounded-sm bg-primary flex items-center justify-center">
+<span class="text-[7px] text-white select-none">🌰</span>
+</div>
+<div class="h-2.5 rounded-sm bg-primary flex items-center justify-center">
+<span class="text-[7px] text-white select-none">🌰</span>
+</div>
+<div class="h-2.5 rounded-sm bg-primary flex items-center justify-center">
+<span class="text-[7px] text-white select-none">🌰</span>
+</div>
+<div class="h-2.5 rounded-sm bg-emerald-600 flex items-center justify-center">
+<span class="text-[7px] text-white select-none">🌰</span>
+</div>
+<div class="h-2.5 rounded-sm bg-surface-container-high flex items-center justify-center">
+<span class="text-[6px] text-on-surface-variant/40">·</span>
+</div>
+<div class="h-2.5 rounded-sm bg-surface-container-high flex items-center justify-center">
+<span class="text-[6px] text-on-surface-variant/40">·</span>
+</div>
+<div class="h-2.5 rounded-sm bg-surface-container-high flex items-center justify-center">
+<span class="text-[6px] text-on-surface-variant/40">·</span>
+</div>
+</div>
+<div class="flex items-center justify-between font-pixel text-[10px] text-on-surface-variant pt-0.5">
+<span>00:00</span>
+<span class="text-tertiary font-medium">Reset pukul 24:00 WIB</span>
+<span>24:00</span>
+</div>
+</div>
+<!-- Quick Actions Grid -->
+<div class="grid grid-cols-4 gap-2">
+<button class="flex flex-col items-center justify-center py-3 px-1 rounded-2xl bg-surface-container-lowest border border-black/[0.06] hover:bg-surface-container-low transition-all active:scale-95 text-center group shadow-[0_1px_4px_rgba(0,0,0,0.02)]">
+<div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-100 flex items-center justify-center mb-1.5 group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-[19px]">document_scanner</span>
+</div>
+<span class="font-pixel text-[11px] font-bold text-on-surface">Scan Struk</span>
+</button>
+<button class="flex flex-col items-center justify-center py-3 px-1 rounded-2xl bg-surface-container-lowest border border-black/[0.06] hover:bg-surface-container-low transition-all active:scale-95 text-center group shadow-[0_1px_4px_rgba(0,0,0,0.02)]">
+<div class="w-10 h-10 rounded-xl bg-stone-100 text-stone-700 border border-stone-200/60 flex items-center justify-center mb-1.5 group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-[19px]">currency_exchange</span>
+</div>
+<span class="font-pixel text-[11px] font-bold text-on-surface">Kirim Daun</span>
+</button>
+<button class="flex flex-col items-center justify-center py-3 px-1 rounded-2xl bg-surface-container-lowest border border-black/[0.06] hover:bg-surface-container-low transition-all active:scale-95 text-center group shadow-[0_1px_4px_rgba(0,0,0,0.02)]">
+<div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-700 border border-blue-100 flex items-center justify-center mb-1.5 group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-[19px]">insights</span>
+</div>
+<span class="font-pixel text-[11px] font-bold text-on-surface">Laporan</span>
+</button>
+<button class="flex flex-col items-center justify-center py-3 px-1 rounded-2xl bg-surface-container-lowest border border-black/[0.06] hover:bg-surface-container-low transition-all active:scale-95 text-center group shadow-[0_1px_4px_rgba(0,0,0,0.02)]">
+<div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-800 border border-amber-100 flex items-center justify-center mb-1.5 group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-[19px]">military_tech</span>
+</div>
+<span class="font-pixel text-[11px] font-bold text-on-surface">Misi Hemat</span>
+</button>
+</div>
+<!-- Modern Visual Mini-Quest Banner -->
+<div class="flex items-center gap-3 p-3 rounded-2xl bg-surface-container-lowest border border-black/[0.06] shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
+<div class="w-9 h-9 shrink-0 rounded-xl bg-primary text-white flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">explore</span>
+</div>
+<div class="flex-1 min-w-0">
+<span class="font-pixel text-[10px] font-bold text-primary uppercase tracking-wider">Misi Harian Tanuki</span>
+<p class="text-[12px] text-on-surface truncate font-normal">Hemat jajan kopi sore ini untuk +50 Poin Daun Emas</p>
+</div>
+<button class="px-2.5 py-1 rounded-lg bg-primary hover:bg-primary-container text-white font-pixel text-[10px] font-bold shrink-0 transition-colors">
+          KLAIM
+        </button>
+</div>
+<!-- Transaction Ledger Section -->
+<div class="flex flex-col gap-2 mt-1">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-primary text-[18px]">receipt_long</span>
+<span class="text-[15px] font-semibold text-on-surface">Transaksi Daun Terkini</span>
+</div>
+<a class="font-pixel text-[11px] font-bold text-primary hover:underline flex items-center gap-0.5" href="#">
+<span>Semua</span>
+<span class="material-symbols-outlined text-[13px]">chevron_right</span>
+</a>
+</div>
+<!-- Transaction List Card Container -->
+<div class="flex flex-col rounded-2xl bg-surface-container-lowest border border-black/[0.06] divide-y divide-black/[0.04] shadow-[0_2px_8px_rgba(0,0,0,0.03)] overflow-hidden">
+<!-- Tx 1: Kopi Susu Matcha -->
+<div class="flex items-center gap-3 p-3 hover:bg-surface-container-low/50 transition-colors">
+<div class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center shrink-0 text-stone-700 border border-black/[0.03]">
+<span class="material-symbols-outlined text-[19px]">coffee</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between gap-1">
+<span class="text-[13px] font-semibold text-on-surface truncate">Kopi Susu Matcha</span>
+<span class="font-pixel text-[12px] font-bold text-on-surface shrink-0">-Rp 28.000</span>
+</div>
+<div class="flex items-center justify-between gap-1 mt-0.5">
+<span class="text-[12px] text-on-surface-variant truncate">Kafe Koma · Hari ini, 14:20</span>
+<span class="font-pixel text-[10px] text-stone-600 bg-surface-container px-1.5 py-0.5 rounded">Jajan &amp; Makan</span>
+</div>
+</div>
+</div>
+<!-- Tx 2: MRT Pulang Pergi -->
+<div class="flex items-center gap-3 p-3 hover:bg-surface-container-low/50 transition-colors">
+<div class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center shrink-0 text-stone-700 border border-black/[0.03]">
+<span class="material-symbols-outlined text-[19px]">directions_subway</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between gap-1">
+<span class="text-[13px] font-semibold text-on-surface truncate">MRT Pulang Pergi</span>
+<span class="font-pixel text-[12px] font-bold text-on-surface shrink-0">-Rp 14.000</span>
+</div>
+<div class="flex items-center justify-between gap-1 mt-0.5">
+<span class="text-[12px] text-on-surface-variant truncate">Stasiun Dukuh Atas · Kemarin</span>
+<span class="font-pixel text-[10px] text-stone-600 bg-surface-container px-1.5 py-0.5 rounded">Transport</span>
+</div>
+</div>
+</div>
+<!-- Tx 3: Freelance Design Gig -->
+<div class="flex items-center gap-3 p-3 hover:bg-surface-container-low/50 transition-colors">
+<div class="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center shrink-0 text-primary">
+<span class="material-symbols-outlined text-[19px]">energy_savings_leaf</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between gap-1">
+<span class="text-[13px] font-semibold text-primary truncate">Freelance Design Gig</span>
+<span class="font-pixel text-[12px] font-bold text-primary shrink-0">+Rp 1.500.000</span>
+</div>
+<div class="flex items-center justify-between gap-1 mt-0.5">
+<span class="text-[12px] text-on-surface-variant truncate">Studio Daun Studio · Kemarin</span>
+<span class="font-pixel text-[10px] text-emerald-800 bg-emerald-50 border border-emerald-200/50 px-1.5 py-0.5 rounded">Penghasilan</span>
+</div>
+</div>
+</div>
+<!-- Tx 4: Langganan Spotify -->
+<div class="flex items-center gap-3 p-3 hover:bg-surface-container-low/50 transition-colors">
+<div class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center shrink-0 text-stone-700 border border-black/[0.03]">
+<span class="material-symbols-outlined text-[19px]">headphones</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between gap-1">
+<span class="text-[13px] font-semibold text-on-surface truncate">Langganan Spotify</span>
+<span class="font-pixel text-[12px] font-bold text-on-surface shrink-0">-Rp 54.990</span>
+</div>
+<div class="flex items-center justify-between gap-1 mt-0.5">
+<span class="text-[12px] text-on-surface-variant truncate">Auto-Debit Bulanan · 22 Mei</span>
+<span class="font-pixel text-[10px] text-stone-600 bg-surface-container px-1.5 py-0.5 rounded">Hiburan</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Clean Sanctuary Note -->
+<div class="flex items-center justify-center gap-1.5 py-3 text-on-surface-variant font-pixel text-[10px] font-bold select-none opacity-60">
+<span>⛩️</span>
+<span class="tracking-wide">DISIMPAN SECARA AMAN DI KUIL TANUKI</span>
+<span>⛩️</span>
+</div>
+</div>
+</main>
+<!-- Clean Minimalist Bottom Navigation Bar -->
+<nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface/90 backdrop-blur-xl border-t border-black/[0.05]" data-active-classes="text-primary font-semibold relative after:content-[''] after:absolute after:bottom-1 after:w-1.5 after:h-1.5 after:bg-primary after:rounded-full">
+<div class="flex items-center justify-around h-16 px-space-sm max-w-md mx-auto">
+<a aria-current="page" class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] gap-0.5 transition-all text-primary font-semibold relative after:content-[''] after:absolute after:bottom-1 after:w-1.5 after:h-1.5 after:bg-primary after:rounded-full" data-path="dompet" href="#">
+<span class="material-symbols-outlined text-[21px]">account_balance_wallet</span>
+<span class="font-pixel text-[10px] tracking-wide">Dompet</span>
+</a>
+<a class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] -mt-5 group" data-path="catat" href="#">
+<div class="w-11 h-11 rounded-2xl bg-primary text-white shadow-[0_4px_12px_rgba(31,75,44,0.25)] flex items-center justify-center group-hover:bg-primary-container transition-all active:scale-95">
+<span class="material-symbols-outlined text-[24px]">add</span>
+</div>
+<span class="font-pixel text-[10px] tracking-wide text-on-surface-variant mt-1">Catat</span>
+</a>
+<a class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] gap-0.5 text-on-surface-variant hover:text-on-surface transition-all" data-path="analitik" href="#">
+<span class="material-symbols-outlined text-[21px]">bar_chart</span>
+<span class="font-pixel text-[10px] tracking-wide">Analitik</span>
+</a>
+<a class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] gap-0.5 text-on-surface-variant hover:text-on-surface transition-all" data-path="celengan" href="#">
+<span class="material-symbols-outlined text-[21px]">savings</span>
+<span class="font-pixel text-[10px] tracking-wide">Celengan</span>
+</a>
+</div>
+</nav>
+<script>
+    (function() {
+      // Interactive Eye Toggle for Balance Privacy
+      const toggleBtn = document.getElementById('toggle-balance-btn');
+      const balanceDisplay = document.getElementById('balance-display');
+      const eyeIcon = document.getElementById('eye-icon');
+      let isHidden = false;
+
+      if (toggleBtn && balanceDisplay && eyeIcon) {
+        toggleBtn.addEventListener('click', function() {
+          isHidden = !isHidden;
+          if (isHidden) {
+            balanceDisplay.textContent = '••••••••';
+            eyeIcon.textContent = 'visibility_off';
+          } else {
+            balanceDisplay.textContent = '14.850.000';
+            eyeIcon.textContent = 'visibility';
+          }
+        });
+      }
+
+      // Interactive Mascot Card Click: subtle cheer response
+      const mascotCard = document.getElementById('guardian-card');
+      if (mascotCard) {
+        mascotCard.addEventListener('click', function() {
+          mascotCard.classList.add('scale-[0.99]');
+          setTimeout(() => {
+            mascotCard.classList.remove('scale-[0.99]');
+          }, 150);
+        });
+      }
+    })();
+  </script>
+</body></html>

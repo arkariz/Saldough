@@ -58,7 +58,11 @@ final class RevenueCatPlanSource {
   /// langganan, sehingga Plus yang sudah dibeli hilang hanya karena pengguna
   /// keluar akun. Pengenal tetap sampai akun lain masuk (`logIn` menggantinya)
   /// atau aplikasi dipasang ulang; keadaan hak dibaca ulang saja.
-  Future<void> setUser(String? uid) => uid == null ? refresh() : _run(() => gateway.logIn(uid));
+  ///
+  /// [email] dan [displayName] ikut dikirim sebagai atribut pelanggan agar
+  /// dikenali di dasbor RevenueCat (dicatat di `PLAY_DATA_SAFETY.md`).
+  Future<void> setUser(String? uid, {String? email, String? displayName}) =>
+      uid == null ? refresh() : _run(() => gateway.logIn(uid, email: email, displayName: displayName));
 
   /// Membaca ulang keadaan dari server.
   Future<void> refresh() => _run(gateway.fetch);

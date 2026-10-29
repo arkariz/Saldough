@@ -153,7 +153,7 @@ dari rancangan:
 
 | Mekanisme | Ke mana | Data | Status | Dampak ke formulir |
 |---|---|---|---|---|
-| **RevenueCat** (`purchases_flutter`, hanya build Android dengan kunci SDK) | RevenueCat (pihak ketiga) | ID pengguna aplikasi (anonim, atau ID akun Firebase bila masuk; `logIn(uid)`), riwayat dan status langganan, data teknis perangkat/jaringan yang dikirim SDK (mis. alamat IP, versi aplikasi, platform) | Baru | **Perlu baris baru**: "Info keuangan: Riwayat pembelian" dan "Info pengenal: ID pengguna" (sudah ada untuk akun) serta "ID perangkat atau ID lain" |
+| **RevenueCat** (`purchases_flutter`, hanya build Android dengan kunci SDK) | RevenueCat (pihak ketiga) | ID pengguna aplikasi (anonim, atau ID akun Firebase bila masuk; `logIn(uid)`), **alamat email dan nama tampilan akun yang masuk (atribut pelanggan, agar pemilik mengenali pelanggan di dasbor; 29 Okt 2026)**, riwayat dan status langganan, data teknis perangkat/jaringan yang dikirim SDK (mis. alamat IP, versi aplikasi, platform) | Baru | **Perlu baris baru**: "Info keuangan: Riwayat pembelian"; "Info pengenal: ID pengguna", "Info pribadi: Alamat email", dan "Info pribadi: Nama" ditandai dibagikan ke RevenueCat serta "ID perangkat atau ID lain" |
 | **Google Play Billing** (lewat RevenueCat) | Google Play | Pembayaran diproses Google; aplikasi tidak pernah menerima nomor kartu | Baru | Tidak ada baris "info pembayaran" dari aplikasi |
 | **Analytics**: `trial_started`, `trial_moment`, `trial_value_recap_shown`, `trial_ended`, `paywall_viewed`, `paywall_dismissed`, `purchase_started`, `purchase_completed`, `purchase_failed`, `purchase_restored`, `plus_feature_used`, `taste_quota_exhausted` | Firebase Analytics | Pemicu paywall (P1–P10), jenis paket (`monthly`, `yearly`, ...), alasan gagal, nama fitur, jumlah hari uji coba. **Tanpa** harga, nominal, ID akun, atau isi data | Baru, jenis data sama | Tidak ada baris baru (sudah "Interaksi aplikasi") |
 | **Remote Config**: kunci batas dan jatah Plus (`free_*`, `taste_*`, `plus_launch_at`, ...) | Firebase | Nilai konfigurasi saja, tanpa data pengguna | Baru | Tidak ada |
@@ -168,7 +168,7 @@ nama pengembang; konfirmasi dengan panduan Google sebelum mengisi, dan bila
 ragu isi "Dibagikan: Ya".
 
 **Kebijakan privasi (`tanukonomy-web`) perlu menyebut** RevenueCat sebagai
-pemroses langganan (ID pengguna, riwayat pembelian), Google Play sebagai
+pemroses langganan (ID pengguna, email, nama, riwayat pembelian), Google Play sebagai
 pemroses pembayaran, dan bahwa fitur Plus memerlukan masuk akun untuk uji coba
 (B-20).
 

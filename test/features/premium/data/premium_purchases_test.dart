@@ -25,7 +25,7 @@ final class _Gateway implements PurchasesGateway {
   @override
   Future<void> configure() async {}
   @override
-  Future<PlusSnapshot?> logIn(String uid) async => snapshot;
+  Future<PlusSnapshot?> logIn(String uid, {String? email, String? displayName}) async => snapshot;
   @override
   Future<PlusSnapshot?> logOut() async => snapshot;
   @override

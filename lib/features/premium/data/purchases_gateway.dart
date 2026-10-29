@@ -14,8 +14,10 @@ abstract interface class PurchasesGateway {
   Future<void> configure();
 
   /// Mengikat pengguna RevenueCat ke [uid] akun Firebase; hak anonim
-  /// dipindahkan oleh RevenueCat.
-  Future<PlusSnapshot?> logIn(String uid);
+  /// dipindahkan oleh RevenueCat. [email] dan [displayName] dikirim sebagai
+  /// atribut pelanggan supaya pemilik bisa mengenali pelanggan di dasbor
+  /// (mis. untuk hak promosi); gagal mengirimnya tidak menggagalkan masuk.
+  Future<PlusSnapshot?> logIn(String uid, {String? email, String? displayName});
 
   /// Kembali ke pengguna anonim.
   Future<PlusSnapshot?> logOut();
@@ -85,7 +87,16 @@ final class PurchasesFlutterGateway implements PurchasesGateway {
   }
 
   @override
-  Future<PlusSnapshot?> logIn(String uid) async => _of((await Purchases.logIn(uid)).customerInfo);
+  Future<PlusSnapshot?> logIn(String uid, {String? email, String? displayName}) async {
+    final result = await Purchases.logIn(uid);
+    try {
+      if (email != null && email.isNotEmpty) await Purchases.setEmail(email);
+      if (displayName != null && displayName.isNotEmpty) await Purchases.setDisplayName(displayName);
+    } on Object catch (e) {
+      developer.log('Atribut pelanggan RevenueCat gagal dikirim', error: e, name: 'Purchases');
+    }
+    return _of(result.customerInfo);
+  }
 
   @override
   Future<PlusSnapshot?> logOut() async => _of(await Purchases.logOut());

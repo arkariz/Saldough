@@ -166,7 +166,7 @@ Future<void> startEntitlements(GetIt container) async {
   // Hak RevenueCat disalin ke cache di latar; tidak menunda layar pertama.
   if (revenueCat != null) {
     unawaited(
-      revenueCat.start().then((_) => revenueCat.setUser(user?.uid)),
+      revenueCat.start().then((_) => revenueCat.setUser(user?.uid, email: user?.email, displayName: user?.displayName)),
     );
   }
   unawaited(entitlements.refresh());
@@ -180,7 +180,7 @@ Future<void> startEntitlements(GetIt container) async {
 
 Future<void> _accountChanged(LocalEntitlements entitlements, RevenueCatPlanSource? revenueCat, AppUser? user) async {
   await entitlements.setAccount(_accountOf(user));
-  await revenueCat?.setUser(user?.uid);
+  await revenueCat?.setUser(user?.uid, email: user?.email, displayName: user?.displayName);
 }
 
 EntitlementAccount? _accountOf(AppUser? user) => user == null

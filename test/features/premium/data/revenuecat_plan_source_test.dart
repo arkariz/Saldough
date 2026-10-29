@@ -14,6 +14,7 @@ import 'package:saldough/features/premium/domain/purchase_models.dart';
 final class _FakeGateway implements PurchasesGateway {
   final controller = StreamController<PlusSnapshot?>.broadcast();
   final calls = <String>[];
+  final attributes = <(String?, String?)>[];
   PlusSnapshot? next;
   bool failNext = false;
   bool failConfigure = false;
@@ -34,7 +35,10 @@ final class _FakeGateway implements PurchasesGateway {
   }
 
   @override
-  Future<PlusSnapshot?> logIn(String uid) => _answer('logIn:$uid');
+  Future<PlusSnapshot?> logIn(String uid, {String? email, String? displayName}) {
+    attributes.add((email, displayName));
+    return _answer('logIn:$uid');
+  }
 
   @override
   Future<PlusSnapshot?> logOut() => _answer('logOut');
@@ -234,6 +238,11 @@ void main() {
         expect(changed, 1);
       },
     );
+
+    test('masuk meneruskan email dan nama ke gateway sebagai atribut pelanggan', () async {
+      await source.setUser('u1', email: 'a@b.id', displayName: 'Ayu');
+      expect(gateway.attributes, [('a@b.id', 'Ayu')]);
+    });
 
     test('masuk mengikat pengguna RevenueCat; keluar tidak logOut dan Plus tetap', () async {
       gateway.next = PlusSnapshot(isActive: true, expiration: DateTime(2027, 2));

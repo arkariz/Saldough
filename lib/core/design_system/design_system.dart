@@ -6,9 +6,9 @@ library;
 
 export 'color/ds_color_scheme.dart';
 export 'ds_theme.dart';
-export 'presets/autumn_kyoto.dart';
 export 'presets/ds_theme_preset.dart';
 export 'presets/ds_theme_presets.dart';
+export 'presets/matcha.dart';
 export 'tokens/ds_elevation.dart';
 export 'tokens/ds_motion.dart';
 export 'tokens/ds_radius.dart';

@@ -1,32 +1,35 @@
 import 'package:flutter/widgets.dart';
 
-/// Skala sudut lengkung design system baru (spek bagian `rounded`, ADR-043).
+/// Skala sudut lengkung design system baru (`spec.md` bagian `rounded` dan
+/// Shapes, ADR-043).
 ///
-/// Postur "Soft (Level 1)": kontrol mikro 2–4px, input dan tombol 4px,
-/// kartu/panel/dialog 8px. Lingkaran penuh hanya untuk avatar dan titik
-/// status.
+/// Input, tombol, dan sel 8px; kartu dan panel ringkasan 16px; sheet 20px
+/// di sudut atas; badge, tag, dan avatar transaksi pil penuh.
 abstract final class DsRadius {
   DsRadius._();
 
   /// Tanpa lengkung.
   static const double none = 0;
 
-  /// `sm` (2px): badge, checkbox, switch.
-  static const double sm = 2;
+  /// `sm` (4px): checkbox, segmen meter.
+  static const double sm = 4;
 
-  /// `DEFAULT` (4px): input, tombol, chip.
-  static const double base = 4;
+  /// `DEFAULT` (8px): input, tombol, sel interaktif, widget data.
+  static const double base = 8;
 
-  /// `md` (6px).
-  static const double md = 6;
+  /// `md` (12px): tile ikon, tombol di kartu, kotak statistik.
+  static const double md = 12;
 
-  /// `lg` (8px): kartu, panel, dialog.
-  static const double lg = 8;
+  /// `lg` (16px): kartu dan panel ringkasan.
+  static const double lg = 16;
 
-  /// `xl` (12px): sudut atas bottom sheet.
-  static const double xl = 12;
+  /// Sudut atas bottom sheet ponsel (20px).
+  static const double sheet = 20;
 
-  /// `full`: avatar dan titik status.
+  /// `xl` (24px): dialog dan overlay.
+  static const double xl = 24;
+
+  /// `full`: badge, tag, chip, avatar.
   static const double full = 9999;
 
   /// [BorderRadius] seragam [sm].
@@ -41,6 +44,12 @@ abstract final class DsRadius {
   /// [BorderRadius] seragam [lg].
   static const BorderRadius lgAll = BorderRadius.all(Radius.circular(lg));
 
-  /// Sudut atas [xl] untuk bottom sheet.
-  static const BorderRadius sheetTop = BorderRadius.vertical(top: Radius.circular(xl));
+  /// [BorderRadius] seragam [xl].
+  static const BorderRadius xlAll = BorderRadius.all(Radius.circular(xl));
+
+  /// [BorderRadius] pil.
+  static const BorderRadius fullAll = BorderRadius.all(Radius.circular(full));
+
+  /// Sudut atas [sheet] untuk bottom sheet.
+  static const BorderRadius sheetTop = BorderRadius.vertical(top: Radius.circular(sheet));
 }

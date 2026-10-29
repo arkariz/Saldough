@@ -1,16 +1,18 @@
 import 'package:flutter/animation.dart';
 
-/// Gerak design system baru (spek bagian Buttons, ADR-043).
+/// Gerak design system baru (`spec.md`: transisi 150ms renyah, ADR-043).
 abstract final class DsMotion {
   DsMotion._();
 
-  /// Transisi tekan tombol (100ms).
-  static const Duration press = Duration(milliseconds: 100);
+  /// Transisi standar (150ms).
+  static const Duration standard = Duration(milliseconds: 150);
 
-  /// Kurva transisi tekan. Spek hanya menyebut "cubic-bezier"; dipakai
-  /// kurva standar Material.
-  static const Curve pressCurve = Cubic(0.2, 0, 0, 1);
+  /// Kurva transisi standar (ease-out).
+  static const Curve curve = Curves.easeOut;
 
-  /// Geseran ke bawah saat tombol ditekan (px).
-  static const double pressOffset = 1;
+  /// Skala saat tombol atau kartu ditekan (referensi `active:scale-[0.98]`).
+  static const double pressScale = 0.98;
+
+  /// Skala saat tile kecil ditekan (referensi `active:scale-95`).
+  static const double pressScaleTile = 0.95;
 }

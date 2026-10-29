@@ -91,10 +91,10 @@ class DsCategoryColors {
 
 /// Skema warna design system baru (ADR-043), satu per mode per preset.
 ///
-/// Nama field = peran di spek Autumn Kyoto Ledger
-/// (`docs/03-design/design-system-kyoto/spec-autumn-kyoto-ledger.md`) dalam
-/// camelCase, ditambah peran komponen dari prosa spek dan peran keuangan
-/// yang tidak ada di spek. Nilai tiap preset ada di `presets/`.
+/// Peran Material 3 ditambah peran semantik design system (permukaan, teks,
+/// garis, tindakan, kartu hero, nada badge, keuangan). Nama dan isinya
+/// dijelaskan di `docs/03-design/design-system-v2/README.md`; nilai tiap
+/// preset ada di `presets/`.
 @immutable
 class DsColorScheme extends ThemeExtension<DsColorScheme> {
   /// Membuat skema; seluruh peran wajib diisi supaya preset tidak bolong.
@@ -147,24 +147,35 @@ class DsColorScheme extends ThemeExtension<DsColorScheme> {
     required this.onBackground,
     required this.surfaceVariant,
     required this.surfaceCanvas,
-    required this.honeyBiscuit,
-    required this.warmSand,
-    required this.outlineSubtle,
-    required this.outlineStrong,
+    required this.surfaceCard,
+    required this.surfaceOverlay,
+    required this.surfaceHover,
+    required this.surfaceSunken,
     required this.textPrimary,
     required this.textSecondary,
     required this.textTertiary,
-    required this.surfaceFloating,
-    required this.outlineFloating,
+    required this.outlineSubtle,
+    required this.outlineOverlay,
+    required this.outlineStrong,
+    required this.outlineFocus,
     required this.actionPrimary,
     required this.actionPrimaryPressed,
-    required this.actionPrimaryStroke,
     required this.onActionPrimary,
     required this.actionSecondary,
     required this.actionSecondaryPressed,
     required this.onActionSecondary,
-    required this.secondaryContainerOutline,
-    required this.focusRing,
+    required this.actionGhost,
+    required this.actionGhostPressed,
+    required this.heroSurface,
+    required this.heroBorder,
+    required this.heroGlow,
+    required this.onHero,
+    required this.onHeroMuted,
+    required this.heroAccent,
+    required this.heroTile,
+    required this.heroActionSecondary,
+    required this.toneWarmContainer,
+    required this.onToneWarmContainer,
     required this.income,
     required this.incomeContainer,
     required this.onIncomeContainer,
@@ -175,13 +186,11 @@ class DsColorScheme extends ThemeExtension<DsColorScheme> {
     required this.infoContainer,
     required this.onInfoContainer,
     required this.shadow,
-    required this.shadowTint,
-    required this.shadowAccent,
     required this.scrim,
     required this.categories,
   });
 
-  // --- Peran spek (gaya Material 3) ---
+  // --- Peran Material 3 (frontmatter DESIGN.md) ---
 
   /// Permukaan dasar Material.
   final Color surface;
@@ -195,13 +204,13 @@ class DsColorScheme extends ThemeExtension<DsColorScheme> {
   /// Wadah terendah.
   final Color surfaceContainerLowest;
 
-  /// Wadah cekung: baki buku besar, sumur modul, baris disorot (tier 2).
+  /// Wadah rendah.
   final Color surfaceContainerLow;
 
-  /// Kartu dan panel standar (tier 1).
+  /// Wadah standar Material.
   final Color surfaceContainer;
 
-  /// Panel mengambang, popover, chip netral, keadaan ditekan tombol tersier.
+  /// Wadah tinggi: segmen meter kosong.
   final Color surfaceContainerHigh;
 
   /// Wadah tertinggi.
@@ -219,7 +228,7 @@ class DsColorScheme extends ThemeExtension<DsColorScheme> {
   /// Teks di atas inverseSurface.
   final Color inverseOnSurface;
 
-  /// Garis Material.
+  /// Garis Material yang wajib terlihat (3:1).
   final Color outline;
 
   /// Garis Material varian.
@@ -228,13 +237,13 @@ class DsColorScheme extends ThemeExtension<DsColorScheme> {
   /// Rona permukaan Material (tidak dipakai untuk elevasi).
   final Color surfaceTint;
 
-  /// Amber gelap untuk teks, ikon, dan tautan berwarna primer (lolos 4,5:1 di kartu).
+  /// Hijau hutan pekat Material.
   final Color primary;
 
   /// Teks di atas primary.
   final Color onPrimary;
 
-  /// Amber biji ek (#b45309), nada utama merek.
+  /// Hijau matcha hutan (#1F4B2C), nada utama merek.
   final Color primaryContainer;
 
   /// Teks di atas primaryContainer.
@@ -243,19 +252,19 @@ class DsColorScheme extends ThemeExtension<DsColorScheme> {
   /// Primer di atas inverseSurface.
   final Color inversePrimary;
 
-  /// Terakota gelap untuk teks dan ikon sekunder.
+  /// Sage gelap.
   final Color secondary;
 
   /// Teks di atas secondary.
   final Color onSecondary;
 
-  /// Latar chip terakota lembut.
+  /// Sage lembut.
   final Color secondaryContainer;
 
-  /// Teks chip terakota lembut.
+  /// Teks di atas secondaryContainer.
   final Color onSecondaryContainer;
 
-  /// Madu untuk indikator info dan sorotan finansial.
+  /// Arang hangat.
   final Color tertiary;
 
   /// Teks di atas tertiary.
@@ -324,71 +333,110 @@ class DsColorScheme extends ThemeExtension<DsColorScheme> {
   /// Permukaan varian Material.
   final Color surfaceVariant;
 
-  /// Kanvas washi: latar halaman, isi kolom input (tier 0).
+  // --- Permukaan, teks, dan garis (prosa DESIGN.md) ---
+
+  /// Kanvas kabut hangat: latar halaman (tier 0).
   final Color surfaceCanvas;
 
-  /// Aksen biskuit madu untuk sorotan dekoratif, bukan teks.
-  final Color honeyBiscuit;
+  /// Kartu, baris daftar, kolom input (tier 1).
+  final Color surfaceCard;
 
-  /// Pasir hangat: bingkai kartu aktif/ditekan (tier 2).
-  final Color warmSand;
+  /// Popover, dialog, sheet (tier 2).
+  final Color surfaceOverlay;
 
-  /// Garis pemisah baris dan bingkai kartu (tier 1).
-  final Color outlineSubtle;
+  /// Isi tipis saat baris atau kartu ditekan/aktif.
+  final Color surfaceHover;
 
-  /// Bingkai kolom input, checkbox, dan radio kosong.
-  final Color outlineStrong;
+  /// Wadah cekung: track kontrol segmen, tile ikon netral, tag kategori.
+  final Color surfaceSunken;
 
-  /// Teks utama dan nominal.
+  /// Teks utama dan nominal pengeluaran.
   final Color textPrimary;
 
-  /// Teks pendukung: metadata dan label sekunder.
+  /// Teks pendukung: subjudul, keterangan.
   final Color textSecondary;
 
-  /// Teks tersier: keadaan nonaktif dan tag tersier (bukan untuk teks yang wajib terbaca).
+  /// Teks tersier: placeholder, simbol mata uang di kolom nominal. Bukan untuk teks wajib baca.
   final Color textTertiary;
 
-  // --- Peran komponen dari prosa spek ---
+  /// Garis rambut 1px: bingkai kartu, pemisah baris, kolom input.
+  final Color outlineSubtle;
 
-  /// Laci, menu, dan dialog (tier 3).
-  final Color surfaceFloating;
+  /// Bingkai popover, dialog, sheet.
+  final Color outlineOverlay;
 
-  /// Bingkai tier 3.
-  final Color outlineFloating;
+  /// Bingkai checkbox dan tombol sekunder ditekan.
+  final Color outlineStrong;
 
-  /// Isi tombol utama.
+  /// Cincin fokus 1px dan bingkai aktif.
+  final Color outlineFocus;
+
+  // --- Tindakan ---
+
+  /// Isi tombol utama dan tombol Catat.
   final Color actionPrimary;
 
   /// Tombol utama ditekan.
   final Color actionPrimaryPressed;
 
-  /// Garis dasar 1px tombol utama ditekan.
-  final Color actionPrimaryStroke;
-
   /// Teks dan ikon di atas actionPrimary.
   final Color onActionPrimary;
 
-  /// Isi tombol sekunder dan checkbox/radio terpilih.
+  /// Isi tombol sekunder.
   final Color actionSecondary;
 
   /// Tombol sekunder ditekan.
   final Color actionSecondaryPressed;
 
-  /// Teks dan ikon di atas actionSecondary.
+  /// Teks tombol sekunder.
   final Color onActionSecondary;
 
-  /// Bingkai chip terakota lembut.
-  final Color secondaryContainerOutline;
+  /// Teks tombol hantu.
+  final Color actionGhost;
 
-  /// Cincin fokus 2px di luar kolom input.
-  final Color focusRing;
+  /// Isi tombol hantu ditekan.
+  final Color actionGhostPressed;
 
-  // --- Tambahan aplikasi keuangan (tidak ada di spek) ---
+  // --- Kartu saldo hero (code.html) ---
 
-  /// Nominal pemasukan dan status Aman: lumut hangat teredam.
+  /// Latar kartu saldo hijau hutan.
+  final Color heroSurface;
+
+  /// Bingkai kartu saldo.
+  final Color heroBorder;
+
+  /// Cahaya sekitar di sudut kartu saldo (dipakai dengan alfa rendah).
+  final Color heroGlow;
+
+  /// Teks dan nominal di kartu saldo.
+  final Color onHero;
+
+  /// Label dan keterangan di kartu saldo.
+  final Color onHeroMuted;
+
+  /// Prefiks mata uang dan ikon aksen di kartu saldo.
+  final Color heroAccent;
+
+  /// Kotak statistik di kartu saldo (putih 8%).
+  final Color heroTile;
+
+  /// Tombol kedua di kartu saldo.
+  final Color heroActionSecondary;
+
+  // --- Nada badge dan tag ---
+
+  /// Badge/tag sampanye hangat: kategori hidup sehari-hari, peringatan halus.
+  final Color toneWarmContainer;
+
+  /// Teks badge sampanye.
+  final Color onToneWarmContainer;
+
+  // --- Keuangan dan status ---
+
+  /// Nominal pemasukan dan saldo terkonfirmasi.
   final Color income;
 
-  /// Latar badge dan banner pemasukan/aman.
+  /// Latar badge pemasukan/delta positif (sage).
   final Color incomeContainer;
 
   /// Teks di atas incomeContainer.
@@ -406,7 +454,7 @@ class DsColorScheme extends ThemeExtension<DsColorScheme> {
   /// Info netral dan transfer.
   final Color info;
 
-  /// Latar banner dan badge info.
+  /// Latar banner, badge, dan tile info.
   final Color infoContainer;
 
   /// Teks di atas infoContainer.
@@ -414,14 +462,8 @@ class DsColorScheme extends ThemeExtension<DsColorScheme> {
 
   // --- Efek ---
 
-  /// Warna dasar bayangan (arang kastanye).
+  /// Warna dasar bayangan sekitar.
   final Color shadow;
-
-  /// Rona terakota bayangan tier 2.
-  final Color shadowTint;
-
-  /// Rona amber bayangan tier 3.
-  final Color shadowAccent;
 
   /// Tirai di belakang dialog dan sheet.
   final Color scrim;
@@ -531,24 +573,35 @@ class DsColorScheme extends ThemeExtension<DsColorScheme> {
     Color? onBackground,
     Color? surfaceVariant,
     Color? surfaceCanvas,
-    Color? honeyBiscuit,
-    Color? warmSand,
-    Color? outlineSubtle,
-    Color? outlineStrong,
+    Color? surfaceCard,
+    Color? surfaceOverlay,
+    Color? surfaceHover,
+    Color? surfaceSunken,
     Color? textPrimary,
     Color? textSecondary,
     Color? textTertiary,
-    Color? surfaceFloating,
-    Color? outlineFloating,
+    Color? outlineSubtle,
+    Color? outlineOverlay,
+    Color? outlineStrong,
+    Color? outlineFocus,
     Color? actionPrimary,
     Color? actionPrimaryPressed,
-    Color? actionPrimaryStroke,
     Color? onActionPrimary,
     Color? actionSecondary,
     Color? actionSecondaryPressed,
     Color? onActionSecondary,
-    Color? secondaryContainerOutline,
-    Color? focusRing,
+    Color? actionGhost,
+    Color? actionGhostPressed,
+    Color? heroSurface,
+    Color? heroBorder,
+    Color? heroGlow,
+    Color? onHero,
+    Color? onHeroMuted,
+    Color? heroAccent,
+    Color? heroTile,
+    Color? heroActionSecondary,
+    Color? toneWarmContainer,
+    Color? onToneWarmContainer,
     Color? income,
     Color? incomeContainer,
     Color? onIncomeContainer,
@@ -559,8 +612,6 @@ class DsColorScheme extends ThemeExtension<DsColorScheme> {
     Color? infoContainer,
     Color? onInfoContainer,
     Color? shadow,
-    Color? shadowTint,
-    Color? shadowAccent,
     Color? scrim,
     DsCategoryColors? categories,
   }) {
@@ -613,24 +664,35 @@ class DsColorScheme extends ThemeExtension<DsColorScheme> {
       onBackground: onBackground ?? this.onBackground,
       surfaceVariant: surfaceVariant ?? this.surfaceVariant,
       surfaceCanvas: surfaceCanvas ?? this.surfaceCanvas,
-      honeyBiscuit: honeyBiscuit ?? this.honeyBiscuit,
-      warmSand: warmSand ?? this.warmSand,
-      outlineSubtle: outlineSubtle ?? this.outlineSubtle,
-      outlineStrong: outlineStrong ?? this.outlineStrong,
+      surfaceCard: surfaceCard ?? this.surfaceCard,
+      surfaceOverlay: surfaceOverlay ?? this.surfaceOverlay,
+      surfaceHover: surfaceHover ?? this.surfaceHover,
+      surfaceSunken: surfaceSunken ?? this.surfaceSunken,
       textPrimary: textPrimary ?? this.textPrimary,
       textSecondary: textSecondary ?? this.textSecondary,
       textTertiary: textTertiary ?? this.textTertiary,
-      surfaceFloating: surfaceFloating ?? this.surfaceFloating,
-      outlineFloating: outlineFloating ?? this.outlineFloating,
+      outlineSubtle: outlineSubtle ?? this.outlineSubtle,
+      outlineOverlay: outlineOverlay ?? this.outlineOverlay,
+      outlineStrong: outlineStrong ?? this.outlineStrong,
+      outlineFocus: outlineFocus ?? this.outlineFocus,
       actionPrimary: actionPrimary ?? this.actionPrimary,
       actionPrimaryPressed: actionPrimaryPressed ?? this.actionPrimaryPressed,
-      actionPrimaryStroke: actionPrimaryStroke ?? this.actionPrimaryStroke,
       onActionPrimary: onActionPrimary ?? this.onActionPrimary,
       actionSecondary: actionSecondary ?? this.actionSecondary,
       actionSecondaryPressed: actionSecondaryPressed ?? this.actionSecondaryPressed,
       onActionSecondary: onActionSecondary ?? this.onActionSecondary,
-      secondaryContainerOutline: secondaryContainerOutline ?? this.secondaryContainerOutline,
-      focusRing: focusRing ?? this.focusRing,
+      actionGhost: actionGhost ?? this.actionGhost,
+      actionGhostPressed: actionGhostPressed ?? this.actionGhostPressed,
+      heroSurface: heroSurface ?? this.heroSurface,
+      heroBorder: heroBorder ?? this.heroBorder,
+      heroGlow: heroGlow ?? this.heroGlow,
+      onHero: onHero ?? this.onHero,
+      onHeroMuted: onHeroMuted ?? this.onHeroMuted,
+      heroAccent: heroAccent ?? this.heroAccent,
+      heroTile: heroTile ?? this.heroTile,
+      heroActionSecondary: heroActionSecondary ?? this.heroActionSecondary,
+      toneWarmContainer: toneWarmContainer ?? this.toneWarmContainer,
+      onToneWarmContainer: onToneWarmContainer ?? this.onToneWarmContainer,
       income: income ?? this.income,
       incomeContainer: incomeContainer ?? this.incomeContainer,
       onIncomeContainer: onIncomeContainer ?? this.onIncomeContainer,
@@ -641,8 +703,6 @@ class DsColorScheme extends ThemeExtension<DsColorScheme> {
       infoContainer: infoContainer ?? this.infoContainer,
       onInfoContainer: onInfoContainer ?? this.onInfoContainer,
       shadow: shadow ?? this.shadow,
-      shadowTint: shadowTint ?? this.shadowTint,
-      shadowAccent: shadowAccent ?? this.shadowAccent,
       scrim: scrim ?? this.scrim,
       categories: categories ?? this.categories,
     );
@@ -700,24 +760,35 @@ class DsColorScheme extends ThemeExtension<DsColorScheme> {
       onBackground: Color.lerp(onBackground, other.onBackground, t)!,
       surfaceVariant: Color.lerp(surfaceVariant, other.surfaceVariant, t)!,
       surfaceCanvas: Color.lerp(surfaceCanvas, other.surfaceCanvas, t)!,
-      honeyBiscuit: Color.lerp(honeyBiscuit, other.honeyBiscuit, t)!,
-      warmSand: Color.lerp(warmSand, other.warmSand, t)!,
-      outlineSubtle: Color.lerp(outlineSubtle, other.outlineSubtle, t)!,
-      outlineStrong: Color.lerp(outlineStrong, other.outlineStrong, t)!,
+      surfaceCard: Color.lerp(surfaceCard, other.surfaceCard, t)!,
+      surfaceOverlay: Color.lerp(surfaceOverlay, other.surfaceOverlay, t)!,
+      surfaceHover: Color.lerp(surfaceHover, other.surfaceHover, t)!,
+      surfaceSunken: Color.lerp(surfaceSunken, other.surfaceSunken, t)!,
       textPrimary: Color.lerp(textPrimary, other.textPrimary, t)!,
       textSecondary: Color.lerp(textSecondary, other.textSecondary, t)!,
       textTertiary: Color.lerp(textTertiary, other.textTertiary, t)!,
-      surfaceFloating: Color.lerp(surfaceFloating, other.surfaceFloating, t)!,
-      outlineFloating: Color.lerp(outlineFloating, other.outlineFloating, t)!,
+      outlineSubtle: Color.lerp(outlineSubtle, other.outlineSubtle, t)!,
+      outlineOverlay: Color.lerp(outlineOverlay, other.outlineOverlay, t)!,
+      outlineStrong: Color.lerp(outlineStrong, other.outlineStrong, t)!,
+      outlineFocus: Color.lerp(outlineFocus, other.outlineFocus, t)!,
       actionPrimary: Color.lerp(actionPrimary, other.actionPrimary, t)!,
       actionPrimaryPressed: Color.lerp(actionPrimaryPressed, other.actionPrimaryPressed, t)!,
-      actionPrimaryStroke: Color.lerp(actionPrimaryStroke, other.actionPrimaryStroke, t)!,
       onActionPrimary: Color.lerp(onActionPrimary, other.onActionPrimary, t)!,
       actionSecondary: Color.lerp(actionSecondary, other.actionSecondary, t)!,
       actionSecondaryPressed: Color.lerp(actionSecondaryPressed, other.actionSecondaryPressed, t)!,
       onActionSecondary: Color.lerp(onActionSecondary, other.onActionSecondary, t)!,
-      secondaryContainerOutline: Color.lerp(secondaryContainerOutline, other.secondaryContainerOutline, t)!,
-      focusRing: Color.lerp(focusRing, other.focusRing, t)!,
+      actionGhost: Color.lerp(actionGhost, other.actionGhost, t)!,
+      actionGhostPressed: Color.lerp(actionGhostPressed, other.actionGhostPressed, t)!,
+      heroSurface: Color.lerp(heroSurface, other.heroSurface, t)!,
+      heroBorder: Color.lerp(heroBorder, other.heroBorder, t)!,
+      heroGlow: Color.lerp(heroGlow, other.heroGlow, t)!,
+      onHero: Color.lerp(onHero, other.onHero, t)!,
+      onHeroMuted: Color.lerp(onHeroMuted, other.onHeroMuted, t)!,
+      heroAccent: Color.lerp(heroAccent, other.heroAccent, t)!,
+      heroTile: Color.lerp(heroTile, other.heroTile, t)!,
+      heroActionSecondary: Color.lerp(heroActionSecondary, other.heroActionSecondary, t)!,
+      toneWarmContainer: Color.lerp(toneWarmContainer, other.toneWarmContainer, t)!,
+      onToneWarmContainer: Color.lerp(onToneWarmContainer, other.onToneWarmContainer, t)!,
       income: Color.lerp(income, other.income, t)!,
       incomeContainer: Color.lerp(incomeContainer, other.incomeContainer, t)!,
       onIncomeContainer: Color.lerp(onIncomeContainer, other.onIncomeContainer, t)!,
@@ -728,8 +799,6 @@ class DsColorScheme extends ThemeExtension<DsColorScheme> {
       infoContainer: Color.lerp(infoContainer, other.infoContainer, t)!,
       onInfoContainer: Color.lerp(onInfoContainer, other.onInfoContainer, t)!,
       shadow: Color.lerp(shadow, other.shadow, t)!,
-      shadowTint: Color.lerp(shadowTint, other.shadowTint, t)!,
-      shadowAccent: Color.lerp(shadowAccent, other.shadowAccent, t)!,
       scrim: Color.lerp(scrim, other.scrim, t)!,
       categories: DsCategoryColors.lerp(categories, other.categories, t),
     );
@@ -786,24 +855,35 @@ class DsColorScheme extends ThemeExtension<DsColorScheme> {
     'onBackground': onBackground,
     'surfaceVariant': surfaceVariant,
     'surfaceCanvas': surfaceCanvas,
-    'honeyBiscuit': honeyBiscuit,
-    'warmSand': warmSand,
-    'outlineSubtle': outlineSubtle,
-    'outlineStrong': outlineStrong,
+    'surfaceCard': surfaceCard,
+    'surfaceOverlay': surfaceOverlay,
+    'surfaceHover': surfaceHover,
+    'surfaceSunken': surfaceSunken,
     'textPrimary': textPrimary,
     'textSecondary': textSecondary,
     'textTertiary': textTertiary,
-    'surfaceFloating': surfaceFloating,
-    'outlineFloating': outlineFloating,
+    'outlineSubtle': outlineSubtle,
+    'outlineOverlay': outlineOverlay,
+    'outlineStrong': outlineStrong,
+    'outlineFocus': outlineFocus,
     'actionPrimary': actionPrimary,
     'actionPrimaryPressed': actionPrimaryPressed,
-    'actionPrimaryStroke': actionPrimaryStroke,
     'onActionPrimary': onActionPrimary,
     'actionSecondary': actionSecondary,
     'actionSecondaryPressed': actionSecondaryPressed,
     'onActionSecondary': onActionSecondary,
-    'secondaryContainerOutline': secondaryContainerOutline,
-    'focusRing': focusRing,
+    'actionGhost': actionGhost,
+    'actionGhostPressed': actionGhostPressed,
+    'heroSurface': heroSurface,
+    'heroBorder': heroBorder,
+    'heroGlow': heroGlow,
+    'onHero': onHero,
+    'onHeroMuted': onHeroMuted,
+    'heroAccent': heroAccent,
+    'heroTile': heroTile,
+    'heroActionSecondary': heroActionSecondary,
+    'toneWarmContainer': toneWarmContainer,
+    'onToneWarmContainer': onToneWarmContainer,
     'income': income,
     'incomeContainer': incomeContainer,
     'onIncomeContainer': onIncomeContainer,
@@ -814,8 +894,6 @@ class DsColorScheme extends ThemeExtension<DsColorScheme> {
     'infoContainer': infoContainer,
     'onInfoContainer': onInfoContainer,
     'shadow': shadow,
-    'shadowTint': shadowTint,
-    'shadowAccent': shadowAccent,
     'scrim': scrim,
   };
 }

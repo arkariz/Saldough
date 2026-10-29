@@ -176,23 +176,9 @@ flutter:
           weight: 600
         - asset: assets/fonts/PlusJakartaSans-Variable.ttf
           weight: 700
-    # Design system baru (ADR-043), berdampingan sampai rombak UI. Berkas
-    # variabel; bobot skala didaftarkan, `dsTextStyle` juga mengirim `wght`.
-    - family: Epilogue
+    # Design system baru (ADR-043): Plus Jakarta Sans di atas dipakai juga;
+    # Space Mono Bold untuk aksen piksel (label, nominal, logo kata).
+    - family: SpaceMono
       fonts:
-        - asset: assets/fonts/Epilogue-Variable.ttf
-          weight: 600
-        - asset: assets/fonts/Epilogue-Variable.ttf
+        - asset: assets/fonts/SpaceMono-Bold.ttf
           weight: 700
-    - family: SourceSans3
-      fonts:
-        - asset: assets/fonts/SourceSans3-Variable.ttf
-          weight: 400
-        - asset: assets/fonts/SourceSans3-Variable.ttf
-          weight: 600
-    - family: JetBrainsMono
-      fonts:
-        - asset: assets/fonts/JetBrainsMono-Variable.ttf
-          weight: 500
-        - asset: assets/fonts/JetBrainsMono-Variable.ttf
-          weight: 600

@@ -57,7 +57,7 @@ Templat tugas:
 
 ## Ringkasan progres
 
-Terakhir diperbarui: 18 Oktober 2026 (Fase 19 selesai dan masuk `main` lewat PR #51; angka uji terakhir yang tercatat: 1.706 lulus, belum dijalankan ulang sesudah T-19.11/T-19.12; Fase 19 terverifikasi emulator oleh QA). Sebelumnya: 17 Oktober 2026 (1.706 uji lulus, 187 berkas uji, 62.636 baris Dart di `lib/` tanpa `.g.dart`, `flutter analyze` tanpa isu, sesudah irisan 8 Fase 19; kode Fase 19 selesai, sisa T-19.7 untuk QA). Sebelumnya: 17 Oktober 2026 (1.693 uji lulus, sesudah irisan 7 Fase 19). Sebelumnya: 17 Oktober 2026 (1.685 uji lulus, sesudah irisan 6 Fase 19). Sebelumnya: 17 Oktober 2026 (1.662 uji lulus, sesudah irisan 5 Fase 19). Sebelumnya: 17 Oktober 2026 (1.640 uji lulus, sesudah irisan 4 Fase 19). Sebelumnya: 17 Oktober 2026 (1.619 uji lulus, sesudah irisan 3 Fase 19). Sebelumnya: 17 Oktober 2026 (1.608 uji lulus, sesudah irisan 2 Fase 19). Sebelumnya: 15 Oktober 2026 (1.587 uji lulus, 178 berkas uji, 59.046 baris Dart di `lib/` tanpa `.g.dart`, `flutter analyze` tanpa isu, sesudah irisan 1 Fase 19). Sebelumnya: 15 Oktober 2026 (1.421 uji lulus per T-20.5, angka terakhir yang tercatat dan belum dijalankan ulang; 167 berkas uji dan 57.417 baris Dart di `lib/` tanpa `.g.dart` dihitung ulang 15 Okt; `flutter analyze` tanpa isu per T-20.5, sesudah T-20.1–T-20.8 Fase 20). Sebelumnya: 11 Oktober 2026 (1.349 uji lulus, 153 berkas uji, 54.617 baris Dart di `lib/` tanpa `.g.dart`, `flutter analyze` tanpa isu, sesudah T-18.19). Sebelumnya: 11 Oktober 2026 (1.346 uji lulus, 153 berkas uji, 54.611 baris sesudah T-18.18). Sebelumnya: 11 Oktober 2026 (1.342 uji lulus, 152 berkas uji, 54.585 baris sesudah T-18.17). Sebelumnya: 11 Oktober 2026 (1.341 uji lulus, 152 berkas uji, 54.579 baris sesudah T-18.16). Sebelumnya: 11 Oktober 2026 (1.339 uji lulus, 152 berkas uji, 54.574 baris sesudah T-18.15). Sebelumnya: 11 Oktober 2026 (1.333 uji lulus, 152 berkas uji, 54.513 baris sesudah T-18.13 dan T-18.14). Sebelumnya: 11 Oktober 2026 (1.331 uji lulus, 152 berkas uji, 54.497 baris sesudah T-18.11). Sebelumnya: 11 Oktober 2026 (1.326 uji lulus, 151 berkas uji, 54.397 baris sesudah T-18.10). Sebelumnya: 11 Oktober 2026 (1.324 uji lulus, 151 berkas uji, 54.375 baris sesudah T-18.7). Sebelumnya: 11 Oktober 2026 (1.316 uji lulus, 150 berkas uji, 54.213 baris sesudah T-18.8). Sebelumnya: 11 Oktober 2026 (1.313 uji lulus, 150 berkas uji, 54.143 baris sesudah T-18.6). Sebelumnya: 11 Oktober 2026 (1.302 uji lulus, 148 berkas uji, 53.368 baris sesudah T-18.5). Sebelumnya: 10 Oktober 2026 (1.296 uji lulus, 147 berkas uji, 53.136 baris sesudah T-18.4). Sebelumnya: 10 Oktober 2026 (1.291 uji lulus, 146 berkas uji, 53.082 baris sesudah T-18.12). Sebelumnya: 10 Oktober 2026 (1.284 uji lulus, 146 berkas uji, 53.059 baris sesudah T-18.3). Sebelumnya: 10 Oktober 2026 (1.280 uji lulus, 145 berkas uji, 53.030 baris sesudah T-18.2). Sebelumnya: 10 Oktober 2026 (1.254 uji lulus, 144 berkas uji, 52.772 baris sesudah T-8.18). Sebelumnya: 10 Oktober 2026 (1.231 uji lulus, 142 berkas uji, 52.488 baris sesudah T-8.13–8.17). Sebelumnya: 9 Oktober 2026 (1.213 uji lulus, 142 berkas uji, 52.277 baris Dart di `lib/` tanpa `.g.dart` sesudah perbaikan QA PR #43; sesudah kode Fase 14: 1.166 uji, 134 berkas, 51.797 baris). Sebelumnya: 1 Oktober 2026 (911 uji lulus, 95 berkas uji, 39.746 baris sesudah Fase 13; 901 uji lulus sesudah M4 berjalan; sebelumnya 867 uji lulus, 88 berkas uji, 34.516 baris Dart di `lib/` tanpa `.g.dart`).
+Terakhir diperbarui: 29 Oktober 2026 (penyelarasan dokumen dengan `main` di `0.11.0+17`: Fase 22 dan 23 sudah di `main`; dihitung ulang hari ini dengan Flutter 3.47.5 dari `.fvm`: 2.076 uji lulus, 223 berkas uji, 71.320 baris Dart di `lib/` tanpa `.g.dart`, `flutter analyze` 1 info `avoid_redundant_argument_values` di uji ADR-042, F23-3). Sebelumnya: 18 Oktober 2026 (Fase 19 selesai dan masuk `main` lewat PR #51; angka uji terakhir yang tercatat: 1.706 lulus, belum dijalankan ulang sesudah T-19.11/T-19.12; Fase 19 terverifikasi emulator oleh QA). Sebelumnya: 17 Oktober 2026 (1.706 uji lulus, 187 berkas uji, 62.636 baris Dart di `lib/` tanpa `.g.dart`, `flutter analyze` tanpa isu, sesudah irisan 8 Fase 19; kode Fase 19 selesai, sisa T-19.7 untuk QA). Sebelumnya: 17 Oktober 2026 (1.693 uji lulus, sesudah irisan 7 Fase 19). Sebelumnya: 17 Oktober 2026 (1.685 uji lulus, sesudah irisan 6 Fase 19). Sebelumnya: 17 Oktober 2026 (1.662 uji lulus, sesudah irisan 5 Fase 19). Sebelumnya: 17 Oktober 2026 (1.640 uji lulus, sesudah irisan 4 Fase 19). Sebelumnya: 17 Oktober 2026 (1.619 uji lulus, sesudah irisan 3 Fase 19). Sebelumnya: 17 Oktober 2026 (1.608 uji lulus, sesudah irisan 2 Fase 19). Sebelumnya: 15 Oktober 2026 (1.587 uji lulus, 178 berkas uji, 59.046 baris Dart di `lib/` tanpa `.g.dart`, `flutter analyze` tanpa isu, sesudah irisan 1 Fase 19). Sebelumnya: 15 Oktober 2026 (1.421 uji lulus per T-20.5, angka terakhir yang tercatat dan belum dijalankan ulang; 167 berkas uji dan 57.417 baris Dart di `lib/` tanpa `.g.dart` dihitung ulang 15 Okt; `flutter analyze` tanpa isu per T-20.5, sesudah T-20.1–T-20.8 Fase 20). Sebelumnya: 11 Oktober 2026 (1.349 uji lulus, 153 berkas uji, 54.617 baris Dart di `lib/` tanpa `.g.dart`, `flutter analyze` tanpa isu, sesudah T-18.19). Sebelumnya: 11 Oktober 2026 (1.346 uji lulus, 153 berkas uji, 54.611 baris sesudah T-18.18). Sebelumnya: 11 Oktober 2026 (1.342 uji lulus, 152 berkas uji, 54.585 baris sesudah T-18.17). Sebelumnya: 11 Oktober 2026 (1.341 uji lulus, 152 berkas uji, 54.579 baris sesudah T-18.16). Sebelumnya: 11 Oktober 2026 (1.339 uji lulus, 152 berkas uji, 54.574 baris sesudah T-18.15). Sebelumnya: 11 Oktober 2026 (1.333 uji lulus, 152 berkas uji, 54.513 baris sesudah T-18.13 dan T-18.14). Sebelumnya: 11 Oktober 2026 (1.331 uji lulus, 152 berkas uji, 54.497 baris sesudah T-18.11). Sebelumnya: 11 Oktober 2026 (1.326 uji lulus, 151 berkas uji, 54.397 baris sesudah T-18.10). Sebelumnya: 11 Oktober 2026 (1.324 uji lulus, 151 berkas uji, 54.375 baris sesudah T-18.7). Sebelumnya: 11 Oktober 2026 (1.316 uji lulus, 150 berkas uji, 54.213 baris sesudah T-18.8). Sebelumnya: 11 Oktober 2026 (1.313 uji lulus, 150 berkas uji, 54.143 baris sesudah T-18.6). Sebelumnya: 11 Oktober 2026 (1.302 uji lulus, 148 berkas uji, 53.368 baris sesudah T-18.5). Sebelumnya: 10 Oktober 2026 (1.296 uji lulus, 147 berkas uji, 53.136 baris sesudah T-18.4). Sebelumnya: 10 Oktober 2026 (1.291 uji lulus, 146 berkas uji, 53.082 baris sesudah T-18.12). Sebelumnya: 10 Oktober 2026 (1.284 uji lulus, 146 berkas uji, 53.059 baris sesudah T-18.3). Sebelumnya: 10 Oktober 2026 (1.280 uji lulus, 145 berkas uji, 53.030 baris sesudah T-18.2). Sebelumnya: 10 Oktober 2026 (1.254 uji lulus, 144 berkas uji, 52.772 baris sesudah T-8.18). Sebelumnya: 10 Oktober 2026 (1.231 uji lulus, 142 berkas uji, 52.488 baris sesudah T-8.13–8.17). Sebelumnya: 9 Oktober 2026 (1.213 uji lulus, 142 berkas uji, 52.277 baris Dart di `lib/` tanpa `.g.dart` sesudah perbaikan QA PR #43; sesudah kode Fase 14: 1.166 uji, 134 berkas, 51.797 baris). Sebelumnya: 1 Oktober 2026 (911 uji lulus, 95 berkas uji, 39.746 baris sesudah Fase 13; 901 uji lulus sesudah M4 berjalan; sebelumnya 867 uji lulus, 88 berkas uji, 34.516 baris Dart di `lib/` tanpa `.g.dart`).
 
 | Fase | Tugas | Selesai | Status |
 |---|---|---|---|
@@ -87,8 +87,8 @@ Terakhir diperbarui: 18 Oktober 2026 (Fase 19 selesai dan masuk `main` lewat PR 
 | 20 — Pengumuman pembaruan ([APP_UPDATE.md](../01-product/features/APP_UPDATE.md)) | 8 | 8 | KT-U1–KT-U5 dijawab dan ADR-039 Accepted (15 Okt 2026); T-20.1–T-20.8 selesai dan sudah di `main` (ada di build `0.6.0+12` dan `0.7.0+13`); T-20.4 selesai (rupa v3 diterapkan, selisih diputuskan pemilik); T-20.7 formulir Play Console dan kebijakan privasi dilaporkan pemilik selesai; verifikasi perangkat T-20.8 lulus semua (15 Okt 2026) |
 | 21 — Penemuan fitur ([FEATURE_DISCOVERY.md](../01-product/features/FEATURE_DISCOVERY.md)) | 10 | 7 | Kode T-21.1–T-21.7 selesai; T-21.9 (Mulai cepat) sebagian; menunggu T-21.0 (rupa) dan T-21.8 (verifikasi perangkat) |
 | 22 — Ekspor dan cadangan manual ([EXPORT_BACKUP.md](../01-product/features/EXPORT_BACKUP.md)) | 8 | 8 | Selesai 23 Okt 2026 (dari B-42): ADR-040 Accepted, T-22.0–T-22.7 di `main`; QA emulator Android tanpa temuan S1/S2; sisa uji perangkat (iOS, Excel/Sheets, dll.) di B-67 |
-| 23 — Catat notifikasi multi-dompet, contoh, dan rutin lebih awal ([ADR-042](../02-architecture/adr/0042-notifikasi-multi-dompet-sampel-dan-rutin.md)) | 4 | 4 | Kode selesai 23 Okt 2026 di branch `worktree-notif-multi-wallet-recurring` (belum digabung); sisa kompilasi Kotlin, uji emulator, dan pengungkapan privasi situs |
-| Antrean (`B-n`, belum dijadwalkan) | 65 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
+| 23 — Catat notifikasi multi-dompet, contoh, dan rutin lebih awal ([ADR-042](../02-architecture/adr/0042-notifikasi-multi-dompet-sampel-dan-rutin.md)) | 4 | 4 | **Selesai 23 Okt 2026, di `main`** (commit `c83f360`), dirilis di `0.10.0+16`. QA emulator ([VERIFICATION_PLAN_FASE_23.md](VERIFICATION_PLAN_FASE_23.md)): kompilasi Kotlin lulus, 26 baris lulus, tanpa Gagal S1/S2, 5 temuan S3; sisanya di B-83 |
+| Antrean (`B-n`, belum dijadwalkan) | 66 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
 
 ## Keputusan terbuka
 
@@ -102,13 +102,22 @@ diputuskan, dan catat keputusannya di tugas atau ADR yang mengerjakannya.
   §3.3 poin 4. (Ganti akun sudah diputuskan: data diganti dengan peringatan,
   tanpa penggabungan.)
 
-- **KT-U1–KT-U5** Pengumuman pembaruan (Fase 20): boleh memaksa pembaruan
-  (rekomendasi tidak), pembaruan kecil diumumkan sekali atau diam
-  (rekomendasi umumkan sekali), Apa yang baru otomatis (rekomendasi ya,
-  sekali), format versi di Akun, dan penulis catatan Apa yang baru. Rincian
-  dan alasannya di [APP_UPDATE.md](../01-product/features/APP_UPDATE.md)
-  §12. Keputusan teknis bukan bagian KT ini; engineer menulisnya sebagai ADR
-  di T-20.1.
+- **KT-W1** Arti mengubah saldo dompet. Sejak `0.11.0+17` (commit
+  `dd18320`, 27 Okt 2026, dikerjakan tanpa tugas T-n.n), kolom di Ubah
+  dompet berarti **saldo saat ini**: angka yang diisi langsung menjadi saldo,
+  dan `WalletBloc` diam-diam menggeser `initialBalance` (= angka diisi −
+  netto transaksi dompet). Ini masih memenuhi FR-WAL-002, tetapi
+  (a) selisih antara catatan dan uang nyata hilang tanpa jejak, (b) saldo
+  historis seluruh periode lampau ikut bergeser (Analisis, saldo terendah,
+  perkiraan), padahal ADR-038 menjaga periode lampau tidak dipotong ulang,
+  dan (c) saldo negatif atau bersen pecahan tampil sebagai kolom kosong.
+  Pilihan: pertahankan dan tulis ADR-nya, atau catat selisih sebagai
+  transaksi penyesuaian bertanggal hari ini (ADR domain baru, menyentuh
+  aturan 8). Keputusan teknis menyusul sebagai ADR.
+
+KT-U1–KT-U5 (pengumuman pembaruan, Fase 20) diputuskan 15 Okt 2026 sesuai
+rekomendasi; dicatat di [APP_UPDATE.md](../01-product/features/APP_UPDATE.md)
+§12 dan ADR-039. Pembaruan wajib (KT-U1 R2) ditinjau ulang di B-39.
 
 KT-E1–KT-E5 (ekspor dan cadangan, Fase 22) diputuskan 22 Okt 2026 sesuai
 rekomendasi: xlsx bawaan + CSV, cadangan tanpa sandi di R1, lembar sistem
@@ -5350,12 +5359,19 @@ Permintaan pemilik 23 Okt 2026 (kasus Bank Jago).
       `PLAY_DATA_SAFETY.md`.
       Verifikasi: OTP tidak pernah tersimpan, kedaluwarsa, uji backup registry.
 
-**Kode T-23.1–T-23.4 selesai 23 Okt 2026** (branch
-`worktree-notif-multi-wallet-recurring`, belum digabung). `flutter analyze`
-bersih dan seluruh uji lulus. Belum diverifikasi: kompilasi Kotlin (contoh
-notifikasi), uji emulator Jago asli (pola `{from}`/`{to}` butuh sampel nyata),
-pembaruan pengungkapan jelas dan kebijakan privasi situs untuk contoh
-notifikasi. Catatan implementasi di ADR-042 §7.
+**Selesai 23 Okt 2026, di `main`** (commit `c83f360`, dirilis di
+`0.10.0+16`). Catatan implementasi di ADR-042 §7. QA emulator (commit
+`9c54afc`, [VERIFICATION_PLAN_FASE_23.md](VERIFICATION_PLAN_FASE_23.md)):
+kompilasi Kotlin dan APK debug lulus, 26 baris lulus, tanpa Gagal S1/S2,
+5 temuan S3 (F23-1, F23-2, F23-4, F23-5, F23-6; F23-3 info analyze).
+Rekomendasi QA: layak digabung dengan catatan. Sisanya (keputusan F23-2 dan
+F23-6, perbaikan F23-5, pengungkapan contoh notifikasi di Keamanan Data dan
+situs, uji layar, uji perangkat dengan notifikasi Jago asli) di B-83.
+
+**Sesudah Fase 23 (di luar fase):** `0.11.0+17` (commit `dd18320`,
+27 Okt 2026) mengubah Ubah dompet: kolom saldo kini berarti saldo saat ini
+dan saldo awal digeser diam-diam. Dikerjakan tanpa tugas atau ADR; keputusan
+domainnya terbuka di KT-W1. Build ini belum ditandai tag.
 
 ## Antrean (belum dijadwalkan)
 
@@ -5429,6 +5445,7 @@ menambah dan memindahkannya ada di
 | B-80 | **Perkiraan zakat dari catatan** (**gratis**, keputusan 23 Okt 2026): zakat penghasilan dan zakat mal dari dompet, aset, dan utang; pembayarannya dicatat lewat CATAT. Rujukan nisab dari lembaga amil, harga emas diisi pengguna. Sasaran sebelum Ramadan 2027 bila sempat. | agen + pemilik | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §16, [laporan bisnis](https://claude.ai/artifact/SKsV87e4f7hX8h58Qvv7G5) #14 |
 | B-81 | **Kamar Tanuki** (gratis dasar; barang, kostum, dan tema musiman di Plus lewat B-56): kamar piksel yang bertambah barang saat tonggak nyata tercapai; tidak ada yang hilang saat absen, tanuki tidak pernah sedih. Bisa dimatikan. | pemilik menyerahkan aset, lalu agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §16, [laporan bisnis](https://claude.ai/artifact/SKsV87e4f7hX8h58Qvv7G5) Gamifikasi |
 | B-82 | **Buku Stempel** (gratis; edisi musiman khusus Plus): stempel piksel untuk tonggak (periode lengkap, saldo cocok, rutin tak terlewat, target tercapai) dan edisi Ramadan, 17 Agustus, Tahun Baru; tanpa streak, poin, atau peringkat (KT-R13). | pemilik menyerahkan aset, lalu agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §16, [laporan bisnis](https://claude.ai/artifact/SKsV87e4f7hX8h58Qvv7G5) Gamifikasi |
+| B-83 | Tindak lanjut QA Fase 23 sebelum rilis publik: putuskan F23-2 (badge "Mungkin sudah tercatat" untuk pola terikat tanpa kemunculan terbuka) dan F23-6 (saring pemilih Ikat ke rutin menurut jenis pola); perbaiki F23-5 (sakelar contoh notifikasi tetap tampil mati sampai halaman dibuka ulang) dan F23-1 (alasan kotak masuk transfer); perbarui Keamanan Data Play dan kebijakan privasi situs untuk contoh notifikasi; uji layar Aturan dompet, Ikat ke rutin, dan Contoh notifikasi; ulangi F23-4 dan baris "tidak diuji" di perangkat dengan notifikasi Jago asli. | pemilik (keputusan, Play Console, perangkat) + agen | [VERIFICATION_PLAN_FASE_23.md](VERIFICATION_PLAN_FASE_23.md), ADR-042 |
 | B-39 | **Pengumuman pembaruan R2**: pembaruan wajib/versi minimum untuk perbaikan kritis (KT-U1), pembaruan untuk iOS (App Store) sesudah iOS dirilis, dan pilihan jalur uji untuk penguji. | agen + pemilik | [APP_UPDATE.md](../01-product/features/APP_UPDATE.md) §14 |
 | B-35 | Uji di perangkat yang belum dilakukan QA PR #43: lebar 360dp (butuh izin mengubah setelan ponsel), Freelance, perekaman suara sungguhan, dan jalur Gemini secara terpisah. | pemilik | QA PR #43 (di luar PR) |
 | B-14 | **Catat lewat Suara**: STT sistem (`speech_to_text`) + parser aturan + Gemma lokal mulai dari model termurah, 270M → 1B → Gemma 4 E2B (unduhan opt-in dari Hugging Face) → form CATAT terisi draf; adaptor Firebase AI sebagai jalur pivot. ADR-027. Riset & rencana di [VOICE_INPUT_RESEARCH.md](../01-product/features/VOICE_INPUT_RESEARCH.md). | dijadwalkan: T-11.2–T-11.9 | riset 30 Sep 2026 |

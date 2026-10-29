@@ -241,7 +241,9 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
     return RecordFormFrame(
       kindSwitcher: editing ? null : widget.kindSwitcher,
       kind: TransactionKind.expense,
-      title: editing ? t.transaction.editSheetTitle : t.appShell.recordAction,
+      title: editing
+          ? t.transaction.editSheetTitle
+          : recordFormTitle(repeatLocked: widget.repeatLocked, scheduleOnly: widget.scheduleOnly),
       isEditing: editing,
       onBack: () => Navigator.of(context).pop(),
       amountController: _amountController,

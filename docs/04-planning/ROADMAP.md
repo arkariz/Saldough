@@ -58,16 +58,18 @@ berarti membangun ringkasan untuk data yang belum ada.
 | 18 | Periode keuangan | Awal bulan mengikuti gajian, periode peralihan, anggaran rutin ikut pindah (selesai 15 Okt 2026) |
 | 19 | Analisis keuangan R1 | Ke mana uang pergi per kategori, dibanding biasanya, tren enam periode (selesai 18 Okt 2026) |
 | 20 | Pengumuman pembaruan | Versi baru Play Store dan pembaruan kecil Shorebird diumumkan, catatan Apa yang baru (selesai 15 Okt 2026) |
-| 21 | Penemuan fitur | Catat dari notifikasi, pengingat rutin, dan awal bulan keuangan dijadikan langkah wajib onboarding dan tombol permanen (draf 18 Okt 2026, KT-D1 diputuskan, menunggu rupa) |
+| 21 | Penemuan fitur | Catat dari notifikasi, pengingat rutin, dan awal bulan keuangan dijadikan langkah wajib onboarding dan tombol permanen (kode T-21.1–T-21.7 selesai, Mulai cepat sebagian; menunggu rupa T-21.0 dan verifikasi perangkat T-21.8) |
 | 22 | Ekspor dan cadangan manual | Ekspor transaksi ke xlsx/CSV, cadangkan dan pulihkan manual ke berkas, gratis tanpa akun (dari B-42, selesai 23 Okt 2026) |
+| 23 | Catat notifikasi multi-dompet, contoh, dan rutin lebih awal | Satu sumber notifikasi bisa ke banyak dompet, contoh notifikasi jadi pola, rutin diikat ke pola, Catat sekarang untuk rutin yang belum jatuh tempo (selesai 23 Okt 2026, rilis `0.10.0+16`) |
 
 Fase 0 sampai 6 membentuk MVP. Fase 7 dikerjakan setelahnya. Fase 8 dan 9
 lahir dari pemakaian nyata dan persiapan rilis, bukan dari rencana awal.
 
-**Status per 18 Oktober 2026:** semua fase di tabel sudah selesai kodenya
-(kecuali sisa kecil di Fase 8, 11, dan 15 yang tercatat di
-[TASK_LIST.md](TASK_LIST.md)). Arah berikutnya ada di
-[Now / Next / Later](#now--next--later) di bawah.
+**Status per 29 Oktober 2026:** semua fase di tabel sudah selesai kodenya,
+kecuali Fase 21 (menunggu rupa dan verifikasi perangkat) dan sisa kecil di
+Fase 8, 11, dan 15 yang tercatat di [TASK_LIST.md](TASK_LIST.md). Versi di
+`main` `0.11.0+17` (tag terakhir `0.10.0+16`), masih closed testing. Arah
+berikutnya ada di [Now / Next / Later](#now--next--later) di bawah.
 
 ## Now / Next / Later
 
@@ -75,7 +77,7 @@ Arah ke depan, diambil dari antrean `B-n` dan tugas terbuka di
 [TASK_LIST.md](TASK_LIST.md). Ini peta prioritas, bukan jadwal: tidak ada
 tanggal, dan pemilik yang menentukan kapan sebuah butir naik kolom. Butir
 yang naik ke **Now** dijadwalkan sebagai fase dengan tugas `T-n.n` mengikuti
-"Menambah tugas baru" di TASK_LIST. Diperbarui 18 Okt 2026.
+"Menambah tugas baru" di TASK_LIST. Diperbarui 29 Okt 2026.
 
 Tujuan produk yang dipakai menilai (PRD §3): pengguna **kembali mencatat
 secara rutin**, angka selalu tepat, dan inti aplikasi tetap jalan tanpa akun
@@ -94,6 +96,8 @@ baru:
 | B-1 | Sapuan nama "Saldough" → "Tanukonomy" di dokumen | agen |
 | B-5, B-35, B-40 | Verifikasi perangkat yang tertunda: Akun, mata uang, Freelance, suara, lebar 360dp, keadaan kosong Analisis | pemilik |
 | Audit TASK_LIST | Kotak lama yang kemungkinan sudah selesai di kode tapi belum dicentang (T-11.17–11.20, T-15.9, T-15.14, T-15.19, dan B-13/B-14 yang usang) | agen |
+| B-83 | Tindak lanjut QA Fase 23: keputusan F23-2 dan F23-6, perbaikan F23-5, pengungkapan contoh notifikasi di Keamanan Data dan situs, uji perangkat dengan notifikasi bank asli | pemilik + agen |
+| KT-W1 | Putuskan arti mengubah saldo dompet (sejak `0.11.0+17` saldo awal digeser diam-diam, saldo periode lampau ikut bergeser) lalu tulis ADR-nya | pemilik, lalu agen |
 | B-43 | Kunci aplikasi sidik jari/PIN (gratis); prasyarat Plus. Pasangannya, ekspor dan cadangan/pulihkan manual (Fase 22, dari B-42), **selesai 23 Okt 2026**; sisa uji perangkatnya di B-67 | agen, pemilik (B-67) |
 
 **Satu fitur yang ikut di Now:** **B-26**, kartu lembut "Ada yang belum dicatat
@@ -515,7 +519,9 @@ notifikasi pintu yang selalu ada di Beranda (Nyalakan, Kelola, Izinkan) dengan
 Mulai cepat, menambah tombol Nyalakan pengingat, status di Akun, dan tur
 ([FEATURE_DISCOVERY.md](../01-product/features/FEATURE_DISCOVERY.md)).
 Bukan fitur baru; bergantung pada slot Beranda Fase 20 dan onboarding Fase
-9. **Status:** KT-D1 diputuskan 18 Okt 2026; menunggu rupa dari designer, lalu kode.
+9. **Status:** KT-D1 diputuskan 18 Okt 2026. Kode T-21.1–T-21.7 selesai,
+T-21.9 (Mulai cepat) sebagian; menunggu rupa T-21.0 dan verifikasi perangkat
+T-21.8.
 
 **Selesai kalau:** akun baru tidak bisa melewati dua langkah tanpa
 menjawab, baris Catat dari notifikasi di Beranda tidak pernah hilang dan tombol
@@ -535,6 +541,23 @@ ADR engineer (T-22.1). **Status:** selesai 23 Okt 2026. Kode T-22.0–T-22.7 di 
 **Selesai kalau:** cadangan dari satu ponsel dipulihkan di ponsel lain dan
 seluruh layar identik, pemulihan gagal tidak pernah merusak data, dan total
 di spreadsheet sama dengan aplikasi, terverifikasi di perangkat.
+
+## Fase 23: Catat notifikasi multi-dompet, contoh, dan rutin lebih awal
+
+Permintaan pemilik 23 Okt 2026 (kasus Bank Jago dengan banyak kantong).
+Satu sumber notifikasi bisa mencatat ke beberapa dompet lewat aturan kata
+pengenal, transfer antarkantong lewat penanda `{from}`/`{to}`, contoh
+notifikasi (bawaan mati, 7 hari, tanpa OTP) bisa dijadikan filter dan pola,
+rutin bisa diikat ke pola notifikasi, dan kemunculan rutin yang belum jatuh
+tempo bisa dicatat lebih awal
+([ADR-042](../02-architecture/adr/0042-notifikasi-multi-dompet-sampel-dan-rutin.md)).
+**Status:** selesai 23 Okt 2026, di `main` dan dirilis di `0.10.0+16`. QA
+emulator tanpa Gagal S1/S2; tindak lanjutnya di B-83.
+
+**Selesai kalau:** dompet dipilih benar atau tidak ditebak (ambigu ke kotak
+masuk), transfer tidak pernah jadi pemasukan atau pengeluaran, rutin tertaut
+hanya bila pasti, dan contoh notifikasi tidak pernah menyimpan OTP,
+terverifikasi di perangkat dengan notifikasi bank asli.
 
 ## Ketergantungan antar fase
 

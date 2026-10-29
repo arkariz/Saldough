@@ -395,8 +395,8 @@ class Translations$transaction$id {
 	/// id: 'Hapus filter'
 	String get clearFiltersButton => 'Hapus filter';
 
-	/// id: 'Cari di bulan lain'
-	String get crossMonthSearchButton => 'Cari di bulan lain';
+	/// id: 'Cari di periode lain'
+	String get crossMonthSearchButton => 'Cari di periode lain';
 
 	/// id: 'Mencari di bulan sebelumnya...'
 	String get crossMonthSearchingLabel => 'Mencari di bulan sebelumnya...';
@@ -1975,8 +1975,8 @@ class Translations$onboarding$id {
 	/// id: 'Pantau semua saldomu dengan mudah'
 	String get page2Title => 'Pantau semua saldomu dengan mudah';
 
-	/// id: 'Tambahkan rekening bank, e-wallet, dan uang tunai sebagai dompet di akunmu. Saldo tiap dompet dan totalnya selalu terlihat.'
-	String get page2Body => 'Tambahkan rekening bank, e-wallet, dan uang tunai sebagai dompet di akunmu. Saldo tiap dompet dan totalnya selalu terlihat.';
+	/// id: 'Tambahkan rekening bank, e-wallet, dan uang tunai sebagai dompet. Saldo tiap dompet dan totalnya selalu terlihat.'
+	String get page2Body => 'Tambahkan rekening bank, e-wallet, dan uang tunai sebagai dompet. Saldo tiap dompet dan totalnya selalu terlihat.';
 
 	/// id: 'Atur transaksi dalam hitungan detik'
 	String get page3Title => 'Atur transaksi dalam hitungan detik';
@@ -3165,8 +3165,8 @@ class Translations$recurring$id {
 	/// id: 'Belum ada transaksi berulang'
 	String get emptyTitle => 'Belum ada transaksi berulang';
 
-	/// id: 'Tambahkan tagihan dan pemasukan yang pasti datang tiap bulan, lalu lihat berapa dana yang benar-benar bebas.'
-	String get emptyBody => 'Tambahkan tagihan dan pemasukan yang pasti datang tiap bulan, lalu lihat berapa dana yang benar-benar bebas.';
+	/// id: 'Tambahkan tagihan dan pemasukan yang pasti datang tiap bulan, lalu lihat berapa uang nganggur bulan ini.'
+	String get emptyBody => 'Tambahkan tagihan dan pemasukan yang pasti datang tiap bulan, lalu lihat berapa uang nganggur bulan ini.';
 
 	/// id: 'Belum ada transaksi berulang di sini.'
 	String get filteredEmpty => 'Belum ada transaksi berulang di sini.';
@@ -3430,8 +3430,8 @@ class Translations$recurring$id {
 	/// id: '$name $amount, $date. Perkiraan kurang ≈$shortfall.'
 	String fundingBody({required Object name, required Object amount, required Object date, required Object shortfall}) => '${name} ${amount}, ${date}. Perkiraan kurang ≈${shortfall}.';
 
-	/// id: 'Mulai $month, ada ruang bebas +$amount/bln.'
-	String installmentFreeLine({required Object month, required Object amount}) => 'Mulai ${month}, ada ruang bebas +${amount}/bln.';
+	/// id: 'Mulai $month, uang nganggurmu bertambah +$amount/bln.'
+	String installmentFreeLine({required Object month, required Object amount}) => 'Mulai ${month}, uang nganggurmu bertambah +${amount}/bln.';
 
 	/// id: 'Belum terlihat di notifikasi'
 	String get unseenLabel => 'Belum terlihat di notifikasi';
@@ -3667,8 +3667,8 @@ class Translations$plan$id {
 	/// id: 'Rencanakan bulan ini'
 	String get emptyTitle => 'Rencanakan bulan ini';
 
-	/// id: 'Tambahkan tagihan dan pemasukan yang pasti datang tiap bulan, lalu lihat berapa dana yang benar-benar bebas.'
-	String get emptyBody => 'Tambahkan tagihan dan pemasukan yang pasti datang tiap bulan, lalu lihat berapa dana yang benar-benar bebas.';
+	/// id: 'Tambahkan tagihan dan pemasukan yang pasti datang tiap bulan, lalu lihat berapa uang nganggur bulan ini.'
+	String get emptyBody => 'Tambahkan tagihan dan pemasukan yang pasti datang tiap bulan, lalu lihat berapa uang nganggur bulan ini.';
 
 	/// id: 'Perkiraan saldo, terendah $low pada $date, akhir bulan $end'
 	String chartSemantics({required Object low, required Object date, required Object end}) => 'Perkiraan saldo, terendah ${low} pada ${date}, akhir bulan ${end}';
@@ -3751,8 +3751,8 @@ class Translations$plan$id {
 	/// id: 'Rencana $month siap.'
 	String reviewDoneMessage({required Object month}) => 'Rencana ${month} siap.';
 
-	/// id: 'Pemasukan terjadwal $income, sudah dialokasikan $committed, uang nganggur $free.'
-	String homeReviewBody({required Object income, required Object committed, required Object free}) => 'Pemasukan terjadwal ${income}, sudah dialokasikan ${committed}, uang nganggur ${free}.';
+	/// id: 'Pemasukan terjadwal $income, sudah terpakai rencana $committed, uang nganggur $free.'
+	String homeReviewBody({required Object income, required Object committed, required Object free}) => 'Pemasukan terjadwal ${income}, sudah terpakai rencana ${committed}, uang nganggur ${free}.';
 
 	/// id: 'Ada transaksi berulang bernominal perkiraan yang perlu dicek.'
 	String get homeReviewEstimates => 'Ada transaksi berulang bernominal perkiraan yang perlu dicek.';
@@ -3784,14 +3784,14 @@ class Translations$plan$id {
 	/// id: 'Perkiraan $month meleset $amount, terbesar dari $line.'
 	String accuracyMissedBy({required Object month, required Object amount, required Object line}) => 'Perkiraan ${month} meleset ${amount}, terbesar dari ${line}.';
 
-	/// id: '${percent}% pemasukan $month sudah dialokasikan (tagihan rutin + anggaran).'
-	String committedShare({required Object percent, required Object month}) => '${percent}% pemasukan ${month} sudah dialokasikan (tagihan rutin + anggaran).';
+	/// id: '${percent}% pemasukan $month sudah terpakai rencana (tagihan rutin + anggaran).'
+	String committedShare({required Object percent, required Object month}) => '${percent}% pemasukan ${month} sudah terpakai rencana (tagihan rutin + anggaran).';
 
-	/// id: '${percent}% pemasukan $month sudah dialokasikan (tagihan rutin + anggaran); bulan sebelumnya ${previous}%.'
-	String committedShareVs({required Object percent, required Object month, required Object previous}) => '${percent}% pemasukan ${month} sudah dialokasikan (tagihan rutin + anggaran); bulan sebelumnya ${previous}%.';
+	/// id: '${percent}% pemasukan $month sudah terpakai rencana (tagihan rutin + anggaran); bulan sebelumnya ${previous}%.'
+	String committedShareVs({required Object percent, required Object month, required Object previous}) => '${percent}% pemasukan ${month} sudah terpakai rencana (tagihan rutin + anggaran); bulan sebelumnya ${previous}%.';
 
-	/// id: 'Setelah $name selesai, mulai $month kamu punya ruang bebas +$amount/bln.'
-	String installmentFree({required Object name, required Object month, required Object amount}) => 'Setelah ${name} selesai, mulai ${month} kamu punya ruang bebas +${amount}/bln.';
+	/// id: 'Setelah $name selesai, mulai $month uang nganggurmu bertambah +$amount/bln.'
+	String installmentFree({required Object name, required Object month, required Object amount}) => 'Setelah ${name} selesai, mulai ${month} uang nganggurmu bertambah +${amount}/bln.';
 
 	/// id: 'Lihat rincian $month'
 	String lookbackSeeAnalysis({required Object month}) => 'Lihat rincian ${month}';
@@ -4083,6 +4083,12 @@ class Translations$record$repeat$id {
 
 	/// id: 'Simpan jadwal'
 	String get saveScheduleAction => 'Simpan jadwal';
+
+	/// id: 'Ubah jadwal'
+	String get editScheduleTitle => 'Ubah jadwal';
+
+	/// id: 'Jadikan berulang'
+	String get makeRecurringTitle => 'Jadikan berulang';
 
 	/// id: '$name dijadwalkan. Pertama $date.'
 	String scheduledMessage({required Object name, required Object date}) => '${name} dijadwalkan. Pertama ${date}.';
@@ -4928,6 +4934,8 @@ extension on Translations {
 			'record.repeat.paymentAutoDebit' => 'Autodebet',
 			'record.repeat.recordAndScheduleAction' => 'Catat dan jadwalkan',
 			'record.repeat.saveScheduleAction' => 'Simpan jadwal',
+			'record.repeat.editScheduleTitle' => 'Ubah jadwal',
+			'record.repeat.makeRecurringTitle' => 'Jadikan berulang',
 			'record.repeat.scheduledMessage' => ({required Object name, required Object date}) => '${name} dijadwalkan. Pertama ${date}.',
 			'record.repeat.recordedMessage' => ({required Object name}) => '${name} tercatat dan dijadwalkan.',
 			'record.repeat.recordedNextMessage' => ({required Object name, required Object date}) => '${name} tercatat. Berikutnya ${date}.',
@@ -4973,7 +4981,7 @@ extension on Translations {
 			'transaction.emptyFilterTitle' => 'Tidak ada transaksi yang cocok dengan filter',
 			'transaction.emptyFilterSubtitle' => 'Pencarian dan filter hanya berlaku untuk periode yang sedang dibuka. Coba ganti periode atau hapus filter.',
 			'transaction.clearFiltersButton' => 'Hapus filter',
-			'transaction.crossMonthSearchButton' => 'Cari di bulan lain',
+			'transaction.crossMonthSearchButton' => 'Cari di periode lain',
 			'transaction.crossMonthSearchingLabel' => 'Mencari di bulan sebelumnya...',
 			'transaction.crossMonthResultsHeader' => 'Ditemukan di bulan lain',
 			'transaction.crossMonthLoadMoreButton' => 'Cari lebih jauh',
@@ -5317,10 +5325,10 @@ extension on Translations {
 			'budget.templateUpdatedMessage' => 'Perubahan template tersimpan.',
 			'budget.templateDeletedMessage' => 'Template dihapus.',
 			'budget.templateDuplicatedMessage' => 'Template digandakan.',
-			'budget.templateCopyName' => ({required Object name}) => '${name} (salinan)',
-			'budget.templateNameLabel' => 'Nama template',
 			_ => null,
 		} ?? switch (path) {
+			'budget.templateCopyName' => ({required Object name}) => '${name} (salinan)',
+			'budget.templateNameLabel' => 'Nama template',
 			'budget.repeatLabel' => 'Ulangi tiap periode',
 			'budget.repeatHelpMonthly' => ({required Object date}) => 'Dibuat ulang tiap bulan mulai ${date} dengan pos yang sama.',
 			'budget.repeatHelpWeekly' => ({required Object date}) => 'Dibuat ulang tiap minggu mulai ${date} dengan pos yang sama.',
@@ -5501,7 +5509,7 @@ extension on Translations {
 			'onboarding.page1Title' => 'Semua keuanganmu, dalam satu genggaman',
 			'onboarding.page1Body' => 'Pantau di mana uangmu berada, lacak riwayat transaksimu, dan susun rencana alokasi anggaranmu, semuanya dalam satu aplikasi.',
 			'onboarding.page2Title' => 'Pantau semua saldomu dengan mudah',
-			'onboarding.page2Body' => 'Tambahkan rekening bank, e-wallet, dan uang tunai sebagai dompet di akunmu. Saldo tiap dompet dan totalnya selalu terlihat.',
+			'onboarding.page2Body' => 'Tambahkan rekening bank, e-wallet, dan uang tunai sebagai dompet. Saldo tiap dompet dan totalnya selalu terlihat.',
 			'onboarding.page3Title' => 'Atur transaksi dalam hitungan detik',
 			'onboarding.page3Body' => 'Pemasukan, pengeluaran, atau transfer saldo antardompet? Tinggal ketuk Catat. Dompet yang sering kamu pakai dan kategori favoritmu sudah siap.',
 			'onboarding.page4Title' => 'Atur anggaran, pantau pengeluaran',
@@ -5831,10 +5839,10 @@ extension on Translations {
 			'notificationCapture.samplesDisclosureTitle' => 'Simpan contoh notifikasi?',
 			'notificationCapture.samplesDisclosureBody' => 'Tanukonomy akan menyimpan teks notifikasi dari aplikasi yang kamu pilih, termasuk yang bukan transaksi, selama 7 hari di perangkat ini. Dipakai hanya untuk membuat filter dan pola. Kode OTP tidak pernah disimpan, dan teks ini tidak dikirim ke server. Kamu bisa mematikannya kapan saja; semua contoh langsung terhapus.',
 			'notificationCapture.samplesDisclosureCancel' => 'Batal',
-			'notificationCapture.samplesDisclosureAgree' => 'Nyalakan',
-			'notificationCapture.roleIgnore' => 'Abaikan',
 			_ => null,
 		} ?? switch (path) {
+			'notificationCapture.samplesDisclosureAgree' => 'Nyalakan',
+			'notificationCapture.roleIgnore' => 'Abaikan',
 			'notificationCapture.patternKindLabel' => '3. Jenis transaksi',
 			'notificationCapture.kindExpense' => 'Keluar',
 			'notificationCapture.kindIncome' => 'Masuk',
@@ -5946,7 +5954,7 @@ extension on Translations {
 			'recurring.paymentManual' => 'bayar sendiri',
 			'recurring.priceUp' => ({required Object amount, required Object usual}) => '${amount}, biasanya ${usual}',
 			'recurring.emptyTitle' => 'Belum ada transaksi berulang',
-			'recurring.emptyBody' => 'Tambahkan tagihan dan pemasukan yang pasti datang tiap bulan, lalu lihat berapa dana yang benar-benar bebas.',
+			'recurring.emptyBody' => 'Tambahkan tagihan dan pemasukan yang pasti datang tiap bulan, lalu lihat berapa uang nganggur bulan ini.',
 			'recurring.filteredEmpty' => 'Belum ada transaksi berulang di sini.',
 			'recurring.showAllAction' => 'Tampilkan semua',
 			'recurring.addAction' => 'Tambah transaksi berulang',
@@ -6033,7 +6041,7 @@ extension on Translations {
 			'recurring.budgetUnlinkedMessage' => ({required Object name}) => 'Tautan pos ${name} dilepas.',
 			'recurring.fundingTitle' => ({required Object wallet}) => 'Siapkan dana di ${wallet}',
 			'recurring.fundingBody' => ({required Object name, required Object amount, required Object date, required Object shortfall}) => '${name} ${amount}, ${date}. Perkiraan kurang ≈${shortfall}.',
-			'recurring.installmentFreeLine' => ({required Object month, required Object amount}) => 'Mulai ${month}, ada ruang bebas +${amount}/bln.',
+			'recurring.installmentFreeLine' => ({required Object month, required Object amount}) => 'Mulai ${month}, uang nganggurmu bertambah +${amount}/bln.',
 			'recurring.unseenLabel' => 'Belum terlihat di notifikasi',
 			'recurring.notYetAction' => 'Belum terjadi',
 			'recurring.snoozedMessage' => ({required Object name}) => '${name} ditanyakan lagi 2 hari lagi.',
@@ -6109,7 +6117,7 @@ extension on Translations {
 			'plan.nextTitle' => 'Berikutnya',
 			'plan.seeAllRecurring' => 'Semua di Rutin',
 			'plan.emptyTitle' => 'Rencanakan bulan ini',
-			'plan.emptyBody' => 'Tambahkan tagihan dan pemasukan yang pasti datang tiap bulan, lalu lihat berapa dana yang benar-benar bebas.',
+			'plan.emptyBody' => 'Tambahkan tagihan dan pemasukan yang pasti datang tiap bulan, lalu lihat berapa uang nganggur bulan ini.',
 			'plan.chartSemantics' => ({required Object low, required Object date, required Object end}) => 'Perkiraan saldo, terendah ${low} pada ${date}, akhir bulan ${end}',
 			'plan.chartPoint' => ({required Object date, required Object amount}) => '${date} · ${amount}',
 			'plan.forecastEndLabel' => ({required Object date}) => 'Perkiraan saldo ${date}',
@@ -6137,7 +6145,7 @@ extension on Translations {
 			'plan.reviewLater' => 'Nanti',
 			'plan.reviewCollapsed' => ({required Object month, required Object done, required Object total}) => 'Tinjau rencana ${month} (${done}/${total})',
 			'plan.reviewDoneMessage' => ({required Object month}) => 'Rencana ${month} siap.',
-			'plan.homeReviewBody' => ({required Object income, required Object committed, required Object free}) => 'Pemasukan terjadwal ${income}, sudah dialokasikan ${committed}, uang nganggur ${free}.',
+			'plan.homeReviewBody' => ({required Object income, required Object committed, required Object free}) => 'Pemasukan terjadwal ${income}, sudah terpakai rencana ${committed}, uang nganggur ${free}.',
 			'plan.homeReviewEstimates' => 'Ada transaksi berulang bernominal perkiraan yang perlu dicek.',
 			'plan.homeReviewAction' => 'Tinjau rencana',
 			'plan.lookbackTitle' => ({required Object month}) => 'Kilas balik ${month}',
@@ -6148,9 +6156,9 @@ extension on Translations {
 			'plan.accuracyExact' => ({required Object month}) => 'Perkiraan ${month} tepat.',
 			'plan.accuracyMissed' => ({required Object month, required Object amount}) => 'Perkiraan ${month} meleset ${amount}.',
 			'plan.accuracyMissedBy' => ({required Object month, required Object amount, required Object line}) => 'Perkiraan ${month} meleset ${amount}, terbesar dari ${line}.',
-			'plan.committedShare' => ({required Object percent, required Object month}) => '${percent}% pemasukan ${month} sudah dialokasikan (tagihan rutin + anggaran).',
-			'plan.committedShareVs' => ({required Object percent, required Object month, required Object previous}) => '${percent}% pemasukan ${month} sudah dialokasikan (tagihan rutin + anggaran); bulan sebelumnya ${previous}%.',
-			'plan.installmentFree' => ({required Object name, required Object month, required Object amount}) => 'Setelah ${name} selesai, mulai ${month} kamu punya ruang bebas +${amount}/bln.',
+			'plan.committedShare' => ({required Object percent, required Object month}) => '${percent}% pemasukan ${month} sudah terpakai rencana (tagihan rutin + anggaran).',
+			'plan.committedShareVs' => ({required Object percent, required Object month, required Object previous}) => '${percent}% pemasukan ${month} sudah terpakai rencana (tagihan rutin + anggaran); bulan sebelumnya ${previous}%.',
+			'plan.installmentFree' => ({required Object name, required Object month, required Object amount}) => 'Setelah ${name} selesai, mulai ${month} uang nganggurmu bertambah +${amount}/bln.',
 			'plan.lookbackSeeAnalysis' => ({required Object month}) => 'Lihat rincian ${month}',
 			'plan.reviewSeeAgain' => 'Lihat lagi',
 			'appUpdate.banner.storeAvailable' => 'Versi baru tersedia',

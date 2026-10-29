@@ -204,7 +204,7 @@ class _Translations$transaction$en extends Translations$transaction$id {
 	@override String get emptyFilterTitle => 'No transactions match your filters';
 	@override String get emptyFilterSubtitle => 'Search and filters only cover the period that\'s open. Try another period or clear the filters.';
 	@override String get clearFiltersButton => 'Clear filters';
-	@override String get crossMonthSearchButton => 'Search other months';
+	@override String get crossMonthSearchButton => 'Search other periods';
 	@override String get crossMonthSearchingLabel => 'Searching earlier months...';
 	@override String get crossMonthResultsHeader => 'Found in other months';
 	@override String get crossMonthLoadMoreButton => 'Search further back';
@@ -1264,7 +1264,7 @@ class _Translations$recurring$en extends Translations$recurring$id {
 	@override String get paymentManual => 'I pay it';
 	@override String priceUp({required Object amount, required Object usual}) => '${amount}, usually ${usual}';
 	@override String get emptyTitle => 'No recurring transactions yet';
-	@override String get emptyBody => 'Add your regular monthly bills and income, then see what\'s really free.';
+	@override String get emptyBody => 'Add your regular monthly bills and income, then see how much unplanned money you have this month.';
 	@override String get filteredEmpty => 'Nothing here yet.';
 	@override String get showAllAction => 'Show all';
 	@override String get addAction => 'Add recurring transaction';
@@ -1357,7 +1357,7 @@ class _Translations$recurring$en extends Translations$recurring$id {
 	@override String budgetUnlinkedMessage({required Object name}) => '${name} is no longer linked to a budget item.';
 	@override String fundingTitle({required Object wallet}) => 'Funds needed in ${wallet}';
 	@override String fundingBody({required Object name, required Object amount, required Object date, required Object shortfall}) => '${name} ${amount} on ${date}. Expected shortfall ≈${shortfall}.';
-	@override String installmentFreeLine({required Object month, required Object amount}) => 'From ${month} you\'ll free up +${amount}/mo.';
+	@override String installmentFreeLine({required Object month, required Object amount}) => 'From ${month} your unplanned money grows +${amount}/mo.';
 	@override String get unseenLabel => 'Not seen in notifications yet';
 	@override String get notYetAction => 'Not yet';
 	@override String snoozedMessage({required Object name}) => 'We\'ll ask about ${name} again in 2 days.';
@@ -1442,7 +1442,7 @@ class _Translations$plan$en extends Translations$plan$id {
 	@override String get nextTitle => 'Next';
 	@override String get seeAllRecurring => 'All in Recurring';
 	@override String get emptyTitle => 'Plan this month';
-	@override String get emptyBody => 'Add your regular monthly bills and income, then see what\'s really free.';
+	@override String get emptyBody => 'Add your regular monthly bills and income, then see how much unplanned money you have this month.';
 	@override String chartSemantics({required Object low, required Object date, required Object end}) => 'Balance forecast, lowest ${low} on ${date}, month end ${end}';
 	@override String chartPoint({required Object date, required Object amount}) => '${date} · ${amount}';
 	@override String forecastEndLabel({required Object date}) => 'Balance forecast ${date}';
@@ -1483,7 +1483,7 @@ class _Translations$plan$en extends Translations$plan$id {
 	@override String accuracyMissedBy({required Object month, required Object amount, required Object line}) => 'The ${month} forecast was off by ${amount}, mostly from ${line}.';
 	@override String committedShare({required Object percent, required Object month}) => '${percent}% of ${month} income is already committed (repeating + budgets).';
 	@override String committedShareVs({required Object percent, required Object month, required Object previous}) => '${percent}% of ${month} income is already committed (repeating + budgets); the month before, ${previous}%.';
-	@override String installmentFree({required Object name, required Object month, required Object amount}) => 'After ${name} ends, from ${month} you free up +${amount}/mo.';
+	@override String installmentFree({required Object name, required Object month, required Object amount}) => 'After ${name} ends, from ${month} your unplanned money grows +${amount}/mo.';
 	@override String lookbackSeeAnalysis({required Object month}) => 'See ${month} details';
 	@override String get reviewSeeAgain => 'See again';
 }
@@ -1618,6 +1618,8 @@ class _Translations$record$repeat$en extends Translations$record$repeat$id {
 	@override String get paymentAutoDebit => 'Auto-debit';
 	@override String get recordAndScheduleAction => 'Record and schedule';
 	@override String get saveScheduleAction => 'Save schedule';
+	@override String get editScheduleTitle => 'Edit schedule';
+	@override String get makeRecurringTitle => 'Make recurring';
 	@override String scheduledMessage({required Object name, required Object date}) => '${name} scheduled. First on ${date}.';
 	@override String recordedMessage({required Object name}) => '${name} recorded and scheduled.';
 	@override String recordedNextMessage({required Object name, required Object date}) => '${name} recorded. Next on ${date}.';
@@ -2143,6 +2145,8 @@ extension on TranslationsEn {
 			'record.repeat.paymentAutoDebit' => 'Auto-debit',
 			'record.repeat.recordAndScheduleAction' => 'Record and schedule',
 			'record.repeat.saveScheduleAction' => 'Save schedule',
+			'record.repeat.editScheduleTitle' => 'Edit schedule',
+			'record.repeat.makeRecurringTitle' => 'Make recurring',
 			'record.repeat.scheduledMessage' => ({required Object name, required Object date}) => '${name} scheduled. First on ${date}.',
 			'record.repeat.recordedMessage' => ({required Object name}) => '${name} recorded and scheduled.',
 			'record.repeat.recordedNextMessage' => ({required Object name, required Object date}) => '${name} recorded. Next on ${date}.',
@@ -2188,7 +2192,7 @@ extension on TranslationsEn {
 			'transaction.emptyFilterTitle' => 'No transactions match your filters',
 			'transaction.emptyFilterSubtitle' => 'Search and filters only cover the period that\'s open. Try another period or clear the filters.',
 			'transaction.clearFiltersButton' => 'Clear filters',
-			'transaction.crossMonthSearchButton' => 'Search other months',
+			'transaction.crossMonthSearchButton' => 'Search other periods',
 			'transaction.crossMonthSearchingLabel' => 'Searching earlier months...',
 			'transaction.crossMonthResultsHeader' => 'Found in other months',
 			'transaction.crossMonthLoadMoreButton' => 'Search further back',
@@ -2532,10 +2536,10 @@ extension on TranslationsEn {
 			'budget.templateUpdatedMessage' => 'Template changes saved.',
 			'budget.templateDeletedMessage' => 'Template deleted.',
 			'budget.templateDuplicatedMessage' => 'Template duplicated.',
-			'budget.templateCopyName' => ({required Object name}) => '${name} (copy)',
-			'budget.templateNameLabel' => 'Template name',
 			_ => null,
 		} ?? switch (path) {
+			'budget.templateCopyName' => ({required Object name}) => '${name} (copy)',
+			'budget.templateNameLabel' => 'Template name',
 			'budget.repeatLabel' => 'Repeat every period',
 			'budget.repeatHelpMonthly' => ({required Object date}) => 'Repeats every month from ${date} with the same items.',
 			'budget.repeatHelpWeekly' => ({required Object date}) => 'Repeats every week from ${date} with the same items.',
@@ -3046,10 +3050,10 @@ extension on TranslationsEn {
 			'notificationCapture.samplesDisclosureTitle' => 'Save notification samples?',
 			'notificationCapture.samplesDisclosureBody' => 'Tanukonomy will keep the text of notifications from the apps you chose, including non-transaction ones, for 7 days on this device. It is used only to build filters and patterns. OTP codes are never saved, and this text is not sent to any server. You can turn it off at any time; all samples are deleted right away.',
 			'notificationCapture.samplesDisclosureCancel' => 'Cancel',
-			'notificationCapture.samplesDisclosureAgree' => 'Turn on',
-			'notificationCapture.roleIgnore' => 'Ignore',
 			_ => null,
 		} ?? switch (path) {
+			'notificationCapture.samplesDisclosureAgree' => 'Turn on',
+			'notificationCapture.roleIgnore' => 'Ignore',
 			'notificationCapture.patternKindLabel' => '3. Transaction type',
 			'notificationCapture.kindExpense' => 'Out',
 			'notificationCapture.kindIncome' => 'In',
@@ -3161,7 +3165,7 @@ extension on TranslationsEn {
 			'recurring.paymentManual' => 'I pay it',
 			'recurring.priceUp' => ({required Object amount, required Object usual}) => '${amount}, usually ${usual}',
 			'recurring.emptyTitle' => 'No recurring transactions yet',
-			'recurring.emptyBody' => 'Add your regular monthly bills and income, then see what\'s really free.',
+			'recurring.emptyBody' => 'Add your regular monthly bills and income, then see how much unplanned money you have this month.',
 			'recurring.filteredEmpty' => 'Nothing here yet.',
 			'recurring.showAllAction' => 'Show all',
 			'recurring.addAction' => 'Add recurring transaction',
@@ -3248,7 +3252,7 @@ extension on TranslationsEn {
 			'recurring.budgetUnlinkedMessage' => ({required Object name}) => '${name} is no longer linked to a budget item.',
 			'recurring.fundingTitle' => ({required Object wallet}) => 'Funds needed in ${wallet}',
 			'recurring.fundingBody' => ({required Object name, required Object amount, required Object date, required Object shortfall}) => '${name} ${amount} on ${date}. Expected shortfall ≈${shortfall}.',
-			'recurring.installmentFreeLine' => ({required Object month, required Object amount}) => 'From ${month} you\'ll free up +${amount}/mo.',
+			'recurring.installmentFreeLine' => ({required Object month, required Object amount}) => 'From ${month} your unplanned money grows +${amount}/mo.',
 			'recurring.unseenLabel' => 'Not seen in notifications yet',
 			'recurring.notYetAction' => 'Not yet',
 			'recurring.snoozedMessage' => ({required Object name}) => 'We\'ll ask about ${name} again in 2 days.',
@@ -3324,7 +3328,7 @@ extension on TranslationsEn {
 			'plan.nextTitle' => 'Next',
 			'plan.seeAllRecurring' => 'All in Recurring',
 			'plan.emptyTitle' => 'Plan this month',
-			'plan.emptyBody' => 'Add your regular monthly bills and income, then see what\'s really free.',
+			'plan.emptyBody' => 'Add your regular monthly bills and income, then see how much unplanned money you have this month.',
 			'plan.chartSemantics' => ({required Object low, required Object date, required Object end}) => 'Balance forecast, lowest ${low} on ${date}, month end ${end}',
 			'plan.chartPoint' => ({required Object date, required Object amount}) => '${date} · ${amount}',
 			'plan.forecastEndLabel' => ({required Object date}) => 'Balance forecast ${date}',
@@ -3365,7 +3369,7 @@ extension on TranslationsEn {
 			'plan.accuracyMissedBy' => ({required Object month, required Object amount, required Object line}) => 'The ${month} forecast was off by ${amount}, mostly from ${line}.',
 			'plan.committedShare' => ({required Object percent, required Object month}) => '${percent}% of ${month} income is already committed (repeating + budgets).',
 			'plan.committedShareVs' => ({required Object percent, required Object month, required Object previous}) => '${percent}% of ${month} income is already committed (repeating + budgets); the month before, ${previous}%.',
-			'plan.installmentFree' => ({required Object name, required Object month, required Object amount}) => 'After ${name} ends, from ${month} you free up +${amount}/mo.',
+			'plan.installmentFree' => ({required Object name, required Object month, required Object amount}) => 'After ${name} ends, from ${month} your unplanned money grows +${amount}/mo.',
 			'plan.lookbackSeeAnalysis' => ({required Object month}) => 'See ${month} details',
 			'plan.reviewSeeAgain' => 'See again',
 			'appUpdate.banner.storeAvailable' => 'A new version is available',

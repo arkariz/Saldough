@@ -1,7 +1,8 @@
 # CLAUDE.md — Konteks proyek Saldough
 
-**Terakhir diperbarui:** 15 Oktober 2026
-**Fase saat ini:** MVP selesai (Fase 0–7), Fase 9 (onboarding, tur spotlight, lapis info) selesai 28 Sep 2026; Fase 8 (tindak lanjut pasca-MVP, persiapan rilis) berjalan; Fase 11 (Catat Cerdas) berjalan; Fase 12 (rapikan batas arsitektur, ADR-030) selesai 1 Okt 2026; Fase 13 (pecah fitur `record`, ADR-033) selesai 1 Okt 2026; Fase 14 (bahasa visual baru, ADR-034) kodenya selesai 9 Okt 2026 (sisa review desain/QA, render situs B-4, verifikasi perangkat); Fase 15 (Rencana dan rutin, ADR-035) berjalan sejak 2 Okt 2026; Fase 16 (Rencana R2, ADR-036) kodenya selesai 4 Okt 2026 (sisa poles T-16.16); Fase 17 (Rencana R3, ADR-037 Accepted) berjalan sejak 4 Okt 2026. Fase 18 (periode keuangan, ADR-038 Accepted) selesai 15 Okt 2026 (rilis `0.7.0+13`, verifikasi perangkat T-18.9 lulus); Fase 19 (Analisis R1, selesai 18 Okt 2026) kodenya selesai 17 Okt 2026 per irisan vertikal yang diverifikasi pemilik (rupa sudah ada, salinan di `docs/03-design`); verifikasi emulator T-19.7 selesai 18 Okt 2026 (tidak ada Gagal S1/S2; tersisa B-40) dan **sudah di `main`** lewat PR #51 (rebase, 18 Okt 2026); sisa Fase 19 hanya B-40 dan R2 (B-38). Fase 20 (pengumuman pembaruan, ADR-039 Accepted) selesai 15 Okt 2026 (kode di `main`, verifikasi perangkat T-20.8 lulus). Fase 21 (penemuan fitur: onboarding dua langkah wajib, pintu permanen Catat dari notifikasi + Mulai cepat) spek final 19 Okt 2026 (KT-D1 diputuskan), menunggu rupa. Fase 22 (ekspor dan cadangan manual, ADR-040 Accepted) selesai 23 Okt 2026 (kode di `main`, QA emulator tanpa temuan S1/S2; sisa iOS dan Excel/Sheets di B-67). Versi `0.7.0+13` (tag terbaru `0.7.0+13`), belum dirilis publik.
+**Terakhir diperbarui:** 29 Oktober 2026
+**Ringkas per 29 Okt 2026:** versi di `main` `0.11.0+17` (tag terakhir `0.10.0+16`; `0.11.0+17` belum ditandai), masih closed testing. Fase 22 dan 23 sudah di `main`; Fase 21 menunggu rupa dan verifikasi perangkat. Syarat rilis publik ada di ROADMAP "Now". Keputusan terbuka terbaru: KT-W1 (arti mengubah saldo dompet). Rincian per fase di bawah dan di TASK_LIST.
+**Fase saat ini:** MVP selesai (Fase 0–7), Fase 9 (onboarding, tur spotlight, lapis info) selesai 28 Sep 2026; Fase 8 (tindak lanjut pasca-MVP, persiapan rilis) berjalan; Fase 11 (Catat Cerdas) berjalan; Fase 12 (rapikan batas arsitektur, ADR-030) selesai 1 Okt 2026; Fase 13 (pecah fitur `record`, ADR-033) selesai 1 Okt 2026; Fase 14 (bahasa visual baru, ADR-034) kodenya selesai 9 Okt 2026 (sisa review desain/QA, render situs B-4, verifikasi perangkat); Fase 15 (Rencana dan rutin, ADR-035) berjalan sejak 2 Okt 2026; Fase 16 (Rencana R2, ADR-036) kodenya selesai 4 Okt 2026 (sisa poles T-16.16); Fase 17 (Rencana R3, ADR-037 Accepted) berjalan sejak 4 Okt 2026. Fase 18 (periode keuangan, ADR-038 Accepted) selesai 15 Okt 2026 (rilis `0.7.0+13`, verifikasi perangkat T-18.9 lulus); Fase 19 (Analisis R1, selesai 18 Okt 2026) kodenya selesai 17 Okt 2026 per irisan vertikal yang diverifikasi pemilik (rupa sudah ada, salinan di `docs/03-design`); verifikasi emulator T-19.7 selesai 18 Okt 2026 (tidak ada Gagal S1/S2; tersisa B-40) dan **sudah di `main`** lewat PR #51 (rebase, 18 Okt 2026); sisa Fase 19 hanya B-40 dan R2 (B-38). Fase 20 (pengumuman pembaruan, ADR-039 Accepted) selesai 15 Okt 2026 (kode di `main`, verifikasi perangkat T-20.8 lulus). Fase 21 (penemuan fitur: onboarding dua langkah wajib, pintu permanen Catat dari notifikasi + Mulai cepat) kode T-21.1–T-21.7 selesai, T-21.9 sebagian; menunggu rupa T-21.0 dan verifikasi perangkat T-21.8. Fase 22 (ekspor dan cadangan manual, ADR-040 Accepted) selesai 23 Okt 2026 (kode di `main`, QA emulator tanpa temuan S1/S2; sisa iOS dan Excel/Sheets di B-67). Fase 23 (catat notifikasi multi-dompet, contoh notifikasi, ikat rutin ke pola, catat rutin lebih awal; ADR-042) selesai 23 Okt 2026 (di `main`, rilis `0.10.0+16`, QA emulator tanpa Gagal S1/S2; tindak lanjut di B-83). Versi `0.11.0+17` (tag terbaru `0.10.0+16`), belum dirilis publik.
 
 ## Apa ini
 
@@ -25,7 +26,7 @@ antarmuka harus mencerminkannya: "Catat Transfer", bukan "Transfer Sekarang".
 | **Kebutuhan produk** | `docs/01-product/prd-saldough-2.0.md` |
 | **Tugas, progres, antrean, dan cara menambah tugas baru** | `docs/04-planning/TASK_LIST.md` (bagian "Menambah tugas baru" dan "Antrean"); pelacak yang sudah ditutup di `docs/04-planning/done/` (mis. `UX_REVIEW_FIXES.md`) |
 | **Desain dan riset per fitur** | `docs/01-product/features/` — `ONBOARDING_PLAN.md` (onboarding dan tur spotlight), `VOICE_INPUT_RESEARCH.md` (Catat lewat Suara dan sistem kategori), `RECURRING_AND_FORECAST.md` (transaksi rutin, uang nganggur, perkiraan), `PLAN_TAB_LAYOUT.md` (tata letak tab Rencana), `RECURRING_COMPETITIVE_ANALYSIS.md`, `FINANCIAL_ANALYSIS.md` (analisis keuangan, Fase 19), `FINANCIAL_PERIOD.md` (periode keuangan, Fase 18), `APP_UPDATE.md` (pengumuman pembaruan Play Store dan Shorebird, Fase 20, keputusan teknis di ADR-039), `FEATURE_DISCOVERY.md` (penemuan fitur: Catat dari notifikasi, pengingat rutin, awal bulan keuangan, Fase 21), `FREEMIUM_PAYWALL.md` (freemium/paywall Tanukonomy Plus, diputuskan pemilik 18 dan 23 Okt 2026, antrean B-41–B-62 dan B-68–B-82), `EXPORT_BACKUP.md` (ekspor ke spreadsheet, cadangkan dan pulihkan manual, Fase 22) |
-| **Toko dan rilis** | `docs/03-release/` — `PLAY_DATA_SAFETY.md` (formulir Keamanan Data), `RELEASE_NOTES.md` (catatan "Apa yang baru": berkas `release_notes/`, persetujuan, langkah rilis), `PLAY_STORE_LISTING.md` (setelan toko dan listing, ASO), `ASO_NAME_RESEARCH.md` (riset nama), `RELEASE_NOTES.md` (catatan Apa yang baru: berkas, langkah rilis, pipeline CI) |
+| **Toko dan rilis** | `docs/03-release/` — `PLAY_DATA_SAFETY.md` (formulir Keamanan Data), `RELEASE_NOTES.md` (catatan "Apa yang baru": berkas `release_notes/`, persetujuan, langkah rilis), `PLAY_STORE_LISTING.md` (setelan toko dan listing, ASO), `ASO_NAME_RESEARCH.md` (riset nama) |
 | **Keputusan arsitektur** | `docs/02-architecture/adr/` |
 | **Situs web (landing, kebijakan privasi, uji coba)** | Repo `arkariz/tanukonomy-web`, progres di `docs/TASKS.md` repo itu |
 | **Desain UI (wajib sebelum membuat atau mengubah tampilan)** | Skill `tanukonomy-ui`. Sumbernya artefak pemilik: [design system](https://claude.ai/artifact/HHq7YfEY5Wtc1JXtBhzBQS) [prototipe 12 layar](https://claude.ai/artifact/L4176HPgR9gCXACe3gyRbZ), dan [prototipe Rencana dan Rutin](https://claude.ai/artifact/PzQEmLqRBQM72YM6HhU7pS), baca dengan alat Artifact (`action: "read"`, `path: "project/README.md"`); salinannya di `docs/03-design/`. Keputusannya [ADR-034](../docs/02-architecture/adr/0034-bahasa-visual-buku-catatan-piksel.md) |
@@ -74,7 +75,7 @@ Nominal tetap `int` sen (seperseratus satuan utama). Tampilkan lewat
 atau simbol lain langsung di widget.
 
 **Rilis Android (T-8.7):** penandatanganan rilis lewat
-`android/key.properties` (gitignore, tidak ada di repo), versi kini `0.7.0+13`,
+`android/key.properties` (gitignore, tidak ada di repo), versi kini `0.11.0+17`,
 Shorebird (`shorebird.yaml`), `google-services.json` sudah di repo. Pemilik
 sudah membangun, mengunggah, dan mempublikasikan **closed testing** di Play
 Console (29 Sep 2026) dan mengisi formulir Keamanan Data serta listing.
@@ -98,6 +99,13 @@ Kembalikan; juga dari layar geser pertama onboarding). Kode di
 alasan); uji kelengkapan registri gagal bila terlewat. Kolom Awal periode di
 ekspor memakai `periodDateOf`, jadi aturan periode keuangan tidak boleh
 disalin di tempat lain. Rincian di `docs/01-product/features/EXPORT_BACKUP.md`.
+
+**Ubah saldo dompet (sejak `0.11.0+17`, 27 Okt 2026, KT-W1 terbuka):**
+kolom saldo di Ubah dompet berarti **saldo saat ini**; `WalletBloc` menggeser
+`initialBalance` (= angka diisi − netto transaksi) tanpa membuat transaksi,
+lalu `RecomputeWalletBalances`. Akibatnya saldo historis periode lampau ikut
+bergeser. Perubahan ini dibuat tanpa tugas atau ADR; jangan membangun di
+atasnya sebelum pemilik memutuskan KT-W1 di TASK_LIST.
 
 **Periode keuangan (Fase 18, ADR-038, selesai 15 Okt 2026):** "bulan" di
 aplikasi adalah **periode keuangan** yang dimulai di tanggal pilihan pengguna
@@ -143,6 +151,10 @@ atau peringatan (11 info `unnecessary_unawaited` di uji, B-9). Baseline 1 Okt
 tanpa error atau peringatan (12 info `unnecessary_unawaited`, B-9).
 Baseline 10 Okt 2026 (sesudah T-8.18, kalkulator Catat): 52.772 baris, 144
 berkas uji, 1.254 uji lulus, `flutter analyze` tanpa isu sama sekali.
+Baseline 29 Okt 2026 (`0.11.0+17`): 71.320 baris, 223 berkas uji, 2.076 uji
+lulus, `flutter analyze` 1 info (`avoid_redundant_argument_values` di uji
+ADR-042, F23-3). Flutter dijalankan lewat `.fvm/flutter_sdk/bin/flutter`;
+`flutter` tidak ada di PATH shell agen.
 Kode 1.0 bisa dipulihkan dari riwayat git (commit `13c7939` sebelum pivot).
 
 Yang sudah berjalan: CATAT (pemasukan, pengeluaran, transfer, dengan tautan
@@ -155,8 +167,8 @@ Fase 7 juga selesai: template anggaran (layar, gandakan, aktif/nonaktif,
 anggaran dari template), ikon SVG, bentuk ADR-015, dan poles state.
 Fase 11 (berjalan) menambah kategori bawaan yang bisa diubah (ADR-026),
 pilihan bahasa aplikasi (ADR-028), dan Catat pakai suara yang mengisi
-formulir CATAT (ADR-027/029); navigasi bawah kini 4 tab dengan dua FAB
-(suara dan CATAT) di kanan bawah.
+formulir CATAT (ADR-027/029). Navigasi bawah kini 4 tab (Beranda, Riwayat,
+Rencana, Dompet) dengan tombol Catat di tengah; tekan lama = suara (ADR-034).
 Seluruh tugas MVP di TASK_LIST sudah tercentang. Tugas baru (improvement
 atau fitur) ditambahkan mengikuti "Menambah tugas baru" di TASK_LIST; jangan
 membuat daftar tugas di dokumen lain. Keputusan yang menunggu
@@ -195,6 +207,10 @@ dicatat langsung (`RecordTransaction`) atau masuk kotak masuk. Teks notifikasi
 paling lama 7 hari di perangkat. Native hanya membuang posting ulang (bukan
 isi kembar), antrean hanya di-ack bila simpanan Dart berhasil, dan Gemini
 menerima teks yang saldonya/rekeningnya disamarkan.
+Fase 23 (ADR-042): satu sumber bisa ke banyak dompet (`walletRules`, ambigu
+ke kotak masuk, tidak ditebak), transfer antarkantong lewat penanda
+`{from}`/`{to}`, contoh notifikasi opsional (bawaan mati, 7 hari, tanpa OTP),
+dan rutin bisa diikat ke pola (`RecurringRule.notificationBinding`).
 
 **Bahasa visual baru (ADR-034, kode Fase 14 selesai 9 Okt 2026):**
 "buku catatan dengan aksen piksel" menggantikan ADR-015/016/020. Satu huruf
@@ -255,7 +271,7 @@ sejenisnya sudah dihapus 28 Sep 2026).
 - Repositori: `arkariz/Saldough`
 - Satu branch dan satu PR per fase, misalnya `claude/pivot-docs-fase-0`
 - Nama paket Dart: `saldough`, seluruh impor memakai `package:saldough/...`
-- Flutter 3.47.2, Dart 3.13.2, Android `minSdk` 23
+- Flutter 3.47.5, Dart 3.13.4 (dipin lewat `.fvm/fvm_config.json`), Android `minSdk` 23
 - Penyimpanan lokal-first; fitur online sedang direncanakan, lihat "Status"
 - Terjemahan slang, bahasa dasar `id`, tambahan `en`
 - Keadaan sebelum pivot: commit `13c7939`

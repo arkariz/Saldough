@@ -176,7 +176,9 @@ class _IncomeFormSheetState extends State<IncomeFormSheet> {
     return RecordFormFrame(
       kindSwitcher: editing ? null : widget.kindSwitcher,
       kind: TransactionKind.income,
-      title: editing ? t.transaction.editSheetTitle : t.appShell.recordAction,
+      title: editing
+          ? t.transaction.editSheetTitle
+          : recordFormTitle(repeatLocked: widget.repeatLocked, scheduleOnly: widget.scheduleOnly),
       isEditing: editing,
       onBack: () => Navigator.of(context).pop(),
       amountController: _amountController,

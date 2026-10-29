@@ -361,6 +361,15 @@ class _OptionChip extends StatelessWidget {
   Widget build(BuildContext context) => AppChip(label: label, selected: selected, onTap: onTap);
 }
 
+/// Judul formulir CATAT: Ubah rutin ([scheduleOnly]) dan Jadikan Rutin
+/// ([repeatLocked] tanpa [scheduleOnly]) tidak mencatat transaksi baru, jadi
+/// tidak berjudul "Catat".
+String recordFormTitle({required bool repeatLocked, required bool scheduleOnly}) {
+  if (scheduleOnly) return t.record.repeat.editScheduleTitle;
+  if (repeatLocked) return t.record.repeat.makeRecurringTitle;
+  return t.appShell.recordAction;
+}
+
 /// Label tombol simpan CATAT (J2): tanpa Ulangi → [plain]; dengan Ulangi,
 /// tanggal hari ini atau lampau → "Catat & Jadwalkan", tanggal masa depan
 /// → "Simpan Jadwal" (tidak ada transaksi yang dibuat).

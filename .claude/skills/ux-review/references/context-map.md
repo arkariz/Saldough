@@ -18,7 +18,7 @@
 
 - `lib/core/theme/` — `PixelTheme.light`/`.dark` adalah tema global `MaterialApp` (ADR-031); `AppColorsExtension` (`pixelLight`/`pixelDark`), token `AppSpacing`/`AppRadius`/`AppBorder`/`AppElevation`. Baca nilainya di sini, jangan menebak dari nama variabel.
 - `lib/core/presentation/widgets/` — komponen bersama: `AppHardCard`, `AppButton`, `AppQuickChip`, `AppSegmented`, `AppMoneyText`, `AppIcon`/`CategoryIcon`, `AppSkeleton`, `AppSegmentedProgressBar`, `FullScreenSheet`, `ConfirmDeleteDialog`, `AppMenuSelectButton`, `AppForm*`. Cek di sini dulu sebelum menilai "kenapa kartu ini beda dengan kartu itu" — biasanya bedanya hanya parameter.
-- `lib/app/shell/app_shell_page.dart` — shell di rute `/home`: empat tab navigasi bawah (Beranda, Anggaran, Riwayat, Dompet) dan dua FAB bertumpuk di kanan bawah (Catat pakai suara, CATAT). Fitur lain dibuka lewat `context.pushRoute(XRouteKeys.y, input)` (ADR-030).
+- `lib/app/shell/app_shell_page.dart` — shell di rute `/home`: empat tab navigasi bawah (Beranda, Riwayat, Rencana, Dompet) dan tombol Catat di tengah; tekan lama membuka Catat pakai suara (ADR-034). Tab Rencana bersegmen Bulan ini, Anggaran, Rutin; Riwayat bersegmen Daftar dan Analisis. Fitur lain dibuka lewat `context.pushRoute(XRouteKeys.y, input)` (ADR-030).
 - `assets/i18n/id.i18n.json` (dan `en`) — seluruh copy antarmuka. Baca JSON-nya langsung untuk audit copy — lebih cepat daripada grep tiap `t.xxx.yyy`. Kode hasil slang ada di `lib/core/i18n/`.
 
 ## Kode — zona `features`

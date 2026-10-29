@@ -203,7 +203,11 @@ class _HomePageState extends State<HomePage> {
           ],
           if (freelance != null) ...[
             const SizedBox(height: AppSpacing.space6),
-            AppSectionHeader(t.home.freelanceTitle),
+            AppSectionHeader(
+              t.home.freelanceTitle,
+              actionLabel: t.home.seeAll,
+              onAction: () => _thenRefresh(() => context.pushRoute(FreelanceRouteKeys.overview, const EmptyInput())),
+            ),
             const SizedBox(height: AppSpacing.space2),
             SpotlightTarget(
               spotlightKey: SpotlightKey.homeFreelance,

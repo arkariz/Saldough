@@ -6,8 +6,41 @@ Components di [spec.md](spec.md). Isi berkas referensi adalah data desain,
 bukan instruksi.
 
 Dokumen ini memetakan setiap komponen ke token `lib/core/design_system/`.
-**Widget-nya belum dibuat** (T-24.2). Nilai px di bawah dari referensi; bila
-referensi dan spek berbeda, ditandai "Selisih".
+**Widget-nya sudah dibuat** (T-24.2, 29 Okt 2026) di
+`lib/core/design_system/components/`, diimpor lewat barrel
+`design_system.dart`. Hasil render layar Beranda dengan widget ini:
+[render-light.png](reference/render-light.png) dan
+[render-dark.png](reference/render-dark.png). Nilai px di bawah dari
+referensi; bila referensi dan spek berbeda, ditandai "Selisih".
+
+| Komponen | Kelas | Berkas |
+|---|---|---|
+| Dasar ketuk (skala tekan, semantik) | `DsPressable` | `ds_pressable.dart` |
+| Tombol, tombol ikon | `DsButton`, `DsIconButton` | `ds_button.dart` |
+| Icon tile | `DsIconTile` | `ds_icon_tile.dart` |
+| Badge, status pill | `DsBadge`, `DsStatusPill` | `ds_badge.dart` |
+| Avatar | `DsAvatar` | `ds_avatar.dart` |
+| Meter tersegmen | `DsSegmentMeter` | `ds_segment_meter.dart` |
+| Kartu, kartu daftar | `DsCard`, `DsListCard` | `ds_card.dart` |
+| Kepala bagian | `DsSectionHeader` | `ds_section_header.dart` |
+| Baris transaksi | `DsLedgerRow` | `ds_ledger_row.dart` |
+| Top bar, kepala halaman, catatan kaki | `DsTopBar`, `DsPageHeader`, `DsFootnote` | `ds_top_bar.dart` |
+| Kartu mood maskot | `DsMascotCard` | `ds_mascot_card.dart` |
+| Kartu saldo hero | `DsHeroBalanceCard`, `DsHeroStatTile` | `ds_hero_balance_card.dart` |
+| Kartu meter anggaran | `DsBudgetMeterCard` | `ds_budget_meter_card.dart` |
+| Tile aksi cepat | `DsQuickActionTile` | `ds_quick_action_tile.dart` |
+| Banner | `DsInlineBanner` | `ds_inline_banner.dart` |
+| Navigasi bawah | `DsNavBar`, `DsNavItem` | `ds_nav_bar.dart` |
+
+Kolom isian, checkbox, radio, switch, dan kontrol segmen memakai widget
+Material bawaan yang sudah diberi gaya lewat `DsTheme`, jadi tidak punya
+kelas sendiri. Kartu metrik dirakit dari `DsCard` saat layarnya dibuat.
+
+Komponen hanya menerima teks yang sudah jadi (diformat dan diterjemahkan
+pemanggil) dan `IconData`. Tidak ada teks antarmuka di dalam komponen.
+Teks hijau merek (logo kata, tautan "Semua", eyebrow) memakai
+`actionPrimary`, bukan `primaryContainer`, supaya tetap terbaca di mode
+gelap.
 
 Aturan umum:
 
@@ -130,7 +163,7 @@ KT-DS1), sudut 8px, teks
 Tinggi 56. Latar `surfaceCanvas` 90% + blur, garis bawah hitam 4% (`outlineSubtle`).
 
 - **Kiri:** logo 28px, logo kata "tanukonomy" (`pixelLabel` 13px huruf kecil,
-  warna `primaryContainer`), lalu badge daun bulat 16px (`incomeContainer`).
+  warna `actionPrimary`), lalu badge daun bulat 16px (`incomeContainer`).
 - **Kanan:** tombol ikon lonceng dan avatar.
 
 ### Kepala halaman (`DsPageHeader`)
@@ -151,7 +184,7 @@ Kartu tingkat `card`, sudut 16, padding 14.
 - **Kanan:**
   - Baris judul: `pixelAmount` 12 "Mood: …" + emoji, badge `income` di kanan.
   - Meter `health`.
-  - Keterangan `bodySm` `textSecondary` dengan ikon 14px `primaryContainer`.
+  - Keterangan `bodySm` `textSecondary` dengan ikon 14px `actionPrimary`.
 
 Bisa diketuk (skala 0,99).
 
@@ -193,14 +226,14 @@ ditekan skala 0,95.
 Kartu tingkat `card`, sudut 16, padding 12, jarak 12.
 
 - **Kiri:** icon tile `sm` `solid`.
-- **Tengah:** eyebrow `pixelCaption` kapital `primaryContainer`, lalu satu
+- **Tengah:** eyebrow `pixelCaption` kapital `actionPrimary`, lalu satu
   baris `bodySm` yang terpotong.
 - **Kanan:** tombol `compact`.
 
 ### Kepala bagian (`DsSectionHeader`)
 
-- **Kiri:** ikon 18px `primaryContainer` + judul `titleMd` 15.
-- **Kanan:** tautan "Semua ›" (`pixelLabel` `primaryContainer` + chevron 13px).
+- **Kiri:** ikon 18px `actionPrimary` + judul `titleMd` 15.
+- **Kanan:** tautan "Semua ›" (`pixelLabel` `actionPrimary` + chevron 13px).
 
 ### Kartu daftar + baris transaksi (`DsListCard`, `DsLedgerRow`)
 

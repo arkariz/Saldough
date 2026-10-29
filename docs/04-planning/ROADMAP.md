@@ -567,8 +567,8 @@ dan referensi komponen Beranda, berdampingan dengan yang lama sampai rombak
 UI, plus preset tema (warna terang/gelap) yang mudah ditambah developer dan
 dipilih pengguna
 ([ADR-043](../02-architecture/adr/0043-design-system-v2-dan-preset-tema.md),
-Proposed). **Status:** fondasi selesai 29 Okt 2026; komponen sudah dipetakan,
-widget menunggu permintaan pemilik, pemasangan menunggu keputusan pemilik.
+Proposed). **Status:** fondasi dan widget komponen selesai 29 Okt 2026; pemasangan
+dan perombakan layar menunggu keputusan pemilik.
 
 ## Ketergantungan antar fase
 

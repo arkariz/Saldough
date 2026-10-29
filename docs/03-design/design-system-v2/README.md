@@ -5,8 +5,9 @@ Keputusan ada di [ADR-043](../../02-architecture/adr/0043-design-system-v2-dan-p
 
 Ini design system pengganti untuk rombak UI. Ia berdampingan dengan design
 system lama (`../design-system/`, ADR-034) dan tidak mengubahnya. Aplikasi
-masih memakai `PixelTheme` sampai pemilik memutuskan pemasangan. Komponen
-sudah dipetakan, tetapi widget-nya belum dibuat.
+masih memakai `PixelTheme` sampai pemilik memutuskan pemasangan. Widget
+komponennya sudah ada di `lib/core/design_system/components/`, tetapi belum
+dipakai layar mana pun.
 
 Spek sebelumnya (Autumn Kyoto Ledger, 29 Okt 2026) diganti pemilik pada hari
 yang sama dengan spek ini; isinya masih ada di riwayat git.
@@ -15,7 +16,8 @@ yang sama dengan spek ini; isinya masih ada di riwayat git.
 |---|---|
 | [spec.md](spec.md) | Spek pemilik "Tanukonomy" (DESIGN.md dari Stitch), disalin apa adanya |
 | [reference/home.html](reference/home.html), [home.png](reference/home.png) | Referensi komponen: layar Beranda dari pemilik |
-| [components.md](components.md) | Pemetaan setiap komponen referensi ke token, beserta varian dan selisihnya |
+| [components.md](components.md) | Pemetaan setiap komponen referensi ke token dan widget-nya, beserta varian dan selisihnya |
+| [reference/render-light.png](reference/render-light.png), [render-dark.png](reference/render-dark.png) | Layar Beranda dirakit dari widget design system v2 |
 | [tokens.json](tokens.json) | Token dalam bentuk data: warna per preset (terang/gelap), tipografi, radius, jarak, elevasi, gerak |
 | README.md (ini) | Penerapan di Flutter, cara menambah preset, selisih, keputusan terbuka |
 
@@ -34,11 +36,13 @@ lama dan baru di satu widget.
 | `tokens/ds_radius.dart`, `ds_shapes.dart` | Radius spek; bentuk siap pakai `micro`, `badge`, `control`, `tile`, `card`, `overlay`, `sheet`, `pill`, `circle` |
 | `tokens/ds_spacing.dart` | Jarak, margin/gutter per lebar, breakpoint, target sentuh 44 |
 | `tokens/ds_elevation.dart` | `DsElevation`: `canvas`, `card`, `overlay` (`DsSurfaceTier` + `decoration()`) |
-| `tokens/ds_motion.dart` | Transisi 150ms ease-out, skala tekan |
+| `tokens/ds_motion.dart`, `ds_opacity.dart` | Transisi 150ms ease-out, skala tekan; tingkat keburaman |
+| `components/` | Widget komponen (lihat [components.md](components.md)) |
 | `presets/` | `DsThemePreset`, registri `DsThemePresets`, preset `matcha` |
 | `ds_theme.dart` | `DsTheme.build(preset, brightness)` (di-cache), `DsTheme.light/dark`, `context.ds` |
 
-Contoh pemakaian di widget (nanti):
+Contoh pemakaian token langsung (untuk layar yang butuh lebih dari
+komponen):
 
 ```dart
 final ds = context.ds;

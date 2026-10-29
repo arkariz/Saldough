@@ -173,6 +173,7 @@ class DsColorScheme extends ThemeExtension<DsColorScheme> {
     required this.onHero,
     required this.onHeroMuted,
     required this.heroAccent,
+    required this.heroAccentWarm,
     required this.heroTile,
     required this.heroActionSecondary,
     required this.toneWarmContainer,
@@ -421,6 +422,9 @@ class DsColorScheme extends ThemeExtension<DsColorScheme> {
   /// Prefiks mata uang dan ikon aksen di kartu saldo.
   final Color heroAccent;
 
+  /// Ikon aksen hangat (keluar) di kartu saldo.
+  final Color heroAccentWarm;
+
   /// Kotak statistik di kartu saldo (putih 8%).
   final Color heroTile;
 
@@ -603,6 +607,7 @@ class DsColorScheme extends ThemeExtension<DsColorScheme> {
     Color? onHero,
     Color? onHeroMuted,
     Color? heroAccent,
+    Color? heroAccentWarm,
     Color? heroTile,
     Color? heroActionSecondary,
     Color? toneWarmContainer,
@@ -695,6 +700,7 @@ class DsColorScheme extends ThemeExtension<DsColorScheme> {
       onHero: onHero ?? this.onHero,
       onHeroMuted: onHeroMuted ?? this.onHeroMuted,
       heroAccent: heroAccent ?? this.heroAccent,
+      heroAccentWarm: heroAccentWarm ?? this.heroAccentWarm,
       heroTile: heroTile ?? this.heroTile,
       heroActionSecondary: heroActionSecondary ?? this.heroActionSecondary,
       toneWarmContainer: toneWarmContainer ?? this.toneWarmContainer,
@@ -792,6 +798,7 @@ class DsColorScheme extends ThemeExtension<DsColorScheme> {
       onHero: Color.lerp(onHero, other.onHero, t)!,
       onHeroMuted: Color.lerp(onHeroMuted, other.onHeroMuted, t)!,
       heroAccent: Color.lerp(heroAccent, other.heroAccent, t)!,
+      heroAccentWarm: Color.lerp(heroAccentWarm, other.heroAccentWarm, t)!,
       heroTile: Color.lerp(heroTile, other.heroTile, t)!,
       heroActionSecondary: Color.lerp(heroActionSecondary, other.heroActionSecondary, t)!,
       toneWarmContainer: Color.lerp(toneWarmContainer, other.toneWarmContainer, t)!,
@@ -888,6 +895,7 @@ class DsColorScheme extends ThemeExtension<DsColorScheme> {
     'onHero': onHero,
     'onHeroMuted': onHeroMuted,
     'heroAccent': heroAccent,
+    'heroAccentWarm': heroAccentWarm,
     'heroTile': heroTile,
     'heroActionSecondary': heroActionSecondary,
     'toneWarmContainer': toneWarmContainer,

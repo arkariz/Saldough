@@ -92,6 +92,7 @@ Terakhir diperbarui: 29 Oktober 2026 (penyelarasan dokumen dengan `main` di `0.1
 | 24 — Design system baru dan preset tema ([ADR-043](../02-architecture/adr/0043-design-system-kyoto-dan-preset-tema.md), Proposed) | 4 | 1 | Berjalan sejak 29 Okt 2026 -- T-24.1 fondasi selesai; komponen menunggu referensi pemilik, pemasangan menunggu keputusan pemilik |
 | 24 — Design system baru dan preset tema ([ADR-043](../02-architecture/adr/0043-design-system-v2-dan-preset-tema.md), Proposed) | 4 | 1 | Berjalan sejak 29 Okt 2026 -- T-24.1 fondasi selesai (spek Tanukonomy Matcha); komponen dipetakan, widget menunggu permintaan pemilik dan KT-DS1–KT-DS4; pemasangan menunggu keputusan pemilik |
 | 24 — Design system baru dan preset tema ([ADR-043](../02-architecture/adr/0043-design-system-v2-dan-preset-tema.md), Proposed) | 4 | 1 | Berjalan sejak 29 Okt 2026 -- T-24.1 fondasi selesai (spek Tanukonomy Matcha); komponen dipetakan, KT-DS1–KT-DS4 diputuskan; widget menunggu permintaan pemilik; pemasangan menunggu keputusan pemilik |
+| 24 — Design system baru dan preset tema ([ADR-043](../02-architecture/adr/0043-design-system-v2-dan-preset-tema.md), Proposed) | 4 | 2 | Berjalan sejak 29 Okt 2026 -- T-24.1 fondasi selesai (spek Tanukonomy Matcha); KT-DS1–KT-DS4 diputuskan; T-24.2 widget komponen selesai; pemasangan menunggu keputusan pemilik |
 | Antrean (`B-n`, belum dijadwalkan) | 67 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
 
 ## Keputusan terbuka
@@ -5892,12 +5893,20 @@ memilih mode (dan preset bila ≥ 2), dan design system lama dihapus.
       tema, skema, tipografi); seluruh uji dan `flutter analyze` tanpa isu
       baru; tidak ada berkas design system lama yang berubah.
       Di luar PRD: tampilan.
-- [ ] **T-24.2** Widget komponen design system v2 sesuai
-      [components.md](../03-design/design-system-v2/components.md) (tombol,
-      icon tile, badge, meter tersegmen, top bar, kartu hero, kartu meter,
-      tile aksi cepat, banner, kepala bagian, kartu daftar + baris
-      transaksi, navigasi bawah). Referensi sudah dikirim; mulai bila pemilik
-      meminta. KT-DS1–KT-DS4 sudah diputuskan 29 Okt 2026.
+- [x] **T-24.2** Widget komponen design system v2 (29 Okt 2026) di
+      `lib/core/design_system/components/` sesuai
+      [components.md](../03-design/design-system-v2/components.md): tombol
+      (6 varian), tombol ikon, icon tile, badge, status pill, avatar, meter
+      tersegmen, kartu, kartu daftar, kepala bagian, baris transaksi, top bar,
+      kepala halaman, catatan kaki, kartu mood maskot, kartu saldo hero,
+      kartu meter anggaran, tile aksi cepat, banner, navigasi bawah. Teks
+      dan format nominal dari pemanggil; belum dipakai layar mana pun.
+      Verifikasi: uji widget `ds_components_test.dart` (ketuk, nonaktif,
+      semantik, area sentuh 44, warna per jenis nominal, saldo disamarkan,
+      posisi tombol Catat, tanpa luapan di mode gelap); layar Beranda dirakit
+      dari widget ini dan dirender dengan huruf asli, cocok dengan referensi
+      (`reference/render-light.png`, `render-dark.png`).
+      Di luar PRD: tampilan.
 - [ ] **T-24.3** Pasang ke aplikasi: `MaterialApp` memakai `DsTheme`,
       preferensi preset + mode (`settings_appearance`, dikecualikan dari
       `BackupRegistry` sebagai milik perangkat), baris Akun › Tampilan (mode;

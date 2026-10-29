@@ -43,6 +43,8 @@ final _pairs = <(String, String, double)>[
   ('onError', 'error', 4.5),
   ('onErrorContainer', 'errorContainer', 4.5),
   ('error', 'surfaceCard', 4.5),
+  ('actionPrimary', 'surfaceCard', 4.5),
+  ('actionPrimary', 'surfaceCanvas', 4.5),
   ('onActionPrimary', 'actionPrimary', 4.5),
   ('onActionPrimary', 'actionPrimaryPressed', 4.5),
   ('onActionSecondary', 'actionSecondary', 4.5),

@@ -88,8 +88,9 @@ widget komponen baru dibuat setelah pemilik memintanya.
 ### 3.4 Komponen
 
 [components.md](../../03-design/design-system-v2/components.md) memetakan
-komponen referensi ke token, beserta varian dan selisihnya. Widget dibuat di
-T-24.2. Teks dan fitur referensi yang bertentangan dengan aturan produk
+komponen referensi ke token, beserta varian dan selisihnya. Widget-nya ada
+di `lib/core/design_system/components/` (T-24.2) dan hanya menerima teks
+yang sudah diformat dan diterjemahkan pemanggil. Teks dan fitur referensi yang bertentangan dengan aturan produk
 ("Kirim Daun", "Isi Saldo", gamifikasi) tidak ikut diadopsi.
 
 ### 3.5 Preferensi pengguna (saat pemasangan)

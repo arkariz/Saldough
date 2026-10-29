@@ -5856,7 +5856,8 @@ Jalur kritis: T-24.2 → T-24.4 → T-24.6 → T-24.14 → T-24.18.
       Di dasbor RevenueCat: entitlement `plus`; offering `default` (package
       `monthly`, `yearly`), `founder` (`yearly_founder`, bulanan), `post_trial`
       (`yearly_intro`, bulanan) yang terhubung ke produk Test Store. Kunci
-      `test_…` tidak pernah dipakai di build rilis. Tahap 2 (Play Billing
+      `test_…` tidak pernah dipakai di build rilis (Fastfile menolak kunci
+      selain `goog_…` di lane rilis dan patch). Tahap 2 (Play Billing
       sungguhan, kunci `goog_…` sebagai secret GitHub) menyusul.
 
 ## Antrean (belum dijadwalkan)

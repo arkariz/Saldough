@@ -13,6 +13,11 @@ def revenuecat_args
         UI.important("REVENUECAT_ANDROID_KEY kosong: build tanpa RevenueCat")
         return ""
     end
+    # Kunci Test Store (`test_…`) tidak boleh masuk build yang dipublikasikan;
+    # pembelian sungguhan hanya lewat kunci Play (`goog_…`).
+    unless key.start_with?("goog_")
+        UI.user_error!("REVENUECAT_ANDROID_KEY bukan kunci Play (goog_…): kunci test_ hanya untuk build debug")
+    end
     "-- --dart-define=REVENUECAT_ANDROID_KEY=#{key}"
 end
 

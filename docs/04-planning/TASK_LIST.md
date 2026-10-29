@@ -91,6 +91,7 @@ Terakhir diperbarui: 29 Oktober 2026 (penyelarasan dokumen dengan `main` di `0.1
 | 24 — Fondasi Plus ([ADR-041](../02-architecture/adr/0041-monetisasi-hak-plus-dan-uji-coba.md), [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md)) | 22 | 21 | Dijadwalkan 23 Okt 2026 (dari B-41); T-24.1 (ADR-041 revisi 2), T-24.2 (fondasi murni), T-24.3 (`AppUser.createdAt`), T-24.4 (penyimpanan hak), T-24.5 (batas dari Remote Config), T-24.6 (`Entitlements` lokal), T-24.7 (pengganti paket uji), T-24.8 (paywall sementara), T-24.9 (gerbang R3), T-24.10 (gerbang notifikasi), T-24.11 (kuota tafsir), T-24.12 (gerbang Analisis), T-24.13 (gerbang template dan proyek), dan T-24.14 (adaptor RevenueCat, uji palsu), dan T-24.15 (kebijakan offering, beli/pulihkan), dan T-24.16 (analitik dan dokumen rilis) selesai; T-24.17a (paywall berparameter, PlanCard, keadaan) T-24.17b (PlusLocked, lencana Plus), dan T-24.17c (status Plus di Akun, halaman fitur), T-24.17d (hadiah uji coba), dan T-24.17e (layar turun, kartu Plus, momen) selesai, jadi T-24.17 selesai; berikutnya T-24.18 (rupa sudah ada, PR #65) dan T-24.18. Uji nyata T-24.14 menunggu akun dan kunci RevenueCat; rilis build bergerbang menunggu penguji bisa masuk akun |
 | 24 — Design system baru dan preset tema ([ADR-043](../02-architecture/adr/0043-design-system-kyoto-dan-preset-tema.md), Proposed) | 4 | 1 | Berjalan sejak 29 Okt 2026 -- T-24.1 fondasi selesai; komponen menunggu referensi pemilik, pemasangan menunggu keputusan pemilik |
 | 24 — Design system baru dan preset tema ([ADR-043](../02-architecture/adr/0043-design-system-v2-dan-preset-tema.md), Proposed) | 4 | 1 | Berjalan sejak 29 Okt 2026 -- T-24.1 fondasi selesai (spek Tanukonomy Matcha); komponen dipetakan, widget menunggu permintaan pemilik dan KT-DS1–KT-DS4; pemasangan menunggu keputusan pemilik |
+| 24 — Design system baru dan preset tema ([ADR-043](../02-architecture/adr/0043-design-system-v2-dan-preset-tema.md), Proposed) | 4 | 1 | Berjalan sejak 29 Okt 2026 -- T-24.1 fondasi selesai (spek Tanukonomy Matcha); komponen dipetakan, KT-DS1–KT-DS4 diputuskan; widget menunggu permintaan pemilik; pemasangan menunggu keputusan pemilik |
 | Antrean (`B-n`, belum dijadwalkan) | 67 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
 
 ## Keputusan terbuka
@@ -118,13 +119,10 @@ diputuskan, dan catat keputusannya di tugas atau ADR yang mengerjakannya.
   transaksi penyesuaian bertanggal hari ini (ADR domain baru, menyentuh
   aturan 8). Keputusan teknis menyusul sebagai ADR.
 
-- **KT-DS1–KT-DS4** Design system v2 (Fase 24): (1) bingkai kolom input
-  `#EAECEF` 1,2:1 dan checkbox `#D1D5DB` 1,5:1 di bawah 3:1, ikut spek atau
-  pakai `outline`? (2) `textTertiary` `#9CA3AF` 2,5:1, jam di baris pakai
-  `textSecondary`? (3) `pixelCaption` 10px di bawah batas 12px, ikut
-  referensi? (4) badge pil Plus Jakarta Sans (spek) atau sudut 4–6px Space
-  Mono (referensi)? Rincian di
-  [design-system-v2/README.md](../03-design/design-system-v2/README.md).
+KT-DS1–KT-DS4 (design system v2, Fase 24) diputuskan 29 Okt 2026: bingkai
+input dan checkbox ikut spek, keterangan/jam memakai `textMuted` `#6B7280`,
+label piksel terkecil 11px, badge dan tag ikut gambar (sudut 6px, Space
+Mono); dicatat di [design-system-v2/README.md](../03-design/design-system-v2/README.md).
 
 KT-U1–KT-U5 (pengumuman pembaruan, Fase 20) diputuskan 15 Okt 2026 sesuai
 rekomendasi; dicatat di [APP_UPDATE.md](../01-product/features/APP_UPDATE.md)
@@ -5899,7 +5897,7 @@ memilih mode (dan preset bila ≥ 2), dan design system lama dihapus.
       icon tile, badge, meter tersegmen, top bar, kartu hero, kartu meter,
       tile aksi cepat, banner, kepala bagian, kartu daftar + baris
       transaksi, navigasi bawah). Referensi sudah dikirim; mulai bila pemilik
-      meminta. Butuh KT-DS1–KT-DS4 lebih dulu.
+      meminta. KT-DS1–KT-DS4 sudah diputuskan 29 Okt 2026.
 - [ ] **T-24.3** Pasang ke aplikasi: `MaterialApp` memakai `DsTheme`,
       preferensi preset + mode (`settings_appearance`, dikecualikan dari
       `BackupRegistry` sebagai milik perangkat), baris Akun › Tampilan (mode;

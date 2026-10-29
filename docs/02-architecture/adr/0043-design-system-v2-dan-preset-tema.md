@@ -105,8 +105,8 @@ Pilihan preset dan mode (Terang/Gelap/Ikuti sistem):
 
 - Selama masa transisi aplikasi membawa dua design system. Hurufnya tetap
   Plus Jakarta Sans ditambah Space Mono Bold (+~90 KB).
-- Selisih disengaja dari spek dan keputusan terbuka KT-DS1–KT-DS4 dicatat di
-  README design system v2 dan TASK_LIST.
+- Selisih disengaja dari spek dan keputusan KT-DS1–KT-DS4 (29 Okt 2026)
+  dicatat di README design system v2.
 - Skill `tanukonomy-ui`, `docs/03-design/design-system/`, dan aturan visual
   di `.claude/CLAUDE.md` masih menggambarkan ADR-034. Semuanya diperbarui
   saat pemasangan.

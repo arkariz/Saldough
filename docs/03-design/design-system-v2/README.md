@@ -31,7 +31,7 @@ lama dan baru di satu widget.
 | `color/ds_color_scheme.dart` | `DsColorScheme` (`ThemeExtension`), `DsCategoryColors`, `DsColorPair` |
 | `typography/ds_fonts.dart` | `DsFonts.sans` Plus Jakarta Sans, `DsFonts.pixel` Space Mono Bold |
 | `typography/ds_typography.dart` | `DsTypography` (`ThemeExtension`), `dsTextStyle()` |
-| `tokens/ds_radius.dart`, `ds_shapes.dart` | Radius spek; bentuk siap pakai `micro`, `control`, `tile`, `card`, `overlay`, `sheet`, `pill`, `circle` |
+| `tokens/ds_radius.dart`, `ds_shapes.dart` | Radius spek; bentuk siap pakai `micro`, `badge`, `control`, `tile`, `card`, `overlay`, `sheet`, `pill`, `circle` |
 | `tokens/ds_spacing.dart` | Jarak, margin/gutter per lebar, breakpoint, target sentuh 44 |
 | `tokens/ds_elevation.dart` | `DsElevation`: `canvas`, `card`, `overlay` (`DsSurfaceTier` + `decoration()`) |
 | `tokens/ds_motion.dart` | Transisi 150ms ease-out, skala tekan |
@@ -139,6 +139,7 @@ dirancang sendiri.
 | `surfaceSunken` | Wadah cekung: track kontrol segmen, tile ikon netral, tag kategori. | `#f3f4f6` | `#1a1e1b` |
 | `textPrimary` | Teks utama dan nominal pengeluaran. | `#111827` | `#eef1ee` |
 | `textSecondary` | Teks pendukung: subjudul, keterangan. | `#4b5563` | `#b8c0ba` |
+| `textMuted` | Keterangan dan jam di baris transaksi, kaki kartu (KT-DS2). Hanya di kartu dan kanvas; di wadah cekung pakai textSecondary. | `#6b7280` | `#9aa29c` |
 | `textTertiary` | Teks tersier: placeholder, simbol mata uang di kolom nominal. Bukan untuk teks wajib baca. | `#9ca3af` | `#858d87` |
 | `outlineSubtle` | Garis rambut 1px: bingkai kartu, pemisah baris, kolom input. | `#eaecef` | `#2a302c` |
 | `outlineOverlay` | Bingkai popover, dialog, sheet. | `#e2e5e9` | `#333a35` |
@@ -225,7 +226,7 @@ Rasio kontras dihitung dan dijaga uji.
 | `pixelDisplay` | Space Mono Bold | 28/36 | 700 | −0,025em | referensi (saldo hero) |
 | `pixelAmount` | Space Mono Bold | 12/16 | 700 | | referensi (nominal baris) |
 | `pixelLabel` | Space Mono Bold | 11/14 | 700 | +0,05em | referensi (label kapital, badge, tautan) |
-| `pixelCaption` | Space Mono Bold | 10/14 | 700 | +0,025em | referensi (navigasi, tag, jam) |
+| `pixelCaption` | Space Mono Bold | 11/14 | 700 | +0,025em | referensi 10px, dinaikkan (KT-DS3) |
 
 Slot `TextTheme` Material dipetakan begini:
 
@@ -241,12 +242,13 @@ Space Mono Bold dipulihkan dari riwayat git; lisensinya OFL.
 
 - **Radius:**
   - `sm` 4: checkbox, segmen meter.
+  - `badge` 6: badge dan tag (referensi, KT-DS4), segmen kontrol segmen.
   - `base` 8: input, tombol, sel.
   - `md` 12: tile ikon, tombol di kartu.
   - `lg` 16: kartu.
   - `sheet` 20: sudut atas sheet.
   - `xl` 24: dialog.
-  - `full`: badge, tag, avatar.
+  - `full`: chip pilihan, status pill, avatar.
 - **Elevasi:**
   - `canvas`: kanvas.
   - `card`: putih, garis rambut `outlineSubtle`, bayangan `0 2 8` hitam 3%.
@@ -282,17 +284,19 @@ Selisih yang disengaja:
    amber) dipetakan ke peran semantik (`income`, `surfaceSunken`, `info`,
    `warning`).
 
-Keputusan terbuka (dicatat di TASK_LIST):
+Keputusan pemilik (29 Okt 2026):
 
-- **KT-DS1:** Bingkai kolom input `#EAECEF` hanya 1,2:1 di putih, dan
-  bingkai checkbox `#D1D5DB` 1,5:1. Keduanya di bawah 3:1 untuk batas
-  kontrol (WCAG 1.4.11). Ikuti spek, atau pakai `outline` `#727971` untuk
-  kolom kosong?
-- **KT-DS2:** `textTertiary` `#9CA3AF` hanya 2,5:1. Spek memakainya untuk
-  jam di baris transaksi, sedangkan referensi memakai `#6B7280` (4,8:1).
-  Usulnya: jam memakai `textSecondary`, dan `textTertiary` hanya untuk
-  placeholder.
-- **KT-DS3:** `pixelCaption` 10px (label navigasi, tag) di bawah batas 12px
-  yang dipakai aplikasi sekarang.
-- **KT-DS4:** Badge berbentuk pil berhuruf Plus Jakarta Sans (spek), atau
-  bersudut 4–6px berhuruf Space Mono (referensi)?
+- **KT-DS1: bingkai ikut spek.** Kolom input tetap `#EAECEF` (1,2:1) dan
+  checkbox `#D1D5DB` (1,5:1), walaupun di bawah 3:1 untuk batas kontrol
+  (WCAG 1.4.11). Fokus tetap hijau 1px. Jangan "memperbaiki" ke garis yang
+  lebih gelap tanpa keputusan baru.
+- **KT-DS2: keterangan dan jam memakai `textMuted` `#6B7280`** (4,8:1 di
+  kartu dan kanvas), sama dengan referensi. `textTertiary` `#9CA3AF` hanya
+  untuk placeholder dan keadaan nonaktif. Di wadah cekung (`surfaceSunken`,
+  4,4:1) teks memakai `textSecondary`.
+- **KT-DS3: label piksel terkecil 11px.** `pixelCaption` dinaikkan dari
+  10px (referensi) ke 11px, dipakai untuk navigasi bawah, badge, tag, dan
+  jam di kartu.
+- **KT-DS4: badge dan tag ikut gambar.** Sudut 6px (`DsShapes.badge`),
+  huruf Space Mono Bold (`pixelCaption`/`pixelLabel`). Chip yang bisa
+  dipilih (filter) dan status pill tetap berbentuk pil.

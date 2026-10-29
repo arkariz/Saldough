@@ -149,7 +149,7 @@ abstract final class DsTheme {
       segmentedButtonTheme: SegmentedButtonThemeData(
         style: ButtonStyle(
           textStyle: WidgetStatePropertyAll(typography.labelMd),
-          shape: const WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(6)))),
+          shape: const WidgetStatePropertyAll(DsShapes.badge),
           side: WidgetStateProperty.resolveWith(
             (states) => BorderSide(
               color: states.contains(WidgetState.selected) ? colors.outlineSubtle : Colors.transparent,
@@ -163,8 +163,8 @@ abstract final class DsTheme {
           ),
         ),
       ),
-      // Chip bawaan = tag netral pil; varian pemasukan dan sampanye dibuat
-      // di komponen tag.
+      // Chip bawaan = chip pilihan pil (mis. filter). Badge dan tag
+      // bersudut 6px dibuat di komponen badge (KT-DS4).
       chipTheme: ChipThemeData(
         backgroundColor: colors.surfaceCard,
         selectedColor: colors.incomeContainer,

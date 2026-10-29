@@ -8,6 +8,9 @@ abstract final class DsShapes {
   /// Checkbox dan segmen meter: [DsRadius.sm].
   static const RoundedRectangleBorder micro = RoundedRectangleBorder(borderRadius: DsRadius.smAll);
 
+  /// Badge dan tag: [DsRadius.badge] (KT-DS4).
+  static const RoundedRectangleBorder badge = RoundedRectangleBorder(borderRadius: DsRadius.badgeAll);
+
   /// Input, tombol, sel interaktif: [DsRadius.base].
   static const RoundedRectangleBorder control = RoundedRectangleBorder(borderRadius: DsRadius.baseAll);
 
@@ -23,7 +26,7 @@ abstract final class DsShapes {
   /// Bottom sheet: sudut atas [DsRadius.sheet].
   static const RoundedRectangleBorder sheet = RoundedRectangleBorder(borderRadius: DsRadius.sheetTop);
 
-  /// Badge, tag, chip: pil.
+  /// Chip pilihan dan status pill: pil.
   static const StadiumBorder pill = StadiumBorder();
 
   /// Avatar dan titik status.

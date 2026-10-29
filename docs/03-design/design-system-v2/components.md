@@ -70,18 +70,17 @@ Di sini warnanya dipetakan ke nada semantik.
 
 ### Badge dan tag (`DsBadge`)
 
-Spek: pil (`DsShapes.pill`), padding 4×10, `labelMd`. Referensi: sudut 4–6px,
-padding 2×6, `pixelCaption` atau `pixelLabel` kapital.
+Bentuk ikut referensi (KT-DS4): sudut 6px (`DsShapes.badge`), padding 2×6,
+teks `pixelCaption` (tag) atau `pixelLabel` kapital (badge status). Spek
+meminta pil Plus Jakarta Sans; yang berbentuk pil hanya chip pilihan
+(filter) dan status pill.
 
 | Nada | Latar | Teks | Bingkai | Contoh |
 |---|---|---|---|---|
 | `income` | `incomeContainer` | `onIncomeContainer` | – | "Penghasilan", "84% SEHAT" |
 | `warm` | `toneWarmContainer` | `onToneWarmContainer` | – | kategori hidup sehari-hari |
-| `neutral` | `surfaceCard` | `textSecondary` | `outlineSubtle` | "74% TERPAKAI" |
+| `neutral` | `surfaceSunken` | `textSecondary` | `outlineSubtle` | "74% TERPAKAI" |
 | `category` | `surfaceSunken` | `textSecondary` | – | "Jajan & Makan", "Transport" |
-
-**Keputusan terbuka (KT-DS4):** bentuk badge mengikuti spek (pil, Plus
-Jakarta Sans) atau referensi (sudut 4–6px, Space Mono)?
 
 ### Status pill (`DsStatusPill`)
 
@@ -107,7 +106,8 @@ di referensi).
 
 ### Kolom isian (`DsTextField`, dari spek)
 
-Isi `surfaceCard`, bingkai `outlineSubtle` 1px, sudut 8px, teks
+Isi `surfaceCard`, bingkai `outlineSubtle` 1px (ikut spek walau 1,2:1,
+KT-DS1), sudut 8px, teks
 `textPrimary`, placeholder `textTertiary`. Saat fokus: cincin 1px
 `outlineFocus`, tanpa cahaya. Sudah diatur lewat `inputDecorationTheme`.
 
@@ -116,10 +116,10 @@ Isi `surfaceCard`, bingkai `outlineSubtle` 1px, sudut 8px, teks
 
 ### Checkbox dan kontrol segmen (dari spek)
 
-- Checkbox 16px, sudut 4px, bingkai `outlineStrong`. Saat terpilih: isi
+- Checkbox 16px, sudut 4px, bingkai `outlineStrong` (ikut spek, KT-DS1). Saat terpilih: isi
   `actionPrimary` dengan centang putih. Sudah diatur lewat `checkboxTheme`.
 - Kontrol segmen (Hari/Minggu/Bulan/Tahun): track `surfaceSunken`, tiap
-  segmen bersudut 6px, segmen terpilih `surfaceCard` dengan bingkai
+  segmen bersudut 6px (`DsShapes.badge`), segmen terpilih `surfaceCard` dengan bingkai
   `outlineSubtle` dan teks `textPrimary`. Sudah diatur lewat
   `segmentedButtonTheme`; versi kustom dibuat bila tampilannya kurang pas.
 
@@ -137,7 +137,7 @@ Tinggi 56. Latar `surfaceCanvas` 90% + blur, garis bawah hitam 4% (`outlineSubtl
 
 - **Baris atas:** sapaan `headlineSm` 22px bold dengan emoji di kiri, status
   pill di kanan.
-- **Di bawahnya:** subjudul `bodySm` `textSecondary`.
+- **Di bawahnya:** subjudul `bodySm` `textMuted`.
 
 Selisih: 22px tidak ada di skala. Dipetakan ke `headlineSm` (18) atau
 `headlineMd` (24), tunggu keputusan saat membuat layar.
@@ -180,7 +180,7 @@ Kartu tingkat `card`, sudut 16, padding 14, jarak 8.
 2. **Nominal:** terpakai `amount`, lalu "/ total" `bodySm` `textSecondary`;
    sisa `amountSm` `income` di kanan.
 3. Meter `budget`.
-4. **Kaki:** tiga label `pixelCaption` `textSecondary` (awal, tengah, akhir).
+4. **Kaki:** tiga label `pixelCaption` `textMuted` (awal, tengah, akhir).
 
 ### Tile aksi cepat (`DsQuickActionTile`)
 
@@ -211,8 +211,8 @@ Kartu tingkat `card`, sudut 16, padding 12, jarak 12.
 - Icon tile `md`: nada kategori, atau `income` untuk pemasukan.
 - **Baris 1:** judul `bodyMd` w600 13 di kiri; nominal `pixelAmount` rata
   kanan, tidak terpotong.
-- **Baris 2:** keterangan `bodySm` 12 `textSecondary` ("Tempat · waktu") di
-  kiri; badge `category` di kanan.
+- **Baris 2:** keterangan `bodySm` 12 `textMuted` ("Tempat · waktu", KT-DS2)
+  di kiri; badge `category` di kanan.
 
 Pengeluaran berwarna `textPrimary`. Pemasukan berwarna `income`, termasuk
 judulnya. Transfer berwarna `textSecondary` (aturan lama, tidak ada di
@@ -231,7 +231,7 @@ Teks `pixelCaption` kapital `textSecondary` 60%, di tengah, diapit emoji.
 Tinggi 64. Latar `surfaceCanvas` 90% + blur, garis atas hitam 5%
 (`outlineSubtle`).
 
-- **Tab:** ikon 21px + label `pixelCaption`. Tab aktif berwarna
+- **Tab:** ikon 21px + label `pixelCaption` 11px (referensi 10px, KT-DS3). Tab aktif berwarna
   `actionPrimary` dengan titik 6px di bawah; tab lain `textSecondary`.
 - **Tombol Catat di tengah:** kotak 44px, sudut 16, isi `actionPrimary`,
   ikon `add` 24px, bayangan `0 4 12` `actionPrimary` 25%, naik 20px. Label

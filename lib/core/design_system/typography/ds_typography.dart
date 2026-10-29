@@ -56,7 +56,7 @@ class DsTypography extends ThemeExtension<DsTypography> {
       pixelDisplay: dsTextStyle(pixel, 28, 36, FontWeight.w700, ink, letterSpacingEm: -0.025),
       pixelAmount: dsTextStyle(pixel, 12, 16, FontWeight.w700, ink),
       pixelLabel: dsTextStyle(pixel, 11, 14, FontWeight.w700, ink, letterSpacingEm: 0.05),
-      pixelCaption: dsTextStyle(pixel, 10, 14, FontWeight.w700, ink, letterSpacingEm: 0.025),
+      pixelCaption: dsTextStyle(pixel, 11, 14, FontWeight.w700, ink, letterSpacingEm: 0.025),
     );
   }
 
@@ -112,8 +112,8 @@ class DsTypography extends ThemeExtension<DsTypography> {
   /// Mono 11/14, +0,05em.
   final TextStyle pixelLabel;
 
-  /// Label kecil: navigasi bawah, tag kategori, keterangan jam: Space Mono
-  /// 10/14, +0,025em.
+  /// Label kecil: navigasi bawah, badge dan tag, keterangan jam: Space Mono
+  /// 11/14, +0,025em. Referensi 10px, dinaikkan ke 11px (KT-DS3).
   final TextStyle pixelCaption;
 
   /// Slot [TextTheme] Material dari skala ini, supaya widget bawaan memakai

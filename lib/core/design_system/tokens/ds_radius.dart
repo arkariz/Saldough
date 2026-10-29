@@ -4,7 +4,8 @@ import 'package:flutter/widgets.dart';
 /// Shapes, ADR-043).
 ///
 /// Input, tombol, dan sel 8px; kartu dan panel ringkasan 16px; sheet 20px
-/// di sudut atas; badge, tag, dan avatar transaksi pil penuh.
+/// di sudut atas. Badge dan tag bersudut 6px mengikuti referensi, bukan pil
+/// seperti spek (KT-DS4); pil untuk chip pilihan dan status pill.
 abstract final class DsRadius {
   DsRadius._();
 
@@ -13,6 +14,9 @@ abstract final class DsRadius {
 
   /// `sm` (4px): checkbox, segmen meter.
   static const double sm = 4;
+
+  /// Badge dan tag (6px, referensi; KT-DS4), segmen kontrol segmen.
+  static const double badge = 6;
 
   /// `DEFAULT` (8px): input, tombol, sel interaktif, widget data.
   static const double base = 8;
@@ -29,11 +33,14 @@ abstract final class DsRadius {
   /// `xl` (24px): dialog dan overlay.
   static const double xl = 24;
 
-  /// `full`: badge, tag, chip, avatar.
+  /// `full`: chip pilihan, status pill, avatar.
   static const double full = 9999;
 
   /// [BorderRadius] seragam [sm].
   static const BorderRadius smAll = BorderRadius.all(Radius.circular(sm));
+
+  /// [BorderRadius] seragam [badge].
+  static const BorderRadius badgeAll = BorderRadius.all(Radius.circular(badge));
 
   /// [BorderRadius] seragam [base].
   static const BorderRadius baseAll = BorderRadius.all(Radius.circular(base));

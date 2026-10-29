@@ -17,8 +17,9 @@ double _contrast(Color a, Color b) {
 /// Pasangan (teks, latar, ambang) yang wajib dipenuhi setiap preset.
 ///
 /// Ambang 3:1 untuk garis yang wajib terlihat dan aksen ikon di kartu hero.
-/// `textTertiary`, `outlineSubtle`, dan `outlineStrong` sengaja tidak diuji:
-/// nilainya mengikuti spek dan tercatat di KT-DS1/KT-DS2.
+/// `textTertiary` (hanya placeholder dan nonaktif), `outlineSubtle`, dan
+/// `outlineStrong` (KT-DS1: ikut spek) sengaja tidak diuji. `textMuted`
+/// hanya diuji di kartu dan kanvas (KT-DS2).
 final _pairs = <(String, String, double)>[
   ('textPrimary', 'surfaceCanvas', 4.5),
   ('textPrimary', 'surfaceCard', 4.5),
@@ -28,6 +29,8 @@ final _pairs = <(String, String, double)>[
   ('textSecondary', 'surfaceCanvas', 4.5),
   ('textSecondary', 'surfaceCard', 4.5),
   ('textSecondary', 'surfaceSunken', 4.5),
+  ('textMuted', 'surfaceCanvas', 4.5),
+  ('textMuted', 'surfaceCard', 4.5),
   ('onSurface', 'surface', 4.5),
   ('onSurfaceVariant', 'surface', 4.5),
   ('primary', 'surfaceCard', 4.5),

@@ -153,6 +153,7 @@ class DsColorScheme extends ThemeExtension<DsColorScheme> {
     required this.surfaceSunken,
     required this.textPrimary,
     required this.textSecondary,
+    required this.textMuted,
     required this.textTertiary,
     required this.outlineSubtle,
     required this.outlineOverlay,
@@ -355,6 +356,9 @@ class DsColorScheme extends ThemeExtension<DsColorScheme> {
 
   /// Teks pendukung: subjudul, keterangan.
   final Color textSecondary;
+
+  /// Keterangan dan jam di baris transaksi, kaki kartu (KT-DS2). Hanya di kartu dan kanvas; di wadah cekung pakai textSecondary.
+  final Color textMuted;
 
   /// Teks tersier: placeholder, simbol mata uang di kolom nominal. Bukan untuk teks wajib baca.
   final Color textTertiary;
@@ -579,6 +583,7 @@ class DsColorScheme extends ThemeExtension<DsColorScheme> {
     Color? surfaceSunken,
     Color? textPrimary,
     Color? textSecondary,
+    Color? textMuted,
     Color? textTertiary,
     Color? outlineSubtle,
     Color? outlineOverlay,
@@ -670,6 +675,7 @@ class DsColorScheme extends ThemeExtension<DsColorScheme> {
       surfaceSunken: surfaceSunken ?? this.surfaceSunken,
       textPrimary: textPrimary ?? this.textPrimary,
       textSecondary: textSecondary ?? this.textSecondary,
+      textMuted: textMuted ?? this.textMuted,
       textTertiary: textTertiary ?? this.textTertiary,
       outlineSubtle: outlineSubtle ?? this.outlineSubtle,
       outlineOverlay: outlineOverlay ?? this.outlineOverlay,
@@ -766,6 +772,7 @@ class DsColorScheme extends ThemeExtension<DsColorScheme> {
       surfaceSunken: Color.lerp(surfaceSunken, other.surfaceSunken, t)!,
       textPrimary: Color.lerp(textPrimary, other.textPrimary, t)!,
       textSecondary: Color.lerp(textSecondary, other.textSecondary, t)!,
+      textMuted: Color.lerp(textMuted, other.textMuted, t)!,
       textTertiary: Color.lerp(textTertiary, other.textTertiary, t)!,
       outlineSubtle: Color.lerp(outlineSubtle, other.outlineSubtle, t)!,
       outlineOverlay: Color.lerp(outlineOverlay, other.outlineOverlay, t)!,
@@ -861,6 +868,7 @@ class DsColorScheme extends ThemeExtension<DsColorScheme> {
     'surfaceSunken': surfaceSunken,
     'textPrimary': textPrimary,
     'textSecondary': textSecondary,
+    'textMuted': textMuted,
     'textTertiary': textTertiary,
     'outlineSubtle': outlineSubtle,
     'outlineOverlay': outlineOverlay,

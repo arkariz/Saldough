@@ -90,7 +90,8 @@ void main() {
     test('huruf lama tidak lagi dibundel', () {
       final pubspec = File('pubspec.yaml').readAsStringSync();
       expect(pubspec, isNot(contains('SpaceGrotesk')));
-      expect(pubspec, isNot(contains('SpaceMono')));
+      // SpaceMono kembali dibundel untuk design system v2 (ADR-043), bukan
+      // untuk PixelTheme.
       expect(pubspec, contains('PlusJakartaSans'));
     });
 

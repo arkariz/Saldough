@@ -16,22 +16,21 @@ double _contrast(Color a, Color b) {
 
 /// Pasangan (teks, latar, ambang) yang wajib dipenuhi setiap preset.
 ///
-/// `onActionSecondary` di atas `actionSecondary` memakai 3:1 karena nilai
-/// spek Kyoto (#ffffff di #b87352) hanya 3,74:1; dicatat sebagai keputusan
-/// terbuka di README design system baru.
+/// Ambang 3:1 untuk garis yang wajib terlihat dan aksen ikon di kartu hero.
+/// `textTertiary`, `outlineSubtle`, dan `outlineStrong` sengaja tidak diuji:
+/// nilainya mengikuti spek dan tercatat di KT-DS1/KT-DS2.
 final _pairs = <(String, String, double)>[
   ('textPrimary', 'surfaceCanvas', 4.5),
-  ('textPrimary', 'surfaceContainer', 4.5),
-  ('textPrimary', 'surfaceContainerLow', 4.5),
-  ('textPrimary', 'surfaceContainerHigh', 4.5),
-  ('textPrimary', 'surfaceFloating', 4.5),
+  ('textPrimary', 'surfaceCard', 4.5),
+  ('textPrimary', 'surfaceOverlay', 4.5),
+  ('textPrimary', 'surfaceHover', 4.5),
+  ('textPrimary', 'surfaceSunken', 4.5),
   ('textSecondary', 'surfaceCanvas', 4.5),
-  ('textSecondary', 'surfaceContainer', 4.5),
-  ('textSecondary', 'surfaceContainerLow', 4.5),
+  ('textSecondary', 'surfaceCard', 4.5),
+  ('textSecondary', 'surfaceSunken', 4.5),
   ('onSurface', 'surface', 4.5),
   ('onSurfaceVariant', 'surface', 4.5),
-  ('primary', 'surfaceCanvas', 4.5),
-  ('primary', 'surfaceContainer', 4.5),
+  ('primary', 'surfaceCard', 4.5),
   ('onPrimary', 'primary', 4.5),
   ('onPrimaryContainer', 'primaryContainer', 4.5),
   ('onSecondary', 'secondary', 4.5),
@@ -40,24 +39,30 @@ final _pairs = <(String, String, double)>[
   ('onTertiaryContainer', 'tertiaryContainer', 4.5),
   ('onError', 'error', 4.5),
   ('onErrorContainer', 'errorContainer', 4.5),
-  ('error', 'surfaceContainer', 4.5),
+  ('error', 'surfaceCard', 4.5),
   ('onActionPrimary', 'actionPrimary', 4.5),
   ('onActionPrimary', 'actionPrimaryPressed', 4.5),
-  ('onActionSecondary', 'actionSecondary', 3),
-  ('onActionSecondary', 'actionSecondaryPressed', 3),
+  ('onActionSecondary', 'actionSecondary', 4.5),
+  ('onActionSecondary', 'actionSecondaryPressed', 4.5),
+  ('actionGhost', 'surfaceCard', 4.5),
+  ('actionGhost', 'actionGhostPressed', 4.5),
   ('inverseOnSurface', 'inverseSurface', 4.5),
   ('inversePrimary', 'inverseSurface', 4.5),
+  ('onHero', 'heroSurface', 4.5),
+  ('onHeroMuted', 'heroSurface', 4.5),
+  ('heroAccent', 'heroSurface', 3),
+  ('primaryContainer', 'onHero', 4.5),
+  ('onHero', 'heroActionSecondary', 4.5),
+  ('onToneWarmContainer', 'toneWarmContainer', 4.5),
   ('income', 'surfaceCanvas', 4.5),
-  ('income', 'surfaceContainer', 4.5),
+  ('income', 'surfaceCard', 4.5),
   ('onIncomeContainer', 'incomeContainer', 4.5),
-  ('warning', 'surfaceCanvas', 4.5),
-  ('warning', 'surfaceContainer', 4.5),
+  ('warning', 'surfaceCard', 4.5),
   ('onWarningContainer', 'warningContainer', 4.5),
-  ('info', 'surfaceCanvas', 4.5),
-  ('info', 'surfaceContainer', 4.5),
+  ('info', 'surfaceCard', 4.5),
   ('onInfoContainer', 'infoContainer', 4.5),
-  ('outlineStrong', 'surfaceCanvas', 3),
-  ('outlineStrong', 'surfaceContainer', 3),
+  ('outline', 'surfaceCard', 3),
+  ('outlineFocus', 'surfaceCard', 3),
 ];
 
 void main() {
@@ -71,7 +76,7 @@ void main() {
   });
 
   test('byId jatuh ke fallback untuk id tak dikenal atau null', () {
-    expect(DsThemePresets.byId('autumn_kyoto'), autumnKyoto);
+    expect(DsThemePresets.byId('matcha'), matcha);
     expect(DsThemePresets.byId('tidak_ada'), DsThemePresets.fallback);
     expect(DsThemePresets.byId(null), DsThemePresets.fallback);
   });
@@ -98,7 +103,7 @@ void main() {
 
         test('warna yang ditempatkan sebagai latar buram', () {
           for (final entry in colors.entries) {
-            if (const {'focusRing', 'scrim'}.contains(entry.key)) continue;
+            if (const {'heroTile', 'scrim'}.contains(entry.key)) continue;
             expect(entry.value.a, 1, reason: entry.key);
           }
         });

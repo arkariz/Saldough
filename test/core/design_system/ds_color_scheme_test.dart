@@ -3,15 +3,17 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:saldough/core/design_system/design_system.dart';
 
 void main() {
-  final light = autumnKyoto.light;
-  final dark = autumnKyoto.dark;
+  final light = matcha.light;
+  final dark = matcha.dark;
 
-  test('nilai terang Kyoto sesuai spek', () {
-    expect(light.surfaceCanvas, const Color(0xFFFBF9F4));
-    expect(light.primaryContainer, const Color(0xFFB45309));
-    expect(light.textPrimary, const Color(0xFF2A2421));
-    expect(light.outlineSubtle, const Color(0xFFDED5C6));
-    expect(light.actionSecondary, const Color(0xFFB87352));
+  test('nilai terang Matcha sesuai spek', () {
+    expect(light.surfaceCanvas, const Color(0xFFFAFAF9));
+    expect(light.surfaceCard, const Color(0xFFFFFFFF));
+    expect(light.primaryContainer, const Color(0xFF1F4B2C));
+    expect(light.actionPrimary, const Color(0xFF1F4B2C));
+    expect(light.textPrimary, const Color(0xFF111827));
+    expect(light.outlineSubtle, const Color(0xFFEAECEF));
+    expect(light.incomeContainer, const Color(0xFFD8E6DC));
   });
 
   test('copyWith hanya mengganti yang diberikan', () {

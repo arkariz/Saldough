@@ -6973,10 +6973,10 @@ extension on Translations {
 			'premium.paywall.processing' => 'Memproses…',
 			'premium.paywall.waiting' => 'Menunggu persetujuan',
 			'premium.paywall.pending' => 'Pembayaran tertunda. Plus aktif begitu disetujui.',
-			'premium.paywall.failed' => 'Pembayaran belum berhasil. Cek metode bayarmu di Play Store, lalu coba lagi.',
-			'premium.paywall.fineYearly' => ({required Object price}) => '${price} per tahun, diperpanjang otomatis. Batalkan kapan saja di Play Store.',
 			_ => null,
 		} ?? switch (path) {
+			'premium.paywall.failed' => 'Pembayaran belum berhasil. Cek metode bayarmu di Play Store, lalu coba lagi.',
+			'premium.paywall.fineYearly' => ({required Object price}) => '${price} per tahun, diperpanjang otomatis. Batalkan kapan saja di Play Store.',
 			'premium.paywall.fineMonthly' => ({required Object price}) => '${price} per bulan, diperpanjang otomatis. Batalkan kapan saja di Play Store.',
 			'premium.paywall.fineIntro' => ({required Object price, required Object regular}) => '${price} untuk tahun pertama, lalu ${regular} per tahun, diperpanjang otomatis. Batalkan kapan saja di Play Store.',
 			'premium.paywall.doneTitle' => 'Plus aktif',

@@ -3923,10 +3923,10 @@ extension on TranslationsEn {
 			'premium.paywall.processing' => 'Processing…',
 			'premium.paywall.waiting' => 'Waiting for approval',
 			'premium.paywall.pending' => 'Payment pending. Plus turns on as soon as it is approved.',
-			'premium.paywall.failed' => 'Payment did not go through. Check your payment method in the Play Store, then try again.',
-			'premium.paywall.fineYearly' => ({required Object price}) => '${price} per year, renews automatically. Cancel anytime in the Play Store.',
 			_ => null,
 		} ?? switch (path) {
+			'premium.paywall.failed' => 'Payment did not go through. Check your payment method in the Play Store, then try again.',
+			'premium.paywall.fineYearly' => ({required Object price}) => '${price} per year, renews automatically. Cancel anytime in the Play Store.',
 			'premium.paywall.fineMonthly' => ({required Object price}) => '${price} per month, renews automatically. Cancel anytime in the Play Store.',
 			'premium.paywall.fineIntro' => ({required Object price, required Object regular}) => '${price} for the first year, then ${regular} a year, renews automatically. Cancel anytime in the Play Store.',
 			'premium.paywall.doneTitle' => 'Plus is on',

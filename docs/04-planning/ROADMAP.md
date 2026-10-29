@@ -560,6 +560,15 @@ masuk), transfer tidak pernah jadi pemasukan atau pengeluaran, rutin tertaut
 hanya bila pasti, dan contoh notifikasi tidak pernah menyimpan OTP,
 terverifikasi di perangkat dengan notifikasi bank asli.
 
+## Fase 24: Design system baru dan preset tema
+
+Permintaan pemilik 29 Okt 2026: design system baru dari spek Autumn Kyoto
+Ledger, berdampingan dengan yang lama sampai rombak UI, plus preset tema
+(warna terang/gelap) yang mudah ditambah developer dan dipilih pengguna
+([ADR-043](../02-architecture/adr/0043-design-system-kyoto-dan-preset-tema.md),
+Proposed). **Status:** fondasi selesai 29 Okt 2026; komponen menunggu
+referensi pemilik, pemasangan menunggu keputusan pemilik.
+
 ## Ketergantungan antar fase
 
 ```

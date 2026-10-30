@@ -122,12 +122,10 @@ diputuskan, dan catat keputusannya di tugas atau ADR yang mengerjakannya.
   transaksi penyesuaian bertanggal hari ini (ADR domain baru, menyentuh
   aturan 8). Keputusan teknis menyusul sebagai ADR.
 
-- **KT-DS5–KT-DS8** Ikon clay (Fase 24): (5) ikon clay menggantikan ikon
-  piksel kategori/dompet atau berdampingan? (6) tile ikon bertimbul seperti
-  acuan atau datar? (7) ikon clay tidak mengikuti preset dan mode gelap:
-  biarkan, buat varian gelap, atau peta warna per preset? (8) arti ikon aksi
-  "Kirim Daun" dan "Scan Struk". Rincian di
-  [icons.md](../03-design/design-system-v2/icons.md).
+KT-DS5–KT-DS8 (ikon clay, Fase 24) diputuskan 30 Okt 2026: clay menggantikan
+semua ikon piksel, tile datar dengan hanya tombol Catat bertimbul, ikon tetap
+dan tile ikut tema, Scan Struk tetap dan Kirim Daun jadi Catat Transfer;
+dicatat di [icons.md](../03-design/design-system-v2/icons.md).
 
 KT-DS1–KT-DS4 (design system v2, Fase 24) diputuskan 29 Okt 2026: bingkai
 input dan checkbox ikut spek, keterangan/jam memakai `textMuted` `#6B7280`,
@@ -5932,7 +5930,8 @@ memilih mode (dan preset bila ≥ 2), dan design system lama dihapus.
       2026, [icons.md](../03-design/design-system-v2/icons.md)). Dokumen dan
       10 SVG acuan sudah disimpan; widget (`DsIconTile` mendukung SVG,
       tile bertimbul, tombol Catat bulat, lencana level, animasi laser dan
-      gelombang suara) belum dibuat. Menunggu KT-DS5–KT-DS8.
+      gelombang suara) belum dibuat. KT-DS5–KT-DS8 sudah diputuskan; sisa pekerjaan: menggambar ikon clay
+      untuk seluruh kategori/dompet.
 - [ ] **T-24.3** Pasang ke aplikasi: `MaterialApp` memakai `DsTheme`,
       preferensi preset + mode (`settings_appearance`, dikecualikan dari
       `BackupRegistry` sebagai milik perangkat), baris Akun › Tampilan (mode;

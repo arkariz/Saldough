@@ -314,7 +314,8 @@ Keputusan pemilik (29 Okt 2026):
   huruf Space Mono Bold (`pixelCaption`/`pixelLabel`). Chip yang bisa
   dipilih (filter) dan status pill tetap berbentuk pil.
 
-Keputusan terbuka dari acuan ikon clay (30 Okt 2026), rincian di
-[icons.md](icons.md): **KT-DS5** keluarga ikon (clay vs piksel),
-**KT-DS6** tile bertimbul atau datar, **KT-DS7** ikon tidak mengikuti
-preset/gelap, **KT-DS8** arti ikon aksi.
+Keputusan dari acuan ikon clay (30 Okt 2026), rincian di
+[icons.md](icons.md): **KT-DS5** clay menggantikan semua ikon piksel,
+**KT-DS6** tile datar dan hanya tombol Catat bertimbul, **KT-DS7** ikon
+tetap dan tile ikut tema, **KT-DS8** Scan Struk tetap dan Kirim Daun
+menjadi Catat Transfer.

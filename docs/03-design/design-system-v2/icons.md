@@ -85,25 +85,30 @@ dengan ketiganya: banyak bayangan berwarna, bayangan dalam, gradasi, dan
 lima nada (hijau, biru, amber, lavender, batu). Acuan sebelumnya sudah
 memakai tile berwarna kategori, tetapi datar.
 
-Hal yang perlu diputuskan sebelum ikon ini dipakai di aplikasi:
+## Keputusan pemilik (30 Okt 2026)
 
-- **KT-DS5: pilih keluarga ikon.** Ikon clay menggantikan ikon piksel
-  `assets/icons/` (ADR-034) untuk kategori dan dompet, atau berdampingan?
-  Aplikasi punya 41 ikon piksel kategori/dompet; acuan hanya menggambar 10.
-  Ikon clay butuh ilustrasi baru untuk semua kategori bawaan
-  (belanja, makan, tagihan, kesehatan, dll.) dan dompet.
-- **KT-DS6: tile bertimbul atau datar.** Spek menyebut kartu tanpa bayangan
-  dekoratif; tile ikon clay bertimbul (bayangan luar + dalam). Ikuti
-  acuan, atau tile datar berwarna nada (seperti `DsIconTile` sekarang) dengan
-  ikon clay saja?
-- **KT-DS7: ikon clay tidak mengikuti tema.** Warnanya tertanam di SVG
-  (`#34d399`, `#f59e0b`, ...), jadi tidak berganti saat preset `pink` atau
-  mode gelap. Pilihan: biarkan (ikon tetap sama di semua preset), atau
-  buat varian gelap, atau ganti warna lewat peta warna (`flutter_svg`
-  `ColorMapper`) per preset.
-- **KT-DS8: peta ikon aksi.** "Kirim Daun" dan "Scan Struk" menyiratkan
-  memindahkan uang dan fitur yang belum ada. Ikon daun-kirim perlu diganti
-  arti (mis. catat transfer) atau digambar ulang.
+- **KT-DS5: ikon clay menggantikan semuanya.** Ikon piksel `assets/icons/`
+  (ADR-034) untuk kategori, dompet, transfer, dan Freelance diganti ikon
+  clay. Acuan hanya menggambar 10; sisanya (kategori bawaan, dompet, dll.)
+  perlu ilustrasi baru dengan resep di atas. Daftar ikon yang harus dibuat
+  disusun saat T-24.6 dikerjakan, dari `lib/` dan `assets/icons/`.
+- **KT-DS6: tile datar, hanya tombol Catat yang bertimbul.** Tile ikon
+  memakai latar nada tipis + garis rambut 1px (seperti `DsIconTile` sekarang);
+  kedalaman datang dari ikon clay. Tombol Catat di navigasi bawah tetap
+  bulat 52px bergradasi dengan daun timbul, satu-satunya elemen bertimbul
+  per layar. Kilap, bayangan dalam, dan gradasi tile di tabel "Resep gaya"
+  **tidak dipakai** untuk tile; hanya untuk ikon dan tombol Catat.
+- **KT-DS7: ikon tetap, tile ikut tema.** Warna ikon clay tertanam di SVG
+  dan tidak berganti per preset atau mode. Warna latar tile diambil dari
+  token kategori (`categories.*.container`) per mode, sehingga mode gelap
+  tidak menyilaukan. Pemetaan warna hijau per preset (`ColorMapper`) ditunda
+  sampai bentrok di preset pink terlihat mengganggu.
+- **KT-DS8: "Scan Struk" tetap, "Kirim Daun" diganti arti.** Scan Struk
+  adalah fitur yang direncanakan (tidak tampil sebelum fiturnya ada).
+  "Kirim Daun" menjadi "Catat Transfer" sesuai glosarium ("mencatat, bukan
+  melakukan"); ikon daunnya hanya gambar daun tanpa makna kirim, jadi
+  dapat dipertahankan, atau digambar ulang bila terasa kurang mewakili
+  transfer.
 
 ## Catatan teknis
 

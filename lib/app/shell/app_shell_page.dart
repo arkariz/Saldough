@@ -200,6 +200,7 @@ class _AppShellPageState extends State<AppShellPage> {
         featureNudge: ReminderNudgeCard(container: parentContainer, board: _statusBoard),
         forecast: PlanForecastRow(
           container: parentContainer,
+          board: _statusBoard,
           onTap: () => _showPlan(context, PlanSegment.thisMonth),
         ),
       ),

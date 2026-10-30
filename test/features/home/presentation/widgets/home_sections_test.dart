@@ -183,12 +183,11 @@ void main() {
     testWidgets('kartu saldo hero tampil tanpa galat di $preset ${brightness.name}', (tester) async {
       await tester.pumpWidget(
         _host(
-          HomeBalanceCard(
+          const HomeBalanceCard(
             total: 1485000000,
             walletCount: 2,
-            onShowWallets: () {},
-            onRecord: () {},
-            cashFlow: const CashFlow(income: 850000000, expense: 365000000),
+            cashFlow: CashFlow(income: 850000000, expense: 365000000),
+            footer: Text('FOOTER'),
           ),
           preset: preset,
           brightness: brightness,
@@ -198,6 +197,9 @@ void main() {
       expect(tester.takeException(), isNull);
       expect(find.text('14.850.000'), findsOneWidget);
       expect(find.text('+Rp8.500.000'), findsOneWidget);
+      expect(find.text('FOOTER'), findsOneWidget);
+      // Kartu saldo tanpa tombol: Catat dan Dompet ada di navigasi.
+      expect(find.descendant(of: find.byType(DsHeroBalanceCard), matching: find.byType(DsButton)), findsNothing);
     });
   }
 }

@@ -736,6 +736,7 @@
     "subtitle": "Your finances today.",
     "insightTitle": "Insights & plans",
     "statusCarouselDot": "Go to status card $number",
+    "statusOpen": "View",
     "statusCarouselPrevious": "Previous status card",
     "statusCarouselNext": "Next status card",
     "carouselPrevious": "Previous slide",

@@ -11,17 +11,17 @@ import 'package:saldough/shared/transaction/transaction.dart';
 
 /// Kartu saldo Beranda (acuan `home-clay.html`, kartu hero): total saldo
 /// dompet aktif (FR-HOME-001) di kartu hijau yang menghitung naik saat
-/// dibuka, dengan pemasukan dan pengeluaran periode, serta tombol Catat
-/// dan Dompet. Menyembunyikan nominal memutar saldo (`DsFlipSwitcher`).
+/// dibuka, dengan pemasukan dan pengeluaran periode dan perkiraan saldo
+/// akhir periode. Tanpa tombol: Catat ada di navigasi dan tile aksi cepat,
+/// Dompet di navigasi. Menyembunyikan nominal memutar saldo (`DsFlipSwitcher`).
 /// Tanpa dompet, ajakan membuat dompet pertama ada di bawah (FR-HOME-005).
 class HomeBalanceCard extends StatelessWidget {
   /// Membuat [HomeBalanceCard].
   const HomeBalanceCard({
     required this.total,
     required this.walletCount,
-    required this.onShowWallets,
-    required this.onRecord,
     this.cashFlow,
+    this.footer,
     super.key,
   });
 
@@ -31,14 +31,12 @@ class HomeBalanceCard extends StatelessWidget {
   /// Jumlah dompet aktif.
   final int walletCount;
 
-  /// Membuka tab Dompet.
-  final VoidCallback onShowWallets;
-
-  /// Membuka alur CATAT.
-  final VoidCallback onRecord;
-
   /// Arus periode berjalan; `null` menyembunyikan kotak Masuk/Keluar.
   final CashFlow? cashFlow;
+
+  /// Baris di bawah kotak Masuk/Keluar: perkiraan saldo akhir periode,
+  /// disisipkan akar komposisi dari fitur Rencana. `null` = tidak ada.
+  final Widget? footer;
 
   @override
   Widget build(BuildContext context) {
@@ -71,15 +69,7 @@ class HomeBalanceCard extends StatelessWidget {
                   income: false,
                 ),
               ],
-        actions: [
-          DsButton.onHero(label: t.appShell.recordAction, icon: Icons.add_circle_outline, onPressed: onRecord),
-          if (walletCount > 0)
-            DsButton.onHeroTonal(
-              label: t.appShell.walletsTabLabel,
-              icon: Icons.account_balance_wallet_outlined,
-              onPressed: onShowWallets,
-            ),
-        ],
+        footer: footer,
       ),
     );
   }

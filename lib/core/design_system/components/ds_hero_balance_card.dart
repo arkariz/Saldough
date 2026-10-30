@@ -27,6 +27,7 @@ class DsHeroBalanceCard extends StatelessWidget {
     this.caption,
     this.stats = const [],
     this.actions = const [],
+    this.footer,
     super.key,
   });
 
@@ -62,6 +63,10 @@ class DsHeroBalanceCard extends StatelessWidget {
 
   /// Tombol, paling banyak dua (`DsButton.onHero`, `DsButton.onHeroTonal`).
   final List<Widget> actions;
+
+  /// Baris keterangan di bawah kotak statistik (mis. perkiraan saldo akhir
+  /// periode), tanpa tombol. Ditulis dengan warna `onHeroMuted`/`onHero`.
+  final Widget? footer;
 
   @override
   Widget build(BuildContext context) {
@@ -131,6 +136,7 @@ class DsHeroBalanceCard extends StatelessWidget {
                   const SizedBox(height: 14),
                   Row(children: _spaced(stats, 8)),
                 ],
+                if (footer != null) ...[const SizedBox(height: 12), footer!],
                 if (actions.isNotEmpty) ...[
                   const SizedBox(height: 12),
                   Row(children: _spaced(actions, 8)),

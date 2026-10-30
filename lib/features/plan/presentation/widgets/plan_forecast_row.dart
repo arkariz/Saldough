@@ -1,5 +1,6 @@
 import 'package:di/di.dart';
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
@@ -22,11 +23,17 @@ class PlanForecastRow extends StatelessWidget {
   const PlanForecastRow({
     required this.container,
     required this.onTap,
+    this.board,
     super.key,
   });
 
   /// Kontainer akar.
   final GetIt container;
+
+  /// Papan status Beranda (mode ringkas, ADR-043): Siapkan dana dan
+  /// "Oktober dimulai" menjadi slide satu baris, dan perkiraan saldo menjadi
+  /// baris keterangan untuk kartu saldo hero. `null` = tampilan lama.
+  final DsStatusBoard? board;
 
   /// Membuka Rencana › Bulan ini.
   final VoidCallback onTap;
@@ -43,6 +50,8 @@ class PlanForecastRow extends StatelessWidget {
             action: () => bloc.add(const PlanMonthLoaded()),
             child: BlocBuilder<PlanMonthBloc, PlanMonthState>(
               builder: (context, state) {
+                final board = this.board;
+                if (board != null) return _compact(context, board, state);
                 if (state.isLoading || state.loadFailed) return const SizedBox.shrink();
                 // Kartu sekali tampil "Oktober dimulai" (J4, ADR-036 §3.7).
                 final review = state.showReview && !state.review.dismissed
@@ -83,6 +92,77 @@ class PlanForecastRow extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  /// Slide status dan baris perkiraan untuk mode ringkas.
+  Widget _compact(BuildContext context, DsStatusBoard board, PlanMonthState state) {
+    Widget reports({DsStatusSlideData? funding, DsStatusSlideData? monthStart}) => Column(
+      children: [
+        DsStatusReport(board: board, id: 'funding', data: funding),
+        DsStatusReport(board: board, id: 'month_start', data: monthStart),
+      ],
+    );
+    if (state.isLoading || state.loadFailed) return reports();
+    final funding = state.fundingWarnings;
+    DsStatusSlideData? fundingSlide;
+    if (funding.isNotEmpty) {
+      final first = funding.first;
+      final name = first.rule.note.isEmpty ? t.record.repeat.fallbackName : first.rule.note;
+      final more = funding.length > 1 ? ' ${t.plan.fundingMore(n: funding.length - 1)}' : '';
+      fundingSlide = DsStatusSlideData(
+        id: 'funding',
+        icon: Icons.warning_amber_rounded,
+        title: t.plan.fundingTitle,
+        subtitle:
+            '${t.plan.fundingBody(wallet: first.walletName, shortfall: AppMoneyFormatter.formatApprox(first.shortfall), name: name, date: CycleMonthFormatter.formatDayMonth(first.date))}$more',
+        actionLabel: t.home.statusOpen,
+        onAction: onTap,
+        attention: true,
+        order: -2,
+      );
+    }
+    DsStatusSlideData? monthStartSlide;
+    if (state.showReview && !state.review.dismissed) {
+      final plan = state.planFor(0);
+      monthStartSlide = DsStatusSlideData(
+        id: 'month_start',
+        icon: Icons.event_available_outlined,
+        title: t.plan.reviewTitle(month: state.range.shortName),
+        subtitle: t.plan.homeReviewBody(
+          income: AppMoneyFormatter.format(plan.plannedIncome),
+          committed: AppMoneyFormatter.format(plan.plannedRecurringOut + plan.budgetPlanned),
+          free: AppMoneyFormatter.format(plan.planned),
+        ),
+        actionLabel: t.plan.homeReviewAction,
+        onAction: onTap,
+        attention: true,
+        order: 1,
+      );
+    }
+    final low = state.projection.lowest;
+    final line = state.rules.isEmpty || low == null
+        ? null
+        : TourTrigger(
+            tour: TourId.home,
+            ready: true,
+            child: SpotlightTarget(
+              spotlightKey: SpotlightKey.homeForecast,
+              child: PlanForecastHeroLine(
+                endDate: state.range.lastDay,
+                endBalance: state.projection.endBalance,
+                lowDate: low.date,
+                lowBalance: low.balance,
+                onTap: onTap,
+              ),
+            ),
+          );
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        reports(funding: fundingSlide, monthStart: monthStartSlide),
+        ?line,
+      ],
     );
   }
 }
@@ -230,6 +310,99 @@ class _MonthStartCard extends StatelessWidget {
                 ),
               ],
             ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Perkiraan saldo akhir periode sebagai baris keterangan di kartu saldo
+/// hero (huruf piksel, warna kartu): "PERKIRAAN SALDO 31 OKT   ≈Rp8.615.000 ›"
+/// dan, bila titik terendah lebih rendah dari akhir periode, baris
+/// "Terendah ≈… pada 24 Okt". Ketuk membuka Rencana › Bulan ini.
+class PlanForecastHeroLine extends StatelessWidget {
+  /// Membuat [PlanForecastHeroLine].
+  const PlanForecastHeroLine({
+    required this.endDate,
+    required this.endBalance,
+    required this.lowDate,
+    required this.lowBalance,
+    required this.onTap,
+    super.key,
+  });
+
+  /// Hari terakhir periode keuangan.
+  final DateTime endDate;
+
+  /// Perkiraan saldo di [endDate] (sen).
+  final int endBalance;
+
+  /// Hari saldo terendah.
+  final DateTime lowDate;
+
+  /// Perkiraan saldo terendah (sen).
+  final int lowBalance;
+
+  /// Membuka Rencana › Bulan ini.
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final ds = context.ds;
+    final c = ds.colors;
+    final label = t.plan.forecastEndLabel(date: CycleMonthFormatter.formatDayMonth(endDate));
+    final value = t.plan.approxAmount(amount: AppMoneyFormatter.formatApprox(endBalance));
+    final showLow = lowBalance < endBalance;
+    final lowText = t.plan.forecastLowest(
+      amount: t.plan.approxAmount(amount: AppMoneyFormatter.formatApprox(lowBalance)),
+      date: CycleMonthFormatter.formatDayMonth(lowDate),
+    );
+    // Di atas hijau pekat, nada bahaya memakai kuning terang, bukan merah:
+    // `error` tidak lolos kontras di latar kartu saldo.
+    final negativeEnd = endBalance < 0;
+    final negativeLow = lowBalance < 0;
+    return DsPressable(
+      onPressed: onTap,
+      pressedScale: 0.99,
+      semanticLabel: [label, value, if (showLow) lowText].join(', '),
+      builder: (context, _) => ConstrainedBox(
+        constraints: const BoxConstraints(minHeight: 44),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
+              children: [
+                Flexible(
+                  child: Text(
+                    label.toUpperCase(),
+                    style: ds.typography.pixelCaption.copyWith(color: c.onHeroMuted),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: AlignmentDirectional.centerEnd,
+                    child: Text(
+                      value,
+                      key: const ValueKey('forecast-end'),
+                      style: ds.typography.pixelAmount.copyWith(color: negativeEnd ? c.heroAccentWarm : c.onHero),
+                    ),
+                  ),
+                ),
+                Icon(Icons.chevron_right, size: 16, color: c.onHeroMuted),
+              ],
+            ),
+            if (showLow)
+              Text(
+                lowText,
+                key: const ValueKey('forecast-lowest'),
+                style: ds.typography.pixelCaption.copyWith(color: negativeLow ? c.heroAccentWarm : c.onHeroMuted),
+              ),
           ],
         ),
       ),

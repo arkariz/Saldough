@@ -736,6 +736,7 @@
     "subtitle": "Ringkasan keuanganmu hari ini.",
     "insightTitle": "Wawasan & Rencana",
     "statusCarouselDot": "Ke kartu status $number",
+    "statusOpen": "Lihat",
     "statusCarouselPrevious": "Kartu status sebelumnya",
     "statusCarouselNext": "Kartu status berikutnya",
     "carouselPrevious": "Slide sebelumnya",

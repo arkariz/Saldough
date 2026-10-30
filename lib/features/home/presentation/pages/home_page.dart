@@ -224,8 +224,7 @@ class _HomePageState extends State<HomePage> {
                 total: state.totalBalance,
                 walletCount: state.activeWallets.length,
                 cashFlow: state.hasTransactions ? state.cashFlow : null,
-                onShowWallets: widget.onShowWallets,
-                onRecord: () => _thenRefresh(widget.onRecord),
+                footer: widget.forecast,
               ),
             ),
           ],
@@ -233,13 +232,11 @@ class _HomePageState extends State<HomePage> {
           ?widget.notice,
           ?widget.pendingRecurring,
           ?widget.featureNudge,
-          // Arus periode (Masuk/Keluar) kini ada di kartu saldo; kartu Arus
-          // terpisah dihapus karena menggandakannya. Pintu ke Analisis
-          // pindah ke tile "Laporan". Perkiraan saldo akhir tetap tampil.
-          if (widget.forecast case final forecast?) ...[
-            gap(DsSpacing.lg),
-            forecast,
-          ],
+          // Perkiraan saldo akhir periode ada di kartu saldo (footer). Tanpa
+          // kartu saldo (belum ada dompet) widget ini tetap dipasang tak
+          // terlihat supaya slide Siapkan dana dan Oktober dimulai tetap
+          // dilaporkan ke carousel status.
+          if (state.hasNoWallets && widget.forecast != null) Offstage(child: widget.forecast),
           if (budget != null || hasPreview) ...[
             gap(DsSpacing.lg),
             // Target tur membungkus seluruh carousel supaya tetap terbangun

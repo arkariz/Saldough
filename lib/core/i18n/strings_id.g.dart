@@ -1962,6 +1962,9 @@ class Translations$home$id {
 	/// id: 'Ke kartu status $number'
 	String statusCarouselDot({required Object number}) => 'Ke kartu status ${number}';
 
+	/// id: 'Lihat'
+	String get statusOpen => 'Lihat';
+
 	/// id: 'Kartu status sebelumnya'
 	String get statusCarouselPrevious => 'Kartu status sebelumnya';
 
@@ -6303,6 +6306,7 @@ extension on Translations {
 			'home.subtitle' => 'Ringkasan keuanganmu hari ini.',
 			'home.insightTitle' => 'Wawasan & Rencana',
 			'home.statusCarouselDot' => ({required Object number}) => 'Ke kartu status ${number}',
+			'home.statusOpen' => 'Lihat',
 			'home.statusCarouselPrevious' => 'Kartu status sebelumnya',
 			'home.statusCarouselNext' => 'Kartu status berikutnya',
 			'home.carouselPrevious' => 'Slide sebelumnya',
@@ -6634,9 +6638,9 @@ extension on Translations {
 			'notificationCapture.searchApps' => 'Cari aplikasi',
 			'notificationCapture.builtInPatternsBadge' => 'Pola bawaan',
 			'notificationCapture.appsLoadFailed' => 'Daftar aplikasi gagal dibaca.',
-			'notificationCapture.appsEmpty' => 'Tidak ada aplikasi yang cocok.',
 			_ => null,
 		} ?? switch (path) {
+			'notificationCapture.appsEmpty' => 'Tidak ada aplikasi yang cocok.',
 			'notificationCapture.sourceEnabled' => 'Dengarkan aplikasi ini',
 			'notificationCapture.walletLabel' => 'Dompet',
 			'notificationCapture.keywordsLabel' => 'Filter',

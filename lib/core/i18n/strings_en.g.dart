@@ -784,6 +784,7 @@ class _Translations$home$en extends Translations$home$id {
 	@override String get subtitle => 'Your finances today.';
 	@override String get insightTitle => 'Insights & plans';
 	@override String statusCarouselDot({required Object number}) => 'Go to status card ${number}';
+	@override String get statusOpen => 'View';
 	@override String get statusCarouselPrevious => 'Previous status card';
 	@override String get statusCarouselNext => 'Next status card';
 	@override String get carouselPrevious => 'Previous slide';
@@ -3155,6 +3156,7 @@ extension on TranslationsEn {
 			'home.subtitle' => 'Your finances today.',
 			'home.insightTitle' => 'Insights & plans',
 			'home.statusCarouselDot' => ({required Object number}) => 'Go to status card ${number}',
+			'home.statusOpen' => 'View',
 			'home.statusCarouselPrevious' => 'Previous status card',
 			'home.statusCarouselNext' => 'Next status card',
 			'home.carouselPrevious' => 'Previous slide',
@@ -3486,9 +3488,9 @@ extension on TranslationsEn {
 			'notificationCapture.searchApps' => 'Search apps',
 			'notificationCapture.builtInPatternsBadge' => 'Built-in patterns',
 			'notificationCapture.appsLoadFailed' => 'Couldn\'t read the app list.',
-			'notificationCapture.appsEmpty' => 'No matching apps.',
 			_ => null,
 		} ?? switch (path) {
+			'notificationCapture.appsEmpty' => 'No matching apps.',
 			'notificationCapture.sourceEnabled' => 'Read this app\'s notifications',
 			'notificationCapture.walletLabel' => 'Wallet',
 			'notificationCapture.keywordsLabel' => 'Filter',

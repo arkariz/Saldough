@@ -5964,6 +5964,14 @@ memilih mode (dan preset bila ≥ 2), dan design system lama dihapus.
       "Perlu dicek"; tidak ada Catat satu ketuk di Beranda (FR-RUT-002
       direvisi); langkah tur `homeStatus` menggantikan tiga langkah lama di
       Beranda. Kartu penuh lama dipertahankan untuk segmen Rutin/Riwayat.
+      **Perkiraan saldo dan review periode (30 Okt 2026):** Siapkan dana dan
+      "Oktober dimulai" menjadi slide status (urutan: Siapkan dana, rutin
+      menunggu, Oktober dimulai, notifikasi, pengingat); perkiraan saldo
+      akhir periode menjadi baris keterangan di kartu saldo hero
+      (`PlanForecastHeroLine`, target tur `homeForecast`); tombol Catat dan
+      Dompet dihapus dari kartu saldo (ada di navigasi dan tile aksi cepat).
+      Tombol "Nanti" kartu Oktober dimulai tidak ada di Beranda; menutup di
+      Rencana.
       Sisa: navigasi bawah (`AppNavBar`, tombol Catat clay), Riwayat,
       Rencana, Dompet, Akun, Catat, layar turunan, ikon clay untuk 41
       kategori/dompet (KT-DS5), lalu hapus `core/theme/`, `AppThemeBridge`,

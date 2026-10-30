@@ -2,14 +2,27 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:saldough/core/design_system/ds_theme.dart';
+import 'package:saldough/core/design_system/tokens/ds_motion.dart';
 import 'package:saldough/core/design_system/tokens/ds_opacity.dart';
 import 'package:saldough/core/design_system/tokens/ds_spacing.dart';
 
 /// Top bar: logo + logo kata di kiri, tindakan di kanan, latar kanvas
 /// tembus pandang dengan blur dan garis rambut bawah. Tinggi 56.
+///
+/// [collapsedTitle] dan [collapse] dipakai `DsCollapsingTopBar`: saat
+/// [collapse] naik ke 1, logo kata memudar dan [collapsedTitle] turun masuk.
 class DsTopBar extends StatelessWidget implements PreferredSizeWidget {
   /// Membuat top bar.
-  const DsTopBar({required this.wordmark, this.logo, this.badge, this.actions = const [], super.key});
+  const DsTopBar({
+    required this.wordmark,
+    this.logo,
+    this.badge,
+    this.actions = const [],
+    this.collapsedTitle,
+    this.collapse = 0,
+    this.elevated = false,
+    super.key,
+  });
 
   /// Gambar logo 28px.
   final Widget? logo;
@@ -23,6 +36,15 @@ class DsTopBar extends StatelessWidget implements PreferredSizeWidget {
   /// Tindakan di kanan (`DsIconButton`, `DsAvatar`).
   final List<Widget> actions;
 
+  /// Isi pengganti logo kata saat halaman digulir (mini saldo).
+  final Widget? collapsedTitle;
+
+  /// Kemajuan menyusut 0–1.
+  final double collapse;
+
+  /// Tampilkan bayangan tipis di bawah bar.
+  final bool elevated;
+
   @override
   Size get preferredSize => const Size.fromHeight(56);
 
@@ -30,13 +52,28 @@ class DsTopBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     final ds = context.ds;
     final c = ds.colors;
+    final title = Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (logo != null) ...[SizedBox.square(dimension: 28, child: logo), const SizedBox(width: 8)],
+        Semantics(
+          header: true,
+          child: Text(wordmark, style: ds.typography.pixelLabel.copyWith(fontSize: 13, color: c.actionPrimary)),
+        ),
+        if (badge != null) ...[const SizedBox(width: 6), badge!],
+      ],
+    );
     return ClipRect(
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-        child: Container(
+        child: AnimatedContainer(
+          duration: DsMotion.standard,
           decoration: BoxDecoration(
             color: c.surfaceCanvas.withValues(alpha: DsOpacity.chrome),
             border: Border(bottom: BorderSide(color: c.outlineSubtle)),
+            boxShadow: elevated
+                ? const [BoxShadow(color: Color(0x0F000000), offset: Offset(0, 4), blurRadius: 20)]
+                : const [],
           ),
           child: SafeArea(
             bottom: false,
@@ -46,16 +83,22 @@ class DsTopBar extends StatelessWidget implements PreferredSizeWidget {
                 padding: const EdgeInsets.symmetric(horizontal: DsSpacing.md),
                 child: Row(
                   children: [
-                    if (logo != null) ...[SizedBox.square(dimension: 28, child: logo), const SizedBox(width: 8)],
-                    Semantics(
-                      header: true,
-                      child: Text(
-                        wordmark,
-                        style: ds.typography.pixelLabel.copyWith(fontSize: 13, color: c.actionPrimary),
+                    Expanded(
+                      child: Stack(
+                        alignment: Alignment.centerLeft,
+                        children: [
+                          Opacity(opacity: 1 - collapse, child: title),
+                          if (collapsedTitle != null)
+                            IgnorePointer(
+                              ignoring: collapse < 0.5,
+                              child: Opacity(
+                                opacity: collapse,
+                                child: Transform.translate(offset: Offset(0, -8 * (1 - collapse)), child: collapsedTitle),
+                              ),
+                            ),
+                        ],
                       ),
                     ),
-                    if (badge != null) ...[const SizedBox(width: 6), badge!],
-                    const Spacer(),
                     ...actions,
                   ],
                 ),

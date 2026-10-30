@@ -5,13 +5,20 @@
 library;
 
 export 'color/ds_color_scheme.dart';
+export 'components/ds_ambient_layer.dart';
 export 'components/ds_avatar.dart';
 export 'components/ds_badge.dart';
 export 'components/ds_budget_meter_card.dart';
 export 'components/ds_button.dart';
 export 'components/ds_card.dart';
+export 'components/ds_carousel.dart';
+export 'components/ds_celebration.dart';
+export 'components/ds_collapsing_top_bar.dart';
+export 'components/ds_count_up.dart';
+export 'components/ds_flip_switcher.dart';
 export 'components/ds_hero_balance_card.dart';
 export 'components/ds_icon_tile.dart';
+export 'components/ds_idle_motion.dart';
 export 'components/ds_inline_banner.dart';
 export 'components/ds_ledger_row.dart';
 export 'components/ds_mascot_card.dart';
@@ -20,6 +27,7 @@ export 'components/ds_pressable.dart';
 export 'components/ds_quick_action_tile.dart';
 export 'components/ds_section_header.dart';
 export 'components/ds_segment_meter.dart';
+export 'components/ds_tap_tip.dart';
 export 'components/ds_top_bar.dart';
 export 'ds_theme.dart';
 export 'presets/ds_theme_preset.dart';

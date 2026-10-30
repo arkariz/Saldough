@@ -93,6 +93,7 @@ Terakhir diperbarui: 29 Oktober 2026 (penyelarasan dokumen dengan `main` di `0.1
 | 24 — Design system baru dan preset tema ([ADR-043](../02-architecture/adr/0043-design-system-v2-dan-preset-tema.md), Proposed) | 4 | 1 | Berjalan sejak 29 Okt 2026 -- T-24.1 fondasi selesai (spek Tanukonomy Matcha); komponen dipetakan, widget menunggu permintaan pemilik dan KT-DS1–KT-DS4; pemasangan menunggu keputusan pemilik |
 | 24 — Design system baru dan preset tema ([ADR-043](../02-architecture/adr/0043-design-system-v2-dan-preset-tema.md), Proposed) | 4 | 1 | Berjalan sejak 29 Okt 2026 -- T-24.1 fondasi selesai (spek Tanukonomy Matcha); komponen dipetakan, KT-DS1–KT-DS4 diputuskan; widget menunggu permintaan pemilik; pemasangan menunggu keputusan pemilik |
 | 24 — Design system baru dan preset tema ([ADR-043](../02-architecture/adr/0043-design-system-v2-dan-preset-tema.md), Proposed) | 4 | 2 | Berjalan sejak 29 Okt 2026 -- T-24.1 fondasi selesai (spek Tanukonomy Matcha); KT-DS1–KT-DS4 diputuskan; T-24.2 widget komponen selesai; pemasangan menunggu keputusan pemilik |
+| 24 — Design system baru dan preset tema ([ADR-043](../02-architecture/adr/0043-design-system-v2-dan-preset-tema.md), Proposed) | 5 | 3 | Berjalan sejak 29 Okt 2026 -- T-24.1 fondasi selesai (spek Tanukonomy Matcha); KT-DS1–KT-DS4 diputuskan; T-24.2 widget komponen dan T-24.5 animasi selesai (animasi belum dinilai di perangkat); pemasangan menunggu keputusan pemilik |
 | Antrean (`B-n`, belum dijadwalkan) | 67 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
 
 ## Keputusan terbuka
@@ -5906,6 +5907,18 @@ memilih mode (dan preset bila ≥ 2), dan design system lama dihapus.
       posisi tombol Catat, tanpa luapan di mode gelap); layar Beranda dirakit
       dari widget ini dan dirender dengan huruf asli, cocok dengan referensi
       (`reference/render-light.png`, `render-dark.png`).
+      Di luar PRD: tampilan.
+- [x] **T-24.5** Animasi design system v2 dari acuan Beranda beranimasi
+      (30 Okt 2026), semua animasi diadopsi atas keputusan pemilik
+      ([motion.md](../03-design/design-system-v2/motion.md)): hitung naik,
+      balik 3D saldo, app bar menyusut, parallax, carousel, meter bernapas,
+      denyut, gerak diam, partikel latar, perayaan klaim, goyang badge,
+      tooltip ketuk. Partikel diletakkan di belakang konten dan semuanya
+      berhenti saat gerak dikurangi.
+      Verifikasi: 21 uji di `ds_motion_test.dart` (nilai hitung naik, mode
+      kurangi gerak, pemicu dan pelepasan overlay, urutan lapisan,
+      carousel); analyze bersih. **Belum dinilai di perangkat** (kesan
+      gerak, kepadatan dan keburaman partikel).
       Di luar PRD: tampilan.
 - [ ] **T-24.3** Pasang ke aplikasi: `MaterialApp` memakai `DsTheme`,
       preferensi preset + mode (`settings_appearance`, dikecualikan dari

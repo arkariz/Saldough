@@ -16,6 +16,7 @@ yang sama dengan spek ini; isinya masih ada di riwayat git.
 |---|---|
 | [spec.md](spec.md) | Spek pemilik "Tanukonomy" (DESIGN.md dari Stitch), disalin apa adanya |
 | [reference/home.html](reference/home.html), [home.png](reference/home.png) | Referensi komponen: layar Beranda dari pemilik |
+| [motion.md](motion.md), [reference/home-motion.html](reference/home-motion.html) | Daftar animasi, aturan gerak dikurangi, perbaikan dari acuan |
 | [components.md](components.md) | Pemetaan setiap komponen referensi ke token dan widget-nya, beserta varian dan selisihnya |
 | [reference/render-light.png](reference/render-light.png), [render-dark.png](reference/render-dark.png) | Layar Beranda dirakit dari widget design system v2 |
 | [tokens.json](tokens.json) | Token dalam bentuk data: warna per preset (terang/gelap), tipografi, radius, jarak, elevasi, gerak |

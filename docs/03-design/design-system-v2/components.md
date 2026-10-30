@@ -31,6 +31,17 @@ referensi; bila referensi dan spek berbeda, ditandai "Selisih".
 | Tile aksi cepat | `DsQuickActionTile` | `ds_quick_action_tile.dart` |
 | Banner | `DsInlineBanner` | `ds_inline_banner.dart` |
 | Navigasi bawah | `DsNavBar`, `DsNavItem` | `ds_nav_bar.dart` |
+| Hitung naik angka | `DsCountUp` | `ds_count_up.dart` |
+| Balik 3D | `DsFlipSwitcher` | `ds_flip_switcher.dart` |
+| App bar menyusut, parallax | `DsCollapsingTopBar`, `DsParallax` | `ds_collapsing_top_bar.dart` |
+| Carousel | `DsCarousel`, `DsCarouselDots` | `ds_carousel.dart` |
+| Denyut, gerak diam | `DsPulse`, `DsIdleMotion` | `ds_idle_motion.dart` |
+| Partikel latar | `DsAmbientLayer`, `DsAmbientBackdrop` | `ds_ambient_layer.dart` |
+| Perayaan, goyang | `DsCelebration`, `DsJiggle` | `ds_celebration.dart` |
+| Tooltip ketuk | `DsTapTip` | `ds_tap_tip.dart` |
+
+Perilaku, waktu, dan aturan pakai komponen gerak ada di
+[motion.md](motion.md). `DsSegmentMeter` punya opsi `breathing`.
 
 Kolom isian, checkbox, radio, switch, dan kontrol segmen memakai widget
 Material bawaan yang sudah diberi gaya lewat `DsTheme`, jadi tidak punya

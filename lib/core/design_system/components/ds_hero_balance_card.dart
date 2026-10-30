@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:saldough/core/design_system/components/ds_button.dart';
+import 'package:saldough/core/design_system/components/ds_flip_switcher.dart';
 import 'package:saldough/core/design_system/components/ds_icon_tile.dart';
 import 'package:saldough/core/design_system/ds_theme.dart';
 import 'package:saldough/core/design_system/tokens/ds_opacity.dart';
@@ -109,9 +110,14 @@ class DsHeroBalanceCard extends StatelessWidget {
                       child: FittedBox(
                         fit: BoxFit.scaleDown,
                         alignment: Alignment.centerLeft,
-                        child: Text(
-                          hidden ? hiddenMask : amount,
-                          style: ds.typography.pixelDisplay.copyWith(color: c.onHero),
+                        // Balik 3D saat disembunyikan/ditampilkan; perubahan
+                        // angka (hitung naik) tidak memicunya.
+                        child: DsFlipSwitcher(
+                          child: Text(
+                            hidden ? hiddenMask : amount,
+                            key: ValueKey(hidden),
+                            style: ds.typography.pixelDisplay.copyWith(color: c.onHero),
+                          ),
                         ),
                       ),
                     ),

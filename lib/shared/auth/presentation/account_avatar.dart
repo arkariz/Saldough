@@ -98,3 +98,39 @@ class _AccountAvatarButtonState extends State<AccountAvatarButton> {
     );
   }
 }
+
+/// Membangun anak dari pengguna yang sedang masuk (atau `null`), mengikuti
+/// perubahan status masuk. Dipakai Beranda untuk sapaan bernama tanpa tahu
+/// soal akun ([AccountAvatarButton] memakai sumber yang sama).
+class AccountUserBuilder extends StatefulWidget {
+  /// Membuat [AccountUserBuilder].
+  const AccountUserBuilder({required this.builder, super.key});
+
+  /// Membangun anak dari [user].
+  final Widget Function(BuildContext context, AppUser? user) builder;
+
+  @override
+  State<AccountUserBuilder> createState() => _AccountUserBuilderState();
+}
+
+class _AccountUserBuilderState extends State<AccountUserBuilder> {
+  late final AuthRepository _auth;
+  late final Stream<AppUser?> _changes;
+
+  @override
+  void initState() {
+    super.initState();
+    final rootContext = Navigator.of(context, rootNavigator: true).context;
+    _auth = ScopeProvider.of(rootContext)<AuthRepository>();
+    _changes = _auth.authStateChanges();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<AppUser?>(
+      stream: _changes,
+      initialData: _auth.currentUser,
+      builder: (context, snapshot) => widget.builder(context, snapshot.data),
+    );
+  }
+}

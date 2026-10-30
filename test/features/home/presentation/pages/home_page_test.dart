@@ -5,6 +5,7 @@ import 'package:memory_storage/memory_storage.dart';
 import 'package:navigation/navigation.dart';
 import 'package:saldough/app/shell/app_shell_page.dart';
 import 'package:saldough/core/currency/currency.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
@@ -29,6 +30,7 @@ import 'package:saldough/features/home/domain/budget_overview_source.dart';
 import 'package:saldough/features/home/domain/freelance_overview_source.dart';
 import 'package:saldough/features/home/presentation/pages/home_page.dart';
 import 'package:saldough/features/home/presentation/widgets/home_cards.dart';
+import 'package:saldough/features/home/presentation/widgets/home_sections.dart';
 import 'package:saldough/features/home/presentation/widgets/home_summary.dart';
 import 'package:saldough/features/plan/domain/plan_sources.dart';
 import 'package:saldough/features/record/presentation/widgets/record_form_host.dart';
@@ -38,12 +40,12 @@ import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
-import 'package:saldough/shared/transaction/transaction_presentation.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
 import '../../../../helpers/categories.dart';
 import '../../../../helpers/fake_auth_repository.dart';
 import '../../../../helpers/plan_sources.dart';
+import '../../../../helpers/reduced_motion.dart';
 import '../../../../helpers/routes.dart';
 
 /// Uji Beranda (Fase 6, FR-HOME-001..005) lewat shell sungguhan dengan
@@ -101,7 +103,7 @@ void main() {
     await tester.pumpWidget(
       ScopeProvider(
         container: container,
-        child: MaterialApp(theme: PixelTheme.light, home: const AppShellPage()),
+        child: MaterialApp(builder: reducedMotion, theme: PixelTheme.light, home: const AppShellPage()),
       ),
     );
     for (var i = 0; i < 5; i++) {
@@ -232,7 +234,7 @@ void main() {
     await openShell(tester);
 
     // Total saldo dompet aktif: Rp5.250.000 + Rp0.
-    expect(find.descendant(of: find.byType(HeroAmount), matching: find.text('Rp5.250.000')), findsOneWidget);
+    expect(find.descendant(of: find.byType(DsHeroBalanceCard), matching: find.text('5.250.000')), findsOneWidget);
     // Transfer Rp1.000.000 tidak dihitung; pengeluaran tahun lalu juga tidak.
     // Judul "Arus {periode}" (PeriodHeader, P-11).
     expect(find.text(t.home.flowTitle(period: CycleMonthFormatter.formatMonthName(now))), findsOneWidget);
@@ -244,15 +246,25 @@ void main() {
     expect(find.descendant(of: flow, matching: find.text('+Rp5.000.000')), findsOneWidget);
     expect(find.descendant(of: flow, matching: find.text('−Rp750.000')), findsOneWidget);
     // Anggaran aktif: rencana 2 × Rp75.000.
-    expect(find.byType(HomeBudgetCard), findsOneWidget);
-    expect(find.text(t.home.budgetSpentOf(spent: 'Rp0', planned: 'Rp150.000')), findsOneWidget);
+    // Carousel menyimpan salinan tak terlihat tiap slide untuk mengukur tinggi;
+    // `hitTestable` hanya mengambil yang tampil.
+    expect(find.byType(HomeBudgetCard).hitTestable(), findsOneWidget);
+    // Terpakai dan rencana kini dua teks di kartu meter; kalimat lengkapnya
+    // tinggal label pembaca layar meter.
+    final budgetCard = find.byType(HomeBudgetCard).hitTestable();
+    expect(find.descendant(of: budgetCard, matching: find.text('Rp0')), findsOneWidget);
+    expect(find.descendant(of: budgetCard, matching: find.text('/ Rp150.000')), findsOneWidget);
+    expect(
+      tester.widget<DsSegmentMeter>(find.descendant(of: budgetCard, matching: find.byType(DsSegmentMeter))).semanticLabel,
+      t.home.budgetSpentOf(spent: 'Rp0', planned: 'Rp150.000'),
+    );
     // Freelance sebagai tagihan: belum diterima (kotor) 10 jam × Rp72.500,
     // satu tagihan tertunda.
     expect(find.byType(HomeFreelanceCard), findsOneWidget);
     expect(find.textContaining(t.home.freelanceRowSub(count: 1, date: '').trim()), findsOneWidget);
     expect(find.text('Rp725.000'), findsOneWidget);
     // Terbaru di atas, termasuk transfer (tetap tercatat, hanya tidak dihitung arus).
-    final rows = tester.widgetList<TransactionRow>(find.byType(TransactionRow)).map((r) => r.transaction.id);
+    final rows = tester.widgetList<HomeRecentRow>(find.byType(HomeRecentRow)).map((r) => r.transaction.id);
     expect(rows, ['topup', 'makan', 'gaji', 'lama']);
 
     // "Lihat semua" terakhir milik Transaksi terbaru.
@@ -266,7 +278,7 @@ void main() {
     await seedFull();
     await openShell(tester);
 
-    await tester.tap(find.byType(HomeBudgetCard));
+    await tester.tap(find.byType(HomeBudgetCard).hitTestable());
     await tester.pumpAndSettle();
     expect(navIndex(tester), 2); // Rencana (urutan ADR-034).
   });
@@ -663,7 +675,7 @@ void main() {
         container: container,
         child: MaterialApp(
           theme: PixelTheme.light,
-          builder: (context, child) => ActiveCurrencyRebuilder(child: child!),
+          builder: (context, child) => reducedMotion(context, ActiveCurrencyRebuilder(child: child!)),
           home: const AppShellPage(),
         ),
       ),
@@ -672,16 +684,16 @@ void main() {
       await tester.pump();
     }
     await tester.pumpAndSettle();
-    expect(find.descendant(of: find.byType(HeroAmount), matching: find.text('Rp5.250.000')), findsOneWidget);
+    expect(find.descendant(of: find.byType(DsHeroBalanceCard), matching: find.text('5.250.000')), findsOneWidget);
 
     await tester.tap(find.byKey(const ValueKey('home-hide-amounts')));
     await tester.pumpAndSettle();
     expect(AmountVisibility.hidden, isTrue);
-    expect(find.descendant(of: find.byType(HeroAmount), matching: find.text('Rp•••••')), findsOneWidget);
+    expect(find.descendant(of: find.byType(DsHeroBalanceCard), matching: find.text('••••••••')), findsOneWidget);
     expect(find.text('+Rp5.000.000'), findsNothing);
 
     await tester.tap(find.byKey(const ValueKey('home-hide-amounts')));
     await tester.pumpAndSettle();
-    expect(find.descendant(of: find.byType(HeroAmount), matching: find.text('Rp5.250.000')), findsOneWidget);
+    expect(find.descendant(of: find.byType(DsHeroBalanceCard), matching: find.text('5.250.000')), findsOneWidget);
   });
 }

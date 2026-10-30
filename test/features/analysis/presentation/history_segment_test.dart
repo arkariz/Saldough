@@ -27,6 +27,7 @@ import '../../../helpers/categories.dart';
 import '../../../helpers/fake_auth_repository.dart';
 import '../../../helpers/mocks.dart';
 import '../../../helpers/plan_sources.dart';
+import '../../../helpers/reduced_motion.dart';
 import '../../../helpers/routes.dart';
 
 /// Segmen Daftar | Analisis di tab Riwayat (A1): navigasi, segmen terakhir
@@ -78,7 +79,7 @@ void main() {
     await tester.pumpWidget(
       ScopeProvider(
         container: container,
-        child: MaterialApp(theme: PixelTheme.light, home: const AppShellPage()),
+        child: MaterialApp(builder: reducedMotion, theme: PixelTheme.light, home: const AppShellPage()),
       ),
     );
     // Scope bersarang diinisialisasi satu frame demi satu frame.

@@ -34,6 +34,7 @@ import 'package:saldough/shared/wallet/wallet.dart';
 import '../../../../helpers/fake_auth_repository.dart';
 import '../../../../helpers/mocks.dart';
 import '../../../../helpers/plan_sources.dart';
+import '../../../../helpers/reduced_motion.dart';
 import '../../../../helpers/routes.dart';
 
 /// Uji alur layar Anggaran lewat shell sungguhan dengan penyimpanan di
@@ -94,7 +95,7 @@ void main() {
   }
 
   Future<void> openBudgetTab(WidgetTester tester) async {
-    await tester.pumpWidget(ScopeProvider(container: container, child: MaterialApp(theme: PixelTheme.light, home: const AppShellPage())));
+    await tester.pumpWidget(ScopeProvider(container: container, child: MaterialApp(builder: reducedMotion, theme: PixelTheme.light, home: const AppShellPage())));
     // Empat ScopeWidget bersarang (Record, Transaction, Wallet, Budget).
     for (var i = 0; i < 5; i++) {
       await tester.pump();

@@ -46,6 +46,7 @@ import 'package:saldough/shared/wallet/wallet.dart';
 import '../../../../helpers/fake_auth_repository.dart';
 import '../../../../helpers/fake_plus_purchasing.dart';
 import '../../../../helpers/plan_sources.dart';
+import '../../../../helpers/reduced_motion.dart';
 import '../../../../helpers/routes.dart';
 
 T _right<T>(Either<Failure, T> result) => result.getOrElse((_) => throw StateError('expected Right'));
@@ -132,7 +133,7 @@ void main() {
     await tester.pumpWidget(
       ScopeProvider(
         container: container,
-        child: MaterialApp(theme: PixelTheme.light, home: const AppShellPage()),
+        child: MaterialApp(builder: reducedMotion, theme: PixelTheme.light, home: const AppShellPage()),
       ),
     );
     for (var i = 0; i < 5; i++) {

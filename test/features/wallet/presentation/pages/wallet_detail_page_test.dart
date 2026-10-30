@@ -29,6 +29,7 @@ import '../../../../helpers/fake_auth_repository.dart';
 import '../../../../helpers/keypad.dart';
 import '../../../../helpers/mocks.dart';
 import '../../../../helpers/plan_sources.dart';
+import '../../../../helpers/reduced_motion.dart';
 import '../../../../helpers/routes.dart';
 
 /// Uji T-2.8 (FR-WAL-004, FR-REC-002): layar rincian dompet -- info dompet,
@@ -94,7 +95,7 @@ void main() {
     await tester.pumpWidget(
       ScopeProvider(
         container: container,
-        child: MaterialApp(theme: PixelTheme.light, home: const AppShellPage()),
+        child: MaterialApp(builder: reducedMotion, theme: PixelTheme.light, home: const AppShellPage()),
       ),
     );
     // Tiga `pump()`: tiga ScopeWidget bersarang (Record, Transaction, Wallet).

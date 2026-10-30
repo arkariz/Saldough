@@ -8,6 +8,7 @@ import 'package:memory_storage/memory_storage.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:navigation/navigation.dart';
 import 'package:saldough/app/shell/app_shell_page.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/discovery/discovery.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
@@ -44,6 +45,7 @@ import '../../helpers/fake_feature_statuses.dart';
 import '../../helpers/keypad.dart';
 import '../../helpers/mocks.dart';
 import '../../helpers/plan_sources.dart';
+import '../../helpers/reduced_motion.dart';
 import '../../helpers/routes.dart';
 
 class _MockScheduler extends Mock implements ReminderScheduler {}
@@ -83,7 +85,7 @@ void main() {
   Widget pumpableShell() {
     return ScopeProvider(
       container: container,
-      child: MaterialApp(theme: PixelTheme.light, home: const AppShellPage()),
+      child: MaterialApp(builder: reducedMotion, theme: PixelTheme.light, home: const AppShellPage()),
     );
   }
 
@@ -136,7 +138,7 @@ void main() {
       await tester.pump(); // + ScopeWidget<BudgetScope> (T-4.5)
       await tester.pump(); // + ScopeWidget<HomeScope> (Fase 6)
 
-      expect(find.widgetWithText(AppBar, t.appShell.homeTabLabel), findsOneWidget);
+      expect(find.byType(DsCollapsingTopBar), findsOneWidget);
       final nav = tester.widget<AppNavBar>(find.byType(AppNavBar));
       expect(nav.selectedIndex, 0);
     });
@@ -184,7 +186,7 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(tester.widget<AppNavBar>(find.byType(AppNavBar)).selectedIndex, 0, reason: label);
-        expect(find.widgetWithText(AppBar, t.appShell.homeTabLabel), findsOneWidget);
+        expect(find.byType(DsCollapsingTopBar), findsOneWidget);
       }
       // Di Beranda, Kembali diteruskan ke sistem (aplikasi ditutup).
       expect(shellPopScope().canPop, isTrue);
@@ -497,7 +499,7 @@ void main() {
       await tester.pumpWidget(
         ScopeProvider(
           container: failingContainer,
-          child: MaterialApp(theme: PixelTheme.light, home: const AppShellPage()),
+          child: MaterialApp(builder: reducedMotion, theme: PixelTheme.light, home: const AppShellPage()),
         ),
       );
       await tester.pump();
@@ -522,7 +524,7 @@ void main() {
       await tester.pumpWidget(
         ScopeProvider(
           container: container,
-          child: MaterialApp(theme: PixelTheme.light, home: const AppShellPage(startAction: ShellStartAction.createWallet)),
+          child: MaterialApp(builder: reducedMotion, theme: PixelTheme.light, home: const AppShellPage(startAction: ShellStartAction.createWallet)),
         ),
       );
       await tester.pumpAndSettle();

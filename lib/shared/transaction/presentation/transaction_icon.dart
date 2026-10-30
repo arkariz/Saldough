@@ -69,7 +69,10 @@ class TransactionIcon extends StatelessWidget {
   /// Seberapa jauh lencana keluar dari tepi kotak.
   static const badgeOverhang = 4.0;
 
-  IconKey _icon() {
+  /// Kunci ikon untuk transaksi berjenis [kind]: ikon kategori bila ada,
+  /// ikon jenis bila tidak. Dipakai juga oleh baris yang menggambar ikonnya
+  /// sendiri (Beranda, ikon clay).
+  static IconKey iconKeyFor({required TransactionKind kind, String? categoryId, String? title}) {
     final category = kind == TransactionKind.transfer ? null : ActiveCategories.byId(categoryId);
     if (category != null) return categoryIcon(category, title: title);
     return switch (kind) {
@@ -78,6 +81,8 @@ class TransactionIcon extends StatelessWidget {
       TransactionKind.transfer => IconKey.transfer,
     };
   }
+
+  IconKey _icon() => iconKeyFor(kind: kind, categoryId: categoryId, title: title);
 
   @override
   Widget build(BuildContext context) {

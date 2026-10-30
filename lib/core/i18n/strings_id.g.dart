@@ -1946,6 +1946,47 @@ class Translations$home$id {
 
 	/// id: 'Analisis $period: pemasukan dan pengeluaran per kategori'
 	String analysisDoor({required Object period}) => 'Analisis ${period}: pemasukan dan pengeluaran per kategori';
+
+	/// id: 'Halo'
+	String get greeting => 'Halo';
+
+	/// id: 'Halo, $name'
+	String greetingNamed({required Object name}) => 'Halo, ${name}';
+
+	/// id: 'Ringkasan keuanganmu hari ini.'
+	String get subtitle => 'Ringkasan keuanganmu hari ini.';
+
+	/// id: 'Wawasan & Rencana'
+	String get insightTitle => 'Wawasan & Rencana';
+
+	/// id: 'Slide sebelumnya'
+	String get carouselPrevious => 'Slide sebelumnya';
+
+	/// id: 'Slide berikutnya'
+	String get carouselNext => 'Slide berikutnya';
+
+	/// id: 'Ke slide $number'
+	String carouselDot({required Object number}) => 'Ke slide ${number}';
+
+	/// id: 'Catat Transfer'
+	String get actionTransfer => 'Catat Transfer';
+
+	/// id: 'Scan Struk'
+	String get actionScan => 'Scan Struk';
+
+	/// id: 'Laporan'
+	String get actionReport => 'Laporan';
+
+	/// id: 'Misi Hemat'
+	String get actionMission => 'Misi Hemat';
+
+	/// id: 'Segera'
+	String get soon => 'Segera';
+
+	/// id: 'Disimpan di perangkatmu'
+	String get footnote => 'Disimpan di perangkatmu';
+
+	late final Translations$home$preview$id preview = Translations$home$preview$id.internal(_root);
 }
 
 // Path: onboarding
@@ -4300,6 +4341,69 @@ class Translations$dataPortability$types$id {
 	String get transfer => 'Transfer';
 }
 
+// Path: home.preview
+class Translations$home$preview$id {
+	Translations$home$preview$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'LVL 12 STEWARD'
+	String get level => 'LVL 12 STEWARD';
+
+	/// id: 'Mood: Santai & Makmur'
+	String get moodTitle => 'Mood: Santai & Makmur';
+
+	/// id: '84% SEHAT'
+	String get moodBadge => '84% SEHAT';
+
+	/// id: 'Sisa kuota jajan aman sampai akhir pekan.'
+	String get moodNote => 'Sisa kuota jajan aman sampai akhir pekan.';
+
+	/// id: 'MISI HARIAN TANUKI'
+	String get missionEyebrow => 'MISI HARIAN TANUKI';
+
+	/// id: 'Hemat jajan kopi sore ini untuk +50 Poin'
+	String get missionBody => 'Hemat jajan kopi sore ini untuk +50 Poin';
+
+	/// id: 'KLAIM'
+	String get missionClaim => 'KLAIM';
+
+	/// id: 'TERKLAIM'
+	String get missionClaimed => 'TERKLAIM';
+
+	/// id: '+50 XP'
+	String get missionReward => '+50 XP';
+
+	/// id: 'Tagihan Rutin'
+	String get billTitle => 'Tagihan Rutin';
+
+	/// id: '3 HARI LAGI'
+	String get billBadge => '3 HARI LAGI';
+
+	/// id: 'Spotify Family & Wi-Fi'
+	String get billName => 'Spotify Family & Wi-Fi';
+
+	/// id: 'Rp354.990'
+	String get billAmount => 'Rp354.990';
+
+	/// id: 'Jatuh tempo 25 Mei'
+	String get billDue => 'Jatuh tempo 25 Mei';
+
+	/// id: 'Koban & Hadiah'
+	String get rewardTitle => 'Koban & Hadiah';
+
+	/// id: 'REWARD AKTIF'
+	String get rewardBadge => 'REWARD AKTIF';
+
+	/// id: '1.485 Koban'
+	String get rewardAmount => '1.485 Koban';
+
+	/// id: 'Siap ditukar di katalog hadiah'
+	String get rewardNote => 'Siap ditukar di katalog hadiah';
+}
+
 // Path: account.errors
 class Translations$account$errors$id {
 	Translations$account$errors$id.internal(this._root);
@@ -6176,6 +6280,37 @@ extension on Translations {
 			'home.incomeStat' => 'Pemasukan',
 			'home.expenseStat' => 'Pengeluaran',
 			'home.analysisDoor' => ({required Object period}) => 'Analisis ${period}: pemasukan dan pengeluaran per kategori',
+			'home.greeting' => 'Halo',
+			'home.greetingNamed' => ({required Object name}) => 'Halo, ${name}',
+			'home.subtitle' => 'Ringkasan keuanganmu hari ini.',
+			'home.insightTitle' => 'Wawasan & Rencana',
+			'home.carouselPrevious' => 'Slide sebelumnya',
+			'home.carouselNext' => 'Slide berikutnya',
+			'home.carouselDot' => ({required Object number}) => 'Ke slide ${number}',
+			'home.actionTransfer' => 'Catat Transfer',
+			'home.actionScan' => 'Scan Struk',
+			'home.actionReport' => 'Laporan',
+			'home.actionMission' => 'Misi Hemat',
+			'home.soon' => 'Segera',
+			'home.footnote' => 'Disimpan di perangkatmu',
+			'home.preview.level' => 'LVL 12 STEWARD',
+			'home.preview.moodTitle' => 'Mood: Santai & Makmur',
+			'home.preview.moodBadge' => '84% SEHAT',
+			'home.preview.moodNote' => 'Sisa kuota jajan aman sampai akhir pekan.',
+			'home.preview.missionEyebrow' => 'MISI HARIAN TANUKI',
+			'home.preview.missionBody' => 'Hemat jajan kopi sore ini untuk +50 Poin',
+			'home.preview.missionClaim' => 'KLAIM',
+			'home.preview.missionClaimed' => 'TERKLAIM',
+			'home.preview.missionReward' => '+50 XP',
+			'home.preview.billTitle' => 'Tagihan Rutin',
+			'home.preview.billBadge' => '3 HARI LAGI',
+			'home.preview.billName' => 'Spotify Family & Wi-Fi',
+			'home.preview.billAmount' => 'Rp354.990',
+			'home.preview.billDue' => 'Jatuh tempo 25 Mei',
+			'home.preview.rewardTitle' => 'Koban & Hadiah',
+			'home.preview.rewardBadge' => 'REWARD AKTIF',
+			'home.preview.rewardAmount' => '1.485 Koban',
+			'home.preview.rewardNote' => 'Siap ditukar di katalog hadiah',
 			'onboarding.skipAction' => 'Lewati',
 			'onboarding.nextAction' => 'Lanjut',
 			'onboarding.closeAction' => 'Tutup',
@@ -6482,6 +6617,8 @@ extension on Translations {
 			'notificationCapture.keywordsLabel' => 'Filter',
 			'notificationCapture.keywordsHint' => 'Hanya notifikasi yang memuat salah satu frasa ini yang dibaca.',
 			'notificationCapture.keywordField' => 'Tambah frasa',
+			_ => null,
+		} ?? switch (path) {
 			'notificationCapture.addKeyword' => 'Tambah',
 			'notificationCapture.patternsTitle' => 'Pola',
 			'notificationCapture.patternsHint' => 'Ajari Tanukonomy membaca format notifikasi aplikasi ini.',
@@ -6513,8 +6650,6 @@ extension on Translations {
 			'notificationCapture.bindingTitle' => 'Ikat ke rutin',
 			'notificationCapture.bindingHint' => 'Notifikasi yang cocok dengan pola terikat dicatat sebagai kemunculan rutin itu. Bila nominal atau jadwalnya tidak pas, masuk kotak masuk, tidak ditebak.',
 			'notificationCapture.bindingNone' => 'Tidak terikat',
-			_ => null,
-		} ?? switch (path) {
 			'notificationCapture.samplesToggle' => 'Simpan contoh notifikasi',
 			'notificationCapture.samplesHint' => 'Untuk membuat filter dan pola dari notifikasi aplikasi ini. Disimpan di perangkat 7 hari, tidak dikirim ke mana pun.',
 			'notificationCapture.samplesTitle' => 'Notifikasi terbaru',

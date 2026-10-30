@@ -33,6 +33,7 @@ export 'app_switch_row.dart';
 export 'app_tappable.dart';
 export 'app_trend_chart.dart';
 export 'category_icon.dart';
+export 'clay_icons.dart';
 export 'confirm_delete_dialog.dart';
 export 'dismiss_keyboard.dart';
 export 'fit_start.dart';

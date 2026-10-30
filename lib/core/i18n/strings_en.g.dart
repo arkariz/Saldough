@@ -779,6 +779,20 @@ class _Translations$home$en extends Translations$home$id {
 	@override String get incomeStat => 'Income';
 	@override String get expenseStat => 'Expenses';
 	@override String analysisDoor({required Object period}) => 'Analysis ${period}: income and expenses by category';
+	@override String get greeting => 'Hello';
+	@override String greetingNamed({required Object name}) => 'Hello, ${name}';
+	@override String get subtitle => 'Your finances today.';
+	@override String get insightTitle => 'Insights & plans';
+	@override String get carouselPrevious => 'Previous slide';
+	@override String get carouselNext => 'Next slide';
+	@override String carouselDot({required Object number}) => 'Go to slide ${number}';
+	@override String get actionTransfer => 'Record Transfer';
+	@override String get actionScan => 'Scan Receipt';
+	@override String get actionReport => 'Report';
+	@override String get actionMission => 'Saving Missions';
+	@override String get soon => 'Soon';
+	@override String get footnote => 'Stored on your device';
+	@override late final _Translations$home$preview$en preview = _Translations$home$preview$en._(_root);
 }
 
 // Path: onboarding
@@ -1725,6 +1739,33 @@ class _Translations$dataPortability$types$en extends Translations$dataPortabilit
 	@override String get income => 'Income';
 	@override String get expense => 'Expense';
 	@override String get transfer => 'Transfer';
+}
+
+// Path: home.preview
+class _Translations$home$preview$en extends Translations$home$preview$id {
+	_Translations$home$preview$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get level => 'LVL 12 STEWARD';
+	@override String get moodTitle => 'Mood: Calm & Prosperous';
+	@override String get moodBadge => '84% HEALTHY';
+	@override String get moodNote => 'Your spending allowance is safe until the weekend.';
+	@override String get missionEyebrow => 'DAILY TANUKI MISSION';
+	@override String get missionBody => 'Skip the afternoon coffee to earn +50 points';
+	@override String get missionClaim => 'CLAIM';
+	@override String get missionClaimed => 'CLAIMED';
+	@override String get missionReward => '+50 XP';
+	@override String get billTitle => 'Recurring Bills';
+	@override String get billBadge => '3 DAYS LEFT';
+	@override String get billName => 'Spotify Family & Wi-Fi';
+	@override String get billAmount => 'USD 354.99';
+	@override String get billDue => 'Due May 25';
+	@override String get rewardTitle => 'Koban & Rewards';
+	@override String get rewardBadge => 'ACTIVE REWARD';
+	@override String get rewardAmount => '1,485 Koban';
+	@override String get rewardNote => 'Ready to redeem in the rewards catalog';
 }
 
 // Path: account.errors
@@ -3103,6 +3144,37 @@ extension on TranslationsEn {
 			'home.incomeStat' => 'Income',
 			'home.expenseStat' => 'Expenses',
 			'home.analysisDoor' => ({required Object period}) => 'Analysis ${period}: income and expenses by category',
+			'home.greeting' => 'Hello',
+			'home.greetingNamed' => ({required Object name}) => 'Hello, ${name}',
+			'home.subtitle' => 'Your finances today.',
+			'home.insightTitle' => 'Insights & plans',
+			'home.carouselPrevious' => 'Previous slide',
+			'home.carouselNext' => 'Next slide',
+			'home.carouselDot' => ({required Object number}) => 'Go to slide ${number}',
+			'home.actionTransfer' => 'Record Transfer',
+			'home.actionScan' => 'Scan Receipt',
+			'home.actionReport' => 'Report',
+			'home.actionMission' => 'Saving Missions',
+			'home.soon' => 'Soon',
+			'home.footnote' => 'Stored on your device',
+			'home.preview.level' => 'LVL 12 STEWARD',
+			'home.preview.moodTitle' => 'Mood: Calm & Prosperous',
+			'home.preview.moodBadge' => '84% HEALTHY',
+			'home.preview.moodNote' => 'Your spending allowance is safe until the weekend.',
+			'home.preview.missionEyebrow' => 'DAILY TANUKI MISSION',
+			'home.preview.missionBody' => 'Skip the afternoon coffee to earn +50 points',
+			'home.preview.missionClaim' => 'CLAIM',
+			'home.preview.missionClaimed' => 'CLAIMED',
+			'home.preview.missionReward' => '+50 XP',
+			'home.preview.billTitle' => 'Recurring Bills',
+			'home.preview.billBadge' => '3 DAYS LEFT',
+			'home.preview.billName' => 'Spotify Family & Wi-Fi',
+			'home.preview.billAmount' => 'USD 354.99',
+			'home.preview.billDue' => 'Due May 25',
+			'home.preview.rewardTitle' => 'Koban & Rewards',
+			'home.preview.rewardBadge' => 'ACTIVE REWARD',
+			'home.preview.rewardAmount' => '1,485 Koban',
+			'home.preview.rewardNote' => 'Ready to redeem in the rewards catalog',
 			'onboarding.skipAction' => 'Skip',
 			'onboarding.nextAction' => 'Next',
 			'onboarding.closeAction' => 'Close',
@@ -3409,6 +3481,8 @@ extension on TranslationsEn {
 			'notificationCapture.keywordsLabel' => 'Filter',
 			'notificationCapture.keywordsHint' => 'Only notifications containing one of these phrases are read.',
 			'notificationCapture.keywordField' => 'Add a phrase',
+			_ => null,
+		} ?? switch (path) {
 			'notificationCapture.addKeyword' => 'Add',
 			'notificationCapture.patternsTitle' => 'Patterns',
 			'notificationCapture.patternsHint' => 'Teach Tanukonomy how to read this app\'s notification format.',
@@ -3440,8 +3514,6 @@ extension on TranslationsEn {
 			'notificationCapture.bindingTitle' => 'Bind to a recurring item',
 			'notificationCapture.bindingHint' => 'Notifications that match a bound pattern are recorded as that recurring item. If the amount or schedule does not fit, they go to the inbox instead of being guessed.',
 			'notificationCapture.bindingNone' => 'Not bound',
-			_ => null,
-		} ?? switch (path) {
 			'notificationCapture.samplesToggle' => 'Save notification samples',
 			'notificationCapture.samplesHint' => 'To build filters and patterns from this app\'s notifications. Kept on this device for 7 days, never sent anywhere.',
 			'notificationCapture.samplesTitle' => 'Recent notifications',

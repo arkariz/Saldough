@@ -29,6 +29,7 @@ import '../../../../helpers/fake_auth_repository.dart';
 import '../../../../helpers/keypad.dart';
 import '../../../../helpers/mocks.dart';
 import '../../../../helpers/plan_sources.dart';
+import '../../../../helpers/reduced_motion.dart';
 import '../../../../helpers/routes.dart';
 
 void main() {
@@ -67,7 +68,7 @@ void main() {
   Widget pumpableShell() {
     return ScopeProvider(
       container: container,
-      child: MaterialApp(theme: PixelTheme.light, home: const AppShellPage()),
+      child: MaterialApp(builder: reducedMotion, theme: PixelTheme.light, home: const AppShellPage()),
     );
   }
 
@@ -259,7 +260,7 @@ void main() {
       await tester.pumpWidget(
         ScopeProvider(
           container: failingContainer,
-          child: MaterialApp(theme: PixelTheme.light, home: const AppShellPage()),
+          child: MaterialApp(builder: reducedMotion, theme: PixelTheme.light, home: const AppShellPage()),
         ),
       );
       await tester.pump();

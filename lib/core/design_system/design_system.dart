@@ -30,6 +30,7 @@ export 'components/ds_segment_meter.dart';
 export 'components/ds_tap_tip.dart';
 export 'components/ds_top_bar.dart';
 export 'ds_theme.dart';
+export 'legacy/app_theme_bridge.dart';
 export 'presets/ds_theme_preset.dart';
 export 'presets/ds_theme_presets.dart';
 export 'presets/matcha.dart';

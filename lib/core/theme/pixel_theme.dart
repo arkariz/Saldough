@@ -20,6 +20,11 @@ abstract final class PixelTheme {
   /// Tema mode gelap.
   static ThemeData get dark => _build(AppColors.dark, Brightness.dark);
 
+  /// Tema lama dengan token [colors] sembarang. Dipakai jembatan design
+  /// system v2 (`AppThemeBridge`) supaya layar yang belum dirombak tetap
+  /// tampil sama dengan warna preset aktif.
+  static ThemeData forColors(AppColors colors, Brightness brightness) => _build(colors, brightness);
+
   static ThemeData _build(AppColors colors, Brightness brightness) {
     final base = brightness == Brightness.light ? ThemeData.light() : ThemeData.dark();
     // Pemetaan `flutter.md` design system.

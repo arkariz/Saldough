@@ -5951,6 +5951,10 @@ memilih mode (dan preset bila ≥ 2), dan design system lama dihapus.
       di semua build atas keputusan pemilik; matikan sebelum rilis publik
       atau ganti dengan data nyata setelah keputusan gamifikasi). Scan
       Struk tampil nonaktif "Segera"; Kirim Daun menjadi Catat Transfer.
+      Kartu "Arus periode" dihapus (30 Okt 2026, permintaan pemilik) karena
+      menggandakan Masuk/Keluar di kartu saldo; pintu Analisis pindah ke tile
+      Laporan, perkiraan saldo akhir tampil mandiri, dan langkah tur
+      `homeCashFlow` terlewati karena targetnya tidak ada lagi.
       Uji: 2.186 lulus; uji fungsional memakai `reducedMotion`
       (`test/helpers/reduced_motion.dart`) karena animasi berulang
       menggagalkan `pumpAndSettle`. **Belum dinilai di emulator/perangkat**

@@ -12,7 +12,6 @@ import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
-import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/features/budget/data/adapters/budget_item_catalog_impl.dart';
 import 'package:saldough/features/budget/data/adapters/budget_overview_source_impl.dart';
 import 'package:saldough/features/budget/data/repositories/budget_repository_impl.dart';
@@ -202,7 +201,6 @@ void main() {
     expect(find.text(t.home.recordAction), findsNothing);
     expect(find.byType(HomeFirstSteps), findsOneWidget);
     // Kartu tanpa isi disembunyikan, bukan diisi Rp0 berderet.
-    expect(find.byType(HomeMonthCard), findsNothing);
     expect(find.byType(HomeBudgetCard), findsNothing);
     expect(find.byType(HomeFreelanceCard), findsNothing);
 
@@ -236,15 +234,11 @@ void main() {
     // Total saldo dompet aktif: Rp5.250.000 + Rp0.
     expect(find.descendant(of: find.byType(DsHeroBalanceCard), matching: find.text('5.250.000')), findsOneWidget);
     // Transfer Rp1.000.000 tidak dihitung; pengeluaran tahun lalu juga tidak.
-    // Judul "Arus {periode}" (PeriodHeader, P-11).
-    expect(find.text(t.home.flowTitle(period: CycleMonthFormatter.formatMonthName(now))), findsOneWidget);
-    final flow = find.byType(HomeMonthCard);
-    // Baris selisih tanpa "bulan ini": judulnya bisa rentang (T-18.18).
-    expect(find.descendant(of: flow, matching: find.text(t.home.flowNet)), findsOneWidget);
-    expect(t.home.flowNet, 'Selisih');
-    expect(find.descendant(of: flow, matching: find.text(t.home.incomeStat)), findsOne);
-    expect(find.descendant(of: flow, matching: find.text('+Rp5.000.000')), findsOneWidget);
-    expect(find.descendant(of: flow, matching: find.text('−Rp750.000')), findsOneWidget);
+    // Arus periode ada di kartu saldo (kartu Arus terpisah dihapus).
+    final hero = find.byType(DsHeroBalanceCard);
+    expect(find.descendant(of: hero, matching: find.text(t.home.incomeStat.toUpperCase())), findsOneWidget);
+    expect(find.descendant(of: hero, matching: find.text('+Rp5.000.000')), findsOneWidget);
+    expect(find.descendant(of: hero, matching: find.text('−Rp750.000')), findsOneWidget);
     // Anggaran aktif: rencana 2 × Rp75.000.
     // Carousel menyimpan salinan tak terlihat tiap slide untuk mengukur tinggi;
     // `hitTestable` hanya mengambil yang tampil.
@@ -352,16 +346,15 @@ void main() {
       expect(progress.seenSteps, {SpotlightKey.homeBalance, SpotlightKey.homeRecord, SpotlightKey.homeVoice});
     });
 
-    testWidgets('data lengkap: tujuh langkah termasuk suara, arus, anggaran, Freelance, dan transaksi terbaru', (tester) async {
+    testWidgets('data lengkap: enam langkah termasuk suara, anggaran, Freelance, dan transaksi terbaru', (tester) async {
       tallViewport(tester);
       await seedFull();
       await openShellWithTours(tester);
 
-      expect(step(1, 7, t.tour.homeBalanceTitle, t.tour.homeBalanceBody), findsOneWidget);
+      expect(step(1, 6, t.tour.homeBalanceTitle, t.tour.homeBalanceBody), findsOneWidget);
       final rest = [
         (t.tour.homeRecordTitle, t.tour.homeRecordBody),
         (t.tour.homeVoiceTitle, t.tour.homeVoiceBody),
-        (t.tour.homeCashFlowTitle, t.tour.homeCashFlowBody),
         (t.tour.homeBudgetTitle, t.tour.homeBudgetBody),
         (t.tour.homeFreelanceTitle, t.tour.homeFreelanceBody),
         (t.tour.homeRecentTitle, t.tour.homeRecentBody),
@@ -369,7 +362,7 @@ void main() {
       for (final (i, (title, body)) in rest.indexed) {
         await tester.tap(find.text(t.tour.nextAction));
         await tester.pumpAndSettle();
-        expect(step(i + 2, 7, title, body), findsOneWidget);
+        expect(step(i + 2, 6, title, body), findsOneWidget);
       }
     });
 
@@ -380,8 +373,8 @@ void main() {
       await seedFull();
       await openShellWithTours(tester);
 
-      // Saldo dan CATAT sudah dilihat; tinggal empat kartu yang baru muncul.
-      expect(step(1, 4, t.tour.homeCashFlowTitle, t.tour.homeCashFlowBody), findsOneWidget);
+      // Saldo dan CATAT sudah dilihat; tinggal tiga kartu yang baru muncul.
+      expect(step(1, 3, t.tour.homeBudgetTitle, t.tour.homeBudgetBody), findsOneWidget);
       expect(find.text(t.tour.homeBalanceTitle), findsNothing);
     });
 

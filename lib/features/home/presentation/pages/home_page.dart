@@ -221,33 +221,10 @@ class _HomePageState extends State<HomePage> {
           ?widget.notice,
           ?widget.pendingRecurring,
           ?widget.featureNudge,
-          // Kartu tanpa isi disembunyikan, bukan diisi angka nol (FR-HOME-005).
-          if (state.hasTransactions) ...[
-            gap(DsSpacing.lg),
-            // Judul "Arus {periode}" dan penanda periode peralihan
-            // (PeriodHeader, P-11); di Beranda bukan tombol.
-            DsSectionHeader(
-              title: t.home.flowTitle(period: state.period.name),
-              icon: Icons.swap_vert,
-              actionLabel: t.appShell.transactionsTabLabel,
-              onAction: widget.onShowTransactions,
-            ),
-            if (state.period.isTransition) AppPeriodTag(days: state.period.days),
-            const SizedBox(height: DsSpacing.sm),
-            SpotlightTarget(
-              spotlightKey: SpotlightKey.homeCashFlow,
-              child: HomeMonthCard(
-                cashFlow: state.cashFlow,
-                footer: widget.forecast,
-                // Pintu ke Analisis periode berjalan (D4): hanya navigasi, tanpa
-                // membaca riwayat enam bulan di Beranda (NFR-PERF-002).
-                onOpenAnalysis: () => unawaited(
-                  context.pushRoute(AnalysisRouteKeys.open, const AnalysisInput(source: AnalysisSource.home)),
-                ),
-                analysisLabel: t.home.analysisDoor(period: state.period.name),
-              ),
-            ),
-          ] else if (widget.forecast case final forecast?) ...[
+          // Arus periode (Masuk/Keluar) kini ada di kartu saldo; kartu Arus
+          // terpisah dihapus karena menggandakannya. Pintu ke Analisis
+          // pindah ke tile "Laporan". Perkiraan saldo akhir tetap tampil.
+          if (widget.forecast case final forecast?) ...[
             gap(DsSpacing.lg),
             forecast,
           ],

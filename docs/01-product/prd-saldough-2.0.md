@@ -703,11 +703,14 @@ Fase 15; R2 dan R3 di antrean.
 
 **FR-RUT-002 — Kemunculan yang menunggu dicatat (R1a)**
 
-- [ ] Kemunculan yang sudah tiba tampil di kartu **Menunggu dicatat** di
-      Beranda dan di segmen Rutin, dengan tanggal transaksi bawaan = tanggal
-      kemunculan.
-- [ ] Nominal tetap: **Catat** satu ketuk dengan snackbar Batalkan; nominal
-      kira-kira: Catat membuka CATAT dengan nominal terfokus.
+- [ ] Kemunculan yang sudah tiba tampil sebagai satu baris ringkas
+      **"Menunggu dicatat (n)"** di carousel status Beranda (membuka segmen
+      Rutin) dan sebagai daftar di segmen Rutin, dengan tanggal transaksi
+      bawaan = tanggal kemunculan. *(Direvisi 30 Okt 2026, ADR-043: sebelumnya
+      kartu daftar di Beranda; Catat, Lewati, dan Catat semua hanya di segmen
+      Rutin.)*
+- [ ] Nominal tetap: **Catat** satu ketuk dengan snackbar Batalkan (di segmen
+      Rutin); nominal kira-kira: Catat membuka CATAT dengan nominal terfokus.
 - [ ] **Lewati** satu kemunculan tanpa mengubah rutinnya; **Catat semua** untuk
       beberapa kemunculan bernominal tetap.
 - [ ] Satu kemunculan menghasilkan paling banyak satu transaksi. Kemunculan

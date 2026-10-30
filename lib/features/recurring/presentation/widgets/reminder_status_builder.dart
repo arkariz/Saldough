@@ -19,7 +19,13 @@ import 'package:saldough/shared/transaction/transaction.dart';
 /// kontainer minimal) tidak membangun apa pun.
 class ReminderStatusBuilder extends StatefulWidget {
   /// Membuat [ReminderStatusBuilder].
-  const ReminderStatusBuilder({required this.container, required this.surface, required this.builder, super.key});
+  const ReminderStatusBuilder({
+    required this.container,
+    required this.surface,
+    required this.builder,
+    this.hiddenBuilder,
+    super.key,
+  });
 
   /// Kontainer akar.
   final GetIt container;
@@ -30,6 +36,11 @@ class ReminderStatusBuilder extends StatefulWidget {
   /// Dipanggil bila pengingat belum efektif; [enable] meminta izin lalu
   /// menyalakan, dan menampilkan snackbar bila izin ditolak.
   final Widget Function(BuildContext context, FeatureState state, Future<void> Function() enable) builder;
+
+  /// Dibangun saat pengingat sudah efektif, tidak didukung, atau belum
+  /// termuat; bawaannya kosong. Dipakai pelapor status Beranda untuk
+  /// mencabut slide.
+  final WidgetBuilder? hiddenBuilder;
 
   @override
   State<ReminderStatusBuilder> createState() => _ReminderStatusBuilderState();
@@ -112,7 +123,7 @@ class _ReminderStatusBuilderState extends State<ReminderStatusBuilder> with Widg
   Widget build(BuildContext context) {
     final state = _state;
     if (state == null || state == FeatureState.active || state == FeatureState.unsupported) {
-      return const SizedBox.shrink();
+      return widget.hiddenBuilder?.call(context) ?? const SizedBox.shrink();
     }
     return widget.builder(context, state, _enable);
   }

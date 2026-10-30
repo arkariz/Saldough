@@ -30,6 +30,7 @@ SpotlightStep spotlightStep(SpotlightKey key) {
     SpotlightKey.homeRecord => (tr.homeRecordTitle, tr.homeRecordBody),
     SpotlightKey.homeVoice => (tr.homeVoiceTitle, tr.homeVoiceBody),
     SpotlightKey.homeForecast => (tr.homeForecastTitle, tr.homeForecastBody),
+    SpotlightKey.homeStatus => (tr.homeStatusTitle, tr.homeStatusBody),
     SpotlightKey.homePending => (tr.homePendingTitle, tr.homePendingBody),
     SpotlightKey.homeNotification => (tr.homeNotificationTitle, tr.homeNotificationBody),
     SpotlightKey.homeReminder => (tr.homeReminderTitle, tr.homeReminderBody),

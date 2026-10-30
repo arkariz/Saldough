@@ -26,6 +26,10 @@ enum SpotlightKey {
   /// pengingat belum efektif (Fase 21, T-21.6).
   homeReminder,
 
+  /// Carousel status Beranda ("Perlu dicek": rutin menunggu, tangkapan
+  /// notifikasi, pengingat; ADR-043). Terdaftar hanya bila ada slide nyata.
+  homeStatus,
+
   /// Arus bulan ini di Beranda.
   homeCashFlow,
 

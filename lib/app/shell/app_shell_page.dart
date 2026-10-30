@@ -1,14 +1,13 @@
 import 'dart:async';
-
 import 'package:di/di.dart';
 import 'package:flutter/material.dart';
 import 'package:navigation/navigation.dart';
 import 'package:saldough/app/data_portability/app_reboot.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/account/presentation/navigation/account_route_keys.dart';
 import 'package:saldough/features/analysis/presentation/widgets/analysis_segment.dart';
 import 'package:saldough/features/app_update/presentation/widgets/app_update_banner.dart';
@@ -86,6 +85,17 @@ class _AppShellPageState extends State<AppShellPage> {
 
   /// [AppShellPage.startAction] sudah dijalankan -- hanya sekali per shell.
   bool _startActionDone = false;
+
+  /// Papan status Beranda (ADR-043): kotak masuk notifikasi, rutin menunggu,
+  /// dan pengingat melapor satu slide ringkas ke sini; kompleksitasnya ada
+  /// di layar tujuan masing-masing.
+  final DsStatusBoard _statusBoard = DsStatusBoard();
+
+  @override
+  void dispose() {
+    _statusBoard.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -180,13 +190,14 @@ class _AppShellPageState extends State<AppShellPage> {
         ),
         // Kotak masuk notifikasi (Android): pintu permanen Catat dari
         // notifikasi, P-6 sesudah kartu pembaruan.
-        notice: NotificationInboxCard(container: parentContainer),
+        statusBoard: _statusBoard,
+        notice: NotificationInboxCard(container: parentContainer, board: _statusBoard),
         pendingRecurring: RecurringPendingCard(
-          spotlight: (tour: TourId.home, key: SpotlightKey.homePending),
+          board: _statusBoard,
           container: parentContainer,
           onShowAll: () => _showPlan(context, PlanSegment.recurring),
         ),
-        featureNudge: ReminderNudgeCard(container: parentContainer, spotlight: true),
+        featureNudge: ReminderNudgeCard(container: parentContainer, board: _statusBoard),
         forecast: PlanForecastRow(
           container: parentContainer,
           onTap: () => _showPlan(context, PlanSegment.thisMonth),
@@ -292,7 +303,10 @@ class _AppShellPageState extends State<AppShellPage> {
                                               // untuk suara (ADR-021, ADR-034 §3.3).
                                               recordWrapper: (button) => SpotlightTarget(
                                                 spotlightKey: SpotlightKey.homeVoice,
-                                                child: SpotlightTarget(spotlightKey: SpotlightKey.homeRecord, child: button),
+                                                child: SpotlightTarget(
+                                                  spotlightKey: SpotlightKey.homeRecord,
+                                                  child: button,
+                                                ),
                                               ),
                                             ),
                                           ),

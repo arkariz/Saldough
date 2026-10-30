@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
 import 'package:navigation/navigation.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/discovery/discovery.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
@@ -20,7 +21,6 @@ import 'package:saldough/shared/capture/capture.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
-
 import '../../../../helpers/fake_feature_statuses.dart';
 import '../../../../helpers/fake_notification_capture_gateway.dart';
 import '../../../../helpers/routes.dart';
@@ -76,6 +76,65 @@ void main() {
     );
     await tester.pumpAndSettle();
   }
+
+  Future<DsStatusBoard> pumpBoard(WidgetTester tester) async {
+    final board = DsStatusBoard();
+    addTearDown(board.dispose);
+    await tester.pumpWidget(
+      ScopeProvider(
+        container: container,
+        child: MaterialApp(
+          theme: PixelTheme.light,
+          home: Scaffold(body: ListView(children: [NotificationInboxCard(container: container, board: board)])),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    return board;
+  }
+
+  group('mode ringkas (papan status Beranda)', () {
+    testWidgets('iOS: tidak ada slide', (tester) async {
+      final board = await pumpBoard(tester);
+      expect(board.slides, isEmpty);
+    });
+
+    testWidgets('belum disetel: Nyalakan membuka Mulai cepat; tanpa kartu penuh', (tester) async {
+      statuses.status[DiscoveredFeature.notification] = const FeatureStatus(FeatureState.unset);
+      final board = await pumpBoard(tester);
+
+      expect(find.byKey(const ValueKey('notification-inbox-card')), findsNothing);
+      final slide = board.slides.single;
+      expect(slide.title, t.discovery.notification.button);
+      expect(slide.actionLabel, t.discovery.turnOn);
+      expect(slide.attention, isFalse);
+      slide.onAction!();
+      await tester.pumpAndSettle();
+      expect(find.text(t.discovery.quickStart.title), findsOneWidget);
+    });
+
+    testWidgets('aktif tanpa tangkapan: status aplikasi aktif, tanpa tombol; ketuk membuka setelan', (tester) async {
+      statuses.status[DiscoveredFeature.notification] = const FeatureStatus(FeatureState.active, activeCount: 3);
+      final board = await pumpBoard(tester);
+
+      final slide = board.slides.single;
+      expect(slide.subtitle, t.discovery.notification.activeApps(n: 3));
+      expect(slide.actionLabel, isNull);
+      expect(slide.onAction, isNotNull);
+    });
+
+    testWidgets('aktif dengan tangkapan: perlu dicek, Cek membuka kotak masuk, tanpa aksi mencatat', (tester) async {
+      statuses.status[DiscoveredFeature.notification] = const FeatureStatus(FeatureState.active, activeCount: 1);
+      await store.saveInbox([entry('a'), entry('b')]);
+      final board = await pumpBoard(tester);
+
+      final slide = board.slides.single;
+      expect(slide.attention, isTrue);
+      expect(slide.subtitle, t.notificationCapture.banner(n: 2));
+      expect(slide.actionLabel, t.discovery.notification.check);
+      expect(find.text(t.discovery.notification.teachPattern), findsNothing);
+    });
+  });
 
   final card = find.byKey(const ValueKey('notification-inbox-card'));
   final action = find.byKey(const ValueKey('inbox-card-action'));

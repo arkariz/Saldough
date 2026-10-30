@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
+import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/home/domain/budget_overview_source.dart';
 import 'package:saldough/features/home/presentation/home_placeholder.dart';
 import 'package:saldough/features/home/presentation/widgets/home_summary.dart';
@@ -53,6 +55,46 @@ class HomeMoodCard extends StatelessWidget {
       meterLabel: t.home.preview.moodBadge,
       note: t.home.preview.moodNote,
       noteIcon: Icons.psychology_alt_outlined,
+    );
+  }
+}
+
+/// Carousel status "Perlu dicek" di atas kartu saldo (ADR-043): slide dari
+/// [board] (rutin menunggu, tangkapan notifikasi, pengingat; yang perlu
+/// dicek tampil dulu) lalu kartu mood tiruan ([showMood]). Setiap slide satu
+/// baris yang membuka layar tujuannya; mencatat tidak pernah terjadi di sini
+/// (aturan 8). Target tur `homeStatus` hanya terdaftar bila ada slide nyata.
+class HomeStatusSection extends StatelessWidget {
+  /// Membuat [HomeStatusSection].
+  const HomeStatusSection({required this.board, required this.showMood, super.key});
+
+  /// Papan status, atau `null`.
+  final DsStatusBoard? board;
+
+  /// Tampilkan kartu mood tiruan di belakang.
+  final bool showMood;
+
+  @override
+  Widget build(BuildContext context) {
+    final board = this.board ?? DsStatusBoard();
+    return ListenableBuilder(
+      listenable: board,
+      builder: (context, _) {
+        final carousel = DsStatusCarousel(
+          board: board,
+          trailing: showMood ? const HomeMoodCard() : null,
+          previousLabel: t.home.statusCarouselPrevious,
+          nextLabel: t.home.statusCarouselNext,
+          dotLabel: (i) => t.home.statusCarouselDot(number: i + 1),
+        );
+        if (board.slides.isEmpty) return carousel;
+        // Disorot sekali saat pertama tampil: slidenya datang sesudah layar.
+        return TourTrigger(
+          tour: TourId.home,
+          ready: true,
+          child: SpotlightTarget(spotlightKey: SpotlightKey.homeStatus, child: carousel),
+        );
+      },
     );
   }
 }

@@ -43,6 +43,7 @@ class HomePage extends StatefulWidget {
     this.pendingRecurring,
     this.featureNudge,
     this.forecast,
+    this.statusBoard,
     super.key,
   });
 
@@ -78,6 +79,12 @@ class HomePage extends StatefulWidget {
 
   /// Baris perkiraan saldo akhir bulan (T-15.13), disisipkan akar komposisi.
   final Widget? forecast;
+
+  /// Papan status (ADR-043): slot [notice], [pendingRecurring], dan
+  /// [featureNudge] melapor ke sini (tanpa menggambar kartu) dan Beranda
+  /// menampilkannya sebagai carousel "Perlu dicek" di atas kartu saldo.
+  /// `null` = tanpa carousel status.
+  final DsStatusBoard? statusBoard;
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -199,7 +206,12 @@ class _HomePageState extends State<HomePage> {
           AccountUserBuilder(
             builder: (context, user) => HomeGreeting(name: _firstName(user), jiggle: _claims),
           ),
-          if (hasPreview && !state.hasNoWallets) ...[gap(), const HomeMoodCard()],
+          // Slide status nyata tampil walau belum ada dompet (seperti kartu
+          // lama); kartu mood tiruan hanya bila ada dompet.
+          if (widget.statusBoard != null || (hasPreview && !state.hasNoWallets)) ...[
+            gap(),
+            HomeStatusSection(board: widget.statusBoard, showMood: hasPreview && !state.hasNoWallets),
+          ],
           // Urutan `patterns.md`: total saldo → yang perlu tindakan → bulan
           // ini → anggaran → freelance → transaksi terbaru.
           // Tanpa dompet, Beranda langsung ke langkah awal (`BerandaKosong`):

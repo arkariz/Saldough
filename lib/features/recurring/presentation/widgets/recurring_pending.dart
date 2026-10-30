@@ -1,5 +1,6 @@
 import 'package:di/di.dart';
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
@@ -154,8 +155,7 @@ class RecurringPendingTile extends StatelessWidget {
                 AppButton.text(
                   small: true,
                   label: t.recurring.notYetAction,
-                  onPressed: () =>
-                      bloc.add(RecurringOccurrenceSnoozed(ruleId: rule.id)),
+                  onPressed: () => bloc.add(RecurringOccurrenceSnoozed(ruleId: rule.id)),
                 )
               else if (fixed)
                 AppButton.text(
@@ -200,14 +200,11 @@ List<RecurringEntry> pendingEntries(RecurringState state) => [
 /// Tombol **Catat semua** bila ada dua atau lebih kemunculan menunggu yang
 /// bisa dicatat satu ketuk.
 Widget? recordAllButton(BuildContext context, List<RecurringEntry> pending) {
-  final fixed = pending
-      .where((e) => e.rule.amountMode == RecurringAmountMode.fixed)
-      .length;
+  final fixed = pending.where((e) => e.rule.amountMode == RecurringAmountMode.fixed).length;
   if (fixed < 2) return null;
   return AppButton.secondary(
     label: t.recurring.recordAllAction,
-    onPressed: () =>
-        context.read<RecurringBloc>().add(const RecurringPendingRecordedAll()),
+    onPressed: () => context.read<RecurringBloc>().add(const RecurringPendingRecordedAll()),
   );
 }
 
@@ -221,6 +218,7 @@ class RecurringPendingCard extends StatelessWidget {
     required this.container,
     required this.onShowAll,
     this.spotlight,
+    this.board,
     super.key,
   });
 
@@ -233,6 +231,14 @@ class RecurringPendingCard extends StatelessWidget {
   /// Tur dan langkah yang menyorot kartu ini, atau `null`. Hanya untuk satu
   /// tempat pemakaian (Beranda): kunci spotlight hanya boleh satu target.
   final ({TourId tour, SpotlightKey key})? spotlight;
+
+  /// Papan status Beranda (mode ringkas, ADR-043): tanpa menggambar kartu,
+  /// hanya melapor satu slide "N menunggu dicatat" yang membuka segmen Rutin.
+  /// Mencatat, Lewati, dan Catat semua tinggal di segmen Rutin. `null` =
+  /// kartu penuh (dipakai juga di segmen Rutin).
+  final DsStatusBoard? board;
+
+  static const _statusId = 'recurring';
 
   static const _maxShown = 3;
 
@@ -249,11 +255,30 @@ class RecurringPendingCard extends StatelessWidget {
               action: () => bloc.add(const RecurringStarted()),
               child: BlocBuilder<RecurringBloc, RecurringState>(
                 builder: (context, state) {
-                  if (state.isLoading || state.loadFailed) {
-                    return const SizedBox.shrink();
-                  }
+                  final board = this.board;
+                  Widget hidden() =>
+                      board == null ? const SizedBox.shrink() : DsStatusReport(board: board, id: _statusId, data: null);
+                  if (state.isLoading || state.loadFailed) return hidden();
                   final pending = pendingEntries(state);
-                  if (pending.isEmpty) return const SizedBox.shrink();
+                  if (pending.isEmpty) return hidden();
+                  if (board != null) {
+                    final first = pending.first.rule.note;
+                    return DsStatusReport(
+                      board: board,
+                      id: _statusId,
+                      data: DsStatusSlideData(
+                        id: _statusId,
+                        icon: Icons.event_note_outlined,
+                        title: '${t.recurring.pendingCardTitle} (${pending.length})',
+                        subtitle: pending.length == 1
+                            ? first
+                            : t.recurring.pendingMore(name: first, n: pending.length - 1),
+                        actionLabel: t.recurring.seeAllAction,
+                        onAction: onShowAll,
+                        attention: true,
+                      ),
+                    );
+                  }
                   final recordAll = recordAllButton(context, pending);
                   // Prototipe `BerandaRutin.dc.html`: judul bagian dengan tautan
                   // ke segmen Rutin, kartu daftar kemunculan menunggu.

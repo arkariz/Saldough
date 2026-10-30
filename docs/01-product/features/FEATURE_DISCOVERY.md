@@ -127,6 +127,16 @@ berubah selain baris informasi 4.3 dan ringkasan satu baris dua pilihan tadi
 - **P-6** Urutan di Beranda: banner pembaruan (Fase 20) › kartu Menunggu
   dicatat dan kotak masuk tangkapan › baris pintu permanen. Baris ini tidak
   pernah menggeser yang di atasnya.
+> **Pembaruan 30 Okt 2026 (ADR-043):** di Beranda baru, kartu **Menunggu
+> dicatat**, **Catat dari notifikasi**, dan **pengingat rutin** menjadi
+> slide status satu baris di carousel "Perlu dicek" di atas kartu saldo.
+> Urutannya: yang perlu dicek dulu (rutin menunggu, tangkapan notifikasi),
+> lalu pintu permanen notifikasi, lalu pengingat. Pintu P-7 tetap ada di
+> Android dengan tiga keadaannya, tetapi pratinjau tangkapan, **Ajari
+> pola**, dan Abaikan hanya di kotak masuk tangkapan (layar tujuannya).
+> Tidak ada aksi mencatat di slide (aturan 8). Kartu penuh lama dipakai
+> di tempat lain (segmen Rutin, Riwayat).
+
 - **P-7 (baru)** Baris **Catat dari notifikasi di Beranda tidak pernah
   hilang** (Android), dalam tiga keadaan:
   | Keadaan | Isi baris | Ketukan membuka |

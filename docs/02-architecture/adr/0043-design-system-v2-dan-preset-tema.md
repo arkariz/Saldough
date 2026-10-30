@@ -111,6 +111,20 @@ cadangan), dan dipilih di Akun › Tampilan (baris Mode dan Warna aplikasi).
 Preset yang tak dikenal lagi jatuh ke `DsThemePresets.fallback`. Baris
 preset tampil bila ada dua preset atau lebih (sekarang `matcha` dan `pink`).
 
+### 3.6 Carousel status Beranda (30 Okt 2026)
+
+Tiga banner Beranda (`NotificationInboxCard`, `RecurringPendingCard`,
+`ReminderNudgeCard`) punya **mode ringkas**: dengan parameter `board`
+(`DsStatusBoard`), widget tidak menggambar apa pun dan hanya melapor satu
+`DsStatusSlideData` lewat `DsStatusReport`. Beranda merender slide itu
+sebagai carousel "Perlu dicek" (`DsStatusCarousel`) di atas kartu saldo,
+diikuti kartu mood tiruan. Logika data tetap di fitur masing-masing;
+Beranda tidak mengimpor fitur lain (ADR-030); papan dimiliki cangkang.
+Slide hanya membuka layar tujuan, tanpa aksi mencatat (aturan 8):
+mencatat rutin lewat segmen Rutin, tangkapan lewat kotak masuk/CATAT.
+Target tur `homeStatus` membungkus seluruh carousel. Tanpa `board`,
+ketiga widget tetap kartu penuh (dipakai segmen Rutin dan Riwayat).
+
 ## 4. Konsekuensi
 
 - Selama masa transisi aplikasi membawa dua design system. Hurufnya tetap

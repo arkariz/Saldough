@@ -1,7 +1,7 @@
 import 'dart:async';
-
 import 'package:di/di.dart';
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/discovery/discovery.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
@@ -18,7 +18,13 @@ import 'package:saldough/features/recurring/presentation/widgets/reminder_status
 /// Beranda dan dipakai segmen Rutin.
 class ReminderNudgeCard extends StatelessWidget {
   /// Membuat [ReminderNudgeCard].
-  const ReminderNudgeCard({required this.container, this.bottomGap = false, this.spotlight = false, super.key});
+  const ReminderNudgeCard({
+    required this.container,
+    this.bottomGap = false,
+    this.spotlight = false,
+    this.board,
+    super.key,
+  });
 
   /// Kontainer akar.
   final GetIt container;
@@ -30,13 +36,35 @@ class ReminderNudgeCard extends StatelessWidget {
   /// tampil. Hanya satu pemakaian yang boleh membawa kunci spotlight.
   final bool spotlight;
 
+  /// Papan status Beranda (mode ringkas, ADR-043): tanpa menggambar kartu,
+  /// hanya melapor satu slide yang hilang begitu pengingat menyala.
+  final DsStatusBoard? board;
+
+  static const _statusId = 'reminder';
+
   @override
   Widget build(BuildContext context) => ReminderStatusBuilder(
     container: container,
     surface: bottomGap ? 'rutin_segment' : 'home',
+    hiddenBuilder: board == null ? null : (_) => DsStatusReport(board: board!, id: _statusId, data: null),
     builder: (context, state, enable) {
       final texts = t.discovery;
       final needsPermission = state == FeatureState.permissionNeeded;
+      if (board != null) {
+        return DsStatusReport(
+          board: board!,
+          id: _statusId,
+          data: DsStatusSlideData(
+            id: _statusId,
+            icon: Icons.schedule,
+            title: needsPermission ? t.recurring.remindersTitle : texts.reminder.button,
+            subtitle: needsPermission ? texts.status.permissionNeeded : texts.reminder.body,
+            actionLabel: needsPermission ? texts.allowAccess : texts.turnOn,
+            onAction: () => unawaited(enable()),
+            order: 2,
+          ),
+        );
+      }
       final textTheme = Theme.of(context).textTheme;
       final colors = context.appColors;
       final card = AppCard(

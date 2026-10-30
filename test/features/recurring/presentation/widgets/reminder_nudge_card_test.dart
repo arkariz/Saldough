@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/discovery/discovery.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
@@ -13,7 +14,6 @@ import 'package:saldough/features/recurring/domain/reminder_settings.dart';
 import 'package:saldough/features/recurring/presentation/widgets/reminder_nudge_card.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
-
 import '../../../../helpers/fake_feature_statuses.dart';
 
 class _MockScheduler extends Mock implements ReminderScheduler {}
@@ -60,6 +60,55 @@ void main() {
 
   final nudge = find.byKey(const ValueKey('reminder-nudge'));
   final nudgeAction = find.byKey(const ValueKey('reminder-nudge-action'));
+
+  group('mode ringkas (papan status Beranda)', () {
+    testWidgets('belum menyala: melapor satu slide dan tidak menggambar kartu', (tester) async {
+      final board = DsStatusBoard();
+      addTearDown(board.dispose);
+      statuses.status[DiscoveredFeature.reminder] = const FeatureStatus(FeatureState.off);
+      await pump(tester, (c) => ReminderNudgeCard(container: c, board: board));
+
+      expect(nudge, findsNothing);
+      final slide = board.slides.single;
+      expect(slide.id, 'reminder');
+      expect(slide.title, t.discovery.reminder.button);
+      expect(slide.actionLabel, t.discovery.turnOn);
+      expect(slide.attention, isFalse);
+    });
+
+    testWidgets('izin hilang: judul dan tombol Izinkan', (tester) async {
+      final board = DsStatusBoard();
+      addTearDown(board.dispose);
+      statuses.status[DiscoveredFeature.reminder] = const FeatureStatus(FeatureState.permissionNeeded);
+      await pump(tester, (c) => ReminderNudgeCard(container: c, board: board));
+
+      expect(board.slides.single.title, t.recurring.remindersTitle);
+      expect(board.slides.single.actionLabel, t.discovery.allowAccess);
+    });
+
+    testWidgets('efektif: tidak ada slide', (tester) async {
+      final board = DsStatusBoard();
+      addTearDown(board.dispose);
+      statuses.status[DiscoveredFeature.reminder] = const FeatureStatus(FeatureState.active);
+      await pump(tester, (c) => ReminderNudgeCard(container: c, board: board));
+      expect(board.slides, isEmpty);
+    });
+
+    testWidgets('onAction menyalakan pengingat (izin diminta)', (tester) async {
+      final board = DsStatusBoard();
+      addTearDown(board.dispose);
+      statuses.status[DiscoveredFeature.reminder] = const FeatureStatus(FeatureState.off);
+      when(() => scheduler.requestPermission()).thenAnswer((_) async => true);
+      await pump(tester, (c) => ReminderNudgeCard(container: c, board: board));
+
+      statuses.status[DiscoveredFeature.reminder] = const FeatureStatus(FeatureState.active);
+      board.slides.single.onAction!();
+      await tester.pumpAndSettle();
+
+      verify(() => scheduler.requestPermission()).called(1);
+      expect(board.slides, isEmpty);
+    });
+  });
 
   group('kartu tombol pengingat', () {
     testWidgets('mati: judul, keterangan, dan Nyalakan; tanpa tombol tutup atau tunda', (tester) async {

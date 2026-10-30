@@ -54,6 +54,10 @@ const Map<TourId, List<SpotlightKey>> tourSteps = {
     // Kartu di Beranda dari Rencana; muncul belakangan (sesudah rutin
     // pertama), jadi disorot sendiri saat pertama tampil.
     SpotlightKey.homeForecast,
+    // Carousel status Beranda menggantikan tiga kartu di bawah ini sejak
+    // ADR-043; kunci lama tetap ada (kartu penuh masih dipakai uji dan
+    // segmen lain) tetapi tidak terdaftar di Beranda.
+    SpotlightKey.homeStatus,
     SpotlightKey.homePending,
     // Pintu permanen Fase 21: ada di Beranda belakangan (pengingat hilang
     // saat efektif), jadi tiap langkah disorot sekali saat pertama tampil.

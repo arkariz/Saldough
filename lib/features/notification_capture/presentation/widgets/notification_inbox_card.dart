@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:di/di.dart';
 import 'package:flutter/material.dart';
 import 'package:navigation/navigation.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/discovery/discovery.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
@@ -32,11 +33,17 @@ import 'package:saldough/shared/transaction/transaction_presentation.dart';
 /// (aturan 8). Kosong di platform tanpa dukungan dan tanpa layanan
 /// terdaftar (uji).
 class NotificationInboxCard extends StatefulWidget {
-  /// Membuat [NotificationInboxCard].
-  const NotificationInboxCard({required this.container, super.key});
+  /// Membuat [NotificationInboxCard]. Dengan [board], kartu tidak
+  /// menggambar apa pun dan hanya melapor ke papan status Beranda.
+  const NotificationInboxCard({required this.container, this.board, super.key});
 
   /// Kontainer akar.
   final GetIt container;
+
+  /// Papan status Beranda (mode ringkas, ADR-043): kartu melapor satu slide
+  /// satu baris yang membuka layar tujuan, tanpa pratinjau dan tanpa aksi
+  /// pencatatan (aturan 8). `null` = kartu penuh seperti sebelumnya.
+  final DsStatusBoard? board;
 
   @override
   State<NotificationInboxCard> createState() => _NotificationInboxCardState();
@@ -44,6 +51,9 @@ class NotificationInboxCard extends StatefulWidget {
 
 class _NotificationInboxCardState extends State<NotificationInboxCard> with WidgetsBindingObserver {
   static const _previewCount = 2;
+
+  /// Pengenal slide di papan status Beranda.
+  static const _statusId = 'notification';
 
   FeatureStatuses? _statuses;
   NotificationCaptureStore? _store;
@@ -142,7 +152,10 @@ class _NotificationInboxCardState extends State<NotificationInboxCard> with Widg
   @override
   Widget build(BuildContext context) {
     final status = _status;
-    if (status == null || !status.isSupported) return const SizedBox.shrink();
+    final board = widget.board;
+    if (status == null || !status.isSupported) {
+      return board == null ? const SizedBox.shrink() : DsStatusReport(board: board, id: _statusId, data: null);
+    }
     final texts = t.discovery;
     final textTheme = Theme.of(context).textTheme;
     final colors = context.appColors;
@@ -165,9 +178,30 @@ class _NotificationInboxCardState extends State<NotificationInboxCard> with Widg
       FeatureState.permissionNeeded => (texts.allowAccess, () => unawaited(_allow()), true),
       _ => hasPending ? (texts.notification.check, _openInbox, false) : (null, null, false),
     };
+    if (board != null) {
+      // Mode ringkas: satu baris yang membuka layar tujuan. Ketukan pada
+      // slide tanpa tombol (aktif, tanpa tangkapan) membuka setelan.
+      return DsStatusReport(
+        board: board,
+        id: _statusId,
+        data: DsStatusSlideData(
+          id: _statusId,
+          icon: hasPending ? Icons.notifications_active_outlined : Icons.notifications_none,
+          title: title,
+          subtitle: sub,
+          actionLabel: ctaLabel,
+          onAction: onCta ?? _openSettings,
+          attention: hasPending,
+          order: 1,
+        ),
+      );
+    }
     final head = Row(
       children: [
-        AppIconTile(IconKey.inbox, tint: hasPending ? .amber : null,),
+        AppIconTile(
+          IconKey.inbox,
+          tint: hasPending ? .amber : null,
+        ),
         const SizedBox(width: AppSpacing.space3),
         Expanded(
           child: Column(

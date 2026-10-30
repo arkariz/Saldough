@@ -1959,6 +1959,15 @@ class Translations$home$id {
 	/// id: 'Wawasan & Rencana'
 	String get insightTitle => 'Wawasan & Rencana';
 
+	/// id: 'Ke kartu status $number'
+	String statusCarouselDot({required Object number}) => 'Ke kartu status ${number}';
+
+	/// id: 'Kartu status sebelumnya'
+	String get statusCarouselPrevious => 'Kartu status sebelumnya';
+
+	/// id: 'Kartu status berikutnya'
+	String get statusCarouselNext => 'Kartu status berikutnya';
+
 	/// id: 'Slide sebelumnya'
 	String get carouselPrevious => 'Slide sebelumnya';
 
@@ -2338,6 +2347,12 @@ class Translations$tour$id {
 
 	/// id: 'Nyalakan supaya kamu diingatkan sebelum tagihan jatuh tempo. Kartu ini hilang begitu pengingat menyala.'
 	String get homeReminderBody => 'Nyalakan supaya kamu diingatkan sebelum tagihan jatuh tempo. Kartu ini hilang begitu pengingat menyala.';
+
+	/// id: 'Perlu dicek'
+	String get homeStatusTitle => 'Perlu dicek';
+
+	/// id: 'Tagihan rutin yang menunggu, notifikasi yang perlu dicek, dan pengingat muncul di sini. Ketuk salah satunya untuk membukanya.'
+	String get homeStatusBody => 'Tagihan rutin yang menunggu, notifikasi yang perlu dicek, dan pengingat muncul di sini. Ketuk salah satunya untuk membukanya.';
 
 	/// id: 'Ulangi'
 	String get recordRepeatTitle => 'Ulangi';
@@ -3400,6 +3415,9 @@ class Translations$recurring$id {
 
 	/// id: 'Menunggu dicatat'
 	String get pendingCardTitle => 'Menunggu dicatat';
+
+	/// id: '$name dan $n lainnya'
+	String pendingMore({required Object name, required Object n}) => '${name} dan ${n} lainnya';
 
 	/// id: 'Biasanya $usual. Periksa lagi nominalnya.'
 	String unusualAmountNotice({required Object usual}) => 'Biasanya ${usual}. Periksa lagi nominalnya.';
@@ -6284,6 +6302,9 @@ extension on Translations {
 			'home.greetingNamed' => ({required Object name}) => 'Halo, ${name}',
 			'home.subtitle' => 'Ringkasan keuanganmu hari ini.',
 			'home.insightTitle' => 'Wawasan & Rencana',
+			'home.statusCarouselDot' => ({required Object number}) => 'Ke kartu status ${number}',
+			'home.statusCarouselPrevious' => 'Kartu status sebelumnya',
+			'home.statusCarouselNext' => 'Kartu status berikutnya',
 			'home.carouselPrevious' => 'Slide sebelumnya',
 			'home.carouselNext' => 'Slide berikutnya',
 			'home.carouselDot' => ({required Object number}) => 'Ke slide ${number}',
@@ -6422,6 +6443,8 @@ extension on Translations {
 			'tour.homeNotificationBody' => 'Pilih aplikasi bank atau dompet digitalmu, lalu notifikasi transaksinya jadi draf catatan. Kartu ini selalu ada di sini.',
 			'tour.homeReminderTitle' => 'Pengingat tagihan rutin',
 			'tour.homeReminderBody' => 'Nyalakan supaya kamu diingatkan sebelum tagihan jatuh tempo. Kartu ini hilang begitu pengingat menyala.',
+			'tour.homeStatusTitle' => 'Perlu dicek',
+			'tour.homeStatusBody' => 'Tagihan rutin yang menunggu, notifikasi yang perlu dicek, dan pengingat muncul di sini. Ketuk salah satunya untuk membukanya.',
 			'tour.recordRepeatTitle' => 'Ulangi',
 			'tour.recordRepeatBody' => 'Untuk tagihan, gaji, atau langganan. Transaksi berikutnya menunggu konfirmasimu dan tidak pernah dicatat diam-diam.',
 			'tour.recurringStartersTitle' => 'Mulai cepat',
@@ -6612,13 +6635,13 @@ extension on Translations {
 			'notificationCapture.builtInPatternsBadge' => 'Pola bawaan',
 			'notificationCapture.appsLoadFailed' => 'Daftar aplikasi gagal dibaca.',
 			'notificationCapture.appsEmpty' => 'Tidak ada aplikasi yang cocok.',
+			_ => null,
+		} ?? switch (path) {
 			'notificationCapture.sourceEnabled' => 'Dengarkan aplikasi ini',
 			'notificationCapture.walletLabel' => 'Dompet',
 			'notificationCapture.keywordsLabel' => 'Filter',
 			'notificationCapture.keywordsHint' => 'Hanya notifikasi yang memuat salah satu frasa ini yang dibaca.',
 			'notificationCapture.keywordField' => 'Tambah frasa',
-			_ => null,
-		} ?? switch (path) {
 			'notificationCapture.addKeyword' => 'Tambah',
 			'notificationCapture.patternsTitle' => 'Pola',
 			'notificationCapture.patternsHint' => 'Ajari Tanukonomy membaca format notifikasi aplikasi ini.',
@@ -6825,6 +6848,7 @@ extension on Translations {
 			'recurring.recordAllAction' => 'Catat semua',
 			'recurring.seeAllAction' => 'Lihat semua',
 			'recurring.pendingCardTitle' => 'Menunggu dicatat',
+			'recurring.pendingMore' => ({required Object name, required Object n}) => '${name} dan ${n} lainnya',
 			'recurring.unusualAmountNotice' => ({required Object usual}) => 'Biasanya ${usual}. Periksa lagi nominalnya.',
 			'recurring.farDateNotice' => ({required Object date}) => 'Jadwalnya ${date}. Pastikan tanggalnya benar.',
 			'recurring.occurrenceNotice' => ({required Object name, required Object date}) => 'Mencatat ${name} · ${date}',

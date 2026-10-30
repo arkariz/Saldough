@@ -783,6 +783,9 @@ class _Translations$home$en extends Translations$home$id {
 	@override String greetingNamed({required Object name}) => 'Hello, ${name}';
 	@override String get subtitle => 'Your finances today.';
 	@override String get insightTitle => 'Insights & plans';
+	@override String statusCarouselDot({required Object number}) => 'Go to status card ${number}';
+	@override String get statusCarouselPrevious => 'Previous status card';
+	@override String get statusCarouselNext => 'Next status card';
 	@override String get carouselPrevious => 'Previous slide';
 	@override String get carouselNext => 'Next slide';
 	@override String carouselDot({required Object number}) => 'Go to slide ${number}';
@@ -922,6 +925,8 @@ class _Translations$tour$en extends Translations$tour$id {
 	@override String get homeNotificationBody => 'Pick your bank or e-wallet apps and their transaction notifications become draft transactions. This card is always here.';
 	@override String get homeReminderTitle => 'Recurring reminders';
 	@override String get homeReminderBody => 'Turn them on to get reminded before bills are due. This card goes away once reminders are on.';
+	@override String get homeStatusTitle => 'Needs a look';
+	@override String get homeStatusBody => 'Recurring items waiting to be recorded, captured notifications, and reminders show up here. Tap one to open it.';
 	@override String get recordRepeatTitle => 'Repeat';
 	@override String get recordRepeatBody => 'For bills, salary, or subscriptions. The next one waits for your confirmation; nothing is recorded silently.';
 	@override String get recurringStartersTitle => 'Quick start';
@@ -1353,6 +1358,7 @@ class _Translations$recurring$en extends Translations$recurring$id {
 	@override String get recordAllAction => 'Record all';
 	@override String get seeAllAction => 'See all';
 	@override String get pendingCardTitle => 'Waiting to record';
+	@override String pendingMore({required Object name, required Object n}) => '${name} and ${n} more';
 	@override String unusualAmountNotice({required Object usual}) => 'Usually ${usual}. Check the amount again.';
 	@override String farDateNotice({required Object date}) => 'Scheduled for ${date}. Make sure the date is right.';
 	@override String occurrenceNotice({required Object name, required Object date}) => 'Recording ${name} · ${date}';
@@ -3148,6 +3154,9 @@ extension on TranslationsEn {
 			'home.greetingNamed' => ({required Object name}) => 'Hello, ${name}',
 			'home.subtitle' => 'Your finances today.',
 			'home.insightTitle' => 'Insights & plans',
+			'home.statusCarouselDot' => ({required Object number}) => 'Go to status card ${number}',
+			'home.statusCarouselPrevious' => 'Previous status card',
+			'home.statusCarouselNext' => 'Next status card',
 			'home.carouselPrevious' => 'Previous slide',
 			'home.carouselNext' => 'Next slide',
 			'home.carouselDot' => ({required Object number}) => 'Go to slide ${number}',
@@ -3286,6 +3295,8 @@ extension on TranslationsEn {
 			'tour.homeNotificationBody' => 'Pick your bank or e-wallet apps and their transaction notifications become draft transactions. This card is always here.',
 			'tour.homeReminderTitle' => 'Recurring reminders',
 			'tour.homeReminderBody' => 'Turn them on to get reminded before bills are due. This card goes away once reminders are on.',
+			'tour.homeStatusTitle' => 'Needs a look',
+			'tour.homeStatusBody' => 'Recurring items waiting to be recorded, captured notifications, and reminders show up here. Tap one to open it.',
 			'tour.recordRepeatTitle' => 'Repeat',
 			'tour.recordRepeatBody' => 'For bills, salary, or subscriptions. The next one waits for your confirmation; nothing is recorded silently.',
 			'tour.recurringStartersTitle' => 'Quick start',
@@ -3476,13 +3487,13 @@ extension on TranslationsEn {
 			'notificationCapture.builtInPatternsBadge' => 'Built-in patterns',
 			'notificationCapture.appsLoadFailed' => 'Couldn\'t read the app list.',
 			'notificationCapture.appsEmpty' => 'No matching apps.',
+			_ => null,
+		} ?? switch (path) {
 			'notificationCapture.sourceEnabled' => 'Read this app\'s notifications',
 			'notificationCapture.walletLabel' => 'Wallet',
 			'notificationCapture.keywordsLabel' => 'Filter',
 			'notificationCapture.keywordsHint' => 'Only notifications containing one of these phrases are read.',
 			'notificationCapture.keywordField' => 'Add a phrase',
-			_ => null,
-		} ?? switch (path) {
 			'notificationCapture.addKeyword' => 'Add',
 			'notificationCapture.patternsTitle' => 'Patterns',
 			'notificationCapture.patternsHint' => 'Teach Tanukonomy how to read this app\'s notification format.',
@@ -3689,6 +3700,7 @@ extension on TranslationsEn {
 			'recurring.recordAllAction' => 'Record all',
 			'recurring.seeAllAction' => 'See all',
 			'recurring.pendingCardTitle' => 'Waiting to record',
+			'recurring.pendingMore' => ({required Object name, required Object n}) => '${name} and ${n} more',
 			'recurring.unusualAmountNotice' => ({required Object usual}) => 'Usually ${usual}. Check the amount again.',
 			'recurring.farDateNotice' => ({required Object date}) => 'Scheduled for ${date}. Make sure the date is right.',
 			'recurring.occurrenceNotice' => ({required Object name, required Object date}) => 'Recording ${name} · ${date}',

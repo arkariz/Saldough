@@ -310,11 +310,18 @@ void main() {
       }
       await tester.pumpAndSettle();
 
+      // Beranda hanya memuat slide ringkas yang membuka segmen Rutin; baris
+      // Netflix dan tombol Catat tinggal di segmen Rutin.
+      expect(find.byKey(const ValueKey('status-slide-recurring')), findsOneWidget);
       expect(find.text('${t.recurring.pendingCardTitle} (1)'), findsOneWidget);
-      expect(find.text('Netflix ●'), findsOneWidget);
+      expect(find.text('Netflix'), findsOneWidget);
+      expect(
+        find.descendant(of: find.byKey(const ValueKey('status-slide-recurring')), matching: find.text(t.recurring.recordAction)),
+        findsNothing,
+      );
     });
 
-    testWidgets('Beranda: pintu permanen sesudah kartu Menunggu, kartu pengingat paling bawah (P-6)', (tester) async {
+    testWidgets('Beranda: slide status berurutan, rutin menunggu, pintu notifikasi, pengingat (P-6)', (tester) async {
       final now = DateTime.now();
       await container<RecurringRuleRepository>().saveRule(
         RecurringRule(
@@ -347,11 +354,12 @@ void main() {
       }
       await tester.pumpAndSettle();
 
-      final pending = tester.getTopLeft(find.text('${t.recurring.pendingCardTitle} (1)')).dy;
-      final inbox = tester.getTopLeft(find.byKey(const ValueKey('notification-inbox-card'))).dy;
-      final nudge = tester.getTopLeft(find.byKey(const ValueKey('reminder-nudge'))).dy;
-      expect(inbox, lessThan(nudge));
-      expect(pending, lessThan(nudge));
+      // Urutan slide status (P-6): yang perlu dicek (rutin menunggu) dulu,
+      // lalu pintu permanen catat dari notifikasi, pengingat paling akhir.
+      final board = tester.widget<DsStatusCarousel>(find.byType(DsStatusCarousel)).board;
+      expect(board.slides.map((slide) => slide.id), ['recurring', 'notification', 'reminder']);
+      expect(find.byKey(const ValueKey('notification-inbox-card')), findsNothing);
+      expect(find.byKey(const ValueKey('reminder-nudge')), findsNothing);
     });
 
     testWidgets('tab Rencana: sub-tab Anggaran lalu Rutin, tanpa app bar Anggaran ganda (T-15.4)', (tester) async {

@@ -54,6 +54,19 @@ class _DsCarouselState extends State<DsCarousel> {
   int _index = 0;
 
   @override
+  void didUpdateWidget(DsCarousel oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Jumlah halaman bisa berubah (slide status datang dan pergi).
+    final last = widget.children.length - 1;
+    if (_index > last && last >= 0) {
+      _index = last;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted && _controller.hasClients) _controller.jumpToPage(last);
+      });
+    }
+  }
+
+  @override
   void dispose() {
     _controller.dispose();
     super.dispose();

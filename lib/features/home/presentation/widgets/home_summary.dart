@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
@@ -44,10 +45,14 @@ class HomeBalanceCard extends StatelessWidget {
     final symbol = ActiveCurrency.value.symbol;
     return DsCountUp(
       value: total,
+      duration: const Duration(milliseconds: 1100),
+      curve: Curves.easeOutCubic,
       builder: (context, shown) => DsHeroBalanceCard(
         label: t.home.balanceLabel.toUpperCase(),
-        labelIcon: Icons.spa_outlined,
         currencySymbol: symbol,
+        semanticAmount: AppMoneyFormatter.formatRevealed(total),
+        mascot: SvgPicture.asset(ClayIcons.mascot),
+        coin: SvgPicture.asset(ClayIcons.tierCoin, width: 24, height: 24),
         // Nominal tanpa penyamaran; `hidden` menggantikannya oleh topeng.
         amount: AppMoneyFormatter.formatRevealed(shown).replaceFirst(symbol, ''),
         hidden: AmountVisibility.hidden,
@@ -58,12 +63,12 @@ class HomeBalanceCard extends StatelessWidget {
             ? const []
             : [
                 DsHeroStatTile(
-                  icon: Icons.arrow_downward,
+                  icon: Icons.arrow_circle_up,
                   label: t.home.incomeStat.toUpperCase(),
                   value: AppMoneyText.format(flow.income, MoneyKind.income),
                 ),
                 DsHeroStatTile(
-                  icon: Icons.arrow_upward,
+                  icon: Icons.arrow_circle_down,
                   label: t.home.expenseStat.toUpperCase(),
                   value: AppMoneyText.format(flow.expense, MoneyKind.expense),
                   income: false,

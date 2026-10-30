@@ -57,3 +57,43 @@ class DsFlipSwitcher extends StatelessWidget {
     );
   }
 }
+
+/// Mengganti [child] dengan kabur: yang lama mengabur dan memudar, yang baru
+/// jernih kembali (280ms). Dipakai saat nominal di kartu saldo hero
+/// disembunyikan atau ditampilkan. [child] wajib punya `key` yang berbeda
+/// untuk tiap keadaan. Saat gerak dikurangi, pergantian langsung.
+class DsBlurSwitcher extends StatelessWidget {
+  /// Membuat pengganti kabur.
+  const DsBlurSwitcher({required this.child, this.alignment = Alignment.centerLeft, super.key});
+
+  /// Isi saat ini; `key`-nya menentukan kapan dianggap berganti.
+  final Widget child;
+
+  /// Perataan isi di dalam pengganti.
+  final AlignmentGeometry alignment;
+
+  @override
+  Widget build(BuildContext context) {
+    final reduced = DsMotion.reduced(context);
+    return AnimatedSwitcher(
+      duration: reduced ? Duration.zero : const Duration(milliseconds: 280),
+      switchInCurve: Curves.easeOut,
+      switchOutCurve: Curves.easeIn,
+      layoutBuilder: (current, previous) => Stack(
+        alignment: alignment,
+        children: [...previous, ?current],
+      ),
+      transitionBuilder: (incoming, animation) => AnimatedBuilder(
+        animation: animation,
+        builder: (context, _) {
+          final away = 1 - animation.value;
+          final view = away > 0
+              ? ImageFiltered(imageFilter: ImageFilter.blur(sigmaX: 6 * away, sigmaY: 6 * away), child: incoming)
+              : incoming;
+          return Opacity(opacity: (0.4 + 0.6 * animation.value).clamp(0, 1) * animation.value.clamp(0, 1), child: view);
+        },
+      ),
+      child: child,
+    );
+  }
+}

@@ -1,0 +1,1108 @@
+<!DOCTYPE html><html lang="id"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"><meta content="mobile_tab" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "surface-tint": "#3c6846", "primary-container": "#1f4b2c", "on-primary-fixed": "#00210c", "on-secondary": "#ffffff", "inverse-on-surface": "#f1f1f0", "surface": "#f9f9f8", "surface-container-high": "#e8e8e7", "surface-container-lowest": "#ffffff", "inverse-primary": "#a2d2a9", "surface-bright": "#f9f9f8", "on-background": "#1a1c1c", "surface-container-highest": "#e2e2e2", "surface-variant": "#e2e2e2", "surface-container-low": "#f3f4f3", "inverse-surface": "#2f3130", "surface-dim": "#dadad9", "on-tertiary-fixed": "#1e1b15", "tertiary-fixed-dim": "#ccc6bb", "on-surface-variant": "#414941", "secondary-container": "#d8e6dc", "tertiary-fixed": "#e8e2d7", "on-secondary-fixed-variant": "#3d4a42", "surface-container": "#eeeeed", "on-secondary-fixed": "#121e18", "on-tertiary": "#ffffff", "secondary-fixed": "#d8e6dc", "on-error-container": "#93000a", "on-secondary-container": "#5a6760", "secondary": "#54615a", "error-container": "#ffdad6", "primary-fixed-dim": "#a2d2a9", "on-tertiary-container": "#b4aea4", "on-primary": "#ffffff", "outline": "#727971", "secondary-fixed-dim": "#bccac0", "background": "#f9f9f8", "on-primary-container": "#8bba93", "on-surface": "#1a1c1c", "on-tertiary-fixed-variant": "#4a463f", "on-primary-fixed-variant": "#244f30", "outline-variant": "#c1c9bf", "on-error": "#ffffff", "tertiary-container": "#46423a", "primary-fixed": "#bdefc4", "tertiary": "#2f2c25", "primary": "#043417", "error": "#ba1a1a" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "space-sm": "0.5rem", "gutter": "1.5rem", "gutter-mobile": "1rem", "margin": "3rem", "space-xs": "0.25rem", "space-md": "1rem", "space-lg": "1.5rem", "space-xl": "2.5rem", "margin-mobile": "1.25rem" }, fontFamily: { "headline-sm": ["Plus Jakarta Sans"], "label-sm": ["Plus Jakarta Sans"], "title-md": ["Plus Jakarta Sans"], "body-lg": ["Plus Jakarta Sans"], "body-sm": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "label-md": ["Plus Jakarta Sans"], "body-md": ["Plus Jakarta Sans"], "numerical-display": ["Plus Jakarta Sans"], "display-lg": ["Plus Jakarta Sans"], "headline-lg-mobile": ["Plus Jakarta Sans"] }, fontSize: { "headline-sm": ["18px", { "lineHeight": "26px", "letterSpacing": "-0.015em", "fontWeight": "600" }], "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.06em", "fontWeight": "600" }], "title-md": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "body-lg": ["16px", { "lineHeight": "26px", "letterSpacing": "-0.005em", "fontWeight": "400" }], "body-sm": ["13px", { "lineHeight": "18px", "letterSpacing": "0.005em", "fontWeight": "400" }], "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "600" }], "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.025em", "fontWeight": "600" }], "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.04em", "fontWeight": "600" }], "body-md": ["14px", { "lineHeight": "22px", "letterSpacing": "0em", "fontWeight": "400" }], "numerical-display": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.03em", "fontWeight": "600" }], "display-lg": ["44px", { "lineHeight": "52px", "letterSpacing": "-0.03em", "fontWeight": "700" }], "headline-lg-mobile": ["26px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "600" }] } } } };</script><style>@layer base{html,body{width:100vw;margin:0;padding:0;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head><body class="bg-surface text-on-surface flex flex-col min-h-screen antialiased"><header class="fixed top-0 w-full z-50 pt-safe bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 px-gutter-mobile flex items-center justify-between"><div class="flex items-center gap-space-xs"><button aria-label="Kembali ke Dashboard" class="w-11 h-11 flex items-center justify-center rounded-full text-on-surface hover:bg-surface-container-low transition-colors" type="button"><span class="material-symbols-outlined text-[24px]">arrow_back</span></button><h1 class="font-headline-sm text-headline-sm text-on-surface tracking-tight truncate">Dompet</h1></div><div class="flex items-center gap-space-sm"><button class="h-11 px-space-md flex items-center justify-center rounded-full bg-secondary-container text-on-secondary-container font-label-md text-label-md hover:bg-secondary-fixed transition-colors active:scale-95" type="button"><span class="">Atur / Selesai</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="flex-1 flex flex-col relative w-full pt-16 pb-24 bg-surface"><div class="flex flex-col w-full px-gutter-mobile select-none pb-12">
+<!-- Inline SVG Filters for Claymorphism Tactility & Animations -->
+<svg aria-hidden="true" class="absolute w-0 h-0 invisible">
+<defs>
+<linearGradient id="tanukiLeafGrad" x1="0%" x2="100%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#bdefc4"></stop>
+<stop offset="50%" stop-color="#1f4b2c"></stop>
+<stop offset="100%" stop-color="#043417"></stop>
+</linearGradient>
+<radialGradient cx="50%" cy="30%" id="clayTanukiShine" r="70%">
+<stop offset="0%" stop-color="#ffffff" stop-opacity="0.7"></stop>
+<stop offset="60%" stop-color="#c48a5c" stop-opacity="0"></stop>
+<stop offset="100%" stop-color="#5a381e" stop-opacity="0.4"></stop>
+</radialGradient>
+<linearGradient id="kobanGold" x1="0%" x2="100%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#fff1a8"></stop>
+<stop offset="45%" stop-color="#f5c242"></stop>
+<stop offset="100%" stop-color="#b8860b"></stop>
+</linearGradient>
+</defs>
+</svg>
+<style>
+    @keyframes jiggle-even {
+      0% { transform: rotate(-1.3deg) translateY(0px); }
+      50% { transform: rotate(1.2deg) translateY(-1px); }
+      100% { transform: rotate(-1.3deg) translateY(0px); }
+    }
+    @keyframes jiggle-odd {
+      0% { transform: rotate(1.3deg) translateY(-1px); }
+      50% { transform: rotate(-1.2deg) translateY(0px); }
+      100% { transform: rotate(1.3deg) translateY(-1px); }
+    }
+    @keyframes squishy-pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.025) translateY(-2px); }
+    }
+    @keyframes leaf-float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-4px) rotate(6deg); }
+    }
+    @keyframes floatLeaf1 {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      50% { transform: translate(-6px, -8px) rotate(14deg); }
+    }
+    @keyframes floatLeaf2 {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      50% { transform: translate(7px, -6px) rotate(-18deg); }
+    }
+    @keyframes shimmerGlow {
+      0%, 100% { opacity: 0.35; transform: scale(1); }
+      50% { opacity: 0.85; transform: scale(1.08); }
+    }
+    @keyframes auraBreathe {
+      0%, 100% { opacity: 0.45; transform: scale(1); }
+      50% { opacity: 0.85; transform: scale(1.12); }
+    }
+    @keyframes mascotNod {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      30% { transform: translateY(-3px) rotate(2deg); }
+      60% { transform: translateY(1px) rotate(-1deg); }
+    }
+    @keyframes coinShine {
+      0%, 100% { transform: rotate(-12deg) scale(1); filter: brightness(1); }
+      50% { transform: rotate(-8deg) scale(1.06); filter: brightness(1.25); }
+    }
+    @keyframes eyeBounce {
+      0% { transform: scale(1); }
+      40% { transform: scale(0.8) rotate(-15deg); }
+      75% { transform: scale(1.2) rotate(10deg); }
+      100% { transform: scale(1) rotate(0deg); }
+    }
+    .clay-card {
+      box-shadow: 0 10px 24px -4px rgba(4, 52, 23, 0.07),
+                  0 4px 10px -2px rgba(4, 52, 23, 0.04),
+                  inset 0 2px 3px rgba(255, 255, 255, 0.9),
+                  inset 0 -3px 6px rgba(0, 0, 0, 0.03);
+    }
+    .clay-card-dark {
+      box-shadow: 0 16px 32px -6px rgba(4, 52, 23, 0.35),
+                  0 6px 16px -2px rgba(4, 52, 23, 0.22),
+                  inset 0 2.5px 5px rgba(255, 255, 255, 0.28),
+                  inset 0 -5px 10px rgba(0, 0, 0, 0.35);
+    }
+    .clay-rich-banner {
+      background: linear-gradient(145deg, #1f572e 0%, #154322 45%, #082d15 100%);
+      border: 1px solid rgba(189, 239, 196, 0.22);
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
+      transform-style: preserve-3d;
+      perspective: 800px;
+    }
+    .clay-rich-banner:hover {
+      box-shadow: 0 20px 38px -6px rgba(4, 52, 23, 0.42),
+                  0 8px 18px -2px rgba(4, 52, 23, 0.26),
+                  inset 0 3px 6px rgba(255, 255, 255, 0.35),
+                  inset 0 -5px 12px rgba(0, 0, 0, 0.4);
+    }
+    .clay-rich-banner:active {
+      transform: scale(0.985) translateY(1px);
+    }
+    .clay-pill-stat {
+      box-shadow: inset 0 1.5px 2.5px rgba(255, 255, 255, 0.2),
+                  inset 0 -1.5px 3px rgba(0, 0, 0, 0.25),
+                  0 2px 5px rgba(0, 0, 0, 0.15);
+    }
+    .clay-action-chip {
+      box-shadow: inset 0 1.5px 2px rgba(255, 255, 255, 0.25),
+                  inset 0 -2px 4px rgba(0, 0, 0, 0.28),
+                  0 3px 8px rgba(0, 0, 0, 0.18);
+      transition: all 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .clay-action-chip:hover {
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: inset 0 2px 3px rgba(255, 255, 255, 0.35),
+                  0 5px 12px rgba(0, 0, 0, 0.24);
+    }
+    .clay-action-chip:active {
+      transform: translateY(1px) scale(0.95);
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+    .clay-badge {
+      box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.8),
+                  0 2px 4px rgba(0,0,0,0.04);
+    }
+    .clay-btn-active {
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15),
+                  0 2px 6px rgba(4, 52, 23, 0.2);
+    }
+    .eye-anim {
+      animation: eyeBounce 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .balance-reveal-blur {
+      transition: filter 0.28s ease, opacity 0.28s ease;
+    }
+    .is-organizing .wallet-item:nth-child(even) {
+      animation: jiggle-even 0.23s infinite ease-in-out;
+    }
+    .is-organizing .wallet-item:nth-child(odd) {
+      animation: jiggle-odd 0.21s infinite ease-in-out;
+    }
+    .is-organizing .wallet-item:active {
+      animation-play-state: paused;
+    }
+    .wallet-item.dragging {
+      opacity: 0.45;
+      transform: scale(0.97) rotate(0deg) !important;
+      animation: none !important;
+    }
+    .wallet-item.drag-over-top {
+      border-top: 3px dashed #1f4b2c !important;
+    }
+    .wallet-item.drag-over-bottom {
+      border-bottom: 3px dashed #1f4b2c !important;
+    }
+  </style>
+<!-- BANNER RINGKASAN SALDO TANUKONOMY (Clay Balance Orb Card - Rich & Tactile) -->
+<section class="w-full mt-2 mb-space-md relative">
+<!-- Ambient Breathing Glowing Aura Behind Banner -->
+<div aria-hidden="true" class="absolute -inset-1 rounded-3xl bg-gradient-to-r from-primary-fixed/20 via-surface-tint/30 to-primary/40 blur-xl pointer-events-none" style="animation: auraBreathe 4.5s ease-in-out infinite;"></div>
+<div class="clay-card-dark clay-rich-banner text-on-primary rounded-3xl p-5 relative overflow-hidden transition-all duration-300 cursor-default" id="main-balance-card" style="transform: perspective(800px) rotateX(0deg) rotateY(0deg) translateY(0px);">
+<!-- Background Radial Ambient Shimmers -->
+<div class="absolute -right-8 -bottom-10 w-44 h-44 rounded-full bg-primary/70 blur-2xl pointer-events-none"></div>
+<div class="absolute -left-10 -top-10 w-36 h-36 rounded-full bg-primary-fixed/15 blur-xl pointer-events-none"></div>
+<div class="absolute left-1/3 top-0 w-40 h-28 bg-surface-tint/25 rounded-full blur-2xl pointer-events-none"></div>
+<!-- Floating Micro-Leaves & Gold Sparkles (Animated) -->
+<div aria-hidden="true" class="absolute top-3 left-28 pointer-events-none" style="animation: floatLeaf1 6s ease-in-out infinite;">
+<svg class="w-4 h-4 fill-primary-fixed/40 drop-shadow-sm" viewBox="0 0 24 24"><path d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22l1-2.3C12.83,18 19,15 21,8H17Z"></path></svg>
+</div>
+<div aria-hidden="true" class="absolute bottom-14 left-6 pointer-events-none" style="animation: floatLeaf2 5.2s ease-in-out infinite 1s;">
+<svg class="w-3.5 h-3.5 fill-primary-fixed/35 drop-shadow-sm" viewBox="0 0 24 24"><path d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22l1-2.3C12.83,18 19,15 21,8H17Z"></path></svg>
+</div>
+<!-- Golden Shimmer Sparkles -->
+<div aria-hidden="true" class="absolute top-10 right-28 pointer-events-none" style="animation: shimmerGlow 3.2s ease-in-out infinite;">
+<svg class="w-3 h-3 text-amber-300 drop-shadow" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L14.2 8.8L21 11L14.2 13.2L12 20L9.8 13.2L3 11L9.8 8.8L12 2Z"></path></svg>
+</div>
+<div aria-hidden="true" class="absolute bottom-20 right-32 pointer-events-none" style="animation: shimmerGlow 3.8s ease-in-out infinite 1.5s;">
+<svg class="w-2.5 h-2.5 text-amber-200/90 drop-shadow" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L14.2 8.8L21 11L14.2 13.2L12 20L9.8 13.2L3 11L9.8 8.8L12 2Z"></path></svg>
+</div>
+<!-- 3D Plump Clay Tanuki Mascot Peeking Charm & Lucky Koban Gold Coin -->
+<div aria-hidden="true" class="absolute -right-1 top-2.5 pointer-events-none select-none z-10">
+<div class="relative w-24 h-24 flex items-center justify-center" style="animation: mascotNod 5.5s ease-in-out infinite;">
+<!-- Plump Clay Tanuki SVG Illustration -->
+<svg class="w-20 h-20 filter drop-shadow-[0_8px_10px_rgba(0,0,0,0.35)]" viewBox="0 0 100 100">
+<!-- Ears -->
+<circle cx="28" cy="26" fill="#7a4b27" r="11" stroke="#4a2d16" stroke-width="1.5"></circle>
+<circle cx="28" cy="26" fill="#f0d5be" r="6"></circle>
+<circle cx="72" cy="26" fill="#7a4b27" r="11" stroke="#4a2d16" stroke-width="1.5"></circle>
+<circle cx="72" cy="26" fill="#f0d5be" r="6"></circle>
+<!-- Clay Tanuki Head Base -->
+<ellipse cx="50" cy="54" fill="#935b31" rx="34" ry="30" stroke="#4a2d16" stroke-width="1.5"></ellipse>
+<!-- Clay 3D Specular Highlight on Head -->
+<ellipse cx="44" cy="40" fill="url(#clayTanukiShine)" rx="18" ry="12"></ellipse>
+<!-- White Muzzle / Cheek Fluff -->
+<path d="M30,55 C30,70 42,75 50,75 C58,75 70,70 70,55 C70,45 60,46 50,47 C40,46 30,45 30,55 Z" fill="#f8e7d8"></path>
+<!-- Tanuki Mask / Eye Patches -->
+<ellipse cx="37" cy="50" fill="#3e2311" rx="8" ry="9" transform="rotate(-10 37 50)"></ellipse>
+<ellipse cx="63" cy="50" fill="#3e2311" rx="8" ry="9" transform="rotate(10 63 50)"></ellipse>
+<!-- Eyes with Gleam -->
+<circle cx="38" cy="50" fill="#111111" r="3.2"></circle>
+<circle cx="39.2" cy="48.8" fill="#ffffff" r="1.1"></circle>
+<circle cx="62" cy="50" fill="#111111" r="3.2"></circle>
+<circle cx="63.2" cy="48.8" fill="#ffffff" r="1.1"></circle>
+<!-- Cute Nose & Mouth -->
+<polygon fill="#20120a" points="50,56 46,53 54,53"></polygon>
+<path d="M47,60 Q50,63 53,60" fill="none" stroke="#20120a" stroke-linecap="round" stroke-width="1.4"></path>
+<!-- Plump Cheeks Blush -->
+<ellipse cx="32" cy="60" fill="#f48fb1" opacity="0.65" rx="4" ry="2.5"></ellipse>
+<ellipse cx="68" cy="60" fill="#f48fb1" opacity="0.65" rx="4" ry="2.5"></ellipse>
+<!-- Magic Tanuki Leaf On Forehead -->
+<g transform="translate(42, 23) rotate(8)">
+<path d="M8,1 C16,4 18,12 11,16 C7,14 6,10 8,1 Z" fill="#66bb6a" stroke="#2e7d32" stroke-width="0.8"></path>
+<path d="M8,2 Q10,8 10,14" fill="none" stroke="#bdefc4" stroke-linecap="round" stroke-width="0.8"></path>
+</g>
+</svg>
+<!-- 3D Gold Koban Lucky Coin badge attached -->
+<div class="absolute -bottom-1 -left-2 w-7 h-9 rounded-full shadow-lg border border-amber-200/60 flex items-center justify-center rotate-[-14deg]" style="background: url(#); background: linear-gradient(135deg, #fff2a3 0%, #f1be38 50%, #9e7208 100%); animation: coinShine 3.6s ease-in-out infinite;">
+<span class="font-bold text-[9px] text-[#523803] font-mono tracking-tighter">両</span>
+</div>
+</div>
+</div>
+<!-- Header Info Row -->
+<div class="flex items-center justify-between relative z-20">
+<div class="flex items-center gap-space-xs">
+<!-- Tanuki Leaf Token Icon -->
+<div class="w-6 h-6 rounded-full bg-primary-fixed flex items-center justify-center shadow-md border border-white/40">
+<span class="material-symbols-outlined text-primary text-[15px]" style="font-variation-settings: 'FILL' 1;">eco</span>
+</div>
+<span class="font-label-md text-label-md text-primary-fixed tracking-wider uppercase font-semibold">Tanukonomy Balance</span>
+<span class="hidden sm:inline-block w-1.5 h-1.5 rounded-full bg-primary-fixed/60"></span>
+<span class="hidden sm:inline-block font-label-sm text-[10px] text-on-primary-container/90">Kakeibo Pot</span>
+</div>
+<button class="w-8 h-8 rounded-full bg-black/25 backdrop-blur-md flex items-center justify-center text-on-primary hover:bg-black/40 active:scale-90 transition-all border border-white/20 shadow-sm" id="toggle-balance-visibility" title="Sembunyikan / Tampilkan Saldo" type="button">
+<span class="material-symbols-outlined text-[18px] transition-transform eye-anim" id="eye-icon">visibility</span>
+</button>
+</div>
+<!-- Big Nominal Row (Interactive Count-up & Blur Reveal) -->
+<div class="mt-3 flex items-baseline gap-2 relative z-20">
+<span class="font-headline-sm text-headline-sm text-primary-fixed font-semibold tracking-tight">Rp</span>
+<span class="font-display-lg text-display-lg text-on-primary tracking-tight font-bold balance-reveal-blur" data-target="14850000" id="balance-nominal" style="filter: blur(0px); opacity: 1;">14.850.000</span>
+</div>
+<!-- Rich Secondary Metric Row inside Banner (Pemasukan, Pengeluaran, Kakeibo Health) -->
+<div class="mt-3.5 grid grid-cols-3 gap-2 relative z-20">
+<!-- Pemasukan -->
+<div class="clay-pill-stat bg-black/25 backdrop-blur-md border border-white/15 rounded-xl px-2.5 py-1.5 flex flex-col justify-center">
+<div class="flex items-center gap-1 text-[10px] text-primary-fixed font-label-sm leading-none font-semibold">
+<span class="material-symbols-outlined text-[13px] text-primary-fixed">arrow_circle_up</span>
+<span class="">Masuk</span>
+</div>
+<span class="font-title-md text-[12px] text-on-primary font-bold mt-0.5 tracking-tight truncate">+8.500.000</span>
+</div>
+<!-- Pengeluaran -->
+<div class="clay-pill-stat bg-black/25 backdrop-blur-md border border-white/15 rounded-xl px-2.5 py-1.5 flex flex-col justify-center">
+<div class="flex items-center gap-1 text-[10px] text-amber-300 font-label-sm leading-none font-semibold">
+<span class="material-symbols-outlined text-[13px] text-amber-300">arrow_circle_down</span>
+<span class="">Keluar</span>
+</div>
+<span class="font-title-md text-[12px] text-on-primary font-bold mt-0.5 tracking-tight truncate">-3.650.000</span>
+</div>
+<!-- Kakeibo Health Badge -->
+<div class="clay-pill-stat bg-black/25 backdrop-blur-md border border-white/15 rounded-xl px-2.5 py-1.5 flex flex-col justify-center group cursor-pointer hover:bg-black/35 transition-colors">
+<div class="flex items-center gap-1 text-[10px] text-primary-fixed-dim font-label-sm leading-none font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-fixed animate-ping"></span>
+<span class="truncate">Kakeibo Health</span>
+</div>
+<div class="flex items-center gap-1 mt-0.5">
+<span class="font-title-md text-[12px] text-primary-fixed font-bold tracking-tight">94%</span>
+<span class="font-label-sm text-[10px] text-primary-fixed-dim font-medium">Sehat</span>
+</div>
+</div>
+</div>
+<!-- Quick Mini-Action Chips inside Banner -->
+
+<!-- Bottom Status Ribbon -->
+<div class="mt-3 pt-2.5 flex items-center justify-between text-on-primary-container border-t border-white/10 relative z-20"><div class="flex items-center gap-1.5 font-body-sm text-body-sm"><span class="w-2 h-2 rounded-full bg-primary-fixed inline-block animate-ping"></span><span class="font-semibold text-on-primary">5 Kantong Aktif</span></div></div>
+</div>
+</section><section class="w-full mb-space-md" id="balance-distribution-section">
+<div class="clay-card bg-surface-container-lowest rounded-3xl p-4 transition-all duration-300 relative overflow-hidden border border-white">
+<!-- Header Toggle Bar -->
+<div class="flex items-center justify-between cursor-pointer select-none" id="btn-toggle-distribution">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-xl bg-gradient-to-br from-primary-fixed to-secondary-container flex items-center justify-center text-primary shadow-inner">
+<span class="material-symbols-outlined text-[18px]">pie_chart</span>
+</div>
+<div>
+<div class="flex items-center gap-1.5">
+<h3 class="font-title-md text-title-md text-on-surface font-bold">Distribusi Saldo</h3>
+<span class="font-label-sm text-label-sm px-2 py-0.2 rounded-full bg-secondary-container text-primary-container font-semibold">5 Alokasi</span>
+</div>
+<p class="font-body-sm text-[11px] text-on-surface-variant" id="dist-mode-subtitle">Tampilan Cepat • Klik untuk Donut Chart</p>
+</div>
+</div>
+<button aria-label="Buka Rincian Distribusi" class="w-8 h-8 rounded-full bg-surface-container-low hover:bg-surface-container flex items-center justify-center text-on-surface-variant transition-transform duration-300" id="btn-dist-chevron" type="button">
+<span class="material-symbols-outlined text-[20px] transition-transform duration-300" id="dist-chevron-icon">expand_more</span>
+</button>
+</div>
+<!-- 1. DEFAULT COLLAPSED VIEW: Linear Segmented Clay Bar -->
+<div class="mt-3.5 transition-all duration-300 block" id="distribution-linear-view">
+<!-- Clay Multi-Segment Progress Bar -->
+<div class="h-4 w-full bg-surface-container-low rounded-full p-0.5 flex gap-1 shadow-inner overflow-hidden border border-white/80">
+<div class="h-full rounded-full transition-all duration-300 cursor-pointer relative group" data-wallet-key="bca" style="width: 55%; background-color: #1f4b2c;" title="BCA Kuil Utama: 55%">
+<div class="absolute inset-0 bg-white/20 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+<div class="h-full rounded-full transition-all duration-300 cursor-pointer relative group" data-wallet-key="jago" style="width: 21%; background-color: #54615a;" title="Bank Jago: 21%">
+<div class="absolute inset-0 bg-white/20 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+<div class="h-full rounded-full transition-all duration-300 cursor-pointer relative group" data-wallet-key="gopay" style="width: 10%; background-color: #3c6846;" title="GoPay Kantong: 10%">
+<div class="absolute inset-0 bg-white/20 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+<div class="h-full rounded-full transition-all duration-300 cursor-pointer relative group" data-wallet-key="bibit" style="width: 9%; background-color: #a2d2a9;" title="Bibit Tanuki: 9%">
+<div class="absolute inset-0 bg-white/20 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+<div class="h-full rounded-full transition-all duration-300 cursor-pointer relative group" data-wallet-key="cash" style="width: 5%; background-color: #bccac0;" title="Cash Kuil: 5%">
+<div class="absolute inset-0 bg-white/20 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+</div>
+<!-- Quick Summary Pills -->
+<div class="flex items-center justify-between flex-wrap gap-1.5 mt-2.5 pt-0.5 text-on-surface-variant font-label-sm text-[11px]">
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-full inline-block shadow-sm" style="background-color: #1f4b2c;"></span>
+<span class="font-medium text-on-surface">BCA (55%)</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-full inline-block shadow-sm" style="background-color: #54615a;"></span>
+<span class="font-medium text-on-surface">Jago (21%)</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-full inline-block shadow-sm" style="background-color: #3c6846;"></span>
+<span class="font-medium text-on-surface">GoPay (10%)</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-full inline-block shadow-sm" style="background-color: #a2d2a9;"></span>
+<span class="font-medium text-on-surface">Bibit (9%)</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-full inline-block shadow-sm" style="background-color: #bccac0;"></span>
+<span class="font-medium text-on-surface">Cash (5%)</span>
+</div>
+</div>
+</div>
+<!-- 2. EXPANDED VIEW: Donut Chart + Detailed Clay Badge Breakdown -->
+<div class="hidden mt-4 pt-3 border-t border-surface-container transition-all duration-300" id="distribution-donut-view">
+<div class="flex flex-col sm:flex-row items-center gap-4">
+<!-- Interactive SVG Donut Chart -->
+<div class="relative w-36 h-36 shrink-0 flex items-center justify-center">
+<svg class="w-full h-full transform -rotate-90 filter drop-shadow-sm" id="donut-svg" viewBox="0 0 100 100">
+<circle cx="50" cy="50" fill="none" r="38" stroke="#f3f4f3" stroke-width="13"></circle>
+<!-- Segment 1: BCA 55% (circ ~ 238.76, 55% = 131.3) -->
+<circle class="donut-segment cursor-pointer transition-all duration-300 hover:opacity-85 hover:stroke-[15]" cx="50" cy="50" data-name="BCA Kuil Utama" data-nominal="Rp 8.250.000" data-percent="55%" fill="none" id="donut-seg-bca" r="38" stroke="#1f4b2c" stroke-dasharray="131.3 238.76" stroke-dashoffset="0" stroke-width="13"></circle>
+<!-- Segment 2: Jago 21% (21% = 50.14) offset -131.3 -->
+<circle class="donut-segment cursor-pointer transition-all duration-300 hover:opacity-85 hover:stroke-[15]" cx="50" cy="50" data-name="Bank Jago Belanja" data-nominal="Rp 3.150.000" data-percent="21%" fill="none" id="donut-seg-jago" r="38" stroke="#54615a" stroke-dasharray="50.14 238.76" stroke-dashoffset="-131.3" stroke-width="13"></circle>
+<!-- Segment 3: GoPay 10% (10% = 23.88) offset -(131.3+50.14) = -181.44 -->
+<circle class="donut-segment cursor-pointer transition-all duration-300 hover:opacity-85 hover:stroke-[15]" cx="50" cy="50" data-name="GoPay Kantong Daun" data-nominal="Rp 1.450.000" data-percent="10%" fill="none" id="donut-seg-gopay" r="38" stroke="#3c6846" stroke-dasharray="23.88 238.76" stroke-dashoffset="-181.44" stroke-width="13"></circle>
+<!-- Segment 4: Bibit 9% (9% = 21.49) offset -(181.44+23.88) = -205.32 -->
+<circle class="donut-segment cursor-pointer transition-all duration-300 hover:opacity-85 hover:stroke-[15]" cx="50" cy="50" data-name="Bibit Tanuki Tunas" data-nominal="Rp 1.250.000" data-percent="9%" fill="none" id="donut-seg-bibit" r="38" stroke="#a2d2a9" stroke-dasharray="21.49 238.76" stroke-dashoffset="-205.32" stroke-width="13"></circle>
+<!-- Segment 5: Cash 5% (5% = 11.94) offset -(205.32+21.49) = -226.81 -->
+<circle class="donut-segment cursor-pointer transition-all duration-300 hover:opacity-85 hover:stroke-[15]" cx="50" cy="50" data-name="Cash Dompet Kuil" data-nominal="Rp 750.000" data-percent="5%" fill="none" id="donut-seg-cash" r="38" stroke="#bccac0" stroke-dasharray="11.94 238.76" stroke-dashoffset="-226.81" stroke-width="13"></circle>
+</svg>
+<!-- Donut Hole Content Badge (Shows Hovered / Focused Info) -->
+<div class="absolute inset-0 flex flex-col items-center justify-center text-center p-2 pointer-events-none">
+<span class="font-label-sm text-[10px] text-on-surface-variant leading-none uppercase tracking-wider font-semibold" id="donut-center-label">Porsi Terbesar</span>
+<span class="font-headline-sm text-[18px] text-primary font-bold mt-0.5" id="donut-center-value">55%</span>
+<span class="font-label-sm text-[10px] text-on-surface font-medium truncate max-w-[80px]" id="donut-center-name">BCA Kuil</span>
+</div>
+</div>
+<!-- Detailed Interactive Legend List -->
+<div class="flex-1 flex flex-col gap-1.5 w-full">
+<div class="dist-legend-item clay-badge bg-surface-container-low hover:bg-secondary-container/40 p-2 rounded-xl flex items-center justify-between cursor-pointer transition-all duration-150 border border-white/60" data-target="donut-seg-bca">
+<div class="flex items-center gap-2 min-w-0">
+<div class="w-3 h-3 rounded-full shrink-0 shadow-sm" style="background-color: #1f4b2c;"></div>
+<div class="min-w-0">
+<p class="font-title-md text-[13px] font-bold text-on-surface truncate">BCA Kuil Utama</p>
+<p class="font-body-sm text-[11px] text-on-surface-variant">Digital • Rp 8.250.000</p>
+</div>
+</div>
+<span class="font-title-md text-[13px] font-bold text-primary shrink-0">55%</span>
+</div>
+<div class="dist-legend-item clay-badge bg-surface-container-low hover:bg-secondary-container/40 p-2 rounded-xl flex items-center justify-between cursor-pointer transition-all duration-150 border border-white/60" data-target="donut-seg-jago">
+<div class="flex items-center gap-2 min-w-0">
+<div class="w-3 h-3 rounded-full shrink-0 shadow-sm" style="background-color: #54615a;"></div>
+<div class="min-w-0">
+<p class="font-title-md text-[13px] font-bold text-on-surface truncate">Bank Jago Belanja</p>
+<p class="font-body-sm text-[11px] text-on-surface-variant">Fleksibel • Rp 3.150.000</p>
+</div>
+</div>
+<span class="font-title-md text-[13px] font-bold text-primary shrink-0">21%</span>
+</div>
+<div class="dist-legend-item clay-badge bg-surface-container-low hover:bg-secondary-container/40 p-2 rounded-xl flex items-center justify-between cursor-pointer transition-all duration-150 border border-white/60" data-target="donut-seg-gopay">
+<div class="flex items-center gap-2 min-w-0">
+<div class="w-3 h-3 rounded-full shrink-0 shadow-sm" style="background-color: #3c6846;"></div>
+<div class="min-w-0">
+<p class="font-title-md text-[13px] font-bold text-on-surface truncate">GoPay Kantong Daun</p>
+<p class="font-body-sm text-[11px] text-on-surface-variant">QRIS • Rp 1.450.000</p>
+</div>
+</div>
+<span class="font-title-md text-[13px] font-bold text-primary shrink-0">10%</span>
+</div>
+<div class="dist-legend-item clay-badge bg-surface-container-low hover:bg-secondary-container/40 p-2 rounded-xl flex items-center justify-between cursor-pointer transition-all duration-150 border border-white/60" data-target="donut-seg-bibit">
+<div class="flex items-center gap-2 min-w-0">
+<div class="w-3 h-3 rounded-full shrink-0 shadow-sm" style="background-color: #a2d2a9;"></div>
+<div class="min-w-0">
+<p class="font-title-md text-[13px] font-bold text-on-surface truncate">Bibit Tanuki Tunas</p>
+<p class="font-body-sm text-[11px] text-on-surface-variant">Invest • Rp 1.250.000</p>
+</div>
+</div>
+<span class="font-title-md text-[13px] font-bold text-primary shrink-0">9%</span>
+</div>
+<div class="dist-legend-item clay-badge bg-surface-container-low hover:bg-secondary-container/40 p-2 rounded-xl flex items-center justify-between cursor-pointer transition-all duration-150 border border-white/60" data-target="donut-seg-cash">
+<div class="flex items-center gap-2 min-w-0">
+<div class="w-3 h-3 rounded-full shrink-0 shadow-sm" style="background-color: #bccac0;"></div>
+<div class="min-w-0">
+<p class="font-title-md text-[13px] font-bold text-on-surface truncate">Cash Dompet Kuil</p>
+<p class="font-body-sm text-[11px] text-on-surface-variant">Fisik • Rp 750.000</p>
+</div>
+</div>
+<span class="font-title-md text-[13px] font-bold text-primary shrink-0">5%</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- BAR KONTROL MODE ATUR (Interactive Jiggle Switch) -->
+<section class="flex items-center justify-between mb-3 px-1">
+<div>
+<h2 class="font-title-md text-title-md text-on-surface font-bold tracking-tight flex items-center gap-1.5">
+        Kantong Dompet
+        <span class="font-label-sm text-label-sm px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-semibold" id="card-counter-badge">5 Akun</span>
+</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant" id="subtext-guide">Prioritas alokasi dana harian</p>
+</div>
+<!-- Tombol Atur Urutan -->
+<button class="group flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-surface-container-high text-on-surface font-label-md text-label-md hover:bg-surface-container-highest transition-all duration-200 active:scale-95 clay-badge" id="btn-toggle-reorder" type="button">
+<span class="material-symbols-outlined text-[18px] transition-transform group-hover:rotate-45" id="reorder-icon">tune</span>
+<span id="reorder-label" class="">Atur Urutan</span>
+</button>
+</section>
+<!-- PETUNJUK MENGAMBANG SAAT MODE ATUR (Floating Instruction Pill) -->
+<div class="hidden transform transition-all duration-300 mb-3 p-3 bg-secondary-container rounded-2xl flex items-center gap-2.5 text-on-secondary-container clay-badge" id="reorder-banner">
+<div class="w-7 h-7 rounded-full bg-primary-container text-on-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[16px] animate-bounce">drag_indicator</span>
+</div>
+<div class="flex-1 min-w-0">
+<p class="font-label-md text-label-md font-bold leading-tight">Mode Penataan Aktif!</p>
+<p class="font-body-sm text-body-sm leading-tight text-on-secondary-variant truncate">Tekan tahan &amp; geser kartu ke atas/bawah untuk mengubah hierarki.</p>
+</div>
+<button class="px-2.5 py-1 rounded-full bg-primary-container text-on-primary font-label-sm text-label-sm font-semibold hover:bg-primary transition-colors" id="btn-quick-done" type="button">
+      Selesai
+    </button>
+</div>
+<!-- DAFTAR KANTONG DOMPET (DRAGGABLE & CLAYMORPHIC CONTAINER) -->
+<div class="flex flex-col gap-3 w-full transition-all duration-200" id="wallet-container">
+<!-- KARTU 1: BCA Kuil Utama -->
+<div class="wallet-item clay-card bg-surface-container-lowest rounded-2xl p-4 flex items-center justify-between relative transition-all duration-150 cursor-grab active:cursor-grabbing" data-id="wallet-1" data-nominal="8250000" draggable="false">
+<!-- Delete / Hide Toggle Badge (Muncul saat mode atur) -->
+<button class="reorder-control hidden absolute -top-2 -left-2 w-6 h-6 rounded-full bg-error text-on-error flex items-center justify-center shadow-md hover:scale-110 active:scale-90 transition-transform z-20" title="Sembunyikan Dompet" type="button">
+<span class="material-symbols-outlined text-[14px]">remove</span>
+</button>
+<div class="flex items-center gap-3.5 min-w-0 flex-1">
+<!-- 3D Clay Icon: Bank Digital -->
+<div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary-fixed to-secondary-container flex items-center justify-center shadow-inner shrink-0 relative overflow-hidden border border-white">
+<div class="absolute inset-0 bg-white/20 rounded-2xl pointer-events-none"></div>
+<span class="material-symbols-outlined text-primary text-[26px]" style="font-variation-settings: 'FILL' 1;">account_balance</span>
+<!-- Soft Clay Dewdrop -->
+<div class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-white/90 shadow-sm"></div>
+</div>
+<div class="min-w-0 flex-1">
+<div class="flex items-center gap-1.5 flex-wrap">
+<h3 class="font-title-md text-title-md text-on-surface font-bold truncate">BCA Kuil Utama</h3>
+<span class="font-label-sm text-label-sm px-2 py-0.2 rounded-full bg-secondary-container text-primary-container font-semibold">Utama</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1 mt-0.5">
+<span class="">Rekening Digital</span>
+<span class="text-on-surface-variant/40">•</span>
+<span class="font-mono text-[11px] tracking-widest text-on-surface">•••• 8829</span>
+</p>
+</div>
+</div>
+<div class="flex items-center gap-2.5 shrink-0 pl-2">
+<div class="text-right">
+<div class="wallet-balance font-headline-sm text-headline-sm text-on-surface font-bold">Rp 8.250.000</div>
+<div class="flex items-center justify-end gap-1 mt-0.5">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Porsi</span>
+<span class="font-label-sm text-label-sm font-bold text-primary">55%</span>
+</div>
+</div>
+<!-- Reorder Drag Handle (Tersembunyi secara default) -->
+<div class="reorder-handle hidden flex items-center justify-center w-8 h-8 rounded-xl bg-surface-container text-on-surface-variant cursor-grab active:cursor-grabbing hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[20px]">drag_handle</span>
+</div>
+<!-- Normal Action Dots (Terlihat saat normal) -->
+<button class="normal-option-btn w-8 h-8 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container-low transition-colors" title="Menu Opsi" type="button">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+</div>
+<!-- KARTU 2: GoPay Kantong Daun -->
+<div class="wallet-item clay-card bg-surface-container-lowest rounded-2xl p-4 flex items-center justify-between relative transition-all duration-150 cursor-grab active:cursor-grabbing" data-id="wallet-2" data-nominal="1450000" draggable="false">
+<button class="reorder-control hidden absolute -top-2 -left-2 w-6 h-6 rounded-full bg-error text-on-error flex items-center justify-center shadow-md hover:scale-110 active:scale-90 transition-transform z-20" title="Sembunyikan Dompet" type="button">
+<span class="material-symbols-outlined text-[14px]">remove</span>
+</button>
+<div class="flex items-center gap-3.5 min-w-0 flex-1">
+<!-- 3D Clay Icon: E-Wallet Daun -->
+<div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-secondary-container via-surface-container-low to-primary-fixed-dim flex items-center justify-center shadow-inner shrink-0 relative overflow-hidden border border-white">
+<div class="absolute inset-0 bg-white/25 pointer-events-none"></div>
+<span class="material-symbols-outlined text-surface-tint text-[26px]" style="font-variation-settings: 'FILL' 1;">local_atm</span>
+<!-- Soft Dewdrop -->
+<div class="absolute bottom-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-white shadow-sm"></div>
+</div>
+<div class="min-w-0 flex-1">
+<div class="flex items-center gap-1.5 flex-wrap">
+<h3 class="font-title-md text-title-md text-on-surface font-bold truncate">GoPay Kantong Daun</h3>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1 mt-0.5">
+<span class="">E-Wallet Harian</span>
+<span class="text-on-surface-variant/40">•</span>
+<span class="font-mono text-[11px] text-on-surface">Instan QRIS</span>
+</p>
+</div>
+</div>
+<div class="flex items-center gap-2.5 shrink-0 pl-2">
+<div class="text-right">
+<div class="wallet-balance font-headline-sm text-headline-sm text-on-surface font-bold">Rp 1.450.000</div>
+<div class="flex items-center justify-end gap-1 mt-0.5">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Porsi</span>
+<span class="font-label-sm text-label-sm font-bold text-primary">10%</span>
+</div>
+</div>
+<div class="reorder-handle hidden flex items-center justify-center w-8 h-8 rounded-xl bg-surface-container text-on-surface-variant cursor-grab active:cursor-grabbing hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[20px]">drag_handle</span>
+</div>
+<button class="normal-option-btn w-8 h-8 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container-low transition-colors" title="Menu Opsi" type="button">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+</div>
+<!-- KARTU 3: Bank Jago Kantong Belanja -->
+<div class="wallet-item clay-card bg-surface-container-lowest rounded-2xl p-4 flex items-center justify-between relative transition-all duration-150 cursor-grab active:cursor-grabbing" data-id="wallet-3" data-nominal="3150000" draggable="false">
+<button class="reorder-control hidden absolute -top-2 -left-2 w-6 h-6 rounded-full bg-error text-on-error flex items-center justify-center shadow-md hover:scale-110 active:scale-90 transition-transform z-20" title="Sembunyikan Dompet" type="button">
+<span class="material-symbols-outlined text-[14px]">remove</span>
+</button>
+<div class="flex items-center gap-3.5 min-w-0 flex-1">
+<!-- 3D Clay Icon: Koin Amber Belanja -->
+<div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-tertiary-fixed to-tertiary-fixed-dim flex items-center justify-center shadow-inner shrink-0 relative overflow-hidden border border-white">
+<div class="absolute inset-0 bg-white/20 pointer-events-none"></div>
+<span class="material-symbols-outlined text-tertiary text-[26px]" style="font-variation-settings: 'FILL' 1;">shopping_bag</span>
+<!-- Soft Dewdrop -->
+<div class="absolute top-1.5 left-2 w-1.5 h-1.5 rounded-full bg-white/80 shadow-sm"></div>
+</div>
+<div class="min-w-0 flex-1">
+<div class="flex items-center gap-1.5 flex-wrap">
+<h3 class="font-title-md text-title-md text-on-surface font-bold truncate">Bank Jago Belanja</h3>
+<span class="font-label-sm text-label-sm px-1.5 py-0.2 rounded-full bg-tertiary-fixed text-tertiary font-semibold">Bunga 3.5%</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1 mt-0.5">
+<span class="">Kantong Fleksibel</span>
+<span class="text-on-surface-variant/40">•</span>
+<span class="font-mono text-[11px] text-on-surface">•••• 4102</span>
+</p>
+</div>
+</div>
+<div class="flex items-center gap-2.5 shrink-0 pl-2">
+<div class="text-right">
+<div class="wallet-balance font-headline-sm text-headline-sm text-on-surface font-bold">Rp 3.150.000</div>
+<div class="flex items-center justify-end gap-1 mt-0.5">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Porsi</span>
+<span class="font-label-sm text-label-sm font-bold text-primary">21%</span>
+</div>
+</div>
+<div class="reorder-handle hidden flex items-center justify-center w-8 h-8 rounded-xl bg-surface-container text-on-surface-variant cursor-grab active:cursor-grabbing hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[20px]">drag_handle</span>
+</div>
+<button class="normal-option-btn w-8 h-8 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container-low transition-colors" title="Menu Opsi" type="button">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+</div>
+<!-- KARTU 4: Dompet Tunai / Cash Kuil -->
+<div class="wallet-item clay-card bg-surface-container-lowest rounded-2xl p-4 flex items-center justify-between relative transition-all duration-150 cursor-grab active:cursor-grabbing" data-id="wallet-4" data-nominal="750000" draggable="false">
+<button class="reorder-control hidden absolute -top-2 -left-2 w-6 h-6 rounded-full bg-error text-on-error flex items-center justify-center shadow-md hover:scale-110 active:scale-90 transition-transform z-20" title="Sembunyikan Dompet" type="button">
+<span class="material-symbols-outlined text-[14px]">remove</span>
+</button>
+<div class="flex items-center gap-3.5 min-w-0 flex-1">
+<!-- 3D Clay Icon: Amplop Tunai Tradisional -->
+<div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-surface-container to-secondary-container flex items-center justify-center shadow-inner shrink-0 relative overflow-hidden border border-white">
+<div class="absolute inset-0 bg-white/30 pointer-events-none"></div>
+<span class="material-symbols-outlined text-secondary text-[26px]" style="font-variation-settings: 'FILL' 1;">payments</span>
+<div class="absolute top-1 right-2 w-1.5 h-1.5 rounded-full bg-white shadow-sm"></div>
+</div>
+<div class="min-w-0 flex-1">
+<div class="flex items-center gap-1.5 flex-wrap">
+<h3 class="font-title-md text-title-md text-on-surface font-bold truncate">Cash Dompet Kuil</h3>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1 mt-0.5">
+<span class="">Uang Tunai Fisik</span>
+<span class="text-on-surface-variant/40">•</span>
+<span class="font-body-sm text-[12px] text-on-surface">Amplop Washi</span>
+</p>
+</div>
+</div>
+<div class="flex items-center gap-2.5 shrink-0 pl-2">
+<div class="text-right">
+<div class="wallet-balance font-headline-sm text-headline-sm text-on-surface font-bold">Rp 750.000</div>
+<div class="flex items-center justify-end gap-1 mt-0.5">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Porsi</span>
+<span class="font-label-sm text-label-sm font-bold text-primary">5%</span>
+</div>
+</div>
+<div class="reorder-handle hidden flex items-center justify-center w-8 h-8 rounded-xl bg-surface-container text-on-surface-variant cursor-grab active:cursor-grabbing hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[20px]">drag_handle</span>
+</div>
+<button class="normal-option-btn w-8 h-8 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container-low transition-colors" title="Menu Opsi" type="button">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+</div>
+<!-- KARTU 5: Bibit Tanuki Reksadana -->
+<div class="wallet-item clay-card bg-surface-container-lowest rounded-2xl p-4 flex items-center justify-between relative transition-all duration-150 cursor-grab active:cursor-grabbing" data-id="wallet-5" data-nominal="1250000" draggable="false">
+<button class="reorder-control hidden absolute -top-2 -left-2 w-6 h-6 rounded-full bg-error text-on-error flex items-center justify-center shadow-md hover:scale-110 active:scale-90 transition-transform z-20" title="Sembunyikan Dompet" type="button">
+<span class="material-symbols-outlined text-[14px]">remove</span>
+</button>
+<div class="flex items-center gap-3.5 min-w-0 flex-1">
+<!-- 3D Clay Icon: Tunas Bambu Pertumbuhan -->
+<div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary-fixed via-secondary-fixed to-surface-tint flex items-center justify-center shadow-inner shrink-0 relative overflow-hidden border border-white">
+<div class="absolute inset-0 bg-white/20 pointer-events-none"></div>
+<span class="material-symbols-outlined text-primary text-[26px]" style="font-variation-settings: 'FILL' 1;">potted_plant</span>
+<div class="absolute bottom-1.5 left-2 w-2 h-2 rounded-full bg-white/90 shadow-sm"></div>
+</div>
+<div class="min-w-0 flex-1">
+<div class="flex items-center gap-1.5 flex-wrap">
+<h3 class="font-title-md text-title-md text-on-surface font-bold truncate">Bibit Tanuki Tunas</h3>
+<span class="font-label-sm text-label-sm px-1.5 py-0.2 rounded-full bg-secondary-container text-primary font-semibold">+8.4%</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1 mt-0.5">
+<span class="">Investasi Reksa Dana</span>
+<span class="text-on-surface-variant/40">•</span>
+<span class="font-mono text-[11px] text-on-surface">Auto-Invest</span>
+</p>
+</div>
+</div>
+<div class="flex items-center gap-2.5 shrink-0 pl-2">
+<div class="text-right">
+<div class="wallet-balance font-headline-sm text-headline-sm text-on-surface font-bold">Rp 1.250.000</div>
+<div class="flex items-center justify-end gap-1 mt-0.5">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Porsi</span>
+<span class="font-label-sm text-label-sm font-bold text-primary">9%</span>
+</div>
+</div>
+<div class="reorder-handle hidden flex items-center justify-center w-8 h-8 rounded-xl bg-surface-container text-on-surface-variant cursor-grab active:cursor-grabbing hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[20px]">drag_handle</span>
+</div>
+<button class="normal-option-btn w-8 h-8 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container-low transition-colors" title="Menu Opsi" type="button">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+</div>
+</div>
+<!-- TOMBOL CLAY TIMBUL: TAMBAH KANTONG BARU -->
+<section class="mt-6 flex flex-col gap-3">
+<button class="w-full py-3.5 px-4 rounded-2xl bg-primary text-on-primary font-title-md text-title-md font-bold flex items-center justify-center gap-2 shadow-lg hover:bg-primary-container active:scale-[0.98] transition-all duration-200 clay-badge" id="btn-add-wallet" type="button">
+<!-- Tanuki leaf ornament button -->
+<span class="material-symbols-outlined text-[22px]">add_circle</span>
+<span class="">Tambah Kantong Dompet Baru</span>
+<div class="w-5 h-5 rounded-full bg-primary-fixed/20 flex items-center justify-center ml-1">
+<span class="material-symbols-outlined text-primary-fixed text-[14px]">eco</span>
+</div>
+</button>
+</section>
+<!-- EDUKASI KAKEIBO TANUKI (Japanese Financial Wisdom Card) -->
+<section class="mt-5 p-4 rounded-2xl bg-surface-container-low flex items-start gap-3.5 relative overflow-hidden">
+<div class="w-10 h-10 rounded-2xl bg-secondary-container flex items-center justify-center text-primary shrink-0 clay-badge">
+<span class="material-symbols-outlined text-[24px]">self_improvement</span>
+</div>
+<div class="min-w-0 flex-1">
+<h4 class="font-title-md text-title-md text-on-surface font-bold">Filosofi Kakeibo Guru Tanuki</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1 leading-relaxed">
+        Letakkan dompet kebutuhan pokok (Needs) di urutan paling atas. Urutan kantong mencerminkan ketenangan pikiran dalam membelanjakan setiap helai rupiah.
+      </p>
+</div>
+</section>
+<!-- INTERACTIVE TOAST POPUP NOTIFICATION -->
+<div class="fixed bottom-20 left-1/2 -translate-x-1/2 bg-inverse-surface text-inverse-on-surface px-4 py-2.5 rounded-full shadow-xl font-label-md text-label-md flex items-center gap-2 pointer-events-none transition-opacity duration-300 z-50 opacity-0" id="toast-tanuki">
+<span class="material-symbols-outlined text-inverse-primary text-[18px]">check_circle</span>
+<span id="toast-message" class="">Menyiapkan ringkasan Kakeibo bulan ini...</span>
+</div><script id="tanukonomy-distribution-script">
+  (function initDistributionToggle() {
+    const btnToggle = document.getElementById('btn-toggle-distribution');
+    const linearView = document.getElementById('distribution-linear-view');
+    const donutView = document.getElementById('distribution-donut-view');
+    const chevronIcon = document.getElementById('dist-chevron-icon');
+    const subtitle = document.getElementById('dist-mode-subtitle');
+
+    const centerLabel = document.getElementById('donut-center-label');
+    const centerValue = document.getElementById('donut-center-value');
+    const centerName = document.getElementById('donut-center-name');
+    const segments = document.querySelectorAll('.donut-segment');
+    const legendItems = document.querySelectorAll('.dist-legend-item');
+
+    let isExpanded = false;
+
+    function toggleDistributionView() {
+      isExpanded = !isExpanded;
+      if (isExpanded) {
+        linearView.classList.add('hidden');
+        linearView.classList.remove('block');
+        donutView.classList.remove('hidden');
+        donutView.classList.add('block');
+        chevronIcon.textContent = 'expand_less';
+        if (subtitle) subtitle.textContent = 'Mode Donut Chart • Sentuh untuk rincian';
+      } else {
+        donutView.classList.add('hidden');
+        donutView.classList.remove('block');
+        linearView.classList.remove('hidden');
+        linearView.classList.add('block');
+        chevronIcon.textContent = 'expand_more';
+        if (subtitle) subtitle.textContent = 'Tampilan Cepat • Klik untuk Donut Chart';
+      }
+    }
+
+    if (btnToggle) {
+      btnToggle.addEventListener('click', toggleDistributionView);
+    }
+
+    // Donut Segment & Legend Hover / Focus Interaction
+    function highlightSegment(seg) {
+      if (!seg) return;
+      const name = seg.getAttribute('data-name');
+      const nominal = seg.getAttribute('data-nominal');
+      const percent = seg.getAttribute('data-percent');
+
+      if (centerLabel) centerLabel.textContent = nominal;
+      if (centerValue) centerValue.textContent = percent;
+      if (centerName) centerName.textContent = name;
+
+      segments.forEach(s => {
+        if (s === seg) {
+          s.setAttribute('stroke-width', '17');
+          s.style.opacity = '1';
+        } else {
+          s.setAttribute('stroke-width', '12');
+          s.style.opacity = '0.5';
+        }
+      });
+    }
+
+    function resetHighlight() {
+      if (centerLabel) centerLabel.textContent = 'Porsi Terbesar';
+      if (centerValue) centerValue.textContent = '55%';
+      if (centerName) centerName.textContent = 'BCA Kuil';
+      segments.forEach(s => {
+        s.setAttribute('stroke-width', '13');
+        s.style.opacity = '1';
+      });
+    }
+
+    segments.forEach(seg => {
+      seg.addEventListener('mouseenter', () => highlightSegment(seg));
+      seg.addEventListener('click', () => highlightSegment(seg));
+      seg.addEventListener('mouseleave', resetHighlight);
+    });
+
+    legendItems.forEach(item => {
+      const targetId = item.getAttribute('data-target');
+      const seg = document.getElementById(targetId);
+      item.addEventListener('mouseenter', () => highlightSegment(seg));
+      item.addEventListener('click', () => highlightSegment(seg));
+      item.addEventListener('mouseleave', resetHighlight);
+    });
+  })();
+</script>
+</div>
+<script>
+  (function initTanukonomyWallet() {
+    const btnToggleReorder = document.getElementById('btn-toggle-reorder');
+    const reorderIcon = document.getElementById('reorder-icon');
+    const reorderLabel = document.getElementById('reorder-label');
+    const reorderBanner = document.getElementById('reorder-banner');
+    const btnQuickDone = document.getElementById('btn-quick-done');
+    const walletContainer = document.getElementById('wallet-container');
+    const toggleBalanceVisibility = document.getElementById('toggle-balance-visibility');
+    const balanceNominal = document.getElementById('balance-nominal');
+    const eyeIcon = document.getElementById('eye-icon');
+    const toast = document.getElementById('toast-tanuki');
+    const toastMsg = document.getElementById('toast-message');
+
+    let isOrganizing = false;
+    let isBalanceHidden = false;
+    const targetBalanceNumber = 14850000;
+    const formattedTargetBalance = "14.850.000";
+
+    // Show temporary toast
+    function showToast(message) {
+      if (!toast) return;
+      toastMsg.textContent = message;
+      toast.classList.remove('opacity-0');
+      toast.classList.add('opacity-100');
+      setTimeout(() => {
+        toast.classList.remove('opacity-100');
+        toast.classList.add('opacity-0');
+      }, 2200);
+    }
+
+    // 1. Smooth Rolling Balance Count-Up Animation on Load
+    function animateCountUp(target, duration = 1200) {
+      if (!balanceNominal) return;
+      const startTime = performance.now();
+      function updateNumber(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        // Easing out cubic
+        const easeOut = 1 - Math.pow(1 - progress, 3);
+        const currentVal = Math.floor(easeOut * target);
+        balanceNominal.textContent = currentVal.toLocaleString('id-ID');
+        if (progress < 1) {
+          requestAnimationFrame(updateNumber);
+        } else {
+          balanceNominal.textContent = formattedTargetBalance;
+        }
+      }
+      requestAnimationFrame(updateNumber);
+    }
+
+    // Trigger Count Up on initial script execution
+    animateCountUp(targetBalanceNumber, 1100);
+
+    // 2. Interactive Tilt / Squishy Spring on Card Hover / Touch
+    const balanceCard = document.getElementById('main-balance-card');
+    if (balanceCard) {
+      balanceCard.addEventListener('pointermove', (e) => {
+        const rect = balanceCard.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        const rotateX = (-y / rect.height) * 9;
+        const rotateY = (x / rect.width) * 9;
+        balanceCard.style.transform = `perspective(800px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateY(-2px)`;
+      });
+      balanceCard.addEventListener('pointerleave', () => {
+        balanceCard.style.transform = 'perspective(800px) rotateX(0deg) rotateY(0deg) translateY(0px)';
+      });
+      balanceCard.addEventListener('pointerdown', () => {
+        balanceCard.style.transform = 'perspective(800px) scale(0.985) translateY(1px)';
+      });
+      balanceCard.addEventListener('pointerup', () => {
+        balanceCard.style.transform = 'perspective(800px) scale(1) translateY(0px)';
+      });
+    }
+
+    // 3. Mini Action Chips Interactive Handlers
+    const chipKirim = document.getElementById('chip-kirim-daun');
+    const chipTopup = document.getElementById('chip-topup');
+    const chipAnalisis = document.getElementById('chip-analisis');
+    if (chipKirim) {
+      chipKirim.addEventListener('click', (e) => {
+        e.stopPropagation();
+        showToast("Membuka menu Kirim Daun (Transfer Cepat)...");
+      });
+    }
+    if (chipTopup) {
+      chipTopup.addEventListener('click', (e) => {
+        e.stopPropagation();
+        showToast("Membuka pilihan Top Up Dompet...");
+      });
+    }
+    if (chipAnalisis) {
+      chipAnalisis.addEventListener('click', (e) => {
+        e.stopPropagation();
+        showToast("Menyiapkan ringkasan Kakeibo bulan ini...");
+      });
+    }
+
+    // 4. Eye Toggle with Bounce & Blur/Reveal Animation
+    if (toggleBalanceVisibility) {
+      toggleBalanceVisibility.addEventListener('click', (e) => {
+        e.stopPropagation();
+        isBalanceHidden = !isBalanceHidden;
+
+        // Eye bounce icon animation
+        if (eyeIcon) {
+          eyeIcon.classList.remove('eye-anim');
+          void eyeIcon.offsetWidth; // re-flow
+          eyeIcon.classList.add('eye-anim');
+        }
+
+        // Apply smooth blur transition on balance text
+        balanceNominal.style.filter = 'blur(6px)';
+        balanceNominal.style.opacity = '0.4';
+
+        setTimeout(() => {
+          if (isBalanceHidden) {
+            balanceNominal.textContent = "••••••••";
+            eyeIcon.textContent = "visibility_off";
+            showToast("Saldo dompet disembunyikan");
+          } else {
+            balanceNominal.textContent = formattedTargetBalance;
+            eyeIcon.textContent = "visibility";
+            showToast("Saldo dompet ditampilkan");
+          }
+          balanceNominal.style.filter = 'blur(0px)';
+          balanceNominal.style.opacity = '1';
+        }, 150);
+      });
+    }
+
+    // Toggle Reorder / Jiggle Mode
+    function setOrganizingMode(active) {
+      isOrganizing = active;
+      const items = walletContainer.querySelectorAll('.wallet-item');
+      const handles = walletContainer.querySelectorAll('.reorder-handle');
+      const badges = walletContainer.querySelectorAll('.reorder-control');
+      const normalBtns = walletContainer.querySelectorAll('.normal-option-btn');
+
+      if (isOrganizing) {
+        walletContainer.classList.add('is-organizing');
+        reorderBanner.classList.remove('hidden');
+        reorderLabel.textContent = "Selesai";
+        reorderIcon.textContent = "check";
+        btnToggleReorder.classList.remove('bg-surface-container-high', 'text-on-surface');
+        btnToggleReorder.classList.add('bg-primary', 'text-on-primary', 'clay-btn-active');
+
+        // Enable drag attributes & UI
+        items.forEach(item => {
+          item.setAttribute('draggable', 'true');
+        });
+        handles.forEach(h => h.classList.remove('hidden'));
+        badges.forEach(b => b.classList.remove('hidden'));
+        normalBtns.forEach(btn => btn.classList.add('hidden'));
+
+        showToast("Mode atur aktif: Seret kartu untuk menata urutan");
+      } else {
+        walletContainer.classList.remove('is-organizing');
+        reorderBanner.classList.add('hidden');
+        reorderLabel.textContent = "Atur Urutan";
+        reorderIcon.textContent = "tune";
+        btnToggleReorder.classList.add('bg-surface-container-high', 'text-on-surface');
+        btnToggleReorder.classList.remove('bg-primary', 'text-on-primary', 'clay-btn-active');
+
+        // Disable drag
+        items.forEach(item => {
+          item.setAttribute('draggable', 'false');
+          item.classList.remove('drag-over-top', 'drag-over-bottom', 'dragging');
+        });
+        handles.forEach(h => h.classList.add('hidden'));
+        badges.forEach(b => b.classList.add('hidden'));
+        normalBtns.forEach(btn => btn.classList.remove('hidden'));
+
+        showToast("Urutan dompet disimpan!");
+      }
+    }
+
+    if (btnToggleReorder) {
+      btnToggleReorder.addEventListener('click', () => {
+        setOrganizingMode(!isOrganizing);
+      });
+    }
+
+    if (btnQuickDone) {
+      btnQuickDone.addEventListener('click', () => {
+        setOrganizingMode(false);
+      });
+    }
+
+    // Drag and Drop (HTML5 Desktop / Pointer Drag)
+    let draggedItem = null;
+
+    walletContainer.addEventListener('dragstart', (e) => {
+      const targetItem = e.target.closest('.wallet-item');
+      if (!targetItem || !isOrganizing) return;
+      draggedItem = targetItem;
+      targetItem.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', targetItem.dataset.id);
+    });
+
+    walletContainer.addEventListener('dragend', (e) => {
+      const targetItem = e.target.closest('.wallet-item');
+      if (targetItem) {
+        targetItem.classList.remove('dragging');
+      }
+      walletContainer.querySelectorAll('.wallet-item').forEach(item => {
+        item.classList.remove('drag-over-top', 'drag-over-bottom');
+      });
+      draggedItem = null;
+    });
+
+    walletContainer.addEventListener('dragover', (e) => {
+      if (!isOrganizing || !draggedItem) return;
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+
+      const target = e.target.closest('.wallet-item');
+      if (!target || target === draggedItem) return;
+
+      const rect = target.getBoundingClientRect();
+      const midY = rect.top + rect.height / 2;
+
+      target.classList.remove('drag-over-top', 'drag-over-bottom');
+      if (e.clientY < midY) {
+        target.classList.add('drag-over-top');
+      } else {
+        target.classList.add('drag-over-bottom');
+      }
+    });
+
+    walletContainer.addEventListener('dragleave', (e) => {
+      const target = e.target.closest('.wallet-item');
+      if (target) {
+        target.classList.remove('drag-over-top', 'drag-over-bottom');
+      }
+    });
+
+    walletContainer.addEventListener('drop', (e) => {
+      if (!isOrganizing || !draggedItem) return;
+      e.preventDefault();
+
+      const target = e.target.closest('.wallet-item');
+      if (!target || target === draggedItem) return;
+
+      const rect = target.getBoundingClientRect();
+      const midY = rect.top + rect.height / 2;
+
+      target.classList.remove('drag-over-top', 'drag-over-bottom');
+
+      if (e.clientY < midY) {
+        walletContainer.insertBefore(draggedItem, target);
+      } else {
+        walletContainer.insertBefore(draggedItem, target.nextSibling);
+      }
+      draggedItem.classList.remove('dragging');
+      showToast("Prioritas kantong disesuaikan");
+    });
+
+    // Touch Support for Mobile Drag & Reorder
+    let touchStartY = 0;
+    let activeTouchItem = null;
+    let touchOverItem = null;
+
+    walletContainer.addEventListener('touchstart', (e) => {
+      if (!isOrganizing) return;
+      const handle = e.target.closest('.reorder-handle') || e.target.closest('.wallet-item');
+      if (!handle) return;
+      const item = e.target.closest('.wallet-item');
+      if (!item) return;
+
+      activeTouchItem = item;
+      touchStartY = e.touches[0].clientY;
+      item.classList.add('dragging');
+    }, { passive: true });
+
+    walletContainer.addEventListener('touchmove', (e) => {
+      if (!isOrganizing || !activeTouchItem) return;
+      const currentY = e.touches[0].clientY;
+      const elemBelow = document.elementFromPoint(e.touches[0].clientX, currentY);
+      if (!elemBelow) return;
+
+      const candidate = elemBelow.closest('.wallet-item');
+      if (candidate && candidate !== activeTouchItem) {
+        touchOverItem = candidate;
+        const rect = candidate.getBoundingClientRect();
+        if (currentY < rect.top + rect.height / 2) {
+          walletContainer.insertBefore(activeTouchItem, candidate);
+        } else {
+          walletContainer.insertBefore(activeTouchItem, candidate.nextSibling);
+        }
+      }
+    }, { passive: true });
+
+    walletContainer.addEventListener('touchend', () => {
+      if (!isOrganizing || !activeTouchItem) return;
+      activeTouchItem.classList.remove('dragging');
+      activeTouchItem = null;
+      touchOverItem = null;
+    });
+
+    // Sembunyikan Dompet via Tombol '-'
+    walletContainer.addEventListener('click', (e) => {
+      const removeBtn = e.target.closest('.reorder-control');
+      if (!removeBtn) return;
+      const item = removeBtn.closest('.wallet-item');
+      if (item) {
+        item.style.transition = 'all 0.3s ease';
+        item.style.opacity = '0';
+        item.style.transform = 'scale(0.8)';
+        setTimeout(() => {
+          item.remove();
+          const count = walletContainer.querySelectorAll('.wallet-item').length;
+          const badge = document.getElementById('card-counter-badge');
+          if (badge) badge.textContent = count + ' Akun';
+          showToast("Kantong disembunyikan sementara");
+        }, 300);
+      }
+    });
+
+    // Tambah Kantong Interaktif
+    const btnAdd = document.getElementById('btn-add-wallet');
+    if (btnAdd) {
+      btnAdd.addEventListener('click', () => {
+        showToast("Membuka formulir kantong baru...");
+      });
+    }
+
+  })();
+</script></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface/85 backdrop-blur-xl shadow-[0_-2px_12px_rgba(0,0,0,0.04)]" data-active-classes="text-primary font-semibold"><div class="flex items-center justify-around h-16 px-gutter-mobile"><a aria-current="page" class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] gap-0.5 transition-colors text-primary font-semibold" data-path="dompet" href="#"><span class="material-symbols-outlined text-[24px]">account_balance_wallet</span><span class="font-label-sm text-label-sm">Dompet</span></a><a class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] gap-0.5 text-on-surface-variant transition-colors hover:text-on-surface" data-path="catat" href="#"><div class="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-on-primary shadow-sm"><span class="material-symbols-outlined text-[20px]">add</span></div><span class="font-label-sm text-label-sm mt-0.5">Catat</span></a><a class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] gap-0.5 text-on-surface-variant transition-colors hover:text-on-surface" data-path="analitik" href="#"><span class="material-symbols-outlined text-[24px]">monitoring</span><span class="font-label-sm text-label-sm">Analitik</span></a><a class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] gap-0.5 text-on-surface-variant transition-colors hover:text-on-surface" data-path="celengan" href="#"><span class="material-symbols-outlined text-[24px]">savings</span><span class="font-label-sm text-label-sm">Celengan</span></a></div></nav>
+
+</body></html>

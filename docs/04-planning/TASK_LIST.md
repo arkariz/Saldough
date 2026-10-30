@@ -5959,6 +5959,11 @@ memilih mode (dan preset bila ≥ 2), dan design system lama dihapus.
       (`test/helpers/reduced_motion.dart`) karena animasi berulang
       menggagalkan `pumpAndSettle`. **Belum dinilai di emulator/perangkat**
       (kesan gerak, partikel, pink dan gelap).
+      **Kartu hero diperkaya (31 Okt 2026):** mengikuti
+      `reference/wallet-hero.html` -- aura bernapas, gradasi clay, daun dan
+      kilau melayang, maskot mengangguk dengan koin, saldo kabur saat
+      disembunyikan, miring mengikuti jari, pita dengan titik berdenyut.
+      Belum dinilai di perangkat.
       **Banner status (30 Okt 2026, ADR-043 §3.6):** Menunggu dicatat,
       Catat dari notifikasi, dan pengingat menjadi slide ringkas di carousel
       "Perlu dicek"; tidak ada Catat satu ketuk di Beranda (FR-RUT-002

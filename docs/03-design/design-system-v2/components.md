@@ -208,19 +208,44 @@ Bisa diketuk (skala 0,99).
 
 ### Kartu saldo hero (`DsHeroBalanceCard`)
 
-Latar `heroSurface`, bingkai `heroBorder`, sudut 16, padding 16. Dua cahaya
-`heroGlow` 10% buram di pojok kanan atas dan kiri bawah. Jarak antarbagian
-14.
+Acuan: [reference/wallet-hero.html](reference/wallet-hero.html) (layar
+Dompet, "TANUKONOMY BALANCE"). Diperkaya 31 Okt 2026.
 
-1. **Kepala:** ikon 15px `heroAccent` + label `pixelLabel` kapital
-   `onHeroMuted`; tombol ikon mata di kanan.
-2. **Saldo:** "Rp" `pixelLabel` 14 `heroAccent`, lalu angka `pixelDisplay`
-   `onHero`. Saat disembunyikan: "••••••••" (lewat `AmountVisibility`).
-3. **Keterangan:** `pixelCaption` 11 `onHeroMuted`.
-4. **Dua kotak statistik** (`DsHeroStatTile`): isi `heroTile`, bingkai putih
-   8%, sudut 12, padding 8×10. Isinya icon tile `xs`, label `pixelCaption`
-   kapital `onHeroMuted`, dan nilai `amountSm` `onHero`.
-5. **Dua tombol:** `onHero` dan `onHeroTonal`, lebar sama, jarak 8.
+**Kartu:** sudut `xl` (24), padding 20, gradasi diagonal diturunkan dari
+`heroSurface` (terang 8% → gelap 22% → gelap 50%), bingkai `primaryFixed` 22%,
+dua bayangan clay, kilap tepi atas dan bayangan tepi bawah (pengganti
+`inset`). Tiga cahaya buram statis. **Aura** gradasi buram 4px di luar kartu,
+bernapas (4,5 dtk, opasitas .45↔.85, skala 1↔1,12).
+
+**Isi** (jarak: kepala 4, kotak statistik 14, perkiraan 10, pita 12):
+
+1. **Kepala:** token daun 24px (`primaryFixed`, ikon `eco`) + label
+   `labelMd` kapital `primaryFixed` (jarak huruf 1) + tombol mata
+   `DsIconButton.onHero` (32px, hitam 25%, memantul saat ganti). Padding kanan
+   52 supaya tidak menabrak maskot.
+2. **Saldo:** "Rp" `headlineSm` `primaryFixed`, angka `displayLg` (44, tebal,
+   tabular) `onHero` dalam `FittedBox`. Menghitung naik 1,1 dtk (easeOutCubic,
+   `DsCountUp`); disembunyikan lewat `DsBlurSwitcher` (kabur 6px, opasitas
+   .4→1, 280ms). Pembaca layar mendapat `semanticAmount` (angka akhir), bukan
+   angka antara.
+3. **Kotak statistik** (`DsHeroStatTile`, sampai tiga): hitam 25%, garis putih
+   15%, sudut 12, ikon `arrow_circle_up/down` 13px; varian `pulse` (titik
+   berdenyut) dan `suffix` untuk gaya "Kakeibo Health 94% Sehat". Beranda
+   hanya memakai Masuk dan Keluar (kesehatan sudah di kartu mood).
+4. **`footer`:** baris perkiraan saldo akhir periode dari akar komposisi.
+5. **Pita bawah:** garis atas putih 10%, `DsPingDot` (skala 1→2, opasitas
+   .75→0, 1 dtk) + keterangan ("Di 5 dompet").
+
+**Hiasan bergerak** (satu `Ticker`, berhenti saat gerak dikurangi, tidak
+dibacakan pembaca layar): dua daun melayang (6 dtk dan 5,2 dtk tunda 1 dtk),
+dua kilau emas (3,2 dtk dan 3,8 dtk tunda 1,5 dtk), `mascot` mengangguk
+(5,5 dtk) dengan `coin` berkilau (3,6 dtk) di pojok kanan atas; keduanya
+widget dari pemanggil (core tidak mengimpor `ClayIcons`).
+
+**Sentuh:** kartu miring sampai ±9° mengikuti jari (perspektif), mengecil
+.985 saat ditekan, memantul balik (`easeOutBack` 250ms). Mati saat gerak
+dikurangi. Parameter `actions` (dua tombol `onHero`/`onHeroTonal`) tetap ada
+tetapi Beranda tidak memakainya.
 
 ### Kartu meter anggaran (`DsBudgetMeterCard`)
 

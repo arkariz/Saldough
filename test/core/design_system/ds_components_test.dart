@@ -137,8 +137,8 @@ void main() {
             toggleLabel: 'Tampilkan saldo',
             onToggleHidden: () => toggled = true,
             stats: const [
-              DsHeroStatTile(icon: Icons.arrow_downward, label: 'MASUK', value: '+Rp 8.500.000'),
-              DsHeroStatTile(icon: Icons.arrow_upward, label: 'KELUAR', value: '-Rp 3.650.000', income: false),
+              DsHeroStatTile(icon: Icons.arrow_circle_up, label: 'MASUK', value: '+Rp 8.500.000'),
+              DsHeroStatTile(icon: Icons.arrow_circle_down, label: 'KELUAR', value: '-Rp 3.650.000', income: false),
             ],
             actions: [
               DsButton.onHero(label: 'Catat', onPressed: () {}),

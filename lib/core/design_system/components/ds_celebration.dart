@@ -263,3 +263,55 @@ class _DsJiggleState extends State<DsJiggle> with SingleTickerProviderStateMixin
     );
   }
 }
+
+/// Pantulan singkat saat [trigger] berubah: mengecil dan berputar ke satu
+/// sisi lalu membesar ke sisi lain dan kembali (450ms). Dipakai pada ikon
+/// mata saat saldo disembunyikan. Diam saat gerak dikurangi.
+class DsBounce extends StatefulWidget {
+  /// Membuat pantulan.
+  const DsBounce({required this.trigger, required this.child, super.key});
+
+  /// Ubah nilai ini untuk memutar animasi (bukan saat pertama tampil).
+  final int trigger;
+
+  /// Isi.
+  final Widget child;
+
+  @override
+  State<DsBounce> createState() => _DsBounceState();
+}
+
+class _DsBounceState extends State<DsBounce> with SingleTickerProviderStateMixin {
+  late final AnimationController _controller = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 450),
+  );
+
+  @override
+  void didUpdateWidget(DsBounce oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.trigger != oldWidget.trigger && !DsMotion.reduced(context)) {
+      _controller.forward(from: 0);
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _controller,
+      child: widget.child,
+      builder: (context, child) {
+        final u = Curves.easeOutBack.transform(_controller.value);
+        final scale = dsKeyframes(u, [(0, 1), (0.4, 0.8), (0.75, 1.2), (1, 1)]);
+        final angle = dsKeyframes(u, [(0, 0), (0.4, -15), (0.75, 10), (1, 0)]);
+        return Transform.rotate(angle: angle * math.pi / 180, child: Transform.scale(scale: scale, child: child));
+      },
+    );
+  }
+}

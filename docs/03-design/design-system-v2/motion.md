@@ -32,8 +32,13 @@ Acuan berikutnya, [home-clay.html](reference/home-clay.html), mengganti ikon
 
 | Animasi | Widget | Waktu | Pemicu |
 |---|---|---|---|
-| Hitung naik angka | `DsCountUp` | 1,4 dtk, easeOutExpo | Pertama tampil; nilai berubah |
-| Balik 3D + kabur | `DsFlipSwitcher` (dipakai `DsHeroBalanceCard`) | 200ms keluar, 250ms masuk | Sembunyikan/tampilkan saldo |
+| Hitung naik angka | `DsCountUp` | 1,4 dtk, easeOutExpo (hero Beranda: 1,1 dtk easeOutCubic) | Pertama tampil; nilai berubah |
+| Balik 3D + kabur | `DsFlipSwitcher` | 200ms keluar, 250ms masuk | Sembunyikan/tampilkan angka (selain hero) |
+| Kabur ganti angka | `DsBlurSwitcher` (hero) | 280ms, kabur 6px | Sembunyikan/tampilkan saldo |
+| Mata memantul | `DsBounce` (`DsIconButton.onHero`) | 450ms | Saldo disembunyikan/ditampilkan |
+| Aura, daun, kilau, maskot, koin hero | `DsHeroBalanceCard` | 3,2–6 dtk, berulang | Terus-menerus |
+| Miring 3D hero | `DsHeroBalanceCard` | ±9°, 250ms easeOutBack | Sentuh dan geser |
+| Titik berdenyut | `DsPingDot` | 1 dtk | Terus-menerus |
 | App bar menyusut | `DsCollapsingTopBar` | gulir 110–240px | Gulir; bayangan setelah 15px |
 | Parallax | `DsParallax` | 6% dari gulir (maks 400px) | Gulir |
 | Carousel + titik | `DsCarousel`, `DsCarouselDots` | 300ms | Geser, panah, titik |

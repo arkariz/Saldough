@@ -235,4 +235,109 @@ void main() {
     expect(opacity(), 0);
     await tester.pumpAndSettle();
   });
+
+  group('DsHeroBalanceCard', () {
+    Widget hero({bool hidden = false, VoidCallback? onToggle, bool withStats = true}) => SizedBox(
+      width: 340,
+      child: DsHeroBalanceCard(
+        label: 'TOTAL SALDO',
+        currencySymbol: 'Rp',
+        amount: '14.850.000',
+        semanticAmount: 'Rp14.850.000',
+        hidden: hidden,
+        toggleLabel: 'Sembunyikan saldo',
+        onToggleHidden: onToggle,
+        caption: 'Di 5 dompet',
+        mascot: const SizedBox(key: Key('mascot')),
+        coin: const SizedBox(key: Key('coin'), width: 24, height: 24),
+        stats: withStats
+            ? const [
+                DsHeroStatTile(icon: Icons.arrow_circle_up, label: 'MASUK', value: '+Rp8.500.000'),
+                DsHeroStatTile(icon: Icons.arrow_circle_down, label: 'KELUAR', value: '-Rp3.650.000', income: false),
+              ]
+            : const [],
+      ),
+    );
+
+    testWidgets('daun, kilau, dan aura bergerak seiring waktu', (tester) async {
+      await tester.pumpWidget(_host(hero()));
+      Opacity aura() => tester.widget<Opacity>(find.byType(Opacity).first);
+      final before = aura().opacity;
+      await tester.pump(const Duration(milliseconds: 1500));
+      expect(aura().opacity, isNot(before));
+      expect(find.byKey(const Key('mascot')), findsOneWidget);
+      expect(find.byKey(const Key('coin')), findsOneWidget);
+    });
+
+    testWidgets('gerak dikurangi: aura diam dan tak ada animasi tertunda', (tester) async {
+      await tester.pumpWidget(_host(hero(), reduced: true));
+      final before = tester.widget<Opacity>(find.byType(Opacity).first).opacity;
+      await tester.pump(const Duration(seconds: 2));
+      expect(tester.widget<Opacity>(find.byType(Opacity).first).opacity, before);
+      await tester.pumpAndSettle();
+    });
+
+    testWidgets('menyembunyikan saldo mengaburkan angka dan tombol mata memantul', (tester) async {
+      var taps = 0;
+      await tester.pumpWidget(_host(hero(onToggle: () => taps++)));
+      expect(find.text('14.850.000'), findsOneWidget);
+      await tester.pumpWidget(_host(hero(hidden: true, onToggle: () => taps++)));
+      await tester.pump(const Duration(milliseconds: 150));
+      expect(find.byType(ImageFiltered), findsWidgets);
+      await tester.pump(const Duration(milliseconds: 400));
+      expect(find.text('14.850.000'), findsNothing);
+      expect(find.text('••••••••'), findsOneWidget);
+      await tester.tap(find.byTooltip('Sembunyikan saldo'));
+      expect(taps, 1);
+    });
+
+    testWidgets('pembaca layar mendapat saldo akhir, bukan angka antara', (tester) async {
+      final handle = tester.ensureSemantics();
+      await tester.pumpWidget(_host(hero()));
+      expect(find.bySemanticsLabel('Rp14.850.000'), findsOneWidget);
+      await tester.pumpWidget(_host(hero(hidden: true)));
+      await tester.pumpAndSettle(const Duration(milliseconds: 100), EnginePhase.sendSemanticsUpdate, const Duration(seconds: 2)).catchError((_) => 0);
+      expect(find.bySemanticsLabel('••••••••'), findsOneWidget);
+      handle.dispose();
+    });
+
+    testWidgets('kartu miring mengikuti jari lalu kembali saat dilepas', (tester) async {
+      await tester.pumpWidget(_host(hero()));
+      final card = find.byType(DsHeroBalanceCard);
+      final topRight = tester.getTopRight(card) + const Offset(-10, 10);
+      final gesture = await tester.startGesture(topRight);
+      await tester.pump(const Duration(milliseconds: 300));
+      final tilted = tester.widget<AnimatedContainer>(find.descendant(of: card, matching: find.byType(AnimatedContainer)).first);
+      expect(tilted.transform!.storage[1], isNot(0.0));
+      await gesture.up();
+      await tester.pump(const Duration(milliseconds: 600));
+      final flat = tester.widget<AnimatedContainer>(find.descendant(of: card, matching: find.byType(AnimatedContainer)).first);
+      expect(flat.transform!.storage[1].abs(), lessThan(0.001));
+    });
+
+    testWidgets('gerak dikurangi: kartu tidak miring', (tester) async {
+      await tester.pumpWidget(_host(hero(), reduced: true));
+      final gesture = await tester.startGesture(tester.getTopRight(find.byType(DsHeroBalanceCard)) + const Offset(-10, 10));
+      await tester.pump();
+      final box = tester.widget<AnimatedContainer>(find.descendant(of: find.byType(DsHeroBalanceCard), matching: find.byType(AnimatedContainer)).first);
+      expect(box.transform!.isIdentity(), isTrue);
+      await gesture.up();
+    });
+
+    testWidgets('tanpa overflow di 320dp dengan teks 2x', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: DsTheme.light,
+          builder: (context, home) => MediaQuery(
+            data: MediaQuery.of(context).copyWith(textScaler: const TextScaler.linear(2), disableAnimations: true),
+            child: home!,
+          ),
+          home: Scaffold(
+            body: SingleChildScrollView(child: SizedBox(width: 320, child: hero())),
+          ),
+        ),
+      );
+      expect(tester.takeException(), isNull);
+    });
+  });
 }

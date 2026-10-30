@@ -12,6 +12,7 @@ class DsCountUp extends StatelessWidget {
     required this.value,
     required this.builder,
     this.duration = DsMotion.countUp,
+    this.curve = DsMotion.easeOutExpo,
     this.fromZero = true,
     super.key,
   });
@@ -25,6 +26,9 @@ class DsCountUp extends StatelessWidget {
   /// Lama animasi.
   final Duration duration;
 
+  /// Kurva animasi.
+  final Curve curve;
+
   /// Mulai dari 0 saat pertama tampil. `false`: langsung [value].
   final bool fromZero;
 
@@ -34,7 +38,7 @@ class DsCountUp extends StatelessWidget {
     return TweenAnimationBuilder<double>(
       tween: Tween<double>(begin: fromZero ? 0 : value.toDouble(), end: value.toDouble()),
       duration: duration,
-      curve: DsMotion.easeOutExpo,
+      curve: curve,
       builder: (context, current, _) => builder(context, current.floor()),
     );
   }

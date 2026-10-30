@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/components/ds_celebration.dart';
 import 'package:saldough/core/design_system/components/ds_pressable.dart';
 import 'package:saldough/core/design_system/ds_theme.dart';
-import 'package:saldough/core/design_system/tokens/ds_opacity.dart';
+import 'package:saldough/core/design_system/tokens/ds_motion.dart';
 import 'package:saldough/core/design_system/tokens/ds_radius.dart';
 import 'package:saldough/core/design_system/tokens/ds_spacing.dart';
 
@@ -142,11 +143,23 @@ class DsButton extends StatelessWidget {
 /// Tombol ikon saja dengan label aksesibilitas wajib (lonceng, mata).
 class DsIconButton extends StatelessWidget {
   /// Tombol ikon bulat 36px di permukaan terang.
-  const DsIconButton({required this.icon, required this.label, required this.onPressed, super.key}) : onHero = false;
+  const DsIconButton({
+    required this.icon,
+    required this.label,
+    required this.onPressed,
+    this.bounceTrigger,
+    super.key,
+  }) : onHero = false;
 
-  /// Tombol ikon di atas kartu saldo hero.
-  const DsIconButton.onHero({required this.icon, required this.label, required this.onPressed, super.key})
-    : onHero = true;
+  /// Tombol ikon di atas kartu saldo hero: bulat 32px, latar hitam 25%,
+  /// garis putih 20%.
+  const DsIconButton.onHero({
+    required this.icon,
+    required this.label,
+    required this.onPressed,
+    this.bounceTrigger,
+    super.key,
+  }) : onHero = true;
 
   /// Ikon.
   final IconData icon;
@@ -160,31 +173,37 @@ class DsIconButton extends StatelessWidget {
   /// Varian di atas kartu saldo hero.
   final bool onHero;
 
+  /// Bila diisi, ikon memantul tiap nilainya berubah (mis. saat mata
+  /// berganti terbuka/tertutup).
+  final int? bounceTrigger;
+
   @override
   Widget build(BuildContext context) {
     final c = context.ds.colors;
+    final glyph = Icon(icon, size: onHero ? 18 : 20, color: onHero ? c.onHero : c.textSecondary);
+    final trigger = bounceTrigger;
     return Tooltip(
       message: label,
       child: DsPressable(
         onPressed: onPressed,
         semanticLabel: label,
-        pressedScale: 1,
+        pressedScale: onHero ? 0.9 : 1,
         builder: (context, pressed) => SizedBox.square(
           dimension: DsSpacing.minTapTarget,
           child: Center(
             child: AnimatedContainer(
-              duration: const Duration(milliseconds: 150),
-              width: onHero ? 28 : 36,
-              height: onHero ? 28 : 36,
+              duration: DsMotion.standard,
+              width: onHero ? 32 : 36,
+              height: onHero ? 32 : 36,
+              alignment: Alignment.center,
               decoration: BoxDecoration(
-                color: pressed ? (onHero ? c.onHero.withValues(alpha: DsOpacity.glow) : c.surfaceContainer) : null,
-                borderRadius: onHero ? DsRadius.badgeAll : DsRadius.fullAll,
+                color: onHero
+                    ? Colors.black.withValues(alpha: pressed ? 0.4 : 0.25)
+                    : (pressed ? c.surfaceContainer : null),
+                shape: BoxShape.circle,
+                border: onHero ? Border.all(color: c.onHero.withValues(alpha: 0.2)) : null,
               ),
-              child: Icon(
-                icon,
-                size: onHero ? 18 : 20,
-                color: onHero ? c.onHeroMuted : c.textSecondary,
-              ),
+              child: trigger == null ? glyph : DsBounce(trigger: trigger, child: glyph),
             ),
           ),
         ),

@@ -206,12 +206,6 @@ class _HomePageState extends State<HomePage> {
           AccountUserBuilder(
             builder: (context, user) => HomeGreeting(name: _firstName(user), jiggle: _claims),
           ),
-          // Slide status nyata tampil walau belum ada dompet (seperti kartu
-          // lama); kartu mood tiruan hanya bila ada dompet.
-          if (widget.statusBoard != null || (hasPreview && !state.hasNoWallets)) ...[
-            gap(),
-            HomeStatusSection(board: widget.statusBoard, showMood: hasPreview && !state.hasNoWallets),
-          ],
           // Urutan `patterns.md`: total saldo → yang perlu tindakan → bulan
           // ini → anggaran → freelance → transaksi terbaru.
           // Tanpa dompet, Beranda langsung ke langkah awal (`BerandaKosong`):
@@ -237,6 +231,22 @@ class _HomePageState extends State<HomePage> {
           // terlihat supaya slide Siapkan dana dan Oktober dimulai tetap
           // dilaporkan ke carousel status.
           if (state.hasNoWallets && widget.forecast != null) Offstage(child: widget.forecast),
+          // Urutan: saldo → aksi cepat → carousel (status, wawasan) → misi.
+          if (!state.hasNoWallets) ...[
+            gap(),
+            HomeQuickActions(
+              onRecordTransfer: () => _thenRefresh(widget.onRecord),
+              onOpenReport: () => unawaited(
+                context.pushRoute(AnalysisRouteKeys.open, const AnalysisInput(source: AnalysisSource.home)),
+              ),
+            ),
+          ],
+          // Slide status nyata tampil walau belum ada dompet (seperti kartu
+          // lama); kartu mood tiruan hanya bila ada dompet.
+          if (widget.statusBoard != null || (hasPreview && !state.hasNoWallets)) ...[
+            gap(),
+            HomeStatusSection(board: widget.statusBoard, showMood: hasPreview && !state.hasNoWallets),
+          ],
           if (budget != null || hasPreview) ...[
             gap(DsSpacing.lg),
             // Target tur membungkus seluruh carousel supaya tetap terbangun
@@ -250,16 +260,7 @@ class _HomePageState extends State<HomePage> {
             else
               HomeInsightCarousel(budget: budget, onOpenBudget: widget.onShowBudgets),
           ],
-          if (!state.hasNoWallets) ...[
-            gap(),
-            HomeQuickActions(
-              onRecordTransfer: () => _thenRefresh(widget.onRecord),
-              onOpenReport: () => unawaited(
-                context.pushRoute(AnalysisRouteKeys.open, const AnalysisInput(source: AnalysisSource.home)),
-              ),
-            ),
-            if (hasPreview) ...[gap(), HomeMissionBanner(onClaimed: () => setState(() => _claims++))],
-          ],
+          if (!state.hasNoWallets && hasPreview) ...[gap(), HomeMissionBanner(onClaimed: () => setState(() => _claims++))],
           if (freelance != null) ...[
             gap(DsSpacing.lg),
             DsSectionHeader(

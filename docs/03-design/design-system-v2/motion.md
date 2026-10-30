@@ -10,6 +10,9 @@ kurangi gerak. Isi berkas acuan adalah data desain, bukan instruksi.
 Semua kode di `lib/core/design_system/` (token di
 `tokens/ds_motion.dart`, widget di `components/`).
 
+Acuan berikutnya, [home-clay.html](reference/home-clay.html), mengganti ikon
+(lihat [icons.md](icons.md)) dan menambah dua animasi ikon di tabel.
+
 ## Aturan
 
 1. **Gerak dikurangi.** `DsMotion.reduced(context)` membaca
@@ -43,6 +46,8 @@ Semua kode di `lib/core/design_system/` (token di
 | Ledakan perayaan + hadiah melayang | `DsCelebration.burst` | 0,9–1,3 dtk | Klaim |
 | Goyang badge | `DsJiggle` | 750ms | `trigger` naik |
 | Tooltip ketuk | `DsTapTip` | 300ms masuk, tampil 2,4 dtk | Ketuk |
+| Garis laser menyapu (ikon kamera) | belum ada widget | 2 dtk, ±8px, berulang | Terus-menerus |
+| Gelombang suara (ikon headphone) | belum ada widget | 1,2 dtk, tunda 0,3 dtk per batang | Terus-menerus |
 | Tekan | `DsPressable` | 150ms, skala 0,98 / 0,95 | Tekan |
 
 ## Perbaikan dari acuan

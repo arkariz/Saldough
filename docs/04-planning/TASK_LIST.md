@@ -94,6 +94,7 @@ Terakhir diperbarui: 29 Oktober 2026 (penyelarasan dokumen dengan `main` di `0.1
 | 24 — Design system baru dan preset tema ([ADR-043](../02-architecture/adr/0043-design-system-v2-dan-preset-tema.md), Proposed) | 4 | 1 | Berjalan sejak 29 Okt 2026 -- T-24.1 fondasi selesai (spek Tanukonomy Matcha); komponen dipetakan, KT-DS1–KT-DS4 diputuskan; widget menunggu permintaan pemilik; pemasangan menunggu keputusan pemilik |
 | 24 — Design system baru dan preset tema ([ADR-043](../02-architecture/adr/0043-design-system-v2-dan-preset-tema.md), Proposed) | 4 | 2 | Berjalan sejak 29 Okt 2026 -- T-24.1 fondasi selesai (spek Tanukonomy Matcha); KT-DS1–KT-DS4 diputuskan; T-24.2 widget komponen selesai; pemasangan menunggu keputusan pemilik |
 | 24 — Design system baru dan preset tema ([ADR-043](../02-architecture/adr/0043-design-system-v2-dan-preset-tema.md), Proposed) | 5 | 3 | Berjalan sejak 29 Okt 2026 -- T-24.1 fondasi selesai (spek Tanukonomy Matcha); KT-DS1–KT-DS4 diputuskan; T-24.2 widget komponen dan T-24.5 animasi selesai (animasi belum dinilai di perangkat); pemasangan menunggu keputusan pemilik |
+| 24 — Design system baru dan preset tema ([ADR-043](../02-architecture/adr/0043-design-system-v2-dan-preset-tema.md), Proposed) | 6 | 3 | Berjalan sejak 29 Okt 2026 -- T-24.1 fondasi selesai (spek Tanukonomy Matcha); KT-DS1–KT-DS4 diputuskan; T-24.2 widget komponen dan T-24.5 animasi selesai (animasi belum dinilai di perangkat); pemasangan menunggu keputusan pemilik |
 | Antrean (`B-n`, belum dijadwalkan) | 67 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
 
 ## Keputusan terbuka
@@ -120,6 +121,13 @@ diputuskan, dan catat keputusannya di tugas atau ADR yang mengerjakannya.
   Pilihan: pertahankan dan tulis ADR-nya, atau catat selisih sebagai
   transaksi penyesuaian bertanggal hari ini (ADR domain baru, menyentuh
   aturan 8). Keputusan teknis menyusul sebagai ADR.
+
+- **KT-DS5–KT-DS8** Ikon clay (Fase 24): (5) ikon clay menggantikan ikon
+  piksel kategori/dompet atau berdampingan? (6) tile ikon bertimbul seperti
+  acuan atau datar? (7) ikon clay tidak mengikuti preset dan mode gelap:
+  biarkan, buat varian gelap, atau peta warna per preset? (8) arti ikon aksi
+  "Kirim Daun" dan "Scan Struk". Rincian di
+  [icons.md](../03-design/design-system-v2/icons.md).
 
 KT-DS1–KT-DS4 (design system v2, Fase 24) diputuskan 29 Okt 2026: bingkai
 input dan checkbox ikut spek, keterangan/jam memakai `textMuted` `#6B7280`,
@@ -5920,6 +5928,11 @@ memilih mode (dan preset bila ≥ 2), dan design system lama dihapus.
       carousel); analyze bersih. **Belum dinilai di perangkat** (kesan
       gerak, kepadatan dan keburaman partikel).
       Di luar PRD: tampilan.
+- [ ] **T-24.6** Ikon "tanah liat 3D" di design system v2 (acuan 30 Okt
+      2026, [icons.md](../03-design/design-system-v2/icons.md)). Dokumen dan
+      10 SVG acuan sudah disimpan; widget (`DsIconTile` mendukung SVG,
+      tile bertimbul, tombol Catat bulat, lencana level, animasi laser dan
+      gelombang suara) belum dibuat. Menunggu KT-DS5–KT-DS8.
 - [ ] **T-24.3** Pasang ke aplikasi: `MaterialApp` memakai `DsTheme`,
       preferensi preset + mode (`settings_appearance`, dikecualikan dari
       `BackupRegistry` sebagai milik perangkat), baris Akun › Tampilan (mode;

@@ -1,5 +1,12 @@
 # Referensi komponen design system v2
 
+> **Pembaruan 30 Okt 2026:** acuan Beranda terbaru
+> ([home-clay.html](reference/home-clay.html)) mengganti gaya ikon di icon
+> tile, maskot, lencana level, aksi cepat, avatar transaksi, dan navigasi
+> bawah. Rincian dan keputusan terbuka di [icons.md](icons.md). Widget yang
+> sekarang masih memakai `IconData` (Material Symbols) dan belum mendukung
+> ikon clay.
+
 Sumber: layar Beranda dari pemilik, [reference/home.html](reference/home.html)
 dan [reference/home.png](reference/home.png) (29 Okt 2026), ditambah bagian
 Components di [spec.md](spec.md). Isi berkas referensi adalah data desain,

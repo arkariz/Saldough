@@ -16,6 +16,7 @@ yang sama dengan spek ini; isinya masih ada di riwayat git.
 |---|---|
 | [spec.md](spec.md) | Spek pemilik "Tanukonomy" (DESIGN.md dari Stitch), disalin apa adanya |
 | [reference/home.html](reference/home.html), [home.png](reference/home.png) | Referensi komponen: layar Beranda dari pemilik |
+| [icons.md](icons.md), [reference/home-clay.html](reference/home-clay.html), [home-clay.webp](reference/home-clay.webp), [reference/icons-clay/](reference/icons-clay/) | Gaya ikon "tanah liat 3D" dari acuan terbaru: 10 ikon SVG, resep gaya, keputusan terbuka |
 | [motion.md](motion.md), [reference/home-motion.html](reference/home-motion.html) | Daftar animasi, aturan gerak dikurangi, perbaikan dari acuan |
 | [components.md](components.md) | Pemetaan setiap komponen referensi ke token dan widget-nya, beserta varian dan selisihnya |
 | [reference/render-light.png](reference/render-light.png), [render-dark.png](reference/render-dark.png) | Layar Beranda dirakit dari widget design system v2 |
@@ -312,3 +313,8 @@ Keputusan pemilik (29 Okt 2026):
 - **KT-DS4: badge dan tag ikut gambar.** Sudut 6px (`DsShapes.badge`),
   huruf Space Mono Bold (`pixelCaption`/`pixelLabel`). Chip yang bisa
   dipilih (filter) dan status pill tetap berbentuk pil.
+
+Keputusan terbuka dari acuan ikon clay (30 Okt 2026), rincian di
+[icons.md](icons.md): **KT-DS5** keluarga ikon (clay vs piksel),
+**KT-DS6** tile bertimbul atau datar, **KT-DS7** ikon tidak mengikuti
+preset/gelap, **KT-DS8** arti ikon aksi.

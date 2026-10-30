@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/>
+<meta content="mobile_tab" name="shell-type"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=Space+Mono:wght@700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&amp;display=swap" rel="stylesheet"/>
+<style>
+    @layer base {
+      html, body {
+        width: 100vw;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        overscroll-behavior-y: none;
+      }
+      .pb-safe {
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+      }
+      .pt-safe {
+        padding-top: env(safe-area-inset-top, 0px);
+      }
+      main > :first-child {
+        margin-top: 0 !important;
+      }
+      main > :last-child {
+        margin-bottom: 0 !important;
+      }
+    }
+    ::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    body {
+      min-height: max(884px, 100dvh);
+    }
+
+    /* Ambient micro-animations */
+    @keyframes swayLeaf {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-3px) rotate(6deg); }
+    }
+    @keyframes gentleFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-2.5px); }
+    }
+    @keyframes questGlowPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(31,75,44,0.3); }
+      50% { box-shadow: 0 0 0 5px rgba(31,75,44,0); }
+    }
+
+    /* 1. Breathing Pulse & Shimmer Sweep for Spending Bar & Rewards */
+    @keyframes breathingPulse {
+      0%, 100% {
+        transform: scaleY(1);
+        opacity: 0.9;
+        box-shadow: 0 0 6px rgba(234, 88, 12, 0.4);
+      }
+      50% {
+        transform: scaleY(1.15) scaleX(1.02);
+        opacity: 1;
+        box-shadow: 0 0 16px rgba(234, 88, 12, 0.85);
+      }
+    }
+
+    @keyframes billPulse {
+      0%, 100% {
+        opacity: 1;
+        box-shadow: 0 0 0 0 rgba(225, 29, 72, 0.4);
+      }
+      50% {
+        opacity: 0.85;
+        box-shadow: 0 0 0 4px rgba(225, 29, 72, 0);
+      }
+    }
+
+    @keyframes shimmerSweep {
+      0% {
+        transform: translateX(-100%);
+      }
+      100% {
+        transform: translateX(200%);
+      }
+    }
+
+    @keyframes goldGlow {
+      0%, 100% {
+        box-shadow: 0 0 8px rgba(245, 158, 11, 0.25);
+      }
+      50% {
+        box-shadow: 0 0 16px rgba(245, 158, 11, 0.55);
+      }
+    }
+
+    .animate-breathing-pulse {
+      animation: breathingPulse 2.2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    .animate-bill-pulse {
+      animation: billPulse 2s ease-in-out infinite;
+    }
+
+    .animate-gold-glow {
+      animation: goldGlow 2.5s ease-in-out infinite;
+    }
+
+    .shimmer-sweep-layer {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.45) 50%, transparent 100%);
+      animation: shimmerSweep 2.5s ease-in-out infinite;
+      overflow: hidden;
+      border-radius: 9999px;
+    }
+
+    /* Laser scan line animation for Scan Struk */
+    @keyframes laserSweep {
+      0%, 100% { transform: translateY(-8px); opacity: 0.2; }
+      50% { transform: translateY(8px); opacity: 0.9; }
+    }
+    .laser-scan-anim {
+      animation: laserSweep 2s ease-in-out infinite;
+    }
+
+    /* Soundwave pulse for Spotify */
+    @keyframes wavePulse {
+      0%, 100% { height: 4px; }
+      50% { height: 12px; }
+    }
+    .wave-bar-1 { animation: wavePulse 1.2s ease-in-out infinite; }
+    .wave-bar-2 { animation: wavePulse 1.2s ease-in-out infinite 0.3s; }
+    .wave-bar-3 { animation: wavePulse 1.2s ease-in-out infinite 0.6s; }
+
+    /* 2. Pure CSS Ambient Floating Leaves & Sparkles */
+    @keyframes floatLeaf {
+      0% {
+        transform: translateY(0px) rotate(0deg) scale(0.95);
+      }
+      50% {
+        transform: translateY(-28px) rotate(15deg) scale(1.05);
+      }
+      100% {
+        transform: translateY(-55px) rotate(-10deg) scale(0.92);
+      }
+    }
+
+    @keyframes floatSway {
+      0% {
+        transform: translateX(0px) translateY(0px) rotate(0deg);
+      }
+      33% {
+        transform: translateX(22px) translateY(-30px) rotate(22deg);
+      }
+      66% {
+        transform: translateX(-18px) translateY(-60px) rotate(-15deg);
+      }
+      100% {
+        transform: translateX(0px) translateY(-90px) rotate(360deg);
+      }
+    }
+
+    @keyframes sparkleFloat {
+      0%, 100% {
+        transform: translateY(0px) scale(0.85);
+        opacity: 0.45;
+        filter: drop-shadow(0 0 3px rgba(245, 158, 11, 0.4));
+      }
+      50% {
+        transform: translateY(-20px) scale(1.25);
+        opacity: 0.95;
+        filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.85));
+      }
+    }
+
+    .ambient-particle-leaf {
+      position: absolute;
+      animation: floatSway 9s ease-in-out infinite alternate;
+      will-change: transform;
+    }
+
+    .ambient-particle-sparkle {
+      position: absolute;
+      animation: sparkleFloat 3.8s ease-in-out infinite;
+      will-change: transform, opacity;
+    }
+
+    /* XP Level Badge Jiggle & Glow */
+    @keyframes xpJiggle {
+      0% { transform: scale(1) rotate(0deg); }
+      20% { transform: scale(1.18) rotate(-4deg); box-shadow: 0 0 12px rgba(16,185,129,0.5); }
+      40% { transform: scale(1.15) rotate(4deg); }
+      60% { transform: scale(1.08) rotate(-2deg); }
+      80% { transform: scale(1.03) rotate(1deg); }
+      100% { transform: scale(1) rotate(0deg); box-shadow: none; }
+    }
+
+    /* Smooth 3D Flip / Blur Morph for Balance */
+    .balance-flip-out {
+      animation: flipOut 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+    .balance-flip-in {
+      animation: flipIn 0.25s cubic-bezier(0, 0, 0.2, 1) forwards;
+    }
+    @keyframes flipOut {
+      0% { transform: perspective(400px) rotateX(0deg); filter: blur(0px); opacity: 1; }
+      100% { transform: perspective(400px) rotateX(70deg); filter: blur(4px); opacity: 0; }
+    }
+    @keyframes flipIn {
+      0% { transform: perspective(400px) rotateX(-70deg); filter: blur(4px); opacity: 0; }
+      100% { transform: perspective(400px) rotateX(0deg); filter: blur(0px); opacity: 1; }
+    }
+
+    /* Floating XP Token flying upward */
+    @keyframes floatUpFade {
+      0% { transform: translate(-50%, 0) scale(0.85); opacity: 0; }
+      20% { transform: translate(-50%, -15px) scale(1.15); opacity: 1; }
+      75% { opacity: 0.95; }
+      100% { transform: translate(-50%, -140px) scale(0.9); opacity: 0; }
+    }
+
+    .animate-sway-leaf {
+      display: inline-block;
+      animation: swayLeaf 3.2s ease-in-out infinite;
+    }
+    .animate-float-coin {
+      display: inline-block;
+      animation: gentleFloat 2.6s ease-in-out infinite;
+    }
+    .quest-badge-glow {
+      animation: questGlowPulse 2.4s ease-out infinite;
+    }
+    .xp-badge-active {
+      animation: xpJiggle 0.75s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .animate-sway-leaf,
+      .animate-float-coin,
+      .quest-badge-glow,
+      .animate-breathing-pulse,
+      .animate-bill-pulse,
+      .animate-gold-glow,
+      .shimmer-sweep-layer,
+      .ambient-particle-leaf,
+      .ambient-particle-sparkle,
+      .xp-badge-active,
+      .laser-scan-anim,
+      .wave-bar-1, .wave-bar-2, .wave-bar-3,
+      .animate-bounce,
+      .animate-pulse {
+        animation: none !important;
+      }
+      #hero-card,
+      #sliver-collapsed-bar,
+      #sliver-default-title {
+        transition: none !important;
+        transform: none !important;
+      }
+      #ambient-particles-wrapper,
+      #confetti-container {
+        display: none !important;
+      }
+    }
+  </style>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface": "#f9f9f8",
+            "surface-dim": "#dadad9",
+            "surface-bright": "#f9f9f8",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-low": "#f3f4f3",
+            "surface-container": "#eeeeed",
+            "surface-container-high": "#e8e8e7",
+            "surface-container-highest": "#e2e2e2",
+            "primary": "#1f4b2c",
+            "primary-container": "#2a613a",
+            "primary-fixed": "#bdefc4",
+            "primary-fixed-dim": "#a2d2a9",
+            "on-primary": "#ffffff",
+            "on-primary-container": "#bdefc4",
+            "secondary": "#54615a",
+            "secondary-container": "#d8e6dc",
+            "on-secondary-container": "#24322b",
+            "secondary-fixed": "#d8e6dc",
+            "tertiary": "#2f2c25",
+            "tertiary-fixed": "#e8e2d7",
+            "tertiary-fixed-dim": "#ccc6bb",
+            "on-surface": "#111827",
+            "on-surface-variant": "#6b7280",
+            "outline": "#e5e7eb",
+            "outline-variant": "#d1d5db"
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "2xl": "1rem",
+            "3xl": "1.5rem",
+            "full": "9999px"
+          },
+          spacing: {
+            "space-xs": "0.25rem",
+            "space-sm": "0.5rem",
+            "space-md": "1rem",
+            "space-lg": "1.5rem",
+            "space-xl": "2rem",
+            "gutter": "1rem"
+          },
+          fontFamily: {
+            "body": ["Plus Jakarta Sans", "sans-serif"],
+            "pixel": ["Space Mono", "monospace"]
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-surface font-body text-body-md text-on-surface antialiased flex flex-col min-h-screen selection:bg-primary-fixed selection:text-primary relative overflow-x-hidden">
+<!-- Ambient Floating Leaves & Gold Sparkles Container (Fixed z-20 pointer-events-none) -->
+<div aria-hidden="true" class="fixed inset-0 pointer-events-none z-20 overflow-hidden" id="ambient-particles-wrapper">
+<!-- 12 Lively Floating Tanuki Leaf & Gold Sparkle Elements -->
+<div class="ambient-particle-leaf text-emerald-600/75 text-[18px]" style="top: 12%; left: 8%; animation-delay: 0s; animation-duration: 9.5s;">🍃</div>
+<div class="ambient-particle-sparkle text-amber-500 text-[14px]" style="top: 22%; right: 12%; animation-delay: 0.8s; animation-duration: 3.4s;">✨</div>
+<div class="ambient-particle-leaf text-amber-700/70 text-[16px]" style="top: 38%; left: 86%; animation-delay: 1.4s; animation-duration: 8.8s;">🍂</div>
+<div class="ambient-particle-sparkle text-amber-400 text-[18px]" style="top: 48%; left: 6%; animation-delay: 2.1s; animation-duration: 4.2s;">✨</div>
+<div class="ambient-particle-leaf text-emerald-700/80 text-[19px]" style="top: 62%; right: 8%; animation-delay: 2.7s; animation-duration: 10.2s;">🍃</div>
+<div class="ambient-particle-sparkle text-yellow-500/90 text-[12px]" style="top: 74%; left: 14%; animation-delay: 1.1s; animation-duration: 3.6s;">⭐</div>
+<div class="ambient-particle-leaf text-green-600/70 text-[15px]" style="top: 82%; right: 20%; animation-delay: 3.3s; animation-duration: 9.1s;">🍃</div>
+<div class="ambient-particle-sparkle text-amber-400 text-[16px]" style="top: 18%; left: 45%; animation-delay: 0.5s; animation-duration: 4s;">✨</div>
+<div class="ambient-particle-leaf text-amber-600/75 text-[17px]" style="top: 32%; left: 72%; animation-delay: 4.1s; animation-duration: 8.4s;">🍂</div>
+<div class="ambient-particle-sparkle text-emerald-500/80 text-[14px]" style="top: 56%; left: 24%; animation-delay: 2.9s; animation-duration: 3.7s;">✨</div>
+<div class="ambient-particle-leaf text-emerald-800/65 text-[16px]" style="top: 70%; right: 42%; animation-delay: 1.8s; animation-duration: 11s;">🍃</div>
+<div class="ambient-particle-sparkle text-amber-300 text-[15px]" style="top: 88%; left: 78%; animation-delay: 3.8s; animation-duration: 3.2s;">✨</div>
+</div>
+<!-- Overlay Container for Interactive Particle Burst & Floating XP Elements -->
+<div aria-hidden="true" class="pointer-events-none fixed inset-0 z-50 overflow-hidden" id="confetti-container"></div>
+<!-- Flutter-style Collapsing SliverAppBar Header with Frosted Glass -->
+<header class="fixed top-0 w-full z-50 pt-safe bg-surface/85 backdrop-blur-md border-b border-black/[0.04] transition-all duration-300" id="sliver-app-bar">
+<div class="h-14 px-gutter flex items-center justify-between relative overflow-hidden">
+<!-- Default Brand Title (Fades & shifts slightly left on scroll) -->
+<div class="flex items-center gap-2 transition-all duration-200" id="sliver-default-title">
+<img alt="Tanukonomy Brand Logo" class="h-7 w-auto object-contain rounded" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCYS_QiR2RVZQNwfVxPEKpnEfCDhOeEypV47LVnI2UVoPZNaCjKifJKLR1y37D3THm40j-95bpiZuQ77iD-th-6UQY0ARQ3kc9StVtSN7CVnMjHbSIZcn7Ni0e9ia6RQzgbliak3lUYn4HGnUsGZaJ4e_jFLdYKIjC1VvLckkheIm6lcXSMCmXIQ6MAAOHjmWX0PIueZ6PRbck2DUKl5Fj47sQ4VP6Qs7zY5Pb1P7k"/>
+<div class="flex items-center gap-1.5">
+<span class="font-pixel text-[13px] tracking-wide text-primary font-bold lowercase">tanukonomy</span>
+<span class="inline-flex items-center justify-center w-4 h-4 rounded-full bg-emerald-100 text-emerald-800 animate-sway-leaf">
+<span class="material-symbols-outlined text-[11px] leading-none">eco</span>
+</span>
+</div>
+</div>
+<!-- Collapsed Compact Mini Balance Counter (Slides in when hero card scrolls out) -->
+<div class="absolute inset-y-0 left-gutter flex items-center gap-2 opacity-0 pointer-events-none -translate-y-2 transition-all duration-300 ease-out" id="sliver-collapsed-bar">
+<div class="w-7 h-7 rounded-lg bg-primary text-white flex items-center justify-center shrink-0 shadow-xs">
+<span class="material-symbols-outlined text-[15px]">spa</span>
+</div>
+<div class="flex flex-col">
+<span class="font-pixel text-[9px] uppercase tracking-wider text-on-surface-variant font-bold leading-tight">Total Daun</span>
+<div class="flex items-center gap-1 leading-none">
+<span class="font-pixel text-[13px] font-bold text-primary transition-all duration-200" id="mini-balance-display">Rp 0</span>
+<span class="text-[11px] animate-sway-leaf">🍃</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-1 relative z-10">
+<button aria-label="Notifications" class="w-9 h-9 flex items-center justify-center rounded-full text-on-surface-variant hover:text-on-surface hover:bg-surface-container active:scale-95 transition-all duration-150">
+<span class="material-symbols-outlined text-[20px]">notifications</span>
+</button>
+<div class="p-0.5 rounded-full border border-black/[0.08] flex items-center justify-center ml-0.5 active:scale-95 transition-transform duration-150 cursor-pointer">
+<img alt="Profile" class="w-7 h-7 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBlyH353ejv8EHiaGcT2zzterhtB0H36VIkJuBZhlVjXd8QtddK0aK8BgCLtvKK2s8vvASWCnqEGAvyVjp7RXg3KP83z1e8SNqMyybEIPBQut0WNaqOfFAcZ2yoWeELQ-nVDy9wW5WiWoUo9mPIWkNyzX8A6QxUpPBfBkNIhHAM3m00doaw_YD-uCu1ga2Szan0lrrD-B23y8jmuvOW8eSxue9jYwnbfc7LjVlXhzw"/>
+</div>
+</div>
+</div>
+</header>
+<main class="flex-1 flex flex-col relative w-full pt-16 pb-24 bg-surface z-10" id="main-content">
+<div class="flex flex-col w-full px-gutter pb-6 gap-3.5">
+<!-- Greeting & Guardian Mood Banner -->
+<div class="flex flex-col gap-0.5 mt-1.5">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<h1 class="text-[22px] font-bold tracking-tight text-on-surface">Halo, Kenji!</h1>
+<span class="inline-block animate-sway-leaf select-none text-[18px]">🍃</span>
+</div>
+<!-- Rich Golden Leaf Tier Badge -->
+<div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-amber-500/15 via-emerald-500/10 to-amber-500/20 border border-amber-300/60 shadow-[0_2px_8px_rgba(245,158,11,0.12)] text-amber-950 text-[11px] font-pixel font-bold transition-all duration-300" id="level-badge"><div class="relative w-5 h-5 shrink-0"><svg class="w-full h-full drop-shadow-[0_2px_4px_rgba(217,119,6,0.35)]" viewbox="0 0 24 24"><defs><lineargradient id="clayCoin" x1="0%" x2="100%" y1="0%" y2="100%"><stop offset="0%" stop-color="#fde047"></stop><stop offset="60%" stop-color="#f59e0b"></stop><stop offset="100%" stop-color="#d97706"></stop></lineargradient><lineargradient id="clayCoinHighlight" x1="30%" x2="70%" y1="0%" y2="100%"><stop offset="0%" stop-color="#ffffff" stop-opacity="0.8"></stop><stop offset="100%" stop-color="#ffffff" stop-opacity="0"></stop></lineargradient></defs><circle cx="12" cy="12" fill="url(#clayCoin)" r="10"></circle><circle cx="12" cy="12" fill="#d97706" opacity="0.2" r="8"></circle><path d="M12 7C9.5 7 8 9.5 8 11.5C8 14 10.5 15.5 12 16.5C13.5 15.5 16 14 16 11.5C16 9.5 14.5 7 12 7Z" fill="#15803d" opacity="0.9"></path><path d="M12 7C11.5 9 10.5 12 8.5 13" stroke="#86efac" stroke-linecap="round" stroke-width="0.8"></path><ellipse cx="9" cy="7.5" fill="url(#clayCoinHighlight)" rx="4.5" ry="2.2" transform="rotate(-25 9 7.5)"></ellipse></svg></div><span class="tracking-wide text-amber-950 font-extrabold" id="level-badge-text">LVL 12 STEWARD</span><span class="text-[11px] text-amber-600">⭐</span></div>
+</div>
+<p class="text-[13px] text-on-surface-variant font-normal">Keseimbangan dompetmu terjaga harmonis hari ini.</p>
+</div>
+<!-- Tanuki Guardian Mood Modern Card -->
+<div class="relative overflow-hidden rounded-2xl bg-surface-container-lowest border border-black/[0.06] p-3.5 shadow-[0_2px_8px_rgba(0,0,0,0.03)] active:scale-[0.98] transition-all duration-200 cursor-pointer" id="guardian-card">
+<div class="flex items-center gap-3">
+<!-- Mascot Pixel Avatar Stage - Enhanced with 3D shadow & glowing leaf dewdrop -->
+<div class="relative shrink-0 w-13 h-13 rounded-2xl bg-gradient-to-b from-emerald-50 via-surface-container-low to-emerald-100/50 border border-emerald-900/10 p-1 flex items-center justify-center shadow-[0_4px_12px_rgba(31,75,44,0.08)] ring-1 ring-white"><div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/90 via-transparent to-emerald-500/10 pointer-events-none z-10"></div><svg class="w-10 h-10 transition-transform duration-200 group-hover:scale-105 drop-shadow-[0_4px_8px_rgba(74,55,41,0.28)]" fill="none" viewbox="0 0 54 54"><defs><lineargradient gradientunits="userSpaceOnUse" id="clayTanukiBody" x1="27" x2="27" y1="12" y2="46"><stop offset="0%" stop-color="#8b6f57"></stop><stop offset="50%" stop-color="#6c523e"></stop><stop offset="100%" stop-color="#4d3727"></stop></lineargradient><lineargradient gradientunits="userSpaceOnUse" id="clayMuzzle" x1="27" x2="27" y1="28" y2="42"><stop offset="0%" stop-color="#ffffff"></stop><stop offset="100%" stop-color="#f5ebd9"></stop></lineargradient><lineargradient gradientunits="userSpaceOnUse" id="clayLeafPlump" x1="20" x2="32" y1="5" y2="17"><stop offset="0%" stop-color="#86efac"></stop><stop offset="40%" stop-color="#22c55e"></stop><stop offset="100%" stop-color="#15803d"></stop></lineargradient><lineargradient id="claySoftHighlight" x1="0%" x2="0%" y1="0%" y2="100%"><stop offset="0%" stop-color="#ffffff" stop-opacity="0.75"></stop><stop offset="100%" stop-color="#ffffff" stop-opacity="0"></stop></lineargradient><filter height="130%" id="clayShadowFilter" width="130%" x="-10%" y="-10%"><fedropshadow dx="0" dy="2" flood-color="#2d1e15" flood-opacity="0.35" stddeviation="1.5"></fedropshadow></filter></defs><rect fill="#4d3727" height="10" rx="4.5" width="10" x="11" y="8"></rect><rect fill="#4d3727" height="10" rx="4.5" width="10" x="33" y="8"></rect><rect fill="#f5ebd9" height="6" rx="2.5" width="6" x="13" y="10"></rect><rect fill="#f5ebd9" height="6" rx="2.5" width="6" x="35" y="10"></rect><rect fill="url(#clayTanukiBody)" filter="url(#clayShadowFilter)" height="30" rx="14" width="38" x="8" y="14"></rect><ellipse cx="27" cy="17" fill="url(#claySoftHighlight)" rx="14" ry="4"></ellipse><rect fill="#22472d" height="14" rx="5.5" width="13" x="11" y="20"></rect><rect fill="#22472d" height="14" rx="5.5" width="13" x="30" y="20"></rect><circle cx="17.5" cy="26.5" fill="#ffffff" r="3.8"></circle><circle cx="18" cy="26.5" fill="#1a1a1a" r="2.2"></circle><circle cx="19" cy="25" fill="#ffffff" r="1"></circle><circle cx="36.5" cy="26.5" fill="#ffffff" r="3.8"></circle><circle cx="36" cy="26.5" fill="#1a1a1a" r="2.2"></circle><circle cx="37" cy="25" fill="#ffffff" r="1"></circle><ellipse cx="27" cy="35" fill="url(#clayMuzzle)" rx="8" ry="6"></ellipse><ellipse cx="27" cy="33" fill="url(#claySoftHighlight)" rx="6" ry="2"></ellipse><ellipse cx="27" cy="32" fill="#2d1e15" rx="2.8" ry="2"></ellipse><path d="M25 36.5C26 37.8 28 37.8 29 36.5" stroke="#6c523e" stroke-linecap="round" stroke-width="1.4"></path><ellipse cx="12" cy="33" fill="#f87171" opacity="0.6" rx="2.2" ry="1.4"></ellipse><ellipse cx="42" cy="33" fill="#f87171" opacity="0.6" rx="2.2" ry="1.4"></ellipse><path d="M26 15C22 13 23 8 28 8C33 8 34 13 30 15C28.5 15.8 27.5 15.8 26 15Z" fill="url(#clayLeafPlump)" filter="url(#clayShadowFilter)"></path><path d="M26 13L29 10" stroke="#bbf7d0" stroke-linecap="round" stroke-width="0.9"></path><ellipse cx="26.5" cy="9.5" fill="#ffffff" opacity="0.8" rx="2.5" ry="1.2"></ellipse><circle cx="29.5" cy="12" fill="#ffffff" opacity="0.9" r="1"></circle></svg><span class="absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-white shadow-xs z-20"></span></div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between gap-1">
+<div class="flex items-center gap-1.5 truncate">
+<span class="font-pixel text-[12px] font-bold text-on-surface truncate">Mood: Santai &amp; Makmur</span>
+<span class="text-xs select-none">✨</span>
+</div>
+<span class="font-pixel text-[10px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200/80 px-2 py-0.5 rounded-md shrink-0 shadow-[0_1px_3px_rgba(16,185,129,0.1)]">84% SEHAT</span>
+</div>
+<!-- Sleek Minimalist Health Meter -->
+<div class="flex items-center gap-1 mt-1.5">
+<div class="h-1.5 flex-1 rounded-full bg-primary transition-all"></div>
+<div class="h-1.5 flex-1 rounded-full bg-primary transition-all"></div>
+<div class="h-1.5 flex-1 rounded-full bg-primary transition-all"></div>
+<div class="h-1.5 flex-1 rounded-full bg-primary transition-all"></div>
+<div class="h-1.5 flex-1 rounded-full bg-primary transition-all"></div>
+<div class="h-1.5 flex-1 rounded-full bg-primary transition-all"></div>
+<div class="h-1.5 flex-1 rounded-full bg-primary transition-all"></div>
+<div class="h-1.5 flex-1 rounded-full bg-primary transition-all"></div>
+<div class="h-1.5 flex-1 rounded-full bg-surface-container-high"></div>
+<div class="h-1.5 flex-1 rounded-full bg-surface-container-high"></div>
+</div>
+<p class="text-[12px] text-on-surface-variant mt-1.5 flex items-center gap-1">
+<span class="material-symbols-outlined text-primary text-[14px]">psychology_alt</span>
+<span class="truncate">Sisa kuota jajan aman sampai akhir pekan!</span>
+</p>
+</div>
+</div>
+</div>
+<!-- Tanuki Vault: Hero Balance Card with Parallax & Motion -->
+<div class="relative overflow-hidden rounded-2xl bg-primary text-white p-4 shadow-sm border border-emerald-900/30 will-change-transform transition-transform duration-100 ease-out" id="hero-card">
+<!-- Subtle Minimal Ambient Glow -->
+<div class="absolute -right-8 -top-8 w-36 h-36 rounded-full bg-emerald-500/10 blur-2xl pointer-events-none"></div>
+<div class="absolute left-1/4 -bottom-10 w-32 h-32 rounded-full bg-emerald-300/10 blur-xl pointer-events-none"></div>
+<div class="relative z-10 flex flex-col gap-3.5">
+<!-- Balance Header -->
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5 text-emerald-200/90 font-pixel text-[11px] uppercase tracking-wider font-bold">
+<span class="material-symbols-outlined text-[15px] text-emerald-300 animate-sway-leaf">spa</span>
+<span>Total Kekayaan Daun</span>
+</div>
+<button aria-label="Sembunyikan Saldo" class="text-emerald-200/80 hover:text-white active:scale-90 transition-all duration-150 p-1 rounded-md" id="toggle-balance-btn">
+<span class="material-symbols-outlined text-[18px] transition-transform duration-200" id="eye-icon">visibility</span>
+</button>
+</div>
+<!-- Main Numeric Display with 3D flip wrapper -->
+<div class="flex flex-col" id="balance-container">
+<div class="flex items-baseline gap-1.5 overflow-hidden py-0.5">
+<span class="font-pixel text-[14px] text-emerald-300 font-bold">Rp</span>
+<span class="font-pixel text-[28px] font-bold text-white tracking-tight inline-block transition-all duration-200" id="balance-display">0</span>
+</div>
+<div class="flex items-center gap-1 mt-0.5 transition-opacity duration-200" id="balance-koban-wrapper">
+<span class="font-pixel text-[11px] text-emerald-200/70" id="balance-koban-display">≈ 0 Tanuki Koban</span>
+<span class="select-none text-[10px] animate-float-coin">🪙</span>
+</div>
+</div>
+<!-- Monthly In/Out Mini Pills (Clean Modern Glass-like) -->
+<div class="grid grid-cols-2 gap-2 pt-0.5">
+<div class="flex items-center gap-2 rounded-xl bg-white/[0.08] border border-white/[0.08] px-2.5 py-2 hover:bg-white/[0.12] transition-colors">
+<div class="w-6 h-6 rounded-full bg-emerald-400/20 text-emerald-200 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[14px]">arrow_downward</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-pixel text-[10px] text-emerald-200/70 uppercase">Masuk</span>
+<span class="text-[13px] font-semibold text-white truncate font-pixel" id="income-display">+Rp 0</span>
+</div>
+</div>
+<div class="flex items-center gap-2 rounded-xl bg-white/[0.08] border border-white/[0.08] px-2.5 py-2 hover:bg-white/[0.12] transition-colors">
+<div class="w-6 h-6 rounded-full bg-amber-400/20 text-amber-200 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[14px]">arrow_upward</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-pixel text-[10px] text-emerald-200/70 uppercase">Keluar</span>
+<span class="text-[13px] font-semibold text-white truncate font-pixel" id="expense-display">-Rp 0</span>
+</div>
+</div>
+</div>
+<!-- Card Action Buttons with tactile active scale -->
+<div class="flex items-center gap-2 pt-0.5">
+<button class="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-white text-primary font-body font-semibold text-[13px] shadow-xs active:scale-95 transition-all duration-150">
+<span class="material-symbols-outlined text-[17px]">send</span>
+<span>Kirim Daun</span>
+</button>
+<button class="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-emerald-700/60 hover:bg-emerald-700/80 border border-white/10 text-white font-body font-semibold text-[13px] shadow-xs active:scale-95 transition-all duration-150">
+<span class="material-symbols-outlined text-[17px]">add_circle</span>
+<span>Isi Saldo</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Interactive Horizontal Swipeable Insights Carousel (Option A) -->
+<div class="flex flex-col gap-2 relative w-full">
+<!-- Carousel Header with Navigation Indicators -->
+<div class="flex items-center justify-between px-0.5">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-primary text-[17px]">insights</span>
+<span class="font-pixel text-[11px] font-bold text-on-surface tracking-wide uppercase">Wawasan &amp; Rencana Tanuki</span>
+</div>
+<!-- Left/Right Mini Nav Arrows -->
+<div class="flex items-center gap-1">
+<button aria-label="Slide sebelumnya" class="w-6 h-6 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-on-surface active:scale-90 transition-transform" id="carousel-prev-btn">
+<span class="material-symbols-outlined text-[14px]">chevron_left</span>
+</button>
+<button aria-label="Slide berikutnya" class="w-6 h-6 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-on-surface active:scale-90 transition-transform" id="carousel-next-btn">
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- Carousel Scrollable Track (Snap X Mandatory) -->
+<div aria-label="Tanukonomy Insight Cards" class="flex gap-3 overflow-x-auto no-scrollbar snap-x snap-mandatory scroll-smooth py-0.5 -mx-gutter px-gutter" id="insight-carousel" role="region">
+<!-- Card 1: Batas Belanja Hari Ini (Daily Budget) -->
+<div class="min-w-full snap-center shrink-0 flex flex-col rounded-2xl bg-surface-container-lowest border border-black/[0.06] p-3.5 shadow-[0_2px_8px_rgba(0,0,0,0.03)] gap-2 relative cursor-pointer active:scale-[0.99] transition-all" data-carousel-index="0" id="spending-tracker-card" title="Ketuk untuk melihat rincian batas belanja">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-secondary text-[17px]">cloud_download</span>
+<span class="text-[15px] font-semibold text-on-surface">Batas Belanja Hari Ini</span>
+</div>
+<span class="font-pixel text-[10px] font-bold text-amber-900 bg-amber-100 border border-amber-300 px-2 py-0.5 rounded-md transition-colors animate-breathing-pulse" id="spending-percent-badge">74% TERPAKAI</span>
+</div>
+<div class="flex items-baseline justify-between mt-0.5">
+<div class="flex items-baseline gap-1">
+<span class="text-[16px] font-bold text-on-surface">Rp 185.000</span>
+<span class="text-[12px] text-on-surface-variant font-medium">/ Rp 250.000</span>
+</div>
+<span class="text-[12px] text-primary font-semibold transition-transform duration-200" id="spending-remaining-text">Sisa Rp 65.000</span>
+</div>
+<!-- Sleek Segmented Bar with Breathing Pulse & Continuous Shimmer Sweep Animation -->
+<div class="relative overflow-hidden rounded-lg p-0.5">
+<div class="grid grid-cols-10 gap-1 select-none" id="spending-bar-segments" title="Konsumsi Harian (10 Segmen)">
+<div class="h-3 rounded-sm bg-amber-600 flex items-center justify-center animate-breathing-pulse relative overflow-hidden">
+<span class="text-[7px] text-white select-none relative z-10">🌰</span>
+<div class="shimmer-sweep-layer"></div>
+</div>
+<div class="h-3 rounded-sm bg-amber-600 flex items-center justify-center animate-breathing-pulse relative overflow-hidden" style="animation-delay: 0.15s;">
+<span class="text-[7px] text-white select-none relative z-10">🌰</span>
+<div class="shimmer-sweep-layer" style="animation-delay: 0.25s;"></div>
+</div>
+<div class="h-3 rounded-sm bg-amber-600 flex items-center justify-center animate-breathing-pulse relative overflow-hidden" style="animation-delay: 0.3s;">
+<span class="text-[7px] text-white select-none relative z-10">🌰</span>
+<div class="shimmer-sweep-layer" style="animation-delay: 0.5s;"></div>
+</div>
+<div class="h-3 rounded-sm bg-amber-600 flex items-center justify-center animate-breathing-pulse relative overflow-hidden" style="animation-delay: 0.45s;">
+<span class="text-[7px] text-white select-none relative z-10">🌰</span>
+<div class="shimmer-sweep-layer" style="animation-delay: 0.75s;"></div>
+</div>
+<div class="h-3 rounded-sm bg-amber-600 flex items-center justify-center animate-breathing-pulse relative overflow-hidden" style="animation-delay: 0.6s;">
+<span class="text-[7px] text-white select-none relative z-10">🌰</span>
+<div class="shimmer-sweep-layer" style="animation-delay: 1s;"></div>
+</div>
+<div class="h-3 rounded-sm bg-amber-600 flex items-center justify-center animate-breathing-pulse relative overflow-hidden" style="animation-delay: 0.75s;">
+<span class="text-[7px] text-white select-none relative z-10">🌰</span>
+<div class="shimmer-sweep-layer" style="animation-delay: 1.25s;"></div>
+</div>
+<div class="h-3 rounded-sm bg-amber-500 flex items-center justify-center animate-breathing-pulse relative overflow-hidden" style="animation-delay: 0.9s;">
+<span class="text-[7px] text-white select-none relative z-10">🌰</span>
+<div class="shimmer-sweep-layer" style="animation-delay: 1.5s;"></div>
+</div>
+<div class="h-3 rounded-sm bg-surface-container-high flex items-center justify-center">
+<span class="text-[6px] text-on-surface-variant/40">·</span>
+</div>
+<div class="h-3 rounded-sm bg-surface-container-high flex items-center justify-center">
+<span class="text-[6px] text-on-surface-variant/40">·</span>
+</div>
+<div class="h-3 rounded-sm bg-surface-container-high flex items-center justify-center">
+<span class="text-[6px] text-on-surface-variant/40">·</span>
+</div>
+</div>
+<!-- Continuous Overarching Sweep Kilau Cahaya across active length -->
+<div class="absolute inset-y-0 left-0 w-[74%] pointer-events-none overflow-hidden rounded-md">
+<div class="shimmer-sweep-layer" style="animation-duration: 2.2s;"></div>
+</div>
+</div>
+<!-- Interactive Feedback Toast / Tooltip on Tap -->
+<div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-on-surface text-surface text-[11px] font-pixel px-2.5 py-1 rounded-md shadow-md opacity-0 pointer-events-none transition-all duration-300 z-20 flex items-center gap-1.5 whitespace-nowrap" id="spending-tooltip">
+<span>🌰 Sisa 3 segmen (Rp 65.000) hingga tengah malam!</span>
+</div>
+<div class="flex items-center justify-between font-pixel text-[10px] text-on-surface-variant pt-0.5">
+<span>00:00</span>
+<span class="text-tertiary font-medium">Reset pukul 24:00 WIB</span>
+<span>24:00</span>
+</div>
+</div>
+<!-- Card 2: Tagihan Rutin & Auto-Debit (Bills Due Reminder) -->
+<div class="min-w-full snap-center shrink-0 flex flex-col rounded-2xl bg-surface-container-lowest border border-rose-200/80 p-3.5 shadow-[0_2px_8px_rgba(0,0,0,0.03)] gap-2 relative active:scale-[0.99] transition-all" data-carousel-index="1">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-rose-600 text-[17px]">event_upcoming</span>
+<span class="text-[15px] font-semibold text-on-surface">Tagihan Rutin &amp; Auto-Debit</span>
+</div>
+<span class="font-pixel text-[10px] font-bold text-rose-700 bg-rose-50 border border-rose-200 px-2 py-0.5 rounded-md animate-bill-pulse">3 HARI LAGI</span>
+</div>
+<div class="flex items-baseline justify-between mt-0.5">
+<div class="flex flex-col">
+<span class="text-[14px] font-semibold text-on-surface leading-tight">Spotify Family &amp; Wi-Fi Indihome</span>
+<span class="text-[12px] text-on-surface-variant font-medium mt-0.5">Jatuh tempo pada 25 Mei 2025</span>
+</div>
+<span class="text-[15px] font-bold text-rose-600 font-pixel shrink-0">Rp 354.990</span>
+</div>
+<!-- Status Progress Bar & Action -->
+<div class="space-y-1.5 mt-0.5">
+<div class="flex items-center justify-between text-[11px] font-pixel text-on-surface-variant">
+<span>Kesiapan Dana Terkunci</span>
+<span class="font-bold text-emerald-700">80% Tercukupi</span>
+</div>
+<div class="w-full h-2 rounded-full bg-surface-container-high overflow-hidden relative">
+<div class="h-full rounded-full bg-gradient-to-r from-emerald-600 to-amber-500 w-[80%]"></div>
+</div>
+</div>
+<div class="flex items-center justify-between pt-1">
+<div class="flex items-center gap-1 text-[11px] text-on-surface-variant">
+<span class="material-symbols-outlined text-emerald-600 text-[14px]">verified</span>
+<span>Auto-debit aktif di Tanuki Vault</span>
+</div>
+<button class="px-3 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-700 text-white font-pixel text-[11px] font-bold shrink-0 active:scale-95 transition-transform shadow-xs flex items-center gap-1">
+<span>Siapkan Dana</span>
+<span class="material-symbols-outlined text-[13px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Card 3: Koban & Hadiah Tanuki (Tanuki Koban Rewards) -->
+<div class="min-w-full snap-center shrink-0 flex flex-col rounded-2xl bg-gradient-to-br from-amber-50/70 via-surface-container-lowest to-emerald-50/40 border border-amber-200/90 p-3.5 shadow-[0_2px_8px_rgba(245,158,11,0.06)] gap-2 relative active:scale-[0.99] transition-all overflow-hidden" data-carousel-index="2">
+<!-- Gold Ambient Shimmer Glow -->
+<div class="absolute -right-6 -bottom-6 w-28 h-28 rounded-full bg-amber-400/15 blur-xl pointer-events-none"></div>
+<div class="flex items-center justify-between relative z-10">
+<div class="flex items-center gap-1.5">
+<span class="text-[17px] select-none">🪙</span>
+<span class="text-[15px] font-semibold text-on-surface">Koban &amp; Hadiah Tanuki</span>
+</div>
+<span class="font-pixel text-[10px] font-bold text-amber-900 bg-amber-100 border border-amber-300 px-2 py-0.5 rounded-md animate-gold-glow flex items-center gap-0.5">
+<span>✨</span>
+<span>REWARD AKTIF</span>
+</span>
+</div>
+<div class="flex items-baseline justify-between mt-0.5 relative z-10">
+<div class="flex items-baseline gap-1.5">
+<span class="font-pixel text-[17px] font-bold text-amber-900">1.485</span>
+<span class="font-pixel text-[12px] font-medium text-amber-800">Koban Emas Siap Ditukar</span>
+</div>
+<span class="text-[11px] font-pixel text-emerald-800 bg-emerald-100/80 px-1.5 py-0.5 rounded border border-emerald-200">Tier: Master</span>
+</div>
+<!-- Reward Perk Info Box -->
+<div class="rounded-xl bg-white/80 border border-amber-200/70 p-2 flex items-center justify-between gap-2 relative z-10">
+<div class="flex items-center gap-2 min-w-0">
+<div class="w-7 h-7 rounded-lg bg-amber-100 text-amber-800 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[16px]">local_cafe</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="text-[12px] font-semibold text-on-surface truncate">Voucher Diskon 30% Kafe Koma</span>
+<span class="text-[10px] text-on-surface-variant font-pixel">Cukup tukar 250 Koban Daun</span>
+</div>
+</div>
+<button class="px-2.5 py-1 rounded-md bg-amber-600 hover:bg-amber-700 text-white font-pixel text-[10px] font-bold shrink-0 active:scale-95 transition-transform shadow-xs">
+Tukar
+</button>
+</div>
+<div class="flex items-center justify-between pt-0.5 relative z-10">
+<span class="text-[11px] text-amber-900/80 font-pixel flex items-center gap-1">
+<span class="animate-sway-leaf">🍃</span>
+<span>Misi harian memberi +50 Koban</span>
+</span>
+<button class="text-[11px] font-pixel font-bold text-primary hover:underline flex items-center gap-0.5 active:opacity-75">
+<span>Katalog Hadiah</span>
+<span class="material-symbols-outlined text-[13px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Carousel Pagination Dots (Interactive Indicator) -->
+<div class="flex items-center justify-center gap-1.5 pt-1" id="carousel-dots-container">
+<button aria-label="Ke slide 1: Batas Belanja" class="w-6 h-1.5 rounded-full bg-primary transition-all duration-300 active:scale-95" data-dot-index="0" type="button"></button>
+<button aria-label="Ke slide 2: Tagihan Rutin" class="w-2 h-1.5 rounded-full bg-surface-container-high transition-all duration-300 active:scale-95" data-dot-index="1" type="button"></button>
+<button aria-label="Ke slide 2: Koban Hadiah" class="w-2 h-1.5 rounded-full bg-surface-container-high transition-all duration-300 active:scale-95" data-dot-index="2" type="button"></button>
+</div>
+</div>
+<!-- Rich Bento Quick Actions Grid with Dimensional Tactile Tiles -->
+<div class="grid grid-cols-4 gap-2.5"><!-- Action 1: Scan Struk (Squishy 3D Clay Viewfinder Camera) --><button class="group flex flex-col items-center justify-center py-2.5 px-1 rounded-2xl bg-surface-container-lowest border border-black/[0.06] hover:bg-surface-container-low active:scale-95 transition-all duration-200 text-center shadow-[0_4px_12px_rgba(16,185,129,0.14)] relative overflow-hidden"><div class="relative w-12 h-12 rounded-2xl bg-gradient-to-b from-emerald-100 via-emerald-50 to-emerald-200 border border-emerald-300/60 flex items-center justify-center mb-1.5 shadow-[0_4px_10px_rgba(16,185,129,0.22),inset_0_2px_4px_rgba(255,255,255,0.9),inset_0_-2px_4px_rgba(5,150,105,0.25)] group-hover:scale-105 transition-transform duration-200"><div class="absolute inset-x-1.5 top-0.5 h-3 rounded-full bg-gradient-to-b from-white/90 to-transparent pointer-events-none"></div><svg class="w-8 h-8 drop-shadow-[0_2px_4px_rgba(4,120,87,0.35)]" viewbox="0 0 32 32"><defs><lineargradient id="clayCamBody" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#34d399"></stop><stop offset="100%" stop-color="#059669"></stop></lineargradient><lineargradient id="clayLens" x1="0" x2="1" y1="0" y2="1"><stop offset="0%" stop-color="#064e3b"></stop><stop offset="100%" stop-color="#022c22"></stop></lineargradient></defs><rect fill="url(#clayCamBody)" height="17" rx="5" width="24" x="4" y="9"></rect><path d="M11 9L13 6H19L21 9" fill="#059669"></path><circle cx="24" cy="6.5" fill="#f59e0b" r="1.8"></circle><circle cx="16" cy="17.5" fill="#a7f3d0" r="5.5"></circle><circle cx="16" cy="17.5" fill="url(#clayLens)" r="4.2"></circle><ellipse cx="14.5" cy="16" fill="#ffffff" opacity="0.85" rx="1.5" ry="1"></ellipse><circle cx="17.5" cy="19" fill="#ffffff" opacity="0.7" r="0.6"></circle><ellipse cx="16" cy="11" fill="#ffffff" opacity="0.6" rx="8" ry="1.5"></ellipse></svg><span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-emerald-300 ring-1 ring-white/90 shadow-[0_0_4px_#10b981]"></span></div><span class="font-pixel text-[11px] font-bold text-on-surface">Scan Struk</span></button><!-- Action 2: Kirim Daun (Plump Squishy 3D Tanuki Leaf with Embossed Veins & Dewdrop) --><button class="group flex flex-col items-center justify-center py-2.5 px-1 rounded-2xl bg-surface-container-lowest border border-black/[0.06] hover:bg-surface-container-low active:scale-95 transition-all duration-200 text-center shadow-[0_4px_12px_rgba(31,75,44,0.14)] relative overflow-hidden"><div class="relative w-12 h-12 rounded-2xl bg-gradient-to-b from-emerald-100 via-green-50 to-emerald-200 border border-green-600/30 flex items-center justify-center mb-1.5 shadow-[0_4px_10px_rgba(34,197,94,0.22),inset_0_2px_4px_rgba(255,255,255,0.9),inset_0_-2px_4px_rgba(21,128,61,0.25)] group-hover:scale-105 transition-transform duration-200"><div class="absolute inset-x-1.5 top-0.5 h-3 rounded-full bg-gradient-to-b from-white/90 to-transparent pointer-events-none"></div><svg class="w-8 h-8 drop-shadow-[0_2px_5px_rgba(21,128,61,0.4)]" viewbox="0 0 32 32"><defs><lineargradient id="clayLeafAction" x1="0%" x2="100%" y1="0%" y2="100%"><stop offset="0%" stop-color="#86efac"></stop><stop offset="40%" stop-color="#22c55e"></stop><stop offset="100%" stop-color="#15803d"></stop></lineargradient></defs><path d="M16 4C10 7 7 14 9 20C11 25 17 28 22 26C26 24 28 17 26 11C24 7 20 4 16 4Z" fill="url(#clayLeafAction)"></path><path d="M15 7C14 12 16 18 19 23" stroke="#bbf7d0" stroke-linecap="round" stroke-width="1.4"></path><path d="M14 12L10 14" stroke="#bbf7d0" stroke-linecap="round" stroke-width="1.2"></path><path d="M16 16L12 19" stroke="#bbf7d0" stroke-linecap="round" stroke-width="1.2"></path><path d="M17 14L21 13" stroke="#bbf7d0" stroke-linecap="round" stroke-width="1.2"></path><ellipse cx="13.5" cy="9" fill="#ffffff" opacity="0.75" rx="4.5" ry="2" transform="rotate(-20 13.5 9)"></ellipse><circle cx="20.5" cy="18" fill="#ffffff" opacity="0.9" r="1.8"></circle><circle cx="21" cy="17.6" fill="#38bdf8" opacity="0.6" r="0.8"></circle></svg><span class="absolute bottom-1 right-1 w-2 h-2 rounded-full bg-gradient-to-tr from-amber-400 to-yellow-200 shadow-[0_0_4px_rgba(245,158,11,0.6)]"></span></div><span class="font-pixel text-[11px] font-bold text-on-surface">Kirim Daun</span></button><!-- Action 3: Laporan (Soft 3D Clay Cylindrical Graph Bars with 3D Gold Target Coin) --><button class="group flex flex-col items-center justify-center py-2.5 px-1 rounded-2xl bg-surface-container-lowest border border-black/[0.06] hover:bg-surface-container-low active:scale-95 transition-all duration-200 text-center shadow-[0_4px_12px_rgba(59,130,246,0.14)] relative overflow-hidden"><div class="relative w-12 h-12 rounded-2xl bg-gradient-to-b from-sky-100 via-blue-50 to-indigo-100 border border-blue-300/60 flex items-center justify-center mb-1.5 shadow-[0_4px_10px_rgba(59,130,246,0.22),inset_0_2px_4px_rgba(255,255,255,0.9),inset_0_-2px_4px_rgba(29,78,216,0.2)] group-hover:scale-105 transition-transform duration-200"><div class="absolute inset-x-1.5 top-0.5 h-3 rounded-full bg-gradient-to-b from-white/90 to-transparent pointer-events-none"></div><svg class="w-8 h-8 drop-shadow-[0_2px_4px_rgba(29,78,216,0.35)]" viewbox="0 0 32 32"><defs><lineargradient id="clayBar1" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#93c5fd"></stop><stop offset="100%" stop-color="#3b82f6"></stop></lineargradient><lineargradient id="clayBar2" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#60a5fa"></stop><stop offset="100%" stop-color="#1d4ed8"></stop></lineargradient><lineargradient id="clayBar3" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#34d399"></stop><stop offset="100%" stop-color="#059669"></stop></lineargradient></defs><rect fill="url(#clayBar1)" height="10" rx="2.5" width="5" x="6" y="16"></rect><rect fill="url(#clayBar2)" height="15" rx="2.5" width="5" x="13.5" y="11"></rect><rect fill="url(#clayBar3)" height="20" rx="2.5" width="5" x="21" y="6"></rect><ellipse cx="8.5" cy="17" fill="#ffffff" opacity="0.7" rx="2" ry="0.8"></ellipse><ellipse cx="16" cy="12" fill="#ffffff" opacity="0.7" rx="2" ry="0.8"></ellipse><ellipse cx="23.5" cy="7.5" fill="#ffffff" opacity="0.7" rx="2" ry="0.8"></ellipse><circle cx="24" cy="6.5" fill="#f59e0b" r="2.6"></circle><circle cx="24" cy="6.5" fill="#fef08a" r="1.4"></circle><circle cx="24.6" cy="5.8" fill="#ffffff" r="0.6"></circle></svg><span class="absolute top-1 left-1 w-1.5 h-1.5 rounded-sm bg-blue-400 shadow-[0_0_3px_#60a5fa]"></span></div><span class="font-pixel text-[11px] font-bold text-on-surface">Laporan</span></button><!-- Action 4: Misi Hemat (Warm Gold/Amber 3D Clay Shrine Trophy with Koban) --><button class="group flex flex-col items-center justify-center py-2.5 px-1 rounded-2xl bg-surface-container-lowest border border-black/[0.06] hover:bg-surface-container-low active:scale-95 transition-all duration-200 text-center shadow-[0_4px_12px_rgba(245,158,11,0.14)] relative overflow-hidden"><div class="relative w-12 h-12 rounded-2xl bg-gradient-to-b from-amber-100 via-amber-50 to-orange-100 border border-amber-300/60 flex items-center justify-center mb-1.5 shadow-[0_4px_10px_rgba(245,158,11,0.22),inset_0_2px_4px_rgba(255,255,255,0.9),inset_0_-2px_4px_rgba(180,83,9,0.25)] group-hover:scale-105 transition-transform duration-200"><div class="absolute inset-x-1.5 top-0.5 h-3 rounded-full bg-gradient-to-b from-white/90 to-transparent pointer-events-none"></div><svg class="w-8 h-8 drop-shadow-[0_2px_4px_rgba(180,83,9,0.35)]" viewbox="0 0 32 32"><defs><lineargradient id="clayTrophy" x1="0%" x2="100%" y1="0%" y2="100%"><stop offset="0%" stop-color="#fde047"></stop><stop offset="40%" stop-color="#f59e0b"></stop><stop offset="100%" stop-color="#d97706"></stop></lineargradient></defs><rect fill="#b45309" height="4" rx="2" width="14" x="9" y="22"></rect><path d="M14 18H18V23H14V18Z" fill="#d97706"></path><path d="M9 8H23V14C23 18 19 20 16 20C13 20 9 18 9 14V8Z" fill="url(#clayTrophy)"></path><path d="M9 10H6C4.9 10 4 10.9 4 12V13C4 15 5.5 16.5 7.5 16.5H9" fill="none" stroke="#f59e0b" stroke-linecap="round" stroke-width="1.8"></path><path d="M23 10H26C27.1 10 28 10.9 28 12V13C28 15 26.5 16.5 24.5 16.5H23" fill="none" stroke="#f59e0b" stroke-linecap="round" stroke-width="1.8"></path><ellipse cx="16" cy="9.5" fill="#ffffff" opacity="0.75" rx="5.5" ry="2"></ellipse><circle cx="16" cy="14" fill="#fef08a" r="2.4"></circle><rect fill="#b45309" height="1.6" rx="0.3" width="1.6" x="15.2" y="13.2"></rect><circle cx="17.8" cy="12.8" fill="#ffffff" r="0.6"></circle></svg><div class="absolute bottom-1 left-1/2 -translate-x-1/2 w-3.5 h-1 rounded-full bg-rose-500 shadow-[0_1px_3px_rgba(225,29,72,0.4)]"></div></div><span class="font-pixel text-[11px] font-bold text-on-surface">Misi Hemat</span></button></div>
+<!-- Modern Visual Mini-Quest Banner with Ambient Glow Pulse & Interactive Celebration -->
+<div class="flex items-center gap-3 p-3 rounded-2xl bg-surface-container-lowest border border-black/[0.06] shadow-[0_2px_8px_rgba(0,0,0,0.02)] relative overflow-visible" id="quest-banner">
+<div class="w-10 h-10 shrink-0 rounded-xl bg-gradient-to-br from-emerald-700 via-primary to-emerald-900 border border-emerald-400/30 text-white flex items-center justify-center quest-badge-glow shadow-[0_3px_8px_rgba(31,75,44,0.3)] relative" id="quest-icon-badge">
+<div class="absolute inset-x-1 top-0.5 h-2 rounded-t-lg bg-gradient-to-b from-white/30 to-transparent pointer-events-none"></div>
+<span class="material-symbols-outlined text-[20px] drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)]">explore</span>
+<span class="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-amber-400 ring-2 ring-white flex items-center justify-center text-[7px] text-amber-950 font-bold">★</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-1.5">
+<span class="font-pixel text-[10px] font-bold text-primary uppercase tracking-wider">Misi Harian Tanuki</span>
+<span class="font-pixel text-[9px] font-bold bg-amber-100 text-amber-900 border border-amber-300/60 px-1 py-0.2 rounded" id="xp-tag">+50 XP</span>
+</div>
+<p class="text-[12px] text-on-surface truncate font-normal mt-0.5" id="quest-desc">Hemat jajan kopi sore ini untuk +50 Poin Daun Emas</p>
+</div>
+<button class="px-2.5 py-1.5 rounded-lg bg-primary hover:bg-primary-container text-white font-pixel text-[10px] font-bold shrink-0 active:scale-95 transition-all duration-200 shadow-xs relative overflow-hidden" id="claim-quest-btn">
+<span class="relative z-10" id="claim-btn-text">KLAIM</span>
+</button>
+</div>
+<!-- Transaction Ledger Section -->
+<div class="flex flex-col gap-2 mt-1">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-primary text-[18px]">receipt_long</span>
+<span class="text-[15px] font-semibold text-on-surface">Transaksi Daun Terkini</span>
+</div>
+<a class="font-pixel text-[11px] font-bold text-primary hover:underline flex items-center gap-0.5 active:opacity-75 transition-opacity" href="#">
+<span>Semua</span>
+<span class="material-symbols-outlined text-[13px]">chevron_right</span>
+</a>
+</div>
+<!-- Transaction List Card Container with Rich Dimension Category Avatars -->
+<div class="flex flex-col rounded-2xl bg-surface-container-lowest border border-black/[0.06] divide-y divide-black/[0.04] shadow-[0_2px_8px_rgba(0,0,0,0.03)] overflow-hidden"><!-- Tx 1: Kopi Susu Matcha (Plump Clay Cup with Creamy Matcha & Mini Steam) --><div class="flex items-center gap-3 p-3 hover:bg-surface-container-low/50 active:bg-surface-container-low transition-colors group cursor-pointer"><div class="relative w-11 h-11 rounded-2xl bg-gradient-to-br from-amber-100 via-stone-100 to-emerald-100 border border-emerald-900/10 flex items-center justify-center shrink-0 shadow-[0_3px_8px_rgba(120,53,15,0.12),inset_0_2px_4px_rgba(255,255,255,0.85)] group-hover:scale-105 transition-transform duration-200 overflow-hidden"><div class="absolute inset-x-1 top-0.5 h-2 rounded-t-lg bg-gradient-to-b from-white/70 to-transparent pointer-events-none"></div><svg class="w-7 h-7 drop-shadow-[0_2px_4px_rgba(120,53,15,0.25)]" viewbox="0 0 32 32"><defs><lineargradient id="clayCup" x1="0%" x2="100%" y1="0%" y2="100%"><stop offset="0%" stop-color="#fef3c7"></stop><stop offset="100%" stop-color="#fde68a"></stop></lineargradient><lineargradient id="clayMatchaFoam" x1="0%" x2="100%" y1="0%" y2="100%"><stop offset="0%" stop-color="#86efac"></stop><stop offset="100%" stop-color="#22c55e"></stop></lineargradient></defs><rect fill="url(#clayCup)" height="14" rx="4.5" width="15" x="7" y="11"></rect><path d="M22 13H25C26.5 13 27.5 14.2 27.5 15.5C27.5 17.5 26 19 24 19H22" fill="none" stroke="#f59e0b" stroke-linecap="round" stroke-width="2"></path><ellipse cx="14.5" cy="11" fill="url(#clayMatchaFoam)" rx="7.5" ry="3"></ellipse><ellipse cx="14.5" cy="11" fill="#ffffff" opacity="0.6" rx="4.5" ry="1.8"></ellipse><circle cx="14.5" cy="11" fill="#15803d" r="1.2"></circle><path d="M12 5C11.5 6.5 13 7.5 12.5 9" stroke="#bbf7d0" stroke-linecap="round" stroke-width="1.4"></path><path d="M16 4C15.5 5.5 17 6.8 16.5 8" stroke="#bbf7d0" stroke-linecap="round" stroke-width="1.4"></path><ellipse cx="10.5" cy="15" fill="#ffffff" opacity="0.55" rx="2" ry="4"></ellipse></svg><span class="absolute -top-1 right-0 text-[10px] leading-none animate-sway-leaf">🍃</span></div><div class="flex-1 min-w-0"><div class="flex items-center justify-between gap-1"><span class="text-[13px] font-semibold text-on-surface truncate">Kopi Susu Matcha</span><span class="font-pixel text-[12px] font-bold text-on-surface shrink-0">-Rp 28.000</span></div><div class="flex items-center justify-between gap-1 mt-0.5"><span class="text-[12px] text-on-surface-variant truncate">Kafe Koma · Hari ini, 14:20</span><span class="font-pixel text-[10px] text-amber-900 bg-amber-50 border border-amber-200/60 px-1.5 py-0.5 rounded shadow-xs">Jajan &amp; Makan</span></div></div></div><!-- Tx 2: MRT Pulang Pergi (Plump 3D Clay Capsule Train with Glowing Round Headlights) --><div class="flex items-center gap-3 p-3 hover:bg-surface-container-low/50 active:bg-surface-container-low transition-colors group cursor-pointer"><div class="relative w-11 h-11 rounded-2xl bg-gradient-to-br from-sky-100 via-blue-50 to-indigo-100 border border-blue-900/10 flex items-center justify-center shrink-0 shadow-[0_3px_8px_rgba(37,99,235,0.14),inset_0_2px_4px_rgba(255,255,255,0.85)] group-hover:scale-105 transition-transform duration-200 overflow-hidden"><div class="absolute inset-x-1 top-0.5 h-2 rounded-t-lg bg-gradient-to-b from-white/70 to-transparent pointer-events-none"></div><svg class="w-7 h-7 drop-shadow-[0_2px_4px_rgba(29,78,216,0.3)]" viewbox="0 0 32 32"><defs><lineargradient id="clayTrain" x1="0%" x2="0%" y1="0%" y2="100%"><stop offset="0%" stop-color="#60a5fa"></stop><stop offset="60%" stop-color="#2563eb"></stop><stop offset="100%" stop-color="#1d4ed8"></stop></lineargradient></defs><rect fill="url(#clayTrain)" height="20" rx="7" width="20" x="6" y="6"></rect><rect fill="#e0f2fe" height="8" rx="3" width="14" x="9" y="9"></rect><rect fill="#0284c7" height="5" rx="1.5" width="4.5" x="11" y="10.5"></rect><rect fill="#0284c7" height="5" rx="1.5" width="4.5" x="16.5" y="10.5"></rect><ellipse cx="16" cy="7.5" fill="#ffffff" opacity="0.75" rx="7" ry="1.4"></ellipse><circle cx="10" cy="20.5" fill="#fef08a" r="2"></circle><circle cx="22" cy="20.5" fill="#fef08a" r="2"></circle><circle cx="9.5" cy="20" fill="#ffffff" r="0.8"></circle><circle cx="21.5" cy="20" fill="#ffffff" r="0.8"></circle><rect fill="#1e3a8a" height="2" rx="1" width="6" x="13" y="21"></rect></svg><span class="absolute top-1 right-1 text-[8px] text-amber-500">⭐</span></div><div class="flex-1 min-w-0"><div class="flex items-center justify-between gap-1"><span class="text-[13px] font-semibold text-on-surface truncate">MRT Pulang Pergi</span><span class="font-pixel text-[12px] font-bold text-on-surface shrink-0">-Rp 14.000</span></div><div class="flex items-center justify-between gap-1 mt-0.5"><span class="text-[12px] text-on-surface-variant truncate">Stasiun Dukuh Atas · Kemarin</span><span class="font-pixel text-[10px] text-blue-700 bg-blue-50 border border-blue-200/60 px-1.5 py-0.5 rounded shadow-xs">Transport</span></div></div></div><!-- Tx 3: Freelance Design Gig (Soft 3D Clay Stylus Pen with Embossed Gold Koban Coin) --><div class="flex items-center gap-3 p-3 hover:bg-surface-container-low/50 active:bg-surface-container-low transition-colors group cursor-pointer"><div class="relative w-11 h-11 rounded-2xl bg-gradient-to-br from-emerald-100 via-teal-50 to-green-100 border border-emerald-900/15 flex items-center justify-center shrink-0 shadow-[0_3px_8px_rgba(16,185,129,0.18),inset_0_2px_4px_rgba(255,255,255,0.85)] group-hover:scale-105 transition-transform duration-200 overflow-hidden"><div class="absolute inset-x-1 top-0.5 h-2 rounded-t-lg bg-gradient-to-b from-white/80 to-transparent pointer-events-none"></div><svg class="w-7 h-7 drop-shadow-[0_2px_4px_rgba(4,120,87,0.3)]" viewbox="0 0 32 32"><defs><lineargradient id="clayStylus" x1="0%" x2="100%" y1="0%" y2="100%"><stop offset="0%" stop-color="#34d399"></stop><stop offset="100%" stop-color="#059669"></stop></lineargradient></defs><rect fill="url(#clayStylus)" height="17" rx="3" transform="rotate(35 16 12.5)" width="6" x="13" y="4"></rect><path d="M7.5 24.5L11 20L15 22.5L10 26L7.5 24.5Z" fill="#047857"></path><circle cx="7" cy="26" fill="#111827" r="1.2"></circle><ellipse cx="18" cy="8" fill="#ffffff" opacity="0.75" rx="1.8" ry="4" transform="rotate(35 18 8)"></ellipse><circle cx="22" cy="22" fill="#f59e0b" r="6"></circle><circle cx="22" cy="22" fill="#fbbf24" r="4.5"></circle><rect fill="#b45309" height="3" rx="0.6" width="3" x="20.5" y="20.5"></rect><ellipse cx="20" cy="18.5" fill="#ffffff" opacity="0.8" rx="2.5" ry="1"></ellipse></svg><span class="absolute top-1 left-1 w-1.5 h-1.5 rounded-full bg-emerald-400 ring-1 ring-white"></span></div><div class="flex-1 min-w-0"><div class="flex items-center justify-between gap-1"><span class="text-[13px] font-semibold text-primary truncate">Freelance Design Gig</span><span class="font-pixel text-[12px] font-bold text-primary shrink-0">+Rp 1.500.000</span></div><div class="flex items-center justify-between gap-1 mt-0.5"><span class="text-[12px] text-on-surface-variant truncate">Studio Daun Studio · Kemarin</span><span class="font-pixel text-[10px] text-emerald-800 bg-emerald-50 border border-emerald-200/70 px-1.5 py-0.5 rounded shadow-xs">Penghasilan</span></div></div></div><!-- Tx 4: Langganan Spotify (Plump Round Lavender Clay Headphones with Soft Cushions) --><div class="flex items-center gap-3 p-3 hover:bg-surface-container-low/50 active:bg-surface-container-low transition-colors group cursor-pointer"><div class="relative w-11 h-11 rounded-2xl bg-gradient-to-br from-purple-100 via-fuchsia-50 to-emerald-100 border border-purple-900/10 flex items-center justify-center shrink-0 shadow-[0_3px_8px_rgba(147,51,234,0.14),inset_0_2px_4px_rgba(255,255,255,0.85)] group-hover:scale-105 transition-transform duration-200 overflow-hidden"><div class="absolute inset-x-1 top-0.5 h-2 rounded-t-lg bg-gradient-to-b from-white/70 to-transparent pointer-events-none"></div><svg class="w-7 h-7 drop-shadow-[0_2px_4px_rgba(107,33,168,0.3)]" viewbox="0 0 32 32"><defs><lineargradient id="clayPhones" x1="0%" x2="100%" y1="0%" y2="100%"><stop offset="0%" stop-color="#c084fc"></stop><stop offset="100%" stop-color="#7e22ce"></stop></lineargradient></defs><path d="M8 17C8 11.5 11.5 7 16 7C20.5 7 24 11.5 24 17" fill="none" stroke="url(#clayPhones)" stroke-linecap="round" stroke-width="3.2"></path><ellipse cx="16" cy="7.5" fill="#ffffff" opacity="0.8" rx="5" ry="1.2"></ellipse><rect fill="#6b21a8" height="10" rx="3" width="6" x="5" y="15"></rect><rect fill="#6b21a8" height="10" rx="3" width="6" x="21" y="15"></rect><rect fill="#d8b4fe" height="8" rx="1.5" width="3" x="8" y="16"></rect><rect fill="#d8b4fe" height="8" rx="1.5" width="3" x="21" y="16"></rect><ellipse cx="6.5" cy="17" fill="#ffffff" opacity="0.7" rx="1.5" ry="2.5"></ellipse><ellipse cx="24.5" cy="17" fill="#ffffff" opacity="0.7" rx="1.5" ry="2.5"></ellipse></svg><span class="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-purple-400"></span></div><div class="flex-1 min-w-0"><div class="flex items-center justify-between gap-1"><span class="text-[13px] font-semibold text-on-surface truncate">Langganan Spotify</span><span class="font-pixel text-[12px] font-bold text-on-surface shrink-0">-Rp 54.990</span></div><div class="flex items-center justify-between gap-1 mt-0.5"><span class="text-[12px] text-on-surface-variant truncate">Auto-Debit Bulanan · 22 Mei</span><span class="font-pixel text-[10px] text-purple-800 bg-purple-50 border border-purple-200/60 px-1.5 py-0.5 rounded shadow-xs">Hiburan</span></div></div></div></div>
+</div>
+<!-- Clean Sanctuary Note -->
+<div class="flex items-center justify-center gap-1.5 py-3 text-on-surface-variant font-pixel text-[10px] font-bold select-none opacity-60">
+<span>⛩️</span>
+<span class="tracking-wide">DISIMPAN SECARA AMAN DI KUIL TANUKI</span>
+<span>⛩️</span>
+</div>
+</div>
+</main>
+<!-- Rich Dual-tone Bottom Navigation Bar with Grand Floating '+' Action -->
+<nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface/90 backdrop-blur-xl border-t border-black/[0.05]" data-active-classes="text-primary font-semibold relative after:content-[''] after:absolute after:bottom-1 after:w-1.5 after:h-1.5 after:bg-primary after:rounded-full">
+<div class="flex items-center justify-around h-16 px-space-sm max-w-md mx-auto"><!-- Tab 1: Dompet (Active with Plump Clay Pill Highlight & Tanuki Leaf) --><a aria-current="page" class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] gap-0.5 transition-all text-primary font-bold relative px-2.5 py-1 rounded-xl bg-emerald-100/80 shadow-[0_2px_6px_rgba(4,52,23,0.15),inset_0_1px_2px_rgba(255,255,255,0.9)] active:scale-95 duration-150" data-path="dompet" href="#"><div class="relative flex items-center justify-center"><span class="material-symbols-outlined text-[23px] text-primary drop-shadow-[0_1px_2px_rgba(4,52,23,0.3)]" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span><span class="absolute -top-1 -right-1 text-[9px] animate-sway-leaf">🍃</span></div><span class="font-pixel text-[10px] tracking-wide text-primary font-extrabold">Dompet</span></a><!-- Tab 2: Grand Floating '+' Catat Transaksi Button (Squishy 3D Clay Emerald Button with Embossed Leaf) --><a class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] -mt-5 group active:scale-95 duration-150" data-path="catat" href="#"><div class="relative w-13 h-13 rounded-full bg-gradient-to-tr from-emerald-950 via-primary to-emerald-600 text-white shadow-[0_8px_20px_rgba(31,75,44,0.45),inset_0_3px_5px_rgba(255,255,255,0.65),inset_0_-3px_5px_rgba(0,0,0,0.4)] flex items-center justify-center group-hover:scale-105 active:scale-90 transition-all duration-150 border-2 border-emerald-300/60 ring-2 ring-white"><div class="absolute inset-x-2 top-0.5 h-3.5 rounded-full bg-gradient-to-b from-white/60 to-transparent pointer-events-none"></div><span class="material-symbols-outlined text-[28px] drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)] font-bold">add</span><span class="absolute bottom-1 right-2 text-[9px] text-emerald-200 pointer-events-none drop-shadow-xs">🍃</span></div><span class="font-pixel text-[10px] tracking-wide text-on-surface-variant font-bold mt-1">Catat</span></a><!-- Tab 3: Analitik (Soft 3D Clay Bar Indicator) --><a class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] gap-0.5 text-on-surface-variant hover:text-on-surface active:scale-95 transition-all duration-150 group" data-path="analitik" href="#"><div class="relative flex items-center justify-center group-hover:text-primary transition-colors"><span class="material-symbols-outlined text-[22px]">bar_chart</span><span class="absolute -top-0.5 right-0 w-1.5 h-1.5 rounded-full bg-blue-500/70 opacity-0 group-hover:opacity-100 transition-opacity"></span></div><span class="font-pixel text-[10px] tracking-wide font-medium">Analitik</span></a><!-- Tab 4: Celengan (Soft 3D Clay Koban Indicator) --><a class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] gap-0.5 text-on-surface-variant hover:text-on-surface active:scale-95 transition-all duration-150 group" data-path="celengan" href="#"><div class="relative flex items-center justify-center group-hover:text-primary transition-colors"><span class="material-symbols-outlined text-[22px]">savings</span><span class="absolute -top-1 -right-1 text-[8px] opacity-0 group-hover:opacity-100 transition-opacity">🪙</span></div><span class="font-pixel text-[10px] tracking-wide font-medium">Celengan</span></a></div>
+</nav>
+<script>
+    (function() {
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // ==========================================
+      // 1. Smooth Count-Up Number Rolling on Load
+      // ==========================================
+      const balanceDisplay = document.getElementById('balance-display');
+      const miniBalanceDisplay = document.getElementById('mini-balance-display');
+      const incomeDisplay = document.getElementById('income-display');
+      const expenseDisplay = document.getElementById('expense-display');
+      const kobanDisplay = document.getElementById('balance-koban-display');
+
+      const targetTotal = 14850000;
+      const targetIncome = 8500000;
+      const targetExpense = 3650000;
+      const targetKoban = 1485;
+
+      let isHidden = false;
+      let currentTotalVal = 0;
+
+      function formatIDR(num) {
+        return num.toLocaleString('id-ID');
+      }
+
+      function easeOutExpo(x) {
+        return x === 1 ? 1 : 1 - Math.pow(2, -10 * x);
+      }
+
+      function animateCountUp() {
+        if (prefersReducedMotion) {
+          if (balanceDisplay) balanceDisplay.textContent = formatIDR(targetTotal);
+          if (miniBalanceDisplay) miniBalanceDisplay.textContent = 'Rp ' + formatIDR(targetTotal);
+          if (incomeDisplay) incomeDisplay.textContent = '+Rp ' + formatIDR(targetIncome);
+          if (expenseDisplay) expenseDisplay.textContent = '-Rp ' + formatIDR(targetExpense);
+          if (kobanDisplay) kobanDisplay.textContent = '≈ ' + targetKoban.toLocaleString('id-ID') + ' Tanuki Koban';
+          currentTotalVal = targetTotal;
+          return;
+        }
+
+        const duration = 1400; // ms
+        const startTime = performance.now();
+
+        function updateFrame(now) {
+          const elapsed = now - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          const eased = easeOutExpo(progress);
+
+          const currentTotal = Math.floor(eased * targetTotal);
+          const currentInc = Math.floor(eased * targetIncome);
+          const currentExp = Math.floor(eased * targetExpense);
+          const currentKob = Math.floor(eased * targetKoban);
+
+          currentTotalVal = currentTotal;
+
+          if (!isHidden) {
+            if (balanceDisplay) balanceDisplay.textContent = formatIDR(currentTotal);
+            if (miniBalanceDisplay) miniBalanceDisplay.textContent = 'Rp ' + formatIDR(currentTotal);
+            if (kobanDisplay) kobanDisplay.textContent = '≈ ' + currentKob.toLocaleString('id-ID') + ' Tanuki Koban';
+          }
+          if (incomeDisplay) incomeDisplay.textContent = '+Rp ' + formatIDR(currentInc);
+          if (expenseDisplay) expenseDisplay.textContent = '-Rp ' + formatIDR(currentExp);
+
+          if (progress < 1) {
+            requestAnimationFrame(updateFrame);
+          } else {
+            currentTotalVal = targetTotal;
+            if (!isHidden) {
+              if (balanceDisplay) balanceDisplay.textContent = formatIDR(targetTotal);
+              if (miniBalanceDisplay) miniBalanceDisplay.textContent = 'Rp ' + formatIDR(targetTotal);
+              if (kobanDisplay) kobanDisplay.textContent = '≈ ' + targetKoban.toLocaleString('id-ID') + ' Tanuki Koban';
+            }
+          }
+        }
+
+        requestAnimationFrame(updateFrame);
+      }
+
+      // Initial roll on page load
+      animateCountUp();
+
+      // ==========================================
+      // 2. Eye Toggle Privacy with 3D Flip & Morph
+      // ==========================================
+      const toggleBtn = document.getElementById('toggle-balance-btn');
+      const eyeIcon = document.getElementById('eye-icon');
+      const kobanWrapper = document.getElementById('balance-koban-wrapper');
+
+      if (toggleBtn && balanceDisplay) {
+        toggleBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          isHidden = !isHidden;
+
+          if (prefersReducedMotion) {
+            if (isHidden) {
+              balanceDisplay.textContent = '••••••••';
+              if (miniBalanceDisplay) miniBalanceDisplay.textContent = 'Rp ••••••••';
+              if (eyeIcon) eyeIcon.textContent = 'visibility_off';
+              if (kobanWrapper) kobanWrapper.style.opacity = '0.3';
+            } else {
+              balanceDisplay.textContent = formatIDR(currentTotalVal || targetTotal);
+              if (miniBalanceDisplay) miniBalanceDisplay.textContent = 'Rp ' + formatIDR(currentTotalVal || targetTotal);
+              if (eyeIcon) eyeIcon.textContent = 'visibility';
+              if (kobanWrapper) kobanWrapper.style.opacity = '1';
+            }
+            return;
+          }
+
+          // 3D Flip Out transition
+          balanceDisplay.classList.add('balance-flip-out');
+          eyeIcon.style.transform = 'scale(0.8) rotate(20deg)';
+
+          setTimeout(() => {
+            if (isHidden) {
+              balanceDisplay.textContent = '••••••••';
+              if (miniBalanceDisplay) miniBalanceDisplay.textContent = 'Rp ••••••••';
+              if (eyeIcon) eyeIcon.textContent = 'visibility_off';
+              if (kobanWrapper) kobanWrapper.style.opacity = '0.35';
+            } else {
+              balanceDisplay.textContent = formatIDR(currentTotalVal || targetTotal);
+              if (miniBalanceDisplay) miniBalanceDisplay.textContent = 'Rp ' + formatIDR(currentTotalVal || targetTotal);
+              if (eyeIcon) eyeIcon.textContent = 'visibility';
+              if (kobanWrapper) kobanWrapper.style.opacity = '1';
+            }
+
+            balanceDisplay.classList.remove('balance-flip-out');
+            balanceDisplay.classList.add('balance-flip-in');
+            eyeIcon.style.transform = 'scale(1) rotate(0deg)';
+
+            setTimeout(() => {
+              balanceDisplay.classList.remove('balance-flip-in');
+            }, 250);
+          }, 180);
+        });
+      }
+
+      // ==========================================
+      // 3. Carousel Navigation & Swipe Dots Sync
+      // ==========================================
+      const carousel = document.getElementById('insight-carousel');
+      const dotsContainer = document.getElementById('carousel-dots-container');
+      const prevBtn = document.getElementById('carousel-prev-btn');
+      const nextBtn = document.getElementById('carousel-next-btn');
+      const dots = dotsContainer ? Array.from(dotsContainer.querySelectorAll('button')) : [];
+
+      function updateActiveDot(index) {
+        dots.forEach((dot, idx) => {
+          if (idx === index) {
+            dot.className = 'w-6 h-1.5 rounded-full bg-primary transition-all duration-300 active:scale-95';
+          } else {
+            dot.className = 'w-2 h-1.5 rounded-full bg-surface-container-high transition-all duration-300 active:scale-95';
+          }
+        });
+      }
+
+      function scrollToSlide(index) {
+        if (!carousel) return;
+        const cards = carousel.querySelectorAll('[data-carousel-index]');
+        if (cards[index]) {
+          cards[index].scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', inline: 'center', block: 'nearest' });
+          updateActiveDot(index);
+        }
+      }
+
+      if (carousel) {
+        let scrollTimeout;
+        carousel.addEventListener('scroll', () => {
+          clearTimeout(scrollTimeout);
+          scrollTimeout = setTimeout(() => {
+            const scrollLeft = carousel.scrollLeft;
+            const cardWidth = carousel.firstElementChild ? carousel.firstElementChild.offsetWidth : carousel.offsetWidth;
+            const activeIdx = Math.round(scrollLeft / (cardWidth + 12)); // 12px is gap-3
+            const clamped = Math.max(0, Math.min(dots.length - 1, activeIdx));
+            updateActiveDot(clamped);
+          }, 60);
+        }, { passive: true });
+      }
+
+      dots.forEach((dot, idx) => {
+        dot.addEventListener('click', (e) => {
+          e.stopPropagation();
+          scrollToSlide(idx);
+        });
+      });
+
+      if (prevBtn) {
+        prevBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (!carousel) return;
+          const cardWidth = carousel.firstElementChild ? carousel.firstElementChild.offsetWidth : carousel.offsetWidth;
+          const currentIdx = Math.round(carousel.scrollLeft / (cardWidth + 12));
+          const prevIdx = Math.max(0, currentIdx - 1);
+          scrollToSlide(prevIdx);
+        });
+      }
+
+      if (nextBtn) {
+        nextBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (!carousel) return;
+          const cardWidth = carousel.firstElementChild ? carousel.firstElementChild.offsetWidth : carousel.offsetWidth;
+          const currentIdx = Math.round(carousel.scrollLeft / (cardWidth + 12));
+          const nextIdx = Math.min(dots.length - 1, currentIdx + 1);
+          scrollToSlide(nextIdx);
+        });
+      }
+
+      // ==========================================
+      // 4. Daily Mission Claim Celebration Burst & Flying XP
+      // ==========================================
+      const claimBtn = document.getElementById('claim-quest-btn');
+      const claimBtnText = document.getElementById('claim-btn-text');
+      const levelBadge = document.getElementById('level-badge');
+      const levelBadgeText = document.getElementById('level-badge-text');
+      const confettiContainer = document.getElementById('confetti-container');
+      let isClaimed = false;
+
+      function spawnCelebrationBurst(originX, originY) {
+        if (!confettiContainer || prefersReducedMotion) return;
+
+        const emojis = ['🍃', '✨', '🪙', '🌰', '⭐'];
+        const particleCount = 24;
+
+        for (let i = 0; i < particleCount; i++) {
+          const p = document.createElement('div');
+          const isEmoji = Math.random() > 0.5;
+          p.className = 'fixed pointer-events-none select-none z-50 text-[14px]';
+
+          if (isEmoji) {
+            p.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+          } else {
+            p.style.width = '8px';
+            p.style.height = '8px';
+            p.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+            p.style.backgroundColor = ['#10b981', '#f59e0b', '#34d399', '#fef08a', '#1f4b2c'][
+              Math.floor(Math.random() * 5)
+            ];
+          }
+
+          p.style.left = originX + 'px';
+          p.style.top = originY + 'px';
+          confettiContainer.appendChild(p);
+
+          const angle = (Math.PI * 2 * i) / particleCount + (Math.random() - 0.5) * 0.5;
+          const velocity = 80 + Math.random() * 90;
+          const destX = Math.cos(angle) * velocity;
+          const destY = Math.sin(angle) * velocity - 35; // slightly upward bias
+
+          p.animate(
+            [
+              { transform: 'translate(-50%, -50%) scale(0.6) rotate(0deg)', opacity: 1 },
+              {
+                transform: `translate(calc(-50% + ${destX}px), calc(-50% + ${destY}px)) scale(${0.8 + Math.random() * 0.4}) rotate(${Math.random() * 360}deg)`,
+                opacity: 0.9,
+                offset: 0.65
+              },
+              {
+                transform: `translate(calc(-50% + ${destX * 1.15}px), calc(-50% + ${destY + 45}px)) scale(0.2) rotate(${Math.random() * 540}deg)`,
+                opacity: 0
+              }
+            ],
+            {
+              duration: 900 + Math.random() * 300,
+              easing: 'cubic-bezier(0.25, 1, 0.5, 1)',
+              fill: 'forwards'
+            }
+          ).onfinish = () => p.remove();
+        }
+
+        // Floating "+50 XP" Token gliding toward top header badge
+        const floatTag = document.createElement('div');
+        floatTag.className = 'fixed pointer-events-none z-50 font-pixel font-bold text-xs text-amber-700 bg-amber-100 border border-amber-300 px-2 py-0.5 rounded-full shadow-lg';
+        floatTag.textContent = '+50 XP';
+        floatTag.style.left = originX + 'px';
+        floatTag.style.top = originY + 'px';
+        confettiContainer.appendChild(floatTag);
+
+        floatTag.style.animation = 'floatUpFade 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards';
+        setTimeout(() => {
+          floatTag.remove();
+        }, 1250);
+      }
+
+      if (claimBtn) {
+        claimBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          if (isClaimed) return;
+          isClaimed = true;
+
+          const rect = claimBtn.getBoundingClientRect();
+          const centerX = rect.left + rect.width / 2;
+          const centerY = rect.top + rect.height / 2;
+
+          // 1. Particle burst & floating XP
+          spawnCelebrationBurst(centerX, centerY);
+
+          // 2. Button state change to TERKLAIM ✓ with satisfying pulse
+          claimBtn.classList.remove('bg-primary', 'hover:bg-primary-container');
+          claimBtn.classList.add('bg-emerald-700', 'ring-2', 'ring-emerald-400', 'scale-105');
+          if (claimBtnText) claimBtnText.textContent = 'TERKLAIM ✓';
+
+          // 3. Jiggle Level Steward Badge at the top
+          if (levelBadge) {
+            setTimeout(() => {
+              levelBadge.classList.add('xp-badge-active', 'bg-emerald-100', 'text-emerald-900', 'border-emerald-300');
+              if (levelBadgeText) levelBadgeText.textContent = 'LVL 12 +50 XP';
+
+              setTimeout(() => {
+                levelBadge.classList.remove('xp-badge-active');
+                if (levelBadgeText) levelBadgeText.textContent = 'LVL 12 STEWARD';
+              }, 1400);
+            }, 350);
+          }
+
+          // Reset after 4.5s
+          setTimeout(() => {
+            claimBtn.classList.remove('bg-emerald-700', 'ring-2', 'ring-emerald-400', 'scale-105');
+            claimBtn.classList.add('bg-primary', 'hover:bg-primary-container');
+            if (claimBtnText) claimBtnText.textContent = 'KLAIM';
+            isClaimed = false;
+          }, 4500);
+        });
+      }
+
+      // ==========================================
+      // 5. Interactive Spending Card Tap
+      // ==========================================
+      const spendingCard = document.getElementById('spending-tracker-card');
+      const spendingTooltip = document.getElementById('spending-tooltip');
+      const spendingRemaining = document.getElementById('spending-remaining-text');
+
+      if (spendingCard && spendingTooltip) {
+        spendingCard.addEventListener('click', function() {
+          spendingTooltip.classList.remove('opacity-0', '-translate-y-0');
+          spendingTooltip.classList.add('opacity-100', '-translate-y-1');
+
+          if (spendingRemaining) {
+            spendingRemaining.classList.add('scale-105', 'text-emerald-700');
+          }
+
+          setTimeout(() => {
+            spendingTooltip.classList.remove('opacity-100', '-translate-y-1');
+            spendingTooltip.classList.add('opacity-0');
+            if (spendingRemaining) {
+              spendingRemaining.classList.remove('scale-105', 'text-emerald-700');
+            }
+          }, 2400);
+        });
+      }
+
+      // Interactive Mascot Card Click: subtle cheer response
+      const mascotCard = document.getElementById('guardian-card');
+      if (mascotCard) {
+        mascotCard.addEventListener('click', function() {
+          mascotCard.classList.add('scale-[0.98]');
+          setTimeout(() => {
+            mascotCard.classList.remove('scale-[0.98]');
+          }, 150);
+        });
+      }
+
+      // ==========================================
+      // 6. Flutter-style SliverAppBar with Parallax & Scroll Detection
+      // ==========================================
+      const sliverAppBar = document.getElementById('sliver-app-bar');
+      const sliverDefaultTitle = document.getElementById('sliver-default-title');
+      const sliverCollapsedBar = document.getElementById('sliver-collapsed-bar');
+      const heroCard = document.getElementById('hero-card');
+
+      let ticking = false;
+
+      function handleScroll() {
+        const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+
+        const collapseStart = 110;
+        const collapseEnd = 240;
+
+        let progress = 0;
+        if (scrollY > collapseStart) {
+          progress = Math.min(1, (scrollY - collapseStart) / (collapseEnd - collapseStart));
+        }
+
+        if (sliverAppBar) {
+          if (scrollY > 15) {
+            sliverAppBar.classList.add('shadow-[0_4px_20px_rgba(0,0,0,0.06)]', 'bg-surface/95', 'border-black/[0.08]');
+            sliverAppBar.classList.remove('bg-surface/85', 'border-black/[0.04]');
+          } else {
+            sliverAppBar.classList.remove('shadow-[0_4px_20px_rgba(0,0,0,0.06)]', 'bg-surface/95', 'border-black/[0.08]');
+            sliverAppBar.classList.add('bg-surface/85', 'border-black/[0.04]');
+          }
+        }
+
+        // Cross-fade titles
+        if (sliverDefaultTitle) {
+          sliverDefaultTitle.style.opacity = Math.max(0, 1 - progress * 1.5);
+          sliverDefaultTitle.style.transform = `translateX(${-progress * 12}px)`;
+          sliverDefaultTitle.style.pointerEvents = progress > 0.8 ? 'none' : 'auto';
+        }
+
+        if (sliverCollapsedBar) {
+          sliverCollapsedBar.style.opacity = Math.min(1, Math.max(0, (progress - 0.2) * 1.25));
+          sliverCollapsedBar.style.transform = `translateY(${(1 - progress) * 8}px)`;
+          sliverCollapsedBar.style.pointerEvents = progress > 0.5 ? 'auto' : 'none';
+        }
+
+        // Hero card subtle parallax scale and gentle fade out
+        if (heroCard && !prefersReducedMotion) {
+          if (scrollY < 340) {
+            const parallaxOffset = scrollY * 0.12;
+            const cardScale = Math.max(0.96, 1 - (scrollY * 0.0002));
+            const cardOpacity = Math.max(0.35, 1 - (scrollY / 340) * 0.65);
+            heroCard.style.transform = `translateY(${parallaxOffset}px) scale(${cardScale})`;
+            heroCard.style.opacity = cardOpacity;
+          } else {
+            heroCard.style.transform = 'translateY(40px) scale(0.96)';
+            heroCard.style.opacity = '0.35';
+          }
+        }
+
+        ticking = false;
+      }
+
+      window.addEventListener('scroll', function() {
+        if (!ticking) {
+          window.requestAnimationFrame(handleScroll);
+          ticking = true;
+        }
+      }, { passive: true });
+
+      handleScroll();
+    })();
+  </script>
+</body></html>

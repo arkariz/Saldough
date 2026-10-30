@@ -21,6 +21,7 @@ class DsCarousel extends StatefulWidget {
     this.title,
     this.titleIcon,
     this.onPageChanged,
+    this.adaptiveHeight = false,
     super.key,
   });
 
@@ -45,6 +46,11 @@ class DsCarousel extends StatefulWidget {
   /// Dipanggil saat halaman aktif berubah.
   final ValueChanged<int>? onPageChanged;
 
+  /// Tinggi mengikuti halaman aktif (beranimasi) alih-alih halaman
+  /// tertinggi. Dipakai bila halamannya jauh berbeda tinggi, mis. slide
+  /// status satu baris bersama kartu anggaran.
+  final bool adaptiveHeight;
+
   @override
   State<DsCarousel> createState() => _DsCarouselState();
 }
@@ -52,10 +58,24 @@ class DsCarousel extends StatefulWidget {
 class _DsCarouselState extends State<DsCarousel> {
   final PageController _controller = PageController();
   int _index = 0;
+  List<double?> _heights = const [];
+
+  void _reportHeight(int i, double height) {
+    final next = List<double?>.generate(widget.children.length, (k) => k < _heights.length ? _heights[k] : null);
+    if (next[i] == height) return;
+    next[i] = height;
+    setState(() => _heights = next);
+  }
+
+  double? get _currentHeight {
+    if (!widget.adaptiveHeight || _index >= _heights.length) return null;
+    return _heights[_index];
+  }
 
   @override
   void didUpdateWidget(DsCarousel oldWidget) {
     super.didUpdateWidget(oldWidget);
+    if (_heights.length > widget.children.length) _heights = _heights.sublist(0, widget.children.length);
     // Jumlah halaman bisa berubah (slide status datang dan pergi).
     final last = widget.children.length - 1;
     if (_index > last && last >= 0) {
@@ -80,6 +100,18 @@ class _DsCarouselState extends State<DsCarousel> {
       _controller.animateToPage(target, duration: DsMotion.carousel, curve: DsMotion.curve);
     }
   }
+
+  /// Tinggi sementara mode adaptif sampai halaman pertama melapor.
+  static const double _fallbackHeight = 72;
+
+  Widget _pager(List<Widget> pages) => PageView(
+    controller: _controller,
+    onPageChanged: (i) {
+      setState(() => _index = i);
+      widget.onPageChanged?.call(i);
+    },
+    children: pages,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -114,35 +146,45 @@ class _DsCarouselState extends State<DsCarousel> {
               ),
             ],
           ),
-        Stack(
-          children: [
-            // Pengukur: salinan tak terlihat semua halaman menentukan tinggi
-            // Stack (yang tertinggi). Tanpa semantik dan tanpa animasi.
-            for (final child in widget.children)
-              ExcludeSemantics(
-                child: TickerMode(
-                  enabled: false,
-                  child: Visibility(
-                    visible: false,
-                    maintainSize: true,
-                    maintainState: true,
-                    maintainAnimation: true,
-                    child: SizedBox(width: double.infinity, child: child),
+        if (widget.adaptiveHeight)
+          // Tinggi mengikuti halaman aktif: tiap halaman melapor tingginya
+          // sendiri (tanpa salinan pengukur) dan dibiarkan setinggi isinya di
+          // dalam bingkai (terpotong saat bergeser).
+          AnimatedContainer(
+            duration: DsMotion.reduced(context) ? Duration.zero : DsMotion.carousel,
+            curve: DsMotion.curve,
+            height: _currentHeight ?? _fallbackHeight,
+            child: _pager([
+              for (var i = 0; i < widget.children.length; i++)
+                OverflowBox(
+                  alignment: Alignment.topCenter,
+                  minHeight: 0,
+                  maxHeight: double.infinity,
+                  child: _HeightReporter(onHeight: (h) => _reportHeight(i, h), child: widget.children[i]),
+                ),
+            ]),
+          )
+        else
+          Stack(
+            children: [
+              // Pengukur: salinan tak terlihat semua halaman menentukan tinggi
+              // Stack (yang tertinggi). Tanpa semantik dan tanpa animasi.
+              for (final child in widget.children)
+                ExcludeSemantics(
+                  child: TickerMode(
+                    enabled: false,
+                    child: Visibility(
+                      visible: false,
+                      maintainSize: true,
+                      maintainState: true,
+                      maintainAnimation: true,
+                      child: SizedBox(width: double.infinity, child: child),
+                    ),
                   ),
                 ),
-              ),
-            Positioned.fill(
-              child: PageView(
-                controller: _controller,
-                onPageChanged: (i) {
-                  setState(() => _index = i);
-                  widget.onPageChanged?.call(i);
-                },
-                children: widget.children,
-              ),
-            ),
-          ],
-        ),
+              Positioned.fill(child: _pager(widget.children)),
+            ],
+          ),
         const SizedBox(height: 4),
         DsCarouselDots(
           count: widget.children.length,
@@ -238,5 +280,31 @@ class _Arrow extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+/// Melaporkan tinggi anak sesudah tata letak; tanpa [onHeight] hanya
+/// meneruskan anak.
+class _HeightReporter extends StatefulWidget {
+  const _HeightReporter({required this.child, this.onHeight});
+
+  final Widget child;
+  final ValueChanged<double>? onHeight;
+
+  @override
+  State<_HeightReporter> createState() => _HeightReporterState();
+}
+
+class _HeightReporterState extends State<_HeightReporter> {
+  @override
+  Widget build(BuildContext context) {
+    if (widget.onHeight != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        final box = context.findRenderObject();
+        if (box is RenderBox && box.hasSize) widget.onHeight?.call(box.size.height);
+      });
+    }
+    return widget.child;
   }
 }

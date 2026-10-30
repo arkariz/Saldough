@@ -231,8 +231,8 @@ class _HomePageState extends State<HomePage> {
           // terlihat supaya slide Siapkan dana dan Oktober dimulai tetap
           // dilaporkan ke carousel status.
           if (state.hasNoWallets && widget.forecast != null) Offstage(child: widget.forecast),
-          // Urutan: saldo → aksi cepat → "Perlu dicek" → misi → Freelance →
-          // wawasan → transaksi terbaru. Dua carousel tidak bertumpuk langsung.
+          // Urutan: saldo → aksi cepat → satu carousel (status, wawasan) →
+          // Freelance → transaksi terbaru.
           if (!state.hasNoWallets) ...[
             gap(),
             HomeQuickActions(
@@ -240,15 +240,19 @@ class _HomePageState extends State<HomePage> {
               onOpenReport: () => unawaited(
                 context.pushRoute(AnalysisRouteKeys.open, const AnalysisInput(source: AnalysisSource.home)),
               ),
+              onClaimed: () => setState(() => _claims++),
             ),
           ],
           // Slide status nyata tampil walau belum ada dompet (seperti kartu
-          // lama); kartu mood tiruan hanya bila ada dompet.
-          if (widget.statusBoard != null || (hasPreview && !state.hasNoWallets)) ...[
-            gap(),
-            HomeStatusSection(board: widget.statusBoard, showMood: hasPreview && !state.hasNoWallets),
+          // lama); slide wawasan tiruan hanya bila ada dompet.
+          if (widget.statusBoard != null || budget != null || (hasPreview && !state.hasNoWallets)) ...[
+            gap(DsSpacing.lg),
+            HomeCarouselSection(
+              board: widget.statusBoard,
+              budget: budget,
+              onOpenBudget: widget.onShowBudgets,
+            ),
           ],
-          if (!state.hasNoWallets && hasPreview) ...[gap(), HomeMissionBanner(onClaimed: () => setState(() => _claims++))],
           if (freelance != null) ...[
             gap(DsSpacing.lg),
             DsSectionHeader(
@@ -265,19 +269,6 @@ class _HomePageState extends State<HomePage> {
                 onOpen: () => _thenRefresh(() => context.pushRoute(FreelanceRouteKeys.overview, const EmptyInput())),
               ),
             ),
-          ],
-          if (budget != null || hasPreview) ...[
-            gap(DsSpacing.lg),
-            // Target tur membungkus seluruh carousel supaya tetap terbangun
-            // walau slide digeser, dan hanya ada bila anggaran nyata ada:
-            // langkah tur "Anggaran" tidak boleh menyorot slide tiruan.
-            if (budget != null)
-              SpotlightTarget(
-                spotlightKey: SpotlightKey.homeBudget,
-                child: HomeInsightCarousel(budget: budget, onOpenBudget: widget.onShowBudgets),
-              )
-            else
-              HomeInsightCarousel(budget: budget, onOpenBudget: widget.onShowBudgets),
           ],
           gap(DsSpacing.lg),
           if (state.hasTransactions) ...[

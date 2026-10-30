@@ -82,8 +82,8 @@ class DsStatusSlide extends StatelessWidget {
   }
 }
 
-/// Carousel status di atas kartu saldo: slide dari [board] (yang perlu dicek
-/// dulu) diikuti [trailing] (mis. kartu mood). Satu slide tampil tanpa titik;
+/// Carousel status: slide dari [board] (yang perlu dicek
+/// dulu) diikuti [extras] (mis. kartu anggaran). Satu slide tampil tanpa titik;
 /// dua atau lebih menjadi carousel dengan titik indikator. Tinggi mengikuti
 /// slide tertinggi (`DsCarousel`).
 class DsStatusCarousel extends StatelessWidget {
@@ -93,15 +93,15 @@ class DsStatusCarousel extends StatelessWidget {
     required this.previousLabel,
     required this.nextLabel,
     required this.dotLabel,
-    this.trailing,
+    this.extras = const [],
     super.key,
   });
 
   /// Papan sumber slide.
   final DsStatusBoard board;
 
-  /// Slide tambahan paling belakang (bukan data papan).
-  final Widget? trailing;
+  /// Slide tambahan paling belakang (bukan data papan), mis. kartu anggaran.
+  final List<Widget> extras;
 
   /// Label pembaca layar tombol sebelumnya.
   final String previousLabel;
@@ -123,7 +123,7 @@ class DsStatusCarousel extends StatelessWidget {
         final slides = board.slides;
         final children = <Widget>[
           for (final slide in slides) DsStatusSlide(key: ValueKey('status-slide-${slide.id}'), data: slide),
-          ?trailing,
+          ...extras,
         ];
         if (children.isEmpty) return const SizedBox.shrink();
         if (children.length == 1) return children.single;
@@ -131,6 +131,7 @@ class DsStatusCarousel extends StatelessWidget {
           previousLabel: previousLabel,
           nextLabel: nextLabel,
           dotLabel: dotLabel,
+          adaptiveHeight: true,
           children: [for (final child in children) Align(alignment: Alignment.topCenter, child: child)],
         );
       },

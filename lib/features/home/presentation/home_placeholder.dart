@@ -11,6 +11,3 @@ library;
 
 /// Saklar tunggal untuk semua data tiruan di Beranda.
 const bool kHomePlaceholderPreview = true;
-
-/// Kesehatan keuangan tiruan untuk kartu mood (0–1).
-const double kHomePlaceholderMood = 0.84;

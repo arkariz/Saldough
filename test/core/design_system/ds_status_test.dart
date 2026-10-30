@@ -90,7 +90,7 @@ void main() {
   group('DsStatusCarousel', () {
     DsStatusCarousel carousel(DsStatusBoard board, {Widget? trailing}) => DsStatusCarousel(
       board: board,
-      trailing: trailing,
+      extras: [?trailing],
       previousLabel: 'Sebelumnya',
       nextLabel: 'Berikutnya',
       dotLabel: (i) => 'Kartu ${i + 1}',

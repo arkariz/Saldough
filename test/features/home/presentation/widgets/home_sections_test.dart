@@ -22,7 +22,6 @@ Widget _host(Widget child, {bool reduced = true, Brightness brightness = Brightn
 void main() {
   test('saklar data tiruan menyala sesuai keputusan pemilik', () {
     expect(kHomePlaceholderPreview, isTrue);
-    expect(kHomePlaceholderMood, inInclusiveRange(0, 1));
   });
 
   group('HomeQuickActions', () {
@@ -49,36 +48,76 @@ void main() {
     });
   });
 
-  testWidgets('HomeMissionBanner: klaim memicu perayaan, memanggil onClaimed, lalu tombol nonaktif', (tester) async {
+  testWidgets('Misi Hemat: lencana +50 XP, klaim memicu perayaan dan onClaimed, lalu pulih', (tester) async {
     var claims = 0;
-    await tester.pumpWidget(_host(HomeMissionBanner(onClaimed: () => claims++), reduced: false));
-    await tester.tap(find.text(t.home.preview.missionClaim));
+    await tester.pumpWidget(
+      _host(
+        HomeQuickActions(onRecordTransfer: () {}, onOpenReport: () {}, onClaimed: () => claims++),
+        reduced: false,
+      ),
+    );
+    expect(find.text(t.home.preview.missionReward), findsOneWidget);
+    await tester.tap(find.text(t.home.actionMission));
     await tester.pump(const Duration(milliseconds: 300));
     expect(claims, 1);
-    expect(find.text(t.home.preview.missionReward), findsOneWidget);
     expect(find.text(t.home.preview.missionClaimed), findsOneWidget);
-    // Ketukan kedua saat sudah diklaim tidak memicu apa pun.
-    await tester.tap(find.text(t.home.preview.missionClaimed), warnIfMissed: false);
+    // Perayaan menampilkan hadiahnya; ketukan kedua saat terklaim diabaikan.
+    expect(find.text(t.home.preview.missionReward), findsOneWidget);
+    await tester.tap(find.text(t.home.actionMission), warnIfMissed: false);
     expect(claims, 1);
     await tester.pump(const Duration(seconds: 5));
     await tester.pump(const Duration(seconds: 2));
-    expect(find.text(t.home.preview.missionClaim), findsOneWidget);
+    expect(find.text(t.home.preview.missionClaimed), findsNothing);
+    expect(find.text(t.home.preview.missionReward), findsOneWidget);
   });
 
-  group('HomeInsightCarousel', () {
+  testWidgets('HomeGreeting: pil level di kanan dan pil mood di bawah sapaan', (tester) async {
+    await tester.pumpWidget(_host(const HomeGreeting(name: 'Sari')));
+    expect(find.text(t.home.greetingNamed(name: 'Sari')), findsOneWidget);
+    expect(find.text(t.home.preview.level), findsOneWidget);
+    expect(find.byType(HomeMoodPill), findsOneWidget);
+    expect(find.textContaining(t.home.preview.moodTitle, findRichText: true), findsOneWidget);
+  });
+
+  group('HomeCarouselSection', () {
     const budget = BudgetOverview(activeCount: 1, plannedAmount: 15000000, spent: 3000000);
 
-    testWidgets('anggaran nyata + dua slide tiruan, dapat digeser dengan panah', (tester) async {
-      await tester.pumpWidget(_host(HomeInsightCarousel(budget: budget, onOpenBudget: () {})));
+    testWidgets('satu carousel: anggaran nyata + dua slide tiruan, dapat digeser dengan titik', (tester) async {
+      await tester.pumpWidget(_host(HomeCarouselSection(board: null, budget: budget, onOpenBudget: () {})));
+      await tester.pump();
       expect(find.byType(DsCarousel), findsOneWidget);
       expect(find.byType(HomeBudgetCard).hitTestable(), findsOneWidget);
-      await tester.tap(find.bySemanticsLabel(t.home.carouselNext));
+      await tester.tap(find.bySemanticsLabel(t.home.statusCarouselDot(number: 2)));
       await tester.pumpAndSettle();
       expect(find.text(t.home.preview.billTitle).hitTestable(), findsOneWidget);
     });
 
-    testWidgets('tanpa anggaran tetap ada slide tiruan; tanpa tiruan dan tanpa anggaran tidak ada', (tester) async {
-      await tester.pumpWidget(_host(HomeInsightCarousel(budget: null, onOpenBudget: () {})));
+    testWidgets('slide status tampil lebih dulu, tinggi mengikuti slide aktif', (tester) async {
+      final board = DsStatusBoard();
+      addTearDown(board.dispose);
+      board.report(
+        'a',
+        const DsStatusSlideData(
+          id: 'a',
+          icon: Icons.event_note,
+          title: 'Judul a',
+          subtitle: 'Keterangan a',
+          attention: true,
+        ),
+      );
+      await tester.pumpWidget(_host(HomeCarouselSection(board: board, budget: budget, onOpenBudget: () {})));
+      await tester.pumpAndSettle();
+      expect(find.text('Judul a').hitTestable(), findsOneWidget);
+      final statusHeight = tester.getSize(find.byType(PageView)).height;
+      await tester.tap(find.bySemanticsLabel(t.home.statusCarouselDot(number: 2)));
+      await tester.pumpAndSettle();
+      expect(find.byType(HomeBudgetCard).hitTestable(), findsOneWidget);
+      expect(tester.getSize(find.byType(PageView)).height, greaterThan(statusHeight));
+    });
+
+    testWidgets('tanpa anggaran tetap ada slide tiruan', (tester) async {
+      await tester.pumpWidget(_host(HomeCarouselSection(board: null, budget: null, onOpenBudget: () {})));
+      await tester.pump();
       expect(find.byType(DsCarousel), findsOneWidget);
       expect(find.byType(HomeBudgetCard), findsNothing);
     });
@@ -91,8 +130,12 @@ void main() {
         tester.view.reset();
         tester.platformDispatcher.clearTextScaleFactorTestValue();
       });
-      await tester.pumpWidget(_host(HomeInsightCarousel(budget: budget, onOpenBudget: () {})));
+      await tester.pumpWidget(_host(HomeCarouselSection(board: null, budget: budget, onOpenBudget: () {})));
       await tester.pumpAndSettle();
+      for (var i = 2; i <= 3; i++) {
+        await tester.tap(find.bySemanticsLabel(t.home.statusCarouselDot(number: i)));
+        await tester.pumpAndSettle();
+      }
       expect(tester.takeException(), isNull);
     });
 

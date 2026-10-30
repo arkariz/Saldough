@@ -14,7 +14,8 @@ import 'package:saldough/shared/transaction/transaction_presentation.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
 /// Sapaan Beranda: "Halo, {nama}!" dan subjudul, dengan pil level tiruan
-/// ([kHomePlaceholderPreview]) di kanan. Pil bergoyang bila [jiggle] naik.
+/// ([kHomePlaceholderPreview]) di kanan dan pil mood maskot di bawahnya. Pil
+/// level bergoyang bila [jiggle] naik.
 class HomeGreeting extends StatelessWidget {
   /// Membuat [HomeGreeting].
   const HomeGreeting({required this.name, this.jiggle = 0, super.key});
@@ -27,7 +28,7 @@ class HomeGreeting extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DsPageHeader(
+    final header = DsPageHeader(
       title: name == null ? t.home.greeting : t.home.greetingNamed(name: name!),
       subtitle: t.home.subtitle,
       trailing: kHomePlaceholderPreview
@@ -37,77 +38,82 @@ class HomeGreeting extends StatelessWidget {
             )
           : null,
     );
-  }
-}
-
-/// Kartu mood maskot (tiruan, [kHomePlaceholderPreview]).
-class HomeMoodCard extends StatelessWidget {
-  /// Membuat [HomeMoodCard].
-  const HomeMoodCard({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return DsMascotCard(
-      mascot: SvgPicture.asset(ClayIcons.mascot, width: 40, height: 40),
-      title: t.home.preview.moodTitle,
-      badge: DsBadge(label: t.home.preview.moodBadge, tone: DsBadgeTone.income),
-      meterValue: kHomePlaceholderMood,
-      meterLabel: t.home.preview.moodBadge,
-      note: t.home.preview.moodNote,
-      noteIcon: Icons.psychology_alt_outlined,
+    if (!kHomePlaceholderPreview) return header;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        header,
+        const SizedBox(height: DsSpacing.sm),
+        const HomeMoodPill(),
+      ],
     );
   }
 }
 
-/// Carousel status "Perlu dicek" di atas kartu saldo (ADR-043): slide dari
-/// [board] (rutin menunggu, tangkapan notifikasi, pengingat; yang perlu
-/// dicek tampil dulu) lalu kartu mood tiruan ([showMood]). Setiap slide satu
-/// baris yang membuka layar tujuannya; mencatat tidak pernah terjadi di sini
-/// (aturan 8). Target tur `homeStatus` hanya terdaftar bila ada slide nyata.
-class HomeStatusSection extends StatelessWidget {
-  /// Membuat [HomeStatusSection].
-  const HomeStatusSection({required this.board, required this.showMood, super.key});
+/// Pil mood maskot (tiruan, [kHomePlaceholderPreview]): maskot kecil,
+/// judul mood, dan persen sehat.
+class HomeMoodPill extends StatelessWidget {
+  /// Membuat [HomeMoodPill].
+  const HomeMoodPill({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final ds = context.ds;
+    final c = ds.colors;
+    return Semantics(
+      label: '${t.home.preview.moodTitle}. ${t.home.preview.moodBadge}',
+      excludeSemantics: true,
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(6, 4, 12, 4),
+        decoration: BoxDecoration(
+          color: c.surfaceCard,
+          borderRadius: BorderRadius.circular(999),
+          border: Border.all(color: c.outlineSubtle),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SvgPicture.asset(ClayIcons.mascot, width: 24, height: 24),
+            const SizedBox(width: 6),
+            Flexible(
+              child: Text.rich(
+                TextSpan(
+                  children: [
+                    TextSpan(text: t.home.preview.moodTitle),
+                    TextSpan(
+                      text: '  ${t.home.preview.moodBadge}',
+                      style: TextStyle(color: c.income, fontWeight: FontWeight.w700),
+                    ),
+                  ],
+                ),
+                style: ds.typography.bodySm.copyWith(fontSize: 12, color: c.textSecondary),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Satu carousel di bawah aksi cepat (ADR-043 §3.6): slide status dari
+/// [board] (rutin menunggu, tangkapan notifikasi, pengingat, perkiraan; yang
+/// perlu dicek tampil dulu), lalu slide wawasan: anggaran nyata (bila ada)
+/// dan slide rutin dan hadiah tiruan ([kHomePlaceholderPreview]). Slide
+/// status hanya membuka layar tujuannya; mencatat tidak pernah terjadi di
+/// sini (aturan 8). Tinggi mengikuti slide aktif.
+///
+/// Target tur `homeStatus` hanya terdaftar bila ada slide status nyata, dan
+/// `homeBudget` hanya bila anggaran nyata ada (slide tiruan tidak boleh
+/// disorot). Keduanya membungkus carousel yang sama.
+class HomeCarouselSection extends StatelessWidget {
+  /// Membuat [HomeCarouselSection].
+  const HomeCarouselSection({required this.board, required this.budget, required this.onOpenBudget, super.key});
 
   /// Papan status, atau `null`.
   final DsStatusBoard? board;
-
-  /// Tampilkan kartu mood tiruan di belakang.
-  final bool showMood;
-
-  @override
-  Widget build(BuildContext context) {
-    final board = this.board ?? DsStatusBoard();
-    return ListenableBuilder(
-      listenable: board,
-      builder: (context, _) {
-        final carousel = DsStatusCarousel(
-          board: board,
-          trailing: showMood ? const HomeMoodCard() : null,
-          previousLabel: t.home.statusCarouselPrevious,
-          nextLabel: t.home.statusCarouselNext,
-          dotLabel: (i) => t.home.statusCarouselDot(number: i + 1),
-        );
-        if (board.slides.isEmpty) return carousel;
-        // Disorot sekali saat pertama tampil: slidenya datang sesudah layar.
-        return TourTrigger(
-          tour: TourId.home,
-          ready: true,
-          child: SpotlightTarget(spotlightKey: SpotlightKey.homeStatus, child: carousel),
-        );
-      },
-    );
-  }
-}
-
-/// Carousel "Wawasan & Rencana": slide anggaran nyata (bila ada), lalu
-/// slide rutin dan hadiah tiruan ([kHomePlaceholderPreview]). Tanpa
-/// setidaknya dua slide, hanya kartu anggarannya yang tampil.
-///
-/// Tinggi carousel mengikuti slide tertinggi (`DsCarousel`), jadi isi tidak
-/// luap pada skala teks besar.
-class HomeInsightCarousel extends StatelessWidget {
-  /// Membuat [HomeInsightCarousel].
-  const HomeInsightCarousel({required this.budget, required this.onOpenBudget, super.key});
 
   /// Ringkasan anggaran aktif, atau `null`.
   final BudgetOverview? budget;
@@ -117,20 +123,32 @@ class HomeInsightCarousel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final board = this.board ?? DsStatusBoard();
     final overview = budget;
-    final slides = <Widget>[
-      if (overview != null) HomeBudgetCard(overview: overview, onOpen: onOpenBudget),
-      if (kHomePlaceholderPreview) ...[const _BillSlide(), const _RewardSlide()],
-    ];
-    if (slides.isEmpty) return const SizedBox.shrink();
-    if (slides.length == 1) return slides.single;
-    return DsCarousel(
-      title: t.home.insightTitle.toUpperCase(),
-      titleIcon: Icons.trending_up,
-      previousLabel: t.home.carouselPrevious,
-      nextLabel: t.home.carouselNext,
-      dotLabel: (i) => t.home.carouselDot(number: i + 1),
-      children: [for (final slide in slides) Align(alignment: Alignment.topCenter, child: slide)],
+    return ListenableBuilder(
+      listenable: board,
+      builder: (context, _) {
+        Widget carousel = DsStatusCarousel(
+          board: board,
+          extras: [
+            if (overview != null) HomeBudgetCard(overview: overview, onOpen: onOpenBudget),
+            if (kHomePlaceholderPreview) ...[const _BillSlide(), const _RewardSlide()],
+          ],
+          previousLabel: t.home.statusCarouselPrevious,
+          nextLabel: t.home.statusCarouselNext,
+          dotLabel: (i) => t.home.statusCarouselDot(number: i + 1),
+        );
+        if (overview != null) {
+          carousel = SpotlightTarget(spotlightKey: SpotlightKey.homeBudget, child: carousel);
+        }
+        if (board.slides.isEmpty) return carousel;
+        // Disorot sekali saat pertama tampil: slidenya datang sesudah layar.
+        return TourTrigger(
+          tour: TourId.home,
+          ready: true,
+          child: SpotlightTarget(spotlightKey: SpotlightKey.homeStatus, child: carousel),
+        );
+      },
     );
   }
 }
@@ -230,16 +248,51 @@ class _SlideHeader extends StatelessWidget {
 
 /// Empat tile aksi cepat bergambar clay: Catat Transfer, Scan Struk (belum
 /// ada, nonaktif berlabel "Segera"), Laporan, dan Misi Hemat (tiruan,
-/// [kHomePlaceholderPreview]).
-class HomeQuickActions extends StatelessWidget {
+/// [kHomePlaceholderPreview]). Misi Hemat berlencana "+50 XP"; mengetuknya
+/// mengklaim: perayaan, lalu [onClaimed] (pil level bergoyang). Status klaim
+/// hanya di layar ini dan tidak disimpan.
+class HomeQuickActions extends StatefulWidget {
   /// Membuat [HomeQuickActions].
-  const HomeQuickActions({required this.onRecordTransfer, required this.onOpenReport, super.key});
+  const HomeQuickActions({
+    required this.onRecordTransfer,
+    required this.onOpenReport,
+    this.onClaimed,
+    super.key,
+  });
 
   /// Membuka alur CATAT (aturan 8).
   final VoidCallback onRecordTransfer;
 
   /// Membuka Analisis periode berjalan.
   final VoidCallback onOpenReport;
+
+  /// Dipanggil sekali per klaim misi.
+  final VoidCallback? onClaimed;
+
+  @override
+  State<HomeQuickActions> createState() => _HomeQuickActionsState();
+}
+
+class _HomeQuickActionsState extends State<HomeQuickActions> {
+  bool _claimed = false;
+
+  void _claim(BuildContext tileContext) {
+    if (_claimed) return;
+    final box = tileContext.findRenderObject() as RenderBox?;
+    if (box != null && box.hasSize) {
+      DsCelebration.burst(
+        context,
+        origin: box.localToGlobal(box.size.center(Offset.zero)),
+        label: t.home.preview.missionReward,
+      );
+    }
+    setState(() => _claimed = true);
+    widget.onClaimed?.call();
+    // Dikembalikan setelah 4,5 detik supaya bisa dicoba lagi (tiruan).
+    Future<void>.delayed(const Duration(milliseconds: 4500), () {
+      if (mounted) setState(() => _claimed = false);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -248,38 +301,42 @@ class HomeQuickActions extends StatelessWidget {
         key: const ValueKey('home-action-transfer'),
         tile: DsIconTile.asset(asset: ClayIcons.transfer),
         label: t.home.actionTransfer,
-        onPressed: onRecordTransfer,
+        onPressed: widget.onRecordTransfer,
       ),
       // Scan Struk belum ada: tile pudar, tidak bisa diketuk, dan diberi
       // lencana "Segera" supaya tidak tampak rusak.
-      Stack(
-        clipBehavior: Clip.none,
-        children: [
-          DsQuickActionTile(
-            key: const ValueKey('home-action-scan'),
-            tile: DsIconTile.asset(asset: ClayIcons.scan, tone: DsIconTileTone.income),
-            label: t.home.actionScan,
-            onPressed: null,
-          ),
-          Positioned(
-            top: -6,
-            right: -2,
-            child: DsBadge(label: t.home.soon, tone: DsBadgeTone.warm),
-          ),
-        ],
+      _Badged(
+        badge: DsBadge(label: t.home.soon, tone: DsBadgeTone.warm),
+        child: DsQuickActionTile(
+          key: const ValueKey('home-action-scan'),
+          tile: DsIconTile.asset(asset: ClayIcons.scan, tone: DsIconTileTone.income),
+          label: t.home.actionScan,
+          onPressed: null,
+        ),
       ),
       DsQuickActionTile(
         key: const ValueKey('home-action-report'),
         tile: DsIconTile.asset(asset: ClayIcons.report, tone: DsIconTileTone.info),
         label: t.home.actionReport,
-        onPressed: onOpenReport,
+        onPressed: widget.onOpenReport,
       ),
       if (kHomePlaceholderPreview)
-        DsQuickActionTile(
-          key: const ValueKey('home-action-mission'),
-          tile: DsIconTile.asset(asset: ClayIcons.trophy, tone: DsIconTileTone.warning),
-          label: t.home.actionMission,
-          onPressed: () {},
+        Builder(
+          builder: (tileContext) => _Badged(
+            badge: DsPulse(
+              kind: DsPulseKind.gold,
+              child: DsBadge(
+                label: _claimed ? t.home.preview.missionClaimed : t.home.preview.missionReward,
+                tone: DsBadgeTone.warning,
+              ),
+            ),
+            child: DsQuickActionTile(
+              key: const ValueKey('home-action-mission'),
+              tile: DsIconTile.asset(asset: ClayIcons.trophy, tone: DsIconTileTone.warning),
+              label: t.home.actionMission,
+              onPressed: _claimed ? null : () => _claim(tileContext),
+            ),
+          ),
         ),
     ];
     return Row(
@@ -293,55 +350,21 @@ class HomeQuickActions extends StatelessWidget {
   }
 }
 
-/// Banner misi harian tiruan ([kHomePlaceholderPreview]). "KLAIM" memicu
-/// perayaan dan memberi tahu [onClaimed] (pil level bergoyang); status
-/// hanya di layar ini dan tidak disimpan.
-class HomeMissionBanner extends StatefulWidget {
-  /// Membuat [HomeMissionBanner].
-  const HomeMissionBanner({required this.onClaimed, super.key});
+/// Lencana kecil di pojok kanan atas sebuah tile.
+class _Badged extends StatelessWidget {
+  const _Badged({required this.badge, required this.child});
 
-  /// Dipanggil sekali per klaim.
-  final VoidCallback onClaimed;
+  final Widget badge;
+  final Widget child;
 
   @override
-  State<HomeMissionBanner> createState() => _HomeMissionBannerState();
-}
-
-class _HomeMissionBannerState extends State<HomeMissionBanner> {
-  bool _claimed = false;
-
-  void _claim(BuildContext buttonContext) {
-    if (_claimed) return;
-    final box = buttonContext.findRenderObject() as RenderBox?;
-    if (box != null && box.hasSize) {
-      DsCelebration.burst(
-        context,
-        origin: box.localToGlobal(box.size.center(Offset.zero)),
-        label: t.home.preview.missionReward,
-      );
-    }
-    setState(() => _claimed = true);
-    widget.onClaimed();
-    // Dikembalikan setelah 4,5 detik supaya bisa dicoba lagi (tiruan).
-    Future<void>.delayed(const Duration(milliseconds: 4500), () {
-      if (mounted) setState(() => _claimed = false);
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return DsInlineBanner(
-      icon: Icons.explore_outlined,
-      eyebrow: t.home.preview.missionEyebrow,
-      message: t.home.preview.missionBody,
-      action: Builder(
-        builder: (buttonContext) => DsButton.compact(
-          label: _claimed ? t.home.preview.missionClaimed : t.home.preview.missionClaim,
-          onPressed: _claimed ? null : () => _claim(buttonContext),
-        ),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => Stack(
+    clipBehavior: Clip.none,
+    children: [
+      child,
+      Positioned(top: -6, right: -2, child: badge),
+    ],
+  );
 }
 
 /// Satu baris transaksi terbaru: ikon clay bila kategorinya sudah

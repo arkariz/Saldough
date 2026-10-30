@@ -117,8 +117,12 @@ Tiga banner Beranda (`NotificationInboxCard`, `RecurringPendingCard`,
 `ReminderNudgeCard`) punya **mode ringkas**: dengan parameter `board`
 (`DsStatusBoard`), widget tidak menggambar apa pun dan hanya melapor satu
 `DsStatusSlideData` lewat `DsStatusReport`. Beranda merender slide itu
-sebagai carousel "Perlu dicek" (`DsStatusCarousel`) di atas kartu saldo,
-diikuti kartu mood tiruan. Logika data tetap di fitur masing-masing;
+sebagai slide di **satu carousel** (`DsStatusCarousel`) di bawah aksi cepat
+(31 Okt 2026; sebelumnya carousel sendiri di atas kartu saldo), diikuti slide
+wawasan (anggaran nyata, rutin dan hadiah tiruan). Tinggi carousel mengikuti
+slide aktif (`DsCarousel.adaptiveHeight`). Kartu mood menjadi pil di sapaan
+dan banner misi menjadi lencana di tile Misi Hemat, supaya Beranda tidak
+berlapis strip tipis. Logika data tetap di fitur masing-masing;
 Beranda tidak mengimpor fitur lain (ADR-030); papan dimiliki cangkang.
 Slide hanya membuka layar tujuan, tanpa aksi mencatat (aturan 8):
 mencatat rutin lewat segmen Rutin, tangkapan lewat kotak masuk/CATAT.

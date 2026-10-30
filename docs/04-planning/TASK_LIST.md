@@ -5959,6 +5959,14 @@ memilih mode (dan preset bila ≥ 2), dan design system lama dihapus.
       (`test/helpers/reduced_motion.dart`) karena animasi berulang
       menggagalkan `pumpAndSettle`. **Belum dinilai di emulator/perangkat**
       (kesan gerak, partikel, pink dan gelap).
+      **Beranda dirampingkan (31 Okt 2026, permintaan pemilik):** urutan
+      sapaan, hero, aksi cepat, satu carousel (slide status lalu wawasan,
+      tinggi mengikuti slide aktif), Freelance, transaksi terbaru. Mood
+      menjadi pil di sapaan, banner misi menjadi lencana "+50 XP" di tile
+      Misi Hemat (ketuk = klaim). Langkah tur Anggaran menyorot carousel yang
+      bisa sedang menampilkan slide status. Kunci i18n `home.insightTitle`,
+      `home.carousel*`, dan `home.preview.moodNote/mission(Eyebrow|Body|Claim)`
+      tidak terpakai lagi.
       **Kartu hero diperkaya (31 Okt 2026):** mengikuti
       `reference/wallet-hero.html` -- aura bernapas, gradasi clay, daun dan
       kilau melayang, maskot mengangguk dengan koin, saldo kabur saat

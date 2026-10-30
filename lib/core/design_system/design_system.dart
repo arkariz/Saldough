@@ -25,6 +25,7 @@ export 'ds_theme.dart';
 export 'presets/ds_theme_preset.dart';
 export 'presets/ds_theme_presets.dart';
 export 'presets/matcha.dart';
+export 'presets/pink.dart';
 export 'tokens/ds_elevation.dart';
 export 'tokens/ds_motion.dart';
 export 'tokens/ds_opacity.dart';

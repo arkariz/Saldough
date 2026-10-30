@@ -78,6 +78,13 @@ pengguna (i18n `appearance.presets.<id>`), penyimpanan pilihan preset dan
 mode (Terang/Gelap/Ikuti sistem), dan baris pemilihnya di Akun. Pemilih
 preset baru tampil kalau preset ada dua atau lebih.
 
+## Preset yang tersedia
+
+| id | Warna utama | Catatan |
+|---|---|---|
+| `matcha` | hijau hutan `#1F4B2C` | Bawaan; spek pemilik |
+| `pink` | pink `#BE185D` (terang), `#F9A8C9` (gelap) | Diturunkan dari `matcha`: peran hijau diganti pink, netral beronce pink tipis, pemasukan tetap hijau |
+
 ## Warna
 
 Kelompok pertama berisi peran Material 3 dari frontmatter spek. Kelompok

@@ -51,17 +51,57 @@ class DsAmbientParticle {
   /// Dua belas partikel bawaan, mengikuti `reference/home-motion.html`.
   static const List<DsAmbientParticle> defaults = [
     DsAmbientParticle(kind: DsAmbientKind.leaf, glyph: '🍃', top: 0.12, left: 0.08, size: 18, delay: 0, period: 9.5),
-    DsAmbientParticle(kind: DsAmbientKind.sparkle, glyph: '✨', top: 0.22, left: 0.88, size: 14, delay: 0.8, period: 3.4),
+    DsAmbientParticle(
+      kind: DsAmbientKind.sparkle,
+      glyph: '✨',
+      top: 0.22,
+      left: 0.88,
+      size: 14,
+      delay: 0.8,
+      period: 3.4,
+    ),
     DsAmbientParticle(kind: DsAmbientKind.leaf, glyph: '🍂', top: 0.38, left: 0.86, size: 16, delay: 1.4, period: 8.8),
-    DsAmbientParticle(kind: DsAmbientKind.sparkle, glyph: '✨', top: 0.48, left: 0.06, size: 18, delay: 2.1, period: 4.2),
+    DsAmbientParticle(
+      kind: DsAmbientKind.sparkle,
+      glyph: '✨',
+      top: 0.48,
+      left: 0.06,
+      size: 18,
+      delay: 2.1,
+      period: 4.2,
+    ),
     DsAmbientParticle(kind: DsAmbientKind.leaf, glyph: '🍃', top: 0.62, left: 0.92, size: 19, delay: 2.7, period: 10.2),
-    DsAmbientParticle(kind: DsAmbientKind.sparkle, glyph: '⭐', top: 0.74, left: 0.14, size: 12, delay: 1.1, period: 3.6),
+    DsAmbientParticle(
+      kind: DsAmbientKind.sparkle,
+      glyph: '⭐',
+      top: 0.74,
+      left: 0.14,
+      size: 12,
+      delay: 1.1,
+      period: 3.6,
+    ),
     DsAmbientParticle(kind: DsAmbientKind.leaf, glyph: '🍃', top: 0.82, left: 0.8, size: 15, delay: 3.3, period: 9.1),
     DsAmbientParticle(kind: DsAmbientKind.sparkle, glyph: '✨', top: 0.18, left: 0.45, size: 16, delay: 0.5, period: 4),
     DsAmbientParticle(kind: DsAmbientKind.leaf, glyph: '🍂', top: 0.32, left: 0.72, size: 17, delay: 4.1, period: 8.4),
-    DsAmbientParticle(kind: DsAmbientKind.sparkle, glyph: '✨', top: 0.56, left: 0.24, size: 14, delay: 2.9, period: 3.7),
+    DsAmbientParticle(
+      kind: DsAmbientKind.sparkle,
+      glyph: '✨',
+      top: 0.56,
+      left: 0.24,
+      size: 14,
+      delay: 2.9,
+      period: 3.7,
+    ),
     DsAmbientParticle(kind: DsAmbientKind.leaf, glyph: '🍃', top: 0.7, left: 0.58, size: 16, delay: 1.8, period: 11),
-    DsAmbientParticle(kind: DsAmbientKind.sparkle, glyph: '✨', top: 0.88, left: 0.78, size: 15, delay: 3.8, period: 3.2),
+    DsAmbientParticle(
+      kind: DsAmbientKind.sparkle,
+      glyph: '✨',
+      top: 0.88,
+      left: 0.78,
+      size: 15,
+      delay: 3.8,
+      period: 3.2,
+    ),
   ];
 }
 
@@ -166,7 +206,12 @@ class _DsAmbientLayerState extends State<DsAmbientLayer> with SingleTickerProvid
 /// pernah menimpa teks.
 class DsAmbientBackdrop extends StatelessWidget {
   /// Membuat latar hidup.
-  const DsAmbientBackdrop({required this.child, this.particles = DsAmbientParticle.defaults, this.opacity = 0.55, super.key});
+  const DsAmbientBackdrop({
+    required this.child,
+    this.particles = DsAmbientParticle.defaults,
+    this.opacity = 0.55,
+    super.key,
+  });
 
   /// Konten halaman.
   final Widget child;
@@ -181,7 +226,9 @@ class DsAmbientBackdrop extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Positioned.fill(child: DsAmbientLayer(particles: particles, opacity: opacity)),
+        Positioned.fill(
+          child: DsAmbientLayer(particles: particles, opacity: opacity),
+        ),
         child,
       ],
     );

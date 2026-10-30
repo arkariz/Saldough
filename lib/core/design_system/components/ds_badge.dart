@@ -15,6 +15,12 @@ enum DsBadgeTone {
 
   /// Kabut tanpa garis: tag kategori di baris transaksi.
   category,
+
+  /// Kuning perhatian: "Hampir habis", "3 hari lagi".
+  warning,
+
+  /// Merah: lewat batas.
+  danger,
 }
 
 /// Badge dan tag: sudut 6px, huruf piksel (KT-DS4). Tulis [label] kapital
@@ -38,6 +44,8 @@ class DsBadge extends StatelessWidget {
       DsBadgeTone.warm => (c.toneWarmContainer, c.onToneWarmContainer, null),
       DsBadgeTone.neutral => (c.surfaceSunken, c.textSecondary, c.outlineSubtle),
       DsBadgeTone.category => (c.surfaceSunken, c.textSecondary, null),
+      DsBadgeTone.warning => (c.warningContainer, c.onWarningContainer, null),
+      DsBadgeTone.danger => (c.errorContainer, c.onErrorContainer, null),
     };
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
@@ -46,7 +54,12 @@ class DsBadge extends StatelessWidget {
         borderRadius: DsRadius.badgeAll,
         border: border == null ? null : Border.all(color: border),
       ),
-      child: Text(label, style: ds.typography.pixelCaption.copyWith(color: ink), maxLines: 1),
+      child: Text(
+        label,
+        style: ds.typography.pixelCaption.copyWith(color: ink),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
     );
   }
 }
@@ -111,7 +124,14 @@ class _DsStatusPillState extends State<DsStatusPill> with SingleTickerProviderSt
             ),
           ),
           const SizedBox(width: 6),
-          Text(widget.label, style: ds.typography.pixelLabel.copyWith(color: c.textPrimary)),
+          Flexible(
+            child: Text(
+              widget.label,
+              style: ds.typography.pixelLabel.copyWith(color: c.textPrimary),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
         ],
       ),
     );

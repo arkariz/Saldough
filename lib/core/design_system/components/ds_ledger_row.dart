@@ -75,39 +75,60 @@ class DsLedgerRow extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        title,
-                        style: ds.typography.bodyMd.copyWith(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          fontVariations: const [FontVariation.weight(600)],
-                          color: titleColor,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    const SizedBox(width: 4),
-                    Text(amount, style: ds.typography.pixelAmount.copyWith(color: amountColor)),
-                  ],
-                ),
-                if (subtitle != null || badge != null) ...[
-                  const SizedBox(height: 2),
-                  Row(
+                LayoutBuilder(
+                  builder: (context, box) => Row(
                     children: [
                       Expanded(
                         child: Text(
-                          subtitle ?? '',
-                          style: ds.typography.bodySm.copyWith(fontSize: 12, color: c.textMuted),
+                          title,
+                          style: ds.typography.bodyMd.copyWith(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            fontVariations: const [FontVariation.weight(600)],
+                            color: titleColor,
+                          ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      if (badge != null) ...[const SizedBox(width: 4), badge!],
+                      const SizedBox(width: 4),
+                      // Nominal tidak pernah terpotong: mengecil dulu (maks.
+                      // 60% lebar baris) bila sempit, baru judul yang mengalah.
+                      ConstrainedBox(
+                        constraints: BoxConstraints(maxWidth: box.maxWidth * 0.6),
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          alignment: AlignmentDirectional.centerEnd,
+                          child: Text(amount, style: ds.typography.pixelAmount.copyWith(color: amountColor)),
+                        ),
+                      ),
                     ],
+                  ),
+                ),
+                if (subtitle != null || badge != null) ...[
+                  const SizedBox(height: 2),
+                  LayoutBuilder(
+                    builder: (context, box) => Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            subtitle ?? '',
+                            style: ds.typography.bodySm.copyWith(fontSize: 12, color: c.textMuted),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        // Badge dibatasi 45% lebar baris supaya keterangan
+                        // tetap terbaca di layar sempit.
+                        if (badge != null) ...[
+                          const SizedBox(width: 4),
+                          ConstrainedBox(
+                            constraints: BoxConstraints(maxWidth: box.maxWidth * 0.45),
+                            child: badge,
+                          ),
+                        ],
+                      ],
+                    ),
                   ),
                 ],
               ],
@@ -118,6 +139,10 @@ class DsLedgerRow extends StatelessWidget {
     );
 
     if (onTap == null) return row(pressed: false);
-    return DsPressable(onPressed: onTap, pressedScale: 1, builder: (_, pressed) => row(pressed: pressed));
+    return DsPressable(
+      onPressed: onTap,
+      pressedScale: 1,
+      builder: (_, pressed) => row(pressed: pressed),
+    );
   }
 }

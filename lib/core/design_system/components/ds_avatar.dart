@@ -23,7 +23,10 @@ class DsAvatar extends StatelessWidget {
       label: semanticLabel,
       child: Container(
         padding: const EdgeInsets.all(2),
-        decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: c.outlineSubtle)),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(color: c.outlineSubtle),
+        ),
         child: CircleAvatar(
           radius: size / 2,
           backgroundColor: c.surfaceSunken,

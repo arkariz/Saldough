@@ -7,15 +7,14 @@ import 'package:saldough/core/design_system/tokens/ds_radius.dart';
 /// Carousel kartu satu per halaman: kepala (judul + panah), halaman, dan
 /// titik indikator yang memanjang di halaman aktif.
 ///
-/// Halaman memenuhi lebar penuh tanpa mengintip halaman sebelah. [height]
-/// wajib karena `PageView` butuh tinggi tetap; pilih setinggi slide
-/// terpanjang supaya slide pendek tidak meninggalkan ruang kosong yang tak
-/// sengaja.
+/// Halaman memenuhi lebar penuh tanpa mengintip halaman sebelah. Tinggi
+/// carousel mengikuti halaman **tertinggi** (diukur dari salinan tak
+/// terlihat tanpa animasi), jadi tidak ada tebakan tinggi: isi tidak luap
+/// pada skala teks besar dan tidak ada ruang kosong berlebih.
 class DsCarousel extends StatefulWidget {
   /// Membuat carousel.
   const DsCarousel({
     required this.children,
-    required this.height,
     required this.previousLabel,
     required this.nextLabel,
     required this.dotLabel,
@@ -27,9 +26,6 @@ class DsCarousel extends StatefulWidget {
 
   /// Halaman.
   final List<Widget> children;
-
-  /// Tinggi area halaman.
-  final double height;
 
   /// Judul kepala; tanpa judul, kepala (dan panah) tidak ditampilkan.
   final String? title;
@@ -83,7 +79,10 @@ class _DsCarouselState extends State<DsCarousel> {
         if (widget.title != null)
           Row(
             children: [
-              if (widget.titleIcon != null) ...[Icon(widget.titleIcon, size: 16, color: c.textPrimary), const SizedBox(width: 6)],
+              if (widget.titleIcon != null) ...[
+                Icon(widget.titleIcon, size: 16, color: c.textPrimary),
+                const SizedBox(width: 6),
+              ],
               Expanded(
                 child: Semantics(
                   header: true,
@@ -102,16 +101,34 @@ class _DsCarouselState extends State<DsCarousel> {
               ),
             ],
           ),
-        SizedBox(
-          height: widget.height,
-          child: PageView(
-            controller: _controller,
-            onPageChanged: (i) {
-              setState(() => _index = i);
-              widget.onPageChanged?.call(i);
-            },
-            children: widget.children,
-          ),
+        Stack(
+          children: [
+            // Pengukur: salinan tak terlihat semua halaman menentukan tinggi
+            // Stack (yang tertinggi). Tanpa semantik dan tanpa animasi.
+            for (final child in widget.children)
+              ExcludeSemantics(
+                child: TickerMode(
+                  enabled: false,
+                  child: Visibility(
+                    visible: false,
+                    maintainSize: true,
+                    maintainState: true,
+                    maintainAnimation: true,
+                    child: SizedBox(width: double.infinity, child: child),
+                  ),
+                ),
+              ),
+            Positioned.fill(
+              child: PageView(
+                controller: _controller,
+                onPageChanged: (i) {
+                  setState(() => _index = i);
+                  widget.onPageChanged?.call(i);
+                },
+                children: widget.children,
+              ),
+            ),
+          ],
         ),
         const SizedBox(height: 4),
         DsCarouselDots(

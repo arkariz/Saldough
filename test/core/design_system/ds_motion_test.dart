@@ -96,7 +96,6 @@ void main() {
           alignment: Alignment.topCenter,
           child: DsCarousel(
             title: 'WAWASAN',
-            height: 80,
             previousLabel: 'Sebelumnya',
             nextLabel: 'Berikutnya',
             dotLabel: (i) => 'Slide ${i + 1}',

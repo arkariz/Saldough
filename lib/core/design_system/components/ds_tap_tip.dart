@@ -68,7 +68,10 @@ class _DsTapTipState extends State<DsTapTip> {
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                         decoration: BoxDecoration(color: ds.colors.textPrimary, borderRadius: DsRadius.badgeAll),
-                        child: Text(widget.message, style: ds.typography.pixelLabel.copyWith(color: ds.colors.surfaceCanvas)),
+                        child: Text(
+                          widget.message,
+                          style: ds.typography.pixelLabel.copyWith(color: ds.colors.surfaceCanvas),
+                        ),
                       ),
                     ),
                   ),

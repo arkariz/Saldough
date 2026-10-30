@@ -56,9 +56,16 @@ class DsTopBar extends StatelessWidget implements PreferredSizeWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         if (logo != null) ...[SizedBox.square(dimension: 28, child: logo), const SizedBox(width: 8)],
-        Semantics(
-          header: true,
-          child: Text(wordmark, style: ds.typography.pixelLabel.copyWith(fontSize: 13, color: c.actionPrimary)),
+        Flexible(
+          child: Semantics(
+            header: true,
+            child: Text(
+              wordmark,
+              style: ds.typography.pixelLabel.copyWith(fontSize: 13, color: c.actionPrimary),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
         ),
         if (badge != null) ...[const SizedBox(width: 6), badge!],
       ],
@@ -93,7 +100,10 @@ class DsTopBar extends StatelessWidget implements PreferredSizeWidget {
                               ignoring: collapse < 0.5,
                               child: Opacity(
                                 opacity: collapse,
-                                child: Transform.translate(offset: Offset(0, -8 * (1 - collapse)), child: collapsedTitle),
+                                child: Transform.translate(
+                                  offset: Offset(0, -8 * (1 - collapse)),
+                                  child: collapsedTitle,
+                                ),
                               ),
                             ),
                         ],
@@ -147,7 +157,7 @@ class DsPageHeader extends StatelessWidget {
                 ),
               ),
             ),
-            if (trailing != null) ...[const SizedBox(width: 8), trailing!],
+            if (trailing != null) ...[const SizedBox(width: 8), Flexible(child: trailing!)],
           ],
         ),
         if (subtitle != null) ...[
@@ -185,7 +195,9 @@ class DsFootnote extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             if (leading != null) ...[ExcludeSemantics(child: Text(leading!, style: style)), const SizedBox(width: 6)],
-            Flexible(child: Text(text, style: style, textAlign: TextAlign.center)),
+            Flexible(
+              child: Text(text, style: style, textAlign: TextAlign.center),
+            ),
             if (trailing != null) ...[const SizedBox(width: 6), ExcludeSemantics(child: Text(trailing!, style: style))],
           ],
         ),

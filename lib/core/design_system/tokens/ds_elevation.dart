@@ -53,9 +53,7 @@ class DsElevation extends ThemeExtension<DsElevation> {
       card: DsSurfaceTier(
         color: colors.surfaceCard,
         border: colors.outlineSubtle,
-        shadows: dark
-            ? const []
-            : const [BoxShadow(color: Color(0x08000000), offset: Offset(0, 2), blurRadius: 8)],
+        shadows: dark ? const [] : const [BoxShadow(color: Color(0x08000000), offset: Offset(0, 2), blurRadius: 8)],
       ),
       overlay: DsSurfaceTier(
         color: colors.surfaceOverlay,

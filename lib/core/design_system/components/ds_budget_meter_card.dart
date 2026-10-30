@@ -17,6 +17,7 @@ class DsBudgetMeterCard extends StatelessWidget {
     this.total,
     this.remaining,
     this.tone = DsMeterTone.normal,
+    this.breathing = false,
     this.footer = const [],
     this.onTap,
     super.key,
@@ -49,6 +50,9 @@ class DsBudgetMeterCard extends StatelessWidget {
   /// Warna meter dan sisa.
   final DsMeterTone tone;
 
+  /// Segmen meter bernapas dan berkilau; pakai hanya saat hampir habis.
+  final bool breathing;
+
   /// Label kaki (awal, tengah, akhir), sampai tiga.
   final List<String> footer;
 
@@ -69,73 +73,71 @@ class DsBudgetMeterCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
+          // `Wrap`: pada skala teks besar badge turun ke baris sendiri, bukan
+          // memeras judul per kata.
+          Wrap(
+            alignment: WrapAlignment.spaceBetween,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: 6,
+            runSpacing: 4,
             children: [
-              if (icon != null) ...[Icon(icon, size: 17, color: c.secondary), const SizedBox(width: 6)],
-              Expanded(
-                child: Text(
-                  title,
-                  style: ds.typography.titleMd.copyWith(fontSize: 15),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (icon != null) ...[Icon(icon, size: 17, color: c.secondary), const SizedBox(width: 6)],
+                  Flexible(
+                    child: Text(
+                      title,
+                      style: ds.typography.titleMd.copyWith(fontSize: 15),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
               ),
-              if (badge != null) ...[const SizedBox(width: 6), badge!],
+              ?badge,
             ],
           ),
           const SizedBox(height: 10),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.baseline,
-            textBaseline: TextBaseline.alphabetic,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          // `Wrap`: pada skala teks besar sisa turun ke baris sendiri, bukan
+          // meluap atau memotong nominal terpakai.
+          Wrap(
+            alignment: WrapAlignment.spaceBetween,
+            crossAxisAlignment: WrapCrossAlignment.end,
+            spacing: 8,
+            runSpacing: 2,
             children: [
-              // Terpakai + batas mendapat ruang lebih; sisa mengalah lebih dulu.
-              Flexible(
-                flex: 3,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.baseline,
-                  textBaseline: TextBaseline.alphabetic,
-                  children: [
-                    Text(spent, style: ds.typography.amount),
-                    if (total != null) ...[
-                      const SizedBox(width: 4),
-                      Flexible(
-                        child: Text(
-                          '/ ${total!}',
-                          style: ds.typography.bodySm.copyWith(fontSize: 12, color: c.textMuted),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.baseline,
+                textBaseline: TextBaseline.alphabetic,
+                children: [
+                  Text(spent, style: ds.typography.amount),
+                  if (total != null) ...[
+                    const SizedBox(width: 4),
+                    Flexible(
+                      child: Text(
+                        '/ ${total!}',
+                        style: ds.typography.bodySm.copyWith(fontSize: 12, color: c.textMuted),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                    ],
+                    ),
                   ],
-                ),
+                ],
               ),
-              if (remaining != null) ...[
-                const SizedBox(width: 8),
-                Flexible(
-                  flex: 2,
-                  child: Text(
-                    remaining!,
-                    style: ds.typography.amountSm.copyWith(fontSize: 12, color: remainingColor),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.end,
-                  ),
-                ),
-              ],
+              if (remaining != null)
+                Text(remaining!, style: ds.typography.amountSm.copyWith(fontSize: 12, color: remainingColor)),
             ],
           ),
           const SizedBox(height: 8),
-          DsSegmentMeter(value: value, semanticLabel: meterLabel, tone: tone),
+          DsSegmentMeter(value: value, semanticLabel: meterLabel, tone: tone, breathing: breathing),
           if (footer.isNotEmpty) ...[
             const SizedBox(height: 8),
             Row(
               mainAxisAlignment: footer.length == 1 ? MainAxisAlignment.start : MainAxisAlignment.spaceBetween,
               children: [
-                for (final label in footer)
-                  Text(label, style: ds.typography.pixelCaption.copyWith(color: c.textMuted)),
+                for (final label in footer) Text(label, style: ds.typography.pixelCaption.copyWith(color: c.textMuted)),
               ],
             ),
           ],

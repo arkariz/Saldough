@@ -142,8 +142,7 @@ class DsButton extends StatelessWidget {
 /// Tombol ikon saja dengan label aksesibilitas wajib (lonceng, mata).
 class DsIconButton extends StatelessWidget {
   /// Tombol ikon bulat 36px di permukaan terang.
-  const DsIconButton({required this.icon, required this.label, required this.onPressed, super.key})
-    : onHero = false;
+  const DsIconButton({required this.icon, required this.label, required this.onPressed, super.key}) : onHero = false;
 
   /// Tombol ikon di atas kartu saldo hero.
   const DsIconButton.onHero({required this.icon, required this.label, required this.onPressed, super.key})

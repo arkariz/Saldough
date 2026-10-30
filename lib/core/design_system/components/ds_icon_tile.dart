@@ -67,9 +67,13 @@ class DsIconTile extends StatelessWidget {
        category = null;
 
   /// Tile berwarna kategori [category].
-  const DsIconTile.category({required IconData this.icon, required this.category, this.size = DsIconTileSize.md, super.key})
-    : child = null,
-      tone = DsIconTileTone.neutral;
+  const DsIconTile.category({
+    required IconData this.icon,
+    required this.category,
+    this.size = DsIconTileSize.md,
+    super.key,
+  }) : child = null,
+       tone = DsIconTileTone.neutral;
 
   /// Tile berisi widget bebas (ilustrasi maskot), latar [tone] atau
   /// [category] (bawaan netral).

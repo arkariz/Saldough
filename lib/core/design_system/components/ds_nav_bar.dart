@@ -65,9 +65,18 @@ class DsNavBar extends StatelessWidget {
     final ds = context.ds;
     final c = ds.colors;
     final slot = centerSlot ?? items.length ~/ 2;
-    final children = <Widget>[
-      for (var i = 0; i < items.length; i++) Expanded(child: _Tab(item: items[i], active: i == currentIndex, onTap: () => onSelected(i))),
-    ]..insert(slot, Expanded(child: _CenterAction(label: centerLabel, icon: centerIcon, onPressed: onCenterPressed)));
+    final children =
+        <Widget>[
+          for (var i = 0; i < items.length; i++)
+            Expanded(
+              child: _Tab(item: items[i], active: i == currentIndex, onTap: () => onSelected(i)),
+            ),
+        ]..insert(
+          slot,
+          Expanded(
+            child: _CenterAction(label: centerLabel, icon: centerIcon, onPressed: onCenterPressed),
+          ),
+        );
 
     return ClipRect(
       child: BackdropFilter(

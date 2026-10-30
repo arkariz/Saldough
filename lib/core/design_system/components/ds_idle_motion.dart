@@ -68,7 +68,10 @@ class _DsPulseState extends State<DsPulse> with SingleTickerProviderStateMixin {
       builder: (context, child) {
         final t = Curves.easeInOut.transform(_controller.value);
         final shadow = switch (widget.kind) {
-          DsPulseKind.alert => BoxShadow(color: c.error.withValues(alpha: 0.4 * (1 - t)), spreadRadius: 4 * t),
+          DsPulseKind.alert => BoxShadow(
+            color: c.error.withValues(alpha: 0.4 * (1 - t)),
+            spreadRadius: 4 * t,
+          ),
           DsPulseKind.gold => BoxShadow(
             color: c.warning.withValues(alpha: 0.25 + 0.3 * t),
             blurRadius: 8 + 8 * t,

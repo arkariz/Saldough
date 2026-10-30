@@ -130,8 +130,13 @@ class _BurstLayerState extends State<_BurstLayer> with SingleTickerProviderState
             return Stack(
               clipBehavior: Clip.none,
               children: [
-                for (var i = 0; i < _particles.length; i++) _particle(_particles[i], elapsedMs, shapeColors[i % shapeColors.length]),
-                if (widget.label != null) _label(context, _controller.value * DsMotion.burst.inMilliseconds / DsMotion.floatLabel.inMilliseconds),
+                for (var i = 0; i < _particles.length; i++)
+                  _particle(_particles[i], elapsedMs, shapeColors[i % shapeColors.length]),
+                if (widget.label != null)
+                  _label(
+                    context,
+                    _controller.value * DsMotion.burst.inMilliseconds / DsMotion.floatLabel.inMilliseconds,
+                  ),
               ],
             );
           },
@@ -153,7 +158,11 @@ class _BurstLayerState extends State<_BurstLayer> with SingleTickerProviderState
         : Container(
             width: 8,
             height: 8,
-            decoration: BoxDecoration(color: shapeColor, shape: p.round ? BoxShape.circle : BoxShape.rectangle, borderRadius: p.round ? null : BorderRadius.circular(2)),
+            decoration: BoxDecoration(
+              color: shapeColor,
+              shape: p.round ? BoxShape.circle : BoxShape.rectangle,
+              borderRadius: p.round ? null : BorderRadius.circular(2),
+            ),
           );
     return Positioned(
       left: widget.origin.dx + dx,
@@ -162,7 +171,10 @@ class _BurstLayerState extends State<_BurstLayer> with SingleTickerProviderState
         translation: const Offset(-0.5, -0.5),
         child: Opacity(
           opacity: opacity.clamp(0, 1),
-          child: Transform.rotate(angle: p.endRotation * q * math.pi / 180, child: Transform.scale(scale: scale, child: body)),
+          child: Transform.rotate(
+            angle: p.endRotation * q * math.pi / 180,
+            child: Transform.scale(scale: scale, child: body),
+          ),
         ),
       ),
     );
@@ -243,7 +255,10 @@ class _DsJiggleState extends State<DsJiggle> with SingleTickerProviderStateMixin
         final u = _controller.value;
         final scale = dsKeyframes(u, [(0, 1), (0.2, 1.18), (0.4, 1.15), (0.6, 1.08), (0.8, 1.03), (1, 1)]);
         final angle = dsKeyframes(u, [(0, 0), (0.2, -4), (0.4, 4), (0.6, -2), (0.8, 1), (1, 0)]);
-        return Transform.rotate(angle: angle * math.pi / 180, child: Transform.scale(scale: scale, child: child));
+        return Transform.rotate(
+          angle: angle * math.pi / 180,
+          child: Transform.scale(scale: scale, child: child),
+        );
       },
     );
   }

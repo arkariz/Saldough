@@ -44,7 +44,10 @@ class DsFlipSwitcher extends StatelessWidget {
               child: incoming,
             );
             if (away > 0) {
-              view = ImageFiltered(imageFilter: ImageFilter.blur(sigmaX: 4 * away, sigmaY: 4 * away), child: view);
+              view = ImageFiltered(
+                imageFilter: ImageFilter.blur(sigmaX: 4 * away, sigmaY: 4 * away),
+                child: view,
+              );
             }
             return Opacity(opacity: animation.value.clamp(0, 1), child: view);
           },

@@ -180,7 +180,10 @@ abstract final class DsTheme {
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         margin: EdgeInsets.zero,
-        shape: RoundedRectangleBorder(borderRadius: DsRadius.lgAll, side: BorderSide(color: elevation.card.border)),
+        shape: RoundedRectangleBorder(
+          borderRadius: DsRadius.lgAll,
+          side: BorderSide(color: elevation.card.border),
+        ),
       ),
       dialogTheme: DialogThemeData(
         backgroundColor: elevation.overlay.color,
@@ -189,7 +192,10 @@ abstract final class DsTheme {
         elevation: 0,
         titleTextStyle: typography.headlineSm,
         contentTextStyle: typography.bodyMd.copyWith(color: colors.textSecondary),
-        shape: RoundedRectangleBorder(borderRadius: DsRadius.xlAll, side: BorderSide(color: elevation.overlay.border)),
+        shape: RoundedRectangleBorder(
+          borderRadius: DsRadius.xlAll,
+          side: BorderSide(color: elevation.overlay.border),
+        ),
       ),
       bottomSheetTheme: BottomSheetThemeData(
         backgroundColor: elevation.overlay.color,
@@ -204,7 +210,10 @@ abstract final class DsTheme {
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         textStyle: typography.bodyMd,
-        shape: RoundedRectangleBorder(borderRadius: DsRadius.mdAll, side: BorderSide(color: elevation.overlay.border)),
+        shape: RoundedRectangleBorder(
+          borderRadius: DsRadius.mdAll,
+          side: BorderSide(color: elevation.overlay.border),
+        ),
       ),
       snackBarTheme: SnackBarThemeData(
         backgroundColor: colors.inverseSurface,

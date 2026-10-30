@@ -221,7 +221,10 @@ class _Glow extends StatelessWidget {
         child: Container(
           width: size,
           height: size,
-          decoration: BoxDecoration(color: color.withValues(alpha: DsOpacity.glow), shape: BoxShape.circle),
+          decoration: BoxDecoration(
+            color: color.withValues(alpha: DsOpacity.glow),
+            shape: BoxShape.circle,
+          ),
         ),
       ),
     );

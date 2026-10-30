@@ -127,7 +127,9 @@ class _DsSegmentMeterState extends State<DsSegmentMeter> with SingleTickerProvid
       final color = !isFilled
           ? c.surfaceContainerHigh
           : (!health && widget.tone == DsMeterTone.normal && i == filled - 1 ? c.surfaceTint : fill);
-      Widget box = DecoratedBox(decoration: BoxDecoration(borderRadius: radius, color: color));
+      Widget box = DecoratedBox(
+        decoration: BoxDecoration(borderRadius: radius, color: color),
+      );
       if (isFilled && widget.breathing && _controller.isAnimating) {
         // Napas: 0→1→0 dalam satu periode, tiap segmen tertunda 0,15 dtk.
         final phase = (((seconds - 0.15 * i) % _period) + _period) % _period / _period;

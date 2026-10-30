@@ -35,8 +35,7 @@ class DsInlineBanner extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (eyebrow != null)
-                  Text(eyebrow!, style: ds.typography.pixelCaption.copyWith(color: c.actionPrimary)),
+                if (eyebrow != null) Text(eyebrow!, style: ds.typography.pixelCaption.copyWith(color: c.actionPrimary)),
                 Text(
                   message,
                   style: ds.typography.bodySm.copyWith(fontSize: 12, color: c.textPrimary),

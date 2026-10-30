@@ -10,6 +10,7 @@ void main() {
   // Kelas → cara boot ulang menanganinya.
   const handled = <String, String>{
     'AppReboot': 'laporan pemulihan; diisi bootstrap, tidak dimuat dari penyimpanan',
+    'ActiveAppearance': 'milik perangkat (R-9), dibaca ulang di bootstrapApp',
     'ActiveCategories': 'dikosongkan lalu diisi `listCategories()` di bootstrapApp',
     'ActiveCurrency': 'dimuat ulang dari CurrencyPreferenceRepository di bootstrapApp',
     'ActiveFinancialMonth': 'dimuat ulang dari FinancialMonthPreferenceRepository di bootstrapApp',

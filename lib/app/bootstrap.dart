@@ -10,6 +10,7 @@ import 'package:saldough/app/data_portability/app_reboot.dart';
 import 'package:saldough/app/data_portability/restore_recovery.dart';
 import 'package:saldough/app/di/di.dart';
 import 'package:saldough/app/premium/premium_wiring.dart';
+import 'package:saldough/core/appearance/appearance.dart';
 import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/foundation/analytics/app_bootstrap_firebase.dart';
@@ -71,6 +72,18 @@ Future<void> bootstrapApp() async {
   if (!isReboot) {
     AmountVisibility.notifier.addListener(
       () => unawaited(rootGetIt<AmountVisibilityRepository>().save(hidden: AmountVisibility.hidden)),
+    );
+  }
+
+  // ADR-043: preset warna dan mode terang/gelap. Dibaca sebelum layar
+  // pertama supaya tidak berkedip; gagal dibaca = bawaan. Pendengar dipasang
+  // sekali, cara kerjanya sama dengan `AmountVisibility`.
+  ActiveAppearance.notifier.value = (await rootGetIt<AppearanceRepository>().load()).getOrElse(
+    (_) => AppearanceSettings.initial,
+  );
+  if (!isReboot) {
+    ActiveAppearance.notifier.addListener(
+      () => unawaited(rootGetIt<AppearanceRepository>().save(ActiveAppearance.value)),
     );
   }
 

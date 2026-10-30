@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/app/theme/appearance_theme.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/app_icon.dart';
 import 'package:saldough/core/presentation/widgets/app_spin.dart';
@@ -62,40 +63,57 @@ class _RebootSplash extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = PixelTheme.light.extension<AppColors>()!;
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: PixelTheme.light,
-      darkTheme: PixelTheme.dark,
-      home: Scaffold(
-        body: SafeArea(
-          child: ValueListenableBuilder<RestoreProgress?>(
-            valueListenable: AppReboot.progress,
-            builder: (context, progress, _) {
-              if (progress == null) {
-                return Center(
-                  child: AppSpin(child: AppIcon(IconKey.progressActivity, color: colors.brand)),
-                );
-              }
-              final labels = restoreStepLabels(onboarding: progress.onboarding);
-              final current = progress.onboarding ? progress.step - 1 : progress.step;
-              final textTheme = Theme.of(context).textTheme;
-              return ListView(
-                padding: const EdgeInsets.all(AppSpacing.space4),
-                children: [
-                  const SizedBox(height: AppSpacing.space8),
-                  Text(t.dataPortability.restoreRunTitle, style: textTheme.headlineSmall),
-                  const SizedBox(height: AppSpacing.space4),
-                  RestoreSteps(labels: labels, current: current),
-                  const SizedBox(height: AppSpacing.space3),
-                  Text(
-                    t.dataPortability.restoreNoCancel,
-                    style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
-                  ),
-                ],
+    return AppearanceThemeBuilder(
+      builder: (context, light, dark, mode) => MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: light,
+        darkTheme: dark,
+        themeMode: mode,
+        home: const _RebootBody(),
+      ),
+    );
+  }
+}
+
+class _RebootBody extends StatelessWidget {
+  const _RebootBody();
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    return Scaffold(
+      body: SafeArea(
+        child: ValueListenableBuilder<RestoreProgress?>(
+          valueListenable: AppReboot.progress,
+          builder: (context, progress, _) {
+            if (progress == null) {
+              return Center(
+                child: AppSpin(
+                  child: AppIcon(IconKey.progressActivity, color: colors.brand),
+                ),
               );
-            },
-          ),
+            }
+            final labels = restoreStepLabels(onboarding: progress.onboarding);
+            final current = progress.onboarding ? progress.step - 1 : progress.step;
+            final textTheme = Theme.of(context).textTheme;
+            return ListView(
+              padding: const EdgeInsets.all(AppSpacing.space4),
+              children: [
+                const SizedBox(height: AppSpacing.space8),
+                Text(
+                  t.dataPortability.restoreRunTitle,
+                  style: textTheme.headlineSmall,
+                ),
+                const SizedBox(height: AppSpacing.space4),
+                RestoreSteps(labels: labels, current: current),
+                const SizedBox(height: AppSpacing.space3),
+                Text(
+                  t.dataPortability.restoreNoCancel,
+                  style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
+                ),
+              ],
+            );
+          },
         ),
       ),
     );

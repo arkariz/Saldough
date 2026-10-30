@@ -7,6 +7,7 @@ import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/account/presentation/bloc/account_bloc.dart';
 import 'package:saldough/features/account/presentation/bloc/account_state.dart';
+import 'package:saldough/features/account/presentation/widgets/appearance_setting.dart';
 import 'package:saldough/features/account/presentation/widgets/category_setting.dart';
 import 'package:saldough/features/account/presentation/widgets/currency_setting.dart';
 import 'package:saldough/features/account/presentation/widgets/financial_month_setting.dart';
@@ -249,7 +250,13 @@ class _Settings extends StatelessWidget {
         AppSectionHeader(t.account.displaySection),
         const AppListCard(
           dividerIndent: AppListCard.iconIndent,
-          children: [LanguageSettingEntry(), CurrencySettingSection(), HideAmountsSettingEntry()],
+          children: [
+            LanguageSettingEntry(),
+            AppearanceModeEntry(),
+            AppearancePresetEntry(),
+            CurrencySettingSection(),
+            HideAmountsSettingEntry(),
+          ],
         ),
         if (dataSection case final section?) ...[const SizedBox(height: AppSpacing.space6), section],
       ],

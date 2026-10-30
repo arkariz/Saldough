@@ -998,6 +998,21 @@
     "pickerTitle": "Choose language",
     "hint": "App text and voice recording"
   },
+  "appearance": {
+    "modeLabel": "Appearance",
+    "modeHint": "Light, dark, or follow the device",
+    "modePickerTitle": "Choose appearance",
+    "modeLight": "Light",
+    "modeDark": "Dark",
+    "modeSystem": "Follow device",
+    "presetLabel": "App colors",
+    "presetHint": "Choose the main color of the app",
+    "presetPickerTitle": "Choose app colors",
+    "presets": {
+      "matcha": "Matcha",
+      "pink": "Pink"
+    }
+  },
   "discovery": {
     "payday": {
       "title": "Payday on the $d?",

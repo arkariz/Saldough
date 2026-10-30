@@ -50,6 +50,7 @@ final appBackupRegistry = BackupRegistry(
   excluded: const {
     // Milik perangkat (R-9).
     'settings_language': 'milik perangkat',
+    'settings_appearance': 'milik perangkat',
     'settings_hideAmounts': 'milik perangkat',
     'settings_history_segment': 'milik perangkat',
     'tutorial_progress': 'milik perangkat',

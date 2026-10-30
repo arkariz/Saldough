@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:navigation/navigation.dart';
+import 'package:saldough/app/theme/appearance_theme.dart';
 import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/app_icon.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/shared/category/category.dart';
 
@@ -45,19 +45,27 @@ class SaldoughApp extends StatelessWidget {
       also: ActiveCategories.notifier,
       child: ScopeProvider(
         container: getIt,
-        child: MaterialApp.router(
-          debugShowCheckedModeBanner: false,
-          theme: PixelTheme.light,
-          darkTheme: PixelTheme.dark,
-          locale: TranslationProvider.of(context).flutterLocale,
-          supportedLocales: AppLocaleUtils.supportedLocales,
-          localizationsDelegates: localizationsDelegates,
-          routerConfig: router,
-          // Lapisan tur spotlight di atas `Navigator`, supaya juga menutupi
-          // lembar modal (ADR-021 §3.3).
-          builder: (context, child) => SpotlightHost(
-            repository: getIt<TutorialProgressRepository>(),
-            child: _WithDebugMenu(router: router, registry: getIt<RouteRegistry>(), child: child),
+        // Preset dan mode pilihan pengguna (ADR-043), lewat jembatan ke layar lama.
+        child: AppearanceThemeBuilder(
+          builder: (context, light, dark, mode) => MaterialApp.router(
+            debugShowCheckedModeBanner: false,
+            theme: light,
+            darkTheme: dark,
+            themeMode: mode,
+            locale: TranslationProvider.of(context).flutterLocale,
+            supportedLocales: AppLocaleUtils.supportedLocales,
+            localizationsDelegates: localizationsDelegates,
+            routerConfig: router,
+            // Lapisan tur spotlight di atas `Navigator`, supaya juga menutupi
+            // lembar modal (ADR-021 §3.3).
+            builder: (context, child) => SpotlightHost(
+              repository: getIt<TutorialProgressRepository>(),
+              child: _WithDebugMenu(
+                router: router,
+                registry: getIt<RouteRegistry>(),
+                child: child,
+              ),
+            ),
           ),
         ),
       ),
@@ -66,7 +74,11 @@ class SaldoughApp extends StatelessWidget {
 }
 
 class _WithDebugMenu extends StatelessWidget {
-  const _WithDebugMenu({required this.router, required this.registry, required this.child});
+  const _WithDebugMenu({
+    required this.router,
+    required this.registry,
+    required this.child,
+  });
 
   final GoRouter router;
   final RouteRegistry registry;
@@ -97,7 +109,10 @@ class _WithDebugMenu extends StatelessWidget {
                         registry: registry,
                         onEntryTap: (entry) {
                           Navigator.of(context).pop();
-                          router.goNamed(entry.keyId, extra: entry.createInput());
+                          router.goNamed(
+                            entry.keyId,
+                            extra: entry.createInput(),
+                          );
                         },
                       ),
                     ),

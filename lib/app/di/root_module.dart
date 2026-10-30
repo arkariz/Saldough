@@ -15,6 +15,7 @@ import 'package:saldough/app/shell/account_data_section.dart';
 import 'package:saldough/app/shell/account_plus_section.dart';
 import 'package:saldough/app/shell/account_version_entry.dart';
 import 'package:saldough/app/shell/app_shell_page.dart';
+import 'package:saldough/core/appearance/appearance.dart';
 import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/discovery/discovery.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
@@ -355,6 +356,9 @@ abstract final class RootModule {
       )
       ..registerLazySingleton<AmountVisibilityRepository>(
         () => AmountVisibilityRepositoryImpl(storage: container<KeyValueStorage>()),
+      )
+      ..registerLazySingleton<AppearanceRepository>(
+        () => AppearanceRepositoryImpl(storage: container<KeyValueStorage>()),
       )
       ..registerLazySingleton<FinancialMonthPreferenceRepository>(
         () => FinancialMonthPreferenceRepositoryImpl(storage: container<KeyValueStorage>()),

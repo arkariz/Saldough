@@ -343,6 +343,12 @@ enum IconKey {
   /// Baris setelan Bahasa.
   translate,
 
+  /// Baris setelan warna aplikasi (preset).
+  palette,
+
+  /// Baris setelan mode terang/gelap.
+  contrast,
+
   /// Baris setelan Mata uang.
   payments,
 
@@ -488,6 +494,8 @@ const Map<IconKey, IconData> _symbols = {
   IconKey.label: Symbols.label_rounded,
   IconKey.notifications: Symbols.notifications_rounded,
   IconKey.translate: Symbols.translate_rounded,
+  IconKey.palette: Symbols.palette_rounded,
+  IconKey.contrast: Symbols.contrast_rounded,
   IconKey.payments: Symbols.payments_rounded,
   IconKey.reorder: Symbols.swap_vert_rounded,
   IconKey.dragHandle: Symbols.drag_indicator_rounded,

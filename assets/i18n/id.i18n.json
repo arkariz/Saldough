@@ -998,6 +998,21 @@
     "pickerTitle": "Pilih bahasa",
     "hint": "Tampilan aplikasi dan bahasa ucapan"
   },
+  "appearance": {
+    "modeLabel": "Mode tampilan",
+    "modeHint": "Terang, gelap, atau ikut perangkat",
+    "modePickerTitle": "Pilih mode tampilan",
+    "modeLight": "Terang",
+    "modeDark": "Gelap",
+    "modeSystem": "Ikuti perangkat",
+    "presetLabel": "Warna aplikasi",
+    "presetHint": "Pilih warna utama aplikasi",
+    "presetPickerTitle": "Pilih warna aplikasi",
+    "presets": {
+      "matcha": "Matcha",
+      "pink": "Pink"
+    }
+  },
   "discovery": {
     "payday": {
       "title": "Gajian tanggal $d?",

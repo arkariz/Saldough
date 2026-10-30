@@ -56,6 +56,7 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$currency$en currency = _Translations$currency$en._(_root);
 	@override late final _Translations$category$en category = _Translations$category$en._(_root);
 	@override late final _Translations$language$en language = _Translations$language$en._(_root);
+	@override late final _Translations$appearance$en appearance = _Translations$appearance$en._(_root);
 	@override late final _Translations$discovery$en discovery = _Translations$discovery$en._(_root);
 	@override late final _Translations$notificationCapture$en notificationCapture = _Translations$notificationCapture$en._(_root);
 	@override late final _Translations$recurring$en recurring = _Translations$recurring$en._(_root);
@@ -1065,6 +1066,25 @@ class _Translations$language$en extends Translations$language$id {
 	@override String get hint => 'App text and voice recording';
 }
 
+// Path: appearance
+class _Translations$appearance$en extends Translations$appearance$id {
+	_Translations$appearance$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get modeLabel => 'Appearance';
+	@override String get modeHint => 'Light, dark, or follow the device';
+	@override String get modePickerTitle => 'Choose appearance';
+	@override String get modeLight => 'Light';
+	@override String get modeDark => 'Dark';
+	@override String get modeSystem => 'Follow device';
+	@override String get presetLabel => 'App colors';
+	@override String get presetHint => 'Choose the main color of the app';
+	@override String get presetPickerTitle => 'Choose app colors';
+	@override late final _Translations$appearance$presets$en presets = _Translations$appearance$presets$en._(_root);
+}
+
 // Path: discovery
 class _Translations$discovery$en extends Translations$discovery$id {
 	_Translations$discovery$en._(TranslationsEn root) : this._root = root, super.internal(root);
@@ -1759,6 +1779,17 @@ class _Translations$currency$names$en extends Translations$currency$names$id {
 	@override String get php => 'Philippine Peso';
 	@override String get vnd => 'Vietnamese Dong';
 	@override String get aud => 'Australian Dollar';
+}
+
+// Path: appearance.presets
+class _Translations$appearance$presets$en extends Translations$appearance$presets$id {
+	_Translations$appearance$presets$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get matcha => 'Matcha';
+	@override String get pink => 'Pink';
 }
 
 // Path: discovery.payday
@@ -3316,6 +3347,17 @@ extension on TranslationsEn {
 			'language.label' => 'Language',
 			'language.pickerTitle' => 'Choose language',
 			'language.hint' => 'App text and voice recording',
+			'appearance.modeLabel' => 'Appearance',
+			'appearance.modeHint' => 'Light, dark, or follow the device',
+			'appearance.modePickerTitle' => 'Choose appearance',
+			'appearance.modeLight' => 'Light',
+			'appearance.modeDark' => 'Dark',
+			'appearance.modeSystem' => 'Follow device',
+			'appearance.presetLabel' => 'App colors',
+			'appearance.presetHint' => 'Choose the main color of the app',
+			'appearance.presetPickerTitle' => 'Choose app colors',
+			'appearance.presets.matcha' => 'Matcha',
+			'appearance.presets.pink' => 'Pink',
 			'discovery.payday.title' => ({required Object d}) => 'Payday on the ${d}?',
 			'discovery.payday.body' => ({required Object d}) => 'Start your financial month on day ${d} so Plan and Analysis follow your payday.',
 			'discovery.payday.action' => 'Set',
@@ -3398,6 +3440,8 @@ extension on TranslationsEn {
 			'notificationCapture.bindingTitle' => 'Bind to a recurring item',
 			'notificationCapture.bindingHint' => 'Notifications that match a bound pattern are recorded as that recurring item. If the amount or schedule does not fit, they go to the inbox instead of being guessed.',
 			'notificationCapture.bindingNone' => 'Not bound',
+			_ => null,
+		} ?? switch (path) {
 			'notificationCapture.samplesToggle' => 'Save notification samples',
 			'notificationCapture.samplesHint' => 'To build filters and patterns from this app\'s notifications. Kept on this device for 7 days, never sent anywhere.',
 			'notificationCapture.samplesTitle' => 'Recent notifications',
@@ -3409,8 +3453,6 @@ extension on TranslationsEn {
 			'notificationCapture.samplesDisclosureTitle' => 'Save notification samples?',
 			'notificationCapture.samplesDisclosureBody' => 'Tanukonomy will keep the text of notifications from the apps you chose, including non-transaction ones, for 7 days on this device. It is used only to build filters and patterns. OTP codes are never saved, and this text is not sent to any server. You can turn it off at any time; all samples are deleted right away.',
 			'notificationCapture.samplesDisclosureCancel' => 'Cancel',
-			_ => null,
-		} ?? switch (path) {
 			'notificationCapture.samplesDisclosureAgree' => 'Turn on',
 			'notificationCapture.roleIgnore' => 'Ignore',
 			'notificationCapture.patternKindLabel' => '3. Transaction type',

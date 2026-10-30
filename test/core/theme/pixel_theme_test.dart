@@ -42,9 +42,16 @@ void main() {
     test(
       'dipasang sebagai theme/darkTheme MaterialApp, bukan pembungkus per layar',
       () {
+        // Sejak ADR-043 tema dipasang lewat `AppearanceThemeBuilder` dan
+        // `AppThemeBridge`, yang membangun tema lama dari `PixelTheme.forColors`.
         final app = File('lib/app/app.dart').readAsStringSync();
-        expect(app, contains('theme: PixelTheme.light'));
-        expect(app, contains('darkTheme: PixelTheme.dark'));
+        expect(app, contains('theme: light'));
+        expect(app, contains('darkTheme: dark'));
+        expect(app, isNot(contains('Theme(data:')));
+        expect(
+          File('lib/core/design_system/legacy/app_theme_bridge.dart').readAsStringSync(),
+          contains('PixelTheme.forColors'),
+        );
       },
     );
 

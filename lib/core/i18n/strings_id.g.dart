@@ -58,6 +58,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$currency$id currency = Translations$currency$id.internal(_root);
 	late final Translations$category$id category = Translations$category$id.internal(_root);
 	late final Translations$language$id language = Translations$language$id.internal(_root);
+	late final Translations$appearance$id appearance = Translations$appearance$id.internal(_root);
 	late final Translations$discovery$id discovery = Translations$discovery$id.internal(_root);
 	late final Translations$notificationCapture$id notificationCapture = Translations$notificationCapture$id.internal(_root);
 	late final Translations$recurring$id recurring = Translations$recurring$id.internal(_root);
@@ -2635,6 +2636,44 @@ class Translations$language$id {
 	String get hint => 'Tampilan aplikasi dan bahasa ucapan';
 }
 
+// Path: appearance
+class Translations$appearance$id {
+	Translations$appearance$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Mode tampilan'
+	String get modeLabel => 'Mode tampilan';
+
+	/// id: 'Terang, gelap, atau ikut perangkat'
+	String get modeHint => 'Terang, gelap, atau ikut perangkat';
+
+	/// id: 'Pilih mode tampilan'
+	String get modePickerTitle => 'Pilih mode tampilan';
+
+	/// id: 'Terang'
+	String get modeLight => 'Terang';
+
+	/// id: 'Gelap'
+	String get modeDark => 'Gelap';
+
+	/// id: 'Ikuti perangkat'
+	String get modeSystem => 'Ikuti perangkat';
+
+	/// id: 'Warna aplikasi'
+	String get presetLabel => 'Warna aplikasi';
+
+	/// id: 'Pilih warna utama aplikasi'
+	String get presetHint => 'Pilih warna utama aplikasi';
+
+	/// id: 'Pilih warna aplikasi'
+	String get presetPickerTitle => 'Pilih warna aplikasi';
+
+	late final Translations$appearance$presets$id presets = Translations$appearance$presets$id.internal(_root);
+}
+
 // Path: discovery
 class Translations$discovery$id {
 	Translations$discovery$id.internal(this._root);
@@ -4367,6 +4406,21 @@ class Translations$currency$names$id {
 
 	/// id: 'Dolar Australia'
 	String get aud => 'Dolar Australia';
+}
+
+// Path: appearance.presets
+class Translations$appearance$presets$id {
+	Translations$appearance$presets$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Matcha'
+	String get matcha => 'Matcha';
+
+	/// id: 'Pink'
+	String get pink => 'Pink';
 }
 
 // Path: discovery.payday
@@ -6366,6 +6420,17 @@ extension on Translations {
 			'language.label' => 'Bahasa',
 			'language.pickerTitle' => 'Pilih bahasa',
 			'language.hint' => 'Tampilan aplikasi dan bahasa ucapan',
+			'appearance.modeLabel' => 'Mode tampilan',
+			'appearance.modeHint' => 'Terang, gelap, atau ikut perangkat',
+			'appearance.modePickerTitle' => 'Pilih mode tampilan',
+			'appearance.modeLight' => 'Terang',
+			'appearance.modeDark' => 'Gelap',
+			'appearance.modeSystem' => 'Ikuti perangkat',
+			'appearance.presetLabel' => 'Warna aplikasi',
+			'appearance.presetHint' => 'Pilih warna utama aplikasi',
+			'appearance.presetPickerTitle' => 'Pilih warna aplikasi',
+			'appearance.presets.matcha' => 'Matcha',
+			'appearance.presets.pink' => 'Pink',
 			'discovery.payday.title' => ({required Object d}) => 'Gajian tanggal ${d}?',
 			'discovery.payday.body' => ({required Object d}) => 'Mulai bulan keuangan dari tanggal ${d}, supaya Rencana dan Analisis mengikuti gajianmu.',
 			'discovery.payday.action' => 'Atur',
@@ -6448,6 +6513,8 @@ extension on Translations {
 			'notificationCapture.bindingTitle' => 'Ikat ke rutin',
 			'notificationCapture.bindingHint' => 'Notifikasi yang cocok dengan pola terikat dicatat sebagai kemunculan rutin itu. Bila nominal atau jadwalnya tidak pas, masuk kotak masuk, tidak ditebak.',
 			'notificationCapture.bindingNone' => 'Tidak terikat',
+			_ => null,
+		} ?? switch (path) {
 			'notificationCapture.samplesToggle' => 'Simpan contoh notifikasi',
 			'notificationCapture.samplesHint' => 'Untuk membuat filter dan pola dari notifikasi aplikasi ini. Disimpan di perangkat 7 hari, tidak dikirim ke mana pun.',
 			'notificationCapture.samplesTitle' => 'Notifikasi terbaru',
@@ -6459,8 +6526,6 @@ extension on Translations {
 			'notificationCapture.samplesDisclosureTitle' => 'Simpan contoh notifikasi?',
 			'notificationCapture.samplesDisclosureBody' => 'Tanukonomy akan menyimpan teks notifikasi dari aplikasi yang kamu pilih, termasuk yang bukan transaksi, selama 7 hari di perangkat ini. Dipakai hanya untuk membuat filter dan pola. Kode OTP tidak pernah disimpan, dan teks ini tidak dikirim ke server. Kamu bisa mematikannya kapan saja; semua contoh langsung terhapus.',
 			'notificationCapture.samplesDisclosureCancel' => 'Batal',
-			_ => null,
-		} ?? switch (path) {
 			'notificationCapture.samplesDisclosureAgree' => 'Nyalakan',
 			'notificationCapture.roleIgnore' => 'Abaikan',
 			'notificationCapture.patternKindLabel' => '3. Jenis transaksi',

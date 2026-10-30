@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:saldough/core/design_system/color/ds_color_scheme.dart';
 import 'package:saldough/core/design_system/ds_theme.dart';
 import 'package:saldough/core/design_system/tokens/ds_opacity.dart';
@@ -70,11 +71,32 @@ class DsIconTile extends StatelessWidget {
     : child = null,
       tone = DsIconTileTone.neutral;
 
-  /// Tile berisi widget bebas (ilustrasi maskot), latar netral.
-  const DsIconTile.child({required this.child, this.size = DsIconTileSize.lg, super.key})
-    : icon = null,
-      category = null,
-      tone = DsIconTileTone.neutral;
+  /// Tile berisi widget bebas (ilustrasi maskot), latar [tone] atau
+  /// [category] (bawaan netral).
+  const DsIconTile.child({
+    required this.child,
+    this.size = DsIconTileSize.lg,
+    this.tone = DsIconTileTone.neutral,
+    this.category,
+    super.key,
+  }) : icon = null;
+
+  /// Tile berisi ilustrasi SVG [asset] (ikon "clay", `assets/icons_clay/`).
+  /// Tile datar: warna ilustrasi tertanam dan tidak mengikuti tema, latar
+  /// tile yang mengikuti tema (KT-DS6, KT-DS7).
+  factory DsIconTile.asset({
+    required String asset,
+    DsIconTileTone tone = DsIconTileTone.neutral,
+    DsColorPair? category,
+    DsIconTileSize size = DsIconTileSize.md,
+    Key? key,
+  }) => DsIconTile.child(
+    key: key,
+    size: size,
+    tone: tone,
+    category: category,
+    child: SvgPicture.asset(asset, width: size.side * 0.7, height: size.side * 0.7),
+  );
 
   /// Ikon.
   final IconData? icon;

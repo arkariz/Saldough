@@ -95,6 +95,7 @@ Terakhir diperbarui: 29 Oktober 2026 (penyelarasan dokumen dengan `main` di `0.1
 | 24 — Design system baru dan preset tema ([ADR-043](../02-architecture/adr/0043-design-system-v2-dan-preset-tema.md), Proposed) | 4 | 2 | Berjalan sejak 29 Okt 2026 -- T-24.1 fondasi selesai (spek Tanukonomy Matcha); KT-DS1–KT-DS4 diputuskan; T-24.2 widget komponen selesai; pemasangan menunggu keputusan pemilik |
 | 24 — Design system baru dan preset tema ([ADR-043](../02-architecture/adr/0043-design-system-v2-dan-preset-tema.md), Proposed) | 5 | 3 | Berjalan sejak 29 Okt 2026 -- T-24.1 fondasi selesai (spek Tanukonomy Matcha); KT-DS1–KT-DS4 diputuskan; T-24.2 widget komponen dan T-24.5 animasi selesai (animasi belum dinilai di perangkat); pemasangan menunggu keputusan pemilik |
 | 24 — Design system baru dan preset tema ([ADR-043](../02-architecture/adr/0043-design-system-v2-dan-preset-tema.md), Proposed) | 6 | 3 | Berjalan sejak 29 Okt 2026 -- T-24.1 fondasi selesai (spek Tanukonomy Matcha); KT-DS1–KT-DS4 diputuskan; T-24.2 widget komponen dan T-24.5 animasi selesai (animasi belum dinilai di perangkat); pemasangan menunggu keputusan pemilik |
+| 24 — Design system baru dan preset tema ([ADR-043](../02-architecture/adr/0043-design-system-v2-dan-preset-tema.md), Proposed) | 6 | 4 | Berjalan sejak 29 Okt 2026 -- T-24.1 fondasi selesai (spek Tanukonomy Matcha); KT-DS1–KT-DS4 diputuskan; T-24.2 widget komponen dan T-24.5 animasi selesai (animasi belum dinilai di perangkat); T-24.3 terpasang, Beranda dirombak (irisan T-24.4); layar lain menyusul |
 | Antrean (`B-n`, belum dijadwalkan) | 67 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
 
 ## Keputusan terbuka
@@ -5932,15 +5933,34 @@ memilih mode (dan preset bila ≥ 2), dan design system lama dihapus.
       tile bertimbul, tombol Catat bulat, lencana level, animasi laser dan
       gelombang suara) belum dibuat. KT-DS5–KT-DS8 sudah diputuskan; sisa pekerjaan: menggambar ikon clay
       untuk seluruh kategori/dompet.
-- [ ] **T-24.3** Pasang ke aplikasi: `MaterialApp` memakai `DsTheme`,
-      preferensi preset + mode (`settings_appearance`, dikecualikan dari
-      `BackupRegistry` sebagai milik perangkat), baris Akun › Tampilan (mode;
-      preset bila ≥ 2), label i18n `appearance.*`. Menunggu keputusan pemilik
-      kapan dipasang (bersama atau sebelum rombak layar).
-- [ ] **T-24.4** Pindahkan layar ke token baru, lalu hapus design system
-      lama (`core/theme/`, `PixelCornerBorder`, Plus Jakarta Sans), perbarui
-      skill `tanukonomy-ui`, `docs/03-design/`, dan `.claude/CLAUDE.md`;
-      ADR-043 jadi Accepted dan ADR-034 Superseded.
+- [x] **T-24.3** Pasang design system v2 ke aplikasi (30 Okt 2026).
+      `AppThemeBridge` (jembatan ke layar lama, ADR-043 §3.1 direvisi),
+      `AppearanceThemeBuilder` di `MaterialApp` dan layar boot ulang,
+      preferensi `settings_appearance` (mode + preset, milik perangkat),
+      baris Mode dan Warna aplikasi di Akun › Tampilan, i18n `appearance.*`.
+      Verifikasi: uji jembatan (52 token, kontras per preset × mode, mode
+      gelap tidak jatuh ke token terang), uji preferensi, uji baris Akun,
+      uji registri backup dan boot ulang; seluruh uji lulus.
+      Di luar PRD: tampilan.
+- [ ] **T-24.4** Pindahkan layar ke design system v2, lalu hapus yang lama.
+      **Irisan Beranda selesai 30 Okt 2026** (`lib/features/home/`): top
+      bar menyusut, sapaan, kartu mood, kartu saldo hero, arus, carousel,
+      tile aksi cepat clay, banner misi, transaksi terbaru, partikel latar.
+      Data tiruan (level, mood, misi, slide rutin dan hadiah) di
+      `home_placeholder.dart`, satu saklar `kHomePlaceholderPreview` (aktif
+      di semua build atas keputusan pemilik; matikan sebelum rilis publik
+      atau ganti dengan data nyata setelah keputusan gamifikasi). Scan
+      Struk tampil nonaktif "Segera"; Kirim Daun menjadi Catat Transfer.
+      Uji: 2.186 lulus; uji fungsional memakai `reducedMotion`
+      (`test/helpers/reduced_motion.dart`) karena animasi berulang
+      menggagalkan `pumpAndSettle`. **Belum dinilai di emulator/perangkat**
+      (kesan gerak, partikel, pink dan gelap).
+      Sisa: navigasi bawah (`AppNavBar`, tombol Catat clay), Riwayat,
+      Rencana, Dompet, Akun, Catat, layar turunan, ikon clay untuk 41
+      kategori/dompet (KT-DS5), lalu hapus `core/theme/`, `AppThemeBridge`,
+      `PixelCornerBorder`; perbarui skill `tanukonomy-ui`, `docs/03-design/`,
+      `.claude/CLAUDE.md`; ADR-043 jadi Accepted dan ADR-034 Superseded.
+
 
 ## Antrean (belum dijadwalkan)
 

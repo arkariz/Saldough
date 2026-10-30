@@ -242,6 +242,18 @@ Menunggu, pengingat lokal `flutter_local_notifications`), `features/plan/`
 bernominal tetap boleh dicatat satu ketuk lewat `RecordTransaction`.
 Verifikasi perangkat T-15.9/T-15.14 belum.
 
+**Design system v2 (ADR-043, Proposed, 30 Okt 2026):** pengganti ADR-034
+yang sedang dipasang bertahap. Kode di `lib/core/design_system/` (token,
+22+ widget, animasi, ikon clay, preset warna `matcha` dan `pink`), dokumen di
+`docs/03-design/design-system-v2/`. Tema aktif dibangun `AppThemeBridge`
+(jembatan sementara: tema lama + ekstensi Ds), dipilih pengguna di Akun ›
+Tampilan (`settings_appearance`). **Beranda sudah memakai v2; layar lain
+belum** (T-24.4). Widget baru memakai `context.ds`, bukan `context.appColors`;
+jangan mencampur keduanya di satu widget. Data tiruan Beranda ada di
+`home_placeholder.dart` (saklar `kHomePlaceholderPreview`). Skill
+`tanukonomy-ui` dan paragraf di bawah masih menggambarkan ADR-034 untuk layar
+yang belum dirombak.
+
 **Tema (ADR-031, 1 Okt 2026):** `PixelTheme.light`/`.dark` adalah tema
 `MaterialApp`; jangan membungkus layar atau rute dengan `PixelTheme`/`Theme`.
 Mekanisme ini tetap di ADR-034; isinya diganti di T-14.1.

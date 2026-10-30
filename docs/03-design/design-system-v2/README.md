@@ -1,13 +1,13 @@
 # Design system v2 (Tanukonomy Matcha)
 
-**Status:** fondasi selesai 29 Okt 2026, **belum dipasang** ke aplikasi.
+**Status:** terpasang 30 Okt 2026 lewat `AppThemeBridge`; **Beranda sudah
+dirombak**, layar lain belum (T-24.4).
 Keputusan ada di [ADR-043](../../02-architecture/adr/0043-design-system-v2-dan-preset-tema.md) (Proposed).
 
 Ini design system pengganti untuk rombak UI. Ia berdampingan dengan design
-system lama (`../design-system/`, ADR-034) dan tidak mengubahnya. Aplikasi
-masih memakai `PixelTheme` sampai pemilik memutuskan pemasangan. Widget
-komponennya sudah ada di `lib/core/design_system/components/`, tetapi belum
-dipakai layar mana pun.
+system lama (`../design-system/`, ADR-034) dan tidak mengubahnya. Tema aktif dibangun `AppThemeBridge` (tema lama + ekstensi Ds); layar yang
+belum dirombak tetap tampil benar di terang, gelap, dan tiap preset. Widget
+komponennya dipakai Beranda.
 
 Spek sebelumnya (Autumn Kyoto Ledger, 29 Okt 2026) diganti pemilik pada hari
 yang sama dengan spek ini; isinya masih ada di riwayat git.

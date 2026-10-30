@@ -5,8 +5,8 @@
 - **Decision ID:** ADR-043
 - **Tanggal:** 2026-10-29
 - **Fase roadmap:** Fase 24 (lihat TASK_LIST)
-- **Status:** Proposed. Fondasi dibangun atas permintaan pemilik 29 Okt
-  2026; pemasangan ke aplikasi menunggu keputusan pemilik.
+- **Status:** Proposed. Fondasi dibangun 29 Okt 2026; dipasang ke aplikasi
+  dan Beranda dirombak 30 Okt 2026 (irisan vertikal); layar lain menyusul.
 - **Cakupan:** `lib/core/design_system/`, `assets/fonts/SpaceMono-Bold.ttf`,
   `docs/03-design/design-system-v2/`
 - **Bergantung pada:** ADR-031 (tema global lewat `MaterialApp`)
@@ -43,15 +43,25 @@ widget komponen baru dibuat setelah pemilik memintanya.
 
 ## 3. Keputusan
 
-### 3.1 Design system v2 berdiri sendiri
+### 3.1 Design system v2 berdiri sendiri, dengan jembatan sementara
 
 - **Kode:** `lib/core/design_system/` (barrel `design_system.dart`), prefiks
   `Ds`, berdampingan dengan `lib/core/theme/` lama.
 - **Dokumen:** `docs/03-design/design-system-v2/` (spek, referensi
-  komponen, `components.md`, `tokens.json`).
-- **Tanpa adaptor ke `AppColors` lama.** Saat rombak UI, layar dipindahkan
-  ke token baru, lalu design system lama dihapus. Jangan mencampur token
-  lama dan baru di satu widget.
+  komponen, `components.md`, `motion.md`, `icons.md`, `tokens.json`).
+- **Jembatan (direvisi 30 Okt 2026).** Rancangan awal menolak adaptor.
+  Saat tema dipasang ke aplikasi ternyata 128 berkas layar lama membaca
+  `context.appColors` (jatuh ke token terang bila ekstensinya tidak ada,
+  sehingga mode gelap rusak diam-diam) dan 105 membaca `textTheme`.
+  `AppThemeBridge` (`lib/core/design_system/legacy/`) membangun tema lama
+  lewat `PixelTheme.forColors` dari warna preset aktif, lalu menambahkan
+  ekstensi Ds di atasnya. Layar lama tampil sama (dengan warna preset),
+  layar baru memakai `context.ds`. **Jembatan dihapus saat semua layar
+  dirombak (T-24.4).** Jangan mencampur token lama dan baru di satu widget
+  baru.
+- **Pemasangan:** `AppearanceThemeBuilder` (`lib/app/theme/`) membangun
+  tema terang/gelap dan mode dari `ActiveAppearance` untuk `MaterialApp`
+  dan layar boot ulang.
 
 ### 3.2 Token
 
@@ -93,14 +103,13 @@ di `lib/core/design_system/components/` (T-24.2) dan hanya menerima teks
 yang sudah diformat dan diterjemahkan pemanggil. Teks dan fitur referensi yang bertentangan dengan aturan produk
 ("Kirim Daun", "Isi Saldo", gamifikasi) tidak ikut diadopsi.
 
-### 3.5 Preferensi pengguna (saat pemasangan)
+### 3.5 Preferensi pengguna
 
-Pilihan preset dan mode (Terang/Gelap/Ikuti sistem):
-
-- disimpan lokal dan dianggap milik perangkat, jadi dikecualikan dari
-  cadangan;
-- dipilih di Akun › Tampilan;
-- pemilih preset baru tampil kalau preset ada dua atau lebih.
+Pilihan preset dan mode (Terang/Gelap/Ikuti sistem) disimpan lokal di
+`settings_appearance`, dianggap milik perangkat (dikecualikan dari
+cadangan), dan dipilih di Akun › Tampilan (baris Mode dan Warna aplikasi).
+Preset yang tak dikenal lagi jatuh ke `DsThemePresets.fallback`. Baris
+preset tampil bila ada dua preset atau lebih (sekarang `matcha` dan `pink`).
 
 ## 4. Konsekuensi
 

@@ -163,7 +163,7 @@ class _Tab extends StatelessWidget {
             constraints: const BoxConstraints(minWidth: 56, minHeight: 44),
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
-              color: active ? c.incomeContainer.withValues(alpha: 0.8) : Colors.transparent,
+              color: active ? c.actionPrimary.withValues(alpha: 0.12) : Colors.transparent,
               borderRadius: DsRadius.lgAll,
             ),
             child: Column(

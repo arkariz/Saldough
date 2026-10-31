@@ -10,7 +10,6 @@ import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/budget/data/adapters/budget_item_catalog_impl.dart';
 import 'package:saldough/features/budget/data/adapters/budget_overview_source_impl.dart';
@@ -102,7 +101,7 @@ void main() {
     await tester.pumpWidget(
       ScopeProvider(
         container: container,
-        child: MaterialApp(builder: reducedMotion, theme: PixelTheme.light, home: const AppShellPage()),
+        child: MaterialApp(builder: reducedMotion, theme: AppThemeBridge.build(DsThemePresets.fallback, Brightness.light), home: const AppShellPage()),
       ),
     );
     for (var i = 0; i < 5; i++) {
@@ -302,7 +301,7 @@ void main() {
         ScopeProvider(
           container: container,
           child: MaterialApp(
-            theme: PixelTheme.light,
+            theme: AppThemeBridge.build(DsThemePresets.fallback, Brightness.light),
             builder: (context, child) => MediaQuery(
               data: MediaQuery.of(context).copyWith(disableAnimations: true),
               child: SpotlightHost(repository: tutorials, child: child!),
@@ -401,7 +400,7 @@ void main() {
         ScopeProvider(
           container: container,
           child: MaterialApp(
-            theme: PixelTheme.light,
+            theme: AppThemeBridge.build(DsThemePresets.fallback, Brightness.light),
             builder: (context, child) => MediaQuery(
               data: MediaQuery.of(context).copyWith(disableAnimations: true),
               child: SpotlightHost(repository: tutorials, child: child!),
@@ -667,7 +666,7 @@ void main() {
       ScopeProvider(
         container: container,
         child: MaterialApp(
-          theme: PixelTheme.light,
+          theme: AppThemeBridge.build(DsThemePresets.fallback, Brightness.light),
           builder: (context, child) => reducedMotion(context, ActiveCurrencyRebuilder(child: child!)),
           home: const AppShellPage(),
         ),

@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/foundation/navigation/app_route_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight_host.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 
 enum _InfoAction { replayTour, showIntro, resetAll }
@@ -48,24 +48,18 @@ class TutorialInfoButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (SpotlightHost.maybeOf(context, listen: false) == null) return const SizedBox.shrink();
-    final colors = context.appColors;
     return PopupMenuButton<_InfoAction>(
       tooltip: t.info.menuTooltip,
       padding: EdgeInsets.zero,
-      color: colors.surface,
-      shape: const PixelCornerBorder(),
       onSelected: (action) => unawaited(_onSelected(context, action)),
       itemBuilder: (_) => [
         PopupMenuItem(value: _InfoAction.replayTour, child: Text(t.info.replayTourAction)),
         PopupMenuItem(value: _InfoAction.showIntro, child: Text(t.info.showIntroAction)),
         PopupMenuItem(value: _InfoAction.resetAll, child: Text(t.info.resetAllAction)),
       ],
-      // Target sentuh 44px; ikonnya kecil supaya tidak bersaing dengan angka.
-      child: SizedBox(
-        width: 44,
-        height: 44,
-        child: Center(child: AppIcon(IconKey.info, size: 20, color: colors.ink2)),
-      ),
+      // Muka sama dengan `DsIconButton` (target sentuh 44px); warna dan
+      // sudut menu mengikuti `popupMenuTheme` tema aktif.
+      child: const DsIconButtonFace(icon: Icons.info_outline),
     );
   }
 }

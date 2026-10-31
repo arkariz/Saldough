@@ -155,6 +155,12 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('DsIconButtonFace berukuran target sentuh 44 dan memuat ikon', (tester) async {
+    await tester.pumpWidget(_host(const DsIconButtonFace(icon: Icons.info_outline)));
+    expect(tester.getSize(find.byType(DsIconButtonFace)), const Size.square(44));
+    expect(find.byIcon(Icons.info_outline), findsOneWidget);
+  });
+
   testWidgets('DsNavBar memilih tab dan tombol tengah di posisi tengah', (tester) async {
     int? selected;
     var center = 0;

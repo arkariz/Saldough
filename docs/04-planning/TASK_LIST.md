@@ -5964,9 +5964,13 @@ memilih mode (dan preset bila ≥ 2), dan design system lama dihapus.
       tinggi mengikuti slide aktif), Freelance, transaksi terbaru. Mood
       menjadi pil di sapaan, banner misi menjadi lencana "+50 XP" di tile
       Misi Hemat (ketuk = klaim). Langkah tur Anggaran menyorot carousel yang
-      bisa sedang menampilkan slide status. Kunci i18n `home.insightTitle`,
-      `home.carousel*`, dan `home.preview.moodNote/mission(Eyebrow|Body|Claim)`
-      tidak terpakai lagi.
+      bisa sedang menampilkan slide status. Sisa legacy Beranda yang masih
+      tertinggal: `HomeFirstSteps`, layar galat, banner pembaruan, kartu
+      status mode penuh, dan overlay tur. Sudah dibereskan: skeleton
+      (`HomeSkeleton`/`DsSkeleton`), tombol Tur dan Akun di top bar
+      (`DsIconButtonFace`, `AccountAvatar` bulat), kode mati `home_cards`,
+      kunci i18n tak terpakai, dan tema uji Beranda (jembatan, bukan
+      `PixelTheme`).
       **Kartu hero diperkaya (31 Okt 2026):** mengikuti
       `reference/wallet-hero.html` -- aura bernapas, gradasi clay, daun dan
       kilau melayang, maskot mengangguk dengan koin, saldo kabur saat

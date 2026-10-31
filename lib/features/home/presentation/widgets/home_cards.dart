@@ -7,55 +7,6 @@ import 'package:saldough/core/theme/theme.dart';
 // (saldo, bulan berjalan, anggaran, Freelance) ada di `home_summary.dart`
 // (ADR-034, prototipe `Main.dc.html`).
 
-/// Judul bagian, mis. "Transaksi terbaru" dengan tautan "Lihat semua"
-/// (FR-HOME-004).
-class HomeSectionHeader extends StatelessWidget {
-  /// Membuat [HomeSectionHeader].
-  const HomeSectionHeader({required this.icon, required this.title, this.trailing, super.key});
-
-  /// Ikon judul.
-  final IconKey icon;
-
-  /// Judul.
-  final String title;
-
-  /// Isi kanan, mis. tautan atau keterangan.
-  final Widget? trailing;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        AppIcon(icon, size: 22),
-        const SizedBox(width: AppSpacing.space1),
-        Expanded(
-          child: Text(title, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.titleMedium),
-        ),
-        // `Flexible`, bukan langsung `?trailing` -- label mikro naik ke
-        // 11px minimum (ADR-020 §3.2) butuh sedikit lebih banyak ruang;
-        // tanpa ini `trailing` panjang di teks 2x meluap (ketahuan uji
-        // Freelance 360px + teks 2x, yang melewati `HomeGuide`).
-        if (trailing != null) Flexible(child: trailing!),
-      ],
-    );
-  }
-}
-
-/// Tautan teks kecil beraksen dengan panah, mis. "Lihat semua ›".
-class HomeTextLink extends StatelessWidget {
-  /// Membuat [HomeTextLink].
-  const HomeTextLink({required this.label, required this.onTap, super.key});
-
-  /// Teks tautan.
-  final String label;
-
-  /// Aksi.
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) => _TextLink(label: label, onTap: onTap, chevron: true);
-}
-
 /// Beranda pertama kali (prototipe `BerandaKosong.dc.html`): tanpa dompet,
 /// ilustrasi + "Mulai dari dompetmu"; lalu daftar tiga langkah (tambah
 /// dompet, catat transaksi pertama, buat anggaran) dan satu tombol primer
@@ -166,42 +117,6 @@ class _StepRow extends StatelessWidget {
         subtitle: body,
         wrapTitle: true,
         wrapSubtitle: true,
-      ),
-    );
-  }
-}
-
-/// Tautan teks kecil beraksen.
-class _TextLink extends StatelessWidget {
-  const _TextLink({required this.label, required this.onTap, this.chevron = false});
-
-  final String label;
-  final VoidCallback onTap;
-  final bool chevron;
-
-  @override
-  Widget build(BuildContext context) {
-    final ink = context.appColors.brand;
-    // Simpul semantik sendiri: tanpa `container`, tautan di kartu kosong
-    // tergabung ke label kartu dan tidak bisa diaktifkan tersendiri (UX-12).
-    return Semantics(
-      container: true,
-      button: true,
-      child: GestureDetector(
-        onTap: onTap,
-        behavior: HitTestBehavior.opaque,
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(minHeight: 44),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Flexible(
-                child: Text(label, style: context.numberStyles.amountSm.copyWith(color: ink)),
-              ),
-              if (chevron) AppIcon(IconKey.chevronRight, size: 16, color: ink),
-            ],
-          ),
-        ),
       ),
     );
   }

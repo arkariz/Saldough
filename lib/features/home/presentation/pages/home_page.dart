@@ -18,6 +18,7 @@ import 'package:saldough/features/home/presentation/bloc/home_state.dart';
 import 'package:saldough/features/home/presentation/home_placeholder.dart';
 import 'package:saldough/features/home/presentation/widgets/home_cards.dart';
 import 'package:saldough/features/home/presentation/widgets/home_sections.dart';
+import 'package:saldough/features/home/presentation/widgets/home_skeleton.dart';
 import 'package:saldough/features/home/presentation/widgets/home_summary.dart';
 import 'package:saldough/features/transaction/presentation/navigation/transaction_route_keys.dart';
 import 'package:saldough/shared/auth/auth.dart';
@@ -131,7 +132,7 @@ class _HomePageState extends State<HomePage> {
         top: false,
         child: BlocBuilder<HomeBloc, HomeState>(
           builder: (context, state) => switch (state) {
-            HomeState(isLoading: true) => const AppSkeletonPage(),
+            HomeState(isLoading: true) => const HomeSkeleton(),
             HomeState(loadFailed: true) => _LoadError(
               onRetry: () => context.read<HomeBloc>().add(const HomeStarted()),
             ),

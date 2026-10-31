@@ -782,14 +782,10 @@ class _Translations$home$en extends Translations$home$id {
 	@override String get greeting => 'Hello';
 	@override String greetingNamed({required Object name}) => 'Hello, ${name}';
 	@override String get subtitle => 'Your finances today.';
-	@override String get insightTitle => 'Insights & plans';
 	@override String statusCarouselDot({required Object number}) => 'Go to status card ${number}';
 	@override String get statusOpen => 'View';
 	@override String get statusCarouselPrevious => 'Previous status card';
 	@override String get statusCarouselNext => 'Next status card';
-	@override String get carouselPrevious => 'Previous slide';
-	@override String get carouselNext => 'Next slide';
-	@override String carouselDot({required Object number}) => 'Go to slide ${number}';
 	@override String get actionTransfer => 'Record Transfer';
 	@override String get actionScan => 'Scan Receipt';
 	@override String get actionReport => 'Report';
@@ -1758,10 +1754,6 @@ class _Translations$home$preview$en extends Translations$home$preview$id {
 	@override String get level => 'LVL 12 STEWARD';
 	@override String get moodTitle => 'Mood: Calm & Prosperous';
 	@override String get moodBadge => '84% HEALTHY';
-	@override String get moodNote => 'Your spending allowance is safe until the weekend.';
-	@override String get missionEyebrow => 'DAILY TANUKI MISSION';
-	@override String get missionBody => 'Skip the afternoon coffee to earn +50 points';
-	@override String get missionClaim => 'CLAIM';
 	@override String get missionClaimed => 'CLAIMED';
 	@override String get missionReward => '+50 XP';
 	@override String get billTitle => 'Recurring Bills';
@@ -3154,14 +3146,10 @@ extension on TranslationsEn {
 			'home.greeting' => 'Hello',
 			'home.greetingNamed' => ({required Object name}) => 'Hello, ${name}',
 			'home.subtitle' => 'Your finances today.',
-			'home.insightTitle' => 'Insights & plans',
 			'home.statusCarouselDot' => ({required Object number}) => 'Go to status card ${number}',
 			'home.statusOpen' => 'View',
 			'home.statusCarouselPrevious' => 'Previous status card',
 			'home.statusCarouselNext' => 'Next status card',
-			'home.carouselPrevious' => 'Previous slide',
-			'home.carouselNext' => 'Next slide',
-			'home.carouselDot' => ({required Object number}) => 'Go to slide ${number}',
 			'home.actionTransfer' => 'Record Transfer',
 			'home.actionScan' => 'Scan Receipt',
 			'home.actionReport' => 'Report',
@@ -3171,10 +3159,6 @@ extension on TranslationsEn {
 			'home.preview.level' => 'LVL 12 STEWARD',
 			'home.preview.moodTitle' => 'Mood: Calm & Prosperous',
 			'home.preview.moodBadge' => '84% HEALTHY',
-			'home.preview.moodNote' => 'Your spending allowance is safe until the weekend.',
-			'home.preview.missionEyebrow' => 'DAILY TANUKI MISSION',
-			'home.preview.missionBody' => 'Skip the afternoon coffee to earn +50 points',
-			'home.preview.missionClaim' => 'CLAIM',
 			'home.preview.missionClaimed' => 'CLAIMED',
 			'home.preview.missionReward' => '+50 XP',
 			'home.preview.billTitle' => 'Recurring Bills',
@@ -3488,8 +3472,6 @@ extension on TranslationsEn {
 			'notificationCapture.searchApps' => 'Search apps',
 			'notificationCapture.builtInPatternsBadge' => 'Built-in patterns',
 			'notificationCapture.appsLoadFailed' => 'Couldn\'t read the app list.',
-			_ => null,
-		} ?? switch (path) {
 			'notificationCapture.appsEmpty' => 'No matching apps.',
 			'notificationCapture.sourceEnabled' => 'Read this app\'s notifications',
 			'notificationCapture.walletLabel' => 'Wallet',
@@ -3498,6 +3480,8 @@ extension on TranslationsEn {
 			'notificationCapture.keywordField' => 'Add a phrase',
 			'notificationCapture.addKeyword' => 'Add',
 			'notificationCapture.patternsTitle' => 'Patterns',
+			_ => null,
+		} ?? switch (path) {
 			'notificationCapture.patternsHint' => 'Teach Tanukonomy how to read this app\'s notification format.',
 			'notificationCapture.patternsEmpty' => 'No patterns yet. Tanukonomy still reads with general rules.',
 			'notificationCapture.builtInUnverified' => 'Built-in · you review the results',

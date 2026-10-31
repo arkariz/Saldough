@@ -27,6 +27,7 @@ export 'components/ds_pressable.dart';
 export 'components/ds_quick_action_tile.dart';
 export 'components/ds_section_header.dart';
 export 'components/ds_segment_meter.dart';
+export 'components/ds_skeleton.dart';
 export 'components/ds_status_board.dart';
 export 'components/ds_status_carousel.dart';
 export 'components/ds_tap_tip.dart';

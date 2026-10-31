@@ -211,3 +211,28 @@ class DsIconButton extends StatelessWidget {
     );
   }
 }
+
+/// Muka tombol ikon bulat 36px (area sentuh 44px) tanpa penanganan ketukan,
+/// untuk pembungkus yang menangani ketukan sendiri, mis. `PopupMenuButton`.
+/// Sama dengan tampilan [DsIconButton] di permukaan terang.
+class DsIconButtonFace extends StatelessWidget {
+  /// Membuat muka tombol ikon.
+  const DsIconButtonFace({required this.icon, super.key});
+
+  /// Ikon.
+  final IconData icon;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.ds.colors;
+    return SizedBox.square(
+      dimension: DsSpacing.minTapTarget,
+      child: Center(
+        child: SizedBox.square(
+          dimension: 36,
+          child: Icon(icon, size: 20, color: c.textSecondary),
+        ),
+      ),
+    );
+  }
+}

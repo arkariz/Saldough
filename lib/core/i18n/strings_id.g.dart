@@ -1956,9 +1956,6 @@ class Translations$home$id {
 	/// id: 'Ringkasan keuanganmu hari ini.'
 	String get subtitle => 'Ringkasan keuanganmu hari ini.';
 
-	/// id: 'Wawasan & Rencana'
-	String get insightTitle => 'Wawasan & Rencana';
-
 	/// id: 'Ke kartu status $number'
 	String statusCarouselDot({required Object number}) => 'Ke kartu status ${number}';
 
@@ -1970,15 +1967,6 @@ class Translations$home$id {
 
 	/// id: 'Kartu status berikutnya'
 	String get statusCarouselNext => 'Kartu status berikutnya';
-
-	/// id: 'Slide sebelumnya'
-	String get carouselPrevious => 'Slide sebelumnya';
-
-	/// id: 'Slide berikutnya'
-	String get carouselNext => 'Slide berikutnya';
-
-	/// id: 'Ke slide $number'
-	String carouselDot({required Object number}) => 'Ke slide ${number}';
 
 	/// id: 'Catat Transfer'
 	String get actionTransfer => 'Catat Transfer';
@@ -4379,18 +4367,6 @@ class Translations$home$preview$id {
 	/// id: '84% SEHAT'
 	String get moodBadge => '84% SEHAT';
 
-	/// id: 'Sisa kuota jajan aman sampai akhir pekan.'
-	String get moodNote => 'Sisa kuota jajan aman sampai akhir pekan.';
-
-	/// id: 'MISI HARIAN TANUKI'
-	String get missionEyebrow => 'MISI HARIAN TANUKI';
-
-	/// id: 'Hemat jajan kopi sore ini untuk +50 Poin'
-	String get missionBody => 'Hemat jajan kopi sore ini untuk +50 Poin';
-
-	/// id: 'KLAIM'
-	String get missionClaim => 'KLAIM';
-
 	/// id: 'TERKLAIM'
 	String get missionClaimed => 'TERKLAIM';
 
@@ -6304,14 +6280,10 @@ extension on Translations {
 			'home.greeting' => 'Halo',
 			'home.greetingNamed' => ({required Object name}) => 'Halo, ${name}',
 			'home.subtitle' => 'Ringkasan keuanganmu hari ini.',
-			'home.insightTitle' => 'Wawasan & Rencana',
 			'home.statusCarouselDot' => ({required Object number}) => 'Ke kartu status ${number}',
 			'home.statusOpen' => 'Lihat',
 			'home.statusCarouselPrevious' => 'Kartu status sebelumnya',
 			'home.statusCarouselNext' => 'Kartu status berikutnya',
-			'home.carouselPrevious' => 'Slide sebelumnya',
-			'home.carouselNext' => 'Slide berikutnya',
-			'home.carouselDot' => ({required Object number}) => 'Ke slide ${number}',
 			'home.actionTransfer' => 'Catat Transfer',
 			'home.actionScan' => 'Scan Struk',
 			'home.actionReport' => 'Laporan',
@@ -6321,10 +6293,6 @@ extension on Translations {
 			'home.preview.level' => 'LVL 12 STEWARD',
 			'home.preview.moodTitle' => 'Mood: Santai & Makmur',
 			'home.preview.moodBadge' => '84% SEHAT',
-			'home.preview.moodNote' => 'Sisa kuota jajan aman sampai akhir pekan.',
-			'home.preview.missionEyebrow' => 'MISI HARIAN TANUKI',
-			'home.preview.missionBody' => 'Hemat jajan kopi sore ini untuk +50 Poin',
-			'home.preview.missionClaim' => 'KLAIM',
 			'home.preview.missionClaimed' => 'TERKLAIM',
 			'home.preview.missionReward' => '+50 XP',
 			'home.preview.billTitle' => 'Tagihan Rutin',
@@ -6638,8 +6606,6 @@ extension on Translations {
 			'notificationCapture.searchApps' => 'Cari aplikasi',
 			'notificationCapture.builtInPatternsBadge' => 'Pola bawaan',
 			'notificationCapture.appsLoadFailed' => 'Daftar aplikasi gagal dibaca.',
-			_ => null,
-		} ?? switch (path) {
 			'notificationCapture.appsEmpty' => 'Tidak ada aplikasi yang cocok.',
 			'notificationCapture.sourceEnabled' => 'Dengarkan aplikasi ini',
 			'notificationCapture.walletLabel' => 'Dompet',
@@ -6648,6 +6614,8 @@ extension on Translations {
 			'notificationCapture.keywordField' => 'Tambah frasa',
 			'notificationCapture.addKeyword' => 'Tambah',
 			'notificationCapture.patternsTitle' => 'Pola',
+			_ => null,
+		} ?? switch (path) {
 			'notificationCapture.patternsHint' => 'Ajari Tanukonomy membaca format notifikasi aplikasi ini.',
 			'notificationCapture.patternsEmpty' => 'Belum ada pola. Tanukonomy tetap membaca dengan aturan umum.',
 			'notificationCapture.builtInUnverified' => 'Bawaan · hasilnya selalu kamu cek',

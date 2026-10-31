@@ -2,14 +2,15 @@ import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/motion/motion.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight_controller.dart';
-import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/core/presentation/widgets/clay_icons.dart';
 
 /// Lapisan tur: latar gelap berlubang di sekitar target, bingkai aksen yang
-/// berkedip, dan gelembung panel pixel berisi langkahnya (ADR-021 §3.3,
+/// berkedip, dan gelembung kartu v2 berisi langkahnya (ADR-021 §3.3,
 /// §3.7). Menyerap semua ketukan, jadi target tidak menjalankan aksinya
 /// selama tur.
 class SpotlightOverlay extends StatefulWidget {
@@ -166,7 +167,7 @@ class _SpotlightOverlayState extends State<SpotlightOverlay> with TickerProvider
     if (step == null) return const SizedBox.shrink();
     return Builder(
       builder: (context) {
-        final colors = context.appColors;
+        final colors = context.ds.colors;
         return FadeTransition(
           opacity: _intro,
           child: AnimatedBuilder(
@@ -195,9 +196,9 @@ class _SpotlightOverlayState extends State<SpotlightOverlay> with TickerProvider
                             hole: hole,
                             below: below,
                             scrim: colors.scrim.withValues(alpha: 0.74),
-                            border: colors.brand.withValues(alpha: bright ? 1 : 0.35),
-                            tail: colors.surface,
-                            edge: colors.lineStrong,
+                            border: colors.actionPrimary.withValues(alpha: bright ? 1 : 0.35),
+                            tail: colors.surfaceCard,
+                            edge: colors.outlineSubtle,
                           ),
                         ),
                       ),
@@ -232,11 +233,11 @@ class _Bubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
+    final ds = context.ds;
+    final c = ds.colors;
     final step = controller.currentStep!;
     final current = controller.index + 1;
     final total = controller.steps.length;
-    final textTheme = Theme.of(context).textTheme;
     return AppFadeIn(
       key: ValueKey(controller.index),
       child: Semantics(
@@ -246,8 +247,13 @@ class _Bubble extends StatelessWidget {
         explicitChildNodes: true,
         label: t.tour.stepSemantics(current: current, total: total, title: step.title, body: step.body),
         child: Container(
-          padding: const EdgeInsets.all(AppSpacing.space2 + AppSpacing.space1),
-          decoration: ShapeDecoration(color: colors.surface, shape: const PixelCornerBorder()),
+          padding: const EdgeInsets.all(DsSpacing.md),
+          decoration: BoxDecoration(
+            color: c.surfaceCard,
+            borderRadius: DsRadius.lgAll,
+            border: Border.all(color: c.outlineSubtle),
+            boxShadow: const [BoxShadow(color: Color(0x33000000), blurRadius: 24, offset: Offset(0, 8))],
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -256,41 +262,36 @@ class _Bubble extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const _MascotAvatar(),
-                  const SizedBox(width: AppSpacing.space2 + AppSpacing.space1),
+                  const SizedBox(width: DsSpacing.stack),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        ExcludeSemantics(
-                          child: _StepBlocks(current: current, total: total),
-                        ),
-                        const SizedBox(height: AppSpacing.space1),
-                        ExcludeSemantics(
-                          child: Text(
-                            step.title,
-                            style: textTheme.titleMedium,
-                          ),
-                        ),
+                        ExcludeSemantics(child: _StepBlocks(current: current, total: total)),
+                        const SizedBox(height: 6),
+                        ExcludeSemantics(child: Text(step.title, style: ds.typography.titleMd)),
                       ],
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: AppSpacing.space2),
+              const SizedBox(height: DsSpacing.sm),
               Flexible(
                 child: SingleChildScrollView(
-                  child: ExcludeSemantics(child: Text(step.body, style: textTheme.bodyMedium)),
+                  child: ExcludeSemantics(
+                    child: Text(step.body, style: ds.typography.bodyMd.copyWith(color: c.textSecondary)),
+                  ),
                 ),
               ),
-              const SizedBox(height: AppSpacing.space2 + AppSpacing.space1),
+              const SizedBox(height: DsSpacing.stack),
               Wrap(
                 alignment: WrapAlignment.spaceBetween,
                 crossAxisAlignment: WrapCrossAlignment.center,
-                spacing: AppSpacing.space2,
-                runSpacing: AppSpacing.space1,
+                spacing: DsSpacing.sm,
+                runSpacing: DsSpacing.xs,
                 children: [
-                  AppButton.text(label: t.tour.skipAction, onPressed: controller.finish),
-                  AppButton(
+                  DsButton.ghost(label: t.tour.skipAction, onPressed: controller.finish),
+                  DsButton(
                     label: controller.isLastStep ? t.tour.doneAction : t.tour.nextAction,
                     onPressed: onNext,
                   ),
@@ -304,38 +305,24 @@ class _Bubble extends StatelessWidget {
   }
 }
 
-/// Kepala maskot tanuki yang bernapas di sudut gelembung.
+/// Maskot tanuki clay yang melayang pelan di sudut gelembung.
 class _MascotAvatar extends StatelessWidget {
   const _MascotAvatar();
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return Container(
-      width: 48,
-      height: 48,
-      decoration: BoxDecoration(
-        color: colors.surface2,
-      ),
-      child: ClipRect(
-        child: PixelBob(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 4),
-            child: Image.asset(
-              'assets/illustration/mascot_head.png',
-              fit: BoxFit.cover,
-              alignment: Alignment.topCenter,
-              filterQuality: FilterQuality.none,
-              excludeFromSemantics: true,
-            ),
-          ),
+    return ExcludeSemantics(
+      child: DsIdleMotion(
+        kind: DsIdleKind.float,
+        child: DsIconTile.child(
+          child: SvgPicture.asset(ClayIcons.mascot, width: 40, height: 40),
         ),
       ),
     );
   }
 }
 
-/// Penanda langkah: blok piksel terisi sampai langkah aktif, plus "n/m".
+/// Penanda langkah: batang kecil terisi sampai langkah aktif, plus "n/m".
 class _StepBlocks extends StatelessWidget {
   const _StepBlocks({required this.current, required this.total});
 
@@ -344,23 +331,24 @@ class _StepBlocks extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
+    final ds = context.ds;
+    final c = ds.colors;
     return Row(
       children: [
         for (var i = 1; i <= total; i++)
           Container(
-            width: 12,
-            height: 8,
+            width: 14,
+            height: 6,
             margin: const EdgeInsets.only(right: 3),
             decoration: BoxDecoration(
-              color: i <= current ? colors.brand : colors.surface,
-              border: Border.all(color: colors.lineStrong),
+              color: i <= current ? c.actionPrimary : c.surfaceContainerHigh,
+              borderRadius: DsRadius.fullAll,
             ),
           ),
-        const SizedBox(width: AppSpacing.space1),
+        const SizedBox(width: DsSpacing.xs),
         Text(
           t.tour.stepCounter(current: current, total: total),
-          style: labelSmStyle(context, color: colors.ink2),
+          style: ds.typography.labelSm.copyWith(color: c.textMuted),
         ),
       ],
     );
@@ -375,21 +363,15 @@ class _DoneBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
+    final c = context.ds.colors;
     return Center(
       child: AppFadeIn(
         child: Container(
           width: 72,
           height: 72,
           alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: colors.surface,
-          ),
-          // Aksen, bukan hijau bawaan ikonnya: hijau milik uang masuk (ADR-016).
-          child: ColorFiltered(
-            colorFilter: ColorFilter.mode(colors.brand, BlendMode.srcIn),
-            child: const AppIcon(IconKey.check, size: 40),
-          ),
+          decoration: BoxDecoration(color: c.surfaceCard, shape: BoxShape.circle),
+          child: Icon(Icons.check_circle, size: 44, color: c.actionPrimary),
         ),
       ),
     );
@@ -475,7 +457,7 @@ class _ScrimPainter extends CustomPainter {
       canvas.drawRect(screen, Paint()..color = scrim);
       return;
     }
-    final rrect = RRect.fromRectAndRadius(hole.inflate(_inflate), const Radius.circular(AppSize.pixelStep));
+    final rrect = RRect.fromRectAndRadius(hole.inflate(_inflate), const Radius.circular(DsRadius.lg));
     final path = Path()
       ..fillType = PathFillType.evenOdd
       ..addRect(screen)
@@ -490,21 +472,24 @@ class _ScrimPainter extends CustomPainter {
           ..strokeWidth = 3,
       );
 
-    // Ekor tiga anak tangga dari bingkai ke arah gelembung.
-    final x = snapToPixelGrid(hole.center.dx.clamp(28, size.width - 28));
-    final fill = Paint()..color = tail;
-    final outline = Paint()
-      ..color = edge
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2;
-    for (var i = 0; i < 3; i++) {
-      final width = 6.0 + i * 6;
-      final y = below ? rrect.bottom + 2 + i * 4 : rrect.top - 6 - i * 4;
-      final rect = Rect.fromLTWH(x - width / 2, y, width, 4);
-      canvas
-        ..drawRect(rect, fill)
-        ..drawRect(rect, outline);
-    }
+    // Ekor segitiga dari bingkai ke arah gelembung.
+    final x = hole.center.dx.clamp(28, size.width - 28).toDouble();
+    final tip = below ? rrect.bottom + 4 : rrect.top - 4;
+    final base = below ? tip + 10 : tip - 10;
+    final caret = Path()
+      ..moveTo(x, tip)
+      ..lineTo(x - 9, base)
+      ..lineTo(x + 9, base)
+      ..close();
+    canvas
+      ..drawPath(caret, Paint()..color = tail)
+      ..drawPath(
+        caret,
+        Paint()
+          ..color = edge
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 1,
+      );
   }
 
   @override

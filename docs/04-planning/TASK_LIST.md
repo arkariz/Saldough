@@ -5979,7 +5979,7 @@ memilih mode (dan preset bila ≥ 2), dan design system lama dihapus.
       Misi Hemat (ketuk = klaim). Langkah tur Anggaran menyorot carousel yang
       bisa sedang menampilkan slide status. Sisa legacy Beranda yang masih
       tertinggal: `HomeFirstSteps`, layar galat, kartu status mode penuh,
-      dan overlay tur. Banner pembaruan sudah menjadi slide carousel dan
+      dan overlay tur (overlay tur sudah v2, 31 Okt 2026). Banner pembaruan sudah menjadi slide carousel dan
       lembar Apa yang baru bergaya v2 (31 Okt 2026). Sudah dibereskan: skeleton
       (`HomeSkeleton`/`DsSkeleton`), tombol Tur dan Akun di top bar
       (`DsIconButtonFace`, `AccountAvatar` bulat), kode mati `home_cards`,

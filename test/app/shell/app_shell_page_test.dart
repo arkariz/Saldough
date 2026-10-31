@@ -13,7 +13,6 @@ import 'package:saldough/core/discovery/discovery.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
-import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/budget/data/repositories/budget_repository_impl.dart';
@@ -29,6 +28,7 @@ import 'package:saldough/features/plan/domain/plan_sources.dart';
 import 'package:saldough/features/record/presentation/widgets/expense_form_sheet.dart';
 import 'package:saldough/features/record/presentation/widgets/income_form_sheet.dart';
 import 'package:saldough/features/record/presentation/widgets/record_form_host.dart';
+import 'package:saldough/features/record/presentation/widgets/record_save_button.dart';
 import 'package:saldough/features/recurring/domain/reminder_scheduler.dart';
 import 'package:saldough/features/recurring/domain/reminder_settings.dart';
 import 'package:saldough/features/transaction/presentation/pages/transaction_list_page.dart';
@@ -450,8 +450,8 @@ void main() {
         // Satu-satunya dompet aktif sudah terpilih tanpa membuka menu (UX-2).
         expect(find.text(t.record.walletNotSelectedPrompt), findsNothing);
         expect(find.text('BCA'), findsWidgets);
-        await tester.ensureVisible(find.widgetWithText(AppButton, t.record.incomeAction));
-        await tester.tap(find.widgetWithText(AppButton, t.record.incomeAction));
+        await tester.ensureVisible(find.widgetWithText(RecordSaveButton, t.record.incomeAction));
+        await tester.tap(find.widgetWithText(RecordSaveButton, t.record.incomeAction));
         await tester.pumpAndSettle();
 
         final wallets = (await walletRepository.listWallets()).getOrElse((_) => throw StateError('expected Right'));
@@ -493,7 +493,7 @@ void main() {
       expect(find.byType(IncomeFormSheet), findsNothing);
       expect(find.text(t.record.transferAction), findsWidgets);
 
-      await tester.tap(find.byWidgetPredicate((w) => w is AppIcon && w.iconKey == IconKey.close));
+      await tester.tap(find.byTooltip(t.common.close));
       await tester.pumpAndSettle();
 
       expect(find.byType(RecordFormHost), findsNothing);
@@ -618,7 +618,7 @@ void main() {
 
       // Tur tidak menutup lembar CATAT di baliknya.
       expect(find.byType(RecordFormHost), findsOneWidget);
-      final back = find.byWidgetPredicate((w) => w is AppIcon && w.iconKey == IconKey.close);
+      final back = find.byTooltip(t.common.close);
       await tester.ensureVisible(back);
       await tester.pumpAndSettle();
       await tester.tap(back);

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/features/record/presentation/open_record_sheet.dart';
 import 'package:saldough/features/record/presentation/widgets/expense_form_sheet.dart';
+import 'package:saldough/features/record/presentation/widgets/record_save_button.dart';
 import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
@@ -141,7 +143,7 @@ void main() {
 
         expect(find.text(t.record.expenseRuleTitle), findsNothing);
         expect(find.text('Rp0', findRichText: true), findsOneWidget);
-        expect(find.byType(AppKeypad), findsOneWidget);
+        expect(find.byType(DsKeypad), findsOneWidget);
         expect(
           find.text(t.record.allCategories),
           findsOneWidget,
@@ -238,7 +240,7 @@ void main() {
       // Sunting: tanpa mikrofon.
       expect(find.byKey(const ValueKey('record-voice')), findsNothing);
       expect(
-        find.widgetWithText(AppButton, t.transaction.saveChangesAction),
+        find.widgetWithText(RecordSaveButton, t.transaction.saveChangesAction),
         findsOneWidget,
       );
       expect(find.text('Rp75.000', findRichText: true), findsOneWidget);
@@ -316,7 +318,7 @@ void main() {
 
     expect(find.text(t.record.repeat.everyMonthDay(day: DateTime.now().day)), findsOneWidget);
     final submit = find.byKey(const ValueKey('record-submit'));
-    expect(tester.widget<AppButton>(submit).label, t.record.repeat.recordAndScheduleAction);
+    expect(tester.widget<RecordSaveButton>(submit).label, t.record.repeat.recordAndScheduleAction);
 
     await tester.ensureVisible(submit);
     await tester.tap(submit);
@@ -396,7 +398,7 @@ void main() {
       await openSheet(tester);
       await enterAmount(tester, '100-100');
       expect(find.text(t.record.calc.notPositive), findsOneWidget);
-      expect(tester.widget<AppButton>(find.byKey(const ValueKey('record-submit'))).onPressed, isNull);
+      expect(tester.widget<RecordSaveButton>(find.byKey(const ValueKey('record-submit'))).onPressed, isNull);
 
       // Hapus melewati operand dan operator kembali ke nominal biasa.
       for (var i = 0; i < 4; i++) {
@@ -405,7 +407,7 @@ void main() {
       }
       expect(find.byKey(const ValueKey('record-amount-expression')), findsNothing);
       expect(find.text('Rp100', findRichText: true), findsOneWidget);
-      expect(tester.widget<AppButton>(find.byKey(const ValueKey('record-submit'))).onPressed, isNotNull);
+      expect(tester.widget<RecordSaveButton>(find.byKey(const ValueKey('record-submit'))).onPressed, isNotNull);
     });
   });
 

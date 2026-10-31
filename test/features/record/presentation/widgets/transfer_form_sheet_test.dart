@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
-import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
+import 'package:saldough/features/record/presentation/widgets/record_save_button.dart';
 import 'package:saldough/features/record/presentation/widgets/transfer_form_sheet.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 import '../../../../helpers/keypad.dart';
@@ -82,7 +82,7 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byKey(const ValueKey('record-submit')), findsOneWidget);
-        final button = tester.widget<AppButton>(find.byKey(const ValueKey('record-submit')));
+        final button = tester.widget<RecordSaveButton>(find.byKey(const ValueKey('record-submit')));
         expect(button.onPressed, isNull);
 
         await tester.ensureVisible(find.byKey(const ValueKey('record-submit')));

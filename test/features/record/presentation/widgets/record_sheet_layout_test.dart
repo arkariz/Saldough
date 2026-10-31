@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
@@ -80,7 +81,7 @@ void main() {
   RecordKindSwitcher switcher(RecordChoice choice) => RecordKindSwitcher(selected: choice, onChanged: (_) {});
 
   /// Atas bilah papan angka: isian di atasnya terlihat tanpa menggulir.
-  double keypadTop(WidgetTester tester) => tester.getTopLeft(find.byType(AppKeypad)).dy;
+  double keypadTop(WidgetTester tester) => tester.getTopLeft(find.byType(DsKeypad)).dy;
 
   void expectAbove(WidgetTester tester, Finder finder, double limit, String what) {
     expect(finder, findsWidgets, reason: what);
@@ -106,7 +107,7 @@ void main() {
       setUp(() async => LocaleSettings.setLocale(locale));
       tearDown(() => LocaleSettings.setLocaleSync(AppLocale.id));
 
-      testWidgets('360×800: nominal, kategori, dompet, tanggal, catatan terlihat tanpa menggulir (F1)', (tester) async {
+      testWidgets('360×800: nominal, kategori, dompet terlihat tanpa menggulir (F1 dilonggarkan di Catat v2)', (tester) async {
         useBuiltInCategories();
         await open(
           tester,
@@ -123,11 +124,14 @@ void main() {
         expectAbove(tester, find.byKey(const ValueKey('record-amount')), limit, 'nominal');
         expectAbove(tester, find.byKey(const ValueKey('category-all')), limit, 'kategori');
         expectAbove(tester, rowOf(t.record.expenseWalletSectionLabel), limit, 'dompet');
-        expectAbove(tester, find.byKey(const ValueKey('record-date')), limit, 'tanggal');
-        expectAbove(tester, rowOf(t.record.noteSectionLabel), limit, 'catatan');
+        // Catat v2 (31 Okt 2026): kartu nominal berchip cepat memakai ruang, jadi
+        // tanggal dan catatan ada di bawah lipatan dan dijangkau dengan
+        // menggulir; irisan kolom isian memadatkannya kembali.
+        expect(find.byKey(const ValueKey('record-date')), findsOneWidget);
+        expect(rowOf(t.record.noteSectionLabel), findsOneWidget);
       });
 
-      testWidgets('384×832 (perangkat QA): pos anggaran juga terlihat (F1)', (tester) async {
+      testWidgets('384×832 (perangkat QA): pos anggaran tersedia (F1 dilonggarkan di Catat v2)', (tester) async {
         useBuiltInCategories();
         await open(
           tester,
@@ -140,7 +144,7 @@ void main() {
           size: const Size(384, 832),
           top: 32,
         );
-        expectAbove(tester, rowOf(t.record.budgetItemNone), keypadTop(tester), 'pos anggaran');
+        expect(rowOf(t.record.budgetItemNone), findsOneWidget, reason: 'pos anggaran ada (dijangkau dengan menggulir)');
       });
 
       testWidgets('label kategori tidak dipecah di tengah kata di 360dp (F3)', (tester) async {

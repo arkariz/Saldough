@@ -15,6 +15,7 @@ import 'package:saldough/features/home/domain/budget_overview_source.dart';
 import 'package:saldough/features/home/domain/freelance_overview_source.dart';
 import 'package:saldough/features/plan/domain/plan_sources.dart';
 import 'package:saldough/features/record/presentation/widgets/record_form_host.dart';
+import 'package:saldough/features/record/presentation/widgets/record_save_button.dart';
 import 'package:saldough/features/transaction/presentation/pages/transaction_detail_page.dart';
 import 'package:saldough/features/transaction/presentation/pages/transaction_list_page.dart';
 import 'package:saldough/features/transaction/presentation/widgets/transaction_filter_bar.dart';
@@ -382,10 +383,10 @@ void main() {
       await enterAmount(tester, '25000');
       await tester.pump();
       await tester.ensureVisible(
-        find.widgetWithText(AppButton, t.record.expenseAction).last,
+        find.widgetWithText(RecordSaveButton, t.record.expenseAction).last,
       );
       await tester.tap(
-        find.widgetWithText(AppButton, t.record.expenseAction).last,
+        find.widgetWithText(RecordSaveButton, t.record.expenseAction).last,
       );
       await tester.pumpAndSettle();
 

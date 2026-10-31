@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/currency/currency.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/core/utils/formatters/money_expression.dart';
+import 'package:saldough/core/utils/formatters/money_formatter.dart';
+import 'package:saldough/core/utils/formatters/money_input.dart';
 import 'package:saldough/features/record/presentation/widgets/record_amount_controller.dart';
 import 'package:saldough/features/record/presentation/widgets/record_form_host.dart';
+import 'package:saldough/features/record/presentation/widgets/record_save_button.dart';
 
 /// Kerangka lembar Catat (prototipe `Catat.dc.html`, ADR-034): bar atas
 /// (tutup, judul di tengah, mikrofon), pengalih jenis, isi formulir yang
@@ -70,33 +75,63 @@ class RecordFormFrame extends StatelessWidget {
     onAmountChanged?.call();
   }
 
+  /// Susunan papan angka: 3 kolom angka dan kolom operator kalkulator
+  /// (T-8.18), dengan `000` (atau pemisah desimal) dan hapus di baris bawah.
+  static List<List<DsKeypadKey>> get _keypadRows {
+    final decimal = ActiveCurrency.value.fractionDigits > 0;
+    final operators = moneyOperatorSymbols.keys.toList();
+    DsKeypadKey op(int i) => DsKeypadKey(
+      value: operators[i],
+      label: moneyOperatorSymbols[operators[i]],
+      muted: true,
+      semanticLabel: switch (operators[i]) {
+        moneyKeyAdd => t.common.keypadAdd,
+        moneyKeySubtract => t.common.keypadSubtract,
+        moneyKeyMultiply => t.common.keypadMultiply,
+        _ => t.common.keypadDivide,
+      },
+    );
+    return [
+      [const DsKeypadKey(value: '1'), const DsKeypadKey(value: '2'), const DsKeypadKey(value: '3'), op(0)],
+      [const DsKeypadKey(value: '4'), const DsKeypadKey(value: '5'), const DsKeypadKey(value: '6'), op(1)],
+      [const DsKeypadKey(value: '7'), const DsKeypadKey(value: '8'), const DsKeypadKey(value: '9'), op(2)],
+      [
+        if (decimal)
+          DsKeypadKey(value: moneyKeyDecimal, label: MoneySeparators.decimal, muted: true)
+        else
+          const DsKeypadKey(value: '000', muted: true),
+        const DsKeypadKey(value: '0'),
+        DsKeypadKey(
+          value: moneyKeyBackspace,
+          icon: Icons.backspace_outlined,
+          semanticLabel: t.common.keypadBackspace,
+          muted: true,
+        ),
+        op(3),
+      ],
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
+    final c = context.ds.colors;
     final keyboardOpen = MediaQuery.viewInsetsOf(context).bottom > 0;
     return SizedBox.expand(
       child: Padding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.viewInsetsOf(context).bottom,
-        ),
+        padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             _Header(title: title, isEditing: isEditing, onBack: onBack),
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(
-                  AppSpacing.space4,
-                  AppSpacing.space1,
-                  AppSpacing.space4,
-                  AppSpacing.space4,
-                ),
+                padding: const EdgeInsets.fromLTRB(DsSpacing.md, DsSpacing.xs, DsSpacing.md, DsSpacing.md),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     ?kindSwitcher,
                     for (final (i, child) in children.indexed) ...[
-                      if (i > 0 || kindSwitcher != null) const SizedBox(height: AppSpacing.space2),
+                      if (i > 0 || kindSwitcher != null) const SizedBox(height: 10),
                       child,
                     ],
                   ],
@@ -105,35 +140,28 @@ class RecordFormFrame extends StatelessWidget {
             ),
             DecoratedBox(
               decoration: BoxDecoration(
-                color: colors.surface,
-                border: Border(top: BorderSide(color: colors.line)),
+                color: c.surfaceCard,
+                border: Border(top: BorderSide(color: c.outlineSubtle)),
+                boxShadow: const [BoxShadow(color: Color(0x0D000000), blurRadius: 16, offset: Offset(0, -4))],
               ),
               child: SafeArea(
                 top: false,
                 child: Padding(
-                  // Papan angka membawa jarak 4px di atas dan bawahnya (area
-                  // sentuh), jadi bingkai ini lebih tipis dari prototipe
-                  // (QA PR #43 F1: isian form terlihat tanpa menggulir).
-                  padding: const EdgeInsets.fromLTRB(
-                    AppSpacing.space4,
-                    AppSpacing.space1,
-                    AppSpacing.space4,
-                    AppSpacing.space2,
-                  ),
+                  padding: const EdgeInsets.fromLTRB(DsSpacing.md, DsSpacing.xs, DsSpacing.md, DsSpacing.sm),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       if (amountController != null && !keyboardOpen) ...[
-                        AppKeypad(onKey: _onKey, onClear: _onClear, operators: true),
-                        const SizedBox(height: AppSpacing.space1),
+                        DsKeypad(
+                          rows: _keypadRows,
+                          onKey: _onKey,
+                          onClear: _onClear,
+                          clearValue: moneyKeyBackspace,
+                        ),
+                        const SizedBox(height: DsSpacing.xs),
                       ],
-                      AppButton(
-                        key: const ValueKey('record-submit'),
-                        label: submitLabel,
-                        expand: true,
-                        onPressed: onSubmit,
-                      ),
+                      RecordSaveButton(key: const ValueKey('record-submit'), label: submitLabel, onPressed: onSubmit),
                     ],
                   ),
                 ),
@@ -147,11 +175,7 @@ class RecordFormFrame extends StatelessWidget {
 }
 
 class _Header extends StatelessWidget {
-  const _Header({
-    required this.title,
-    required this.isEditing,
-    required this.onBack,
-  });
+  const _Header({required this.title, required this.isEditing, required this.onBack});
 
   final String title;
   final bool isEditing;
@@ -161,39 +185,29 @@ class _Header extends StatelessWidget {
   Widget build(BuildContext context) {
     final onVoice = isEditing ? null : RecordVoiceAction.maybeOf(context);
     return Padding(
-      padding: const EdgeInsets.fromLTRB(
-        AppSpacing.space1,
-        AppSpacing.space1,
-        AppSpacing.space1,
-        0,
-      ),
+      padding: const EdgeInsets.fromLTRB(DsSpacing.xs, DsSpacing.xs, DsSpacing.xs, 0),
       child: Row(
         children: [
-          AppIconButton(
-            icon: IconKey.close,
-            label: t.common.close,
-            onPressed: onBack,
-          ),
+          DsIconButton(icon: Icons.close, label: t.common.close, onPressed: onBack),
           Expanded(
             child: Semantics(
               header: true,
               child: Text(
                 title,
                 textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.titleLarge,
+                style: context.ds.typography.headlineSm,
               ),
             ),
           ),
           if (onVoice != null)
-            AppIconButton(
+            DsIconButton(
               key: const ValueKey('record-voice'),
-              icon: IconKey.microphone,
+              icon: Icons.mic_none,
               label: t.record.voice.micLabel,
-              tonal: true,
               onPressed: onVoice,
             )
           else
-            const SizedBox(width: AppSize.touch),
+            const SizedBox(width: DsSpacing.minTapTarget),
         ],
       ),
     );
@@ -211,9 +225,7 @@ class RecordNoBalanceChange extends StatelessWidget {
     return Text(
       t.record.repeat.noBalanceChange,
       textAlign: TextAlign.center,
-      style: Theme.of(
-        context,
-      ).textTheme.bodyMedium?.copyWith(color: context.appColors.ink2),
+      style: context.ds.typography.bodyMd.copyWith(color: context.ds.colors.textSecondary),
     );
   }
 }

@@ -5973,6 +5973,14 @@ memilih mode (dan preset bila ≥ 2), dan design system lama dihapus.
       bertanda daun, tekan lama = suara, target tur tetap). `AppNavBar` lama
       tidak dipakai lagi (masih ada di `core/presentation/widgets`, dihapus
       di akhir rombak).
+      **Catat v2, irisan 1 (31 Okt 2026):** kerangka lembar, pengalih jenis
+      (`DsSegmentedPill`), kartu nominal dengan chip cepat, papan angka
+      (`DsKeypad`, kalkulator tetap), dan tombol simpan beranimasi
+      (`RecordSaveButton`: centang membal, "Tersimpan", serpihan daun, lalu
+      menyimpan sesudah 0,5 dtk; langsung bila gerak dikurangi). Tanpa label
+      #tag (belum ada di domain), tanpa stempel/bahasa kuil. Selisih: aturan
+      F1 (semua isian terlihat tanpa menggulir) dilonggarkan, hanya nominal,
+      kategori, dompet; tanggal dan catatan menunggu irisan kolom isian.
       **Ikon clay dilengkapi (31 Okt 2026, KT-DS5):** 33 ikon baru untuk
       dompet, jenis transaksi, kategori, dan status Freelance; semua
       `IconKey` benda kini punya clay (`ClayIcons.forIcon`). Digambar dari

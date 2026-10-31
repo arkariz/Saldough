@@ -246,7 +246,11 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
           RecordDraftCard(draft: widget.draft!),
         SpotlightTarget(
           spotlightKey: SpotlightKey.recordAmount,
-          child: RecordAmountField(controller: _amountController, kind: TransactionKind.transfer),
+          child: RecordAmountField(
+            controller: _amountController,
+            kind: TransactionKind.transfer,
+            onChanged: () => setState(() {}),
+          ),
         ),
         // Galat dompet sama di atas daftar, supaya terlihat tanpa menggulir
         // (QA PR #43 F6).

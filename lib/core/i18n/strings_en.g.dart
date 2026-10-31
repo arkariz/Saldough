@@ -155,6 +155,10 @@ class _Translations$record$en extends Translations$record$id {
 	@override String budgetItemOutOfPeriod({required Object name}) => 'This date is outside the "${name}" budget period, so this transaction no longer counts toward it.';
 	@override String get freelanceCalloutTitle => 'Freelance pay?';
 	@override String get freelanceCalloutAction => 'Record it in Freelance';
+	@override String get amountCardLabel => 'Transaction amount';
+	@override String get quickAddLabel => 'Quick';
+	@override String quickAddSemantics({required Object amount}) => 'Add ${amount}';
+	@override String get savedLabel => 'Saved';
 	@override String get kindSwitcherLabel => 'Transaction kind';
 	@override String get kindExpense => 'Expense';
 	@override String get kindIncome => 'Income';
@@ -2519,6 +2523,10 @@ extension on TranslationsEn {
 			'record.budgetItemOutOfPeriod' => ({required Object name}) => 'This date is outside the "${name}" budget period, so this transaction no longer counts toward it.',
 			'record.freelanceCalloutTitle' => 'Freelance pay?',
 			'record.freelanceCalloutAction' => 'Record it in Freelance',
+			'record.amountCardLabel' => 'Transaction amount',
+			'record.quickAddLabel' => 'Quick',
+			'record.quickAddSemantics' => ({required Object amount}) => 'Add ${amount}',
+			'record.savedLabel' => 'Saved',
 			'record.kindSwitcherLabel' => 'Transaction kind',
 			'record.kindExpense' => 'Expense',
 			'record.kindIncome' => 'Income',
@@ -2972,12 +2980,12 @@ extension on TranslationsEn {
 			'budget.templateDeleteAction' => 'Delete template',
 			'budget.templateDeleteConfirmTitle' => 'Delete template?',
 			'budget.templateDeleteConfirmMessage' => ({required Object name}) => 'Template "${name}" will be deleted. Budgets created from it are not deleted.',
+			_ => null,
+		} ?? switch (path) {
 			'budget.templateSavedMessage' => 'Template saved.',
 			'budget.templateUpdatedMessage' => 'Template changes saved.',
 			'budget.templateDeletedMessage' => 'Template deleted.',
 			'budget.templateDuplicatedMessage' => 'Template duplicated.',
-			_ => null,
-		} ?? switch (path) {
 			'budget.templateCopyName' => ({required Object name}) => '${name} (copy)',
 			'budget.templateNameLabel' => 'Template name',
 			'budget.repeatLabel' => 'Repeat every period',
@@ -3486,12 +3494,12 @@ extension on TranslationsEn {
 			'notificationCapture.sourcesTitle' => 'Apps',
 			'notificationCapture.sourcesEmpty' => 'Pick the bank or e-wallet apps whose notifications you want recorded.',
 			'notificationCapture.addSource' => 'Add app',
+			_ => null,
+		} ?? switch (path) {
 			'notificationCapture.sourceNoWallet' => 'No wallet chosen',
 			'notificationCapture.sourcePaused' => 'Paused',
 			'notificationCapture.pickAppTitle' => 'Pick an app',
 			'notificationCapture.searchApps' => 'Search apps',
-			_ => null,
-		} ?? switch (path) {
 			'notificationCapture.builtInPatternsBadge' => 'Built-in patterns',
 			'notificationCapture.appsLoadFailed' => 'Couldn\'t read the app list.',
 			'notificationCapture.appsEmpty' => 'No matching apps.',

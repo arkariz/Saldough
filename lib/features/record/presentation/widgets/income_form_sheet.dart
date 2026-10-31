@@ -203,7 +203,11 @@ class _IncomeFormSheetState extends State<IncomeFormSheet> {
           ),
         SpotlightTarget(
           spotlightKey: SpotlightKey.recordAmount,
-          child: RecordAmountField(controller: _amountController, kind: TransactionKind.income),
+          child: RecordAmountField(
+            controller: _amountController,
+            kind: TransactionKind.income,
+            onChanged: () => setState(() {}),
+          ),
         ),
         RecordCategoryField(
           value: _categoryId,

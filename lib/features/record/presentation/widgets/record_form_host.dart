@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
-import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/record/presentation/widgets/record_choice.dart';
 
@@ -68,11 +68,11 @@ class RecordKindSwitcher extends StatelessWidget {
       child: Semantics(
         container: true,
         label: t.record.kindSwitcherLabel,
-        child: AppSegmentedControl<RecordChoice>(
-          options: [
-            (RecordChoice.expense, t.record.kindExpense),
-            (RecordChoice.income, t.record.kindIncome),
-            (RecordChoice.transfer, t.record.kindTransfer),
+        child: DsSegmentedPill<RecordChoice>(
+          segments: [
+            DsSegment(value: RecordChoice.expense, label: t.record.kindExpense, icon: Icons.arrow_outward),
+            DsSegment(value: RecordChoice.income, label: t.record.kindIncome, icon: Icons.south_west),
+            DsSegment(value: RecordChoice.transfer, label: t.record.kindTransfer, icon: Icons.sync_alt),
           ],
           selected: selected,
           onChanged: onChanged,

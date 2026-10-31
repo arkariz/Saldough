@@ -27,7 +27,7 @@ void main() {
     await tester.pump();
     expect(find.text('Rp45.000'), findsOneWidget);
     final rich = tester.widget<RichText>(find.descendant(of: find.byKey(const ValueKey('record-amount')), matching: find.byType(RichText)));
-    expect(rich.text.style!.fontSize, 40);
+    expect(rich.text.style!.fontSize, 32);
   });
 
   testWidgets('label semantik menyebut angka yang diketik walau nominal disembunyikan (QA F4)', (tester) async {

@@ -268,6 +268,18 @@ class Translations$record$id {
 	/// id: 'Catat lewat Freelance'
 	String get freelanceCalloutAction => 'Catat lewat Freelance';
 
+	/// id: 'Nilai transaksi'
+	String get amountCardLabel => 'Nilai transaksi';
+
+	/// id: 'Cepat'
+	String get quickAddLabel => 'Cepat';
+
+	/// id: 'Tambah $amount'
+	String quickAddSemantics({required Object amount}) => 'Tambah ${amount}';
+
+	/// id: 'Tersimpan'
+	String get savedLabel => 'Tersimpan';
+
 	/// id: 'Jenis transaksi'
 	String get kindSwitcherLabel => 'Jenis transaksi';
 
@@ -5673,6 +5685,10 @@ extension on Translations {
 			'record.budgetItemOutOfPeriod' => ({required Object name}) => 'Tanggal ini di luar periode anggaran "${name}", jadi transaksi ini tidak dihitung ke anggaran tersebut.',
 			'record.freelanceCalloutTitle' => 'Honor freelance?',
 			'record.freelanceCalloutAction' => 'Catat lewat Freelance',
+			'record.amountCardLabel' => 'Nilai transaksi',
+			'record.quickAddLabel' => 'Cepat',
+			'record.quickAddSemantics' => ({required Object amount}) => 'Tambah ${amount}',
+			'record.savedLabel' => 'Tersimpan',
 			'record.kindSwitcherLabel' => 'Jenis transaksi',
 			'record.kindExpense' => 'Pengeluaran',
 			'record.kindIncome' => 'Pemasukan',
@@ -6126,12 +6142,12 @@ extension on Translations {
 			'budget.templateDeleteAction' => 'Hapus template',
 			'budget.templateDeleteConfirmTitle' => 'Hapus template?',
 			'budget.templateDeleteConfirmMessage' => ({required Object name}) => 'Template "${name}" akan dihapus. Anggaran yang pernah dibuat darinya tidak ikut terhapus.',
+			_ => null,
+		} ?? switch (path) {
 			'budget.templateSavedMessage' => 'Template tersimpan.',
 			'budget.templateUpdatedMessage' => 'Perubahan template tersimpan.',
 			'budget.templateDeletedMessage' => 'Template dihapus.',
 			'budget.templateDuplicatedMessage' => 'Template digandakan.',
-			_ => null,
-		} ?? switch (path) {
 			'budget.templateCopyName' => ({required Object name}) => '${name} (salinan)',
 			'budget.templateNameLabel' => 'Nama template',
 			'budget.repeatLabel' => 'Ulangi tiap periode',
@@ -6640,12 +6656,12 @@ extension on Translations {
 			'notificationCapture.sourcesTitle' => 'Aplikasi',
 			'notificationCapture.sourcesEmpty' => 'Pilih aplikasi bank atau e-wallet yang notifikasinya mau dicatat.',
 			'notificationCapture.addSource' => 'Tambah aplikasi',
+			_ => null,
+		} ?? switch (path) {
 			'notificationCapture.sourceNoWallet' => 'Dompet belum dipilih',
 			'notificationCapture.sourcePaused' => 'Dijeda',
 			'notificationCapture.pickAppTitle' => 'Pilih aplikasi',
 			'notificationCapture.searchApps' => 'Cari aplikasi',
-			_ => null,
-		} ?? switch (path) {
 			'notificationCapture.builtInPatternsBadge' => 'Pola bawaan',
 			'notificationCapture.appsLoadFailed' => 'Daftar aplikasi gagal dibaca.',
 			'notificationCapture.appsEmpty' => 'Tidak ada aplikasi yang cocok.',

@@ -16,6 +16,7 @@ import 'package:saldough/features/home/domain/freelance_overview_source.dart';
 import 'package:saldough/features/plan/domain/plan_sources.dart';
 import 'package:saldough/features/record/presentation/widgets/expense_form_sheet.dart';
 import 'package:saldough/features/record/presentation/widgets/record_form_host.dart';
+import 'package:saldough/features/record/presentation/widgets/record_save_button.dart';
 import 'package:saldough/features/transaction/presentation/pages/transaction_detail_page.dart';
 import 'package:saldough/features/transaction/presentation/widgets/transaction_filter_bar.dart';
 import 'package:saldough/shared/auth/auth.dart';
@@ -572,8 +573,8 @@ void main() {
 
       await enterAmount(tester, '90000');
       await tester.pump();
-      await tester.ensureVisible(find.widgetWithText(AppButton, t.transaction.saveChangesAction));
-      await tester.tap(find.widgetWithText(AppButton, t.transaction.saveChangesAction));
+      await tester.ensureVisible(find.widgetWithText(RecordSaveButton, t.transaction.saveChangesAction));
+      await tester.tap(find.widgetWithText(RecordSaveButton, t.transaction.saveChangesAction));
       await tester.pumpAndSettle();
 
       expect(find.byType(TransactionDetailPage), findsNothing);
@@ -604,7 +605,7 @@ void main() {
       expect(find.text('Rp75.000', findRichText: true), findsOneWidget, reason: 'nominal terisi dari transaksi sumber');
       expect(find.text('Makan Siang'), findsWidgets, reason: 'kategori terisi dari transaksi sumber');
 
-      await tester.tap(find.widgetWithText(AppButton, t.record.expenseAction));
+      await tester.tap(find.widgetWithText(RecordSaveButton, t.record.expenseAction));
       await tester.pumpAndSettle();
 
       expect(await balanceOf('bca'), 85000000, reason: '925.000 dikurangi 75.000 lagi, transaksi BARU bukan sunting');

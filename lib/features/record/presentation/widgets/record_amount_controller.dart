@@ -33,6 +33,17 @@ class RecordAmountController extends TextEditingController {
     if (dropped && unchanged) notifyListeners();
   }
 
+  /// Menambah nominal sebesar [sen] (chip cepat); `false` bila hasilnya
+  /// tidak bisa ditulis utuh atau melewati batas. Membuang ungkapan.
+  bool addSen(int sen) {
+    final next = (parseMoneyInput(text) ?? 0) + sen;
+    if (next > _maxSen || !isMoneyInputExact(next)) return false;
+    text = formatMoneyInput(next);
+    return true;
+  }
+
+  static const int _maxSen = 99999999999;
+
   /// Menerapkan tombol papan angka [key]; `false` bila tidak ada yang
   /// berubah (mis. digit melewati batas).
   bool applyKey(String key) {

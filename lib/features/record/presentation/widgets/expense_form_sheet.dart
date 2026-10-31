@@ -262,7 +262,11 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
           RecordDraftCard(draft: widget.draft!),
         SpotlightTarget(
           spotlightKey: SpotlightKey.recordAmount,
-          child: RecordAmountField(controller: _amountController, kind: TransactionKind.expense),
+          child: RecordAmountField(
+            controller: _amountController,
+            kind: TransactionKind.expense,
+            onChanged: () => setState(() {}),
+          ),
         ),
         RecordCategoryField(
           value: _categoryId,

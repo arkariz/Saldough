@@ -5,13 +5,16 @@ import 'package:saldough/core/presentation/widgets/app_icon.dart';
 ///
 /// KT-DS5: ikon clay menggantikan ikon piksel di seluruh aplikasi. Seluruh
 /// kategori, dompet, jenis transaksi, dan status Freelance sudah digambar
-/// (43 aset). [forIcon] mengembalikan aset clay bila ada; `null` (mis. ikon
+/// (44 aset). [forIcon] mengembalikan aset clay bila ada; `null` (mis. ikon
 /// tindakan atau `balanceSpread`) berarti pemanggil memakai ikon yang ada.
 abstract final class ClayIcons {
   ClayIcons._();
 
   /// Maskot tanuki.
   static const String mascot = 'assets/icons_clay/tanuki_mascot.svg';
+
+  /// Maskot tanuki tidur (keadaan awal Beranda).
+  static const String mascotSleeping = 'assets/icons_clay/tanuki_sleeping.svg';
 
   /// Koin lencana level.
   static const String tierCoin = 'assets/icons_clay/tier_coin.svg';
@@ -142,6 +145,7 @@ abstract final class ClayIcons {
   /// Seluruh aset, untuk uji dan pemeriksaan manifest.
   static const List<String> all = [
     mascot,
+    mascotSleeping,
     tierCoin,
     scan,
     transfer,

@@ -1848,8 +1848,8 @@ class Translations$home$id {
 	/// id: 'Lewat rencana'
 	String get budgetOver => 'Lewat rencana';
 
-	/// id: 'Lihat anggaran'
-	String get budgetAction => 'Lihat anggaran';
+	/// id: 'Buat anggaran'
+	String get budgetAction => 'Buat anggaran';
 
 	/// id: 'Freelance'
 	String get freelanceTitle => 'Freelance';
@@ -1979,6 +1979,33 @@ class Translations$home$id {
 
 	/// id: 'Misi Hemat'
 	String get actionMission => 'Misi Hemat';
+
+	/// id: 'Mulai dari dompet pertamamu, lalu catat transaksinya.'
+	String get firstSubtitle => 'Mulai dari dompet pertamamu, lalu catat transaksinya.';
+
+	/// id: 'Tanuki masih tidur'
+	String get firstLabel => 'Tanuki masih tidur';
+
+	/// id: 'Bangunkan Tanuki'
+	String get questTitle => 'Bangunkan Tanuki';
+
+	/// id: 'Hadiah:'
+	String get questReward => 'Hadiah:';
+
+	/// id: '+150 XP'
+	String get questRewardXp => '+150 XP';
+
+	/// id: '$done/$total selesai'
+	String stepsProgress({required Object done, required Object total}) => '${done}/${total} selesai';
+
+	/// id: 'Opsional'
+	String get stepOptional => 'Opsional';
+
+	/// id: 'Berikutnya'
+	String get stepNext => 'Berikutnya';
+
+	/// id: 'Terakhir'
+	String get stepLast => 'Terakhir';
 
 	/// id: 'Segera'
 	String get soon => 'Segera';
@@ -4358,6 +4385,9 @@ class Translations$home$preview$id {
 
 	// Translations
 
+	/// id: 'LVL 1 · BENIH MAGANG'
+	String get levelNew => 'LVL 1 · BENIH MAGANG';
+
 	/// id: 'LVL 12 STEWARD'
 	String get level => 'LVL 12 STEWARD';
 
@@ -6244,7 +6274,7 @@ extension on Translations {
 			'home.budgetTitle' => 'Anggaran aktif',
 			'home.budgetRemaining' => 'Sisa',
 			'home.budgetOver' => 'Lewat rencana',
-			'home.budgetAction' => 'Lihat anggaran',
+			'home.budgetAction' => 'Buat anggaran',
 			'home.freelanceTitle' => 'Freelance',
 			'home.freelanceAction' => 'Lihat Freelance',
 			'home.recentTitle' => 'Transaksi terbaru',
@@ -6288,8 +6318,18 @@ extension on Translations {
 			'home.actionScan' => 'Scan Struk',
 			'home.actionReport' => 'Laporan',
 			'home.actionMission' => 'Misi Hemat',
+			'home.firstSubtitle' => 'Mulai dari dompet pertamamu, lalu catat transaksinya.',
+			'home.firstLabel' => 'Tanuki masih tidur',
+			'home.questTitle' => 'Bangunkan Tanuki',
+			'home.questReward' => 'Hadiah:',
+			'home.questRewardXp' => '+150 XP',
+			'home.stepsProgress' => ({required Object done, required Object total}) => '${done}/${total} selesai',
+			'home.stepOptional' => 'Opsional',
+			'home.stepNext' => 'Berikutnya',
+			'home.stepLast' => 'Terakhir',
 			'home.soon' => 'Segera',
 			'home.footnote' => 'Disimpan di perangkatmu',
+			'home.preview.levelNew' => 'LVL 1 · BENIH MAGANG',
 			'home.preview.level' => 'LVL 12 STEWARD',
 			'home.preview.moodTitle' => 'Mood: Santai & Makmur',
 			'home.preview.moodBadge' => '84% SEHAT',
@@ -6604,6 +6644,8 @@ extension on Translations {
 			'notificationCapture.sourcePaused' => 'Dijeda',
 			'notificationCapture.pickAppTitle' => 'Pilih aplikasi',
 			'notificationCapture.searchApps' => 'Cari aplikasi',
+			_ => null,
+		} ?? switch (path) {
 			'notificationCapture.builtInPatternsBadge' => 'Pola bawaan',
 			'notificationCapture.appsLoadFailed' => 'Daftar aplikasi gagal dibaca.',
 			'notificationCapture.appsEmpty' => 'Tidak ada aplikasi yang cocok.',
@@ -6614,8 +6656,6 @@ extension on Translations {
 			'notificationCapture.keywordField' => 'Tambah frasa',
 			'notificationCapture.addKeyword' => 'Tambah',
 			'notificationCapture.patternsTitle' => 'Pola',
-			_ => null,
-		} ?? switch (path) {
 			'notificationCapture.patternsHint' => 'Ajari Tanukonomy membaca format notifikasi aplikasi ini.',
 			'notificationCapture.patternsEmpty' => 'Belum ada pola. Tanukonomy tetap membaca dengan aturan umum.',
 			'notificationCapture.builtInUnverified' => 'Bawaan · hasilnya selalu kamu cek',

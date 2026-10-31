@@ -18,7 +18,7 @@ import 'package:saldough/shared/wallet/wallet.dart';
 /// level bergoyang bila [jiggle] naik.
 class HomeGreeting extends StatelessWidget {
   /// Membuat [HomeGreeting].
-  const HomeGreeting({required this.name, this.jiggle = 0, super.key});
+  const HomeGreeting({required this.name, this.jiggle = 0, this.firstRun = false, super.key});
 
   /// Nama depan pengguna, atau `null` bila belum masuk.
   final String? name;
@@ -26,19 +26,23 @@ class HomeGreeting extends StatelessWidget {
   /// Naikkan untuk memutar goyangan pil level (klaim misi).
   final int jiggle;
 
+  /// Belum ada transaksi: subjudul mengajak mulai, pil level pemula, dan
+  /// tanpa pil mood (belum ada data yang dinilai).
+  final bool firstRun;
+
   @override
   Widget build(BuildContext context) {
     final header = DsPageHeader(
       title: name == null ? t.home.greeting : t.home.greetingNamed(name: name!),
-      subtitle: t.home.subtitle,
+      subtitle: firstRun ? t.home.firstSubtitle : t.home.subtitle,
       trailing: kHomePlaceholderPreview
           ? DsJiggle(
               trigger: jiggle,
-              child: DsStatusPill(label: t.home.preview.level),
+              child: DsStatusPill(label: firstRun ? t.home.preview.levelNew : t.home.preview.level),
             )
           : null,
     );
-    if (!kHomePlaceholderPreview) return header;
+    if (!kHomePlaceholderPreview || firstRun) return header;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

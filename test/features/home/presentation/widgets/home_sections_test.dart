@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/features/home/domain/budget_overview_source.dart';
 import 'package:saldough/features/home/presentation/home_placeholder.dart';
+import 'package:saldough/features/home/presentation/widgets/home_cards.dart';
 import 'package:saldough/features/home/presentation/widgets/home_sections.dart';
 import 'package:saldough/features/home/presentation/widgets/home_summary.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
@@ -153,6 +155,103 @@ void main() {
     });
   });
 
+  group('HomeFirstSteps (keadaan awal)', () {
+    Widget steps({
+      bool noWallets = true,
+      bool budget = false,
+      VoidCallback? onWallet,
+      VoidCallback? onRecord,
+      VoidCallback? onBudget,
+    }) => _host(
+      HomeFirstSteps(
+        hasNoWallets: noWallets,
+        hasBudget: budget,
+        onAddWallet: onWallet ?? () {},
+        onRecord: onRecord ?? () {},
+        onBudget: onBudget ?? () {},
+      ),
+    );
+
+    testWidgets('tanpa dompet: hanya langkah dompet bertombol; lainnya terkunci dan tak bisa diketuk', (tester) async {
+      var wallet = 0;
+      var record = 0;
+      var budget = 0;
+      await tester.pumpWidget(steps(onWallet: () => wallet++, onRecord: () => record++, onBudget: () => budget++));
+      expect(find.text(t.home.createWalletAction), findsOneWidget);
+      expect(find.text(t.home.recordAction), findsNothing);
+      expect(find.text(t.home.stepsProgress(done: 0, total: 3).toUpperCase()), findsOneWidget);
+      await tester.tap(find.text(t.home.stepRecordTitle));
+      await tester.tap(find.text(t.home.stepBudgetTitle));
+      expect((record, budget), (0, 0));
+      await tester.tap(find.text(t.home.stepWalletTitle));
+      expect(wallet, 1);
+    });
+
+    testWidgets('ada dompet: langkah dompet selesai, Catat transaksi jadi tombol, anggaran opsional bisa diketuk', (
+      tester,
+    ) async {
+      var record = 0;
+      var budget = 0;
+      await tester.pumpWidget(steps(noWallets: false, onRecord: () => record++, onBudget: () => budget++));
+      expect(find.text(t.home.createWalletAction), findsNothing);
+      expect(find.text(t.home.recordAction), findsOneWidget);
+      expect(find.text(t.home.stepDone.toUpperCase()), findsOneWidget);
+      expect(find.text(t.home.stepOptional.toUpperCase()), findsOneWidget);
+      expect(find.text(t.home.stepsProgress(done: 1, total: 3).toUpperCase()), findsOneWidget);
+      await tester.tap(find.text(t.home.stepRecordTitle));
+      await tester.tap(find.text(t.home.stepBudgetTitle));
+      expect((record, budget), (1, 1));
+    });
+
+    testWidgets('anggaran sudah ada: dua dari tiga selesai', (tester) async {
+      await tester.pumpWidget(steps(noWallets: false, budget: true));
+      expect(find.text(t.home.stepsProgress(done: 2, total: 3).toUpperCase()), findsOneWidget);
+    });
+
+    testWidgets('hadiah XP tampil (tiruan) dan maskot tidur terpasang', (tester) async {
+      await tester.pumpWidget(steps());
+      expect(find.text(t.home.questRewardXp), findsOneWidget);
+      expect(find.byType(SvgPicture), findsOneWidget);
+    });
+
+    testWidgets('tidak luap di 360px dengan teks 2x, juga dengan animasi menyala', (tester) async {
+      tester.view
+        ..physicalSize = const Size(360, 1600)
+        ..devicePixelRatio = 1;
+      tester.platformDispatcher.textScaleFactorTestValue = 2;
+      addTearDown(() {
+        tester.view.reset();
+        tester.platformDispatcher.clearTextScaleFactorTestValue();
+      });
+      await tester.pumpWidget(
+        _host(
+          HomeFirstSteps(
+            hasNoWallets: false,
+            onAddWallet: () {},
+            onRecord: () {},
+            onBudget: () {},
+          ),
+          reduced: false,
+        ),
+      );
+      await tester.pump(const Duration(seconds: 2));
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('HomeGreeting pemula: subjudul mengajak mulai, tanpa pil mood', (tester) async {
+      await tester.pumpWidget(_host(const HomeGreeting(name: null, firstRun: true)));
+      expect(find.text(t.home.firstSubtitle), findsOneWidget);
+      expect(find.text(t.home.preview.levelNew), findsOneWidget);
+      expect(find.byType(HomeMoodPill), findsNothing);
+    });
+
+    testWidgets('HomeEmptyLedger menampilkan judul dan isi kosong', (tester) async {
+      await tester.pumpWidget(_host(const HomeEmptyLedger()));
+      expect(find.text(t.home.emptyTitle), findsOneWidget);
+      expect(find.text(t.home.emptyBody), findsOneWidget);
+    });
+  });
+
   group('HomeRecentRow', () {
     const wallets = {
       'bca': Wallet(id: 'bca', name: 'BCA', iconKey: 'walletBank', initialBalance: 0, currentBalance: 0),
@@ -203,7 +302,7 @@ void main() {
       expect(find.text('BCA · 14.20'), findsNWidgets(2));
     });
 
-    testWidgets('kategori kopi memakai ikon clay; tanpa kategori memakai ikon lama', (tester) async {
+    testWidgets('semua kategori memakai ikon clay di tile datar', (tester) async {
       await tester.pumpWidget(
         _host(
           HomeRecentRow(
@@ -213,8 +312,10 @@ void main() {
         ),
       );
       await tester.pump();
-      // Tanpa kategori terpasang, ikon jatuh ke ikon jenis lama (bukan clay).
-      expect(find.byType(AppIconTile), findsOneWidget);
+      // Semua ikon benda sudah clay: tile datar berisi SVG, bukan ikon piksel.
+      expect(find.byType(AppIconTile), findsNothing);
+      expect(find.byType(DsIconTile), findsOneWidget);
+      expect(find.byType(SvgPicture), findsOneWidget);
     });
   });
 

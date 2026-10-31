@@ -206,7 +206,8 @@ class _HomePageState extends State<HomePage> {
           // Tanpa tampilan (slide pembaruan dan lembar Apa yang baru).
           ?widget.updateHost,
           AccountUserBuilder(
-            builder: (context, user) => HomeGreeting(name: _firstName(user), jiggle: _claims),
+            builder: (context, user) =>
+                HomeGreeting(name: _firstName(user), jiggle: _claims, firstRun: !state.hasTransactions),
           ),
           // Urutan `patterns.md`: total saldo → yang perlu tindakan → bulan
           // ini → anggaran → freelance → transaksi terbaru.
@@ -243,6 +244,18 @@ class _HomePageState extends State<HomePage> {
                 context.pushRoute(AnalysisRouteKeys.open, const AnalysisInput(source: AnalysisSource.home)),
               ),
               onClaimed: () => setState(() => _claims++),
+            ),
+          ],
+          // Keadaan awal: kartu misi tiga langkah, tepat di bawah sapaan (tanpa
+          // dompet) atau di bawah aksi cepat (sudah ada dompet).
+          if (!state.hasTransactions) ...[
+            gap(),
+            HomeFirstSteps(
+              hasNoWallets: state.hasNoWallets,
+              hasBudget: budget != null,
+              onRecord: () => _thenRefresh(widget.onRecord),
+              onAddWallet: widget.onShowWallets,
+              onBudget: widget.onShowBudgets,
             ),
           ],
           // Slide status nyata tampil walau belum ada dompet (seperti kartu
@@ -298,12 +311,10 @@ class _HomePageState extends State<HomePage> {
             ),
             DsFootnote(text: t.home.footnote.toUpperCase()),
           ] else ...[
-            HomeFirstSteps(
-              hasNoWallets: state.hasNoWallets,
-              onRecord: () => _thenRefresh(widget.onRecord),
-              onAddWallet: widget.onShowWallets,
-              onBudget: widget.onShowBudgets,
-            ),
+            DsSectionHeader(title: t.home.recentTitle, icon: Icons.receipt_long),
+            const SizedBox(height: DsSpacing.sm),
+            const HomeEmptyLedger(),
+            DsFootnote(text: t.home.footnote.toUpperCase()),
           ],
         ],
       ),

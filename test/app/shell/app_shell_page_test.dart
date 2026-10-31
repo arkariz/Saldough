@@ -293,6 +293,12 @@ void main() {
     });
 
     testWidgets('Beranda menampilkan kartu Menunggu dicatat bila ada kemunculan menunggu (T-15.6)', (tester) async {
+      // Keadaan awal menaruh kartu misi di atas carousel; viewport tinggi
+      // supaya carousel ikut terbangun.
+      tester.view
+        ..physicalSize = const Size(800, 3000)
+        ..devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
       final now = DateTime.now();
       await container<RecurringRuleRepository>().saveRule(
         RecurringRule(
@@ -322,6 +328,12 @@ void main() {
     });
 
     testWidgets('Beranda: slide status berurutan, rutin menunggu, pintu notifikasi, pengingat (P-6)', (tester) async {
+      // Keadaan awal menaruh kartu misi di atas carousel; viewport tinggi
+      // supaya carousel ikut terbangun.
+      tester.view
+        ..physicalSize = const Size(800, 3000)
+        ..devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
       final now = DateTime.now();
       await container<RecurringRuleRepository>().saveRule(
         RecurringRule(

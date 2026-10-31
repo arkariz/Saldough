@@ -746,7 +746,7 @@ class _Translations$home$en extends Translations$home$id {
 	@override String get budgetTitle => 'Active budgets';
 	@override String get budgetRemaining => 'Remaining';
 	@override String get budgetOver => 'Over plan';
-	@override String get budgetAction => 'View budgets';
+	@override String get budgetAction => 'Create budget';
 	@override String get freelanceTitle => 'Freelance';
 	@override String get freelanceAction => 'View Freelance';
 	@override String get recentTitle => 'Recent transactions';
@@ -790,6 +790,15 @@ class _Translations$home$en extends Translations$home$id {
 	@override String get actionScan => 'Scan Receipt';
 	@override String get actionReport => 'Report';
 	@override String get actionMission => 'Saving Missions';
+	@override String get firstSubtitle => 'Start with your first wallet, then record a transaction.';
+	@override String get firstLabel => 'Tanuki is still asleep';
+	@override String get questTitle => 'Wake up Tanuki';
+	@override String get questReward => 'Reward:';
+	@override String get questRewardXp => '+150 XP';
+	@override String stepsProgress({required Object done, required Object total}) => '${done}/${total} done';
+	@override String get stepOptional => 'Optional';
+	@override String get stepNext => 'Next';
+	@override String get stepLast => 'Last';
 	@override String get soon => 'Soon';
 	@override String get footnote => 'Stored on your device';
 	@override late final _Translations$home$preview$en preview = _Translations$home$preview$en._(_root);
@@ -1751,6 +1760,7 @@ class _Translations$home$preview$en extends Translations$home$preview$id {
 	final TranslationsEn _root; // ignore: unused_field
 
 	// Translations
+	@override String get levelNew => 'LVL 1 · SEEDLING';
 	@override String get level => 'LVL 12 STEWARD';
 	@override String get moodTitle => 'Mood: Calm & Prosperous';
 	@override String get moodBadge => '84% HEALTHY';
@@ -3110,7 +3120,7 @@ extension on TranslationsEn {
 			'home.budgetTitle' => 'Active budgets',
 			'home.budgetRemaining' => 'Remaining',
 			'home.budgetOver' => 'Over plan',
-			'home.budgetAction' => 'View budgets',
+			'home.budgetAction' => 'Create budget',
 			'home.freelanceTitle' => 'Freelance',
 			'home.freelanceAction' => 'View Freelance',
 			'home.recentTitle' => 'Recent transactions',
@@ -3154,8 +3164,18 @@ extension on TranslationsEn {
 			'home.actionScan' => 'Scan Receipt',
 			'home.actionReport' => 'Report',
 			'home.actionMission' => 'Saving Missions',
+			'home.firstSubtitle' => 'Start with your first wallet, then record a transaction.',
+			'home.firstLabel' => 'Tanuki is still asleep',
+			'home.questTitle' => 'Wake up Tanuki',
+			'home.questReward' => 'Reward:',
+			'home.questRewardXp' => '+150 XP',
+			'home.stepsProgress' => ({required Object done, required Object total}) => '${done}/${total} done',
+			'home.stepOptional' => 'Optional',
+			'home.stepNext' => 'Next',
+			'home.stepLast' => 'Last',
 			'home.soon' => 'Soon',
 			'home.footnote' => 'Stored on your device',
+			'home.preview.levelNew' => 'LVL 1 · SEEDLING',
 			'home.preview.level' => 'LVL 12 STEWARD',
 			'home.preview.moodTitle' => 'Mood: Calm & Prosperous',
 			'home.preview.moodBadge' => '84% HEALTHY',
@@ -3470,6 +3490,8 @@ extension on TranslationsEn {
 			'notificationCapture.sourcePaused' => 'Paused',
 			'notificationCapture.pickAppTitle' => 'Pick an app',
 			'notificationCapture.searchApps' => 'Search apps',
+			_ => null,
+		} ?? switch (path) {
 			'notificationCapture.builtInPatternsBadge' => 'Built-in patterns',
 			'notificationCapture.appsLoadFailed' => 'Couldn\'t read the app list.',
 			'notificationCapture.appsEmpty' => 'No matching apps.',
@@ -3480,8 +3502,6 @@ extension on TranslationsEn {
 			'notificationCapture.keywordField' => 'Add a phrase',
 			'notificationCapture.addKeyword' => 'Add',
 			'notificationCapture.patternsTitle' => 'Patterns',
-			_ => null,
-		} ?? switch (path) {
 			'notificationCapture.patternsHint' => 'Teach Tanukonomy how to read this app\'s notification format.',
 			'notificationCapture.patternsEmpty' => 'No patterns yet. Tanukonomy still reads with general rules.',
 			'notificationCapture.builtInUnverified' => 'Built-in · you review the results',

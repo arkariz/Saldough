@@ -101,6 +101,9 @@ class _DsCarouselState extends State<DsCarousel> {
     }
   }
 
+  /// Setengah jarak antarkartu saat digeser.
+  static const double _pageGap = 8;
+
   /// Tinggi sementara mode adaptif sampai halaman pertama melapor.
   static const double _fallbackHeight = 72;
 
@@ -182,7 +185,19 @@ class _DsCarouselState extends State<DsCarousel> {
                     ),
                   ),
                 ),
-              Positioned.fill(child: _pager(widget.children)),
+              // Bingkai PageView selebar 8px lebih ke tiap sisi dan tiap halaman
+              // diberi 8px di kedua sisinya: saat diam kartu persis selebar
+              // konten, saat digeser ada jarak 16px antarkartu.
+              Positioned(
+                left: -_pageGap,
+                right: -_pageGap,
+                top: 0,
+                bottom: 0,
+                child: _pager([
+                  for (final child in widget.children)
+                    Padding(padding: const EdgeInsets.symmetric(horizontal: _pageGap), child: child),
+                ]),
+              ),
             ],
           ),
         const SizedBox(height: 4),

@@ -13,6 +13,7 @@ class DsBudgetMeterCard extends StatelessWidget {
     required this.value,
     required this.meterLabel,
     this.icon,
+    this.leading,
     this.badge,
     this.total,
     this.remaining,
@@ -28,6 +29,9 @@ class DsBudgetMeterCard extends StatelessWidget {
 
   /// Ikon 17px di depan judul.
   final IconData? icon;
+
+  /// Pengganti [icon] berupa widget bebas (mis. ikon clay 28px).
+  final Widget? leading;
 
   /// Badge di kanan judul.
   final Widget? badge;
@@ -84,7 +88,8 @@ class DsBudgetMeterCard extends StatelessWidget {
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  if (icon != null) ...[Icon(icon, size: 17, color: c.secondary), const SizedBox(width: 6)],
+                  if (leading != null) ...[leading!, const SizedBox(width: 8)]
+                  else if (icon != null) ...[Icon(icon, size: 17, color: c.secondary), const SizedBox(width: 6)],
                   Flexible(
                     child: Text(
                       title,

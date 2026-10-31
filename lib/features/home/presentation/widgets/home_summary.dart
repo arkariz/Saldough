@@ -10,6 +10,9 @@ import 'package:saldough/features/home/domain/budget_overview_source.dart';
 import 'package:saldough/features/home/domain/freelance_overview_source.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 
+/// Ukuran ikon clay di kepala slide carousel (anggaran, tagihan, hadiah).
+const double kSlideIconSize = 28;
+
 /// Kartu saldo Beranda (acuan `home-clay.html`, kartu hero): total saldo
 /// dompet aktif (FR-HOME-001) di kartu hijau yang menghitung naik saat
 /// dibuka, dengan pemasukan dan pengeluaran periode dan perkiraan saldo
@@ -116,7 +119,7 @@ class HomeBudgetCard extends StatelessWidget {
       label: t.home.budgetAction,
       child: DsBudgetMeterCard(
         title: t.home.budgetTitle,
-        icon: Icons.hourglass_top,
+        leading: SvgPicture.asset(ClayIcons.clipboard, width: kSlideIconSize, height: kSlideIconSize),
         badge: DsBadge(label: badge.toUpperCase(), tone: tone),
         spent: AppMoneyFormatter.format(overview.spent),
         total: AppMoneyFormatter.format(overview.plannedAmount),

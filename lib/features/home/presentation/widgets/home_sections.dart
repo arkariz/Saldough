@@ -169,7 +169,7 @@ class _BillSlide extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _SlideHeader(
-            leading: Icon(Icons.event_note_outlined, size: 17, color: c.error),
+            leading: SvgPicture.asset(ClayIcons.receipt, width: kSlideIconSize, height: kSlideIconSize),
             title: t.home.preview.billTitle,
             badge: DsPulse(
               child: DsBadge(label: t.home.preview.billBadge, tone: DsBadgeTone.danger),
@@ -201,7 +201,7 @@ class _RewardSlide extends StatelessWidget {
           _SlideHeader(
             leading: DsIdleMotion(
               kind: DsIdleKind.float,
-              child: SvgPicture.asset(ClayIcons.tierCoin, width: 20, height: 20),
+              child: SvgPicture.asset(ClayIcons.tierCoin, width: kSlideIconSize, height: kSlideIconSize),
             ),
             title: t.home.preview.rewardTitle,
             badge: DsPulse(
@@ -240,7 +240,7 @@ class _SlideHeader extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             leading,
-            const SizedBox(width: 6),
+            const SizedBox(width: 8),
             Flexible(child: Text(title, style: context.ds.typography.titleMd.copyWith(fontSize: 15))),
           ],
         ),

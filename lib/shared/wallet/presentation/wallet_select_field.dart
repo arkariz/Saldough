@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
@@ -23,6 +25,7 @@ class WalletSelectField extends StatelessWidget {
     required this.onSelected,
     this.previewAmountSen,
     this.previewIsCredit = true,
+    this.useDs = false,
     super.key,
   });
 
@@ -46,6 +49,10 @@ class WalletSelectField extends StatelessWidget {
   /// dompet tujuan transfer). `false` -- saldo turun (pengeluaran, dompet
   /// asal transfer).
   final bool previewIsCredit;
+
+  /// Tampil sebagai baris isian v2 ([DsSelectRow], ikon clay) -- dipakai Catat.
+  /// Bawaan `false`: rupa lama untuk layar yang belum dirombak.
+  final bool useDs;
 
   Wallet? _findSelected() {
     final id = selectedId;
@@ -76,16 +83,23 @@ class WalletSelectField extends StatelessWidget {
       final text = hasPreview
           ? t.record.balanceAfter(amount: AppMoneyFormatter.format(after))
           : AppMoneyFormatter.format(after);
+      final negative = hasPreview && after < 0;
       trailing = Text(
         text,
         key: const ValueKey('wallet-balance-after'),
         textAlign: TextAlign.end,
-        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-          color: hasPreview && after < 0 ? colors.danger : colors.ink2,
-          fontFeatures: const [FontFeature.tabularFigures()],
-        ),
+        style: useDs
+            ? context.ds.typography.amountSm.copyWith(
+                fontSize: 12,
+                color: negative ? context.ds.colors.error : context.ds.colors.textSecondary,
+              )
+            : Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: negative ? colors.danger : colors.ink2,
+                fontFeatures: const [FontFeature.tabularFigures()],
+              ),
       );
     }
+    if (useDs) return _dsRow(context, selected, trailing);
     return AppMenuSelectButton<String>(
       fieldLabel: label,
       rowIcon: IconKey.wallets,
@@ -100,6 +114,38 @@ class WalletSelectField extends StatelessWidget {
       // Saldo di tiap baris, supaya dompet bisa dipilih tanpa menebak
       // isinya (UX-11).
       detailFor: (id) => AppMoneyFormatter.format(wallets.firstWhere((w) => w.id == id).currentBalance),
+      onSelected: (id) {
+        if (id != null) onSelected(id);
+      },
+    );
+  }
+
+  Widget _dsRow(BuildContext context, Wallet? selected, Widget? trailing) {
+    Widget walletLeading(Wallet? wallet) {
+      final asset = ClayIcons.forIcon(wallet == null ? IconKey.wallets : walletIconKey(wallet.iconKey));
+      return asset == null
+          ? Icon(Icons.account_balance_wallet_outlined, size: 20, color: context.ds.colors.actionPrimary)
+          : SvgPicture.asset(asset, width: 24, height: 24);
+    }
+
+    return DsSelectRow<String>(
+      icon: Icons.account_balance_wallet_outlined,
+      leading: walletLeading(selected),
+      label: label,
+      title: selected?.name ?? t.record.walletNotSelectedPrompt,
+      placeholder: selected == null,
+      trailing: trailing,
+      options: [
+        for (final wallet in wallets)
+          DsMenuOption(
+            value: wallet.id,
+            label: wallet.name,
+            leading: walletLeading(wallet),
+            // Saldo di tiap baris, supaya dompet bisa dipilih tanpa menebak
+            // isinya (UX-11).
+            detail: AppMoneyFormatter.format(wallet.currentBalance),
+          ),
+      ],
       onSelected: (id) {
         if (id != null) onSelected(id);
       },

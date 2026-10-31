@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
@@ -128,6 +129,7 @@ class RecordCategoryField extends StatelessWidget {
           child: _Option(
             key: const ValueKey('category-all'),
             icon: IconKey.moreHorizontal,
+            materialIcon: Icons.more_horiz,
             label: t.record.allCategories,
             selected: false,
             onTap: () => _openAll(context, options),
@@ -144,6 +146,7 @@ class _Option extends StatelessWidget {
     required this.label,
     required this.selected,
     required this.onTap,
+    this.materialIcon,
     super.key,
   });
 
@@ -152,9 +155,22 @@ class _Option extends StatelessWidget {
   final bool selected;
   final VoidCallback onTap;
 
+  /// Ikon Material untuk pilihan non-kategori ("Semua kategori").
+  final IconData? materialIcon;
+
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
+    final ds = context.ds;
+    final c = ds.colors;
+    final asset = materialIcon == null ? ClayIcons.forIcon(icon) : null;
+    final Widget tile;
+    if (materialIcon != null) {
+      tile = DsIconTile(icon: materialIcon!);
+    } else if (asset != null) {
+      tile = DsIconTile.asset(asset: asset, tone: selected ? DsIconTileTone.income : DsIconTileTone.neutral);
+    } else {
+      tile = AppIconTile(icon, selected: selected);
+    }
     return Semantics(
       button: true,
       selected: selected,
@@ -164,21 +180,30 @@ class _Option extends StatelessWidget {
         behavior: HitTestBehavior.opaque,
         onTap: onTap,
         child: Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: AppSpacing.space1,
-            horizontal: 2,
-          ),
-          child: Column(
-            children: [
-              AppIconTile(icon, size: 44, selected: selected),
-              const SizedBox(height: AppSpacing.space1),
-              _OptionLabel(
-                label,
-                style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                  color: selected ? colors.ink : colors.ink2,
+          padding: const EdgeInsets.all(2),
+          child: AnimatedContainer(
+            duration: DsMotion.reduced(context) ? Duration.zero : DsMotion.standard,
+            padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 2),
+            decoration: BoxDecoration(
+              color: selected ? c.actionPrimary.withValues(alpha: 0.08) : c.surfaceCard,
+              borderRadius: DsRadius.lgAll,
+              border: Border.all(color: selected ? c.actionPrimary.withValues(alpha: 0.5) : c.outlineSubtle),
+            ),
+            child: Column(
+              children: [
+                DsBounce(trigger: selected ? 1 : 0, child: tile),
+                const SizedBox(height: 4),
+                _OptionLabel(
+                  label,
+                  style: ds.typography.labelSm.copyWith(
+                    fontSize: 10,
+                    letterSpacing: 0,
+                    fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+                    color: selected ? c.actionPrimary : c.textSecondary,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -222,6 +247,11 @@ class _OptionLabel extends StatelessWidget {
       },
     );
   }
+}
+
+Widget _leadingFor(IconKey key) {
+  final asset = ClayIcons.forIcon(key);
+  return asset == null ? AppIconTile(key) : DsIconTile.asset(asset: asset);
 }
 
 sealed class _Pick {
@@ -272,7 +302,7 @@ class _CategorySheet extends StatelessWidget {
             children: [
               AppListRow(
                 title: t.record.categoryNoneLabel,
-                leading: const AppIconTile(IconKey.categoryOther),
+                leading: _leadingFor(IconKey.categoryOther),
                 trailing: check(on: selectedId == null),
                 onTap: () => Navigator.of(context).pop(const _PickCategory(null)),
               ),
@@ -280,7 +310,7 @@ class _CategorySheet extends StatelessWidget {
                 AppListRow(
                   key: ValueKey('category-sheet-${category.id}'),
                   title: category.name,
-                  leading: AppIconTile(categoryIcon(category)),
+                  leading: _leadingFor(categoryIcon(category)),
                   trailing: check(on: category.id == selectedId),
                   onTap: () => Navigator.of(context).pop(_PickCategory(category.id)),
                 ),

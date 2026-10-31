@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
-import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/features/record/presentation/open_record_sheet.dart';
 import 'package:saldough/features/record/presentation/widgets/expense_form_sheet.dart';
@@ -188,7 +187,7 @@ void main() {
           ],
         );
 
-        expect(find.byType(AppMenuSelectButton<String>), findsWidgets);
+        expect(find.byType(DsSelectRow<String>), findsWidgets);
         expect(
           find.text('BCA'),
           findsNothing,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 
 /// Baris Tanggal di Catat (prototipe `Catat.dc.html`): label kecil di atas
@@ -67,14 +67,12 @@ class RecordDateField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return AppListRow(
+    return DsFieldRow(
       key: const ValueKey('record-date'),
-      compact: true,
-      leading: AppIcon(IconKey.calendar, color: colors.ink2),
+      icon: Icons.event,
       label: t.record.dateFieldLabel,
       title: _label(),
-      chevron: true,
+      trailing: Icon(Icons.schedule, size: 18, color: context.ds.colors.textMuted),
       onTap: () => _pick(context),
     );
   }

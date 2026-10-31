@@ -15,6 +15,7 @@ export 'components/ds_carousel.dart';
 export 'components/ds_celebration.dart';
 export 'components/ds_collapsing_top_bar.dart';
 export 'components/ds_count_up.dart';
+export 'components/ds_field_row.dart';
 export 'components/ds_flip_switcher.dart';
 export 'components/ds_hero_balance_card.dart';
 export 'components/ds_icon_tile.dart';

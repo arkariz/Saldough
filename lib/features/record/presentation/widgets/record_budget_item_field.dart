@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
-import 'package:saldough/core/presentation/widgets/widgets.dart';
+import 'package:saldough/core/presentation/widgets/clay_icons.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 
@@ -128,18 +130,20 @@ class RecordBudgetItemField extends StatelessWidget {
     for (final option in choices) {
       if (option.itemId == selectedId) selected = option;
     }
-    return AppMenuSelectButton<String>(
-      fieldLabel: '${t.record.budgetItemLabel} (${t.record.optionalHint.toLowerCase()})',
-      rowIcon: IconKey.budget,
-      icon: IconKey.budget,
-      label: selected == null ? t.record.budgetItemNone : '${selected.itemName} · ${selected.budgetName}',
-      isPlaceholder: selected == null,
-      wrapLabel: true,
+    return DsSelectRow<String>(
+      icon: Icons.account_balance_wallet_outlined,
+      leading: SvgPicture.asset(ClayIcons.clipboard, width: 24, height: 24),
+      label: '${t.record.budgetItemLabel} (${t.record.optionalHint.toLowerCase()})',
+      title: selected == null ? t.record.budgetItemNone : '${selected.itemName} · ${selected.budgetName}',
+      placeholder: selected == null,
       allLabel: t.record.budgetItemNone,
-      allIcon: IconKey.close,
       options: [
         for (final option in choices)
-          (value: option.itemId, label: '${option.itemName} · ${option.budgetName}', icon: IconKey.budget),
+          DsMenuOption(
+            value: option.itemId,
+            label: '${option.itemName} · ${option.budgetName}',
+            leading: SvgPicture.asset(ClayIcons.clipboard, width: 24, height: 24),
+          ),
       ],
       onSelected: onSelected,
     );

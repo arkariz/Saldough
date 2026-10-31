@@ -5981,6 +5981,13 @@ memilih mode (dan preset bila ≥ 2), dan design system lama dihapus.
       #tag (belum ada di domain), tanpa stempel/bahasa kuil. Selisih: aturan
       F1 (semua isian terlihat tanpa menggulir) dilonggarkan, hanya nominal,
       kategori, dompet; tanggal dan catatan menunggu irisan kolom isian.
+      **Catat v2, irisan 2 (31 Okt 2026):** kategori sebagai petak berikon
+      clay (terpilih: tile hijau, bingkai aksen, ikon membal), baris isian
+      (dompet, tanggal, catatan, pos anggaran, Ulangi) memakai `DsFieldGroup`,
+      `DsFieldRow`, dan `DsSelectRow` (menu popup v2). `WalletSelectField`
+      mendapat `useDs` supaya layar lain tidak ikut berubah. Sheet pilih
+      kategori dan sheet Ulangi masih isi lama. Belum: kartu Tanuki Berbisik
+      dan kartu draf (irisan 3).
       **Ikon clay dilengkapi (31 Okt 2026, KT-DS5):** 33 ikon baru untuk
       dompet, jenis transaksi, kategori, dan status Freelance; semua
       `IconKey` benda kini punya clay (`ClayIcons.forIcon`). Digambar dari

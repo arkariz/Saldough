@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
@@ -255,12 +256,12 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
         // Galat dompet sama di atas daftar, supaya terlihat tanpa menggulir
         // (QA PR #43 F6).
         if (_sameWallet) AppBanner(message: t.record.sameWalletWarning, tone: AppTone.danger),
-        AppListCard(
-          dividerIndent: AppListCard.iconIndent,
+        DsFieldGroup(
           children: [
             SpotlightTarget(
               spotlightKey: SpotlightKey.recordWallet,
               child: WalletSelectField(
+                useDs: true,
                 label: t.record.fromWalletFieldLabel,
                 wallets: widget.wallets,
                 selectedId: _fromWalletId,
@@ -270,6 +271,7 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
               ),
             ),
             WalletSelectField(
+                useDs: true,
               label: t.record.destinationWalletFieldLabel,
               wallets: widget.wallets,
               selectedId: _toWalletId,

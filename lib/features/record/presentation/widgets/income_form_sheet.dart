@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
@@ -217,12 +218,12 @@ class _IncomeFormSheetState extends State<IncomeFormSheet> {
           onCreate: widget.onCreateCategory,
           title: _noteController.text,
         ),
-        AppListCard(
-          dividerIndent: AppListCard.iconIndent,
+        DsFieldGroup(
           children: [
             SpotlightTarget(
               spotlightKey: SpotlightKey.recordWallet,
               child: WalletSelectField(
+                useDs: true,
                 label: t.record.toWalletFieldLabel,
                 wallets: widget.wallets,
                 selectedId: _walletId,

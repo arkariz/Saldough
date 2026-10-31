@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/foundation/entitlement/entitlement.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
@@ -58,10 +60,10 @@ class RecordRepeatField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final value = this.value;
-    return AppListRow(
+    return DsFieldRow(
       key: const ValueKey('record-repeat'),
-      compact: true,
-      leading: AppIcon(IconKey.schedule, color: context.appColors.ink2),
+      icon: Icons.autorenew,
+      leading: SvgPicture.asset(ClayIcons.calendar, width: 24, height: 24),
       label: t.record.repeat.label,
       title: value == null ? t.record.repeat.off : repeatSummary(value, date),
       chevron: true,

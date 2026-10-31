@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
-import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/features/record/presentation/widgets/record_category_field.dart';
 import 'package:saldough/shared/category/category.dart';
 
@@ -59,7 +59,7 @@ void main() {
       expect(find.text('Gaji'), findsNothing);
       expect(find.text('Arisan lama'), findsNothing);
       expect(find.text(t.record.allCategories), findsOneWidget);
-      expect(find.byType(AppIconTile), findsNWidgets(3));
+      expect(find.byType(DsIconTile), findsNWidgets(3));
     });
 
     testWidgets('kategori yang sering dipakai tampil paling depan', (tester) async {
@@ -75,7 +75,7 @@ void main() {
       expect(picked, ['food']);
 
       await tester.pumpWidget(pumpable(value: 'food', onChanged: picked.add));
-      expect(tester.widget<AppIconTile>(find.byType(AppIconTile).first).selected, isTrue);
+      expect(tester.widget<DsIconTile>(find.byType(DsIconTile).first).tone, DsIconTileTone.income, reason: 'terpilih: nada hijau');
       expect(tester.getSemantics(find.byKey(const ValueKey('category-food'))), isSemantics(isSelected: true));
       await tester.tap(find.text('Makan'));
       expect(picked.last, isNull);

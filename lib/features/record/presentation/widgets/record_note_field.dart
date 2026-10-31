@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 
 /// Baris Catatan di Catat (prototipe `Catat.dc.html`): ikon, label kecil di
 /// atas kolom teks satu baris tanpa bingkai ("Tulis catatan singkat").
@@ -22,44 +22,27 @@ class RecordNoteField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
-    return ConstrainedBox(
-      constraints: const BoxConstraints(minHeight: 56),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4, vertical: AppSpacing.space2),
-        child: Row(
-          children: [
-            AppIcon(IconKey.edit, color: colors.ink2),
-            const SizedBox(width: AppSpacing.space3),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(t.record.noteSectionLabel, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
-                  TextField(
-                    controller: controller,
-                    onTapOutside: dismissKeyboardOnTapOutside,
-                    onChanged: onChanged,
-                    textCapitalization: TextCapitalization.sentences,
-                    cursorColor: colors.brand,
-                    style: textTheme.bodyLarge,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      filled: false,
-                      enabledBorder: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                      isDense: true,
-                      contentPadding: EdgeInsets.zero,
-                      hintText: t.record.noteFieldHint,
-                      hintStyle: textTheme.bodyLarge?.copyWith(color: colors.ink3),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
+    final ds = context.ds;
+    final c = ds.colors;
+    return DsFieldRow(
+      icon: Icons.edit_note,
+      label: t.record.noteSectionLabel,
+      child: TextField(
+        controller: controller,
+        onTapOutside: dismissKeyboardOnTapOutside,
+        onChanged: onChanged,
+        textCapitalization: TextCapitalization.sentences,
+        cursorColor: c.actionPrimary,
+        style: ds.typography.bodyMd.copyWith(fontSize: 14, fontWeight: FontWeight.w600),
+        decoration: InputDecoration(
+          border: InputBorder.none,
+          filled: false,
+          enabledBorder: InputBorder.none,
+          focusedBorder: InputBorder.none,
+          isDense: true,
+          contentPadding: EdgeInsets.zero,
+          hintText: t.record.noteFieldHint,
+          hintStyle: ds.typography.bodyMd.copyWith(fontSize: 14, color: c.textMuted),
         ),
       ),
     );

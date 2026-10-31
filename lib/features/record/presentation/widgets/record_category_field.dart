@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
@@ -161,14 +162,31 @@ class _Option extends StatefulWidget {
   State<_Option> createState() => _OptionState();
 }
 
-class _OptionState extends State<_Option> {
+class _OptionState extends State<_Option> with SingleTickerProviderStateMixin {
   /// Naik tiap ketukan dan tiap berpindah ke terpilih: memutar goyangan.
   int _wiggle = 0;
+
+  /// Riak lingkaran dari ikon (acuan `leafRipple`, 0,55 dtk).
+  late final AnimationController _ripple = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 550),
+  );
 
   @override
   void didUpdateWidget(_Option oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.selected && !oldWidget.selected) _wiggle++;
+    if (widget.selected && !oldWidget.selected) _play();
+  }
+
+  @override
+  void dispose() {
+    _ripple.dispose();
+    super.dispose();
+  }
+
+  void _play() {
+    _wiggle++;
+    if (!DsMotion.reduced(context)) _ripple.forward(from: 0);
   }
 
   @override
@@ -195,33 +213,87 @@ class _OptionState extends State<_Option> {
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: () {
-          setState(() => _wiggle++);
+          setState(_play);
           widget.onTap();
         },
         child: Padding(
           padding: const EdgeInsets.all(2),
-          child: AnimatedContainer(
-            duration: DsMotion.reduced(context) ? Duration.zero : DsMotion.standard,
-            padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 2),
-            decoration: BoxDecoration(
-              color: selected ? c.actionPrimary.withValues(alpha: 0.08) : c.surfaceCard,
-              borderRadius: DsRadius.lgAll,
-              border: Border.all(color: selected ? c.actionPrimary.withValues(alpha: 0.5) : c.outlineSubtle),
-            ),
-            child: Column(
-              children: [
-                DsWiggle(trigger: _wiggle, child: tile),
-                const SizedBox(height: 4),
-                _OptionLabel(
-                  widget.label,
-                  style: ds.typography.labelSm.copyWith(
-                    fontSize: 10,
-                    letterSpacing: 0,
-                    fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
-                    color: selected ? c.actionPrimary : c.textSecondary,
+          // Seluruh petak yang bergoyang (acuan `animate-wiggle`), bukan hanya ikon.
+          child: DsWiggle(
+            trigger: _wiggle,
+            child: AnimatedContainer(
+              duration: DsMotion.reduced(context) ? Duration.zero : DsMotion.standard,
+              clipBehavior: Clip.hardEdge,
+              padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 2),
+              decoration: BoxDecoration(
+                color: selected ? c.actionPrimary.withValues(alpha: 0.08) : c.surfaceCard,
+                borderRadius: DsRadius.lgAll,
+                border: Border.all(color: selected ? c.actionPrimary.withValues(alpha: 0.5) : c.outlineSubtle),
+              ),
+              child: Stack(
+                alignment: Alignment.topCenter,
+                children: [
+                  // Riak melebar dari belakang ikon lalu menghilang.
+                  Positioned(
+                    top: 5,
+                    child: IgnorePointer(
+                      child: AnimatedBuilder(
+                        animation: _ripple,
+                        builder: (context, _) {
+                          final t = _ripple.value;
+                          if (t == 0 || t == 1) return const SizedBox(width: 38, height: 38);
+                          return Opacity(
+                            opacity: 0.8 * (1 - t),
+                            child: Transform.scale(
+                              scale: 0.2 + 2.4 * t,
+                              child: Container(
+                                width: 38,
+                                height: 38,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  gradient: RadialGradient(
+                                    colors: [
+                                      c.actionPrimary.withValues(alpha: 0.45),
+                                      c.actionPrimary.withValues(alpha: 0.1),
+                                      c.actionPrimary.withValues(alpha: 0),
+                                    ],
+                                    stops: const [0, 0.7, 1],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
                   ),
-                ),
-              ],
+                  Column(
+                    children: [
+                      AnimatedScale(
+                        scale: selected ? 1.05 : 1,
+                        duration: DsMotion.reduced(context) ? Duration.zero : DsMotion.standard,
+                        child: tile,
+                      ),
+                      const SizedBox(height: 4),
+                      _OptionLabel(
+                        widget.label,
+                        style: ds.typography.labelSm.copyWith(
+                          fontSize: 10,
+                          letterSpacing: 0,
+                          fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+                          color: selected ? c.actionPrimary : c.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                  if (selected)
+                    Positioned(
+                      top: 0,
+                      right: 2,
+                      child: Icon(Icons.eco, size: 10, color: c.actionPrimary),
+                    ),
+                ],
+              ),
             ),
           ),
         ),

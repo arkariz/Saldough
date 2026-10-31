@@ -71,8 +71,18 @@ void main() {
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 150));
       expect(rotation().transform.storage[1], isNot(0), reason: 'miring saat bergoyang');
+      // Riak melebar dari belakang ikon selama animasi (acuan leafRipple).
+      expect(
+        find.byWidgetPredicate((w) => w is Container && w.decoration is BoxDecoration && (w.decoration! as BoxDecoration).gradient is RadialGradient),
+        findsOneWidget,
+      );
       await tester.pump(const Duration(milliseconds: 500));
       expect(rotation().transform.storage[1].abs(), lessThan(0.001));
+      expect(
+        find.byWidgetPredicate((w) => w is Container && w.decoration is BoxDecoration && (w.decoration! as BoxDecoration).gradient is RadialGradient),
+        findsNothing,
+        reason: 'riak hilang sesudah selesai',
+      );
     });
 
     testWidgets('kategori yang sering dipakai tampil paling depan', (tester) async {

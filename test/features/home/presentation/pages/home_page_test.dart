@@ -187,7 +187,7 @@ void main() {
     );
   }
 
-  int navIndex(WidgetTester tester) => tester.widget<AppNavBar>(find.byType(AppNavBar)).selectedIndex;
+  int navIndex(WidgetTester tester) => tester.widget<DsNavBar>(find.byType(DsNavBar)).currentIndex;
 
   testWidgets('tanpa dompet: ajakan membuat dompet pertama, panduan, dan tanpa kartu berangka nol (FR-HOME-005)', (
     tester,
@@ -416,7 +416,7 @@ void main() {
     }
 
     Future<void> openTab(WidgetTester tester, String label) async {
-      await tester.tap(find.descendant(of: find.byType(AppNavBar), matching: find.text(label)));
+      await tester.tap(find.descendant(of: find.byType(DsNavBar), matching: find.text(label)));
       await tester.pumpAndSettle();
     }
 

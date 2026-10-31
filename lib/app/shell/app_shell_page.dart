@@ -7,7 +7,6 @@ import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
-import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/features/account/presentation/navigation/account_route_keys.dart';
 import 'package:saldough/features/analysis/presentation/widgets/analysis_segment.dart';
 import 'package:saldough/features/app_update/presentation/widgets/app_update_banner.dart';
@@ -287,22 +286,38 @@ class _AppShellPageState extends State<AppShellPage> {
                                                   TourVisibility(visible: i == _activeTab, child: tab),
                                               ],
                                             ),
-                                            bottomNavigationBar: AppNavBar(
-                                              selectedIndex: _activeTab,
+                                            bottomNavigationBar: DsNavBar(
+                                              currentIndex: _activeTab,
                                               onSelected: (tabIndex) => _onDestinationSelected(context, tabIndex),
-                                              destinations: [
-                                                (icon: IconKey.navHome, label: t.appShell.homeTabLabel),
-                                                (icon: IconKey.navHistory, label: t.appShell.transactionsTabLabel),
-                                                (icon: IconKey.navPlan, label: t.appShell.planTabLabel),
-                                                (icon: IconKey.navWallets, label: t.appShell.walletsTabLabel),
+                                              items: [
+                                                DsNavItem(
+                                                  icon: Icons.home_outlined,
+                                                  activeIcon: Icons.home,
+                                                  label: t.appShell.homeTabLabel,
+                                                ),
+                                                DsNavItem(
+                                                  icon: Icons.receipt_long_outlined,
+                                                  activeIcon: Icons.receipt_long,
+                                                  label: t.appShell.transactionsTabLabel,
+                                                ),
+                                                DsNavItem(
+                                                  icon: Icons.event_note_outlined,
+                                                  activeIcon: Icons.event_note,
+                                                  label: t.appShell.planTabLabel,
+                                                ),
+                                                DsNavItem(
+                                                  icon: Icons.account_balance_wallet_outlined,
+                                                  activeIcon: Icons.account_balance_wallet,
+                                                  label: t.appShell.walletsTabLabel,
+                                                ),
                                               ],
-                                              recordLabel: t.appShell.recordAction,
-                                              recordHint: t.appShell.recordVoiceHint,
-                                              onRecord: () => unawaited(_openRecord(context)),
-                                              onRecordLongPress: () => unawaited(_openRecord(context, voice: true)),
+                                              centerLabel: t.appShell.recordAction,
+                                              centerHint: t.appShell.recordVoiceHint,
+                                              onCenterPressed: () => unawaited(_openRecord(context)),
+                                              onCenterLongPress: () => unawaited(_openRecord(context, voice: true)),
                                               // Satu tombol, dua langkah tur: Catat lalu tekan lama
                                               // untuk suara (ADR-021, ADR-034 §3.3).
-                                              recordWrapper: (button) => SpotlightTarget(
+                                              centerWrapper: (button) => SpotlightTarget(
                                                 spotlightKey: SpotlightKey.homeVoice,
                                                 child: SpotlightTarget(
                                                   spotlightKey: SpotlightKey.homeRecord,

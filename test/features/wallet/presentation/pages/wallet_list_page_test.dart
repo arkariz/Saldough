@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
 import 'package:navigation/navigation.dart';
 import 'package:saldough/app/shell/app_shell_page.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
@@ -107,7 +108,7 @@ void main() {
     await tester.pump(); // + ScopeWidget<BudgetScope> (T-4.5)
     await tester.pump(); // + ScopeWidget<HomeScope> (Fase 6)
     await tester.tap(
-      find.descendant(of: find.byType(AppNavBar), matching: find.text(t.appShell.walletsTabLabel)),
+      find.descendant(of: find.byType(DsNavBar), matching: find.text(t.appShell.walletsTabLabel)),
     );
     await tester.pumpAndSettle();
   }
@@ -474,11 +475,11 @@ void main() {
           ),
         );
         await tester.tap(
-          find.descendant(of: find.byType(AppNavBar), matching: find.text(t.appShell.transactionsTabLabel)),
+          find.descendant(of: find.byType(DsNavBar), matching: find.text(t.appShell.transactionsTabLabel)),
         );
         await tester.pumpAndSettle();
         await tester.tap(
-          find.descendant(of: find.byType(AppNavBar), matching: find.text(t.appShell.walletsTabLabel)),
+          find.descendant(of: find.byType(DsNavBar), matching: find.text(t.appShell.walletsTabLabel)),
         );
         await tester.pumpAndSettle();
 

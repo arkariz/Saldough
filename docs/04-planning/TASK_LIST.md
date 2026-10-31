@@ -5968,6 +5968,11 @@ memilih mode (dan preset bila ≥ 2), dan design system lama dihapus.
       Kakeibo" dan bahasa "kuil" tidak diadopsi (belum ada layarnya), hadiah
       +150 XP tiruan di balik `kHomePlaceholderPreview`. Pil mood
       disembunyikan sampai ada transaksi. Belum dinilai di perangkat.
+      **Navigasi bawah v2 (31 Okt 2026):** cangkang memakai `DsNavBar`
+      (tab dengan pil lembut di tab aktif, tombol Catat bulat bergradasi
+      bertanda daun, tekan lama = suara, target tur tetap). `AppNavBar` lama
+      tidak dipakai lagi (masih ada di `core/presentation/widgets`, dihapus
+      di akhir rombak).
       **Ikon clay dilengkapi (31 Okt 2026, KT-DS5):** 33 ikon baru untuk
       dompet, jenis transaksi, kategori, dan status Freelance; semua
       `IconKey` benda kini punya clay (`ClayIcons.forIcon`). Digambar dari

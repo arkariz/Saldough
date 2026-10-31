@@ -116,7 +116,8 @@ void main() {
       expect(find.byType(HomeBudgetCard).hitTestable(), findsOneWidget);
       expect(tester.getSize(find.byType(PageView)).height, statusHeight, reason: 'tinggi sama untuk semua slide');
       final page = tester.getSize(find.byType(HomeBudgetCard).hitTestable());
-      expect(page.width, tester.getSize(find.byType(PageView)).width, reason: 'selebar bingkai');
+      // PageView 16px lebih lebar dari konten (jarak antarkartu).
+      expect(page.width, tester.getSize(find.byType(PageView)).width - 16, reason: 'selebar konten');
     });
 
     testWidgets('tanpa anggaran tetap ada slide tiruan', (tester) async {

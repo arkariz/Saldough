@@ -23,8 +23,9 @@ class DsNavItem {
   final String label;
 }
 
-/// Navigasi bawah: tab berlabel piksel dengan titik penanda tab aktif, dan
-/// tombol Catat kotak hijau yang menonjol di tengah. Latar kanvas tembus
+/// Navigasi bawah: tab berlabel piksel dengan latar pil lembut di tab aktif,
+/// dan tombol Catat bulat bergradasi hijau bertanda daun yang menonjol di
+/// tengah (KT-DS6: satu-satunya elemen bertimbul). Latar kanvas tembus
 /// pandang dengan blur dan garis rambut atas. Tinggi 64 + area aman.
 class DsNavBar extends StatelessWidget {
   /// Membuat navigasi bawah.
@@ -36,6 +37,9 @@ class DsNavBar extends StatelessWidget {
     required this.onCenterPressed,
     this.centerIcon = Icons.add,
     this.centerSlot,
+    this.onCenterLongPress,
+    this.centerHint,
+    this.centerWrapper,
     super.key,
   });
 
@@ -57,6 +61,15 @@ class DsNavBar extends StatelessWidget {
   /// Dipanggil saat tombol tengah diketuk.
   final VoidCallback onCenterPressed;
 
+  /// Dipanggil saat tombol tengah ditekan lama (mis. Catat lewat suara).
+  final VoidCallback? onCenterLongPress;
+
+  /// Petunjuk pembaca layar tombol tengah ("Tekan lama untuk suara").
+  final String? centerHint;
+
+  /// Pembungkus tombol tengah, mis. target sorot tur.
+  final Widget Function(Widget button)? centerWrapper;
+
   /// Posisi tombol tengah di antara tab; bawaan di tengah (`items.length ~/ 2`).
   final int? centerSlot;
 
@@ -74,7 +87,14 @@ class DsNavBar extends StatelessWidget {
         ]..insert(
           slot,
           Expanded(
-            child: _CenterAction(label: centerLabel, icon: centerIcon, onPressed: onCenterPressed),
+            child: _CenterAction(
+              label: centerLabel,
+              icon: centerIcon,
+              onPressed: onCenterPressed,
+              onLongPress: onCenterLongPress,
+              hint: centerHint,
+              wrapper: centerWrapper,
+            ),
           ),
         );
 
@@ -109,29 +129,41 @@ class _Tab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ds = context.ds;
-    final color = active ? ds.colors.actionPrimary : ds.colors.textSecondary;
+    final c = ds.colors;
+    final color = active ? c.actionPrimary : c.textSecondary;
     return Semantics(
       selected: active,
+      button: true,
       child: DsPressable(
         onPressed: onTap,
-        pressedScale: 1,
-        builder: (context, _) => Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(active ? (item.activeIcon ?? item.icon) : item.icon, size: 21, color: color),
-            const SizedBox(height: 2),
-            Text(item.label, style: ds.typography.pixelCaption.copyWith(color: color), maxLines: 1),
-            const SizedBox(height: 3),
-            AnimatedOpacity(
-              opacity: active ? 1 : 0,
-              duration: DsMotion.standard,
-              child: Container(
-                width: 6,
-                height: 6,
-                decoration: BoxDecoration(color: ds.colors.actionPrimary, shape: BoxShape.circle),
-              ),
+        pressedScale: 0.95,
+        builder: (context, _) => Center(
+          child: AnimatedContainer(
+            duration: DsMotion.reduced(context) ? Duration.zero : DsMotion.standard,
+            constraints: const BoxConstraints(minWidth: 56, minHeight: 44),
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: active ? c.incomeContainer.withValues(alpha: 0.8) : Colors.transparent,
+              borderRadius: DsRadius.lgAll,
             ),
-          ],
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(active ? (item.activeIcon ?? item.icon) : item.icon, size: 22, color: color),
+                const SizedBox(height: 2),
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    item.label,
+                    style: ds.typography.pixelCaption.copyWith(color: color, fontSize: 10),
+                    maxLines: 1,
+                    textScaler: MediaQuery.textScalerOf(context).clamp(maxScaleFactor: 1.3),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -139,50 +171,111 @@ class _Tab extends StatelessWidget {
 }
 
 class _CenterAction extends StatelessWidget {
-  const _CenterAction({required this.label, required this.icon, required this.onPressed});
+  const _CenterAction({
+    required this.label,
+    required this.icon,
+    required this.onPressed,
+    this.onLongPress,
+    this.hint,
+    this.wrapper,
+  });
 
   final String label;
   final IconData icon;
   final VoidCallback onPressed;
+  final VoidCallback? onLongPress;
+  final String? hint;
+  final Widget Function(Widget button)? wrapper;
 
   @override
   Widget build(BuildContext context) {
     final ds = context.ds;
     final c = ds.colors;
-    return DsPressable(
-      onPressed: onPressed,
-      pressedScale: DsMotion.pressScaleTile,
-      builder: (context, pressed) => OverflowBox(
-        maxHeight: 84,
-        alignment: Alignment.bottomCenter,
-        child: Padding(
-          padding: const EdgeInsets.only(bottom: 6),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              AnimatedContainer(
-                duration: DsMotion.standard,
-                width: 44,
-                height: 44,
-                decoration: BoxDecoration(
-                  color: pressed ? c.actionPrimaryPressed : c.actionPrimary,
-                  borderRadius: DsRadius.lgAll,
-                  boxShadow: [
-                    BoxShadow(
-                      color: c.actionPrimary.withValues(alpha: 0.25),
-                      offset: const Offset(0, 4),
-                      blurRadius: 12,
+    final button = Semantics(
+      button: true,
+      label: label,
+      hint: hint,
+      excludeSemantics: true,
+      onLongPress: onLongPress,
+      child: GestureDetector(
+        key: const ValueKey('nav-catat'),
+        behavior: HitTestBehavior.opaque,
+        onLongPress: onLongPress,
+        child: DsPressable(
+          onPressed: onPressed,
+          pressedScale: 0.9,
+          builder: (context, pressed) => OverflowBox(
+            maxHeight: 88,
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 6),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 52,
+                    height: 52,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: c.surfaceCard, width: 2),
+                      gradient: LinearGradient(
+                        begin: Alignment.bottomLeft,
+                        end: Alignment.topRight,
+                        colors: [
+                          c.actionPrimaryPressed,
+                          if (pressed) c.actionPrimaryPressed else c.actionPrimary,
+                          Color.lerp(c.actionPrimary, c.primaryFixed, 0.45)!,
+                        ],
+                      ),
+                      boxShadow: [
+                        BoxShadow(color: c.actionPrimary.withValues(alpha: 0.4), offset: const Offset(0, 6), blurRadius: 14),
+                      ],
                     ),
-                  ],
-                ),
-                child: Icon(icon, size: 24, color: c.onActionPrimary),
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        // Kilap clay di tepi atas.
+                        Positioned(
+                          top: 3,
+                          left: 9,
+                          right: 9,
+                          height: 14,
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(
+                              borderRadius: DsRadius.fullAll,
+                              gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [Colors.white.withValues(alpha: 0.55), Colors.white.withValues(alpha: 0)],
+                              ),
+                            ),
+                          ),
+                        ),
+                        Icon(icon, size: 28, color: c.onActionPrimary),
+                        Positioned(
+                          right: 9,
+                          bottom: 7,
+                          child: Icon(Icons.eco, size: 10, color: c.primaryFixed),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 3),
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      label,
+                      style: ds.typography.pixelCaption.copyWith(color: c.textSecondary, fontSize: 10),
+                      textScaler: MediaQuery.textScalerOf(context).clamp(maxScaleFactor: 1.3),
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(height: 4),
-              Text(label, style: ds.typography.pixelCaption.copyWith(color: c.textSecondary)),
-            ],
+            ),
           ),
         ),
       ),
     );
+    return wrapper == null ? button : wrapper!(button);
   }
 }

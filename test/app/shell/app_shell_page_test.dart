@@ -105,7 +105,7 @@ void main() {
 
       // Urutan design system: Beranda, Riwayat, [Catat], Rencana, Dompet
       // (ADR-034 §3.3); tanpa tombol mengambang.
-      final labels = tester.widget<AppNavBar>(find.byType(AppNavBar)).destinations.map((d) => d.label);
+      final labels = tester.widget<DsNavBar>(find.byType(DsNavBar)).items.map((d) => d.label);
       expect(
         labels,
         [
@@ -119,8 +119,8 @@ void main() {
       expect(find.byType(FloatingActionButton), findsNothing);
       // Tombol Catat di tengah, di antara Riwayat dan Rencana.
       final catat = tester.getCenter(find.byKey(const ValueKey('nav-catat'))).dx;
-      final history = find.descendant(of: find.byType(AppNavBar), matching: find.text(t.appShell.transactionsTabLabel));
-      final plan = find.descendant(of: find.byType(AppNavBar), matching: find.text(t.appShell.planTabLabel));
+      final history = find.descendant(of: find.byType(DsNavBar), matching: find.text(t.appShell.transactionsTabLabel));
+      final plan = find.descendant(of: find.byType(DsNavBar), matching: find.text(t.appShell.planTabLabel));
       expect(catat, greaterThan(tester.getCenter(history).dx));
       expect(catat, lessThan(tester.getCenter(plan).dx));
     });
@@ -139,8 +139,8 @@ void main() {
       await tester.pump(); // + ScopeWidget<HomeScope> (Fase 6)
 
       expect(find.byType(DsCollapsingTopBar), findsOneWidget);
-      final nav = tester.widget<AppNavBar>(find.byType(AppNavBar));
-      expect(nav.selectedIndex, 0);
+      final nav = tester.widget<DsNavBar>(find.byType(DsNavBar));
+      expect(nav.currentIndex, 0);
     });
 
     testWidgets('menekan tujuan Dompet berpindah ke tab Dompet', (tester) async {
@@ -156,12 +156,12 @@ void main() {
       await tester.pump(); // + ScopeWidget<BudgetScope> (T-4.5)
       await tester.pump(); // + ScopeWidget<HomeScope> (Fase 6)
 
-      await tester.tap(find.descendant(of: find.byType(AppNavBar), matching: find.text(t.appShell.walletsTabLabel)));
+      await tester.tap(find.descendant(of: find.byType(DsNavBar), matching: find.text(t.appShell.walletsTabLabel)));
       await tester.pumpAndSettle();
 
       expect(find.widgetWithText(AppBar, t.appShell.walletsTabLabel), findsOneWidget);
-      final nav = tester.widget<AppNavBar>(find.byType(AppNavBar));
-      expect(nav.selectedIndex, 3);
+      final nav = tester.widget<DsNavBar>(find.byType(DsNavBar));
+      expect(nav.currentIndex, 3);
     });
 
     testWidgets('Kembali sistem di tab selain Beranda pindah ke Beranda, bukan menutup aplikasi (B-33)', (tester) async {
@@ -170,7 +170,7 @@ void main() {
         await tester.pump();
       }
       PopScope<Object?> shellPopScope() => tester.widget<PopScope<Object?>>(
-        find.ancestor(of: find.byType(AppNavBar), matching: find.byType(PopScope<Object?>)).first,
+        find.ancestor(of: find.byType(DsNavBar), matching: find.byType(PopScope<Object?>)).first,
       );
 
       for (final label in [
@@ -178,14 +178,14 @@ void main() {
         t.appShell.planTabLabel,
         t.appShell.walletsTabLabel,
       ]) {
-        await tester.tap(find.descendant(of: find.byType(AppNavBar), matching: find.text(label)));
+        await tester.tap(find.descendant(of: find.byType(DsNavBar), matching: find.text(label)));
         await tester.pumpAndSettle();
         expect(shellPopScope().canPop, isFalse, reason: label);
 
         await tester.binding.handlePopRoute();
         await tester.pumpAndSettle();
 
-        expect(tester.widget<AppNavBar>(find.byType(AppNavBar)).selectedIndex, 0, reason: label);
+        expect(tester.widget<DsNavBar>(find.byType(DsNavBar)).currentIndex, 0, reason: label);
         expect(find.byType(DsCollapsingTopBar), findsOneWidget);
       }
       // Di Beranda, Kembali diteruskan ke sistem (aplikasi ditutup).
@@ -205,7 +205,7 @@ void main() {
       await tester.pump(); // + ScopeWidget<BudgetScope> (T-4.5)
       await tester.pump(); // + ScopeWidget<HomeScope> (Fase 6)
 
-      await tester.tap(find.descendant(of: find.byType(AppNavBar), matching: find.text(t.appShell.transactionsTabLabel)));
+      await tester.tap(find.descendant(of: find.byType(DsNavBar), matching: find.text(t.appShell.transactionsTabLabel)));
       await tester.pumpAndSettle();
 
       expect(find.widgetWithText(AppBar, t.appShell.transactionsTabLabel), findsOneWidget);
@@ -221,7 +221,7 @@ void main() {
       for (var i = 0; i < 5; i++) {
         await tester.pump();
       }
-      await tester.tap(find.descendant(of: find.byType(AppNavBar), matching: find.text(t.appShell.transactionsTabLabel)));
+      await tester.tap(find.descendant(of: find.byType(DsNavBar), matching: find.text(t.appShell.transactionsTabLabel)));
       await tester.pumpAndSettle();
       final inHistory = find.descendant(of: find.byType(TransactionListPage), matching: find.text('Kopi sore'));
       expect(inHistory, findsNothing);
@@ -262,8 +262,8 @@ void main() {
 
       // Tab yang aktif di baliknya tetap Beranda (tab awal), bukan CATAT --
       // CATAT tidak pernah jadi tab "terpilih" yang persisten.
-      final nav = tester.widget<AppNavBar>(find.byType(AppNavBar));
-      expect(nav.selectedIndex, 0);
+      final nav = tester.widget<DsNavBar>(find.byType(DsNavBar));
+      expect(nav.currentIndex, 0);
     });
 
     testWidgets('memilih Masuk di pengalih CATAT membuka formulir pemasukan', (tester) async {
@@ -379,7 +379,7 @@ void main() {
       for (var i = 0; i < 5; i++) {
         await tester.pump();
       }
-      await tester.tap(find.descendant(of: find.byType(AppNavBar), matching: find.text(t.appShell.planTabLabel)));
+      await tester.tap(find.descendant(of: find.byType(DsNavBar), matching: find.text(t.appShell.planTabLabel)));
       await tester.pumpAndSettle();
 
       expect(find.widgetWithText(AppBar, t.appShell.planTabLabel), findsOneWidget);
@@ -403,7 +403,7 @@ void main() {
       await tester.pump(); // + ScopeWidget<BudgetScope> (T-4.5)
       await tester.pump(); // + ScopeWidget<HomeScope> (Fase 6)
 
-      await tester.tap(find.descendant(of: find.byType(AppNavBar), matching: find.text(t.appShell.planTabLabel)));
+      await tester.tap(find.descendant(of: find.byType(DsNavBar), matching: find.text(t.appShell.planTabLabel)));
       await tester.pumpAndSettle();
 
       await tester.tap(find.byKey(const ValueKey('nav-catat')));
@@ -454,7 +454,7 @@ void main() {
 
         // Transaksi yang baru dicatat langsung tampil di tab Transaksi tanpa
         // memulai ulang aplikasi.
-        await tester.tap(find.descendant(of: find.byType(AppNavBar), matching: find.text(t.appShell.transactionsTabLabel)));
+        await tester.tap(find.descendant(of: find.byType(DsNavBar), matching: find.text(t.appShell.transactionsTabLabel)));
         await tester.pumpAndSettle();
         expect(find.text('+Rp75.000'), findsWidgets);
       },
@@ -551,8 +551,8 @@ void main() {
 
       expect(find.byType(WalletFormSheet), findsOneWidget);
       // Tetap di Beranda -- tur Beranda menyusul sesudah dompet dibuat.
-      final nav = tester.widget<AppNavBar>(find.byType(AppNavBar));
-      expect(nav.selectedIndex, 0);
+      final nav = tester.widget<DsNavBar>(find.byType(DsNavBar));
+      expect(nav.currentIndex, 0);
     });
   });
 
@@ -686,11 +686,11 @@ void main() {
 
         expect(tester.takeException(), isNull);
         final labels = [
-          ...tester.widget<AppNavBar>(find.byType(AppNavBar)).destinations.map((d) => d.label),
+          ...tester.widget<DsNavBar>(find.byType(DsNavBar)).items.map((d) => d.label),
           t.appShell.recordAction,
         ];
         for (final label in labels) {
-          final texts = find.descendant(of: find.byType(AppNavBar), matching: find.text(label));
+          final texts = find.descendant(of: find.byType(DsNavBar), matching: find.text(label));
           expect(texts, findsWidgets);
           for (final element in texts.evaluate()) {
             final paragraph = element.renderObject! as RenderParagraph;

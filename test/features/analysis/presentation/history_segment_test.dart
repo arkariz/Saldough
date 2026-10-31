@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
 import 'package:navigation/navigation.dart';
 import 'package:saldough/app/shell/app_shell_page.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
@@ -88,7 +89,7 @@ void main() {
     }
     await tester.tap(
       find.descendant(
-        of: find.byType(AppNavBar),
+        of: find.byType(DsNavBar),
         matching: find.text(t.appShell.transactionsTabLabel),
       ),
     );

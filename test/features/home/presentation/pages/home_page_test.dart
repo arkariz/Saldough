@@ -678,13 +678,13 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.descendant(of: find.byType(DsHeroBalanceCard), matching: find.text('5.250.000')), findsOneWidget);
 
-    await tester.tap(find.byKey(const ValueKey('home-hide-amounts')));
+    await tester.tap(find.byTooltip(t.home.hideAmounts));
     await tester.pumpAndSettle();
     expect(AmountVisibility.hidden, isTrue);
     expect(find.descendant(of: find.byType(DsHeroBalanceCard), matching: find.text('••••••••')), findsOneWidget);
     expect(find.text('+Rp5.000.000'), findsNothing);
 
-    await tester.tap(find.byKey(const ValueKey('home-hide-amounts')));
+    await tester.tap(find.byTooltip(t.home.showAmounts));
     await tester.pumpAndSettle();
     expect(find.descendant(of: find.byType(DsHeroBalanceCard), matching: find.text('5.250.000')), findsOneWidget);
   });

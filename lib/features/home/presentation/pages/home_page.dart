@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:navigation/navigation.dart';
-import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
@@ -173,14 +172,6 @@ class _HomePageState extends State<HomePage> {
       actions: [
         // Menu tur (KO-4, ADR-021 §3.5).
         const TutorialInfoButton(tour: TourId.home),
-        // Sembunyikan nominal (ADR-034 §4): berlaku di semua nominal
-        // aplikasi, tersimpan di setelan.
-        DsIconButton(
-          key: const ValueKey('home-hide-amounts'),
-          icon: AmountVisibility.hidden ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-          label: AmountVisibility.hidden ? t.home.showAmounts : t.home.hideAmounts,
-          onPressed: AmountVisibility.toggle,
-        ),
         // Titik masuk layar Akun (ADR-023/024) -- identitas opsional, bukan
         // navigasi bawah karena bukan aktivitas harian.
         AccountAvatarButton(onPressed: () => context.pushRoute(AccountRouteKeys.page, const EmptyInput())),

@@ -143,35 +143,42 @@ class _QuickAdd extends StatelessWidget {
   Widget build(BuildContext context) {
     final ds = context.ds;
     final c = ds.colors;
-    return Wrap(
-      crossAxisAlignment: WrapCrossAlignment.center,
-      spacing: 6,
-      runSpacing: 4,
+    // Satu baris horizontal: label, lalu empat chip sama lebar.
+    return Row(
       children: [
         Text('${t.record.quickAddLabel}:', style: ds.typography.labelSm.copyWith(color: c.textMuted)),
-        for (final units in RecordAmountField.quickUnits)
-          DsPressable(
-            onPressed: () {
-              if (controller.addSen(units * 100)) onChanged?.call();
-            },
-            pressedScale: 0.95,
-            semanticLabel: t.record.quickAddSemantics(amount: AppMoneyFormatter.formatRevealed(units * 100)),
-            builder: (context, _) => Container(
-              key: ValueKey('record-quick-$units'),
-              constraints: const BoxConstraints(minHeight: 30, minWidth: 44),
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: c.surfaceSunken,
-                borderRadius: DsRadius.mdAll,
-                border: Border.all(color: c.outlineSubtle),
-              ),
-              child: Text(
-                _short(units),
-                style: ds.typography.labelMd.copyWith(color: c.textPrimary, fontSize: 12),
+        const SizedBox(width: 8),
+        for (final (i, units) in RecordAmountField.quickUnits.indexed) ...[
+          if (i > 0) const SizedBox(width: 6),
+          Expanded(
+            child: DsPressable(
+              onPressed: () {
+                if (controller.addSen(units * 100)) onChanged?.call();
+              },
+              pressedScale: 0.93,
+              semanticLabel: t.record.quickAddSemantics(amount: AppMoneyFormatter.formatRevealed(units * 100)),
+              builder: (context, _) => Container(
+                key: ValueKey('record-quick-$units'),
+                constraints: const BoxConstraints(minHeight: 30),
+                padding: const EdgeInsets.symmetric(horizontal: 4),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: c.surfaceSunken,
+                  borderRadius: DsRadius.mdAll,
+                  border: Border.all(color: c.outlineSubtle),
+                ),
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    _short(units),
+                    maxLines: 1,
+                    style: ds.typography.labelMd.copyWith(color: c.textPrimary, fontSize: 12),
+                  ),
+                ),
               ),
             ),
           ),
+        ],
       ],
     );
   }

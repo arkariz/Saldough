@@ -99,8 +99,22 @@ class _Key extends StatefulWidget {
   State<_Key> createState() => _KeyState();
 }
 
-class _KeyState extends State<_Key> {
+class _KeyState extends State<_Key> with SingleTickerProviderStateMixin {
   bool _pressed = false;
+
+  /// Membal sekali tiap ketukan, selesai walau jari diangkat cepat.
+  late final AnimationController _bounce = AnimationController(vsync: this, duration: const Duration(milliseconds: 340));
+  static final Animatable<double> _bounceScale = TweenSequence<double>([
+    TweenSequenceItem(tween: Tween<double>(begin: 1, end: 0.88).chain(CurveTween(curve: Curves.easeOut)), weight: 22),
+    TweenSequenceItem(tween: Tween<double>(begin: 0.88, end: 1.08).chain(CurveTween(curve: Curves.easeOut)), weight: 38),
+    TweenSequenceItem(tween: Tween<double>(begin: 1.08, end: 1).chain(CurveTween(curve: Curves.easeInOut)), weight: 40),
+  ]);
+
+  @override
+  void dispose() {
+    _bounce.dispose();
+    super.dispose();
+  }
 
   void _setPressed(bool value) {
     if (_pressed != value) setState(() => _pressed = value);
@@ -113,6 +127,7 @@ class _KeyState extends State<_Key> {
     final key = widget.data;
     void tap() {
       unawaited(HapticFeedback.selectionClick());
+      if (!DsMotion.reduced(context)) _bounce.forward(from: 0);
       widget.onKey(key.value);
     }
 
@@ -140,10 +155,8 @@ class _KeyState extends State<_Key> {
               },
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: gap),
-          child: AnimatedScale(
-            scale: _pressed ? 0.91 : 1,
-            duration: reduced ? Duration.zero : const Duration(milliseconds: 180),
-            curve: Curves.easeOutBack,
+          child: ScaleTransition(
+            scale: _bounce.drive(_bounceScale),
             child: AnimatedContainer(
               duration: reduced ? Duration.zero : DsMotion.standard,
               height: widget.height,

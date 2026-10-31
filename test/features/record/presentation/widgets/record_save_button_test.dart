@@ -82,6 +82,26 @@ void main() {
       expect(ActiveCurrency.value.fractionDigits, 0);
     });
 
+    testWidgets('chip cepat satu baris horizontal sama lebar, tidak turun ke baris kedua', (tester) async {
+      tester.view
+        ..physicalSize = const Size(320, 700)
+        ..devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      final controller = RecordAmountController();
+      addTearDown(controller.dispose);
+      await tester.pumpWidget(
+        _host(RecordAmountField(controller: controller, kind: TransactionKind.expense), reduced: true),
+      );
+      final tops = [
+        for (final units in RecordAmountField.quickUnits) tester.getTopLeft(find.byKey(ValueKey('record-quick-$units'))).dy,
+      ];
+      expect(tops.toSet(), hasLength(1), reason: 'semua chip sebaris');
+      final widths = [
+        for (final units in RecordAmountField.quickUnits) tester.getSize(find.byKey(ValueKey('record-quick-$units'))).width,
+      ];
+      expect(widths.toSet(), hasLength(1), reason: 'sama lebar');
+    });
+
     testWidgets('chip membuang ungkapan kalkulator', (tester) async {
       final controller = RecordAmountController()..applyKey('1');
       addTearDown(controller.dispose);
@@ -115,6 +135,34 @@ void main() {
       await tester.longPress(find.byKey(const ValueKey('keypad-back')));
       expect(keys, contains('1'));
       expect(cleared, 1);
+    });
+
+    testWidgets('keypad membal tiap ketukan walau jari diangkat cepat, dan diam saat gerak dikurangi', (tester) async {
+      double scaleOf() => tester
+          .widget<ScaleTransition>(
+            find.descendant(of: find.byKey(const ValueKey('keypad-1')), matching: find.byType(ScaleTransition)),
+          )
+          .scale
+          .value;
+      Widget pad({required bool reduced}) => _host(
+        DsKeypad(rows: const [[DsKeypadKey(value: '1')]], onKey: (_) {}, onClear: () {}),
+        reduced: reduced,
+      );
+      await tester.pumpWidget(pad(reduced: false));
+      expect(scaleOf(), 1);
+      await tester.tap(find.byKey(const ValueKey('keypad-1')));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 70));
+      expect(scaleOf(), lessThan(1), reason: 'menekan dulu');
+      await tester.pump(const Duration(milliseconds: 110));
+      expect(scaleOf(), greaterThan(1), reason: 'lalu membal melewati 1');
+      await tester.pump(const Duration(milliseconds: 400));
+      expect(scaleOf(), 1);
+
+      await tester.pumpWidget(pad(reduced: true));
+      await tester.tap(find.byKey(const ValueKey('keypad-1')));
+      await tester.pump(const Duration(milliseconds: 100));
+      expect(scaleOf(), 1);
     });
 
     testWidgets('pil segmen berpindah dan melaporkan nilai', (tester) async {

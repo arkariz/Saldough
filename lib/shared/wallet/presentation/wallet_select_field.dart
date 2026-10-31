@@ -81,8 +81,8 @@ class WalletSelectField extends StatelessWidget {
           ? selected.currentBalance
           : (previewIsCredit ? selected.currentBalance + amount : selected.currentBalance - amount);
       final text = hasPreview
-          ? t.record.balanceAfter(amount: AppMoneyFormatter.format(after))
-          : AppMoneyFormatter.format(after);
+          ? t.record.balanceAfter(amount: useDs ? AppMoneyFormatter.formatRevealed(after) : AppMoneyFormatter.format(after))
+          : (useDs ? AppMoneyFormatter.formatRevealed(after) : AppMoneyFormatter.format(after));
       final negative = hasPreview && after < 0;
       trailing = Text(
         text,
@@ -122,10 +122,8 @@ class WalletSelectField extends StatelessWidget {
 
   Widget _dsRow(BuildContext context, Wallet? selected, Widget? trailing) {
     Widget walletLeading(Wallet? wallet) {
-      final asset = ClayIcons.forIcon(wallet == null ? IconKey.wallets : walletIconKey(wallet.iconKey));
-      return asset == null
-          ? Icon(Icons.account_balance_wallet_outlined, size: 20, color: context.ds.colors.actionPrimary)
-          : SvgPicture.asset(asset, width: 24, height: 24);
+      final asset = wallet == null ? ClayIcons.walletNav : ClayIcons.forIcon(walletIconKey(wallet.iconKey)) ?? ClayIcons.walletNav;
+      return SvgPicture.asset(asset, width: 24, height: 24);
     }
 
     return DsSelectRow<String>(
@@ -143,7 +141,7 @@ class WalletSelectField extends StatelessWidget {
             leading: walletLeading(wallet),
             // Saldo di tiap baris, supaya dompet bisa dipilih tanpa menebak
             // isinya (UX-11).
-            detail: AppMoneyFormatter.format(wallet.currentBalance),
+            detail: AppMoneyFormatter.formatRevealed(wallet.currentBalance),
           ),
       ],
       onSelected: (id) {

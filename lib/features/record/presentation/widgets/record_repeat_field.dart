@@ -63,7 +63,7 @@ class RecordRepeatField extends StatelessWidget {
     return DsFieldRow(
       key: const ValueKey('record-repeat'),
       icon: Icons.autorenew,
-      leading: SvgPicture.asset(ClayIcons.calendar, width: 24, height: 24),
+      leading: SvgPicture.asset(ClayIcons.repeat, width: 24, height: 24),
       label: t.record.repeat.label,
       title: value == null ? t.record.repeat.off : repeatSummary(value, date),
       chevron: true,
@@ -130,57 +130,73 @@ class _RepeatSheetState extends State<_RepeatSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
+    final ds = context.ds;
     final value = _value;
-    Widget check({required bool on}) =>
-        on ? AppIcon(IconKey.check, color: colors.brand) : const SizedBox(width: AppSize.icon);
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(t.record.repeat.label, textAlign: TextAlign.center, style: Theme.of(context).textTheme.titleLarge),
-        const SizedBox(height: AppSpacing.space2),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SvgPicture.asset(ClayIcons.repeat, width: 28, height: 28),
+            const SizedBox(width: 8),
+            Flexible(
+              child: Semantics(
+                header: true,
+                child: Text(t.record.repeat.label, textAlign: TextAlign.center, style: ds.typography.headlineSm),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
         Flexible(
-          child: ListView(
-            shrinkWrap: true,
-            children: [
-              if (!widget.locked)
-                AppListRow(
-                  key: const ValueKey('repeat-option-off'),
-                  title: t.record.repeat.off,
-                  trailing: check(on: value == null),
-                  onTap: () => _set(null),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                DsFieldGroup(
+                  children: [
+                    if (!widget.locked)
+                      _OptionRow(
+                        key: const ValueKey('repeat-option-off'),
+                        title: t.record.repeat.off,
+                        selected: value == null,
+                        onTap: () => _set(null),
+                      ),
+                    for (final frequency in RecurringFrequency.values)
+                      _OptionRow(
+                        key: ValueKey('repeat-option-${frequency.name}'),
+                        title: _frequencyLabel(frequency),
+                        subtitle: value?.frequency == frequency ? repeatSummary(value!, widget.date) : null,
+                        selected: value?.frequency == frequency,
+                        onTap: () => _set((value ?? const RecurringPattern()).copyWith(frequency: frequency)),
+                      ),
+                  ],
                 ),
-              for (final frequency in RecurringFrequency.values)
-                AppListRow(
-                  key: ValueKey('repeat-option-${frequency.name}'),
-                  title: _frequencyLabel(frequency),
-                  subtitle: value?.frequency == frequency ? repeatSummary(value!, widget.date) : null,
-                  wrapSubtitle: true,
-                  trailing: check(on: value?.frequency == frequency),
-                  onTap: () => _set((value ?? const RecurringPattern()).copyWith(frequency: frequency)),
-                ),
-              if (value != null)
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4),
-                  child: !_advanced
-                      // Selebar baris: area sentuhnya sama dengan yang dibaca
-                      // aksesibilitas, bukan hanya teksnya (QA Fase 22, Q1).
-                      ? AppButton.text(
-                          key: const ValueKey('repeat-more'),
-                          small: true,
-                          expand: true,
-                          label: t.record.repeat.moreAction,
-                          onPressed: () => setState(() => _advanced = true),
-                        )
-                      : _Advanced(value: value, kind: widget.kind, date: widget.date, onChanged: _set),
-                ),
-            ],
+                if (value != null) ...[
+                  const SizedBox(height: 8),
+                  if (!_advanced)
+                    // Selebar baris: area sentuhnya sama dengan yang dibaca
+                    // aksesibilitas, bukan hanya teksnya (QA Fase 22, Q1).
+                    DsButton.ghost(
+                      key: const ValueKey('repeat-more'),
+                      label: t.record.repeat.moreAction,
+                      expand: true,
+                      onPressed: () => setState(() => _advanced = true),
+                    )
+                  else
+                    _Advanced(value: value, kind: widget.kind, date: widget.date, onChanged: _set),
+                ],
+                const SizedBox(height: 8),
+              ],
+            ),
           ),
         ),
         Padding(
-          padding: const EdgeInsets.all(AppSpacing.space4),
-          child: AppButton(
+          padding: const EdgeInsets.all(16),
+          child: DsButton(
             key: const ValueKey('repeat-done'),
             label: t.common.done,
             expand: true,
@@ -192,11 +208,73 @@ class _RepeatSheetState extends State<_RepeatSheet> {
   }
 }
 
+/// Satu pilihan frekuensi: penanda bulat, judul, dan kalimat jadwal bila
+/// terpilih.
+class _OptionRow extends StatelessWidget {
+  const _OptionRow({required this.title, required this.selected, required this.onTap, this.subtitle, super.key});
+
+  final String title;
+  final String? subtitle;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final ds = context.ds;
+    final c = ds.colors;
+    return Semantics(
+      button: true,
+      selected: selected,
+      child: DsPressable(
+        onPressed: onTap,
+        pressedScale: 0.995,
+        dimWhenDisabled: false,
+        builder: (context, _) => ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: 52),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            child: Row(
+              children: [
+                Icon(
+                  selected ? Icons.check_circle : Icons.radio_button_unchecked,
+                  size: 22,
+                  color: selected ? c.actionPrimary : c.outlineStrong,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        title,
+                        style: ds.typography.bodyMd.copyWith(
+                          fontSize: 14,
+                          fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+                          color: c.textPrimary,
+                        ),
+                      ),
+                      if (subtitle != null)
+                        Text(subtitle!, style: ds.typography.bodySm.copyWith(fontSize: 12, color: c.textSecondary)),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 String _intervalLabel(RecurringPattern value) => switch (value.frequency) {
   RecurringFrequency.weekly => t.record.repeat.everyNWeeks(n: value.interval),
   RecurringFrequency.monthly => t.record.repeat.everyNMonths(n: value.interval),
   RecurringFrequency.yearly => t.record.repeat.everyNYears(n: value.interval),
 };
+
+enum _EndKind { never, after, on }
 
 class _Advanced extends StatelessWidget {
   const _Advanced({required this.value, required this.kind, required this.date, required this.onChanged});
@@ -226,113 +304,132 @@ class _Advanced extends StatelessWidget {
       RecurringEndsAfter(:final count) => count,
       _ => null,
     };
+    final endKind = switch (value.end) {
+      RecurringNeverEnds() => _EndKind.never,
+      RecurringEndsAfter() => _EndKind.after,
+      RecurringEndsOn() => _EndKind.on,
+    };
+    void toggleAuto() {
+      // Otomasi R3 hanya untuk Plus (ADR-041 §3.8): bukan Plus, sakelar
+      // membuka paywall dan nilainya tidak berubah.
+      if (!ActivePlan.value.isPlus) {
+        unawaited(
+          context.pushRoute(PremiumRouteKeys.paywall, const PaywallInput(PaywallTrigger.recurringAutomation)),
+        );
+        return;
+      }
+      final on = !value.autoRecord;
+      AppAnalytics.log(RecurringEvents.autoRecordToggled(on: on, where: 'form'));
+      onChanged(value.copyWith(autoRecord: on));
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const SizedBox(height: AppSpacing.space2),
+        const _Section(),
         _Stepper(
           label: _intervalLabel(value),
           onMinus: value.interval > 1 ? () => onChanged(value.copyWith(interval: value.interval - 1)) : null,
           onPlus: value.interval < 52 ? () => onChanged(value.copyWith(interval: value.interval + 1)) : null,
         ),
-        const SizedBox(height: AppSpacing.space2),
-        AppSectionLabel(t.record.repeat.endLabel),
-        const SizedBox(height: AppSpacing.space1),
-        Wrap(
-          spacing: AppSpacing.space1,
-          runSpacing: AppSpacing.space1,
-          children: [
-            _OptionChip(
-              label: t.record.repeat.endNever,
-              selected: value.end is RecurringNeverEnds,
-              onTap: () => onChanged(value.copyWith(end: const RecurringNeverEnds())),
-            ),
-            _OptionChip(
-              label: t.record.repeat.endAfter,
-              selected: count != null,
-              onTap: () => onChanged(value.copyWith(end: const RecurringEndsAfter(_RepeatSheetState._defaultCount))),
-            ),
-            _OptionChip(
+        _Section(label: t.record.repeat.endLabel),
+        DsSegmentedPill<_EndKind>(
+          segments: [
+            DsSegment(value: _EndKind.never, label: t.record.repeat.endNever),
+            DsSegment(value: _EndKind.after, label: t.record.repeat.endAfter),
+            DsSegment(
+              value: _EndKind.on,
               label: switch (value.end) {
                 RecurringEndsOn(date: final until) => CycleMonthFormatter.formatDateShort(until),
                 _ => t.record.repeat.endOn,
               },
-              selected: value.end is RecurringEndsOn,
-              onTap: () => _pickEnd(context),
             ),
           ],
+          selected: endKind,
+          onChanged: (next) => switch (next) {
+            _EndKind.never => onChanged(value.copyWith(end: const RecurringNeverEnds())),
+            _EndKind.after => onChanged(value.copyWith(end: const RecurringEndsAfter(_RepeatSheetState._defaultCount))),
+            _EndKind.on => unawaited(_pickEnd(context)),
+          },
         ),
         if (count != null) ...[
-          const SizedBox(height: AppSpacing.space1),
+          const SizedBox(height: 8),
           _Stepper(
             label: t.record.repeat.endsAfterSummary(n: count),
             onMinus: count > 1 ? () => onChanged(value.copyWith(end: RecurringEndsAfter(count - 1))) : null,
             onPlus: count < 360 ? () => onChanged(value.copyWith(end: RecurringEndsAfter(count + 1))) : null,
           ),
         ],
-        const SizedBox(height: AppSpacing.space2),
-        AppSectionLabel(t.record.repeat.amountLabel),
-        const SizedBox(height: AppSpacing.space1),
-        Wrap(
-          spacing: AppSpacing.space1,
-          runSpacing: AppSpacing.space1,
-          children: [
-            for (final (mode, label) in [
-              (RecurringAmountMode.fixed, t.record.repeat.amountFixed),
-              (RecurringAmountMode.estimated, t.record.repeat.amountEstimated),
-            ])
-              _OptionChip(
-                label: label,
-                selected: value.amountMode == mode,
-                onTap: () => onChanged(
-                  value.copyWith(amountMode: mode, autoRecord: mode == RecurringAmountMode.fixed && value.autoRecord),
-                ),
-              ),
+        _Section(label: t.record.repeat.amountLabel),
+        DsSegmentedPill<RecurringAmountMode>(
+          segments: [
+            DsSegment(value: RecurringAmountMode.fixed, label: t.record.repeat.amountFixed),
+            DsSegment(value: RecurringAmountMode.estimated, label: t.record.repeat.amountEstimated),
           ],
+          selected: value.amountMode,
+          onChanged: (mode) => onChanged(
+            value.copyWith(amountMode: mode, autoRecord: mode == RecurringAmountMode.fixed && value.autoRecord),
+          ),
         ),
         // Catat otomatis hanya untuk nominal tetap (ADR-037 §3.2).
-        if (value.amountMode == RecurringAmountMode.fixed)
-          ValueListenableBuilder<PlanState>(
-            valueListenable: ActivePlan.notifier,
-            builder: (context, plan, _) => AppSwitchRow(
-              key: const ValueKey('repeat-auto-record'),
-              // Otomasi R3 hanya untuk Plus (ADR-041 §3.8): bukan Plus, sakelar
-              // membuka paywall dan nilainya tidak berubah.
-              title: t.record.repeat.autoRecordLabel,
-              badge: const PlusBadge(),
-              subtitle: t.record.repeat.autoRecordHint,
-              value: value.autoRecord,
-              onChanged: (on) {
-                if (!plan.isPlus) {
-                  unawaited(context.pushRoute(PremiumRouteKeys.paywall, const PaywallInput(PaywallTrigger.recurringAutomation)));
-                  return;
-                }
-                AppAnalytics.log(RecurringEvents.autoRecordToggled(on: on, where: 'form'));
-                onChanged(value.copyWith(autoRecord: on));
-              },
-            ),
-          ),
-        if (kind != TransactionKind.income) ...[
-          const SizedBox(height: AppSpacing.space2),
-          AppSectionLabel(t.record.repeat.paymentLabel),
-          const SizedBox(height: AppSpacing.space1),
-          Wrap(
-            spacing: AppSpacing.space1,
-            runSpacing: AppSpacing.space1,
+        if (value.amountMode == RecurringAmountMode.fixed) ...[
+          const SizedBox(height: 8),
+          DsFieldGroup(
             children: [
-              for (final (mode, label) in [
-                (RecurringPaymentMode.manual, t.record.repeat.paymentManual),
-                (RecurringPaymentMode.autoDebit, t.record.repeat.paymentAutoDebit),
-              ])
-                _OptionChip(
-                  label: label,
-                  selected: value.paymentMode == mode,
-                  onTap: () => onChanged(value.copyWith(paymentMode: mode)),
+              DsFieldRow(
+                key: const ValueKey('repeat-auto-record'),
+                icon: Icons.bolt,
+                leading: SvgPicture.asset(ClayIcons.alarm, width: 24, height: 24),
+                label: t.record.repeat.autoRecordLabel,
+                title: t.record.repeat.autoRecordHint,
+                onTap: toggleAuto,
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const PlusBadge(),
+                    IgnorePointer(
+                      child: Switch(value: value.autoRecord, onChanged: (_) {}),
+                    ),
+                  ],
                 ),
+              ),
             ],
           ),
         ],
+        if (kind != TransactionKind.income) ...[
+          _Section(label: t.record.repeat.paymentLabel),
+          DsSegmentedPill<RecurringPaymentMode>(
+            segments: [
+              DsSegment(value: RecurringPaymentMode.manual, label: t.record.repeat.paymentManual),
+              DsSegment(value: RecurringPaymentMode.autoDebit, label: t.record.repeat.paymentAutoDebit),
+            ],
+            selected: value.paymentMode ?? RecurringPaymentMode.manual,
+            onChanged: (mode) => onChanged(value.copyWith(paymentMode: mode)),
+          ),
+        ],
       ],
+    );
+  }
+}
+
+/// Judul bagian lanjutan (kapital kecil) dengan jarak atas; tanpa [label]
+/// hanya jarak.
+class _Section extends StatelessWidget {
+  const _Section({this.label});
+
+  final String? label;
+
+  @override
+  Widget build(BuildContext context) {
+    final ds = context.ds;
+    return Padding(
+      padding: const EdgeInsets.only(top: 16, bottom: 8),
+      child: label == null
+          ? const SizedBox.shrink()
+          : Text(
+              label!,
+              style: ds.typography.pixelCaption.copyWith(color: ds.colors.textMuted, fontSize: 10),
+            ),
     );
   }
 }
@@ -346,37 +443,45 @@ class _Stepper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget button(String text, String semantics, VoidCallback? onTap) => Semantics(
+    final ds = context.ds;
+    final c = ds.colors;
+    Widget button(IconData icon, String semantics, VoidCallback? onTap) => Semantics(
       label: semantics,
+      button: true,
       enabled: onTap != null,
       excludeSemantics: true,
-      child: Opacity(
-        opacity: onTap == null ? 0.4 : 1,
-        child: AppChip(label: text, onTap: onTap ?? () {}),
+      child: DsPressable(
+        onPressed: onTap,
+        pressedScale: 0.9,
+        builder: (context, _) => Container(
+          width: 40,
+          height: 40,
+          decoration: BoxDecoration(
+            color: c.surfaceSunken,
+            shape: BoxShape.circle,
+            border: Border.all(color: c.outlineSubtle),
+          ),
+          child: Icon(icon, size: 20, color: c.actionPrimary),
+        ),
       ),
     );
-    return Row(
-      children: [
-        button('−', t.record.repeat.lessAction, onMinus),
-        Expanded(
-          child: Text(label, textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyMedium),
-        ),
-        button('+', t.record.repeat.moreCountAction, onPlus),
-      ],
+    return DsCard(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+      child: Row(
+        children: [
+          button(Icons.remove, t.record.repeat.lessAction, onMinus),
+          Expanded(
+            child: Text(
+              label,
+              textAlign: TextAlign.center,
+              style: ds.typography.bodyMd.copyWith(fontWeight: FontWeight.w600),
+            ),
+          ),
+          button(Icons.add, t.record.repeat.moreCountAction, onPlus),
+        ],
+      ),
     );
   }
-}
-
-/// Pilihan frekuensi/akhir Ulangi sebagai chip (design system Chip).
-class _OptionChip extends StatelessWidget {
-  const _OptionChip({required this.label, required this.selected, required this.onTap});
-
-  final String label;
-  final bool selected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) => AppChip(label: label, selected: selected, onTap: onTap);
 }
 
 /// Judul formulir CATAT: Ubah rutin ([scheduleOnly]) dan Jadikan Rutin

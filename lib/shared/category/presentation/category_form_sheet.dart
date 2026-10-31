@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/shared/category/presentation/category_display.dart';
 
 /// Hasil formulir kategori: nama, dan ikon bila pengguna memilihnya
@@ -57,24 +57,39 @@ class _CategoryFormSheetState extends State<_CategoryFormSheet> {
     Navigator.of(context).pop((name: _name, icon: _picked));
   }
 
+  /// Tile ikon kategori: clay bila ada, ikon lama bila belum.
+  Widget _tile(IconKey icon, {required bool selected}) {
+    final asset = ClayIcons.forIcon(icon);
+    if (asset == null) return AppIconTile(icon, selected: selected);
+    final c = context.ds.colors;
+    return DsIconTile.asset(
+      asset: asset,
+      category: selected ? DsColorPair(c.actionPrimary, c.actionPrimary.withValues(alpha: 0.14)) : null,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
+    final ds = context.ds;
+    final c = ds.colors;
     final shown = _shown;
     return Padding(
       padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
       child: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(AppSpacing.space4, 0, AppSpacing.space4, AppSpacing.space4),
+        padding: const EdgeInsets.fromLTRB(DsSpacing.md, 0, DsSpacing.md, DsSpacing.md),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(widget.title, textAlign: TextAlign.center, style: textTheme.titleLarge),
-            const SizedBox(height: AppSpacing.space4),
+            Semantics(
+              header: true,
+              child: Text(widget.title, textAlign: TextAlign.center, style: ds.typography.headlineSm),
+            ),
+            const SizedBox(height: DsSpacing.md),
             Row(
               children: [
-                AppIconTile(shown),
-                const SizedBox(width: AppSpacing.space3),
+                DsWiggle(trigger: shown.index, child: _tile(shown, selected: true)),
+                const SizedBox(width: 12),
                 Expanded(
                   child: TextField(
                     key: const ValueKey('category-form-name'),
@@ -88,12 +103,15 @@ class _CategoryFormSheetState extends State<_CategoryFormSheet> {
                 ),
               ],
             ),
-            const SizedBox(height: AppSpacing.space4),
-            AppSectionLabel(t.category.iconLabel),
-            const SizedBox(height: AppSpacing.space2),
+            const SizedBox(height: DsSpacing.md),
+            Text(
+              t.category.iconLabel,
+              style: ds.typography.pixelCaption.copyWith(color: c.textMuted, fontSize: 10),
+            ),
+            const SizedBox(height: DsSpacing.sm),
             Wrap(
-              spacing: AppSpacing.space1,
-              runSpacing: AppSpacing.space1,
+              spacing: 4,
+              runSpacing: 4,
               children: [
                 for (final (i, icon) in categoryIconChoices.indexed)
                   Semantics(
@@ -107,15 +125,15 @@ class _CategoryFormSheetState extends State<_CategoryFormSheet> {
                       behavior: HitTestBehavior.opaque,
                       onTap: () => setState(() => _picked = icon),
                       child: SizedBox.square(
-                        dimension: AppSize.touch,
-                        child: Center(child: AppIconTile(icon, selected: icon == shown)),
+                        dimension: 48,
+                        child: Center(child: _tile(icon, selected: icon == shown)),
                       ),
                     ),
                   ),
               ],
             ),
-            const SizedBox(height: AppSpacing.space6),
-            AppButton(
+            const SizedBox(height: DsSpacing.lg),
+            DsButton(
               key: const ValueKey('category-form-save'),
               label: t.common.save,
               expand: true,

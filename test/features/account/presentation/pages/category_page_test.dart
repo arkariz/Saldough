@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
@@ -74,7 +75,12 @@ void main() {
     await tester.enterText(find.byKey(const ValueKey('category-form-name')), 'Ngopi');
     await tester.pump();
     // Pratinjau tile mengikuti tebakan nama.
-    expect(find.byWidgetPredicate((w) => w is AppIconTile && w.icon == IconKey.categoryCoffee), findsWidgets);
+    expect(
+      find.byWidgetPredicate(
+        (w) => w is SvgPicture && w.bytesLoader is SvgAssetLoader && (w.bytesLoader as SvgAssetLoader).assetName == ClayIcons.coffee,
+      ),
+      findsWidgets,
+    );
     await tester.tap(find.byKey(const ValueKey('category-form-save')));
     await tester.pumpAndSettle();
     expect((await stored()).singleWhere((c) => c.name == 'Ngopi').iconKey, isNull);

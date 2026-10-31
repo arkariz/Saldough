@@ -140,7 +140,7 @@ class RecordCategoryField extends StatelessWidget {
   }
 }
 
-class _Option extends StatelessWidget {
+class _Option extends StatefulWidget {
   const _Option({
     required this.icon,
     required this.label,
@@ -159,26 +159,46 @@ class _Option extends StatelessWidget {
   final IconData? materialIcon;
 
   @override
+  State<_Option> createState() => _OptionState();
+}
+
+class _OptionState extends State<_Option> {
+  /// Naik tiap ketukan dan tiap berpindah ke terpilih: memutar goyangan.
+  int _wiggle = 0;
+
+  @override
+  void didUpdateWidget(_Option oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.selected && !oldWidget.selected) _wiggle++;
+  }
+
+  @override
   Widget build(BuildContext context) {
     final ds = context.ds;
     final c = ds.colors;
-    final asset = materialIcon == null ? ClayIcons.forIcon(icon) : null;
+    final selected = widget.selected;
+    final asset = widget.materialIcon == null ? ClayIcons.forIcon(widget.icon) : null;
+    // Warna terpilih mengikuti warna aksi preset (bukan hijau pemasukan).
+    final accent = DsColorPair(c.actionPrimary, c.actionPrimary.withValues(alpha: 0.14));
     final Widget tile;
-    if (materialIcon != null) {
-      tile = DsIconTile(icon: materialIcon!);
+    if (widget.materialIcon != null) {
+      tile = DsIconTile(icon: widget.materialIcon!);
     } else if (asset != null) {
-      tile = DsIconTile.asset(asset: asset, tone: selected ? DsIconTileTone.income : DsIconTileTone.neutral);
+      tile = DsIconTile.asset(asset: asset, category: selected ? accent : null);
     } else {
-      tile = AppIconTile(icon, selected: selected);
+      tile = AppIconTile(widget.icon, selected: selected);
     }
     return Semantics(
       button: true,
       selected: selected,
-      label: label,
+      label: widget.label,
       excludeSemantics: true,
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
-        onTap: onTap,
+        onTap: () {
+          setState(() => _wiggle++);
+          widget.onTap();
+        },
         child: Padding(
           padding: const EdgeInsets.all(2),
           child: AnimatedContainer(
@@ -191,10 +211,10 @@ class _Option extends StatelessWidget {
             ),
             child: Column(
               children: [
-                DsBounce(trigger: selected ? 1 : 0, child: tile),
+                DsWiggle(trigger: _wiggle, child: tile),
                 const SizedBox(height: 4),
                 _OptionLabel(
-                  label,
+                  widget.label,
                   style: ds.typography.labelSm.copyWith(
                     fontSize: 10,
                     letterSpacing: 0,

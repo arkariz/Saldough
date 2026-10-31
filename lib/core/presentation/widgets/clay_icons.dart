@@ -5,7 +5,7 @@ import 'package:saldough/core/presentation/widgets/app_icon.dart';
 ///
 /// KT-DS5: ikon clay menggantikan ikon piksel di seluruh aplikasi. Seluruh
 /// kategori, dompet, jenis transaksi, dan status Freelance sudah digambar
-/// (49 aset). [forIcon] mengembalikan aset clay bila ada; `null` (mis. ikon
+/// (52 aset). [forIcon] mengembalikan aset clay bila ada; `null` (mis. ikon
 /// tindakan atau `balanceSpread`) berarti pemanggil memakai ikon yang ada.
 abstract final class ClayIcons {
   ClayIcons._();
@@ -157,6 +157,15 @@ abstract final class ClayIcons {
   /// Dompet, tab navigasi bawah.
   static const String walletNav = 'assets/icons_clay/wallet_nav.svg';
 
+  /// Kalender bertanggal, kolom tanggal.
+  static const String dateCalendar = 'assets/icons_clay/calendar_date.svg';
+
+  /// Buku catatan berpensil, kolom catatan.
+  static const String note = 'assets/icons_clay/note_pencil.svg';
+
+  /// Panah berputar, Ulangi.
+  static const String repeat = 'assets/icons_clay/repeat_loop.svg';
+
   /// Seluruh aset, untuk uji dan pemeriksaan manifest.
   static const List<String> all = [
     mascot,
@@ -208,6 +217,9 @@ abstract final class ClayIcons {
     calendar,
     rocket,
     walletNav,
+    dateCalendar,
+    note,
+    repeat,
   ];
 
   /// Aset clay untuk [key], atau `null` bila belum digambar.

@@ -315,3 +315,58 @@ class _DsBounceState extends State<DsBounce> with SingleTickerProviderStateMixin
     );
   }
 }
+
+/// Goyang membal sekali tiap [trigger] berubah (acuan `wigglePop`, 0,42 dtk):
+/// skala 0,94 → 1,1 → 1,04 → 1 sambil miring -4° lalu 3°. Diam saat gerak
+/// dikurangi.
+class DsWiggle extends StatefulWidget {
+  /// Membuat goyangan.
+  const DsWiggle({required this.trigger, required this.child, super.key});
+
+  /// Naikkan untuk memutar goyangan.
+  final int trigger;
+
+  /// Yang digoyang.
+  final Widget child;
+
+  @override
+  State<DsWiggle> createState() => _DsWiggleState();
+}
+
+class _DsWiggleState extends State<DsWiggle> with SingleTickerProviderStateMixin {
+  late final AnimationController _controller = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 420),
+  );
+
+  @override
+  void didUpdateWidget(DsWiggle oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.trigger != oldWidget.trigger && !DsMotion.reduced(context)) {
+      _controller.forward(from: 0);
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, child) {
+        final u = _controller.value;
+        final scale = dsKeyframes(u, [(0, 0.94), (0.35, 1.1), (0.7, 1.04), (1, 1)]);
+        final angle = dsKeyframes(u, [(0, 0), (0.35, -4), (0.7, 3), (1, 0)]);
+        return Transform.rotate(
+          angle: angle * math.pi / 180,
+          child: Transform.scale(scale: _controller.isAnimating ? scale : 1, child: child),
+        );
+      },
+      child: widget.child,
+    );
+  }
+}

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
@@ -70,6 +71,7 @@ class RecordDateField extends StatelessWidget {
     return DsFieldRow(
       key: const ValueKey('record-date'),
       icon: Icons.event,
+      leading: SvgPicture.asset(ClayIcons.dateCalendar, width: 24, height: 24),
       label: t.record.dateFieldLabel,
       title: _label(),
       trailing: Icon(Icons.schedule, size: 18, color: context.ds.colors.textMuted),

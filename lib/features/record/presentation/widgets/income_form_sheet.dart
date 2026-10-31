@@ -283,15 +283,11 @@ class _FreelanceCallout extends StatelessWidget {
       child: GestureDetector(
         onTap: () => Navigator.of(context).pop(const OpenFreelance()),
         behavior: HitTestBehavior.opaque,
-        child: AppCard(
-          color: colors.surface2,
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.space2 + AppSpacing.space1,
-            vertical: AppSpacing.space2,
-          ),
+        child: DsCard(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           child: Row(
             children: [
-              const AppIconTile(IconKey.worklog, size: 32),
+              DsIconTile.asset(asset: ClayIcons.stylus, tone: DsIconTileTone.warning, size: DsIconTileSize.sm),
               const SizedBox(width: AppSpacing.space2),
               Expanded(
                 child: Text.rich(
@@ -311,7 +307,7 @@ class _FreelanceCallout extends StatelessWidget {
                   ),
                 ),
               ),
-              AppIcon(IconKey.chevronRight, color: colors.warning),
+              Icon(Icons.chevron_right, color: colors.warning),
             ],
           ),
         ),

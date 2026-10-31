@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
@@ -26,6 +27,7 @@ class RecordNoteField extends StatelessWidget {
     final c = ds.colors;
     return DsFieldRow(
       icon: Icons.edit_note,
+      leading: SvgPicture.asset(ClayIcons.note, width: 24, height: 24),
       label: t.record.noteSectionLabel,
       child: TextField(
         controller: controller,

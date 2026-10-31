@@ -62,6 +62,19 @@ void main() {
       expect(find.byType(DsIconTile), findsNWidgets(3));
     });
 
+    testWidgets('mengetuk kategori menggoyang ikonnya (membal dan miring), lalu kembali diam', (tester) async {
+      await tester.pumpWidget(pumpable());
+      Transform rotation() => tester.widget<Transform>(
+        find.descendant(of: find.byType(DsWiggle).first, matching: find.byType(Transform)).first,
+      );
+      await tester.tap(find.text('Makan'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 150));
+      expect(rotation().transform.storage[1], isNot(0), reason: 'miring saat bergoyang');
+      await tester.pump(const Duration(milliseconds: 500));
+      expect(rotation().transform.storage[1].abs(), lessThan(0.001));
+    });
+
     testWidgets('kategori yang sering dipakai tampil paling depan', (tester) async {
       await tester.pumpWidget(pumpable(frequentIds: const ['transport']));
 
@@ -75,7 +88,7 @@ void main() {
       expect(picked, ['food']);
 
       await tester.pumpWidget(pumpable(value: 'food', onChanged: picked.add));
-      expect(tester.widget<DsIconTile>(find.byType(DsIconTile).first).tone, DsIconTileTone.income, reason: 'terpilih: nada hijau');
+      expect(tester.widget<DsIconTile>(find.byType(DsIconTile).first).category, isNotNull, reason: 'terpilih: warna aksi preset');
       expect(tester.getSemantics(find.byKey(const ValueKey('category-food'))), isSemantics(isSelected: true));
       await tester.tap(find.text('Makan'));
       expect(picked.last, isNull);

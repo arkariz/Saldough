@@ -19,6 +19,7 @@ class DsStatusSlideData {
     this.busy = false,
     this.dismissLabel,
     this.onDismiss,
+    this.asset,
   });
 
   /// Pengenal tetap sumbernya (`notification`, `recurring`, `reminder`).
@@ -26,6 +27,10 @@ class DsStatusSlideData {
 
   /// Ikon tile.
   final IconData icon;
+
+  /// Ilustrasi SVG clay yang menggantikan [icon] di tile; `null` = pakai
+  /// [icon].
+  final String? asset;
 
   /// Judul satu baris.
   final String title;
@@ -59,6 +64,7 @@ class DsStatusSlideData {
   bool sameAppearance(DsStatusSlideData other) =>
       id == other.id &&
       icon == other.icon &&
+      asset == other.asset &&
       title == other.title &&
       subtitle == other.subtitle &&
       actionLabel == other.actionLabel &&

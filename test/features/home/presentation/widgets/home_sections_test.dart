@@ -94,7 +94,7 @@ void main() {
       expect(find.text(t.home.preview.billTitle).hitTestable(), findsOneWidget);
     });
 
-    testWidgets('slide status tampil lebih dulu, tinggi mengikuti slide aktif', (tester) async {
+    testWidgets('slide status tampil lebih dulu, semua slide selebar dan setinggi sama', (tester) async {
       final board = DsStatusBoard();
       addTearDown(board.dispose);
       board.report(
@@ -114,7 +114,9 @@ void main() {
       await tester.tap(find.bySemanticsLabel(t.home.statusCarouselDot(number: 2)));
       await tester.pumpAndSettle();
       expect(find.byType(HomeBudgetCard).hitTestable(), findsOneWidget);
-      expect(tester.getSize(find.byType(PageView)).height, greaterThan(statusHeight));
+      expect(tester.getSize(find.byType(PageView)).height, statusHeight, reason: 'tinggi sama untuk semua slide');
+      final page = tester.getSize(find.byType(HomeBudgetCard).hitTestable());
+      expect(page.width, tester.getSize(find.byType(PageView)).width, reason: 'selebar bingkai');
     });
 
     testWidgets('tanpa anggaran tetap ada slide tiruan', (tester) async {

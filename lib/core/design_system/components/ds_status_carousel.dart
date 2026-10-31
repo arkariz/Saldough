@@ -25,11 +25,10 @@ class DsStatusSlide extends StatelessWidget {
     final ds = context.ds;
     final c = ds.colors;
     final attention = data.attention;
-    final tile = DsIconTile(
-      icon: data.icon,
-      size: DsIconTileSize.sm,
-      tone: attention ? DsIconTileTone.warning : DsIconTileTone.neutral,
-    );
+    final tone = attention ? DsIconTileTone.warning : DsIconTileTone.neutral;
+    final tile = data.asset == null
+        ? DsIconTile(icon: data.icon, size: DsIconTileSize.sm, tone: tone)
+        : DsIconTile.asset(asset: data.asset!, size: DsIconTileSize.sm, tone: tone);
     return Container(
       constraints: const BoxConstraints(minHeight: 64),
       decoration: BoxDecoration(
@@ -144,7 +143,7 @@ class _SpinState extends State<_Spin> with SingleTickerProviderStateMixin {
 /// Carousel status: slide dari [board] (yang perlu dicek
 /// dulu) diikuti [extras] (mis. kartu anggaran). Satu slide tampil tanpa titik;
 /// dua atau lebih menjadi carousel dengan titik indikator. Tinggi mengikuti
-/// slide tertinggi (`DsCarousel`).
+/// slide tertinggi (`DsCarousel`); semua slide diregangkan sama.
 class DsStatusCarousel extends StatelessWidget {
   /// Membuat carousel status.
   const DsStatusCarousel({
@@ -190,8 +189,8 @@ class DsStatusCarousel extends StatelessWidget {
           previousLabel: previousLabel,
           nextLabel: nextLabel,
           dotLabel: dotLabel,
-          adaptiveHeight: true,
-          children: [for (final child in children) Align(alignment: Alignment.topCenter, child: child)],
+          // Semua slide selebar dan setinggi slide tertinggi (tanpa Align).
+          children: children,
         );
       },
     );

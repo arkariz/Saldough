@@ -57,6 +57,7 @@ class ReminderNudgeCard extends StatelessWidget {
           data: DsStatusSlideData(
             id: _statusId,
             icon: Icons.schedule,
+            asset: ClayIcons.alarm,
             title: needsPermission ? t.recurring.remindersTitle : texts.reminder.button,
             subtitle: needsPermission ? texts.status.permissionNeeded : texts.reminder.body,
             actionLabel: needsPermission ? texts.allowAccess : texts.turnOn,

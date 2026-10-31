@@ -318,9 +318,9 @@ void main() {
 
       // Beranda hanya memuat slide ringkas yang membuka segmen Rutin; baris
       // Netflix dan tombol Catat tinggal di segmen Rutin.
-      expect(find.byKey(const ValueKey('status-slide-recurring')), findsOneWidget);
-      expect(find.text('${t.recurring.pendingCardTitle} (1)'), findsOneWidget);
-      expect(find.text('Netflix'), findsOneWidget);
+      expect(find.byKey(const ValueKey('status-slide-recurring')).hitTestable(), findsOneWidget);
+      expect(find.text('${t.recurring.pendingCardTitle} (1)').hitTestable(), findsOneWidget);
+      expect(find.text('Netflix').hitTestable(), findsOneWidget);
       expect(
         find.descendant(of: find.byKey(const ValueKey('status-slide-recurring')), matching: find.text(t.recurring.recordAction)),
         findsNothing,

@@ -2,6 +2,7 @@ import 'package:di/di.dart';
 import 'package:flutter/material.dart';
 import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/widgets/clay_icons.dart';
 import 'package:saldough/features/app_update/domain/services/update_policy.dart';
 import 'package:saldough/features/app_update/presentation/bloc/app_update_bloc.dart';
 import 'package:saldough/features/app_update/presentation/bloc/app_update_state.dart';
@@ -82,6 +83,7 @@ class _AppUpdateBannerState extends State<AppUpdateBanner> with WidgetsBindingOb
         }) => DsStatusSlideData(
           id: _statusId,
           icon: icon,
+          asset: ClayIcons.rocket,
           title: title,
           subtitle: subtitle,
           busy: busy,

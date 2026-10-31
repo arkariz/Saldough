@@ -269,6 +269,7 @@ class RecurringPendingCard extends StatelessWidget {
                       data: DsStatusSlideData(
                         id: _statusId,
                         icon: Icons.event_note_outlined,
+                        asset: ClayIcons.calendar,
                         title: '${t.recurring.pendingCardTitle} (${pending.length})',
                         subtitle: pending.length == 1
                             ? first

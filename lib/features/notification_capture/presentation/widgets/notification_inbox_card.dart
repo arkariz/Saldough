@@ -187,6 +187,7 @@ class _NotificationInboxCardState extends State<NotificationInboxCard> with Widg
         data: DsStatusSlideData(
           id: _statusId,
           icon: hasPending ? Icons.notifications_active_outlined : Icons.notifications_none,
+          asset: ClayIcons.bell,
           title: title,
           subtitle: sub,
           actionLabel: ctaLabel,

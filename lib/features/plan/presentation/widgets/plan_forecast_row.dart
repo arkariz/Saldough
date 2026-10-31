@@ -113,6 +113,7 @@ class PlanForecastRow extends StatelessWidget {
       fundingSlide = DsStatusSlideData(
         id: 'funding',
         icon: Icons.warning_amber_rounded,
+        asset: ClayIcons.warning,
         title: t.plan.fundingTitle,
         subtitle:
             '${t.plan.fundingBody(wallet: first.walletName, shortfall: AppMoneyFormatter.formatApprox(first.shortfall), name: name, date: CycleMonthFormatter.formatDayMonth(first.date))}$more',
@@ -128,6 +129,7 @@ class PlanForecastRow extends StatelessWidget {
       monthStartSlide = DsStatusSlideData(
         id: 'month_start',
         icon: Icons.event_available_outlined,
+        asset: ClayIcons.calendar,
         title: t.plan.reviewTitle(month: state.range.shortName),
         subtitle: t.plan.homeReviewBody(
           income: AppMoneyFormatter.format(plan.plannedIncome),

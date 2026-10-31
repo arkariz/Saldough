@@ -215,6 +215,16 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
 
   /// Pos terpilih kalau masih sah untuk dompet asal saat ini, selain itu
   /// `null` — pos anggaran dompet lain tidak pernah ikut tersimpan.
+  /// Pos anggaran terhubung yang valid, untuk bisikan Tanuki.
+  BudgetItemOption? get _whisperOption {
+    final id = _validBudgetItemId;
+    if (id == null) return null;
+    for (final option in _budgetChoices) {
+      if (option.itemId == id) return option;
+    }
+    return null;
+  }
+
   String? get _validBudgetItemId => _budgetChoices.any((o) => o.itemId == _budgetItemId) ? _budgetItemId : null;
 
 
@@ -327,6 +337,8 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
               ),
           ],
         ),
+        if (_whisperOption case final option?)
+          RecordWhisperCard(itemName: option.itemName, plannedSen: option.plannedAmount, amountSen: amount),
         if (!(_createsRule && _scheduleOnly))
           if (budgetItemOutsidePeriod(widget.budgetItems, _budgetItemId, _periodDate) case final dropped?)
           RecordBudgetItemOutOfPeriodNotice(option: dropped),

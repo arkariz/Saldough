@@ -7,6 +7,7 @@ import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/utils/formatters/money_expression.dart';
 import 'package:saldough/features/record/presentation/widgets/record_amount_controller.dart';
 import 'package:saldough/features/record/presentation/widgets/record_amount_field.dart';
+import 'package:saldough/features/record/presentation/widgets/record_draft_card.dart';
 import 'package:saldough/features/record/presentation/widgets/record_save_button.dart';
 
 Widget _host(Widget child, {bool reduced = false}) => MaterialApp(
@@ -93,11 +94,13 @@ void main() {
         _host(RecordAmountField(controller: controller, kind: TransactionKind.expense), reduced: true),
       );
       final tops = [
-        for (final units in RecordAmountField.quickUnits) tester.getTopLeft(find.byKey(ValueKey('record-quick-$units'))).dy,
+        for (final units in RecordAmountField.quickUnits)
+          tester.getTopLeft(find.byKey(ValueKey('record-quick-$units'))).dy,
       ];
       expect(tops.toSet(), hasLength(1), reason: 'semua chip sebaris');
       final widths = [
-        for (final units in RecordAmountField.quickUnits) tester.getSize(find.byKey(ValueKey('record-quick-$units'))).width,
+        for (final units in RecordAmountField.quickUnits)
+          tester.getSize(find.byKey(ValueKey('record-quick-$units'))).width,
       ];
       expect(widths.toSet(), hasLength(1), reason: 'sama lebar');
     });
@@ -111,6 +114,27 @@ void main() {
       expect(controller.expression, isNotEmpty);
       expect(controller.addSen(500000), isTrue);
       expect(controller.expression, isEmpty);
+    });
+  });
+
+  group('RecordWhisperCard', () {
+    testWidgets('tanpa nominal: menyebut pos dan rencananya; dengan nominal: persen dari rencana', (tester) async {
+      await tester.pumpWidget(
+        _host(const RecordWhisperCard(itemName: 'Makan', plannedSen: 100000000, amountSen: null), reduced: true),
+      );
+      expect(find.text(t.record.whisperTitle), findsOneWidget);
+      expect(find.text(t.record.whisperNoAmount(item: 'Makan', planned: 'Rp1.000.000')), findsOneWidget);
+      await tester.pumpWidget(
+        _host(const RecordWhisperCard(itemName: 'Makan', plannedSen: 100000000, amountSen: 25000000), reduced: true),
+      );
+      expect(find.text(t.record.whisperWithAmount(item: 'Makan', planned: 'Rp1.000.000', percent: 25)), findsOneWidget);
+    });
+
+    testWidgets('nominal pos nol tidak membagi nol', (tester) async {
+      await tester.pumpWidget(
+        _host(const RecordWhisperCard(itemName: 'X', plannedSen: 0, amountSen: 500), reduced: true),
+      );
+      expect(tester.takeException(), isNull);
     });
   });
 
@@ -145,7 +169,13 @@ void main() {
           .scale
           .value;
       Widget pad({required bool reduced}) => _host(
-        DsKeypad(rows: const [[DsKeypadKey(value: '1')]], onKey: (_) {}, onClear: () {}),
+        DsKeypad(
+          rows: const [
+            [DsKeypadKey(value: '1')],
+          ],
+          onKey: (_) {},
+          onClear: () {},
+        ),
         reduced: reduced,
       );
       await tester.pumpWidget(pad(reduced: false));

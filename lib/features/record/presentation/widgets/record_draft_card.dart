@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
-import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/core/presentation/widgets/clay_icons.dart';
+import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/shared/capture/capture.dart';
 
 /// Kartu di atas formulir CATAT yang terisi dari Catat Cerdas (ADR-027 §3.4):
@@ -15,33 +17,94 @@ class RecordDraftCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    if (draft.issues.isNotEmpty) {
-      return AppCard(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(t.record.draftCheckTitle, style: textTheme.titleSmall),
-            const SizedBox(height: AppSpacing.space1),
-            for (final issue in DraftIssue.values)
-              if (draft.issues.contains(issue))
-                Padding(
-                  padding: const EdgeInsets.only(bottom: AppSpacing.space1),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const AppIcon(IconKey.info, size: 18),
-                      const SizedBox(width: AppSpacing.space1),
-                      Expanded(child: Text(draftIssueMessage(issue), style: textTheme.bodyMedium)),
-                    ],
-                  ),
+    if (draft.issues.isEmpty) return const SizedBox.shrink();
+    final ds = context.ds;
+    final c = ds.colors;
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: c.warningContainer.withValues(alpha: 0.55),
+        borderRadius: DsRadius.lgAll,
+        border: Border.all(color: c.warning.withValues(alpha: 0.35)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(t.record.draftCheckTitle, style: ds.typography.titleMd.copyWith(fontSize: 14)),
+          const SizedBox(height: 6),
+          for (final issue in DraftIssue.values)
+            if (draft.issues.contains(issue))
+              Padding(
+                padding: const EdgeInsets.only(bottom: 4),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(Icons.info_outline, size: 18, color: c.warning),
+                    const SizedBox(width: 6),
+                    Expanded(child: Text(draftIssueMessage(issue), style: ds.typography.bodySm.copyWith(fontSize: 13))),
+                  ],
                 ),
+              ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Bisikan Tanuki di bawah isian pengeluaran bila transaksi terhubung ke satu
+/// pos anggaran: rencana pos itu dan, bila nominal sudah diisi, seberapa
+/// besar catatan ini darinya. Hanya angka yang nyata (rencana pos); sisa pos
+/// tidak dihitung di sini, dan anggaran tetap rencana, bukan pemesanan uang.
+class RecordWhisperCard extends StatelessWidget {
+  /// Membuat [RecordWhisperCard].
+  const RecordWhisperCard({required this.itemName, required this.plannedSen, required this.amountSen, super.key});
+
+  /// Nama pos terhubung.
+  final String itemName;
+
+  /// Rencana pos untuk periodenya, sen.
+  final int plannedSen;
+
+  /// Nominal yang sedang diisi, sen; `null` atau 0 = belum ada.
+  final int? amountSen;
+
+  @override
+  Widget build(BuildContext context) {
+    final ds = context.ds;
+    final c = ds.colors;
+    final planned = AppMoneyFormatter.formatRevealed(plannedSen);
+    final amount = amountSen ?? 0;
+    final body = amount > 0 && plannedSen > 0
+        ? t.record.whisperWithAmount(item: itemName, planned: planned, percent: (amount * 100 / plannedSen).round())
+        : t.record.whisperNoAmount(item: itemName, planned: planned);
+    return Semantics(
+      container: true,
+      child: DsCard(
+        key: const ValueKey('record-whisper'),
+        padding: const EdgeInsets.all(10),
+        child: Row(
+          children: [
+            // Diam (tanpa gerak berulang): lembar Catat harus tetap bisa
+            // "settle" di uji dan tidak boros baterai saat mengetik.
+            SvgPicture.asset(ClayIcons.mascot, width: 32, height: 32),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    t.record.whisperTitle,
+                    style: ds.typography.pixelCaption.copyWith(color: c.actionPrimary, fontSize: 10),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(body, style: ds.typography.bodySm.copyWith(fontSize: 12, color: c.textSecondary)),
+                ],
+              ),
+            ),
           ],
         ),
-      );
-    } else {
-      return const SizedBox.shrink();
-    }
+      ),
+    );
   }
 }
 

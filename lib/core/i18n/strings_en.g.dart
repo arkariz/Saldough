@@ -159,6 +159,9 @@ class _Translations$record$en extends Translations$record$id {
 	@override String get quickAddLabel => 'Quick';
 	@override String quickAddSemantics({required Object amount}) => 'Add ${amount}';
 	@override String get savedLabel => 'Saved';
+	@override String get whisperTitle => 'Tanuki whispers';
+	@override String whisperWithAmount({required Object item, required Object planned, required Object percent}) => 'Item ${item} is planned at ${planned}. This entry is ${percent}% of it.';
+	@override String whisperNoAmount({required Object item, required Object planned}) => 'Recorded to ${item}, planned at ${planned} this period.';
 	@override String get kindSwitcherLabel => 'Transaction kind';
 	@override String get kindExpense => 'Expense';
 	@override String get kindIncome => 'Income';
@@ -2527,6 +2530,9 @@ extension on TranslationsEn {
 			'record.quickAddLabel' => 'Quick',
 			'record.quickAddSemantics' => ({required Object amount}) => 'Add ${amount}',
 			'record.savedLabel' => 'Saved',
+			'record.whisperTitle' => 'Tanuki whispers',
+			'record.whisperWithAmount' => ({required Object item, required Object planned, required Object percent}) => 'Item ${item} is planned at ${planned}. This entry is ${percent}% of it.',
+			'record.whisperNoAmount' => ({required Object item, required Object planned}) => 'Recorded to ${item}, planned at ${planned} this period.',
 			'record.kindSwitcherLabel' => 'Transaction kind',
 			'record.kindExpense' => 'Expense',
 			'record.kindIncome' => 'Income',
@@ -2977,11 +2983,11 @@ extension on TranslationsEn {
 			'budget.templateEnabledLabel' => 'Offer this template',
 			'budget.templateEnabledHelp' => 'Inactive templates stay saved but cannot be used to create a budget.',
 			'budget.templateSaveAction' => 'Save template',
+			_ => null,
+		} ?? switch (path) {
 			'budget.templateDeleteAction' => 'Delete template',
 			'budget.templateDeleteConfirmTitle' => 'Delete template?',
 			'budget.templateDeleteConfirmMessage' => ({required Object name}) => 'Template "${name}" will be deleted. Budgets created from it are not deleted.',
-			_ => null,
-		} ?? switch (path) {
 			'budget.templateSavedMessage' => 'Template saved.',
 			'budget.templateUpdatedMessage' => 'Template changes saved.',
 			'budget.templateDeletedMessage' => 'Template deleted.',
@@ -3491,11 +3497,11 @@ extension on TranslationsEn {
 			'notificationCapture.disclosureBody' => 'Tanukonomy will be able to read notifications on your phone.\n\n• Only from apps you pick that match their filter.\n• OTP notifications are never stored.\n• Text that is hard to read may be sent to Gemini (Google).\n• Notification text stays on your phone for at most 7 days.',
 			'notificationCapture.disclosureAccept' => 'Continue',
 			'notificationCapture.reminderPermissionDenied' => 'Notification permission was denied. Turn it on in Android settings to get reminders.',
+			_ => null,
+		} ?? switch (path) {
 			'notificationCapture.sourcesTitle' => 'Apps',
 			'notificationCapture.sourcesEmpty' => 'Pick the bank or e-wallet apps whose notifications you want recorded.',
 			'notificationCapture.addSource' => 'Add app',
-			_ => null,
-		} ?? switch (path) {
 			'notificationCapture.sourceNoWallet' => 'No wallet chosen',
 			'notificationCapture.sourcePaused' => 'Paused',
 			'notificationCapture.pickAppTitle' => 'Pick an app',

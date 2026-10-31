@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/category/category_presentation.dart';
 
@@ -288,14 +287,10 @@ final class _PickCreate extends _Pick {
   const _PickCreate();
 }
 
-/// Sheet pemilih kategori (design system Sheet, varian pemilih): judul di
-/// tengah, daftar baris dengan centang pada yang terpilih.
+/// Sheet pemilih kategori: judul di tengah, daftar baris berikon clay dengan
+/// centang pada yang terpilih.
 class _CategorySheet extends StatelessWidget {
-  const _CategorySheet({
-    required this.options,
-    required this.selectedId,
-    required this.canCreate,
-  });
+  const _CategorySheet({required this.options, required this.selectedId, required this.canCreate});
 
   final List<Category> options;
   final String? selectedId;
@@ -303,47 +298,100 @@ class _CategorySheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    Widget check({required bool on}) =>
-        on ? AppIcon(IconKey.check, color: colors.brand) : const SizedBox(width: AppSize.icon);
+    final ds = context.ds;
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(
-          t.record.allCategories,
-          textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.titleLarge,
+        Semantics(
+          header: true,
+          child: Text(t.record.allCategories, textAlign: TextAlign.center, style: ds.typography.headlineSm),
         ),
-        const SizedBox(height: AppSpacing.space2),
+        const SizedBox(height: 12),
         Flexible(
-          child: ListView(
-            shrinkWrap: true,
-            children: [
-              AppListRow(
-                title: t.record.categoryNoneLabel,
-                leading: _leadingFor(IconKey.categoryOther),
-                trailing: check(on: selectedId == null),
-                onTap: () => Navigator.of(context).pop(const _PickCategory(null)),
-              ),
-              for (final category in options)
-                AppListRow(
-                  key: ValueKey('category-sheet-${category.id}'),
-                  title: category.name,
-                  leading: _leadingFor(categoryIcon(category)),
-                  trailing: check(on: category.id == selectedId),
-                  onTap: () => Navigator.of(context).pop(_PickCategory(category.id)),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+            child: DsFieldGroup(
+              children: [
+                _CategoryRow(
+                  title: t.record.categoryNoneLabel,
+                  tile: _leadingFor(IconKey.categoryOther),
+                  selected: selectedId == null,
+                  onTap: () => Navigator.of(context).pop(const _PickCategory(null)),
                 ),
-              if (canCreate)
-                AppListRow(
-                  title: t.record.categoryAddLabel,
-                  leading: const AppIconTile(IconKey.add, tint: TileTint.slate),
-                  onTap: () => Navigator.of(context).pop(const _PickCreate()),
-                ),
-            ],
+                for (final category in options)
+                  _CategoryRow(
+                    key: ValueKey('category-sheet-${category.id}'),
+                    title: category.name,
+                    tile: _leadingFor(categoryIcon(category)),
+                    selected: category.id == selectedId,
+                    onTap: () => Navigator.of(context).pop(_PickCategory(category.id)),
+                  ),
+                if (canCreate)
+                  _CategoryRow(
+                    title: t.record.categoryAddLabel,
+                    tile: const DsIconTile(icon: Icons.add),
+                    selected: false,
+                    onTap: () => Navigator.of(context).pop(const _PickCreate()),
+                  ),
+              ],
+            ),
           ),
         ),
       ],
+    );
+  }
+}
+
+class _CategoryRow extends StatelessWidget {
+  const _CategoryRow({
+    required this.title,
+    required this.tile,
+    required this.selected,
+    required this.onTap,
+    super.key,
+  });
+
+  final String title;
+  final Widget tile;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final ds = context.ds;
+    final c = ds.colors;
+    return Semantics(
+      button: true,
+      selected: selected,
+      child: DsPressable(
+        onPressed: onTap,
+        pressedScale: 0.995,
+        dimWhenDisabled: false,
+        builder: (context, _) => ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: 56),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            child: Row(
+              children: [
+                tile,
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    title,
+                    style: ds.typography.bodyMd.copyWith(
+                      fontSize: 14,
+                      fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+                      color: c.textPrimary,
+                    ),
+                  ),
+                ),
+                if (selected) Icon(Icons.check_circle, size: 22, color: c.actionPrimary),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

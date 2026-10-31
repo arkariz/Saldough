@@ -5988,6 +5988,11 @@ memilih mode (dan preset bila ≥ 2), dan design system lama dihapus.
       mendapat `useDs` supaya layar lain tidak ikut berubah. Sheet pilih
       kategori dan sheet Ulangi masih isi lama. Belum: kartu Tanuki Berbisik
       dan kartu draf (irisan 3).
+      **Catat v2, irisan 3 (31 Okt 2026):** kartu "Tanuki berbisik" di
+      pengeluaran bila terhubung ke pos anggaran (rencana pos dan persen
+      catatan ini darinya; sisa pos tidak dihitung karena belum ada di
+      port), kartu draf, dan sheet "Semua kategori" bergaya v2. Catat v2
+      selesai kecuali memadatkan Tanggal dan Catatan sebaris.
       **Ikon clay dilengkapi (31 Okt 2026, KT-DS5):** 33 ikon baru untuk
       dompet, jenis transaksi, kategori, dan status Freelance; semua
       `IconKey` benda kini punya clay (`ClayIcons.forIcon`). Digambar dari

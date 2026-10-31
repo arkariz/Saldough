@@ -280,6 +280,15 @@ class Translations$record$id {
 	/// id: 'Tersimpan'
 	String get savedLabel => 'Tersimpan';
 
+	/// id: 'Tanuki berbisik'
+	String get whisperTitle => 'Tanuki berbisik';
+
+	/// id: 'Pos $item direncanakan $planned. Catatan ini $percent% darinya.'
+	String whisperWithAmount({required Object item, required Object planned, required Object percent}) => 'Pos ${item} direncanakan ${planned}. Catatan ini ${percent}% darinya.';
+
+	/// id: 'Dicatat ke pos $item, rencana $planned periode ini.'
+	String whisperNoAmount({required Object item, required Object planned}) => 'Dicatat ke pos ${item}, rencana ${planned} periode ini.';
+
 	/// id: 'Jenis transaksi'
 	String get kindSwitcherLabel => 'Jenis transaksi';
 
@@ -5689,6 +5698,9 @@ extension on Translations {
 			'record.quickAddLabel' => 'Cepat',
 			'record.quickAddSemantics' => ({required Object amount}) => 'Tambah ${amount}',
 			'record.savedLabel' => 'Tersimpan',
+			'record.whisperTitle' => 'Tanuki berbisik',
+			'record.whisperWithAmount' => ({required Object item, required Object planned, required Object percent}) => 'Pos ${item} direncanakan ${planned}. Catatan ini ${percent}% darinya.',
+			'record.whisperNoAmount' => ({required Object item, required Object planned}) => 'Dicatat ke pos ${item}, rencana ${planned} periode ini.',
 			'record.kindSwitcherLabel' => 'Jenis transaksi',
 			'record.kindExpense' => 'Pengeluaran',
 			'record.kindIncome' => 'Pemasukan',
@@ -6139,11 +6151,11 @@ extension on Translations {
 			'budget.templateEnabledLabel' => 'Tawarkan template ini',
 			'budget.templateEnabledHelp' => 'Template nonaktif tetap tersimpan, tapi tidak bisa dipakai membuat anggaran.',
 			'budget.templateSaveAction' => 'Simpan template',
+			_ => null,
+		} ?? switch (path) {
 			'budget.templateDeleteAction' => 'Hapus template',
 			'budget.templateDeleteConfirmTitle' => 'Hapus template?',
 			'budget.templateDeleteConfirmMessage' => ({required Object name}) => 'Template "${name}" akan dihapus. Anggaran yang pernah dibuat darinya tidak ikut terhapus.',
-			_ => null,
-		} ?? switch (path) {
 			'budget.templateSavedMessage' => 'Template tersimpan.',
 			'budget.templateUpdatedMessage' => 'Perubahan template tersimpan.',
 			'budget.templateDeletedMessage' => 'Template dihapus.',
@@ -6653,11 +6665,11 @@ extension on Translations {
 			'notificationCapture.disclosureBody' => 'Tanukonomy akan bisa membaca notifikasi di ponselmu.\n\n• Hanya dari aplikasi yang kamu pilih dan cocok dengan filternya.\n• Notifikasi OTP tidak pernah disimpan.\n• Teks yang sulit dibaca bisa dikirim ke Gemini (Google).\n• Teks notifikasi disimpan di ponselmu paling lama 7 hari.',
 			'notificationCapture.disclosureAccept' => 'Lanjut',
 			'notificationCapture.reminderPermissionDenied' => 'Izin notifikasi ditolak. Nyalakan di setelan Android untuk menerima pengingat.',
+			_ => null,
+		} ?? switch (path) {
 			'notificationCapture.sourcesTitle' => 'Aplikasi',
 			'notificationCapture.sourcesEmpty' => 'Pilih aplikasi bank atau e-wallet yang notifikasinya mau dicatat.',
 			'notificationCapture.addSource' => 'Tambah aplikasi',
-			_ => null,
-		} ?? switch (path) {
 			'notificationCapture.sourceNoWallet' => 'Dompet belum dipilih',
 			'notificationCapture.sourcePaused' => 'Dijeda',
 			'notificationCapture.pickAppTitle' => 'Pilih aplikasi',

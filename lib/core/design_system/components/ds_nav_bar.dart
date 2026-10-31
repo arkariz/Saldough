@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:saldough/core/design_system/components/ds_pressable.dart';
 import 'package:saldough/core/design_system/ds_theme.dart';
 import 'package:saldough/core/design_system/tokens/ds_motion.dart';
@@ -11,13 +12,17 @@ import 'package:saldough/core/design_system/tokens/ds_radius.dart';
 @immutable
 class DsNavItem {
   /// Membuat tab.
-  const DsNavItem({required this.icon, required this.label, this.activeIcon});
+  const DsNavItem({required this.icon, required this.label, this.activeIcon, this.asset});
 
   /// Ikon.
   final IconData icon;
 
   /// Ikon saat aktif; bawaan [icon].
   final IconData? activeIcon;
+
+  /// Ilustrasi SVG clay yang menggantikan [icon]: berwarna penuh saat aktif,
+  /// dipudarkan saat tidak.
+  final String? asset;
 
   /// Label.
   final String label;
@@ -98,25 +103,40 @@ class DsNavBar extends StatelessWidget {
           ),
         );
 
-    return ClipRect(
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
-        child: Container(
-          decoration: BoxDecoration(
-            color: c.surfaceCanvas.withValues(alpha: DsOpacity.chrome),
-            border: Border(top: BorderSide(color: c.outlineSubtle)),
+    // Zona 12px di atas bilah dipakai tombol tengah yang menonjol; latar
+    // dan garis atas dimulai di bawahnya, jadi tombol tidak terpotong.
+    return Stack(
+      children: [
+        Positioned.fill(
+          top: _bump,
+          child: ClipRect(
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: c.surfaceCanvas.withValues(alpha: DsOpacity.chrome),
+                  border: Border(top: BorderSide(color: c.outlineSubtle)),
+                ),
+              ),
+            ),
           ),
-          child: SafeArea(
-            top: false,
-            child: SizedBox(
-              height: 64,
+        ),
+        SafeArea(
+          top: false,
+          child: SizedBox(
+            height: 64 + _bump,
+            child: Padding(
+              padding: const EdgeInsets.only(top: _bump),
               child: Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: children),
             ),
           ),
         ),
-      ),
+      ],
     );
   }
+
+  /// Tinggi zona tonjolan tombol tengah di atas bilah.
+  static const double _bump = 12;
 }
 
 class _Tab extends StatelessWidget {
@@ -150,7 +170,7 @@ class _Tab extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(active ? (item.activeIcon ?? item.icon) : item.icon, size: 22, color: color),
+                _TabIcon(item: item, active: active, color: color),
                 const SizedBox(height: 2),
                 FittedBox(
                   fit: BoxFit.scaleDown,
@@ -165,6 +185,38 @@ class _Tab extends StatelessWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// Ikon tab: ilustrasi clay (pudar dan keabuan bila tidak aktif) atau ikon
+/// biasa bila tab tidak punya aset.
+class _TabIcon extends StatelessWidget {
+  const _TabIcon({required this.item, required this.active, required this.color});
+
+  final DsNavItem item;
+  final bool active;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    final asset = item.asset;
+    if (asset == null) {
+      return Icon(active ? (item.activeIcon ?? item.icon) : item.icon, size: 22, color: color);
+    }
+    final picture = SvgPicture.asset(asset, width: 28, height: 28);
+    if (active) return picture;
+    return Opacity(
+      opacity: 0.6,
+      child: ColorFiltered(
+        colorFilter: const ColorFilter.matrix([
+          0.55, 0.35, 0.1, 0, 0, //
+          0.55, 0.35, 0.1, 0, 0,
+          0.55, 0.35, 0.1, 0, 0,
+          0, 0, 0, 1, 0,
+        ]),
+        child: picture,
       ),
     );
   }
@@ -205,10 +257,10 @@ class _CenterAction extends StatelessWidget {
           onPressed: onPressed,
           pressedScale: 0.9,
           builder: (context, pressed) => OverflowBox(
-            maxHeight: 88,
+            maxHeight: 76,
             alignment: Alignment.bottomCenter,
             child: Padding(
-              padding: const EdgeInsets.only(bottom: 6),
+              padding: const EdgeInsets.only(bottom: 4),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [

@@ -116,6 +116,11 @@ void main() {
         ],
       );
       expect(find.byKey(const ValueKey('nav-catat')), findsOneWidget);
+      // Tombol Catat menonjol tetapi tetap di dalam batas bilah (tidak terpotong).
+      expect(
+        tester.getRect(find.byKey(const ValueKey('nav-catat'))).top,
+        greaterThanOrEqualTo(tester.getRect(find.byType(DsNavBar)).top),
+      );
       expect(find.byType(FloatingActionButton), findsNothing);
       // Tombol Catat di tengah, di antara Riwayat dan Rencana.
       final catat = tester.getCenter(find.byKey(const ValueKey('nav-catat'))).dx;

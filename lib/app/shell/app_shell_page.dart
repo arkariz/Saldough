@@ -7,6 +7,7 @@ import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
+import 'package:saldough/core/presentation/widgets/clay_icons.dart';
 import 'package:saldough/features/account/presentation/navigation/account_route_keys.dart';
 import 'package:saldough/features/analysis/presentation/widgets/analysis_segment.dart';
 import 'package:saldough/features/app_update/presentation/widgets/app_update_banner.dart';
@@ -292,22 +293,22 @@ class _AppShellPageState extends State<AppShellPage> {
                                               items: [
                                                 DsNavItem(
                                                   icon: Icons.home_outlined,
-                                                  activeIcon: Icons.home,
+                                                  asset: ClayIcons.house,
                                                   label: t.appShell.homeTabLabel,
                                                 ),
                                                 DsNavItem(
                                                   icon: Icons.receipt_long_outlined,
-                                                  activeIcon: Icons.receipt_long,
+                                                  asset: ClayIcons.receipt,
                                                   label: t.appShell.transactionsTabLabel,
                                                 ),
                                                 DsNavItem(
                                                   icon: Icons.event_note_outlined,
-                                                  activeIcon: Icons.event_note,
+                                                  asset: ClayIcons.calendar,
                                                   label: t.appShell.planTabLabel,
                                                 ),
                                                 DsNavItem(
                                                   icon: Icons.account_balance_wallet_outlined,
-                                                  activeIcon: Icons.account_balance_wallet,
+                                                  asset: ClayIcons.walletNav,
                                                   label: t.appShell.walletsTabLabel,
                                                 ),
                                               ],

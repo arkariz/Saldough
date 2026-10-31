@@ -16,7 +16,7 @@ void main() {
       expect(svg, startsWith('<svg'), reason: path);
       expect(svg.toLowerCase(), isNot(contains('<filter')), reason: '$path: flutter_svg tak mendukung filter');
     }
-    expect(ClayIcons.all.toSet(), hasLength(48));
+    expect(ClayIcons.all.toSet(), hasLength(49));
     final onDisk = Directory(
       'assets/icons_clay',
     ).listSync().where((e) => e.path.endsWith('.svg')).map((e) => e.path).toSet();

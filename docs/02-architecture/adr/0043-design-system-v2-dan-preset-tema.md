@@ -126,6 +126,12 @@ berlapis strip tipis. Logika data tetap di fitur masing-masing;
 Beranda tidak mengimpor fitur lain (ADR-030); papan dimiliki cangkang.
 Slide hanya membuka layar tujuan, tanpa aksi mencatat (aturan 8):
 mencatat rutin lewat segmen Rutin, tangkapan lewat kotak masuk/CATAT.
+Pengumuman pembaruan aplikasi (`AppUpdateBanner`, fitur `app_update`) ikut
+pola yang sama sejak 31 Okt 2026: slide `app_update` berlatar kuning dan
+paling depan (`order` -3), dengan tombol × (`dismissLabel`/`onDismiss`) untuk
+Nanti dan ikon berputar (`busy`) saat mengunduh; kartu biru penuh di atas
+sapaan dihapus. Lembar "Apa yang baru" tetap dibuka `WhatsNewHost` (tanpa
+tampilan) dan kini memakai token v2.
 Target tur `homeStatus` membungkus seluruh carousel. Tanpa `board`,
 ketiga widget tetap kartu penuh (dipakai segmen Rutin dan Riwayat).
 

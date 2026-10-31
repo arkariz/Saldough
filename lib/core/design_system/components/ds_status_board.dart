@@ -16,6 +16,9 @@ class DsStatusSlideData {
     this.onAction,
     this.attention = false,
     this.order = 0,
+    this.busy = false,
+    this.dismissLabel,
+    this.onDismiss,
   });
 
   /// Pengenal tetap sumbernya (`notification`, `recurring`, `reminder`).
@@ -42,8 +45,17 @@ class DsStatusSlideData {
   /// Urutan di antara slide sejenis (kecil dulu).
   final int order;
 
+  /// Sedang bekerja (mis. mengunduh): ikon berputar.
+  final bool busy;
+
+  /// Label pembaca layar tombol tutup (×); `null` tanpa tombol.
+  final String? dismissLabel;
+
+  /// Dipanggil saat × diketuk, mis. menunda pengumuman.
+  final VoidCallback? onDismiss;
+
   /// Sama dalam hal yang terlihat. [onAction] sengaja tidak dibandingkan:
-  /// penutupnya dibuat ulang tiap bangun tetapi tidak mengubah tampilan.
+  /// penutup [onAction] dan [onDismiss] dibuat ulang tiap bangun tetapi tidak mengubah tampilan.
   bool sameAppearance(DsStatusSlideData other) =>
       id == other.id &&
       icon == other.icon &&
@@ -51,7 +63,9 @@ class DsStatusSlideData {
       subtitle == other.subtitle &&
       actionLabel == other.actionLabel &&
       attention == other.attention &&
-      order == other.order;
+      order == other.order &&
+      busy == other.busy &&
+      dismissLabel == other.dismissLabel;
 }
 
 /// Papan tempat tiap sumber status melapor ([report]) dan carousel status

@@ -5965,8 +5965,9 @@ memilih mode (dan preset bila ≥ 2), dan design system lama dihapus.
       menjadi pil di sapaan, banner misi menjadi lencana "+50 XP" di tile
       Misi Hemat (ketuk = klaim). Langkah tur Anggaran menyorot carousel yang
       bisa sedang menampilkan slide status. Sisa legacy Beranda yang masih
-      tertinggal: `HomeFirstSteps`, layar galat, banner pembaruan, kartu
-      status mode penuh, dan overlay tur. Sudah dibereskan: skeleton
+      tertinggal: `HomeFirstSteps`, layar galat, kartu status mode penuh,
+      dan overlay tur. Banner pembaruan sudah menjadi slide carousel dan
+      lembar Apa yang baru bergaya v2 (31 Okt 2026). Sudah dibereskan: skeleton
       (`HomeSkeleton`/`DsSkeleton`), tombol Tur dan Akun di top bar
       (`DsIconButtonFace`, `AccountAvatar` bulat), kode mati `home_cards`,
       kunci i18n tak terpakai, dan tema uji Beranda (jembatan, bukan

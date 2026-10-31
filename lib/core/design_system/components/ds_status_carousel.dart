@@ -5,11 +5,14 @@ import 'package:saldough/core/design_system/components/ds_icon_tile.dart';
 import 'package:saldough/core/design_system/components/ds_pressable.dart';
 import 'package:saldough/core/design_system/components/ds_status_board.dart';
 import 'package:saldough/core/design_system/ds_theme.dart';
+import 'package:saldough/core/design_system/tokens/ds_motion.dart';
 import 'package:saldough/core/design_system/tokens/ds_radius.dart';
 
 /// Satu slide status ringkas (satu baris, kira-kira 64px): tile ikon, judul
 /// dan keterangan, tombol kecil di kanan. Seluruh slide bisa diketuk. Yang
-/// [DsStatusSlideData.attention] berlatar kuning.
+/// [DsStatusSlideData.attention] berlatar kuning. Bila [DsStatusSlideData.busy]
+/// ikonnya berputar; bila ada [DsStatusSlideData.dismissLabel] tombol × di
+/// kanan menutupnya (tombol sendiri, di luar area ketuk slide).
 class DsStatusSlide extends StatelessWidget {
   /// Membuat slide dari [data].
   const DsStatusSlide({required this.data, super.key});
@@ -22,64 +25,120 @@ class DsStatusSlide extends StatelessWidget {
     final ds = context.ds;
     final c = ds.colors;
     final attention = data.attention;
-    return DsPressable(
-      onPressed: data.onAction,
-      pressedScale: 0.99,
-      dimWhenDisabled: false,
-      semanticLabel: '${data.title}. ${data.subtitle}',
-      builder: (context, _) => Container(
-        constraints: const BoxConstraints(minHeight: 64),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-        decoration: BoxDecoration(
-          color: attention ? c.warningContainer.withValues(alpha: 0.55) : c.surfaceCard,
-          borderRadius: DsRadius.lgAll,
-          border: Border.all(color: attention ? c.warning.withValues(alpha: 0.35) : c.outlineSubtle),
-        ),
-        child: Row(
-          children: [
-            DsIconTile(
-              icon: data.icon,
-              size: DsIconTileSize.sm,
-              tone: attention ? DsIconTileTone.warning : DsIconTileTone.neutral,
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    data.title,
-                    style: ds.typography.bodyMd.copyWith(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      fontVariations: const [FontVariation.weight(600)],
+    final tile = DsIconTile(
+      icon: data.icon,
+      size: DsIconTileSize.sm,
+      tone: attention ? DsIconTileTone.warning : DsIconTileTone.neutral,
+    );
+    return Container(
+      constraints: const BoxConstraints(minHeight: 64),
+      decoration: BoxDecoration(
+        color: attention ? c.warningContainer.withValues(alpha: 0.55) : c.surfaceCard,
+        borderRadius: DsRadius.lgAll,
+        border: Border.all(color: attention ? c.warning.withValues(alpha: 0.35) : c.outlineSubtle),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: DsPressable(
+              onPressed: data.onAction,
+              pressedScale: 0.99,
+              dimWhenDisabled: false,
+              semanticLabel: data.subtitle.isEmpty ? data.title : '${data.title}. ${data.subtitle}',
+              builder: (context, _) => Padding(
+                padding: EdgeInsets.fromLTRB(12, 10, data.dismissLabel == null ? 12 : 0, 10),
+                child: Row(
+                  children: [
+                    if (data.busy) _Spin(child: tile) else tile,
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            data.title,
+                            style: ds.typography.bodyMd.copyWith(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              fontVariations: const [FontVariation.weight(600)],
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          if (data.subtitle.isNotEmpty)
+                            Text(
+                              data.subtitle,
+                              style: ds.typography.bodySm.copyWith(fontSize: 12, color: c.textMuted),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                        ],
+                      ),
                     ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  Text(
-                    data.subtitle,
-                    style: ds.typography.bodySm.copyWith(fontSize: 12, color: c.textMuted),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
-              ),
-            ),
-            if (data.actionLabel != null) ...[
-              const SizedBox(width: 8),
-              ExcludeSemantics(
-                child: IgnorePointer(
-                  child: DsButton.compact(label: data.actionLabel!.toUpperCase(), onPressed: data.onAction ?? () {}),
+                    if (data.actionLabel != null) ...[
+                      const SizedBox(width: 8),
+                      ExcludeSemantics(
+                        child: IgnorePointer(
+                          child: DsButton.compact(
+                            label: data.actionLabel!.toUpperCase(),
+                            onPressed: data.onAction ?? () {},
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
                 ),
               ),
-            ],
-          ],
-        ),
+            ),
+          ),
+          if (data.dismissLabel != null)
+            Padding(
+              padding: const EdgeInsets.only(right: 2),
+              child: DsIconButton(
+                key: const ValueKey('status-slide-dismiss'),
+                icon: Icons.close,
+                label: data.dismissLabel!,
+                onPressed: data.onDismiss,
+              ),
+            ),
+        ],
       ),
     );
   }
+}
+
+/// Memutar [child] terus-menerus; diam saat animasi dikurangi.
+class _Spin extends StatefulWidget {
+  const _Spin({required this.child});
+
+  final Widget child;
+
+  @override
+  State<_Spin> createState() => _SpinState();
+}
+
+class _SpinState extends State<_Spin> with SingleTickerProviderStateMixin {
+  late final AnimationController _controller = AnimationController(vsync: this, duration: const Duration(seconds: 1));
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (DsMotion.reduced(context)) {
+      _controller.stop();
+    } else if (!_controller.isAnimating) {
+      _controller.repeat();
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => RotationTransition(turns: _controller, child: widget.child);
 }
 
 /// Carousel status: slide dari [board] (yang perlu dicek

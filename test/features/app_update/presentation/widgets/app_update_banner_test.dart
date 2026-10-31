@@ -3,13 +3,10 @@ import 'package:di/di.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:memory_storage/memory_storage.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
-import 'package:saldough/core/presentation/spotlight/spotlight.dart';
-import 'package:saldough/core/theme/theme.dart';
-import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/app_update/domain/entities/app_update_memory.dart';
 import 'package:saldough/features/app_update/domain/entities/release_note.dart';
 import 'package:saldough/features/app_update/domain/entities/update_snapshot.dart';
@@ -18,7 +15,6 @@ import 'package:saldough/features/app_update/domain/repositories/update_sources.
 import 'package:saldough/features/app_update/domain/usecases/read_update_snapshot.dart';
 import 'package:saldough/features/app_update/presentation/bloc/app_update_bloc.dart';
 import 'package:saldough/features/app_update/presentation/widgets/app_update_banner.dart';
-import 'package:saldough/features/app_update/presentation/widgets/update_banner_card.dart';
 import 'package:saldough/features/notification_capture/domain/entities/capture_inbox_entry.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_store.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_inbox_changes.dart';
@@ -39,8 +35,8 @@ class _MockCaptureStore extends Mock implements NotificationCaptureStore {}
 
 Stream<StoreUpdateStage> _noStages(Invocation _) => const Stream<StoreUpdateStage>.empty();
 
-/// Banner pembaruan di slot Beranda (APP_UPDATE §7, B-2, B-3, B-7), dengan
-/// bloc sungguhan di atas sumber palsu.
+/// Slide pembaruan di carousel status Beranda (APP_UPDATE §7, B-2, B-3, B-7;
+/// ADR-043 §3.6), dengan bloc sungguhan di atas sumber palsu.
 void main() {
   setUpAll(() async {
     final loader = FontLoader('PlusJakartaSans')..addFont(rootBundle.load('assets/fonts/PlusJakartaSans-Variable.ttf'));
@@ -53,6 +49,7 @@ void main() {
   late _MockMemory memory;
   late GetIt container;
   late FakeReleaseNotes fakeNotes;
+  late DsStatusBoard board;
   AppUpdateBloc? created;
 
   void source({StoreUpdateInfo? play, PatchState patchState = PatchState.none}) {
@@ -68,6 +65,7 @@ void main() {
     patch = _MockPatch();
     memory = _MockMemory();
     fakeNotes = FakeReleaseNotes();
+    board = DsStatusBoard();
     when(installed.read).thenAnswer((_) async => right((name: '0.5.0', build: 6)));
     when(() => store.watch()).thenAnswer(_noStages);
     when(() => store.startDownload()).thenAnswer((_) async => right(true));
@@ -89,10 +87,19 @@ void main() {
   });
 
   tearDown(() async {
+    board.dispose();
     await created?.close();
     await container.reset();
     LocaleSettings.setLocaleSync(AppLocale.id);
   });
+
+  /// Pelapor + carousel status yang membaca papan yang sama.
+  Widget host() => Column(
+    children: [
+      AppUpdateBanner(container: container, board: board),
+      DsStatusCarousel(board: board, previousLabel: 'prev', nextLabel: 'next', dotLabel: (i) => 'dot $i'),
+    ],
+  );
 
   Future<void> pump(WidgetTester tester, {Widget? child}) async {
     tester.view
@@ -101,14 +108,14 @@ void main() {
     addTearDown(tester.view.reset);
     await tester.pumpWidget(
       MaterialApp(
-        theme: PixelTheme.light,
+        theme: AppThemeBridge.build(DsThemePresets.fallback, Brightness.light),
         // Ikon "mengunduh" berputar tanpa henti; uji tidak menunggunya.
         builder: (context, child) =>
             MediaQuery(data: MediaQuery.of(context).copyWith(disableAnimations: true), child: child!),
         home: Scaffold(
           body: Padding(
             padding: const EdgeInsets.all(16),
-            child: child ?? AppUpdateBanner(container: container),
+            child: child ?? host(),
           ),
         ),
       ),
@@ -116,82 +123,46 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  testWidgets('selama tur spotlight tampil, banner menyingkir; sesudahnya kembali (B-10)', (tester) async {
-    source(patchState: const PatchState(next: 1));
-    tester.view
-      ..physicalSize = const Size(360, 800)
-      ..devicePixelRatio = 1;
-    addTearDown(tester.view.reset);
-    final repository = TutorialProgressRepositoryImpl(storage: InMemoryKeyValueStorage());
-    late BuildContext inner;
-    await tester.pumpWidget(
-      MaterialApp(
-        theme: PixelTheme.light,
-        // Seperti `SaldoughApp`: host tur di atas Navigator.
-        builder: (context, child) => SpotlightHost(repository: repository, child: child!),
-        home: Scaffold(
-          body: Builder(
-            builder: (context) {
-              inner = context;
-              return Column(
-                children: [
-                  const SpotlightTarget(
-                    spotlightKey: SpotlightKey.homeBalance,
-                    child: SizedBox(width: 100, height: 40),
-                  ),
-                  AppUpdateBanner(container: container),
-                ],
-              );
-            },
-          ),
-        ),
-      ),
-    );
-    await tester.pumpAndSettle();
-    expect(find.byKey(const ValueKey('app-update-patch-ready')), findsOneWidget);
-
-    final controller = SpotlightHost.maybeOf(inner, listen: false)!;
-    await controller.maybeStart(TourId.home);
-    await tester.pump(const Duration(milliseconds: 500));
-    expect(controller.isActive, isTrue);
-    expect(find.byKey(const ValueKey('app-update-patch-ready')), findsNothing);
-
-    await controller.finish();
-    await tester.pump(const Duration(milliseconds: 500));
-    expect(find.byKey(const ValueKey('app-update-patch-ready')), findsOneWidget);
-  });
+  final slideFinder = find.byKey(const ValueKey('status-slide-app_update'));
+  final dismissFinder = find.byKey(const ValueKey('status-slide-dismiss'));
 
   const available = StoreUpdateInfo(stage: StoreUpdateStage.available, availableBuild: 7);
 
-  testWidgets('tanpa pengumuman: tidak ada banner', (tester) async {
+  testWidgets('tanpa pengumuman: tidak ada slide', (tester) async {
     await pump(tester);
-    expect(find.byType(UpdateBannerCard), findsNothing);
+    expect(slideFinder, findsNothing);
+    expect(board.slides, isEmpty);
     verify(() => store.check()).called(1);
   });
 
   testWidgets('bloc tidak terdaftar: kosong, tanpa galat', (tester) async {
-    await pump(tester, child: AppUpdateBanner(container: GetIt.asNewInstance()));
-    expect(find.byType(UpdateBannerCard), findsNothing);
+    await pump(
+      tester,
+      child: AppUpdateBanner(container: GetIt.asNewInstance(), board: board),
+    );
+    expect(board.slides, isEmpty);
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('chip versi tampil bila catatan build yang ditawarkan Play sudah ada (B-14)', (tester) async {
+  testWidgets('slide berlatar perhatian dan paling depan, dengan chip versi di keterangan (B-14)', (tester) async {
     fakeNotes.entries = {
       (build: 8, patch: 0): const ReleaseNote(build: 8, patch: 0, version: '0.7.0', groups: []),
     };
     source(play: const StoreUpdateInfo(stage: StoreUpdateStage.available, availableBuild: 8));
     await pump(tester);
     expect(find.text('v0.7.0'), findsOneWidget);
+    expect(board.slides.single.attention, isTrue);
+    expect(board.slides.single.order, lessThan(0));
   });
 
-  testWidgets('tanpa catatan build itu: banner tampil tanpa chip', (tester) async {
+  testWidgets('tanpa catatan build itu: slide tampil tanpa keterangan versi', (tester) async {
     source(play: const StoreUpdateInfo(stage: StoreUpdateStage.available, availableBuild: 8));
     await pump(tester);
     expect(find.text(t.appUpdate.banner.storeAvailable), findsOneWidget);
-    expect(find.byKey(const ValueKey('app-update-version-chip')), findsNothing);
+    expect(board.slides.single.subtitle, isEmpty);
   });
 
-  testWidgets('analitik: banner yang tampil dicatat sekali walau layar dibangun ulang', (tester) async {
+  testWidgets('analitik: pengumuman yang tampil dicatat sekali walau layar dibangun ulang', (tester) async {
     final events = <AnalyticsEvent>[];
     AppAnalytics.debugSink = events.add;
     addTearDown(() => AppAnalytics.debugSink = null);
@@ -203,55 +174,43 @@ void main() {
     expect(shown.single.parameters['stage'], 'available');
   });
 
-  testWidgets('jarak: 24px di bawah kartu sebelum bagian berikutnya, tanpa jarak di atasnya', (tester) async {
-    source(play: const StoreUpdateInfo(stage: StoreUpdateStage.available, availableBuild: 8));
-    await pump(
-      tester,
-      child: Column(
-        children: [
-          AppUpdateBanner(container: container),
-          const SizedBox(key: ValueKey('next-section'), height: 40),
-        ],
-      ),
-    );
-    final card = tester.getRect(find.byType(UpdateBannerCard));
-    final next = tester.getRect(find.byKey(const ValueKey('next-section')));
-    expect(next.top - card.bottom, 24, reason: 'kartu tidak menempel pada kartu saldo di bawahnya');
-    expect(card.top, 16, reason: 'tanpa jarak tambahan di atas kartu (hanya padding tes)');
-  });
-
   testWidgets('tersedia: Perbarui memulai unduhan', (tester) async {
     source(play: available);
     await pump(tester);
     expect(find.text(t.appUpdate.banner.storeAvailable), findsOneWidget);
-    await tester.tap(find.text(t.appUpdate.action.update));
+    await tester.tap(find.text(t.appUpdate.banner.storeAvailable));
     await tester.pumpAndSettle();
     verify(() => store.startDownload()).called(1);
   });
 
-  testWidgets('tersedia: Nanti menyembunyikan banner dan menyimpannya', (tester) async {
+  testWidgets('tersedia: × menunda pengumuman dan menyimpannya', (tester) async {
     source(play: available);
     await pump(tester);
-    await tester.tap(find.byKey(const ValueKey('app-update-dismiss')));
+    expect(find.bySemanticsLabel(t.appUpdate.action.later), findsOneWidget);
+    await tester.tap(dismissFinder);
     await tester.pumpAndSettle();
-    expect(find.byType(UpdateBannerCard), findsNothing);
+    expect(slideFinder, findsNothing);
+    verifyNever(() => store.startDownload());
     verify(() => memory.save(any())).called(1);
   });
 
-  testWidgets('mengunduh: tanpa aksi apa pun', (tester) async {
+  testWidgets('mengunduh: ikon berputar, tanpa aksi dan tanpa ×', (tester) async {
     source(play: const StoreUpdateInfo(stage: StoreUpdateStage.downloading, availableBuild: 7));
     await pump(tester);
     expect(find.text(t.appUpdate.banner.storeDownloading), findsOneWidget);
-    expect(find.text(t.appUpdate.action.update), findsNothing);
-    expect(find.byKey(const ValueKey('app-update-dismiss')), findsNothing);
+    expect(find.text(t.appUpdate.banner.storeDownloadingNote), findsOneWidget);
+    expect(board.slides.single.busy, isTrue);
+    expect(board.slides.single.onAction, isNull);
+    expect(find.text(t.appUpdate.action.update.toUpperCase()), findsNothing);
+    expect(dismissFinder, findsNothing);
   });
 
-  testWidgets('sudah diunduh: tanpa Nanti; Pasang sekarang hanya jalan saat diketuk (B-7)', (tester) async {
+  testWidgets('sudah diunduh: tanpa ×; Pasang sekarang hanya jalan saat diketuk (B-7)', (tester) async {
     source(play: const StoreUpdateInfo(stage: StoreUpdateStage.downloaded, availableBuild: 7));
     await pump(tester);
-    expect(find.byKey(const ValueKey('app-update-dismiss')), findsNothing);
+    expect(dismissFinder, findsNothing);
     verifyNever(() => store.completeInstall());
-    await tester.tap(find.text(t.appUpdate.action.install));
+    await tester.tap(find.text(t.appUpdate.banner.storeDownloaded));
     await tester.pumpAndSettle();
     verify(() => store.completeInstall()).called(1);
   });
@@ -260,17 +219,29 @@ void main() {
     source(patchState: const PatchState(next: 1));
     await pump(tester);
     expect(find.text(t.appUpdate.banner.patchReady), findsOneWidget);
-    await tester.tap(find.text(t.appUpdate.action.ok));
+    expect(find.text(t.appUpdate.banner.patchReadyNote), findsOneWidget);
+    await tester.tap(find.text(t.appUpdate.banner.patchReady));
     await tester.pumpAndSettle();
-    expect(find.byType(UpdateBannerCard), findsNothing);
+    expect(slideFinder, findsNothing);
     verify(() => memory.save(any())).called(1);
   });
 
   testWidgets('B-4 (S4): versi baru dan pembaruan kecil sekaligus, hanya versi baru', (tester) async {
     source(play: available, patchState: const PatchState(next: 1));
     await pump(tester);
-    expect(find.byType(UpdateBannerCard), findsOneWidget);
+    expect(board.slides, hasLength(1));
     expect(find.text(t.appUpdate.banner.storeAvailable), findsOneWidget);
+  });
+
+  testWidgets('pengumuman jadi slide pertama di depan slide lain', (tester) async {
+    source(play: available);
+    board.report(
+      'recurring',
+      const DsStatusSlideData(id: 'recurring', icon: Icons.event_note, title: 'Menunggu', subtitle: 'x', attention: true),
+    );
+    await pump(tester);
+    expect(board.slides.first.id, 'app_update');
+    expect(board.slides, hasLength(2));
   });
 
   final cases = <String, ({StoreUpdateInfo? play, PatchState patch})>{
@@ -287,28 +258,16 @@ void main() {
   };
   for (final locale in [AppLocale.id, AppLocale.en]) {
     for (final MapEntry(key: name, value: setup) in cases.entries) {
-      testWidgets('360dp ${locale.languageCode} $name: tanpa overflow, tindakan di dalam banner', (tester) async {
+      testWidgets('360dp ${locale.languageCode} $name: tanpa overflow, tombol di dalam slide', (tester) async {
         await tester.runAsync(() => LocaleSettings.setLocale(locale));
         source(play: setup.play, patchState: setup.patch);
         await pump(tester);
         expect(tester.takeException(), isNull);
-        final banner = tester.getRect(find.byType(UpdateBannerCard));
-        expect(banner.width, 328);
-        for (final label in [
-          t.appUpdate.action.update,
-          t.appUpdate.action.install,
-          t.appUpdate.action.ok,
-        ]) {
-          for (final element in find.text(label).evaluate()) {
-            final rect = tester.getRect(find.byWidget(element.widget));
-            expect(rect.left, greaterThanOrEqualTo(banner.left), reason: label);
-            expect(rect.right, lessThanOrEqualTo(banner.right), reason: label);
-          }
-        }
-        for (final element in find.byKey(const ValueKey('app-update-dismiss')).evaluate()) {
+        final slide = tester.getRect(slideFinder);
+        expect(slide.width, 328);
+        for (final element in dismissFinder.evaluate()) {
           final rect = tester.getRect(find.byWidget(element.widget));
-          expect(rect.right, lessThanOrEqualTo(banner.right));
-          expect(rect.top, greaterThanOrEqualTo(banner.top), reason: '× di pojok atas');
+          expect(rect.right, lessThanOrEqualTo(slide.right));
         }
       });
     }
@@ -336,22 +295,22 @@ void main() {
 
     Widget both() => Column(
       children: [
-        AppUpdateBanner(container: container),
+        host(),
         CaptureInboxBanner(container: container),
       ],
     );
 
-    testWidgets('kotak masuk berisi: kedua banner tampil, tidak saling mengalahkan', (tester) async {
+    testWidgets('kotak masuk berisi: slide pembaruan dan banner kotak masuk tampil bersama', (tester) async {
       when(() => captureStore.loadInbox()).thenAnswer((_) async => right([entry]));
       await pump(tester, child: both());
-      expect(find.byKey(const ValueKey('app-update-store-downloaded')), findsOneWidget);
+      expect(slideFinder, findsOneWidget);
       expect(find.byKey(const ValueKey('capture-inbox-banner')), findsOneWidget);
     });
 
-    testWidgets('kotak masuk kosong: hanya banner pembaruan', (tester) async {
+    testWidgets('kotak masuk kosong: hanya slide pembaruan', (tester) async {
       when(() => captureStore.loadInbox()).thenAnswer((_) async => right(<CaptureInboxEntry>[]));
       await pump(tester, child: both());
-      expect(find.byKey(const ValueKey('app-update-store-downloaded')), findsOneWidget);
+      expect(slideFinder, findsOneWidget);
       expect(find.byKey(const ValueKey('capture-inbox-banner')), findsNothing);
     });
   });

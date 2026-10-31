@@ -148,6 +148,51 @@ void main() {
   });
 
   group('DsStatusSlide', () {
+    testWidgets('× terpisah dari area ketuk slide: menutup tanpa memicu aksi', (tester) async {
+      var actions = 0;
+      var dismissed = 0;
+      await tester.pumpWidget(
+        _host(
+          DsStatusSlide(
+            data: DsStatusSlideData(
+              id: 'u',
+              icon: Icons.rocket_launch_outlined,
+              title: 'Versi baru',
+              subtitle: '',
+              actionLabel: 'Perbarui',
+              onAction: () => actions++,
+              dismissLabel: 'Nanti',
+              onDismiss: () => dismissed++,
+            ),
+          ),
+        ),
+      );
+      expect(find.bySemanticsLabel('Nanti'), findsOneWidget);
+      await tester.tap(find.byKey(const ValueKey('status-slide-dismiss')));
+      expect((actions, dismissed), (0, 1));
+      await tester.tap(find.text('Versi baru'));
+      expect((actions, dismissed), (1, 1));
+    });
+
+    testWidgets('sibuk: ikon berputar; tanpa keterangan tidak ada baris kosong', (tester) async {
+      await tester.pumpWidget(
+        _host(
+          const DsStatusSlide(
+            data: DsStatusSlideData(id: 'u', icon: Icons.sync, title: 'Mengunduh', subtitle: '', busy: true),
+          ),
+        ),
+      );
+      final busy = find.byType(RotationTransition).evaluate().length;
+      await tester.pumpWidget(
+        _host(
+          const DsStatusSlide(
+            data: DsStatusSlideData(id: 'u', icon: Icons.sync, title: 'Mengunduh', subtitle: ''),
+          ),
+        ),
+      );
+      expect(find.byType(RotationTransition).evaluate().length, busy - 1);
+    });
+
     testWidgets('ketuk slide memanggil onAction; semantik tombol memuat judul dan keterangan', (tester) async {
       var taps = 0;
       await tester.pumpWidget(_host(DsStatusSlide(data: _data('a', onAction: () => taps++))));

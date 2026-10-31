@@ -1,30 +1,30 @@
 import 'package:di/di.dart';
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
-import 'package:saldough/core/presentation/spotlight/spotlight.dart';
-import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/app_update/domain/services/update_policy.dart';
 import 'package:saldough/features/app_update/presentation/bloc/app_update_bloc.dart';
 import 'package:saldough/features/app_update/presentation/bloc/app_update_state.dart';
-import 'package:saldough/features/app_update/presentation/widgets/update_banner_card.dart';
 import 'package:state_management/state_management.dart';
 
-/// Banner pembaruan di slot Beranda (APP_UPDATE F1, F2, §7; ADR-039).
-/// Disisipkan shell di slot **di atas** kartu saldo (rupa v3); tampil bersama
-/// banner kotak masuk notifikasi, yang punya slot sendiri di bawah saldo
-/// (B-2 diubah pemilik 15 Okt 2026). Kosong bila fitur tidak
-/// terdaftar (platform lain, uji), bila tidak ada yang diumumkan, atau
-/// selama tur spotlight tampil.
+/// Pengumuman pembaruan di Beranda (APP_UPDATE F1, F2, §7; ADR-039,
+/// ADR-043 §3.6). Tidak menggambar apa pun: melapor satu slide ke [board]
+/// (carousel status), berlatar kuning dan paling depan. Tidak ada slide bila
+/// fitur tidak terdaftar (platform lain, uji) atau tidak ada yang diumumkan.
+/// Tur spotlight tidak perlu menyingkirkannya: slide hidup di dalam target
+/// `homeStatus`.
 ///
 /// Memicu pengecekan sesudah frame pertama dan setiap aplikasi kembali ke
 /// depan, tanpa menunda pembukaan Beranda (B-13).
 class AppUpdateBanner extends StatefulWidget {
   /// Membuat [AppUpdateBanner].
-  const AppUpdateBanner({required this.container, super.key});
+  const AppUpdateBanner({required this.container, required this.board, super.key});
 
   /// Container akar tempat bloc pembaruan terdaftar.
   final GetIt container;
+
+  /// Papan status Beranda tujuan slide.
+  final DsStatusBoard board;
 
   @override
   State<AppUpdateBanner> createState() => _AppUpdateBannerState();
@@ -57,66 +57,80 @@ class _AppUpdateBannerState extends State<AppUpdateBanner> with WidgetsBindingOb
     super.dispose();
   }
 
+  static const _statusId = 'app_update';
+
   @override
   Widget build(BuildContext context) {
     final bloc = _bloc;
     if (bloc == null) return const SizedBox.shrink();
-    // Selama tur tampil, banner menyingkir supaya target sorot tidak bergeser.
-    if (SpotlightHost.maybeOf(context)?.isActive ?? false) return const SizedBox.shrink();
     return BlocBuilder<AppUpdateBloc, AppUpdateState>(
       bloc: bloc,
       buildWhen: (a, b) =>
           a.announcement != b.announcement || a.busy != b.busy || a.availableVersion != b.availableVersion,
       builder: (context, state) {
         final texts = t.appUpdate;
-        final chip = state.availableVersion == null ? null : 'v${state.availableVersion}';
-        final banner = switch (state.announcement) {
+        final version = state.availableVersion == null ? '' : 'v${state.availableVersion}';
+        DsStatusSlideData slide({
+          required IconData icon,
+          required String title,
+          String subtitle = '',
+          bool busy = false,
+          String? actionLabel,
+          VoidCallback? onAction,
+          String? dismissLabel,
+          VoidCallback? onDismiss,
+        }) => DsStatusSlideData(
+          id: _statusId,
+          icon: icon,
+          title: title,
+          subtitle: subtitle,
+          busy: busy,
+          actionLabel: actionLabel,
+          onAction: onAction,
+          dismissLabel: dismissLabel,
+          onDismiss: onDismiss,
+          attention: true,
+          order: -3,
+        );
+        final data = switch (state.announcement) {
           UpdateAnnouncement.none => null,
-          UpdateAnnouncement.storeAvailable => UpdateBannerCard(
-            key: const ValueKey('app-update-store-available'),
-            emoji: '🚀',
+          UpdateAnnouncement.storeAvailable => slide(
+            icon: Icons.rocket_launch_outlined,
             title: texts.banner.storeAvailable,
-            versionChip: chip,
+            subtitle: version,
             actionLabel: texts.action.update,
             onAction: state.busy ? null : () => bloc.add(const AppUpdateDownloadRequested()),
             dismissLabel: texts.action.later,
             onDismiss: () => bloc.add(const AppUpdateDeferred()),
           ),
-          UpdateAnnouncement.storeDownloading => UpdateBannerCard(
-            key: const ValueKey('app-update-store-downloading'),
-            icon: IconKey.progressActivity,
-            spin: true,
+          UpdateAnnouncement.storeDownloading => slide(
+            icon: Icons.sync,
+            busy: true,
             title: texts.banner.storeDownloading,
-            description: texts.banner.storeDownloadingNote,
-            versionChip: chip,
+            subtitle: texts.banner.storeDownloadingNote,
           ),
-          UpdateAnnouncement.storeDownloaded => UpdateBannerCard(
-            key: const ValueKey('app-update-store-downloaded'),
+          UpdateAnnouncement.storeDownloaded => slide(
+            icon: Icons.system_update_alt,
             title: texts.banner.storeDownloaded,
-            versionChip: chip,
+            subtitle: version,
             actionLabel: texts.action.install,
             onAction: () => bloc.add(const AppUpdateInstallRequested()),
           ),
-          UpdateAnnouncement.patchReady => UpdateBannerCard(
-            key: const ValueKey('app-update-patch-ready'),
-            icon: IconKey.restartAlt,
+          UpdateAnnouncement.patchReady => slide(
+            icon: Icons.restart_alt,
             title: texts.banner.patchReady,
-            description: texts.banner.patchReadyNote,
+            subtitle: texts.banner.patchReadyNote,
             actionLabel: texts.action.ok,
             onAction: () => bloc.add(const AppUpdatePatchAcknowledged()),
           ),
         };
-        if (banner == null) return const SizedBox.shrink();
-        // Analitik: bloc menyaring supaya sekali per keadaan per sesi.
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (!bloc.isClosed) bloc.add(AppUpdateBannerShown(state.announcement));
-        });
-        // Jarak 24px di bawah kartu, sama dengan jarak antarbagian Beranda; kartu
-        // ini di atas kartu saldo, jadi tanpa jarak di atasnya.
-        return Padding(
-          padding: const EdgeInsets.only(bottom: AppSpacing.space6),
-          child: banner,
-        );
+        if (data != null) {
+          // Analitik: bloc menyaring supaya sekali per keadaan per sesi.
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (!bloc.isClosed) bloc.add(AppUpdateBannerShown(state.announcement));
+          });
+        }
+        return DsStatusReport(board: widget.board, id: _statusId, data: data);
       },
     );
   }

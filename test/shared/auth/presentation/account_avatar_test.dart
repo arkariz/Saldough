@@ -11,14 +11,14 @@ Widget _host(Widget child) => MaterialApp(
 
 void main() {
   testWidgets('belum masuk: bulat dengan ikon orang', (tester) async {
-    await tester.pumpWidget(_host(const AccountAvatar(user: null, size: 40)));
+    await tester.pumpWidget(_host(const AccountAvatar(user: null)));
     expect(find.byIcon(Icons.person_outline), findsOneWidget);
     final box = tester.widget<Container>(find.byType(Container).first);
     expect((box.decoration! as BoxDecoration).shape, BoxShape.circle);
   });
 
   testWidgets('sudah masuk tanpa foto: inisial berlatar warna aksi utama', (tester) async {
-    await tester.pumpWidget(_host(const AccountAvatar(user: AppUser(uid: 'u', displayName: 'sari dewi'), size: 40)));
+    await tester.pumpWidget(_host(const AccountAvatar(user: AppUser(uid: 'u', displayName: 'sari dewi'))));
     expect(find.text('S'), findsOneWidget);
     final box = tester.widget<Container>(find.byType(Container).first);
     expect((box.decoration! as BoxDecoration).color, DsThemePresets.fallback.light.actionPrimary);

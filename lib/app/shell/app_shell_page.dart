@@ -180,11 +180,11 @@ class _AppShellPageState extends State<AppShellPage> {
         onShowBudgets: () => _showPlan(context, PlanSegment.budget),
         onShowTransactions: () => _onDestinationSelected(context, _transactionsTabIndex),
         onShowWallets: () => _onDestinationSelected(context, _walletsTabIndex),
-        updateNotice: Column(
+        updateHost: Column(
           children: [
             WhatsNewHost(container: parentContainer, active: _activeTab == _homeTabIndex),
             TrialGiftHost(container: parentContainer, active: _activeTab == _homeTabIndex),
-            AppUpdateBanner(container: parentContainer),
+            AppUpdateBanner(container: parentContainer, board: _statusBoard),
             PlusHomeCard(container: parentContainer),
           ],
         ),

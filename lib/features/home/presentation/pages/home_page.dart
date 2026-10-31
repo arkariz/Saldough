@@ -39,7 +39,7 @@ class HomePage extends StatefulWidget {
     required this.onShowBudgets,
     required this.onShowTransactions,
     required this.onShowWallets,
-    this.updateNotice,
+    this.updateHost,
     this.notice,
     this.pendingRecurring,
     this.featureNudge,
@@ -60,10 +60,11 @@ class HomePage extends StatefulWidget {
   /// Pindah ke tab Dompet (membuat dompet pertama).
   final VoidCallback onShowWallets;
 
-  /// Kartu pembaruan aplikasi di **atas** kartu saldo (APP_UPDATE §7, rupa v3),
-  /// disisipkan akar komposisi; tampil bersama banner [notice] bila keduanya
-  /// ada. `null` = tidak ada.
-  final Widget? updateNotice;
+  /// Widget tanpa tampilan untuk pembaruan aplikasi, disisipkan akar
+  /// komposisi: pengumumannya masuk sebagai slide di papan status dan lembar
+  /// "Apa yang baru" dibuka darinya (APP_UPDATE, ADR-043 §3.6). `null` = tidak
+  /// ada.
+  final Widget? updateHost;
 
   /// Kartu pemberitahuan di bawah total saldo, disisipkan akar komposisi
   /// (mis. kotak masuk Catat dari notifikasi, ADR-032); `null` = tidak ada.
@@ -202,8 +203,8 @@ class _HomePageState extends State<HomePage> {
         controller: _scroll,
         padding: const EdgeInsets.fromLTRB(DsSpacing.md, DsSpacing.sm, DsSpacing.md, DsSpacing.xl + DsSpacing.sm),
         children: [
-          // Kartu pembaruan aplikasi membawa jarak bawahnya sendiri.
-          ?widget.updateNotice,
+          // Tanpa tampilan (slide pembaruan dan lembar Apa yang baru).
+          ?widget.updateHost,
           AccountUserBuilder(
             builder: (context, user) => HomeGreeting(name: _firstName(user), jiggle: _claims),
           ),

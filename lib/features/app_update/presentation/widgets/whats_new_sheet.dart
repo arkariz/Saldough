@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
-import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/app_update/domain/entities/release_note.dart';
 import 'package:saldough/features/app_update/presentation/widgets/release_notes_view.dart';
 
-/// Lembar "Apa yang baru" (APP_UPDATE F3, §7, rupa v3): tile 🚀 dengan chip
-/// versi dan judul di tengah, tombol × di pojok kanan atas, butir
+/// Lembar "Apa yang baru" (APP_UPDATE F3, §7; ADR-043): tile roket dengan
+/// badge versi dan judul di tengah, tombol × di pojok kanan atas, butir
 /// **dikelompokkan per kategori** dalam kartu (bergulir, maksimal 330px), dan
 /// satu tombol **Oke**. Tanpa kalimat terima kasih dan tanpa maskot
 /// (keputusan pemilik 15 Okt 2026). Satu catatan = judul bernomor versi
@@ -32,18 +31,13 @@ class WhatsNewSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
+    final ds = context.ds;
+    final c = ds.colors;
     final combined = notes.length > 1;
     return Stack(
       children: [
         Padding(
-          padding: const EdgeInsets.fromLTRB(
-            AppSpacing.space4,
-            AppSpacing.space8,
-            AppSpacing.space4,
-            AppSpacing.space4,
-          ),
+          padding: const EdgeInsets.fromLTRB(DsSpacing.md, DsSpacing.lg + DsSpacing.sm, DsSpacing.md, DsSpacing.md),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -54,36 +48,29 @@ class WhatsNewSheet extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Container(
-                        width: 56,
-                        height: 56,
-                        alignment: Alignment.center,
-                        decoration: ShapeDecoration(color: colors.surface, shape: const PixelCornerBorder.small()),
-                        child: const ExcludeSemantics(child: Text('🚀', style: TextStyle(fontSize: 32, height: 1))),
-                      ),
-                      const SizedBox(width: AppSpacing.space2),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-                        decoration: ShapeDecoration(color: colors.brandSoft, shape: const PixelCornerBorder.small()),
-                        child: Text(
-                          releaseNoteVersion(notes.first),
-                          style: textTheme.labelSmall?.copyWith(color: colors.brandInk),
+                      const ExcludeSemantics(
+                        child: DsIconTile(
+                          icon: Icons.rocket_launch_outlined,
+                          tone: DsIconTileTone.solid,
+                          size: DsIconTileSize.lg,
                         ),
                       ),
+                      const SizedBox(width: DsSpacing.sm),
+                      Flexible(child: DsBadge(label: releaseNoteVersion(notes.first), tone: DsBadgeTone.income)),
                     ],
                   ),
-                  const SizedBox(height: AppSpacing.space3),
+                  const SizedBox(height: 12),
                   Semantics(
                     header: true,
                     child: Text(
                       titleFor(notes),
                       textAlign: TextAlign.center,
-                      style: textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800),
+                      style: ds.typography.headlineSm.copyWith(fontSize: 20, fontWeight: FontWeight.w700),
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: AppSpacing.space4),
+              const SizedBox(height: DsSpacing.md),
               ConstrainedBox(
                 constraints: const BoxConstraints(maxHeight: 330),
                 child: SingleChildScrollView(
@@ -91,16 +78,16 @@ class WhatsNewSheet extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       for (final (index, note) in notes.indexed) ...[
-                        if (index > 0) const SizedBox(height: AppSpacing.space5),
+                        if (index > 0) const SizedBox(height: DsSpacing.lg - 4),
                         if (combined) ...[
                           Semantics(
                             header: true,
                             child: Text(
                               releaseNoteVersion(note),
-                              style: textTheme.labelMedium?.copyWith(color: colors.ink2),
+                              style: ds.typography.labelMd.copyWith(color: c.textSecondary),
                             ),
                           ),
-                          const SizedBox(height: AppSpacing.space2),
+                          const SizedBox(height: DsSpacing.sm),
                         ],
                         ReleaseNoteGroups(groups: note.groups, framed: true),
                       ],
@@ -108,8 +95,8 @@ class WhatsNewSheet extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: AppSpacing.space4),
-              AppButton(
+              const SizedBox(height: DsSpacing.md),
+              DsButton(
                 key: const ValueKey('whats-new-ok'),
                 label: t.appUpdate.action.ok,
                 expand: true,
@@ -119,24 +106,13 @@ class WhatsNewSheet extends StatelessWidget {
           ),
         ),
         Positioned(
-          top: AppSpacing.space3,
-          right: AppSpacing.space3,
-          child: Semantics(
-            button: true,
+          top: DsSpacing.sm,
+          right: DsSpacing.sm,
+          child: DsIconButton(
+            key: const ValueKey('whats-new-close'),
+            icon: Icons.close,
             label: t.appUpdate.whatsNew.close,
-            excludeSemantics: true,
-            onTap: onClose,
-            child: GestureDetector(
-              key: const ValueKey('whats-new-close'),
-              behavior: HitTestBehavior.opaque,
-              onTap: onClose,
-              child: Container(
-                width: AppSize.touch,
-                height: AppSize.touch,
-                decoration: BoxDecoration(color: colors.surface2, shape: BoxShape.circle),
-                child: Center(child: AppIcon(IconKey.close, size: 20, color: colors.ink)),
-              ),
-            ),
+            onPressed: onClose,
           ),
         ),
       ],

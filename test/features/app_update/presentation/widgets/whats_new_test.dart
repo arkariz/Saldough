@@ -5,10 +5,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/app_update/domain/entities/app_update_memory.dart';
 import 'package:saldough/features/app_update/domain/entities/release_note.dart';
@@ -51,7 +51,7 @@ void main() {
       addTearDown(tester.view.reset);
       await tester.pumpWidget(
         MaterialApp(
-          theme: PixelTheme.light,
+          theme: AppThemeBridge.build(DsThemePresets.fallback, Brightness.light),
           home: Scaffold(
             body: WhatsNewSheet(notes: notes, onClose: onClose ?? () {}),
           ),
@@ -69,8 +69,8 @@ void main() {
       expect(find.text(t.appUpdate.category.fixed), findsOneWidget);
       expect(find.text('Hitung langsung di Catat.'), findsOneWidget);
       expect(find.text('Urutan dompet bisa diatur.'), findsOneWidget);
-      expect(find.text('✨'), findsOneWidget);
-      expect(find.text('🛠️'), findsOneWidget);
+      expect(find.byIcon(Icons.auto_awesome), findsOneWidget);
+      expect(find.byIcon(Icons.build_outlined), findsOneWidget);
     });
 
     testWidgets('pembaruan kecil: judul tanpa nomor, baris versi memuat "pembaruan"', (tester) async {
@@ -101,7 +101,8 @@ void main() {
         ]),
       ]);
       expect(find.text('Butir baru.'), findsOneWidget);
-      expect(find.text('✨'), findsNothing);
+      expect(find.byIcon(Icons.auto_awesome), findsNothing);
+      expect(find.byIcon(Icons.notes), findsNothing, reason: 'tanpa label, tanpa ikon kategori');
     });
 
     testWidgets('Oke dan × memanggil penutup; tanpa maskot dan tanpa kalimat terima kasih', (tester) async {
@@ -171,7 +172,7 @@ void main() {
     tearDown(() async => harness.dispose());
 
     Widget app({Widget? child}) => MaterialApp(
-      theme: PixelTheme.light,
+      theme: AppThemeBridge.build(DsThemePresets.fallback, Brightness.light),
       builder: (context, child) => SpotlightHost(
         repository: TutorialProgressRepositoryImpl(storage: InMemoryKeyValueStorage()),
         child: child!,

@@ -444,6 +444,24 @@ void main() {
       expect(find.text(t.record.budgetItemOutOfPeriod(name: 'Bulanan')), findsNothing);
     });
 
+    testWidgets('bisikan Tanuki tampil bila terhubung ke pos: rencana pos dan persen nominal', (tester) async {
+      await pumpForm(
+        tester,
+        initial: cicilan(recurrence: RecurrenceLink(ruleId: 'cicilan', occurrenceDate: DateTime(2026, 10, 25))),
+        budgetItems: options,
+      );
+      expect(find.byKey(const ValueKey('record-whisper')), findsOneWidget);
+      expect(
+        find.text(t.record.whisperWithAmount(item: 'Cicilan', planned: 'Rp2.914.000', percent: 100)),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('tanpa pos anggaran: tidak ada bisikan Tanuki', (tester) async {
+      await pumpForm(tester);
+      expect(find.byKey(const ValueKey('record-whisper')), findsNothing);
+    });
+
     group('Ubah dulu kemunculan rutin tertaut (T-18.16, QA T-18.9 PO-2)', () {
       final rule = RecurringRule(
         id: 'cicilan',

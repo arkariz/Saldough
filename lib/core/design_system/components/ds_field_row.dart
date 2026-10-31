@@ -35,6 +35,32 @@ class DsFieldGroup extends StatelessWidget {
   }
 }
 
+/// Dua baris isian bersisian dalam [DsFieldGroup] (mis. Tanggal dan Ulangi),
+/// dipisah garis tegak tipis. Satu anak mengisi lebar penuh.
+class DsFieldPair extends StatelessWidget {
+  /// Membuat pasangan.
+  const DsFieldPair({required this.children, super.key}) : assert(children.length > 0 && children.length <= 2, 'satu atau dua anak');
+
+  /// Satu atau dua [DsFieldRow].
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) {
+    if (children.length == 1) return children.single;
+    final c = context.ds.colors;
+    return IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(child: children.first),
+          VerticalDivider(width: 1, thickness: 1, color: c.outlineSubtle),
+          Expanded(child: children.last),
+        ],
+      ),
+    );
+  }
+}
+
 /// Satu baris isian: ikon aksen, label kapital kecil, lalu nilai (atau
 /// [child] bebas, mis. kolom teks), dengan [trailing] atau tanda panah di
 /// kanan. Seluruh baris bisa diketuk bila [onTap] diisi.
@@ -51,6 +77,7 @@ class DsFieldRow extends StatelessWidget {
     this.placeholder = false,
     this.onTap,
     this.semanticsLabel,
+    this.titleMaxLines,
     super.key,
   }) : assert(title != null || child != null, 'butuh title atau child');
 
@@ -84,14 +111,17 @@ class DsFieldRow extends StatelessWidget {
   /// Label pembaca layar pengganti "label, nilai".
   final String? semanticsLabel;
 
+  /// Batas baris nilai (berelipsis); `null` = tak terbatas.
+  final int? titleMaxLines;
+
   @override
   Widget build(BuildContext context) {
     final ds = context.ds;
     final c = ds.colors;
     final body = ConstrainedBox(
-      constraints: const BoxConstraints(minHeight: 52),
+      constraints: const BoxConstraints(minHeight: 48),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         child: Row(
           children: [
             SizedBox(
@@ -114,6 +144,8 @@ class DsFieldRow extends StatelessWidget {
                   child ??
                       Text(
                         title!,
+                        maxLines: titleMaxLines,
+                        overflow: titleMaxLines == null ? null : TextOverflow.ellipsis,
                         style: ds.typography.bodyMd.copyWith(
                           fontSize: 14,
                           fontWeight: placeholder ? FontWeight.w400 : FontWeight.w600,

@@ -278,12 +278,6 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
               onSelected: (id) => setState(() => _toWalletId = id),
               previewAmountSen: _preview,
             ),
-            RecordDateField(
-              date: _date,
-              kind: TransactionKind.transfer,
-              allowFuture: _repeat != null,
-              onChanged: (date) => setState(() => _date = date),
-            ),
             RecordNoteField(controller: _noteController, kind: TransactionKind.transfer),
             if (_budgetChoices.isNotEmpty)
               SpotlightTarget(
@@ -294,20 +288,30 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
                   onSelected: (id) => setState(() => _budgetItemId = id),
                 ),
               ),
-            if (!editing && widget.occurrence == null)
-              SpotlightTarget(
-                spotlightKey: SpotlightKey.recordRepeat,
-                child: RecordRepeatField(
-                  value: _repeat,
-                  date: _date,
-                  kind: TransactionKind.transfer,
-                  locked: widget.repeatLocked,
-                  onChanged: (repeat) => setState(() {
-                    _repeat = repeat;
-                    if (repeat == null) _date = dateWithoutRepeat(_date);
-                  }),
-                ),
+            DsFieldPair(
+              children: [
+              RecordDateField(
+                date: _date,
+                kind: TransactionKind.transfer,
+                allowFuture: _repeat != null,
+                onChanged: (date) => setState(() => _date = date),
               ),
+              if (!editing && widget.occurrence == null)
+                SpotlightTarget(
+                  spotlightKey: SpotlightKey.recordRepeat,
+                  child: RecordRepeatField(
+                    value: _repeat,
+                    date: _date,
+                    kind: TransactionKind.transfer,
+                    locked: widget.repeatLocked,
+                    onChanged: (repeat) => setState(() {
+                      _repeat = repeat;
+                      if (repeat == null) _date = dateWithoutRepeat(_date);
+                    }),
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
         if (budgetItemOutsidePeriod(widget.budgetItems, _budgetItemId, _periodDate) case final dropped?)

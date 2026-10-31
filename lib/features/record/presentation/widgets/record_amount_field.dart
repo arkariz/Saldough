@@ -48,7 +48,7 @@ class RecordAmountField extends StatelessWidget {
         final amount = AppMoneyFormatter.formatRevealed(sen);
         final reduced = DsMotion.reduced(context);
         return DsCard(
-          padding: const EdgeInsets.all(10),
+          padding: const EdgeInsets.all(8),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -159,7 +159,7 @@ class _QuickAdd extends StatelessWidget {
               semanticLabel: t.record.quickAddSemantics(amount: AppMoneyFormatter.formatRevealed(units * 100)),
               builder: (context, _) => Container(
                 key: ValueKey('record-quick-$units'),
-                constraints: const BoxConstraints(minHeight: 30),
+                constraints: const BoxConstraints(minHeight: 28),
                 padding: const EdgeInsets.symmetric(horizontal: 4),
                 alignment: Alignment.center,
                 decoration: BoxDecoration(

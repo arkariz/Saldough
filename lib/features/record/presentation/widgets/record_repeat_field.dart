@@ -66,6 +66,7 @@ class RecordRepeatField extends StatelessWidget {
       leading: SvgPicture.asset(ClayIcons.repeat, width: 24, height: 24),
       label: t.record.repeat.label,
       title: value == null ? t.record.repeat.off : repeatSummary(value, date),
+      titleMaxLines: 2,
       chevron: true,
       onTap: () => _open(context),
     );

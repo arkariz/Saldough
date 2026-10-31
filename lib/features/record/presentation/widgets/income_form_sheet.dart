@@ -231,31 +231,35 @@ class _IncomeFormSheetState extends State<IncomeFormSheet> {
                 previewAmountSen: widget.repeatLocked ? null : amount,
               ),
             ),
-            RecordDateField(
-              date: _date,
-              kind: TransactionKind.income,
-              allowFuture: _repeat != null,
-              onChanged: (date) => setState(() => _date = date),
-            ),
             RecordNoteField(
               controller: _noteController,
               kind: TransactionKind.income,
               onChanged: (_) => setState(() {}),
             ),
-            if (!editing && widget.occurrence == null)
-              SpotlightTarget(
-                spotlightKey: SpotlightKey.recordRepeat,
-                child: RecordRepeatField(
-                  value: _repeat,
-                  date: _date,
-                  kind: TransactionKind.income,
-                  locked: widget.repeatLocked,
-                  onChanged: (repeat) => setState(() {
-                    _repeat = repeat;
-                    if (repeat == null) _date = dateWithoutRepeat(_date);
-                  }),
-                ),
+            DsFieldPair(
+              children: [
+              RecordDateField(
+                date: _date,
+                kind: TransactionKind.income,
+                allowFuture: _repeat != null,
+                onChanged: (date) => setState(() => _date = date),
               ),
+              if (!editing && widget.occurrence == null)
+                SpotlightTarget(
+                  spotlightKey: SpotlightKey.recordRepeat,
+                  child: RecordRepeatField(
+                    value: _repeat,
+                    date: _date,
+                    kind: TransactionKind.income,
+                    locked: widget.repeatLocked,
+                    onChanged: (repeat) => setState(() {
+                      _repeat = repeat;
+                      if (repeat == null) _date = dateWithoutRepeat(_date);
+                    }),
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
         if (widget.occurrence case final occurrence?)

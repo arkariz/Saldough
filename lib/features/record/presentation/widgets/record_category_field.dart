@@ -224,7 +224,7 @@ class _OptionState extends State<_Option> with SingleTickerProviderStateMixin {
             child: AnimatedContainer(
               duration: DsMotion.reduced(context) ? Duration.zero : DsMotion.standard,
               clipBehavior: Clip.hardEdge,
-              padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 2),
+              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 2),
               decoration: BoxDecoration(
                 color: selected ? c.actionPrimary.withValues(alpha: 0.08) : c.surfaceCard,
                 borderRadius: DsRadius.lgAll,

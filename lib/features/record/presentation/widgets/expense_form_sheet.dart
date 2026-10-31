@@ -301,12 +301,6 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
                 previewIsCredit: false,
               ),
             ),
-            RecordDateField(
-              date: _date,
-              kind: TransactionKind.expense,
-              allowFuture: _repeat != null,
-              onChanged: (date) => setState(() => _date = date),
-            ),
             RecordNoteField(
               controller: _noteController,
               kind: TransactionKind.expense,
@@ -321,20 +315,30 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
                   onSelected: (id) => setState(() => _budgetItemId = id),
                 ),
               ),
-            if (!editing && widget.occurrence == null)
-              SpotlightTarget(
-                spotlightKey: SpotlightKey.recordRepeat,
-                child: RecordRepeatField(
-                  value: _repeat,
-                  date: _date,
-                  kind: TransactionKind.expense,
-                  locked: widget.repeatLocked,
-                  onChanged: (repeat) => setState(() {
-                    _repeat = repeat;
-                    if (repeat == null) _date = dateWithoutRepeat(_date);
-                  }),
-                ),
+            DsFieldPair(
+              children: [
+              RecordDateField(
+                date: _date,
+                kind: TransactionKind.expense,
+                allowFuture: _repeat != null,
+                onChanged: (date) => setState(() => _date = date),
               ),
+              if (!editing && widget.occurrence == null)
+                SpotlightTarget(
+                  spotlightKey: SpotlightKey.recordRepeat,
+                  child: RecordRepeatField(
+                    value: _repeat,
+                    date: _date,
+                    kind: TransactionKind.expense,
+                    locked: widget.repeatLocked,
+                    onChanged: (repeat) => setState(() {
+                      _repeat = repeat;
+                      if (repeat == null) _date = dateWithoutRepeat(_date);
+                    }),
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
         if (_whisperOption case final option?)

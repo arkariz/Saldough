@@ -107,7 +107,7 @@ void main() {
       setUp(() async => LocaleSettings.setLocale(locale));
       tearDown(() => LocaleSettings.setLocaleSync(AppLocale.id));
 
-      testWidgets('360×800: nominal, kategori, dompet terlihat tanpa menggulir (F1 dilonggarkan di Catat v2)', (tester) async {
+      testWidgets('360×800: nominal, kategori, dompet, tanggal, catatan terlihat tanpa menggulir (F1)', (tester) async {
         useBuiltInCategories();
         await open(
           tester,
@@ -124,11 +124,8 @@ void main() {
         expectAbove(tester, find.byKey(const ValueKey('record-amount')), limit, 'nominal');
         expectAbove(tester, find.byKey(const ValueKey('category-all')), limit, 'kategori');
         expectAbove(tester, rowOf(t.record.expenseWalletSectionLabel), limit, 'dompet');
-        // Catat v2 (31 Okt 2026): kartu nominal berchip cepat memakai ruang, jadi
-        // tanggal dan catatan ada di bawah lipatan dan dijangkau dengan
-        // menggulir; irisan kolom isian memadatkannya kembali.
-        expect(find.byKey(const ValueKey('record-date')), findsOneWidget);
-        expect(rowOf(t.record.noteSectionLabel), findsOneWidget);
+        expectAbove(tester, find.byKey(const ValueKey('record-date')), limit, 'tanggal');
+        expectAbove(tester, rowOf(t.record.noteSectionLabel), limit, 'catatan');
       });
 
       testWidgets('384×832 (perangkat QA): pos anggaran tersedia (F1 dilonggarkan di Catat v2)', (tester) async {

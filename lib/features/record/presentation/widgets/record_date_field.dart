@@ -74,7 +74,7 @@ class RecordDateField extends StatelessWidget {
       leading: SvgPicture.asset(ClayIcons.dateCalendar, width: 24, height: 24),
       label: t.record.dateFieldLabel,
       title: _label(),
-      trailing: Icon(Icons.schedule, size: 18, color: context.ds.colors.textMuted),
+      titleMaxLines: 2,
       onTap: () => _pick(context),
     );
   }

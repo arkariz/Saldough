@@ -327,5 +327,10 @@ class _LoadError extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) =>
-      AppErrorState(title: t.home.loadErrorTitle, retryLabel: t.common.retry, onRetry: onRetry);
+      DsErrorState(
+        title: t.home.loadErrorTitle,
+        retryLabel: t.common.retry,
+        onRetry: onRetry,
+        illustration: SvgPicture.asset(ClayIcons.warning, width: 40, height: 40),
+      );
 }

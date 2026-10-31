@@ -42,6 +42,22 @@ Disalin sebagai SVG valid di [reference/icons-clay/](reference/icons-clay/)
 | `stylus-freelance.svg` | Transaksi freelance | 32, tampil 28 |
 | `headphones-subscription.svg` | Transaksi langganan | 32, tampil 28 |
 
+## Ikon clay tambahan (31 Okt 2026, KT-DS5)
+
+33 ikon baru digambar mengikuti resep di bawah, sehingga seluruh ikon benda
+sudah clay (total 43 aset di `assets/icons_clay/`). Pemetaan `IconKey` ke
+aset ada di `ClayIcons.forIcon`; pratinjau semuanya (terang dan gelap) di
+[reference/icons-clay-sheet.html](reference/icons-clay-sheet.html). Gambar
+dibuat dari kode, belum ditinjau perancang: perlakukan sebagai draf yang
+bisa diganti per berkas tanpa mengubah kode.
+
+| Kelompok | Aset |
+|---|---|
+| Dompet | `bank_wallet`, `cash_wallet`, `ewallet_wallet`, `piggy_savings`, `card_wallet` |
+| Jenis transaksi | `income_arrow`, `expense_arrow` (transfer memakai `leaf_send`) |
+| Kategori | `bowl_food`, `house_household`, `receipt_bills`, `tray_other`, `cap_education`, `bolt_electricity`, `shield_emergency`, `pump_fuel`, `basket_groceries`, `heart_health`, `wifi_internet`, `chart_investment`, `paw_pets`, `bag_shopping`, `family_people`, `heart_donation`, `star_bonus`, `gift_box` |
+| Freelance dan status | `clipboard_worklog`, `clock_hourly`, `doc_invoice`, `check_completed`, `hourglass_pending`, `coin_paid`, `warning_overbudget`, `tray_empty` |
+
 ## Resep gaya (agar ikon baru konsisten)
 
 **Ikon:**

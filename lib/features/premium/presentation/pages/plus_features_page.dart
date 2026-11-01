@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/foundation/entitlement/entitlement.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/plan/active_plan.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/premium/presentation/navigation/premium_route_keys.dart';
 import 'package:saldough/features/premium/presentation/widgets/plus_subscription.dart';
 import 'package:saldough/features/premium/presentation/widgets/plus_tile.dart';
@@ -21,8 +21,7 @@ class PlusFeaturesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final texts = t.premium.features;
-    final textTheme = Theme.of(context).textTheme;
-    final colors = context.appColors;
+    final ds = context.ds;
     final items = [
       (IconKey.photoCamera, texts.records.title, texts.records.text),
       (IconKey.notificationsActive, texts.watches.title, texts.watches.text),
@@ -32,48 +31,36 @@ class PlusFeaturesPage extends StatelessWidget {
       (IconKey.backup, texts.keeps.title, texts.keeps.text),
     ];
     return Scaffold(
-      appBar: AppBar(title: Text(texts.title)),
+      appBar: AppBar(title: Text(texts.title, style: ds.typography.headlineMd), centerTitle: false),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(
-          AppSpacing.space4,
+          16,
           0,
-          AppSpacing.space4,
-          AppSpacing.space4,
+          16,
+          16,
         ),
         children: [
-          Text(texts.intro, style: textTheme.bodyLarge),
-          const SizedBox(height: AppSpacing.space4),
-          AppListCard(
-            dividerIndent: 60,
+          Text(texts.intro, style: ds.typography.bodyMd.copyWith(color: ds.colors.textSecondary)),
+          const SizedBox(height: 16),
+          DsListCard(
             children: [
               for (final (icon, title, text) in items)
-                AppListRow(
-                  leading: PlusTile(icon, size: 32),
-                  title: title,
-                  subtitle: text,
-                  wrapTitle: true,
-                  wrapSubtitle: true,
-                ),
+                DsSettingRow(leading: PlusTile(icon, size: 40), title: title, subtitle: text),
             ],
           ),
-          const SizedBox(height: AppSpacing.space4),
-          AppCard(
+          const SizedBox(height: 16),
+          DsCard(
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                AppIcon(IconKey.checkCircle, color: colors.ink2),
-                const SizedBox(width: AppSpacing.space3),
+                DsIconTile.asset(asset: ClayIcons.done, size: DsIconTileSize.sm),
+                const SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(texts.freeTitle, style: textTheme.titleMedium),
-                      Text(
-                        texts.free,
-                        style: textTheme.bodyMedium?.copyWith(
-                          color: colors.ink2,
-                        ),
-                      ),
+                      Text(texts.freeTitle, style: ds.typography.titleMd),
+                      Text(texts.free, style: ds.typography.bodySm.copyWith(color: ds.colors.textSecondary)),
                     ],
                   ),
                 ),
@@ -87,8 +74,8 @@ class PlusFeaturesPage extends StatelessWidget {
         // Sudah berlangganan: tidak ada paket untuk dilihat.
         builder: (context, plan, _) => isSubscribed(plan)
             ? const SizedBox.shrink()
-            : AppStickyBar(
-                child: AppButton(
+            : DsStickyBar(
+                child: DsButton(
                   label: texts.cta,
                   expand: true,
                   onPressed: () => fromPaywall

@@ -190,6 +190,9 @@ abstract final class ClayIcons {
   /// Jam berputar balik, pulihkan.
   static const String restoreClock = 'assets/icons_clay/restore_clock.svg';
 
+  /// Gelembung obrolan, tanya Tanuki.
+  static const String chat = 'assets/icons_clay/chat_bubble.svg';
+
   /// Seluruh aset, untuk uji dan pemeriksaan manifest.
   static const List<String> all = [
     mascot,
@@ -252,6 +255,7 @@ abstract final class ClayIcons {
     sheet,
     backupBox,
     restoreClock,
+    chat,
   ];
 
   /// Aset clay untuk [key], atau `null` bila belum digambar.
@@ -307,6 +311,14 @@ abstract final class ClayIcons {
     IconKey.schedule => alarm,
     IconKey.calendar => calendar,
     IconKey.systemUpdate => rocket,
+    IconKey.plus => tierCoin,
+    IconKey.photoCamera => scan,
+    IconKey.notificationsActive => bell,
+    IconKey.chatBubble => chat,
+    IconKey.trendingUp => chart,
+    IconKey.summarize => report,
+    IconKey.checkCircle => done,
+    IconKey.error => warning,
     _ => null,
   };
 }

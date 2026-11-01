@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 
-/// Tile ikon `brand-soft` untuk Plus (`tk-tile--brandsoft`): latar `brandSoft`,
-/// ikon `brandInk`, sudut piksel kecil. Dipakai paywall, layar berhasil, dan
-/// kartu Plus; ikonnya dekoratif.
+/// Ubin ikon Plus: ikon clay di atas latar `actionPrimary` tipis, sudut
+/// membulat. Ikon yang belum punya clay jatuh ke simbol Material. Dipakai
+/// paywall, daftar fitur, layar berhasil, dan kartu Plus; ikonnya dekoratif.
 class PlusTile extends StatelessWidget {
   /// Membuat [PlusTile].
   const PlusTile(this.icon, {this.size = 48, super.key});
@@ -17,17 +18,20 @@ class PlusTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
+    final c = context.ds.colors;
+    final clay = ClayIcons.forIcon(icon);
     return ExcludeSemantics(
       child: Container(
         width: size,
         height: size,
         alignment: Alignment.center,
-        decoration: ShapeDecoration(
-          color: colors.brandSoft,
-          shape: const PixelCornerBorder.small(),
+        decoration: BoxDecoration(
+          color: c.actionPrimary.withValues(alpha: 0.10),
+          borderRadius: BorderRadius.circular(size * 0.3),
         ),
-        child: AppIcon(icon, color: colors.brandInk),
+        child: clay != null
+            ? SvgPicture.asset(clay, width: size * 0.64, height: size * 0.64)
+            : AppIcon(icon, size: size * 0.5, color: c.actionPrimary),
       ),
     );
   }

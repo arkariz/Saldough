@@ -1,13 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/foundation/entitlement/entitlement.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/plan/active_plan.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/features/premium/domain/purchase_models.dart';
 import 'package:saldough/features/premium/presentation/bloc/paywall_bloc.dart';
@@ -94,67 +94,60 @@ class _PaywallPageState extends State<PaywallPage> {
         final bloc = context.read<PaywallBloc>();
         return Scaffold(
           appBar: AppBar(),
-          body: ListView(
+          body: SingleChildScrollView(
             padding: const EdgeInsets.fromLTRB(
-              AppSpacing.space4,
+              16,
               0,
-              AppSpacing.space4,
-              AppSpacing.space4,
+              16,
+              16,
             ),
-            children: [
-              _Header(message: PaywallMessage.of(widget.trigger)),
-              if (state.phase == PaywallPhase.pending ||
-                  state.phase == PaywallPhase.failed) ...[
-                const SizedBox(height: AppSpacing.space4),
-                AppBanner(
-                  message: state.phase == PaywallPhase.failed
-                      ? texts.failed
-                      : texts.pending,
-                  tone: state.phase == PaywallPhase.failed
-                      ? AppTone.danger
-                      : AppTone.info,
-                  icon: state.phase == PaywallPhase.failed
-                      ? IconKey.error
-                      : IconKey.info,
-                ),
-              ],
-              if (!widget.signedIn && state.phase != PaywallPhase.notSelling) ...[
-                const SizedBox(height: AppSpacing.space4),
-                AppBanner(
-                  message: texts.signInForTrial,
-                  tone: AppTone.info,
-                  actionLabel: t.premium.signInAction,
-                  onAction: widget.onSignIn,
-                ),
-              ],
-              const SizedBox(height: AppSpacing.space4),
-              const _Benefits(),
-              Align(
-                child: AppButton.text(
-                  label: t.premium.features.seeAll,
-                  icon: IconKey.chevronRight,
-                  small: true,
-                  onPressed: () => unawaited(
-                    context.pushRoute(PremiumRouteKeys.features, const PlusFeaturesInput(fromPaywall: true)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _Header(message: PaywallMessage.of(widget.trigger)),
+                if (state.phase == PaywallPhase.pending || state.phase == PaywallPhase.failed) ...[
+                  const SizedBox(height: 16),
+                  _Notice(
+                    message: state.phase == PaywallPhase.failed ? texts.failed : texts.pending,
+                    danger: state.phase == PaywallPhase.failed,
+                  ),
+                ],
+                if (!widget.signedIn && state.phase != PaywallPhase.notSelling) ...[
+                  const SizedBox(height: 16),
+                  _Notice(
+                    message: texts.signInForTrial,
+                    actionLabel: t.premium.signInAction,
+                    onAction: widget.onSignIn,
+                  ),
+                ],
+                const SizedBox(height: 16),
+                const _Benefits(),
+                Align(
+                  child: DsButton.ghost(
+                    label: t.premium.features.seeAll,
+                    icon: Icons.chevron_right,
+                    onPressed: () => unawaited(
+                      context.pushRoute(PremiumRouteKeys.features, const PlusFeaturesInput(fromPaywall: true)),
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: AppSpacing.space2),
-              switch (state.phase) {
-                PaywallPhase.notSelling => _NotSelling(
-                  signedIn: widget.signedIn,
-                ),
-                PaywallPhase.offline => _Offline(
-                  onRetry: () => bloc.add(const PaywallStarted()),
-                ),
-                _ => _Plans(
-                  state: state,
-                  onSelect: (kind) => bloc.add(PaywallPlanSelected(kind)),
-                ),
-              },
-            ],
+                const SizedBox(height: 8),
+                switch (state.phase) {
+                  PaywallPhase.notSelling => _NotSelling(
+                    signedIn: widget.signedIn,
+                  ),
+                  PaywallPhase.offline => _Offline(
+                    onRetry: () => bloc.add(const PaywallStarted()),
+                  ),
+                  _ => _Plans(
+                    state: state,
+                    onSelect: (kind) => bloc.add(PaywallPlanSelected(kind)),
+                  ),
+                },
+              ],
+            ),
           ),
-          bottomNavigationBar: AppStickyBar(
+          bottomNavigationBar: DsStickyBar(
             child: _Actions(
               state: state,
               signedIn: widget.signedIn,
@@ -176,27 +169,64 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    final colors = context.appColors;
+    final ds = context.ds;
     return Column(
       children: [
-        const PlusTile(IconKey.plus),
-        const SizedBox(height: AppSpacing.space1),
-        if (message.hasKicker)
-          AppBadge(t.premium.paywall.kicker, tone: AppTone.brand),
-        const SizedBox(height: AppSpacing.space1),
+        const PlusTile(IconKey.plus, size: 72),
+        const SizedBox(height: 12),
+        if (message.hasKicker) ...[
+          DsBadge(label: t.premium.paywall.kicker, tone: DsBadgeTone.income),
+          const SizedBox(height: 8),
+        ],
         Text(
           message.title,
           textAlign: TextAlign.center,
-          style: textTheme.titleLarge,
+          style: ds.typography.headlineMd.copyWith(fontSize: 22),
         ),
-        const SizedBox(height: AppSpacing.space1),
+        const SizedBox(height: 4),
         Text(
           message.body,
           textAlign: TextAlign.center,
-          style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
+          style: ds.typography.bodyMd.copyWith(color: ds.colors.textSecondary),
         ),
       ],
+    );
+  }
+}
+
+/// Pemberitahuan di paywall (menunggu, gagal, ajakan masuk): ikon, kalimat
+/// yang membungkus, dan satu tombol ringkas bila ada.
+class _Notice extends StatelessWidget {
+  const _Notice({required this.message, this.danger = false, this.actionLabel, this.onAction});
+
+  final String message;
+  final bool danger;
+  final String? actionLabel;
+  final VoidCallback? onAction;
+
+  @override
+  Widget build(BuildContext context) {
+    final ds = context.ds;
+    final c = ds.colors;
+    return DsCard(
+      padding: const EdgeInsets.all(12),
+      child: Row(
+        children: [
+          DsIconTile(
+            icon: danger ? Icons.error_outline : Icons.info_outline,
+            tone: danger ? DsIconTileTone.warning : DsIconTileTone.info,
+            size: DsIconTileSize.sm,
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(message, style: ds.typography.bodySm.copyWith(color: c.textPrimary)),
+          ),
+          if (actionLabel != null) ...[
+            const SizedBox(width: 8),
+            DsButton.compact(label: actionLabel!, onPressed: onAction),
+          ],
+        ],
+      ),
     );
   }
 }
@@ -207,14 +237,8 @@ class _Benefits extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final texts = t.premium.paywall.benefits;
-    Widget row(IconKey icon, String title) => AppListRow(
-      compact: true,
-      wrapTitle: true,
-      leading: PlusTile(icon, size: 32),
-      title: title,
-    );
-    return AppListCard(
-      dividerIndent: 60,
+    Widget row(IconKey icon, String title) => DsSettingRow(leading: PlusTile(icon, size: 40), title: title);
+    return DsListCard(
       children: [
         row(IconKey.photoCamera, texts.photo),
         row(IconKey.notificationsActive, texts.warn),
@@ -242,7 +266,7 @@ class _Plans extends StatelessWidget {
             selected: true,
             onTap: null,
           ),
-          const SizedBox(height: AppSpacing.space2),
+          const SizedBox(height: 8),
           PlanCard(
             name: texts.monthly,
             subtitle: texts.cancelAnytime,
@@ -256,8 +280,7 @@ class _Plans extends StatelessWidget {
       children: [
         for (final option in state.plans) ...[
           _card(option, state),
-          if (option != state.plans.last)
-            const SizedBox(height: AppSpacing.space2),
+          if (option != state.plans.last) const SizedBox(height: 8),
         ],
       ],
     );
@@ -284,9 +307,7 @@ class _Plans extends StatelessWidget {
       ),
       PlusPlanKind.yearly => (
         null,
-        option.perMonthText == null
-            ? texts.cancelAnytime
-            : texts.yearlyEquiv(price: option.perMonthText!),
+        option.perMonthText == null ? texts.cancelAnytime : texts.yearlyEquiv(price: option.perMonthText!),
       ),
       PlusPlanKind.monthly => (null, texts.cancelAnytime),
     };
@@ -320,30 +341,22 @@ class _Offline extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final texts = t.premium.paywall;
-    final textTheme = Theme.of(context).textTheme;
-    final colors = context.appColors;
-    return AppCard(
+    final ds = context.ds;
+    return DsCard(
+      padding: const EdgeInsets.all(20),
       child: Column(
         children: [
-          AppIcon(IconKey.wifiOff, color: colors.ink2),
-          const SizedBox(height: AppSpacing.space2),
-          Text(
-            texts.offlineTitle,
-            textAlign: TextAlign.center,
-            style: textTheme.titleMedium,
-          ),
-          const SizedBox(height: AppSpacing.space2),
+          Icon(Icons.wifi_off, color: ds.colors.textSecondary),
+          const SizedBox(height: 8),
+          Text(texts.offlineTitle, textAlign: TextAlign.center, style: ds.typography.titleMd),
+          const SizedBox(height: 8),
           Text(
             texts.offlineBody,
             textAlign: TextAlign.center,
-            style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
+            style: ds.typography.bodySm.copyWith(color: ds.colors.textSecondary),
           ),
-          const SizedBox(height: AppSpacing.space2),
-          AppButton.secondary(
-            label: texts.retry,
-            small: true,
-            onPressed: onRetry,
-          ),
+          const SizedBox(height: 8),
+          DsButton.secondary(label: texts.retry, onPressed: onRetry),
         ],
       ),
     );
@@ -358,20 +371,17 @@ class _NotSelling extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final texts = t.premium;
-    final textTheme = Theme.of(context).textTheme;
-    final colors = context.appColors;
-    return AppCard(
+    final ds = context.ds;
+    return DsCard(
+      padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            signedIn ? texts.paywall.notSellingTitle : texts.signInTitle,
-            style: textTheme.titleMedium,
-          ),
-          const SizedBox(height: AppSpacing.space1),
+          Text(signedIn ? texts.paywall.notSellingTitle : texts.signInTitle, style: ds.typography.titleMd),
+          const SizedBox(height: 4),
           Text(
             signedIn ? texts.paywall.notSellingBody : texts.signInBody,
-            style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
+            style: ds.typography.bodySm.copyWith(color: ds.colors.textSecondary),
           ),
         ],
       ),
@@ -403,46 +413,37 @@ class _Actions extends StatelessWidget {
       PaywallPhase.buying => texts.processing,
       PaywallPhase.pending => texts.waiting,
       PaywallPhase.failed => texts.retry,
-      PaywallPhase.ready =>
-        option?.kind == PlusPlanKind.monthly
-            ? texts.buyMonthly
-            : texts.buyYearly,
+      PaywallPhase.ready => option?.kind == PlusPlanKind.monthly ? texts.buyMonthly : texts.buyYearly,
       _ => texts.subscribe,
     };
-    final canBuy =
-        state.phase == PaywallPhase.ready || state.phase == PaywallPhase.failed;
+    final canBuy = state.phase == PaywallPhase.ready || state.phase == PaywallPhase.failed;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         if (selling)
-          AppButton(
+          DsButton(
             label: label,
             expand: true,
-            loading: state.phase == PaywallPhase.buying,
             onPressed: canBuy ? onBuy : null,
           )
         else if (!signedIn)
-          AppButton(
+          DsButton(
             label: t.premium.signInAction,
             expand: true,
             onPressed: onSignIn,
           ),
-        if (selling || !signedIn) const SizedBox(height: AppSpacing.space2),
-        AppButton.secondary(
+        if (selling || !signedIn) const SizedBox(height: 8),
+        DsButton.secondary(
           label: texts.later,
           expand: true,
           onPressed: onLater,
         ),
-        if (option != null &&
-            selling &&
-            state.phase != PaywallPhase.loading) ...[
-          const SizedBox(height: AppSpacing.space2),
+        if (option != null && selling && state.phase != PaywallPhase.loading) ...[
+          const SizedBox(height: 8),
           Text(
             _fine(option),
             textAlign: TextAlign.center,
-            style: Theme.of(
-              context,
-            ).textTheme.bodySmall?.copyWith(color: context.appColors.ink2),
+            style: context.ds.typography.bodySm.copyWith(color: context.ds.colors.textSecondary),
           ),
         ],
       ],
@@ -473,40 +474,36 @@ class _DonePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final texts = t.premium.paywall;
-    final textTheme = Theme.of(context).textTheme;
+    final ds = context.ds;
     final until = ActivePlan.state.isPlus ? _untilOf() : null;
     return Scaffold(
       body: SafeArea(
         child: Center(
           child: Padding(
-            padding: const EdgeInsets.all(AppSpacing.space4),
+            padding: const EdgeInsets.all(16),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const PlusTile(IconKey.plus, size: 64),
-                const SizedBox(height: AppSpacing.space4),
+                const PlusTile(IconKey.plus, size: 88),
+                const SizedBox(height: 16),
                 Text(
                   texts.doneTitle,
                   textAlign: TextAlign.center,
-                  style: textTheme.titleLarge,
+                  style: ds.typography.headlineMd.copyWith(fontSize: 22),
                 ),
-                const SizedBox(height: AppSpacing.space2),
+                const SizedBox(height: 8),
                 Text(
                   until == null
                       ? texts.doneBody
                       : texts.doneBodyPlan(
-                          plan: kind == PlusPlanKind.monthly
-                              ? texts.monthly
-                              : texts.yearly,
+                          plan: kind == PlusPlanKind.monthly ? texts.monthly : texts.yearly,
                           date: CycleMonthFormatter.formatDateShort(until),
                         ),
                   textAlign: TextAlign.center,
-                  style: textTheme.bodyMedium?.copyWith(
-                    color: context.appColors.ink2,
-                  ),
+                  style: ds.typography.bodyMd.copyWith(color: ds.colors.textSecondary),
                 ),
-                const SizedBox(height: AppSpacing.space6),
-                AppButton(
+                const SizedBox(height: 24),
+                DsButton(
                   label: texts.done,
                   expand: true,
                   onPressed: () => Navigator.of(context).maybePop(),
@@ -536,33 +533,37 @@ class _SubscribedPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final texts = t.premium.paywall;
-    final textTheme = Theme.of(context).textTheme;
+    final ds = context.ds;
     return Scaffold(
       appBar: AppBar(),
       body: SafeArea(
         child: Center(
           child: Padding(
-            padding: const EdgeInsets.all(AppSpacing.space4),
+            padding: const EdgeInsets.all(16),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const PlusTile(IconKey.plus, size: 64),
-                const SizedBox(height: AppSpacing.space4),
-                Text(texts.subscribedTitle, textAlign: TextAlign.center, style: textTheme.titleLarge),
-                const SizedBox(height: AppSpacing.space2),
+                const PlusTile(IconKey.plus, size: 88),
+                const SizedBox(height: 16),
+                Text(
+                  texts.subscribedTitle,
+                  textAlign: TextAlign.center,
+                  style: ds.typography.headlineMd.copyWith(fontSize: 22),
+                ),
+                const SizedBox(height: 8),
                 Text(
                   until == null
                       ? texts.subscribedOpen
                       : texts.subscribedBody(date: CycleMonthFormatter.formatDateShort(until!)),
                   textAlign: TextAlign.center,
-                  style: textTheme.bodyMedium?.copyWith(color: context.appColors.ink2),
+                  style: ds.typography.bodyMd.copyWith(color: ds.colors.textSecondary),
                 ),
               ],
             ),
           ),
         ),
       ),
-      bottomNavigationBar: AppStickyBar(
+      bottomNavigationBar: DsStickyBar(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -571,8 +572,8 @@ class _SubscribedPage extends StatelessWidget {
               expand: true,
               onPressed: () => unawaited(launch(playSubscriptionsUri)),
             ),
-            const SizedBox(height: AppSpacing.space2),
-            AppButton.secondary(label: texts.close, expand: true, onPressed: () => Navigator.of(context).maybePop()),
+            const SizedBox(height: 8),
+            DsButton.secondary(label: texts.close, expand: true, onPressed: () => Navigator.of(context).maybePop()),
           ],
         ),
       ),

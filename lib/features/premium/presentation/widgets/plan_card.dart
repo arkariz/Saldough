@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 
-/// Kartu pilihan paket di paywall (`tk-plan`, komponen PlanCard): seperti
-/// radio, dengan nama paket, keterangan satu baris, dan harga dari toko di
-/// kanan. Terpilih = `brandSoft` dengan garis `brand` 2px.
+/// Kartu pilihan paket di paywall (komponen PlanCard): seperti radio, dengan
+/// nama paket, keterangan satu baris, dan harga dari toko di kanan. Terpilih =
+/// latar `actionPrimary` tipis dengan garis `actionPrimary` 2px.
 ///
 /// Harga selalu string dari toko; widget ini tidak pernah menulis "Rp".
 /// [priceText] `null` menampilkan kerangka (harga sedang dimuat).
@@ -48,66 +47,71 @@ class PlanCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
+    final ds = context.ds;
+    final c = ds.colors;
     final enabled = onTap != null;
+    final reduced = DsMotion.reduced(context);
     return Semantics(
       inMutuallyExclusiveGroup: true,
       checked: selected,
       enabled: enabled,
       child: Opacity(
         opacity: enabled ? 1 : 0.6,
-        child: AppChoiceBox(
-          selected: selected,
-          onTap: onTap ?? () {},
-          padding: const EdgeInsets.all(AppSpacing.space4),
-          constraints: const BoxConstraints(minHeight: 72),
-          child: Row(
-            children: [
-              _Radio(selected: selected),
-              const SizedBox(width: AppSpacing.space3),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(name, style: textTheme.titleMedium),
-                    if (tag != null) ...[
-                      const SizedBox(height: AppSpacing.space1),
-                      AppBadge(tag!, tone: AppTone.brand, icon: IconKey.plus),
+        child: DsPressable(
+          onPressed: onTap,
+          pressedScale: 0.99,
+          dimWhenDisabled: false,
+          builder: (context, _) => AnimatedContainer(
+            duration: reduced ? Duration.zero : DsMotion.standard,
+            constraints: const BoxConstraints(minHeight: 72),
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: selected ? c.actionPrimary.withValues(alpha: 0.06) : c.surfaceCard,
+              borderRadius: DsRadius.lgAll,
+              border: Border.all(color: selected ? c.actionPrimary : c.outlineSubtle, width: selected ? 2 : 1),
+              boxShadow: const [BoxShadow(color: Color(0x0F000000), blurRadius: 14, offset: Offset(0, 5))],
+            ),
+            child: Row(
+              children: [
+                _Radio(selected: selected),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(name, style: ds.typography.titleMd),
+                      if (tag != null) ...[const SizedBox(height: 4), DsBadge(label: tag!, tone: DsBadgeTone.income)],
+                      Text(subtitle, style: ds.typography.bodySm.copyWith(color: c.textSecondary)),
                     ],
-                    Text(
-                      subtitle,
-                      style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                if (priceText == null)
+                  const DsSkeleton(width: 84, height: 20)
+                else
+                  Flexible(
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: AlignmentDirectional.centerEnd,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          if (regularPriceText != null)
+                            Text(
+                              regularPriceText!,
+                              style: ds.typography.bodySm.copyWith(
+                                color: c.textMuted,
+                                decoration: TextDecoration.lineThrough,
+                              ),
+                            ),
+                          Text(priceText!, style: ds.typography.titleMd),
+                          if (unit != null) Text(unit!, style: ds.typography.bodySm.copyWith(color: c.textSecondary)),
+                        ],
+                      ),
                     ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: AppSpacing.space3),
-              if (priceText == null)
-                const AppSkeleton(width: 84, height: 20)
-              else
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    if (regularPriceText != null)
-                      Text(
-                        regularPriceText!,
-                        style: textTheme.bodySmall?.copyWith(
-                          color: colors.ink2,
-                          decoration: TextDecoration.lineThrough,
-                        ),
-                      ),
-                    Text(priceText!, style: textTheme.titleMedium),
-                    if (unit != null)
-                      Text(
-                        unit!,
-                        style: textTheme.bodySmall?.copyWith(
-                          color: colors.ink2,
-                        ),
-                      ),
-                  ],
-                ),
-            ],
+                  ),
+              ],
+            ),
           ),
         ),
       ),
@@ -122,28 +126,22 @@ class _Radio extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
+    final c = context.ds.colors;
     return ExcludeSemantics(
       child: Container(
-        width: 20,
-        height: 20,
+        width: 22,
+        height: 22,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: selected ? colors.brand : Colors.transparent,
-          border: Border.all(
-            color: selected ? colors.brand : colors.lineStrong,
-            width: 2,
-          ),
+          color: selected ? c.actionPrimary : Colors.transparent,
+          border: Border.all(color: selected ? c.actionPrimary : c.outline, width: 2),
         ),
         child: selected
             ? Center(
                 child: Container(
                   width: 8,
                   height: 8,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: colors.onBrand,
-                  ),
+                  decoration: BoxDecoration(shape: BoxShape.circle, color: c.onActionPrimary),
                 ),
               )
             : null,

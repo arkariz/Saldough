@@ -370,3 +370,58 @@ class _DsWiggleState extends State<DsWiggle> with SingleTickerProviderStateMixin
     );
   }
 }
+
+/// Goyang halus berulang bergantian khas mode atur (acuan `jiggle-even` dan
+/// `jiggle-odd`): miring ±1,2° tiap 0,21–0,23 dtk; genap dan ganjil berlawanan
+/// arah. Diam saat gerak dikurangi.
+class DsJiggleLoop extends StatefulWidget {
+  /// Membuat goyangan berulang untuk item ke-[index].
+  const DsJiggleLoop({required this.index, required this.child, super.key});
+
+  /// Indeks item; genap dan ganjil bergoyang berlawanan.
+  final int index;
+
+  /// Yang digoyang.
+  final Widget child;
+
+  @override
+  State<DsJiggleLoop> createState() => _DsJiggleLoopState();
+}
+
+class _DsJiggleLoopState extends State<DsJiggleLoop> with SingleTickerProviderStateMixin {
+  late final AnimationController _controller = AnimationController(
+    vsync: this,
+    duration: Duration(milliseconds: widget.index.isEven ? 230 : 210),
+  );
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (DsMotion.reduced(context)) {
+      _controller
+        ..stop()
+        ..value = 0.5;
+    } else if (!_controller.isAnimating) {
+      _controller.repeat(reverse: true);
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final sign = widget.index.isEven ? 1.0 : -1.0;
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, child) {
+        final u = (_controller.value - 0.5) * 2;
+        return Transform.rotate(angle: sign * u * 1.2 * math.pi / 180, child: child);
+      },
+      child: widget.child,
+    );
+  }
+}

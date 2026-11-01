@@ -15,8 +15,8 @@ import 'package:saldough/features/wallet/presentation/widgets/wallet_card.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_empty_states.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_form_sheet.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_hero_card.dart';
-import 'package:saldough/features/wallet/presentation/widgets/wallet_reorder_sheet.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_spread_card.dart';
+import 'package:saldough/features/wallet/presentation/widgets/wallet_type.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 import 'package:state_management/state_management.dart';
 
@@ -45,6 +45,11 @@ class _WalletListPageState extends State<WalletListPage> {
   /// Tidak disimpan: meninggalkan layar mengembalikan kartu ke ringkas.
   String? _linked;
 
+  /// Mode Atur di tempat: dompet bergoyang dan bisa diseret. Urutan kerja
+  /// disimpan di [_order] sampai Selesai.
+  bool _organizing = false;
+  List<Wallet> _order = const [];
+
   @override
   void initState() {
     super.initState();
@@ -56,16 +61,21 @@ class _WalletListPageState extends State<WalletListPage> {
   /// rincian, bukan langsung formulir sunting.
   Future<void> _addWallet(BuildContext context) => openAddWalletSheet(context);
 
-  /// Membuka lembar Urutkan dompet (B-34). Dompet nonaktif tetap di belakang
-  /// dompet aktif dengan urutan relatifnya.
-  Future<void> _reorderWallets(BuildContext context, WalletState state) async {
-    final bloc = context.read<WalletBloc>();
-    final ordered = await showFullScreenSheet<List<String>>(
-      context,
-      builder: (_) => WalletReorderSheet(wallets: state.activeWallets),
-    );
-    if (ordered == null) return;
-    bloc.add(WalletsReordered([...ordered, for (final w in state.inactiveWallets) w.id]));
+  /// Mulai mode Atur di tempat (B-34): dompet aktif bergoyang dan bisa diseret.
+  void _startOrganizing(WalletState state) => setState(() {
+    _organizing = true;
+    _order = [...state.activeWallets];
+    _linked = null;
+  });
+
+  /// Selesai mengatur: simpan urutan bila berubah. Dompet nonaktif tetap di
+  /// belakang dompet aktif dengan urutan relatifnya.
+  void _finishOrganizing(WalletState state) {
+    final changed = [for (final w in _order) w.id].join(',') != [for (final w in state.activeWallets) w.id].join(',');
+    if (changed) {
+      context.read<WalletBloc>().add(WalletsReordered([for (final w in _order) w.id, for (final w in state.inactiveWallets) w.id]));
+    }
+    setState(() => _organizing = false);
   }
 
   @override
@@ -120,7 +130,7 @@ class _WalletListPageState extends State<WalletListPage> {
                   spotlightKey: SpotlightKey.walletSummary,
                   child: WalletHeroCard(total: state.totalBalance, activeCount: active.length),
                 ),
-                if (multi && shares.length > 1) ...[
+                if (multi && shares.length > 1 && !_organizing) ...[
                   const SizedBox(height: AppSpacing.space4),
                   WalletSpreadCard(
                     wallets: active,
@@ -134,15 +144,23 @@ class _WalletListPageState extends State<WalletListPage> {
                 const SizedBox(height: AppSpacing.space4),
                 _WalletsHeader(
                   count: active.length,
-                  onReorder: multi ? () => _reorderWallets(context, state) : null,
+                  organizing: _organizing && multi,
+                  onReorder: multi ? () => _startOrganizing(state) : null,
+                  onDone: () => _finishOrganizing(state),
                 ),
                 const SizedBox(height: AppSpacing.space2),
-                _WalletGrid(
-                  wallets: active,
-                  shares: multi ? shares : const {},
-                  colors: multi ? walletColorMap : const {},
-                  linked: linked,
-                ),
+                if (_organizing && multi)
+                  _OrganizeList(
+                    wallets: _order,
+                    onReorder: (oldIndex, newIndex) => setState(() => _order.insert(newIndex, _order.removeAt(oldIndex))),
+                  )
+                else
+                  _WalletGrid(
+                    wallets: active,
+                    shares: multi ? shares : const {},
+                    colors: multi ? walletColorMap : const {},
+                    linked: linked,
+                  ),
                 if (inactive.isNotEmpty) ...[
                   const SizedBox(height: AppSpacing.space4),
                   DsFieldGroup(
@@ -311,17 +329,40 @@ class _DashedBorderPainter extends CustomPainter {
 
 /// Kepala daftar dompet (acuan Dompet v2): judul "Dompet aktif" dengan
 /// lencana jumlah, keterangan satu baris, dan tombol Atur di kanan bila
-/// dompetnya dua atau lebih.
+/// dompetnya dua atau lebih. Saat [organizing], tombolnya menjadi Selesai dan
+/// keterangannya petunjuk mengatur urutan.
 class _WalletsHeader extends StatelessWidget {
-  const _WalletsHeader({required this.count, required this.onReorder});
+  const _WalletsHeader({
+    required this.count,
+    required this.organizing,
+    required this.onReorder,
+    required this.onDone,
+  });
 
   final int count;
+  final bool organizing;
   final VoidCallback? onReorder;
+  final VoidCallback onDone;
 
   @override
   Widget build(BuildContext context) {
     final ds = context.ds;
     final c = ds.colors;
+    final button = organizing
+        ? DsButton(
+            key: const ValueKey('wallet-reorder-save'),
+            label: t.common.done,
+            icon: Icons.check,
+            onPressed: onDone,
+          )
+        : onReorder == null
+        ? null
+        : DsButton.secondary(
+            key: const ValueKey('wallet-reorder'),
+            label: t.wallet.reorderAction,
+            icon: Icons.tune,
+            onPressed: onReorder,
+          );
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -336,26 +377,93 @@ class _WalletsHeader extends StatelessWidget {
                 children: [
                   Semantics(
                     header: true,
-                    child: Text(t.wallet.listHeading, style: ds.typography.headlineSm),
+                    child: Text(organizing ? t.wallet.reorderTitle : t.wallet.listHeading, style: ds.typography.headlineSm),
                   ),
                   DsBadge(label: '$count', tone: DsBadgeTone.neutral),
                 ],
               ),
               const SizedBox(height: 2),
-              Text(t.wallet.listSubtitle, style: ds.typography.bodySm.copyWith(color: c.textSecondary)),
+              Text(
+                organizing ? t.wallet.reorderHint : t.wallet.listSubtitle,
+                style: ds.typography.bodySm.copyWith(color: c.textSecondary),
+              ),
             ],
           ),
         ),
-        if (onReorder != null) ...[
-          const SizedBox(width: 8),
-          DsButton.secondary(
-            key: const ValueKey('wallet-reorder'),
-            label: t.wallet.reorderAction,
-            icon: Icons.tune,
-            onPressed: onReorder,
-          ),
-        ],
+        if (button != null) ...[const SizedBox(width: 8), button],
       ],
+    );
+  }
+}
+
+/// Daftar dompet saat mode Atur: tiap baris bergoyang pelan dan bisa diseret
+/// lewat pegangan (atau tekan lama barisnya). Tanpa gulir sendiri: halaman
+/// yang menggulir.
+class _OrganizeList extends StatelessWidget {
+  const _OrganizeList({required this.wallets, required this.onReorder});
+
+  final List<Wallet> wallets;
+  final void Function(int oldIndex, int newIndex) onReorder;
+
+  @override
+  Widget build(BuildContext context) {
+    final ds = context.ds;
+    final c = ds.colors;
+    return ReorderableListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      buildDefaultDragHandles: false,
+      itemCount: wallets.length,
+      onReorderItem: onReorder,
+      itemBuilder: (context, index) {
+        final wallet = wallets[index];
+        final asset = ClayIcons.forIcon(walletIconKey(wallet.iconKey)) ?? ClayIcons.walletNav;
+        return Padding(
+          key: ValueKey(wallet.id),
+          padding: const EdgeInsets.only(bottom: 10),
+          child: ReorderableDelayedDragStartListener(
+            index: index,
+            child: DsJiggleLoop(
+              index: index,
+              child: Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: c.surfaceCard,
+                  borderRadius: DsRadius.lgAll,
+                  border: Border.all(color: c.outlineSubtle),
+                ),
+                child: Row(
+                  children: [
+                    DsIconTile.asset(asset: asset),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(wallet.name, style: ds.typography.titleMd.copyWith(fontSize: 15)),
+                          if (walletTypeLabel(wallet.iconKey) case final type?)
+                            Text(type, style: ds.typography.bodySm.copyWith(color: c.textSecondary)),
+                        ],
+                      ),
+                    ),
+                    ReorderableDragStartListener(
+                      key: ValueKey('wallet-reorder-handle-${wallet.id}'),
+                      index: index,
+                      child: Semantics(
+                        label: t.wallet.reorderHandleLabel(name: wallet.name),
+                        child: SizedBox.square(
+                          dimension: 44,
+                          child: Center(child: Icon(Icons.drag_indicator, color: c.textMuted)),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

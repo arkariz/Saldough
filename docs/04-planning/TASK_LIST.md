@@ -6007,6 +6007,10 @@ memilih mode (dan preset bila ≥ 2), dan design system lama dihapus.
       diadopsi dari acuan: lencana "+3,5% APY", skor Kakeibo Health, kartu
       edukasi. Belum: mode Atur di tempat (goyang dan tarik-seret; masih
       lembar urutkan), rincian dompet, formulir dompet, dan menu titik tiga.
+      **Dompet v2, mode Atur di tempat (1 Nov 2026):** tombol Atur di kepala
+      "Dompet aktif" mengganti grid dengan daftar bergoyang (`DsJiggleLoop`)
+      yang bisa diseret lewat pegangan atau tekan lama; Selesai menyimpan
+      urutan bila berubah. Lembar urutkan lama dihapus.
       **Ikon clay dilengkapi (31 Okt 2026, KT-DS5):** 33 ikon baru untuk
       dompet, jenis transaksi, kategori, dan status Freelance; semua
       `IconKey` benda kini punya clay (`ClayIcons.forIcon`). Digambar dari

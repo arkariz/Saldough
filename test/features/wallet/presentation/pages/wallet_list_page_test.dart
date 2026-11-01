@@ -17,7 +17,6 @@ import 'package:saldough/features/plan/domain/plan_sources.dart';
 import 'package:saldough/features/wallet/presentation/pages/wallet_inactive_page.dart';
 import 'package:saldough/features/wallet/presentation/pages/wallet_list_page.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_card.dart';
-import 'package:saldough/features/wallet/presentation/widgets/wallet_reorder_sheet.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_spread_card.dart';
 import 'package:saldough/shared/auth/auth.dart';
 import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
@@ -85,8 +84,8 @@ void main() {
     );
   }
 
-  Future<List<Wallet>> stored() async => (await walletRepository.listWallets())
-      .getOrElse((_) => throw StateError('expected Right'));
+  Future<List<Wallet>> stored() async =>
+      (await walletRepository.listWallets()).getOrElse((_) => throw StateError('expected Right'));
 
   void tallViewport(WidgetTester tester) {
     tester.view.physicalSize = const Size(800, 3200);
@@ -212,7 +211,9 @@ void main() {
         // Bar proporsi benar-benar tergambar: tiap ruas pil setinggi 10px, bukan 0.
         final segments = find.descendant(
           of: find.byType(WalletSpreadBar),
-          matching: find.byWidgetPredicate((w) => w is DecoratedBox && (w.decoration as BoxDecoration).gradient != null),
+          matching: find.byWidgetPredicate(
+            (w) => w is DecoratedBox && (w.decoration as BoxDecoration).gradient != null,
+          ),
         );
         expect(segments, findsNWidgets(3));
         for (final segment in tester.widgetList(segments)) {
@@ -225,7 +226,11 @@ void main() {
         await tester.tap(find.byKey(const ValueKey('wallet-spread-head')));
         await tester.pumpAndSettle();
         expect(find.byType(AppDonutChart), findsOneWidget);
-        expect(tester.widget<AppDonutChart>(find.byType(AppDonutChart)).rounded, isTrue, reason: 'donat gaya v2: ujung bulat');
+        expect(
+          tester.widget<AppDonutChart>(find.byType(AppDonutChart)).rounded,
+          isTrue,
+          reason: 'donat gaya v2: ujung bulat',
+        );
         expect(find.text(t.wallet.spreadTapClose), findsOneWidget);
         expect(find.byType(WalletSpreadBar), findsNothing);
         expect(find.text(t.wallet.spreadSeeTotal), findsNothing);
@@ -234,11 +239,15 @@ void main() {
         await tester.tap(find.byKey(const ValueKey('wallet-legend-tunai')));
         await tester.pumpAndSettle();
         expect(find.text(t.wallet.spreadOfTotal(percent: '1%')), findsOneWidget);
-        bool linkedOf(String name) =>
-            tester.widget<WalletBentoCard>(find.ancestor(of: find.text(name), matching: find.byType(WalletBentoCard))).linked;
+        bool linkedOf(String name) => tester
+            .widget<WalletBentoCard>(find.ancestor(of: find.text(name), matching: find.byType(WalletBentoCard)))
+            .linked;
         expect(linkedOf('BCA'), isFalse);
         expect(
-          tester.widgetList<WalletBentoCard>(find.byType(WalletBentoCard)).where((c) => c.linked).map((c) => c.wallet.id),
+          tester
+              .widgetList<WalletBentoCard>(find.byType(WalletBentoCard))
+              .where((c) => c.linked)
+              .map((c) => c.wallet.id),
           ['tunai'],
         );
 
@@ -311,8 +320,9 @@ void main() {
         expect(wallets.single.currentBalance, 50000000);
         expect(find.text('Dompet Saku'), findsOneWidget);
         expect(find.text(t.wallet.savedMessage), findsOneWidget);
-        final transactions = (await transactionRepository.listAllTransactions())
-            .getOrElse((_) => throw StateError('x'));
+        final transactions = (await transactionRepository.listAllTransactions()).getOrElse(
+          (_) => throw StateError('x'),
+        );
         expect(
           transactions,
           isEmpty,
@@ -566,7 +576,19 @@ void main() {
       expect(reorderButton(), findsNothing);
     });
 
-    testWidgets('menyeret dompet lalu Simpan urutan menyimpan urutan baru; nonaktif tetap di belakang', (tester) async {
+    /// Mode Atur menggoyang dompet tanpa henti; uji mematikannya lewat
+    /// "kurangi gerak" supaya `pumpAndSettle` selesai.
+    void reduceMotion(WidgetTester tester) {
+      tester.platformDispatcher.accessibilityFeaturesTestValue = const FakeAccessibilityFeatures(
+        disableAnimations: true,
+      );
+      addTearDown(tester.platformDispatcher.clearAccessibilityFeaturesTestValue);
+    }
+
+    testWidgets('mode Atur di tempat: seret dompet lalu Selesai menyimpan urutan; nonaktif tetap di belakang', (
+      tester,
+    ) async {
+      reduceMotion(tester);
       tallViewport(tester);
       await seed('w1', 'BCA');
       await seed('w2', 'Lama', active: false);
@@ -577,7 +599,10 @@ void main() {
       await tester.tap(reorderButton());
       await tester.pumpAndSettle();
       expect(find.text(t.wallet.reorderTitle), findsOneWidget);
-      expect(find.descendant(of: find.byType(WalletReorderSheet), matching: find.text('Lama')), findsNothing, reason: 'dompet nonaktif tidak diurutkan di lembar');
+      expect(find.text(t.wallet.reorderHint), findsOneWidget);
+      expect(find.text('Lama'), findsNothing, reason: 'dompet nonaktif tidak diurutkan');
+      expect(find.byType(WalletBentoCard), findsNothing, reason: 'grid diganti daftar atur');
+      expect(find.byKey(const ValueKey('wallet-spread')), findsNothing, reason: 'sebaran disembunyikan saat atur');
 
       // Seret pegangan GoPay ke atas BCA.
       final handle = find.byKey(const ValueKey('wallet-reorder-handle-w4'));
@@ -601,17 +626,29 @@ void main() {
       expect(find.text(t.wallet.reorderedMessage), findsOneWidget);
     });
 
-    testWidgets('menutup lembar tanpa Simpan tidak mengubah urutan', (tester) async {
+    testWidgets('Selesai tanpa mengubah urutan tidak menyimpan apa pun', (tester) async {
+      reduceMotion(tester);
       await seed('w1', 'BCA');
       await seed('w3', 'Tunai', icon: 'walletCash');
       await openWalletsTab(tester);
 
       await tester.tap(reorderButton());
       await tester.pumpAndSettle();
-      await tester.tap(find.byWidgetPredicate((w) => w is AppIcon && w.iconKey == IconKey.close));
+      await tester.tap(find.byKey(const ValueKey('wallet-reorder-save')));
       await tester.pumpAndSettle();
 
       expect((await stored()).map((w) => w.id), ['w1', 'w3']);
+      expect(find.text(t.wallet.reorderedMessage), findsNothing);
+      expect(find.byType(WalletBentoCard), findsNWidgets(2));
+    });
+
+    testWidgets('mode Atur: baris memakai goyangan (diam di uji karena gerak dikurangi)', (tester) async {
+      await seed('w1', 'BCA');
+      await seed('w3', 'Tunai', icon: 'walletCash');
+      await openWalletsTab(tester);
+      await tester.tap(reorderButton());
+      await tester.pumpAndSettle();
+      expect(find.byType(DsJiggleLoop), findsNWidgets(2));
     });
   });
 }

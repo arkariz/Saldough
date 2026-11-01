@@ -74,7 +74,10 @@ void main() {
             wordmark: 'tanukonomy',
             collapsedTitle: const Text('Rp 14.850.000'),
           ),
-          body: ListView(controller: controller, children: [for (var i = 0; i < 40; i++) SizedBox(height: 60, child: Text('$i'))]),
+          body: ListView(
+            controller: controller,
+            children: [for (var i = 0; i < 40; i++) SizedBox(height: 60, child: Text('$i'))],
+          ),
         ),
       ),
     );
@@ -100,7 +103,11 @@ void main() {
             nextLabel: 'Berikutnya',
             dotLabel: (i) => 'Slide ${i + 1}',
             onPageChanged: pages.add,
-            children: const [Center(child: Text('A')), Center(child: Text('B')), Center(child: Text('C'))],
+            children: const [
+              Center(child: Text('A')),
+              Center(child: Text('B')),
+              Center(child: Text('C')),
+            ],
           ),
         ),
       ),
@@ -112,7 +119,9 @@ void main() {
     await tester.pumpAndSettle();
     expect(pages, [1, 2]);
     final widths = tester
-        .widgetList<AnimatedContainer>(find.descendant(of: find.byType(DsCarouselDots), matching: find.byType(AnimatedContainer)))
+        .widgetList<AnimatedContainer>(
+          find.descendant(of: find.byType(DsCarouselDots), matching: find.byType(AnimatedContainer)),
+        )
         .map((a) => a.constraints!.maxWidth)
         .toList();
     expect(widths, [8, 8, 24]);
@@ -136,13 +145,28 @@ void main() {
 
   testWidgets('DsPulse dan DsIdleMotion berulang lalu diam saat gerak dikurangi', (tester) async {
     await tester.pumpWidget(
-      _host(const Column(children: [DsPulse(child: DsBadge(label: '3 HARI LAGI')), DsIdleMotion(child: Text('🍃'))])),
+      _host(
+        const Column(
+          children: [
+            DsPulse(child: DsBadge(label: '3 HARI LAGI')),
+            DsIdleMotion(child: Text('🍃')),
+          ],
+        ),
+      ),
     );
     await tester.pump(const Duration(milliseconds: 500));
     expect(find.byType(DecoratedBox), findsWidgets);
     expect(tester.takeException(), isNull);
     await tester.pumpWidget(
-      _host(const Column(children: [DsPulse(child: DsBadge(label: '3 HARI LAGI')), DsIdleMotion(child: Text('🍃'))]), reduced: true),
+      _host(
+        const Column(
+          children: [
+            DsPulse(child: DsBadge(label: '3 HARI LAGI')),
+            DsIdleMotion(child: Text('🍃')),
+          ],
+        ),
+        reduced: true,
+      ),
     );
     await tester.pump(const Duration(seconds: 5));
     expect(tester.hasRunningAnimations, isFalse);
@@ -183,10 +207,14 @@ void main() {
     testWidgets('memasang overlay lalu melepasnya sendiri', (tester) async {
       late BuildContext ctx;
       await tester.pumpWidget(
-        _host(Builder(builder: (context) {
-          ctx = context;
-          return const SizedBox();
-        })),
+        _host(
+          Builder(
+            builder: (context) {
+              ctx = context;
+              return const SizedBox();
+            },
+          ),
+        ),
       );
       DsCelebration.burst(ctx, origin: const Offset(100, 200), label: '+50 XP', random: math.Random(1));
       await tester.pump(const Duration(milliseconds: 400));
@@ -199,10 +227,15 @@ void main() {
     testWidgets('tidak memasang apa pun saat gerak dikurangi', (tester) async {
       late BuildContext ctx;
       await tester.pumpWidget(
-        _host(Builder(builder: (context) {
-          ctx = context;
-          return const SizedBox();
-        }), reduced: true),
+        _host(
+          Builder(
+            builder: (context) {
+              ctx = context;
+              return const SizedBox();
+            },
+          ),
+          reduced: true,
+        ),
       );
       DsCelebration.burst(ctx, origin: Offset.zero, label: '+50 XP');
       await tester.pump(const Duration(milliseconds: 400));
@@ -215,16 +248,28 @@ void main() {
     await tester.pumpWidget(build(0));
     await tester.pumpWidget(build(1));
     await tester.pump(const Duration(milliseconds: 150));
-    final mid = tester.widget<Transform>(find.ancestor(of: find.text('LVL 12'), matching: find.byType(Transform)).first);
+    final mid = tester.widget<Transform>(
+      find.ancestor(of: find.text('LVL 12'), matching: find.byType(Transform)).first,
+    );
     expect(mid.transform.storage[0], isNot(1.0));
     await tester.pumpAndSettle();
-    final end = tester.widget<Transform>(find.ancestor(of: find.text('LVL 12'), matching: find.byType(Transform)).first);
+    final end = tester.widget<Transform>(
+      find.ancestor(of: find.text('LVL 12'), matching: find.byType(Transform)).first,
+    );
     expect(end.transform.getMaxScaleOnAxis(), closeTo(1, 0.0001));
   });
 
   testWidgets('DsTapTip muncul saat diketuk dan hilang setelah 2,4 dtk', (tester) async {
     await tester.pumpWidget(
-      _host(const Padding(padding: EdgeInsets.only(top: 80), child: DsTapTip(message: 'Aman', child: SizedBox(width: 100, height: 40, child: Text('kartu'))))),
+      _host(
+        const Padding(
+          padding: EdgeInsets.only(top: 80),
+          child: DsTapTip(
+            message: 'Aman',
+            child: SizedBox(width: 100, height: 40, child: Text('kartu')),
+          ),
+        ),
+      ),
     );
     double opacity() => tester.widget<AnimatedOpacity>(find.byType(AnimatedOpacity)).opacity;
     expect(opacity(), 0);
@@ -234,6 +279,45 @@ void main() {
     await tester.pump(DsMotion.tip + const Duration(milliseconds: 50));
     expect(opacity(), 0);
     await tester.pumpAndSettle();
+  });
+
+  group('DsJiggleLoop', () {
+    testWidgets('genap dan ganjil miring berlawanan dan terus bergoyang', (tester) async {
+      await tester.pumpWidget(
+        _host(
+          const Column(
+            children: [
+              DsJiggleLoop(index: 0, child: SizedBox(key: Key('even'), width: 40, height: 40)),
+              DsJiggleLoop(index: 1, child: SizedBox(key: Key('odd'), width: 40, height: 40)),
+            ],
+          ),
+        ),
+      );
+      double angle(String key) => tester
+          .widget<Transform>(find.ancestor(of: find.byKey(Key(key)), matching: find.byType(Transform)).first)
+          .transform
+          .storage[1];
+      await tester.pump(const Duration(milliseconds: 60));
+      final even = angle('even');
+      final odd = angle('odd');
+      expect(even * odd, lessThan(0), reason: 'berlawanan arah');
+      await tester.pump(const Duration(milliseconds: 90));
+      expect(angle('even'), isNot(even));
+    });
+
+    testWidgets('gerak dikurangi: tegak', (tester) async {
+      await tester.pumpWidget(
+        _host(const DsJiggleLoop(index: 0, child: SizedBox(key: Key('x'), width: 40, height: 40)), reduced: true),
+      );
+      await tester.pump(const Duration(milliseconds: 100));
+      expect(
+        tester
+            .widget<Transform>(find.ancestor(of: find.byKey(const Key('x')), matching: find.byType(Transform)).first)
+            .transform
+            .storage[1],
+        0,
+      );
+    });
   });
 
   group('DsHeroBalanceCard', () {
@@ -296,7 +380,9 @@ void main() {
       await tester.pumpWidget(_host(hero()));
       expect(find.bySemanticsLabel('Rp14.850.000'), findsOneWidget);
       await tester.pumpWidget(_host(hero(hidden: true)));
-      await tester.pumpAndSettle(const Duration(milliseconds: 100), EnginePhase.sendSemanticsUpdate, const Duration(seconds: 2)).catchError((_) => 0);
+      await tester
+          .pumpAndSettle(const Duration(milliseconds: 100), EnginePhase.sendSemanticsUpdate, const Duration(seconds: 2))
+          .catchError((_) => 0);
       expect(find.bySemanticsLabel('••••••••'), findsOneWidget);
       handle.dispose();
     });
@@ -307,19 +393,27 @@ void main() {
       final topRight = tester.getTopRight(card) + const Offset(-10, 10);
       final gesture = await tester.startGesture(topRight);
       await tester.pump(const Duration(milliseconds: 300));
-      final tilted = tester.widget<AnimatedContainer>(find.descendant(of: card, matching: find.byType(AnimatedContainer)).first);
+      final tilted = tester.widget<AnimatedContainer>(
+        find.descendant(of: card, matching: find.byType(AnimatedContainer)).first,
+      );
       expect(tilted.transform!.storage[1], isNot(0.0));
       await gesture.up();
       await tester.pump(const Duration(milliseconds: 600));
-      final flat = tester.widget<AnimatedContainer>(find.descendant(of: card, matching: find.byType(AnimatedContainer)).first);
+      final flat = tester.widget<AnimatedContainer>(
+        find.descendant(of: card, matching: find.byType(AnimatedContainer)).first,
+      );
       expect(flat.transform!.storage[1].abs(), lessThan(0.001));
     });
 
     testWidgets('gerak dikurangi: kartu tidak miring', (tester) async {
       await tester.pumpWidget(_host(hero(), reduced: true));
-      final gesture = await tester.startGesture(tester.getTopRight(find.byType(DsHeroBalanceCard)) + const Offset(-10, 10));
+      final gesture = await tester.startGesture(
+        tester.getTopRight(find.byType(DsHeroBalanceCard)) + const Offset(-10, 10),
+      );
       await tester.pump();
-      final box = tester.widget<AnimatedContainer>(find.descendant(of: find.byType(DsHeroBalanceCard), matching: find.byType(AnimatedContainer)).first);
+      final box = tester.widget<AnimatedContainer>(
+        find.descendant(of: find.byType(DsHeroBalanceCard), matching: find.byType(AnimatedContainer)).first,
+      );
       expect(box.transform!.isIdentity(), isTrue);
       await gesture.up();
     });

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:saldough/core/design_system/components/ds_pressable.dart';
 import 'package:saldough/core/design_system/ds_theme.dart';
 import 'package:saldough/core/design_system/tokens/ds_motion.dart';
@@ -8,7 +9,7 @@ import 'package:saldough/core/design_system/tokens/ds_radius.dart';
 @immutable
 class DsSegment<T> {
   /// Membuat pilihan.
-  const DsSegment({required this.value, required this.label, this.icon});
+  const DsSegment({required this.value, required this.label, this.icon, this.asset});
 
   /// Nilai pilihan.
   final T value;
@@ -18,6 +19,9 @@ class DsSegment<T> {
 
   /// Ikon kecil di depan teks.
   final IconData? icon;
+
+  /// Ikon clay (SVG) di depan teks; menggantikan [icon].
+  final String? asset;
 }
 
 /// Pengalih segmen dengan pil hijau yang meluncur ke pilihan aktif (acuan
@@ -114,7 +118,13 @@ class _Segment<T> extends StatelessWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  if (segment.icon != null) ...[Icon(segment.icon, size: 15, color: color), const SizedBox(width: 4)],
+                  if (segment.asset != null) ...[
+                    SvgPicture.asset(segment.asset!, width: 20, height: 20),
+                    const SizedBox(width: 4),
+                  ] else if (segment.icon != null) ...[
+                    Icon(segment.icon, size: 15, color: color),
+                    const SizedBox(width: 4),
+                  ],
                   Flexible(
                     child: Text(
                       segment.label,

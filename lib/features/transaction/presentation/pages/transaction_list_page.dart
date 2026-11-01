@@ -113,12 +113,12 @@ class _TransactionListPageState extends State<TransactionListPage> {
                       DsSegment(
                         value: HistorySegment.list,
                         label: t.transaction.listSegment,
-                        icon: Icons.receipt_long_outlined,
+                        asset: ClayIcons.receipt,
                       ),
                       DsSegment(
                         value: HistorySegment.analysis,
                         label: t.analysis.segment,
-                        icon: Icons.pie_chart_outline,
+                        asset: ClayIcons.report,
                       ),
                     ],
                     selected: _segment!,

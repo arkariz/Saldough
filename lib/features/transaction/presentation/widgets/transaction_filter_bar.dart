@@ -249,16 +249,12 @@ class _TransactionFilterSheet extends StatelessWidget {
             children: [
               DsSelectRow<String>(
                 icon: Icons.account_balance_wallet_outlined,
-                leading: selectedWallet == null
-                    ? null
-                    : DsIconTile.asset(
-                        asset:
-                            ClayIcons.forIcon(
-                              walletIconKey(selectedWallet.iconKey),
-                            ) ??
-                            ClayIcons.walletNav,
-                        size: DsIconTileSize.sm,
-                      ),
+                leading: DsIconTile.asset(
+                  asset: selectedWallet == null
+                      ? ClayIcons.walletNav
+                      : ClayIcons.forIcon(walletIconKey(selectedWallet.iconKey)) ?? ClayIcons.walletNav,
+                  size: DsIconTileSize.sm,
+                ),
                 label: t.transaction.walletFilterLabel,
                 title: selectedWallet?.name ?? t.transaction.walletFilterAllLabel,
                 placeholder: selectedWallet == null,
@@ -277,6 +273,7 @@ class _TransactionFilterSheet extends StatelessWidget {
               ),
               DsSelectRow<String>(
                 icon: Icons.sell_outlined,
+                leading: DsIconTile.asset(asset: ClayIcons.tray, size: DsIconTileSize.sm),
                 label: t.transaction.categoryFilterLabel,
                 title: selectedCategory?.name ?? t.transaction.categoryFilterAllLabel,
                 placeholder: selectedCategory == null,

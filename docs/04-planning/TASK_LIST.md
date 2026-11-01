@@ -6046,7 +6046,10 @@ memilih mode (dan preset bila ≥ 2), dan design system lama dihapus.
       kartu donat bulat dengan legenda bulat (`AppLegendRow` dipasang v2),
       pembanding, sorotan, kaki transfer, dan kartu Tren memakai komponen
       v2 tanpa mengubah perilaku, kunci, atau uji. Grafik batang Tren
-      (`AppTrendChart`) masih gambar lama. Dari acuan Stitch **tidak**
+      (`AppTrendChart`, juga di Rincian kategori) kini batang bulat
+      berkilap, garis putus-putus, pita terpilih meluncur, dan batang tumbuh
+      berurutan (diam bila gerak dikurangi); ikon segmen Daftar/Analisis dan
+      dompet memakai clay. Dari acuan Stitch **tidak**
       dibuat: Bisikan Tanuki ("3 Daun Emas"), Kakeibo 4 pilar dan "Target
       Seimbang" (tidak ada di domain), tren 4 minggu Mei vs April (domain
       punya tren enam periode), Rata-rata harian, dan "Simulasi Anggaran

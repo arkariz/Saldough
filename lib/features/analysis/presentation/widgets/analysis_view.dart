@@ -247,12 +247,12 @@ class _Controls extends StatelessWidget {
               DsSelectRow<String>(
                 key: const ValueKey('analysis-wallet'),
                 icon: Icons.account_balance_wallet_outlined,
-                leading: selected == null
-                    ? null
-                    : DsIconTile.asset(
-                        asset: ClayIcons.forIcon(walletIconKey(selected.iconKey)) ?? ClayIcons.walletNav,
-                        size: DsIconTileSize.sm,
-                      ),
+                leading: DsIconTile.asset(
+                  asset: selected == null
+                      ? ClayIcons.walletNav
+                      : ClayIcons.forIcon(walletIconKey(selected.iconKey)) ?? ClayIcons.walletNav,
+                  size: DsIconTileSize.sm,
+                ),
                 label: t.transaction.walletFilterLabel,
                 title: selected?.name ?? t.analysis.allWallets,
                 allLabel: t.analysis.allWallets,

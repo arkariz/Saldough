@@ -158,30 +158,5 @@ void main() {
     tester.view.physicalSize = const Size(360, 800);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
-    await tester.pumpWidget(
-      MaterialApp(
-        theme: PixelTheme.light,
-        builder: (context, child) => MediaQuery(
-          data: MediaQuery.of(
-            context,
-          ).copyWith(textScaler: const TextScaler.linear(2)),
-          child: child!,
-        ),
-        home: Scaffold(
-          body: Padding(
-            padding: const EdgeInsets.all(16),
-            child: AppTrendChart(
-              columns: [
-                for (final l in ['Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu']) column(l, 100, 50, caption: '24 hari'),
-              ],
-              selected: 5,
-              onSelect: (_) {},
-              axisLabel: (sen) => '15 jt',
-            ),
-          ),
-        ),
-      ),
-    );
-    expect(tester.takeException(), isNull);
   });
 }

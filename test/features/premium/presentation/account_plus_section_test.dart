@@ -134,4 +134,10 @@ void main() {
     await pump(tester, PlusPlan(source: PlanSource.purchase, until: DateTime(2027, 10, 22), inGrace: true), scale: 2);
     expect(tester.takeException(), isNull);
   });
+
+  testWidgets('360dp teks 200%: Gratis dengan tombol Lihat Plus tanpa overflow', (tester) async {
+    await pump(tester, const FreePlan(), scale: 2);
+    expect(tester.takeException(), isNull);
+    expect(find.text(t.premium.seePlus), findsOneWidget);
+  });
 }

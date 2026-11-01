@@ -6066,6 +6066,12 @@ memilih mode (dan preset bila ≥ 2), dan design system lama dihapus.
       paywall, lihat FREEMIUM_PAYWALL), Edit Profil, Kunci Biometrik, toggle
       Kakeibo, Filosofi, dan footer "Edisi Kuil". Perilaku masuk/keluar/hapus
       akun tidak berubah.
+      **Plus di Akun v2 (1 Nov 2026):** `AccountPlusSection` kini kartu
+      gradasi hero (koin clay, status paket, lencana Uji coba/Cek/Plus,
+      tombol "Lihat Plus" untuk paket Gratis) dengan baris Kelola dan Pulihkan
+      `DsSettingRow`. Tanpa harga atau uji coba karangan: harga hanya di
+      paywall dan dari toko. Paywall, kartu Plus Beranda, hadiah uji coba, dan
+      `PlusBadge` masih gaya lama.
       **Ikon clay dilengkapi (31 Okt 2026, KT-DS5):** 33 ikon baru untuk
       dompet, jenis transaksi, kategori, dan status Freelance; semua
       `IconKey` benda kini punya clay (`ClayIcons.forIcon`). Digambar dari

@@ -29,15 +29,15 @@ class PlusDowngradePage extends StatelessWidget {
     final offer = data.offer;
     final deal = offer?.options.where((o) => o.kind == PlusPlanKind.yearlyIntro).firstOrNull;
     final changes = [
-      if (data.sources > 1) (IconKey.inbox, texts.notifTitle, texts.notifSub(n: data.sources)),
-      if (data.autoRules > 0) (IconKey.refresh, texts.autoTitle, texts.autoSub(n: data.autoRules)),
-      (IconKey.budget, texts.analysisTitle, texts.analysisSub(n: data.freePeriods)),
+      if (data.sources > 1) (ClayIcons.bell, texts.notifTitle, texts.notifSub(n: data.sources)),
+      if (data.autoRules > 0) (ClayIcons.repeat, texts.autoTitle, texts.autoSub(n: data.autoRules)),
+      (ClayIcons.report, texts.analysisTitle, texts.analysisSub(n: data.freePeriods)),
     ];
-    Widget rows(List<(IconKey, String, String)> items, {bool keep = false}) => DsListCard(
+    Widget rows(List<(String, String, String)> items, {bool keep = false}) => DsListCard(
       children: [
-        for (final (icon, title, sub) in items)
+        for (final (asset, title, sub) in items)
           DsSettingRow(
-            leading: keep ? DsIconTile.asset(asset: ClayIcons.done) : SettingIconTile(icon),
+            leading: DsIconTile.asset(asset: asset, tone: keep ? DsIconTileTone.income : DsIconTileTone.warning),
             title: title,
             subtitle: sub,
           ),
@@ -53,8 +53,8 @@ class PlusDowngradePage extends StatelessWidget {
           DsSectionHeader(title: texts.keepTitle),
           const SizedBox(height: 8),
           rows(keep: true, [
-            (IconKey.checkCircle, texts.keepEntries, texts.keepEntriesSub),
-            (IconKey.checkCircle, texts.keepCore, texts.keepCoreSub),
+            (ClayIcons.done, texts.keepEntries, texts.keepEntriesSub),
+            (ClayIcons.done, texts.keepCore, texts.keepCoreSub),
           ]),
           const SizedBox(height: 16),
           DsSectionHeader(title: texts.changeTitle),

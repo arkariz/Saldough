@@ -13,30 +13,57 @@ class _TopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Bar atas halaman turunan (design system TopBar `--sub`): kembali di
-    // kiri, ikon ubah dan hapus di kanan.
     return SizedBox(
-      height: AppSize.topbar,
+      height: 48,
       child: Row(
         children: [
-          AppIconButton(
-            icon: IconKey.back,
+          DsIconButton(
+            icon: Icons.arrow_back,
             label: t.transaction.detailBackLabel,
             onPressed: () => Navigator.of(context).maybePop(),
           ),
           const Spacer(),
           if (onEdit case final onEdit?)
-            AppIconButton(icon: IconKey.edit, label: t.transaction.editAction, onPressed: onEdit),
-          if (onDelete case final onDelete?)
-            AppIconButton(icon: IconKey.delete, label: t.transaction.deleteAction, onPressed: onDelete),
+            DsIconButton(icon: Icons.edit_outlined, label: t.transaction.editAction, onPressed: onEdit),
+          if (onDelete case final onDelete?) ...[
+            const SizedBox(width: 8),
+            DsIconButton(icon: Icons.delete_outline, label: t.transaction.deleteAction, onPressed: onDelete),
+          ],
         ],
       ),
     );
   }
 }
 
-/// Kartu utama: lencana jenis ("Pengeluaran tercatat"), nominal besar
-/// berwarna dan bertanda, judul, dan tanggal + jam.
+/// Ubin ikon transaksi: ikon clay kategori bila sudah digambar, ikon piksel
+/// lama (dengan lencana notifikasi asal) di tile datar bila belum (KT-DS5).
+Widget _transactionTile(BuildContext context, Transaction transaction, {DsIconTileSize size = DsIconTileSize.md}) {
+  final txKind = switch (transaction) {
+    IncomeTransaction() => TransactionKind.income,
+    ExpenseTransaction() => TransactionKind.expense,
+    TransferTransaction() => TransactionKind.transfer,
+  };
+  final iconKey = TransactionIcon.iconKeyFor(
+    kind: txKind,
+    categoryId: transaction.categoryId,
+    title: transaction.note,
+  );
+  final clay = transaction.sourceIconId == null ? ClayIcons.forIcon(iconKey) : null;
+  if (clay != null) {
+    return DsIconTile.asset(
+      asset: clay,
+      size: size,
+      tone: txKind == TransactionKind.income ? DsIconTileTone.income : DsIconTileTone.neutral,
+    );
+  }
+  return SizedBox.square(
+    dimension: 48,
+    child: Center(child: TransactionIcon.of(transaction, ringColor: context.ds.colors.surfaceCard)),
+  );
+}
+
+/// Kartu utama: ikon, lencana jenis ("Pengeluaran tercatat"), nominal besar
+/// bertanda, judul, dan tanggal + jam.
 class _HeroCard extends StatelessWidget {
   const _HeroCard({required this.transaction});
 
@@ -44,55 +71,50 @@ class _HeroCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final (kind, badge, amountText) = switch (transaction) {
+    final ds = context.ds;
+    final c = ds.colors;
+    final (badge, tone, amountText, ink) = switch (transaction) {
       IncomeTransaction() => (
-        TransactionKind.income,
         t.transaction.detailIncomeTitle,
+        DsBadgeTone.income,
         '+${AppMoneyFormatter.format(transaction.amount)}',
+        c.income,
       ),
       ExpenseTransaction() => (
-        TransactionKind.expense,
         t.transaction.detailExpenseTitle,
+        DsBadgeTone.neutral,
         '−${AppMoneyFormatter.format(transaction.amount)}',
+        c.textPrimary,
       ),
       TransferTransaction() => (
-        TransactionKind.transfer,
         t.transaction.detailTransferTitle,
+        DsBadgeTone.neutral,
         AppMoneyFormatter.format(transaction.amount),
+        c.textSecondary,
       ),
     };
-    final ink = colors.kindInk(kind);
-    final textTheme = Theme.of(context).textTheme;
-
-    // Angka utama halaman: tile kategori, badge jenis, nominal bertanda
-    // `amount-hero`, judul, tanggal dan jam.
-    return AppCard(
-      padding: const EdgeInsets.all(AppSpacing.space6),
+    return DsCard(
+      padding: const EdgeInsets.all(24),
       child: Column(
         children: [
-          // Kategori + lencana notifikasi asal (ADR-032 §3.10).
-          TransactionIcon.of(transaction, size: 48),
-          const SizedBox(height: AppSpacing.space3),
-          AppBadge(
-            badge,
-            tone: switch (kind) {
-              TransactionKind.income => AppTone.positive,
-              TransactionKind.expense => AppTone.neutral,
-              TransactionKind.transfer => AppTone.info,
-            },
-          ),
-          const SizedBox(height: AppSpacing.space3),
+          _transactionTile(context, transaction, size: DsIconTileSize.lg),
+          const SizedBox(height: 12),
+          DsBadge(label: badge, tone: tone),
+          const SizedBox(height: 12),
           FittedBox(
             fit: BoxFit.scaleDown,
-            child: Text(amountText, style: context.numberStyles.amountHero.copyWith(color: ink)),
+            child: Text(amountText, style: ds.typography.numericalDisplay.copyWith(color: ink)),
           ),
-          const SizedBox(height: AppSpacing.space1),
-          Text(transactionTitle(transaction), textAlign: TextAlign.center, style: textTheme.titleLarge),
-          const SizedBox(height: AppSpacing.space1),
+          const SizedBox(height: 4),
+          Text(
+            transactionTitle(transaction),
+            textAlign: TextAlign.center,
+            style: ds.typography.titleMd.copyWith(fontSize: 18),
+          ),
+          const SizedBox(height: 4),
           Text(
             '${CycleMonthFormatter.formatDateWithWeekday(transaction.date)} · ${transactionTime(transaction.date)}',
-            style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
+            style: ds.typography.bodySm.copyWith(color: c.textSecondary),
             textAlign: TextAlign.center,
           ),
         ],
@@ -102,7 +124,7 @@ class _HeroCard extends StatelessWidget {
 }
 
 /// Kartu rincian: jenis, kategori, dompet (+ saldo saat ini), atau pasangan
-/// Dari / Ke / Jumlah untuk transfer, lalu catatan manual.
+/// Dari / Ke / Jumlah untuk transfer, anggaran tertaut, lalu catatan.
 class _DetailsCard extends StatelessWidget {
   const _DetailsCard({
     required this.transaction,
@@ -122,7 +144,6 @@ class _DetailsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
     final tx = transaction;
     final typeLabel = switch (tx) {
       IncomeTransaction() => t.transaction.detailIncomeType,
@@ -130,307 +151,145 @@ class _DetailsCard extends StatelessWidget {
       TransferTransaction() => t.transaction.detailTransferType,
     };
     final category = ActiveCategories.byId(tx.categoryId);
-
-    return AppCard(
-      color: colors.surface2,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          _Row(
-            label: t.transaction.detailTypeLabel,
-            value: Text(typeLabel, style: _valueStyle(context)),
-          ),
-          if (category != null) ...[
-            const _Gap(),
-            _Row(
-              label: t.transaction.detailCategoryLabel,
-              value: _CategoryChip(category: category),
-            ),
-          ],
-          const _Gap(),
-          switch (tx) {
-            IncomeTransaction(:final walletId) => _WalletRow(
-              label: t.transaction.detailIncomeWalletLabel,
-              wallet: walletsById[walletId],
-            ),
-            ExpenseTransaction(:final walletId) => _WalletRow(
-              label: t.transaction.detailExpenseWalletLabel,
-              wallet: walletsById[walletId],
-            ),
-            TransferTransaction(:final fromWalletId, :final toWalletId) => _TransferPair(
-              from: walletsById[fromWalletId],
-              to: walletsById[toWalletId],
-              amount: tx.amount,
-            ),
-          },
-          if (budgetItem case final item?) ...[
-            const _Gap(),
-            _BudgetRow(item: item, onOpen: onOpenBudget),
-          ],
-          if (tx.note.isNotEmpty) ...[
-            const _Gap(),
-            Text(
-              t.transaction.detailNoteLabel,
-              style: labelSmStyle(context, color: colors.ink2),
-            ),
-            const SizedBox(height: AppSpacing.space1),
-            Container(
-              padding: const EdgeInsets.all(AppSpacing.space2),
-              decoration: BoxDecoration(color: colors.surface2, borderRadius: BorderRadius.circular(4)),
-              child: Text(
-                '“${tx.note}”',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontStyle: FontStyle.italic),
-              ),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-}
-
-/// Baris "Anggaran": pos · anggaran, dan tautan ke rincian anggarannya
-/// (T-4.11, FR-TXN-006).
-class _BudgetRow extends StatelessWidget {
-  const _BudgetRow({required this.item, required this.onOpen});
-
-  final BudgetItemOption item;
-  final VoidCallback? onOpen;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final open = onOpen;
-    return Semantics(
-      button: open != null,
-      child: GestureDetector(
-        onTap: open,
-        behavior: HitTestBehavior.opaque,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    t.transaction.budgetLabel,
-                    style: labelSmStyle(context, color: colors.ink2),
-                  ),
-                  const SizedBox(height: 2),
-                  Row(
-                    children: [
-                      const AppIcon(IconKey.budget, size: 20),
-                      const SizedBox(width: AppSpacing.space1),
-                      Expanded(child: Text('${item.itemName} · ${item.budgetName}', style: _valueStyle(context))),
-                    ],
-                  ),
-                  if (open != null) ...[
-                    const SizedBox(height: 2),
-                    Text(
-                      t.transaction.openBudgetAction,
-                      style: labelSmStyle(context, color: colors.brand),
-                    ),
-                  ],
-                ],
-              ),
-            ),
-            if (open != null) const AppIcon(IconKey.chevronRight),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-TextStyle? _valueStyle(BuildContext context) =>
-    Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w700);
-
-class _Gap extends StatelessWidget {
-  const _Gap();
-
-  @override
-  Widget build(BuildContext context) => const SizedBox(height: AppSpacing.space4);
-}
-
-/// Satu baris "label ........ nilai": label di kiri, nilai di kanan kalau
-/// muat sebaris. Kalau tidak muat -- nilai panjang, layar sempit, atau teks
-/// besar dari pengaturan aksesibilitas -- nilai turun ke baris di bawah label
-/// dan boleh membungkus, alih-alih meluap atau terpotong. Itu sebabnya
-/// [Wrap], bukan `Row` dengan `Expanded`: `Row` tidak pernah turun baris,
-/// jadi label yang lebar langsung mengecilkan nilai sampai tidak terbaca.
-class _Row extends StatelessWidget {
-  const _Row({required this.label, required this.value});
-
-  final String label;
-  final Widget value;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: Wrap(
-        alignment: WrapAlignment.spaceBetween,
-        spacing: AppSpacing.space4,
-        runSpacing: AppSpacing.space1,
-        children: [
-          Text(label, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: context.appColors.ink2)),
-          value,
-        ],
-      ),
-    );
-  }
-}
-
-class _CategoryChip extends StatelessWidget {
-  const _CategoryChip({required this.category});
-
-  final Category category;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2, vertical: AppSpacing.space1),
-      decoration: BoxDecoration(color: colors.surface2, borderRadius: BorderRadius.circular(4)),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          AppIcon(categoryIcon(category), size: 18),
-          const SizedBox(width: AppSpacing.space1),
-          Flexible(
-            child: Text(category.name, style: labelSmStyle(context, color: colors.ink)),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/// Dompet asal/tujuan pemasukan atau pengeluaran, beserta saldo saat ini.
-class _WalletRow extends StatelessWidget {
-  const _WalletRow({required this.label, required this.wallet});
-
-  final String label;
-  final Wallet? wallet;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final wallet = this.wallet;
-    return _Row(
-      label: label,
-      value: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              AppIcon(wallet == null ? IconKey.wallets : walletIconKey(wallet.iconKey), size: 22),
-              const SizedBox(width: AppSpacing.space1),
-              Flexible(
-                child: Text(wallet?.name ?? '—', style: _valueStyle(context), textAlign: TextAlign.end),
-              ),
-            ],
-          ),
-          if (wallet != null)
-            Text(
-              '${t.transaction.detailCurrentBalance}: ${AppMoneyFormatter.format(wallet.currentBalance)}',
-              style: labelSmStyle(context, color: colors.ink2).copyWith(fontWeight: FontWeight.w400),
-            ),
-        ],
-      ),
-    );
-  }
-}
-
-/// Tata letak transfer: kartu Dari, panah, kartu Ke, lalu Jumlah. Sesuai
-/// FR-TXN-006, judulnya "Transfer tercatat" ada di kartu utama.
-///
-/// Kartu ditumpuk VERTIKAL dan masing-masing selebar penuh, bukan
-/// berdampingan: versi berdampingan memberi tiap sisi paruh lebar layar dikurangi
-/// ikon panah, jadi nama dompet yang panjang ("Rekening Bank Central Asia
-/// Utama") atau teks besar dari pengaturan aksesibilitas langsung terpotong.
-/// Di sini nama boleh membungkus ke banyak baris dan TIDAK PERNAH dipotong.
-class _TransferPair extends StatelessWidget {
-  const _TransferPair({required this.from, required this.to, required this.amount});
-
-  final Wallet? from;
-  final Wallet? to;
-  final int amount;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final money = AppMoneyFormatter.format(amount);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+    final money = AppMoneyFormatter.format(tx.amount);
+    return DsListCard(
       children: [
-        _PairCard(label: t.transaction.detailFromLabel, wallet: from, delta: '−$money', deltaColor: colors.ink),
-        const Padding(
-          padding: EdgeInsets.symmetric(vertical: AppSpacing.space1),
-          child: Center(child: AppIcon(IconKey.transfer, size: 28)),
-        ),
-        _PairCard(label: t.transaction.detailToLabel, wallet: to, delta: '+$money', deltaColor: colors.positive),
-        const SizedBox(height: AppSpacing.space4),
-        _Row(
-          label: t.transaction.detailAmountLabel,
-          value: Text(money, style: context.numberStyles.amountSm.copyWith(color: colors.ink2)),
-        ),
+        _InfoRow(label: t.transaction.detailTypeLabel, value: typeLabel),
+        if (category != null)
+          _InfoRow(
+            label: t.transaction.detailCategoryLabel,
+            value: category.name,
+            leading: _categoryTile(category),
+          ),
+        ...switch (tx) {
+          IncomeTransaction(:final walletId) => [
+            _walletRow(t.transaction.detailIncomeWalletLabel, walletsById[walletId]),
+          ],
+          ExpenseTransaction(:final walletId) => [
+            _walletRow(t.transaction.detailExpenseWalletLabel, walletsById[walletId]),
+          ],
+          TransferTransaction(:final fromWalletId, :final toWalletId) => [
+            _walletRow(t.transaction.detailFromLabel, walletsById[fromWalletId], delta: '−$money'),
+            _walletRow(t.transaction.detailToLabel, walletsById[toWalletId], delta: '+$money', deltaIncome: true),
+            _InfoRow(label: t.transaction.detailAmountLabel, value: money),
+          ],
+        },
+        if (budgetItem case final item?)
+          _InfoRow(
+            label: t.transaction.budgetLabel,
+            value: '${item.itemName} · ${item.budgetName}',
+            sub: onOpenBudget == null ? null : t.transaction.openBudgetAction,
+            leading: DsIconTile.asset(asset: ClayIcons.forIcon(IconKey.budget) ?? ClayIcons.receipt, size: DsIconTileSize.sm),
+            onTap: onOpenBudget,
+          ),
+        if (tx.note.isNotEmpty) _InfoRow(label: t.transaction.detailNoteLabel, value: '“${tx.note}”', italic: true),
       ],
     );
   }
+
+  Widget _categoryTile(Category category) {
+    final clay = ClayIcons.forIcon(categoryIcon(category));
+    return clay != null
+        ? DsIconTile.asset(asset: clay, size: DsIconTileSize.sm)
+        : AppIconTile(categoryIcon(category));
+  }
+
+  Widget _walletRow(String label, Wallet? wallet, {String? delta, bool deltaIncome = false}) => _InfoRow(
+    label: label,
+    value: wallet?.name ?? '—',
+    sub: wallet == null
+        ? null
+        : '${t.transaction.detailCurrentBalance}: ${AppMoneyFormatter.format(wallet.currentBalance)}',
+    leading: DsIconTile.asset(
+      asset: wallet == null
+          ? ClayIcons.walletNav
+          : ClayIcons.forIcon(walletIconKey(wallet.iconKey)) ?? ClayIcons.walletNav,
+      size: DsIconTileSize.sm,
+    ),
+    delta: delta,
+    deltaIncome: deltaIncome,
+  );
 }
 
-/// Satu sisi transfer (Dari atau Ke): ikon jenis dompet di kiri; di kanannya
-/// label, nama dompet (membungkus, tidak dipotong), saldo saat ini, dan
-/// perubahan saldo akibat transfer ini.
-class _PairCard extends StatelessWidget {
-  const _PairCard({required this.label, required this.wallet, required this.delta, required this.deltaColor});
+/// Satu baris rincian: label kecil di atas, nilai di bawahnya (membungkus,
+/// tidak dipotong), keterangan opsional, dan nominal perubahan di kanan.
+class _InfoRow extends StatelessWidget {
+  const _InfoRow({
+    required this.label,
+    required this.value,
+    this.sub,
+    this.leading,
+    this.delta,
+    this.deltaIncome = false,
+    this.italic = false,
+    this.onTap,
+  });
 
   final String label;
-  final Wallet? wallet;
-  final String delta;
-  final Color deltaColor;
+  final String value;
+  final String? sub;
+  final Widget? leading;
+  final String? delta;
+  final bool deltaIncome;
+  final bool italic;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final wallet = this.wallet;
-    return Container(
-      padding: const EdgeInsets.all(AppSpacing.space2),
-      decoration: BoxDecoration(color: colors.surface2, borderRadius: BorderRadius.circular(4)),
+    final ds = context.ds;
+    final c = ds.colors;
+    final body = Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          AppIcon(wallet == null ? IconKey.wallets : walletIconKey(wallet.iconKey), size: 32),
-          const SizedBox(width: AppSpacing.space2),
+          if (leading != null) ...[leading!, const SizedBox(width: 12)],
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(label, style: labelSmStyle(context, size: 9, color: colors.ink2)),
-                Text(wallet?.name ?? '—', style: _valueStyle(context)),
-                if (wallet != null)
-                  Text(
-                    '${t.transaction.detailCurrentBalance}: ${AppMoneyFormatter.format(wallet.currentBalance)}',
-                    style: labelSmStyle(
-                      context,
-                      color: colors.ink2,
-                    ).copyWith(fontWeight: FontWeight.w400),
+                Text(label, style: ds.typography.bodySm.copyWith(color: c.textMuted)),
+                const SizedBox(height: 2),
+                Text(
+                  value,
+                  style: ds.typography.titleMd.copyWith(
+                    fontSize: 14,
+                    fontStyle: italic ? FontStyle.italic : FontStyle.normal,
                   ),
-                const SizedBox(height: AppSpacing.space1),
-                // Nominal besar tidak boleh terpotong: kecilkan, bukan elipsis.
-                FittedBox(
-                  fit: BoxFit.scaleDown,
-                  alignment: AlignmentDirectional.centerStart,
-                  child: Text(delta, style: labelSmStyle(context, size: 13, color: deltaColor)),
                 ),
+                if (sub != null)
+                  Text(
+                    sub!,
+                    style: ds.typography.bodySm.copyWith(color: onTap != null ? c.actionPrimary : c.textSecondary),
+                  ),
               ],
             ),
           ),
+          if (delta != null) ...[
+            const SizedBox(width: 8),
+            Flexible(
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: AlignmentDirectional.centerEnd,
+                child: Text(
+                  delta!,
+                  style: ds.typography.amountSm.copyWith(color: deltaIncome ? c.income : c.textPrimary),
+                ),
+              ),
+            ),
+          ],
+          if (onTap != null) ...[
+            const SizedBox(width: 4),
+            Icon(Icons.chevron_right, size: 20, color: c.textMuted),
+          ],
         ],
       ),
+    );
+    if (onTap == null) return body;
+    return DsPressable(
+      onPressed: onTap,
+      pressedScale: 0.995,
+      dimWhenDisabled: false,
+      builder: (context, _) => body,
     );
   }
 }
@@ -444,52 +303,18 @@ class _ManualNote extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return AppCard(
-      color: colors.surface2,
-      padding: const EdgeInsets.all(AppSpacing.space2),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          AppIcon(IconKey.locked, size: 20, color: colors.ink2),
-          const SizedBox(width: AppSpacing.space2),
-          Expanded(
-            child: Text(
-              text,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(color: colors.ink2),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _DeleteLink extends StatelessWidget {
-  const _DeleteLink({required this.onPressed});
-
-  final VoidCallback onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return GestureDetector(
-      onTap: onPressed,
-      behavior: HitTestBehavior.opaque,
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(minHeight: 44),
+    final ds = context.ds;
+    final c = ds.colors;
+    return DecoratedBox(
+      decoration: BoxDecoration(color: c.surfaceSunken, borderRadius: DsRadius.mdAll),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            AppIcon(IconKey.delete, size: 18, color: colors.danger),
-            const SizedBox(width: AppSpacing.space1),
-            Flexible(
-              child: Text(
-                t.transaction.deleteAction,
-                textAlign: TextAlign.center,
-                style: labelSmStyle(context, color: colors.ink),
-              ),
-            ),
+            Icon(Icons.lock_outline, size: 18, color: c.textSecondary),
+            const SizedBox(width: 8),
+            Expanded(child: Text(text, style: ds.typography.bodySm.copyWith(color: c.textSecondary))),
           ],
         ),
       ),

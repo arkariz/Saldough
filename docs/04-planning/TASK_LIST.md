@@ -6054,6 +6054,13 @@ memilih mode (dan preset bila ≥ 2), dan design system lama dihapus.
       Seimbang" (tidak ada di domain), tren 4 minggu Mei vs April (domain
       punya tren enam periode), Rata-rata harian, dan "Simulasi Anggaran
       Juni" (karangan).
+      **Rincian transaksi v2 (1 Nov 2026):** kartu hero (ikon clay, lencana
+      jenis, nominal besar, judul, tanggal), daftar rincian (jenis, kategori,
+      dompet dengan saldo saat ini, Dari/Ke/Jumlah untuk transfer, pos
+      anggaran yang bisa dibuka, catatan), catatan rekaman manual, dan tombol
+      `DsButton` (Ubah, Catat lagi, Jadikan rutin, Hapus). Tanpa acuan
+      Stitch baru: mengikuti pola Rincian dompet. Perilaku, kunci, dan alur
+      sunting/hapus/Urungkan tidak berubah.
       **Ikon clay dilengkapi (31 Okt 2026, KT-DS5):** 33 ikon baru untuk
       dompet, jenis transaksi, kategori, dan status Freelance; semua
       `IconKey` benda kini punya clay (`ClayIcons.forIcon`). Digambar dari

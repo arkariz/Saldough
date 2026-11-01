@@ -371,10 +371,10 @@ void main() {
           t.transaction.recordAgainAction,
           t.transaction.makeRecurringAction,
         ])
-          tester.getSize(find.widgetWithText(AppButton, label)).width,
+          tester.getSize(find.widgetWithText(DsButton, label)).width,
       ];
       expect(widths.toSet(), hasLength(1));
-      expect(widths.first, 800 - 2 * AppSpacing.space4);
+      expect(widths.first, 800 - 2 * 16);
     });
 
     testWidgets('transfer memakai judul "Transfer tercatat" dan Dari / Ke / Jumlah, tanpa kosakata terlarang', (
@@ -560,7 +560,7 @@ void main() {
       await tester.tap(find.text('nasi padang')); // judul baris = catatan (ADR-034)
       await tester.pumpAndSettle();
 
-      await tester.tap(find.widgetWithText(AppButton, t.transaction.editAction));
+      await tester.tap(find.widgetWithText(DsButton, t.transaction.editAction));
       await tester.pumpAndSettle();
 
       expect(find.text(t.transaction.editSheetTitle), findsOneWidget);
@@ -594,8 +594,8 @@ void main() {
       await tester.tap(find.text('nasi padang')); // judul baris = catatan (ADR-034)
       await tester.pumpAndSettle();
 
-      await tester.ensureVisible(find.widgetWithText(AppButton, t.transaction.recordAgainAction));
-      await tester.tap(find.widgetWithText(AppButton, t.transaction.recordAgainAction));
+      await tester.ensureVisible(find.widgetWithText(DsButton, t.transaction.recordAgainAction));
+      await tester.tap(find.widgetWithText(DsButton, t.transaction.recordAgainAction));
       await tester.pumpAndSettle();
 
       // Terisi dari transaksi sumber (nominal, kategori, dompet) -- TAPI

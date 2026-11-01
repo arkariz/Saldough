@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/budget/presentation/navigation/budget_route_keys.dart';
@@ -120,7 +120,19 @@ class TransactionDetailPage extends StatelessWidget {
           builder: (context, state) {
             // Bloc milik rute ini baru dimuat: tanpa kerangka, nama dompet
             // sempat tampil kosong.
-            if (state.isLoading) return const AppSkeletonPage();
+            if (state.isLoading) {
+              return const Padding(
+                padding: EdgeInsets.all(16),
+                child: Column(
+                  spacing: 16,
+                  children: [
+                    DsSkeleton(height: 48, radius: DsRadius.fullAll),
+                    DsSkeleton(height: 200, radius: DsRadius.lgAll),
+                    DsSkeleton(height: 220, radius: DsRadius.lgAll),
+                  ],
+                ),
+              );
+            }
             final walletsById = {for (final wallet in state.wallets) wallet.id: wallet};
             final budgetItem = state.budgetItemOf(switch (transaction) {
               ExpenseTransaction(:final budgetItemId) || TransferTransaction(:final budgetItemId) => budgetItemId,
@@ -133,46 +145,46 @@ class TransactionDetailPage extends StatelessWidget {
               _ => false,
             };
             return ListView(
-              padding: const EdgeInsets.all(AppSpacing.space4),
+              padding: const EdgeInsets.all(16),
               children: [
                 if (ownedByFreelance)
                   const _TopBar()
                 else
                   _TopBar(onEdit: () => _edit(context, state), onDelete: () => _delete(context)),
-                const SizedBox(height: AppSpacing.space4),
+                const SizedBox(height: 16),
                 _HeroCard(transaction: transaction),
-                const SizedBox(height: AppSpacing.space4),
+                const SizedBox(height: 16),
                 _DetailsCard(
                   transaction: transaction,
                   walletsById: walletsById,
                   budgetItem: budgetItem,
                   onOpenBudget: budgetItem == null ? null : _budgetOpener(context, budgetItem),
                 ),
-                const SizedBox(height: AppSpacing.space4),
+                const SizedBox(height: 16),
                 if (ownedByFreelance)
                   _ManualNote(text: t.transaction.detailFreelanceNote)
                 else ...[
                   _ManualNote(text: t.transaction.detailManualNote),
-                  const SizedBox(height: AppSpacing.space4),
-                  AppButton(label: t.transaction.editAction, expand: true, onPressed: () => _edit(context, state)),
-                  const SizedBox(height: AppSpacing.space2),
-                  AppButton.secondary(
+                  const SizedBox(height: 16),
+                  DsButton(label: t.transaction.editAction, expand: true, onPressed: () => _edit(context, state)),
+                  const SizedBox(height: 8),
+                  DsButton.secondary(
                     label: t.transaction.recordAgainAction,
                     expand: true,
                     onPressed: () => _recordAgain(context),
                   ),
                   if (transaction.recurrence == null) ...[
-                    const SizedBox(height: AppSpacing.space2),
-                    AppButton.secondary(
+                    const SizedBox(height: 8),
+                    DsButton.secondary(
                       label: t.transaction.makeRecurringAction,
                       expand: true,
                       onPressed: () => _makeRecurring(context),
                     ),
                   ],
-                  const SizedBox(height: AppSpacing.space2),
-                  _DeleteLink(onPressed: () => _delete(context)),
+                  const SizedBox(height: 8),
+                  DsButton.danger(label: t.transaction.deleteAction, expand: true, onPressed: () => _delete(context)),
                 ],
-                const SizedBox(height: AppSpacing.space4),
+                const SizedBox(height: 16),
               ],
             );
           },

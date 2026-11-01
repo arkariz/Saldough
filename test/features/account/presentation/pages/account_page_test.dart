@@ -6,6 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
 import 'package:navigation/navigation.dart';
 import 'package:saldough/core/currency/currency.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
@@ -213,7 +214,7 @@ void main() {
 
     expect(find.text(t.account.deletePasswordTitle), findsOneWidget);
     await tester.enterText(find.byType(TextField), 'rahasia');
-    await tester.tap(find.widgetWithText(AppButton, t.account.deleteAction).last);
+    await tester.tap(find.widgetWithText(DsButton, t.account.deleteAction).last);
     await tester.pumpAndSettle();
 
     expect(repository.deletePasswords, [null, 'rahasia']);

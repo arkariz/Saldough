@@ -6061,6 +6061,17 @@ memilih mode (dan preset bila ≥ 2), dan design system lama dihapus.
       `DsButton` (Ubah, Catat lagi, Jadikan rutin, Hapus). Tanpa acuan
       Stitch baru: mengikuti pola Rincian dompet. Perilaku, kunci, dan alur
       sunting/hapus/Urungkan tidak berubah.
+      **Akun/Profil v2 (1 Nov 2026):** kartu identitas (avatar, nama, email,
+      lencana metode masuk), kelompok setelan dengan `DsSectionHeader` +
+      `DsListCard` + `DsSettingRow` (ubin ikon clay), bagian Data kamu dan baris
+      Versi aplikasi ikut, tombol Keluar/Hapus akun `DsButton`. Delapan ikon
+      clay baru untuk setelan (bahasa, tema, mata uang, sembunyikan nominal,
+      kategori, ekspor, cadangan, pulihkan); total 60. Dari acuan Stitch
+      **tidak** dibuat: LVL/XP "Steward", statistik Daun Koban/Skor Kakeibo/
+      Misi, lencana Kuil, kartu Gold Leaf Pass dan harga (belum ada
+      paywall, lihat FREEMIUM_PAYWALL), Edit Profil, Kunci Biometrik, toggle
+      Kakeibo, Filosofi, dan footer "Edisi Kuil". Perilaku masuk/keluar/hapus
+      akun tidak berubah.
       **Ikon clay dilengkapi (31 Okt 2026, KT-DS5):** 33 ikon baru untuk
       dompet, jenis transaksi, kategori, dan status Freelance; semua
       `IconKey` benda kini punya clay (`ClayIcons.forIcon`). Digambar dari

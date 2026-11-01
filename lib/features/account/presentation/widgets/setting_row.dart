@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 
-/// Satu baris setelan di layar Akun (prototipe `Akun.dc.html`): ikon 24px
-/// `ink2`, judul, keterangan, lalu [trailing] atau panah. Dipasang di dalam
-/// `AppListCard(dividerIndent: AppListCard.iconIndent)`.
+/// Satu baris setelan di layar Akun (acuan Profil): ubin ikon clay, judul,
+/// keterangan, lalu [trailing] atau panah. Dipasang di dalam `DsListCard`.
 class SettingRow extends StatelessWidget {
   /// Membuat [SettingRow].
   const SettingRow({
@@ -36,14 +35,12 @@ class SettingRow extends StatelessWidget {
   final VoidCallback? onTap;
 
   @override
-  Widget build(BuildContext context) => AppListRow(
-    compact: true,
-    leading: AppIcon(icon, color: context.appColors.ink2),
+  Widget build(BuildContext context) => DsSettingRow(
+    leading: SettingIconTile(icon),
     title: title,
     subtitle: subtitle,
-    wrapSubtitle: true,
-    trailing: trailing ?? badge,
-    chevron: trailing == null,
+    trailing: trailing,
+    badge: badge,
     onTap: onTap,
   );
 }

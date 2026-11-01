@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:di/di.dart';
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
@@ -79,62 +80,51 @@ class _AccountDataSectionState extends State<AccountDataSection> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
     final last = _lastBackup;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        AppSectionHeader(t.dataPortability.sectionTitle),
+        DsSectionHeader(title: t.dataPortability.sectionTitle),
+        const SizedBox(height: 4),
         Padding(
           padding: const EdgeInsets.fromLTRB(AppSpacing.space1, 0, AppSpacing.space1, AppSpacing.space2),
           child: Text(
             t.dataPortability.sectionBody,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: colors.ink2),
+            style: context.ds.typography.bodySm.copyWith(color: context.ds.colors.textSecondary),
           ),
         ),
-        AppListCard(
-          dividerIndent: AppListCard.iconIndent,
+        DsListCard(
           children: [
-            AppListRow(
+            DsSettingRow(
               key: const ValueKey('data-export'),
-              compact: true,
-              leading: AppIcon(IconKey.tableView, color: colors.ink2),
+              leading: const SettingIconTile(IconKey.tableView),
               title: t.dataPortability.exportTitle,
               subtitle: t.dataPortability.exportSub,
-              chevron: true,
               onTap: () => showExportSheet(context, widget.container),
             ),
-            AppListRow(
+            DsSettingRow(
               key: const ValueKey('data-backup'),
-              compact: true,
-              leading: AppIcon(IconKey.backup, color: colors.ink2),
+              leading: const SettingIconTile(IconKey.backup),
               title: t.dataPortability.backupTitle,
               subtitle: last == null
                   ? t.dataPortability.backupNever
                   : t.dataPortability.backupLast(date: CycleMonthFormatter.formatDateShort(last)),
-              chevron: true,
               onTap: _openBackup,
             ),
-            AppListRow(
+            DsSettingRow(
               key: const ValueKey('data-restore'),
-              compact: true,
-              leading: AppIcon(IconKey.restoreBackup, color: colors.ink2),
+              leading: const SettingIconTile(IconKey.restoreBackup),
               title: t.dataPortability.restoreTitle,
               subtitle: t.dataPortability.restoreSub,
-              chevron: true,
               onTap: _openRestore,
             ),
             if (_safety case final safety?)
-              AppListRow(
+              DsSettingRow(
                 key: const ValueKey('data-undo'),
-                compact: true,
-                leading: AppIcon(IconKey.undo, color: colors.ink2),
+                  leading: const SettingIconTile(IconKey.undo),
                 title: t.dataPortability.undoTitle(date: CycleMonthFormatter.formatDateShort(safety.createdAt)),
-                wrapTitle: true,
                 subtitle: t.dataPortability.undoSub,
-                wrapSubtitle: true,
-                chevron: true,
-                onTap: _openUndo,
+                  onTap: _openUndo,
               ),
           ],
         ),

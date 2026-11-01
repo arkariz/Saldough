@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/account/presentation/bloc/account_bloc.dart';
 import 'package:saldough/features/account/presentation/bloc/account_state.dart';
@@ -61,7 +61,7 @@ class _AccountPageState extends State<AccountPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(t.account.title)),
+      appBar: AppBar(title: Text(t.account.title, style: context.ds.typography.headlineMd), centerTitle: false),
       body: SafeArea(
         child: BlocListener<AccountBloc, AccountState>(
           listenWhen: (prev, curr) => !prev.needsPassword && curr.needsPassword,
@@ -73,16 +73,17 @@ class _AccountPageState extends State<AccountPage> {
                 tour: TourId.account,
                 ready: true,
                 child: ListView(
-                  padding: const EdgeInsets.all(AppSpacing.space4),
+                  padding: const EdgeInsets.all(16),
                   children: [
                     if (user == null)
                       _SignedOut(state: state, dataSection: widget.dataSection, plusSection: widget.plusSection)
                     else
                       _SignedIn(state: state, user: user, dataSection: widget.dataSection, plusSection: widget.plusSection),
                     if (widget.versionEntry case final entry?) ...[
-                      const SizedBox(height: AppSpacing.space6),
-                      AppSectionHeader(t.account.appSection),
-                      AppListCard(dividerIndent: AppListCard.iconIndent, children: [entry]),
+                      const SizedBox(height: 24),
+                      DsSectionHeader(title: t.account.appSection),
+                      const SizedBox(height: 8),
+                      DsListCard(children: [entry]),
                     ],
                   ],
                 ),
@@ -131,41 +132,46 @@ class _SignedOutState extends State<_SignedOut> {
   @override
   Widget build(BuildContext context) {
     final state = widget.state;
+    final ds = context.ds;
     final textTheme = Theme.of(context).textTheme;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        // Kartu masuk (prototipe `Akun.dc.html`): maskot di samping teks,
-        // Google sebagai tombol sekunder, email di bawahnya.
-        AppCard(
+        // Kartu masuk: maskot di samping teks, Google sebagai tombol
+        // sekunder, email di bawahnya.
+        DsCard(
+          padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Row(
                 children: [
                   const AccountAvatar(user: null, size: 56),
-                  const SizedBox(width: AppSpacing.space4),
+                  const SizedBox(width: 16),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(t.account.signedOutTitle, style: textTheme.titleMedium),
-                        Text(t.account.signedOutBody, style: textTheme.bodyMedium),
+                        Text(t.account.signedOutTitle, style: ds.typography.titleMd),
+                        Text(
+                          t.account.signedOutBody,
+                          style: ds.typography.bodySm.copyWith(color: ds.colors.textSecondary),
+                        ),
                       ],
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: AppSpacing.space4),
-              AppButton.secondary(
+              const SizedBox(height: 16),
+              DsButton.secondary(
                 expand: true,
                 label: _busyLabel(t.account.googleSignInAction, state, AccountAction.googleSignIn),
                 onPressed: state.isBusy
                     ? null
                     : () => context.read<AccountBloc>().add(const AccountGoogleSignInRequested()),
               ),
-              const SizedBox(height: AppSpacing.space1),
-              AppButton.text(
+              const SizedBox(height: 4),
+              DsButton.ghost(
                 key: const ValueKey('account-email-toggle'),
                 expand: true,
                 label: t.account.emailSignInToggle,
@@ -175,9 +181,9 @@ class _SignedOutState extends State<_SignedOut> {
           ),
         ),
         if (_showEmailForm) ...[
-          const SizedBox(height: AppSpacing.space2),
+          const SizedBox(height: 8),
           Text(t.account.emailFormHint, style: textTheme.bodySmall, textAlign: TextAlign.center),
-          const SizedBox(height: AppSpacing.space4),
+          const SizedBox(height: 16),
           AutofillGroup(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -190,7 +196,7 @@ class _SignedOutState extends State<_SignedOut> {
                   autocorrect: false,
                   decoration: InputDecoration(labelText: t.account.emailLabel),
                 ),
-                const SizedBox(height: AppSpacing.space2),
+                const SizedBox(height: 8),
                 TextField(
                   controller: _passwordController,
                   obscureText: true,
@@ -202,13 +208,13 @@ class _SignedOutState extends State<_SignedOut> {
               ],
             ),
           ),
-          const SizedBox(height: AppSpacing.space4),
-          AppButton(
+          const SizedBox(height: 16),
+          DsButton(
             label: _busyLabel(t.account.emailSignInAction, state, AccountAction.emailSignIn),
             onPressed: state.isBusy ? null : _submitEmail,
           ),
         ],
-        const SizedBox(height: AppSpacing.space6),
+        const SizedBox(height: 24),
         _Settings(dataSection: widget.dataSection, plusSection: widget.plusSection),
       ],
     );
@@ -230,10 +236,10 @@ class _Settings extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        if (plusSection case final section?) ...[section, const SizedBox(height: AppSpacing.space6)],
-        AppSectionHeader(t.account.recordingSection),
-        AppListCard(
-          dividerIndent: AppListCard.iconIndent,
+        if (plusSection case final section?) ...[section, const SizedBox(height: 24)],
+        DsSectionHeader(title: t.account.recordingSection),
+        const SizedBox(height: 8),
+        DsListCard(
           children: [
             const CategorySettingEntry(),
             if (defaultTargetPlatform == TargetPlatform.android) const NotificationCaptureSettingEntry(),
@@ -246,10 +252,10 @@ class _Settings extends StatelessWidget {
             const FinancialMonthSettingEntry(),
           ],
         ),
-        const SizedBox(height: AppSpacing.space6),
-        AppSectionHeader(t.account.displaySection),
-        const AppListCard(
-          dividerIndent: AppListCard.iconIndent,
+        const SizedBox(height: 24),
+        DsSectionHeader(title: t.account.displaySection),
+        const SizedBox(height: 8),
+        const DsListCard(
           children: [
             LanguageSettingEntry(),
             AppearanceModeEntry(),
@@ -258,7 +264,7 @@ class _Settings extends StatelessWidget {
             HideAmountsSettingEntry(),
           ],
         ),
-        if (dataSection case final section?) ...[const SizedBox(height: AppSpacing.space6), section],
+        if (dataSection case final section?) ...[const SizedBox(height: 24), section],
       ],
     );
   }
@@ -286,8 +292,7 @@ class _SignedIn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    final colors = context.appColors;
+    final ds = context.ds;
     final name = user.displayName;
     final method = switch (user.method) {
       SignInMethod.google => t.account.methodGoogle,
@@ -297,44 +302,44 @@ class _SignedIn extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        AppCard(
-          child: Row(
+        DsCard(
+          padding: const EdgeInsets.all(20),
+          child: Column(
             children: [
-              AccountAvatar(user: user, size: 56),
-              const SizedBox(width: AppSpacing.space4),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (name != null && name.isNotEmpty)
-                      Text(name, style: textTheme.titleMedium, overflow: TextOverflow.ellipsis),
-                    if (user.email != null)
-                      Text(user.email!, style: textTheme.bodyMedium, overflow: TextOverflow.ellipsis),
-                    if (method != null) ...[
-                      const SizedBox(height: AppSpacing.space1),
-                      Text(method, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
-                    ],
-                  ],
+              AccountAvatar(user: user, size: 72),
+              const SizedBox(height: 12),
+              if (name != null && name.isNotEmpty)
+                Text(name, textAlign: TextAlign.center, style: ds.typography.titleMd.copyWith(fontSize: 20)),
+              if (user.email != null)
+                Text(
+                  user.email!,
+                  textAlign: TextAlign.center,
+                  style: ds.typography.bodySm.copyWith(color: ds.colors.textSecondary),
                 ),
-              ),
+              if (method != null) ...[
+                const SizedBox(height: 10),
+                DsBadge(label: method, tone: DsBadgeTone.income),
+              ],
             ],
           ),
         ),
-        const SizedBox(height: AppSpacing.space6),
-        AppButton.secondary(
+        const SizedBox(height: 16),
+        DsButton.secondary(
+          expand: true,
+          icon: Icons.logout,
           label: _busyLabel(t.account.signOutAction, state, AccountAction.signOut),
           onPressed: state.isBusy ? null : () => context.read<AccountBloc>().add(const AccountSignOutRequested()),
         ),
-        const SizedBox(height: AppSpacing.space6),
+        const SizedBox(height: 24),
         _Settings(dataSection: dataSection, plusSection: plusSection),
-        const SizedBox(height: AppSpacing.space8),
-        Divider(color: colors.line),
-        const SizedBox(height: AppSpacing.space4),
-        AppSectionHeader(t.account.dangerTitle),
-        Text(t.account.dangerBody, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
-        const SizedBox(height: AppSpacing.space4),
-        AppButton.danger(
+        const SizedBox(height: 32),
+        DsSectionHeader(title: t.account.dangerTitle),
+        const SizedBox(height: 4),
+        Text(t.account.dangerBody, style: ds.typography.bodySm.copyWith(color: ds.colors.textSecondary)),
+        const SizedBox(height: 16),
+        DsButton.danger(
           key: const ValueKey('account-delete'),
+          expand: true,
           label: _busyLabel(t.account.deleteAction, state, AccountAction.delete),
           onPressed: state.isBusy ? null : () => _confirmDelete(context),
         ),
@@ -368,7 +373,7 @@ class _PasswordDialogState extends State<_PasswordDialog> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(t.account.deletePasswordBody),
-          const SizedBox(height: AppSpacing.space4),
+          const SizedBox(height: 16),
           TextField(
             controller: _controller,
             obscureText: true,
@@ -380,8 +385,8 @@ class _PasswordDialogState extends State<_PasswordDialog> {
         ],
       ),
       actions: [
-        AppButton.text(label: t.common.cancel, onPressed: () => Navigator.pop(context)),
-        AppButton.danger(label: t.account.deleteAction, onPressed: () => Navigator.pop(context, _controller.text)),
+        DsButton.ghost(label: t.common.cancel, onPressed: () => Navigator.pop(context)),
+        DsButton.danger(label: t.account.deleteAction, onPressed: () => Navigator.pop(context, _controller.text)),
       ],
     );
   }

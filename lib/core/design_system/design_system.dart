@@ -34,6 +34,7 @@ export 'components/ds_search_field.dart';
 export 'components/ds_section_header.dart';
 export 'components/ds_segment_meter.dart';
 export 'components/ds_segmented_pill.dart';
+export 'components/ds_setting_row.dart';
 export 'components/ds_skeleton.dart';
 export 'components/ds_status_board.dart';
 export 'components/ds_status_carousel.dart';

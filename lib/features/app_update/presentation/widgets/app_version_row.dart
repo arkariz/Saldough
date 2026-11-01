@@ -1,10 +1,10 @@
 import 'package:di/di.dart';
 import 'package:flutter/material.dart';
 import 'package:navigation/navigation.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/app_update/presentation/bloc/app_update_bloc.dart';
 import 'package:saldough/features/app_update/presentation/bloc/app_update_state.dart';
 import 'package:saldough/features/app_update/presentation/navigation/app_update_route_keys.dart';
@@ -46,16 +46,20 @@ class _AppVersionRowState extends State<AppVersionRow> {
       builder: (context, state) {
         final version = state.snapshot?.version;
         final status = versionStatusLabel(state.status);
-        return AppListRow(
+        return DsSettingRow(
           key: const ValueKey('app-version-row'),
-          compact: true,
-          leading: AppIcon(IconKey.systemUpdate, color: context.appColors.ink2),
+          leading: const SettingIconTile(IconKey.systemUpdate),
           title: t.account.version.label,
           subtitle: version == null ? null : versionValue(version),
-          wrapSubtitle: true,
-          detail: status,
-          detailStrong: versionStatusStrong(state.status),
-          chevron: true,
+          badge: status == null
+              ? null
+              : Text(
+                  status,
+                  style: context.ds.typography.labelMd.copyWith(
+                    color: versionStatusStrong(state.status) ? context.ds.colors.actionPrimary : context.ds.colors.textSecondary,
+                    fontWeight: versionStatusStrong(state.status) ? FontWeight.w700 : FontWeight.w500,
+                  ),
+                ),
           onTap: () => context.pushRoute(AppUpdateRouteKeys.notes, const EmptyInput()),
         );
       },

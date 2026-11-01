@@ -166,6 +166,30 @@ abstract final class ClayIcons {
   /// Panah berputar, Ulangi.
   static const String repeat = 'assets/icons_clay/repeat_loop.svg';
 
+  /// Bola dunia, bahasa.
+  static const String globe = 'assets/icons_clay/globe_language.svg';
+
+  /// Palet cat, tema.
+  static const String palette = 'assets/icons_clay/palette_theme.svg';
+
+  /// Tumpukan koin, mata uang.
+  static const String coins = 'assets/icons_clay/coins_currency.svg';
+
+  /// Mata, sembunyikan nominal.
+  static const String eye = 'assets/icons_clay/eye_privacy.svg';
+
+  /// Label harga, kategori.
+  static const String tag = 'assets/icons_clay/tag_category.svg';
+
+  /// Lembar tabel berpanah, ekspor.
+  static const String sheet = 'assets/icons_clay/sheet_export.svg';
+
+  /// Awan berpanah, cadangan.
+  static const String backupBox = 'assets/icons_clay/box_backup.svg';
+
+  /// Jam berputar balik, pulihkan.
+  static const String restoreClock = 'assets/icons_clay/restore_clock.svg';
+
   /// Seluruh aset, untuk uji dan pemeriksaan manifest.
   static const List<String> all = [
     mascot,
@@ -220,6 +244,14 @@ abstract final class ClayIcons {
     dateCalendar,
     note,
     repeat,
+    globe,
+    palette,
+    coins,
+    eye,
+    tag,
+    sheet,
+    backupBox,
+    restoreClock,
   ];
 
   /// Aset clay untuk [key], atau `null` bila belum digambar.
@@ -262,6 +294,18 @@ abstract final class ClayIcons {
     IconKey.paid => paid,
     IconKey.overBudget => warning,
     IconKey.empty => emptyTray,
+    IconKey.translate => globe,
+    IconKey.palette || IconKey.contrast => palette,
+    IconKey.payments => coins,
+    IconKey.visibilityOff => eye,
+    IconKey.label => tag,
+    IconKey.tableView => sheet,
+    IconKey.backup => backupBox,
+    IconKey.restoreBackup || IconKey.undo => restoreClock,
+    IconKey.notifications => bell,
+    IconKey.schedule => alarm,
+    IconKey.calendar => calendar,
+    IconKey.systemUpdate => rocket,
     _ => null,
   };
 }

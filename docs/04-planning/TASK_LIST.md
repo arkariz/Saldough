@@ -6070,8 +6070,11 @@ memilih mode (dan preset bila ≥ 2), dan design system lama dihapus.
       gradasi hero (koin clay, status paket, lencana Uji coba/Cek/Plus,
       tombol "Lihat Plus" untuk paket Gratis) dengan baris Kelola dan Pulihkan
       `DsSettingRow`. Tanpa harga atau uji coba karangan: harga hanya di
-      paywall dan dari toko. Paywall, kartu Plus Beranda, hadiah uji coba, dan
-      `PlusBadge` masih gaya lama.
+      paywall dan dari toko. **Paywall dan daftar fitur v2 (1 Nov 2026):**
+      `PlusTile` clay, `PlanCard` radio v2, daftar `DsSettingRow`, `DsStickyBar`
+      baru, catatan `_Notice`, layar berhasil dan sudah berlangganan; ikon clay
+      `chat_bubble` ditambah (total 61). Kartu Plus Beranda, hadiah uji coba,
+      dan `PlusBadge` masih gaya lama.
       **Ikon clay dilengkapi (31 Okt 2026, KT-DS5):** 33 ikon baru untuk
       dompet, jenis transaksi, kategori, dan status Freelance; semua
       `IconKey` benda kini punya clay (`ClayIcons.forIcon`). Digambar dari

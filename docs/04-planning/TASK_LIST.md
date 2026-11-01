@@ -6028,6 +6028,19 @@ memilih mode (dan preset bila ≥ 2), dan design system lama dihapus.
       kartu saldo dengan chip, sakelar aktif, `DsButton.danger` untuk hapus;
       daftar nonaktif memakai kartu bento. Tab Dompet selesai kecuali menu
       titik tiga (tidak dibuat).
+      **Riwayat v2 (1 Nov 2026), tab Daftar:** pil segmen Daftar | Analisis
+      (`DsSegmentedPill`), pemilih periode pil (`DsPeriodStepper`), kartu
+      Arus periode (selisih dan ubin pemasukan/pengeluaran, transfer tidak
+      dihitung), kolom cari (`DsSearchField`), tombol Filter bulat dengan
+      lembar `DsSelectRow`, chip jenis (`DsFilterChip`), kepala hari huruf
+      kapital dengan selisih hari, baris `TransactionLedgerRow`, keadaan
+      kosong dan galat v2. Selisih dari acuan Stitch yang disengaja: urutan
+      Pemasukan lalu Pengeluaran (sama dengan Beranda), selisih hari (bukan
+      "n Transaksi") tetap di kepala hari, tombol kalender dan "Unduh
+      Laporan Mutasi" tidak dibuat (ekspor hanya di Akun, ADR-040), ikon
+      cari/tune di app bar tidak dibuat (sudah ada di badan layar). Isi
+      segmen Analisis (acuan: Kakeibo 4 pilar, "Daun Emas") **belum**
+      dirombak dan tetap lewat jembatan; acuannya memuat angka karangan.
       **Ikon clay dilengkapi (31 Okt 2026, KT-DS5):** 33 ikon baru untuk
       dompet, jenis transaksi, kategori, dan status Freelance; semua
       `IconKey` benda kini punya clay (`ClayIcons.forIcon`). Digambar dari

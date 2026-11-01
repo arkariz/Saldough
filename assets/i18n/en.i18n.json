@@ -165,6 +165,7 @@
   },
   "transaction": {
     "pageTitle": "History",
+    "flowTitle": "Period flow",
     "searchHint": "Search notes or categories in this period...",
     "allFilterLabel": "All $count",
     "incomeFilterLabel": "Income $count",

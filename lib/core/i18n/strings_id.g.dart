@@ -334,6 +334,9 @@ class Translations$transaction$id {
 	/// id: 'Riwayat'
 	String get pageTitle => 'Riwayat';
 
+	/// id: 'Arus periode'
+	String get flowTitle => 'Arus periode';
+
 	/// id: 'Cari di periode ini: catatan / kategori...'
 	String get searchHint => 'Cari di periode ini: catatan / kategori...';
 
@@ -5798,6 +5801,7 @@ extension on Translations {
 			'record.calc.tooLarge' => 'Hasilnya terlalu besar',
 			'record.amountSemantics' => ({required Object amount}) => 'Nominal ${amount}',
 			'transaction.pageTitle' => 'Riwayat',
+			'transaction.flowTitle' => 'Arus periode',
 			'transaction.searchHint' => 'Cari di periode ini: catatan / kategori...',
 			'transaction.allFilterLabel' => ({required Object count}) => 'Semua ${count}',
 			'transaction.incomeFilterLabel' => ({required Object count}) => 'Pemasukan ${count}',
@@ -6162,9 +6166,9 @@ extension on Translations {
 			'budget.templatesLoadError' => 'Template gagal dimuat',
 			'budget.templateAddTitle' => 'Buat template',
 			'budget.templateEditTitle' => 'Ubah template',
-			'budget.templateRuleBody' => 'Template menyimpan susunan pos rencanamu. Dompet dan periodenya dipilih saat template dipakai.',
 			_ => null,
 		} ?? switch (path) {
+			'budget.templateRuleBody' => 'Template menyimpan susunan pos rencanamu. Dompet dan periodenya dipilih saat template dipakai.',
 			'budget.templateNameHint' => 'Contoh: Belanja bulanan',
 			'budget.templateEnabledLabel' => 'Tawarkan template ini',
 			'budget.templateEnabledHelp' => 'Template nonaktif tetap tersimpan, tapi tidak bisa dipakai membuat anggaran.',
@@ -6676,9 +6680,9 @@ extension on Translations {
 			'notificationCapture.accessMissingTitle' => 'Butuh izin membaca notifikasi',
 			'notificationCapture.accessMissingBody' => 'Tanpa izin ini, Tanukonomy tidak bisa melihat notifikasi bank.',
 			'notificationCapture.accessAction' => 'Beri izin',
-			'notificationCapture.accessGranted' => 'Izin notifikasi aktif',
 			_ => null,
 		} ?? switch (path) {
+			'notificationCapture.accessGranted' => 'Izin notifikasi aktif',
 			'notificationCapture.disclosureTitle' => 'Sebelum memberi izin',
 			'notificationCapture.disclosureBody' => 'Tanukonomy akan bisa membaca notifikasi di ponselmu.\n\n• Hanya dari aplikasi yang kamu pilih dan cocok dengan filternya.\n• Notifikasi OTP tidak pernah disimpan.\n• Teks yang sulit dibaca bisa dikirim ke Gemini (Google).\n• Teks notifikasi disimpan di ponselmu paling lama 7 hari.',
 			'notificationCapture.disclosureAccept' => 'Lanjut',

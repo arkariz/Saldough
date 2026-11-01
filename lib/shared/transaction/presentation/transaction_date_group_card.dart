@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
@@ -41,7 +42,8 @@ class TransactionDateGroupCard extends StatelessWidget {
     final today = DateTime.now();
     final todayOnly = DateTime(today.year, today.month, today.day);
     final day = DateTime(date.year, date.month, date.day);
-    final dated = '${CycleMonthFormatter.formatWeekday(day)}, ${CycleMonthFormatter.formatDayMonth(day)}'
+    final dated =
+        '${CycleMonthFormatter.formatWeekday(day)}, ${CycleMonthFormatter.formatDayMonth(day)}'
         '${day.year == today.year ? '' : ' ${day.year}'}';
     if (day == todayOnly) return '${t.transaction.todayLabel} · $dated';
     if (day == todayOnly.subtract(const Duration(days: 1))) return '${t.transaction.yesterdayLabel} · $dated';
@@ -50,39 +52,52 @@ class TransactionDateGroupCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
+    final ds = context.ds;
+    final c = ds.colors;
     final net = group.netSen;
     final netText = net > 0 ? '+${AppMoneyFormatter.format(net)}' : AppMoneyFormatter.format(net);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space1),
+          padding: const EdgeInsets.symmetric(horizontal: 4),
           // `Wrap`: pada teks besar selisih turun ke baris berikutnya.
           child: SizedBox(
             width: double.infinity,
             child: Wrap(
               alignment: WrapAlignment.spaceBetween,
               crossAxisAlignment: WrapCrossAlignment.center,
-              spacing: AppSpacing.space2,
+              spacing: 8,
               children: [
                 Semantics(
                   header: true,
-                  child: Text(dayLabel(group.date), style: textTheme.labelLarge?.copyWith(color: colors.ink2)),
+                  child: Text(
+                    dayLabel(group.date).toUpperCase(),
+                    style: ds.typography.labelMd.copyWith(
+                      fontSize: 11,
+                      color: c.textMuted,
+                      letterSpacing: 0.6,
+                    ),
+                  ),
                 ),
-                Text(netText, style: context.numberStyles.amountSm.copyWith(color: colors.ink2)),
+                Text(
+                  netText,
+                  style: ds.typography.amountSm.copyWith(
+                    fontSize: 12,
+                    color: c.textSecondary,
+                  ),
+                ),
               ],
             ),
           ),
         ),
-        const SizedBox(height: AppSpacing.space2),
-        AppListCard(
+        const SizedBox(height: 8),
+        DsListCard(
           children: [
             for (var i = 0; i < group.transactions.length; i++)
               SpotlightTarget(
                 spotlightKey: i == 0 ? firstRowSpotlightKey : null,
-                child: TransactionRow(
+                child: TransactionLedgerRow(
                   transaction: group.transactions[i],
                   walletsById: walletsById,
                   onTap: onTransactionTap == null ? null : () => onTransactionTap!(group.transactions[i]),
@@ -140,7 +155,10 @@ class TransactionRow extends StatelessWidget {
       TransferTransaction() => MoneyKind.transfer,
     };
     return AppListRow(
-      leading: TransactionIcon.of(transaction, ringColor: context.appColors.surface),
+      leading: TransactionIcon.of(
+        transaction,
+        ringColor: context.appColors.surface,
+      ),
       title: transactionTitle(transaction),
       subtitle: _subtitle,
       trailing: AppMoneyText(transaction.amount, kind: kind),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/transaction/transaction_presentation.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
@@ -24,62 +24,92 @@ class TransactionEmptyMonthState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
+    final ds = context.ds;
+    final c = ds.colors;
+    final guide = [
+      (
+        ClayIcons.incomeArrow,
+        DsIconTileTone.income,
+        t.transaction.emptyGuideIncomeTitle,
+        t.transaction.emptyGuideIncomeDescription,
+      ),
+      (
+        ClayIcons.expenseArrow,
+        DsIconTileTone.neutral,
+        t.transaction.emptyGuideExpenseTitle,
+        t.transaction.emptyGuideExpenseDescription,
+      ),
+      (
+        ClayIcons.transfer,
+        DsIconTileTone.info,
+        t.transaction.emptyGuideTransferTitle,
+        t.transaction.emptyGuideTransferDescription,
+      ),
+    ];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        AppEmptyState(
-          art: EmptyArt.history,
-          title: t.transaction.emptyMonthTitle,
-          body: t.transaction.emptyMonthSubtitle,
-          actionLabel: t.transaction.emptyMonthCta,
-          actionIcon: IconKey.add,
-          onAction: onRecord,
+        DsCard(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            children: [
+              DsIconTile.asset(asset: ClayIcons.emptyTray, size: DsIconTileSize.lg),
+              const SizedBox(height: 12),
+              Text(
+                t.transaction.emptyMonthTitle,
+                textAlign: TextAlign.center,
+                style: ds.typography.titleMd,
+              ),
+              const SizedBox(height: 4),
+              Text(
+                t.transaction.emptyMonthSubtitle,
+                textAlign: TextAlign.center,
+                style: ds.typography.bodySm.copyWith(color: c.textMuted),
+              ),
+              const SizedBox(height: 16),
+              DsButton(label: t.transaction.emptyMonthCta, icon: Icons.add, onPressed: onRecord),
+            ],
+          ),
         ),
-        AppSectionHeader(t.transaction.emptyGuideTitle),
-        AppListCard(
-          children: [
-            for (final (kind, icon, title, description) in [
-              (
-                TransactionKind.income,
-                IconKey.income,
-                t.transaction.emptyGuideIncomeTitle,
-                t.transaction.emptyGuideIncomeDescription,
-              ),
-              (
-                TransactionKind.expense,
-                IconKey.expense,
-                t.transaction.emptyGuideExpenseTitle,
-                t.transaction.emptyGuideExpenseDescription,
-              ),
-              (
-                TransactionKind.transfer,
-                IconKey.transfer,
-                t.transaction.emptyGuideTransferTitle,
-                t.transaction.emptyGuideTransferDescription,
-              ),
-            ])
-              AppListRow(
-                leading: AppIconTile(icon, tint: _guideTint[kind]),
-                title: title,
-                subtitle: description,
-                wrapTitle: true,
-                wrapSubtitle: true,
-              ),
-          ],
+        const SizedBox(height: 16),
+        DsSectionHeader(title: t.transaction.emptyGuideTitle),
+        const SizedBox(height: 8),
+        DsCard(
+          child: Column(
+            children: [
+              for (final (i, (asset, tone, title, description)) in guide.indexed) ...[
+                if (i > 0) const SizedBox(height: 12),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    DsIconTile.asset(asset: asset, tone: tone),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(title, style: ds.typography.titleMd.copyWith(fontSize: 14)),
+                          Text(description, style: ds.typography.bodySm.copyWith(color: c.textSecondary)),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ],
+          ),
         ),
-        const SizedBox(height: AppSpacing.space4),
+        const SizedBox(height: 16),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            AppIcon(IconKey.locked, size: 18, color: colors.ink3),
-            const SizedBox(width: AppSpacing.space2),
+            Icon(Icons.lock_outline, size: 16, color: c.textMuted),
+            const SizedBox(width: 8),
             Flexible(
               child: Text(
                 t.transaction.trustFooterMessage,
                 textAlign: TextAlign.center,
-                style: textTheme.bodySmall?.copyWith(color: colors.ink3),
+                style: ds.typography.bodySm.copyWith(color: c.textMuted),
               ),
             ),
           ],
@@ -88,12 +118,6 @@ class TransactionEmptyMonthState extends StatelessWidget {
     );
   }
 }
-
-const Map<TransactionKind, TileTint> _guideTint = {
-  TransactionKind.income: TileTint.green,
-  TransactionKind.expense: TileTint.rose,
-  TransactionKind.transfer: TileTint.slate,
-};
 
 /// Keadaan kosong saat bulan berjalan PUNYA transaksi, tapi filter aktif
 /// mengecualikan semuanya -- pesan yang lebih singkat, TANPA ilustrasi
@@ -107,15 +131,27 @@ class TransactionEmptyFilterState extends StatelessWidget {
   final VoidCallback onClearFilters;
 
   @override
-  Widget build(BuildContext context) => Center(
-    child: AppEmptyState(
-      title: t.transaction.emptyFilterTitle,
-      body: t.transaction.emptyFilterSubtitle,
-      actionLabel: t.transaction.clearFiltersButton,
-      onAction: onClearFilters,
-      textAction: true,
-    ),
-  );
+  Widget build(BuildContext context) {
+    final ds = context.ds;
+    return DsCard(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        children: [
+          DsIconTile.asset(asset: ClayIcons.emptyTray, size: DsIconTileSize.lg),
+          const SizedBox(height: 12),
+          Text(t.transaction.emptyFilterTitle, textAlign: TextAlign.center, style: ds.typography.titleMd),
+          const SizedBox(height: 4),
+          Text(
+            t.transaction.emptyFilterSubtitle,
+            textAlign: TextAlign.center,
+            style: ds.typography.bodySm.copyWith(color: ds.colors.textMuted),
+          ),
+          const SizedBox(height: 12),
+          DsButton.ghost(label: t.transaction.clearFiltersButton, onPressed: onClearFilters),
+        ],
+      ),
+    );
+  }
 }
 
 /// Bagian pencarian lintas bulan (T-8.2, UX-6 langkah 2) -- tampil di bawah
@@ -164,17 +200,18 @@ class TransactionCrossMonthSearchSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
+    final ds = context.ds;
+    final c = ds.colors;
 
     if (isSearching) {
       return Padding(
-        padding: const EdgeInsets.only(top: AppSpacing.space4),
+        padding: const EdgeInsets.only(top: 16),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2)),
-            const SizedBox(width: AppSpacing.space2),
-            Text(t.transaction.crossMonthSearchingLabel, style: TextStyle(color: colors.ink2)),
+            const SizedBox(width: 8),
+            Text(t.transaction.crossMonthSearchingLabel, style: ds.typography.bodySm.copyWith(color: c.textSecondary)),
           ],
         ),
       );
@@ -182,26 +219,26 @@ class TransactionCrossMonthSearchSection extends StatelessWidget {
 
     if (!hasScanned) {
       return Padding(
-        padding: const EdgeInsets.only(top: AppSpacing.space4),
+        padding: const EdgeInsets.only(top: 16),
         child: Center(
-          child: AppButton.secondary(label: t.transaction.crossMonthSearchButton, onPressed: onSearch),
+          child: DsButton.secondary(label: t.transaction.crossMonthSearchButton, onPressed: onSearch),
         ),
       );
     }
 
     if (groups.isEmpty) {
       return Padding(
-        padding: const EdgeInsets.only(top: AppSpacing.space4),
+        padding: const EdgeInsets.only(top: 16),
         child: Column(
           children: [
             Text(
               t.transaction.crossMonthNoMoreResults,
               textAlign: TextAlign.center,
-              style: TextStyle(color: colors.ink2),
+              style: ds.typography.bodySm.copyWith(color: c.textSecondary),
             ),
             if (!exhausted) ...[
-              const SizedBox(height: AppSpacing.space2),
-              AppButton.secondary(label: t.transaction.crossMonthLoadMoreButton, onPressed: onSearch),
+              const SizedBox(height: 8),
+              DsButton.secondary(label: t.transaction.crossMonthLoadMoreButton, onPressed: onSearch),
             ],
           ],
         ),
@@ -209,22 +246,22 @@ class TransactionCrossMonthSearchSection extends StatelessWidget {
     }
 
     return Padding(
-      padding: const EdgeInsets.only(top: AppSpacing.space4),
+      padding: const EdgeInsets.only(top: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
             t.transaction.crossMonthResultsHeader,
-            style: labelSmStyle(context, color: colors.ink2),
+            style: ds.typography.labelMd.copyWith(color: c.textSecondary),
           ),
-          const SizedBox(height: AppSpacing.space2),
+          const SizedBox(height: 8),
           for (final group in groups) ...[
             TransactionDateGroupCard(group: group, walletsById: walletsById, onTransactionTap: onTransactionTap),
-            const SizedBox(height: AppSpacing.space4),
+            const SizedBox(height: 16),
           ],
           if (!exhausted)
             Center(
-              child: AppButton.secondary(label: t.transaction.crossMonthLoadMoreButton, onPressed: onSearch),
+              child: DsButton.secondary(label: t.transaction.crossMonthLoadMoreButton, onPressed: onSearch),
             ),
         ],
       ),
@@ -243,7 +280,7 @@ class TransactionLoadErrorState extends StatelessWidget {
   final VoidCallback onRetry;
 
   @override
-  Widget build(BuildContext context) => AppErrorState(
+  Widget build(BuildContext context) => DsErrorState(
     title: t.transaction.loadErrorTitle,
     body: t.transaction.loadErrorSubtitle,
     retryLabel: t.common.retry,

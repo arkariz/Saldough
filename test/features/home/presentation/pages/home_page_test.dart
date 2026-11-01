@@ -9,7 +9,6 @@ import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
-import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/budget/data/adapters/budget_item_catalog_impl.dart';
 import 'package:saldough/features/budget/data/adapters/budget_overview_source_impl.dart';
@@ -516,7 +515,7 @@ void main() {
       await openShellWithTours(tester);
       await openTab(tester, t.appShell.transactionsTabLabel);
       await tester.tap(
-        find.descendant(of: find.byType(AppSubTabs<HistorySegment>), matching: find.text(t.analysis.segment)),
+        find.descendant(of: find.byType(DsSegmentedPill<HistorySegment>), matching: find.text(t.analysis.segment)),
       );
       await tester.pumpAndSettle();
 
@@ -536,7 +535,7 @@ void main() {
       await openShellWithTours(tester);
       await openTab(tester, t.appShell.transactionsTabLabel);
       await tester.tap(
-        find.descendant(of: find.byType(AppSubTabs<HistorySegment>), matching: find.text(t.analysis.segment)),
+        find.descendant(of: find.byType(DsSegmentedPill<HistorySegment>), matching: find.text(t.analysis.segment)),
       );
       await tester.pumpAndSettle();
       expect(find.text(t.tour.analysisCategoriesTitle), findsNothing);

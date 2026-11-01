@@ -224,9 +224,9 @@ void main() {
 
       // Dropdown dompet ada di dalam lembar (posisi pertama) -- mengetuknya
       // membuka menu pilihan, lalu pilih "BCA".
-      await tester.tap(find.byType(AppMenuSelectButton<String>).first);
+      await tester.tap(find.byType(DsSelectRow<String>).first);
       await tester.pumpAndSettle();
-      await tester.tap(find.text('BCA'));
+      await tester.tap(find.text('BCA').last);
       await tester.pumpAndSettle();
       await tester.tap(find.text(t.transaction.filterSheetDoneAction));
       await tester.pumpAndSettle();
@@ -285,7 +285,7 @@ void main() {
 
         // Header ikut menggulir bersama isi, jadi CTA bisa berada di bawah
         // layar pada viewport pendek -- gulir dulu seperti pengguna.
-        final cta = find.widgetWithText(AppButton, t.transaction.emptyMonthCta);
+        final cta = find.widgetWithText(DsButton, t.transaction.emptyMonthCta);
         await tester.ensureVisible(cta);
         await tester.pumpAndSettle();
         await tester.tap(cta);

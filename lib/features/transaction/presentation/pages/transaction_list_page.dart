@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
@@ -89,31 +90,55 @@ class _TransactionListPageState extends State<TransactionListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(t.transaction.pageTitle, style: Theme.of(context).textTheme.headlineSmall),
+        title: Text(t.transaction.pageTitle, style: context.ds.typography.headlineMd),
         centerTitle: false,
         actions: const [TutorialInfoButton(tour: TourId.transaction)],
-        // Daftar | Analisis (A1, SubTabs): navigasi, isi di bawahnya berganti seluruhnya.
-        bottom: widget.analysis == null || _segment == null
-            ? null
-            : AppSubTabs<HistorySegment>(
-                options: [
-                  (HistorySegment.list, t.transaction.listSegment),
-                  (HistorySegment.analysis, t.analysis.segment),
-                ],
-                selected: _segment!,
-                onChanged: _selectSegment,
-                tabWrap: (segment, tab) => SpotlightTarget(
-                  spotlightKey: segment == HistorySegment.analysis ? SpotlightKey.txnAnalysisSegment : null,
-                  child: tab,
-                ),
-              ),
       ),
       body: SafeArea(
-        child: _segment == null
-            ? const AppSkeletonPage()
-            : _segment == HistorySegment.analysis
-            ? widget.analysis!
-            : BlocBuilder<TransactionBloc, TransactionState>(
+        child: Column(
+          children: [
+            // Daftar | Analisis (A1): navigasi, isi di bawahnya berganti seluruhnya.
+            if (widget.analysis != null && _segment != null)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.space4,
+                  AppSpacing.space1,
+                  AppSpacing.space4,
+                  AppSpacing.space2,
+                ),
+                child: SpotlightTarget(
+                  spotlightKey: SpotlightKey.txnAnalysisSegment,
+                  child: DsSegmentedPill<HistorySegment>(
+                    segments: [
+                      DsSegment(
+                        value: HistorySegment.list,
+                        label: t.transaction.listSegment,
+                        icon: Icons.receipt_long_outlined,
+                      ),
+                      DsSegment(
+                        value: HistorySegment.analysis,
+                        label: t.analysis.segment,
+                        icon: Icons.pie_chart_outline,
+                      ),
+                    ],
+                    selected: _segment!,
+                    onChanged: _selectSegment,
+                  ),
+                ),
+              ),
+            Expanded(child: _content(context)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _content(BuildContext context) {
+    return _segment == null
+        ? const AppSkeletonPage()
+        : _segment == HistorySegment.analysis
+        ? widget.analysis!
+        : BlocBuilder<TransactionBloc, TransactionState>(
           builder: (context, state) {
             if (state.isLoading) return const AppSkeletonPage();
 
@@ -217,9 +242,7 @@ class _TransactionListPageState extends State<TransactionListPage> {
               ),
             );
           },
-        ),
-      ),
-    );
+        );
   }
 }
 

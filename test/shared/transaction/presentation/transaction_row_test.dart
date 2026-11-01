@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
@@ -87,25 +89,24 @@ void main() {
       );
 
       expect(find.text('Kopi susu'), findsOneWidget);
-      expect(find.text('Makan & Minum'), findsOneWidget);
+      // Dua lencana kategori + judul baris tanpa catatan (kategori jadi judul).
+      expect(find.text('Makan & Minum'), findsNWidgets(3));
       expect(find.text('Tunai · 08.00'), findsOneWidget);
       expect(find.text('BCA → Tunai · 17.30'), findsOneWidget);
       expect(find.text('−Rp45.000'), findsOneWidget);
       expect(find.text('Rp300.000'), findsOneWidget);
       // Kepala: hari ini + selisih tanpa transfer.
       expect(
-        find.textContaining('${t.transaction.todayLabel} · '),
+        find.textContaining('${t.transaction.todayLabel} · '.toUpperCase()),
         findsOneWidget,
       );
       expect(find.text('−Rp95.000'), findsOneWidget);
       // Satu kartu daftar, pemisah menjorok.
-      expect(find.byType(AppListCard), findsOneWidget);
+      expect(find.byType(DsListCard), findsOneWidget);
       expect(find.byType(Divider), findsNWidgets(2));
-      // Kopi memakai ikon kopi (varian judul).
+      // Kopi memakai ikon clay cangkir (varian judul).
       expect(
-        find.byWidgetPredicate(
-          (w) => w is AppIconTile && w.icon == IconKey.categoryCoffee,
-        ),
+        find.byWidgetPredicate((w) => w is SvgPicture && '${w.bytesLoader}'.contains(ClayIcons.coffee)),
         findsOneWidget,
       );
     },

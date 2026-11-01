@@ -185,6 +185,7 @@ class _Translations$transaction$en extends Translations$transaction$id {
 
 	// Translations
 	@override String get pageTitle => 'History';
+	@override String get flowTitle => 'Period flow';
 	@override String get searchHint => 'Search notes or categories in this period...';
 	@override String allFilterLabel({required Object count}) => 'All ${count}';
 	@override String incomeFilterLabel({required Object count}) => 'Income ${count}';
@@ -2622,6 +2623,7 @@ extension on TranslationsEn {
 			'record.calc.tooLarge' => 'The result is too large',
 			'record.amountSemantics' => ({required Object amount}) => 'Amount ${amount}',
 			'transaction.pageTitle' => 'History',
+			'transaction.flowTitle' => 'Period flow',
 			'transaction.searchHint' => 'Search notes or categories in this period...',
 			'transaction.allFilterLabel' => ({required Object count}) => 'All ${count}',
 			'transaction.incomeFilterLabel' => ({required Object count}) => 'Income ${count}',
@@ -2986,9 +2988,9 @@ extension on TranslationsEn {
 			'budget.templatesLoadError' => 'Couldn\'t load templates',
 			'budget.templateAddTitle' => 'Create template',
 			'budget.templateEditTitle' => 'Edit template',
-			'budget.templateRuleBody' => 'A template keeps your set of plan items. The wallet and period are chosen when you use it.',
 			_ => null,
 		} ?? switch (path) {
+			'budget.templateRuleBody' => 'A template keeps your set of plan items. The wallet and period are chosen when you use it.',
 			'budget.templateNameHint' => 'Example: Monthly groceries',
 			'budget.templateEnabledLabel' => 'Offer this template',
 			'budget.templateEnabledHelp' => 'Inactive templates stay saved but cannot be used to create a budget.',
@@ -3500,9 +3502,9 @@ extension on TranslationsEn {
 			'notificationCapture.accessMissingTitle' => 'Permission needed to read notifications',
 			'notificationCapture.accessMissingBody' => 'Without it, Tanukonomy can\'t see your bank notifications.',
 			'notificationCapture.accessAction' => 'Allow access',
-			'notificationCapture.accessGranted' => 'Notification permission is on',
 			_ => null,
 		} ?? switch (path) {
+			'notificationCapture.accessGranted' => 'Notification permission is on',
 			'notificationCapture.disclosureTitle' => 'Before you grant permission',
 			'notificationCapture.disclosureBody' => 'Tanukonomy will be able to read notifications on your phone.\n\n• Only from apps you pick that match their filter.\n• OTP notifications are never stored.\n• Text that is hard to read may be sent to Gemini (Google).\n• Notification text stays on your phone for at most 7 days.',
 			'notificationCapture.disclosureAccept' => 'Continue',

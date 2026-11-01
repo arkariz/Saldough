@@ -97,7 +97,7 @@ void main() {
   }
 
   Finder segment(String label) => find.descendant(
-    of: find.byType(AppSubTabs<HistorySegment>),
+    of: find.byType(DsSegmentedPill<HistorySegment>),
     matching: find.text(label),
   );
 
@@ -109,7 +109,7 @@ void main() {
     tester,
   ) async {
     await openHistoryTab(tester);
-    expect(find.byType(AppSubTabs<HistorySegment>), findsOneWidget);
+    expect(find.byType(DsSegmentedPill<HistorySegment>), findsOneWidget);
     expect(segment('Daftar'), findsOneWidget);
     expect(segment('Analisis'), findsOneWidget);
     expect(
@@ -243,11 +243,11 @@ void main() {
     ) async {
       await seedTwoMonths();
       await openHistoryTab(tester);
-      final next = tester.widget<AppIconButton>(find.byKey(const ValueKey('period-next')));
+      final next = tester.widget<DsIconButton>(find.byKey(const ValueKey('period-next')));
       expect(next.onPressed, isNull);
       await tester.tap(find.byKey(const ValueKey('period-previous')));
       await tester.pumpAndSettle();
-      final back = tester.widget<AppIconButton>(find.byKey(const ValueKey('period-previous')));
+      final back = tester.widget<DsIconButton>(find.byKey(const ValueKey('period-previous')));
       expect(back.onPressed, isNull, reason: 'bulan pertama pencatatan');
     });
   });

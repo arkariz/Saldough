@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 
-/// Pemilih periode dan ringkasan periode Riwayat (prototipe `Riwayat.dc.html`):
-/// panah periode sebelumnya/berikutnya di sekitar "September 2026" (atau
-/// rentang "25 Okt – 24 Nov"), lalu kartu pemasukan dan pengeluaran periode
-/// itu. Dihitung dari SELURUH transaksi periode ini (`rawTransactions`),
+/// Pemilih periode dan ringkasan periode Riwayat (acuan Riwayat v2): pil
+/// periode dengan panah sebelumnya/berikutnya di sekitar "September 2026"
+/// (atau rentang "25 Okt – 24 Nov"), lalu kartu arus periode itu: selisih
+/// dan dua ubin pemasukan dan pengeluaran. Dihitung dari SELURUH transaksi periode ini (`rawTransactions`),
 /// bukan hasil saringan -- ringkasan periode, bukan hasil pencarian.
 /// Transfer tidak dihitung (CLAUDE.md aturan 7). Periodenya dibagi dengan
 /// segmen Analisis (T-19.10).
@@ -52,34 +53,132 @@ class TransactionPeriodHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
+    final ds = context.ds;
+    final c = ds.colors;
     final totals = _totals;
-    Widget stat(String label, int sen, MoneyKind kind) => Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label, style: textTheme.bodyMedium?.copyWith(color: colors.ink2)),
-        FitStart(child: AppMoneyText(sen, kind: kind)),
-      ],
+    final net = totals.income - totals.expense;
+    final days = period.isTransition ? period.days : null;
+    Widget stat(String label, int sen, MoneyKind kind, Color dot) => DecoratedBox(
+      decoration: BoxDecoration(
+        color: c.surfaceSunken,
+        borderRadius: DsRadius.mdAll,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                SizedBox.square(
+                  dimension: 8,
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      color: dot,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 6),
+                Flexible(
+                  child: Text(
+                    label,
+                    style: ds.typography.labelMd.copyWith(
+                      color: c.textSecondary,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 4),
+            FitStart(child: AppMoneyText(sen, kind: kind)),
+          ],
+        ),
+      ),
     );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        AppPeriodStepper(
+        DsPeriodStepper(
           title: period.label,
-          transitionDays: period.isTransition ? period.days : null,
+          tag: days == null ? null : t.plan.transitionLabel(days: days),
+          previousLabel: t.analysis.previousPeriod,
+          nextLabel: t.analysis.nextPeriod,
           onPrevious: onPrevious,
           onNext: onNext,
         ),
-        const SizedBox(height: AppSpacing.space2),
-        AppCard(
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4, vertical: AppSpacing.space3),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+        const SizedBox(height: AppSpacing.space3),
+        DsCard(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Expanded(child: stat(t.home.incomeStat, totals.income, MoneyKind.income)),
-              const SizedBox(width: AppSpacing.space3),
-              Expanded(child: stat(t.home.expenseStat, totals.expense, MoneyKind.expense)),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      t.transaction.flowTitle,
+                      style: ds.typography.titleMd.copyWith(
+                        fontSize: 14,
+                        color: c.textSecondary,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Flexible(
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: net < 0 ? c.errorContainer : c.incomeContainer,
+                        borderRadius: DsRadius.fullAll,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 3,
+                        ),
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            '${t.home.flowNet} ${AppMoneyText.format(net.abs(), net > 0
+                                ? MoneyKind.income
+                                : net < 0
+                                ? MoneyKind.expense
+                                : MoneyKind.transfer)}',
+                            key: const ValueKey('period-net'),
+                            style: ds.typography.labelMd.copyWith(
+                              color: net < 0 ? c.onErrorContainer : c.onIncomeContainer,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              IntrinsicHeight(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Expanded(
+                      child: stat(
+                        t.home.incomeStat,
+                        totals.income,
+                        MoneyKind.income,
+                        c.income,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: stat(
+                        t.home.expenseStat,
+                        totals.expense,
+                        MoneyKind.expense,
+                        c.error,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),

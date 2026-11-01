@@ -165,6 +165,7 @@
   },
   "transaction": {
     "pageTitle": "Riwayat",
+    "flowTitle": "Arus periode",
     "searchHint": "Cari di periode ini: catatan / kategori...",
     "allFilterLabel": "Semua $count",
     "incomeFilterLabel": "Pemasukan $count",

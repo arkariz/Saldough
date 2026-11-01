@@ -1,11 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/language/language.dart';
-import 'package:saldough/core/presentation/motion/motion.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/voice_capture/domain/speech_transcriber.dart';
 import 'package:saldough/features/voice_capture/presentation/bloc/voice_capture_bloc.dart';
 import 'package:saldough/shared/capture/capture.dart';
@@ -89,8 +88,8 @@ class VoiceCaptureSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    final colors = context.appColors;
+    final ds = context.ds;
+    final c = ds.colors;
     return BlocConsumer<VoiceCaptureBloc, VoiceCaptureState>(
       listenWhen: (previous, current) => previous.phase != current.phase,
       listener: (context, state) {
@@ -101,15 +100,15 @@ class VoiceCaptureSheet extends StatelessWidget {
         final heard = state.heardText.trim();
         final quoted = heard.isEmpty ? null : '“$heard”';
         final busy = state.phase == VoiceCapturePhase.interpreting || state.phase == VoiceCapturePhase.done;
-        final (String primary, TextStyle? primaryStyle) = switch (state.phase) {
-          VoiceCapturePhase.idle => (t.record.voice.idleHint, textTheme.bodyLarge),
+        final (String primary, TextStyle primaryStyle) = switch (state.phase) {
+          VoiceCapturePhase.idle => (t.record.voice.idleHint, ds.typography.bodyMd),
           VoiceCapturePhase.starting || VoiceCapturePhase.listening =>
-            quoted == null ? (t.record.voice.listening, textTheme.bodyLarge) : (quoted, textTheme.titleMedium),
+            quoted == null ? (t.record.voice.listening, ds.typography.bodyMd) : (quoted, ds.typography.titleMd),
           VoiceCapturePhase.interpreting || VoiceCapturePhase.done => (
             quoted ?? t.record.voice.interpreting,
-            textTheme.titleMedium,
+            ds.typography.titleMd,
           ),
-          VoiceCapturePhase.failed => (_failureMessage(state.failure), textTheme.bodyLarge),
+          VoiceCapturePhase.failed => (_failureMessage(state.failure), ds.typography.bodyMd),
         };
         final secondary = switch (state.phase) {
           VoiceCapturePhase.idle => t.record.voice.example,
@@ -122,7 +121,7 @@ class VoiceCaptureSheet extends StatelessWidget {
         final tappable = state.phase == VoiceCapturePhase.idle || state.phase == VoiceCapturePhase.failed;
         return SafeArea(
           child: Padding(
-            padding: const EdgeInsets.all(AppSpacing.space6),
+            padding: const EdgeInsets.all(24),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -131,22 +130,22 @@ class VoiceCaptureSheet extends StatelessWidget {
                 // di tengah.
                 Row(
                   children: [
-                    AppIconButton(
-                      icon: IconKey.close,
+                    DsIconButton(
+                      icon: Icons.close,
                       label: t.common.close,
                       onPressed: () => Navigator.of(context).maybePop(),
                     ),
                     Expanded(
-                      child: Text(t.record.voice.title, textAlign: TextAlign.center, style: textTheme.titleMedium),
+                      child: Text(t.record.voice.title, textAlign: TextAlign.center, style: ds.typography.titleMd),
                     ),
-                    const SizedBox(width: AppSize.touch),
+                    const SizedBox(width: 44),
                   ],
                 ),
-                const SizedBox(height: AppSpacing.space4),
+                const SizedBox(height: 16),
                 // Lencana rekam di atas mikrofon; tempatnya tetap supaya
                 // tombol tidak melompat.
                 SizedBox(
-                  height: AppSpacing.space6,
+                  height: 24,
                   child: state.isRecording
                       ? Center(
                           child: _RecordingBadge(key: const ValueKey('voice-recording-badge'), phase: state.phase),
@@ -160,7 +159,7 @@ class VoiceCaptureSheet extends StatelessWidget {
                     onPressed: tappable ? () => _onMainButton(context, state) : null,
                   ),
                 ),
-                const SizedBox(height: AppSpacing.space4),
+                const SizedBox(height: 16),
                 Semantics(
                   liveRegion: true,
                   child: _TranscriptBox(
@@ -169,36 +168,45 @@ class VoiceCaptureSheet extends StatelessWidget {
                       primary,
                       key: const ValueKey('voice-primary-text'),
                       textAlign: TextAlign.center,
-                      style: primaryStyle?.copyWith(color: colors.ink),
+                      style: primaryStyle.copyWith(color: c.textPrimary),
                     ),
                   ),
                 ),
                 if (secondary != null) ...[
-                  const SizedBox(height: AppSpacing.space1),
+                  const SizedBox(height: 4),
                   Text(
                     secondary,
                     key: const ValueKey('voice-secondary-text'),
                     textAlign: TextAlign.center,
-                    style: textTheme.bodySmall?.copyWith(color: colors.ink2),
+                    style: ds.typography.bodySm.copyWith(color: c.textSecondary),
                   ),
                 ],
                 if (busy) ...[
-                  const SizedBox(height: AppSpacing.space4),
-                  LinearProgressIndicator(color: colors.brand, backgroundColor: colors.track),
+                  const SizedBox(height: 16),
+                  ClipRRect(
+                    borderRadius: DsRadius.fullAll,
+                    child: LinearProgressIndicator(
+                      color: c.actionPrimary,
+                      backgroundColor: c.surfaceContainerHigh,
+                      minHeight: 6,
+                    ),
+                  ),
                 ],
-                const SizedBox(height: AppSpacing.space6),
+                const SizedBox(height: 24),
                 // Tanpa internet (atau tanpa pengenal), merekam ulang belum
                 // tentu berhasil -- mengetik jadi jalan utama. Pencatatan
                 // sendiri tetap penuh tanpa internet (NFR-REL-001).
                 if (_typingIsPrimary(state))
-                  AppButton(
+                  DsButton(
                     key: const ValueKey('voice-type-instead'),
+                    expand: true,
                     label: t.record.voice.typeInstead,
                     onPressed: () => Navigator.of(context).pop(const VoiceTypeInstead()),
                   )
                 else
-                  AppButton.text(
+                  DsButton.ghost(
                     key: const ValueKey('voice-type-instead'),
+                    expand: true,
                     label: t.record.voice.typeInstead,
                     onPressed: () => Navigator.of(context).pop(const VoiceTypeInstead()),
                   ),
@@ -247,7 +255,7 @@ class _RecordButtonState extends State<_RecordButton> with SingleTickerProviderS
   }
 
   void _syncPulse() {
-    final animate = _recording && MotionPolicy.duration(context, _pulse.duration!) != Duration.zero;
+    final animate = _recording && !DsMotion.reduced(context);
     if (animate && !_pulse.isAnimating) {
       _pulse.repeat(reverse: true);
     } else if (!animate && _pulse.isAnimating) {
@@ -265,9 +273,8 @@ class _RecordButtonState extends State<_RecordButton> with SingleTickerProviderS
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
+    final c = context.ds.colors;
     const size = 96.0;
-    final color = colors.brand;
     final label = switch (widget.phase) {
       VoiceCapturePhase.idle => t.record.voice.startAction,
       VoiceCapturePhase.starting || VoiceCapturePhase.listening => t.record.voice.listeningButtonLabel,
@@ -289,12 +296,12 @@ class _RecordButtonState extends State<_RecordButton> with SingleTickerProviderS
                   builder: (context, _) {
                     // Cincin: dasar berdenyut pelan, ditambah kekuatan suara.
                     final grow = 8 + 10 * _pulse.value + 22 * widget.level;
-                    // Dua cincin: luar `surface2`, dalam `brandSoft`.
+                    // Dua cincin `actionPrimary` tipis: luar lebih pudar.
                     return Stack(
                       alignment: Alignment.center,
                       children: [
-                        _Ring(size: size + grow * 2, color: colors.surface2),
-                        _Ring(size: size + grow, color: colors.brandSoft),
+                        _Ring(size: size + grow * 2, color: c.actionPrimary.withValues(alpha: 0.08)),
+                        _Ring(size: size + grow, color: c.actionPrimary.withValues(alpha: 0.16)),
                       ],
                     );
                   },
@@ -302,23 +309,36 @@ class _RecordButtonState extends State<_RecordButton> with SingleTickerProviderS
               Semantics(
                 button: widget.onPressed != null,
                 label: label,
-                child: AppTappable(
+                child: DsPressable(
                   key: const ValueKey('voice-record-button'),
-                  label: label,
-                  onTap: widget.onPressed,
-                  child: Container(
+                  semanticLabel: label,
+                  onPressed: widget.onPressed,
+                  dimWhenDisabled: false,
+                  builder: (context, _) => Container(
                     width: size,
                     height: size,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: _dimmed ? colors.surface2 : color,
+                      gradient: _dimmed
+                          ? null
+                          : LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [Color.lerp(c.actionPrimary, Colors.white, 0.18)!, c.actionPrimary],
+                            ),
+                      color: _dimmed ? c.surfaceSunken : null,
+                      boxShadow: _dimmed
+                          ? null
+                          : [
+                              BoxShadow(
+                                color: c.actionPrimary.withValues(alpha: 0.35),
+                                blurRadius: 18,
+                                offset: const Offset(0, 6),
+                              ),
+                            ],
                     ),
-                    child: AppIcon(
-                      IconKey.microphone,
-                      size: 40,
-                      color: _dimmed ? colors.ink2 : colors.onBrand,
-                    ),
+                    child: Icon(Icons.mic, size: 42, color: _dimmed ? c.textSecondary : c.onActionPrimary),
                   ),
                 ),
               ),
@@ -328,8 +348,8 @@ class _RecordButtonState extends State<_RecordButton> with SingleTickerProviderS
         // Label hanya saat gagal: aksi "Rekam ulang" tidak terbaca dari ikon
         // saja. Di tahap lain pesan utama sudah menjelaskan.
         if (widget.phase == VoiceCapturePhase.failed) ...[
-          const SizedBox(height: AppSpacing.space1),
-          Text(label, style: Theme.of(context).textTheme.labelLarge),
+          const SizedBox(height: 4),
+          Text(label, style: context.ds.typography.labelMd),
         ],
       ],
     );
@@ -364,14 +384,14 @@ class _RecordingBadgeState extends State<_RecordingBadge> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
+    final c = context.ds.colors;
     final seconds = _stopwatch.elapsed.inSeconds;
     final blinkOn = (_stopwatch.elapsed.inMilliseconds ~/ 500).isEven;
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2, vertical: AppSpacing.space1),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: colors.dangerSoft,
-        borderRadius: BorderRadius.circular(AppRadius.full),
+        color: c.errorContainer,
+        borderRadius: DsRadius.fullAll,
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -381,13 +401,13 @@ class _RecordingBadgeState extends State<_RecordingBadge> {
             height: 10,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: blinkOn ? colors.danger : colors.dangerSoft,
+              color: blinkOn ? c.error : c.errorContainer,
             ),
           ),
-          const SizedBox(width: AppSpacing.space1),
+          const SizedBox(width: 4),
           Text(
             '${t.record.voice.recordingBadge} ${seconds ~/ 60}:${(seconds % 60).toString().padLeft(2, '0')}',
-            style: context.numberStyles.amountSm.copyWith(color: colors.ink),
+            style: context.ds.typography.amountSm.copyWith(color: c.onErrorContainer),
           ),
         ],
       ),
@@ -406,8 +426,8 @@ class _TranscriptBox extends StatelessWidget {
   Widget build(BuildContext context) {
     if (!boxed) return child;
     return Container(
-      padding: const EdgeInsets.all(AppSpacing.space4),
-      decoration: ShapeDecoration(color: context.appColors.surface2, shape: const PixelCornerBorder()),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(color: context.ds.colors.surfaceSunken, borderRadius: DsRadius.lgAll),
       child: child,
     );
   }

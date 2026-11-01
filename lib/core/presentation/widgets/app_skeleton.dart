@@ -110,7 +110,7 @@ class _AppSkeletonPageState extends State<AppSkeletonPage> {
   Widget build(BuildContext context) {
     if (!_visible) return const SizedBox.expand();
     final colors = context.appColors;
-    final line = BorderRadius.circular(AppSize.pixelStepSm);
+    final line = BorderRadius.circular(8);
     return Semantics(
       container: true,
       child: SingleChildScrollView(
@@ -124,7 +124,7 @@ class _AppSkeletonPageState extends State<AppSkeletonPage> {
             AppSkeleton(height: 36, width: 200, borderRadius: line),
             const SizedBox(height: AppSpacing.space6),
             DecoratedBox(
-              decoration: BoxDecoration(color: colors.surface, borderRadius: BorderRadius.circular(AppSize.pixelStep)),
+              decoration: BoxDecoration(color: colors.surface, borderRadius: BorderRadius.circular(16)),
               child: Column(
                 children: [
                   for (var i = 0; i < widget.rowCount; i++)

@@ -29,24 +29,23 @@ class AppearanceModeEntry extends StatelessWidget {
 
   Future<void> _choose(BuildContext context) async {
     final current = ActiveAppearance.value.themeMode;
-    final picked = await showDialog<ThemeMode>(
-      context: context,
-      builder: (dialogContext) => SimpleDialog(
-        title: Text(t.appearance.modePickerTitle),
-        children: [
-          for (final mode in ThemeMode.values)
-            SimpleDialogOption(
-              key: ValueKey('appearance-mode-${mode.name}'),
-              onPressed: () => Navigator.of(dialogContext).pop(mode),
-              child: Row(
-                children: [
-                  Expanded(child: Text(appearanceModeLabel(mode))),
-                  if (mode == current) const AppIcon(IconKey.check),
-                ],
-              ),
-            ),
-        ],
-      ),
+    final picked = await showOptionSheet<ThemeMode>(
+      context,
+      title: t.appearance.modePickerTitle,
+      current: current,
+      options: [
+        for (final mode in ThemeMode.values)
+          OptionSheetItem(
+            key: ValueKey('appearance-mode-${mode.name}'),
+            value: mode,
+            label: appearanceModeLabel(mode),
+            leading: Icon(switch (mode) {
+              ThemeMode.light => Icons.light_mode_outlined,
+              ThemeMode.dark => Icons.dark_mode_outlined,
+              ThemeMode.system => Icons.brightness_auto_outlined,
+            }, color: context.ds.colors.actionPrimary),
+          ),
+      ],
     );
     if (picked == null || picked == current) return;
     ActiveAppearance.notifier.value = ActiveAppearance.value.copyWith(themeMode: picked);
@@ -76,26 +75,19 @@ class AppearancePresetEntry extends StatelessWidget {
   final List<DsThemePreset> presets;
 
   Future<void> _choose(BuildContext context, String current) async {
-    final picked = await showDialog<String>(
-      context: context,
-      builder: (dialogContext) => SimpleDialog(
-        title: Text(t.appearance.presetPickerTitle),
-        children: [
-          for (final preset in presets)
-            SimpleDialogOption(
-              key: ValueKey('appearance-preset-${preset.id}'),
-              onPressed: () => Navigator.of(dialogContext).pop(preset.id),
-              child: Row(
-                children: [
-                  _Swatch(color: preset.light.actionPrimary),
-                  const SizedBox(width: 12),
-                  Expanded(child: Text(appearancePresetLabel(preset.id))),
-                  if (preset.id == current) const AppIcon(IconKey.check),
-                ],
-              ),
-            ),
-        ],
-      ),
+    final picked = await showOptionSheet<String>(
+      context,
+      title: t.appearance.presetPickerTitle,
+      current: current,
+      options: [
+        for (final preset in presets)
+          OptionSheetItem(
+            key: ValueKey('appearance-preset-${preset.id}'),
+            value: preset.id,
+            label: appearancePresetLabel(preset.id),
+            leading: _Swatch(color: preset.light.actionPrimary),
+          ),
+      ],
     );
     if (picked == null || picked == current) return;
     ActiveAppearance.notifier.value = ActiveAppearance.value.copyWith(presetId: picked);

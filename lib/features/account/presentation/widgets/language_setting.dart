@@ -14,24 +14,18 @@ class LanguageSettingEntry extends StatelessWidget {
 
   Future<void> _choose(BuildContext context) async {
     final current = ActiveLanguage.value;
-    final picked = await showDialog<AppLocale>(
-      context: context,
-      builder: (dialogContext) => SimpleDialog(
-        title: Text(t.language.pickerTitle),
-        children: [
-          for (final locale in AppLocale.values)
-            SimpleDialogOption(
-              key: ValueKey('language-option-${locale.languageCode}'),
-              onPressed: () => Navigator.of(dialogContext).pop(locale),
-              child: Row(
-                children: [
-                  Expanded(child: Text(languageName(locale))),
-                  if (locale == current) const AppIcon(IconKey.check),
-                ],
-              ),
-            ),
-        ],
-      ),
+    final picked = await showOptionSheet<AppLocale>(
+      context,
+      title: t.language.pickerTitle,
+      current: current,
+      options: [
+        for (final locale in AppLocale.values)
+          OptionSheetItem(
+            key: ValueKey('language-option-${locale.languageCode}'),
+            value: locale,
+            label: languageName(locale),
+          ),
+      ],
     );
     if (picked == null || picked == current || !context.mounted) return;
     context.read<AccountBloc>().add(AccountLanguageChangeRequested(picked));

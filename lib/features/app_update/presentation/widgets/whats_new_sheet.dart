@@ -56,7 +56,9 @@ class WhatsNewSheet extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: DsSpacing.sm),
-                      Flexible(child: DsBadge(label: releaseNoteVersion(notes.first), tone: DsBadgeTone.income)),
+                      Flexible(
+                        child: DsBadge(label: releaseNoteVersion(notes.first), tone: DsBadgeTone.income),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 12),

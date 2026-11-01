@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
@@ -64,7 +65,8 @@ void main() {
 
     final created = (await stored()).singleWhere((c) => c.name == 'Kucing');
     expect(created.iconKey, 'categoryPets');
-    expect(find.byWidgetPredicate((w) => w is AppIconTile && w.icon == IconKey.categoryPets), findsOneWidget);
+    expect(find.text('Kucing'), findsOneWidget);
+    expect(find.byType(DsIconTile), findsWidgets);
   });
 
   testWidgets('tambah tanpa memilih ikon: iconKey kosong, ikon ditebak dari nama', (tester) async {

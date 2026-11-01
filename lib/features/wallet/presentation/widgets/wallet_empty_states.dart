@@ -14,14 +14,27 @@ class WalletEmptyState extends StatelessWidget {
   final VoidCallback onAdd;
 
   @override
-  Widget build(BuildContext context) => AppEmptyState(
-    art: EmptyArt.wallets,
-    title: t.wallet.emptyTitle,
-    body: t.wallet.emptyBody,
-    actionLabel: t.wallet.addAction,
-    actionIcon: IconKey.add,
-    onAction: onAdd,
-  );
+  Widget build(BuildContext context) {
+    final ds = context.ds;
+    return DsCard(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        children: [
+          DsIconTile.asset(asset: ClayIcons.walletNav, size: DsIconTileSize.lg),
+          const SizedBox(height: 12),
+          Text(t.wallet.emptyTitle, textAlign: TextAlign.center, style: ds.typography.titleMd.copyWith(fontSize: 17)),
+          const SizedBox(height: 4),
+          Text(
+            t.wallet.emptyBody,
+            textAlign: TextAlign.center,
+            style: ds.typography.bodySm.copyWith(color: ds.colors.textSecondary),
+          ),
+          const SizedBox(height: 16),
+          DsButton(label: t.wallet.addAction, icon: Icons.add, onPressed: onAdd),
+        ],
+      ),
+    );
+  }
 }
 
 /// Keadaan galat layar Dompet: pembacaan gagal, dengan tombol coba lagi.

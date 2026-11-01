@@ -143,10 +143,7 @@ void main() {
         await openWalletsTab(tester);
 
         expect(find.text(t.wallet.emptyTitle), findsOneWidget);
-        expect(
-          find.widgetWithText(AppButton, t.wallet.addAction),
-          findsOneWidget,
-        );
+        expect(find.widgetWithText(DsButton, t.wallet.addAction), findsWidgets);
       },
     );
 

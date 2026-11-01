@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:flutter/services.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
-import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/app_update/presentation/bloc/app_update_state.dart';
 
 /// Ringkasan teknis keadaan pembaruan untuk panel diagnostik (tekan lama
@@ -46,26 +45,26 @@ class UpdateDiagnosticsSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
+    final ds = context.ds;
     return Padding(
-      padding: const EdgeInsets.all(AppSpacing.space4),
+      padding: const EdgeInsets.all(16),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(t.appUpdate.diagnostic.title, style: textTheme.titleLarge),
-          const SizedBox(height: AppSpacing.space3),
+          Text(t.appUpdate.diagnostic.title, style: ds.typography.headlineMd.copyWith(fontSize: 20)),
+          const SizedBox(height: 12),
           Flexible(
             child: SingleChildScrollView(
               child: SelectableText(
                 text,
                 key: const ValueKey('update-diagnostics-text'),
-                style: textTheme.bodySmall?.copyWith(fontFamily: 'monospace', color: context.appColors.ink),
+                style: ds.typography.bodySm.copyWith(fontFamily: 'monospace', color: ds.colors.textPrimary),
               ),
             ),
           ),
-          const SizedBox(height: AppSpacing.space4),
-          AppButton.secondary(
+          const SizedBox(height: 16),
+          DsButton.secondary(
             key: const ValueKey('update-diagnostics-copy'),
             label: t.appUpdate.diagnostic.copy,
             expand: true,

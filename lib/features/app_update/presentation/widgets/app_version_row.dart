@@ -56,7 +56,9 @@ class _AppVersionRowState extends State<AppVersionRow> {
               : Text(
                   status,
                   style: context.ds.typography.labelMd.copyWith(
-                    color: versionStatusStrong(state.status) ? context.ds.colors.actionPrimary : context.ds.colors.textSecondary,
+                    color: versionStatusStrong(state.status)
+                        ? context.ds.colors.actionPrimary
+                        : context.ds.colors.textSecondary,
                     fontWeight: versionStatusStrong(state.status) ? FontWeight.w700 : FontWeight.w500,
                   ),
                 ),

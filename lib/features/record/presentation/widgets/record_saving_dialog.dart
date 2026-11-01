@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
-import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/features/record/presentation/bloc/record_state.dart';
 
@@ -44,7 +43,7 @@ class RecordSavingDialog extends StatelessWidget {
         return Dialog(
           backgroundColor: Colors.transparent,
           elevation: 0,
-          child: AppCard(
+          child: DsCard(
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -53,8 +52,8 @@ class RecordSavingDialog extends StatelessWidget {
                   height: 20,
                   child: CircularProgressIndicator(strokeWidth: 2),
                 ),
-                const SizedBox(width: AppSpacing.space2),
-                Text(t.record.savingMessage),
+                const SizedBox(width: 12),
+                Text(t.record.savingMessage, style: context.ds.typography.bodyMd),
               ],
             ),
           ),

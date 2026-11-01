@@ -25,7 +25,12 @@ class FinancialMonthSettingEntry extends StatelessWidget {
         subtitle:
             '${_startLabel(schedule.active)} · '
             '${schedule.periodOf(DateTime.now()).label}',
-        onTap: () => unawaited(context.pushRoute(BudgetRouteKeys.financialMonth, const FinancialMonthInput(source: FinancialMonthSource.account))),
+        onTap: () => unawaited(
+          context.pushRoute(
+            BudgetRouteKeys.financialMonth,
+            const FinancialMonthInput(source: FinancialMonthSource.account),
+          ),
+        ),
       ),
     );
   }

@@ -6078,6 +6078,14 @@ memilih mode (dan preset bila ≥ 2), dan design system lama dihapus.
       layar hadiah uji coba (hero perayaan), layar turun ke Gratis (kartu
       penawaran hero), dan kisi tanggal `AppDayGrid` (dipakai juga onboarding
       dan setelan periode) kini v2.
+      **Sisa kecil v2 (1 Nov 2026):** lembar Catat suara dan bahasa ucapan
+      (tombol rekam gradasi, cincin, lencana REKAM v2), catatan pembaruan
+      (kartu kepala gradasi) dan lembar diagnostik, Kelola kategori (daftar
+      `DsListCard`), baris status fitur (`DsBadge`), dialog bahasa/mode/preset/
+      mata uang diganti `showOptionSheet` (lembar pilihan v2 baru), halaman
+      transaksi tersaring dan rincian kategori Analisis, kerangka halaman
+      (`AppSkeletonPage` membulat), serta pelengkap Catat dan Dompet (dialog
+      menyimpan, banner dompet sama, keadaan dompet kosong, pratinjau saldo).
       **Ikon clay dilengkapi (31 Okt 2026, KT-DS5):** 33 ikon baru untuk
       dompet, jenis transaksi, kategori, dan status Freelance; semua
       `IconKey` benda kini punya clay (`ClayIcons.forIcon`). Digambar dari

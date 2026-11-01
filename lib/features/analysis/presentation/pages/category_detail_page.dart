@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:di/di.dart';
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/analysis/domain/category_detail.dart';
@@ -47,10 +47,7 @@ class CategoryDetailPage extends StatelessWidget {
         child: BlocBuilder<CategoryDetailBloc, CategoryDetailState>(
           builder: (context, state) => Scaffold(
             appBar: AppBar(
-              title: Text(
-                state.name,
-                style: Theme.of(context).textTheme.headlineSmall,
-              ),
+              title: Text(state.name, style: context.ds.typography.headlineMd),
               centerTitle: false,
             ),
             body: SafeArea(
@@ -75,7 +72,7 @@ class _Body extends StatelessWidget {
     if (state.isLoading) return const AppSkeletonPage();
     final detail = state.detail;
     if (state.loadFailed || detail == null) {
-      return AppErrorState(
+      return DsErrorState(
         title: t.transaction.loadErrorTitle,
         retryLabel: t.common.retry,
         onRetry: () => bloc.add(const CategoryDetailStarted()),
@@ -90,38 +87,46 @@ class _Body extends StatelessWidget {
         key: const ValueKey('category-scroll'),
         physics: const AlwaysScrollableScrollPhysics(),
         padding: const EdgeInsets.fromLTRB(
-          AppSpacing.space4,
-          AppSpacing.space1,
-          AppSpacing.space4,
-          AppSpacing.space8,
+          16,
+          4,
+          16,
+          32,
         ),
         children: [
           _SummaryCard(state: state, detail: detail),
           if (detail.trend.length >= 2) ...[
-            const SizedBox(height: AppSpacing.space4),
-            AppSectionHeader(t.analysis.trend.title),
+            const SizedBox(height: 16),
+            DsSectionHeader(title: t.analysis.trend.title),
+            const SizedBox(height: 8),
             _TrendCard(state: state, detail: detail, input: input),
           ],
-          const SizedBox(height: AppSpacing.space4),
-          AppSectionHeader(
-            t.analysis.category.transactions,
-            hint: state.hasMore ? t.analysis.category.moreHint : null,
-          ),
+          const SizedBox(height: 16),
+          DsSectionHeader(title: t.analysis.category.transactions),
+          if (state.hasMore)
+            Text(
+              t.analysis.category.moreHint,
+              style: context.ds.typography.bodySm.copyWith(color: context.ds.colors.textSecondary),
+            ),
+          const SizedBox(height: 8),
           if (state.groups.isEmpty)
-            Padding(
+            DsCard(
               key: const ValueKey('category-empty'),
-              padding: const EdgeInsets.symmetric(vertical: AppSpacing.space4),
-              child: Text(
-                t.transaction.filteredEmpty,
-                textAlign: TextAlign.center,
-                style: Theme.of(
-                  context,
-                ).textTheme.bodyLarge?.copyWith(color: context.appColors.ink2),
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                children: [
+                  DsIconTile.asset(asset: ClayIcons.emptyTray, size: DsIconTileSize.lg),
+                  const SizedBox(height: 10),
+                  Text(
+                    t.transaction.filteredEmpty,
+                    textAlign: TextAlign.center,
+                    style: context.ds.typography.bodySm.copyWith(color: context.ds.colors.textSecondary),
+                  ),
+                ],
               ),
             )
           else
             for (final (i, group) in state.groups.indexed) ...[
-              if (i > 0) const SizedBox(height: AppSpacing.space4),
+              if (i > 0) const SizedBox(height: 16),
               TransactionDateGroupCard(
                 group: group,
                 walletsById: state.walletsById,
@@ -131,9 +136,10 @@ class _Body extends StatelessWidget {
                 ),
               ),
             ],
-          const SizedBox(height: AppSpacing.space3),
-          AppButton.secondary(
+          const SizedBox(height: 12),
+          DsButton.secondary(
             key: const ValueKey('category-see-all'),
+            expand: true,
             label: t.analysis.category.seeAll,
             onPressed: () {
               AppAnalytics.log(AnalysisEvents.seeAllOpened);
@@ -164,8 +170,8 @@ class _SummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
+    final ds = context.ds;
+    final c = ds.colors;
     final income = state.kind == CategoryKind.income;
     final kindName = (income ? t.analysis.kind.income : t.analysis.kind.expense).toLowerCase();
     final share = detail.share.belowOne ? '<1%' : '${detail.share.percent}%';
@@ -177,23 +183,24 @@ class _SummaryCard extends StatelessWidget {
       return LocaleSettings.currentLocale == AppLocale.en ? text : text.replaceAll('.', ',');
     }
 
-    return AppCard(
+    return DsCard(
       key: const ValueKey('category-summary'),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
-        spacing: AppSpacing.space1,
+        spacing: 4,
         children: [
           Row(
             children: [
               Expanded(
                 child: Text(
                   state.period.label,
-                  style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
+                  style: ds.typography.bodySm.copyWith(color: c.textSecondary),
                 ),
               ),
               if (state.isArchived)
-                AppBadge(
-                  t.analysis.archived,
+                DsBadge(
+                  label: t.analysis.archived,
+                  tone: DsBadgeTone.neutral,
                   key: const ValueKey('category-archived'),
                 ),
             ],
@@ -204,20 +211,21 @@ class _SummaryCard extends StatelessWidget {
             child: AppMoneyText(
               detail.amount,
               size: MoneySize.hero,
-              color: income ? colors.positive : null,
+              color: income ? c.income : null,
             ),
           ),
           Text(
             t.analysis.shareOf(percent: share, kind: kindName),
-            style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
+            style: ds.typography.bodySm.copyWith(color: c.textSecondary),
           ),
           if (isNew)
             Align(
               alignment: AlignmentDirectional.centerStart,
               child: Padding(
-                padding: const EdgeInsets.only(top: AppSpacing.space1),
-                child: AppBadge(
-                  t.analysis.compare.newThisMonth,
+                padding: const EdgeInsets.only(top: 4),
+                child: DsBadge(
+                  label: t.analysis.compare.newThisMonth,
+                  tone: DsBadgeTone.neutral,
                   key: const ValueKey('analysis-new'),
                 ),
               ),
@@ -236,20 +244,16 @@ class _SummaryCard extends StatelessWidget {
                 alignStart: true,
               ),
             ),
-          Divider(height: AppSpacing.space4, color: colors.line),
+          Divider(height: 16, color: c.outlineSubtle),
           Row(
             key: const ValueKey('category-frequency'),
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
                 padding: const EdgeInsets.only(top: 2),
-                child: AppIcon(
-                  IconKey.transactions,
-                  size: 18,
-                  color: colors.ink2,
-                ),
+                child: Icon(Icons.receipt_long_outlined, size: 18, color: c.textSecondary),
               ),
-              const SizedBox(width: AppSpacing.space2),
+              const SizedBox(width: 8),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -268,7 +272,7 @@ class _SummaryCard extends StatelessWidget {
                                 frequency.average,
                               ),
                             ),
-                      style: textTheme.bodyLarge,
+                      style: ds.typography.bodyMd.copyWith(color: c.textPrimary),
                     ),
                     if (frequency.usualCountTenths != null && frequency.usualAverage != null)
                       Text(
@@ -279,9 +283,7 @@ class _SummaryCard extends StatelessWidget {
                           ),
                         ),
                         key: const ValueKey('category-usual'),
-                        style: textTheme.bodyMedium?.copyWith(
-                          color: colors.ink2,
-                        ),
+                        style: ds.typography.bodySm.copyWith(color: c.textSecondary),
                       ),
                   ],
                 ),
@@ -309,8 +311,8 @@ class _TrendCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
+    final ds = context.ds;
+    final c = ds.colors;
     final bloc = context.read<CategoryDetailBloc>();
     final trend = detail.trend;
     final selected = state.trendIndex;
@@ -343,11 +345,11 @@ class _TrendCard extends StatelessWidget {
     final title = point.isRunning
         ? '${point.period.label} · ${t.analysis.trend.toDate(date: CycleMonthFormatter.formatDayMonth(point.asOf!))}'
         : point.period.label;
-    return AppCard(
+    return DsCard(
       key: const ValueKey('category-trend'),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
-        spacing: AppSpacing.space3,
+        spacing: 12,
         children: [
           AppTrendChart(
             columns: [for (final p in trend) column(p)],
@@ -360,32 +362,28 @@ class _TrendCard extends StatelessWidget {
           ),
           Container(
             key: const ValueKey('category-readout'),
-            color: colors.surface2,
+            decoration: BoxDecoration(color: c.surfaceSunken, borderRadius: DsRadius.mdAll),
             padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.space3,
+              horizontal: 12,
               vertical: 10,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              spacing: AppSpacing.space1,
+              spacing: 4,
               children: [
-                Text(title, style: textTheme.labelLarge),
+                Text(title, style: ds.typography.labelMd.copyWith(color: c.textPrimary)),
                 Text.rich(
                   TextSpan(
                     children: [
                       TextSpan(
                         text: AppMoneyFormatter.format(point.amount),
-                        style: context.numberStyles.amountSm.copyWith(
-                          color: colors.ink,
-                        ),
+                        style: ds.typography.amountSm.copyWith(color: c.textPrimary),
                       ),
                       if (comparable && diff != 0)
                         TextSpan(
                           text:
                               ' · ${diff > 0 ? t.analysis.category.aboveAvg(amount: AppMoneyFormatter.format(diff)) : t.analysis.category.belowAvg(amount: AppMoneyFormatter.format(-diff))}',
-                          style: textTheme.bodyMedium?.copyWith(
-                            color: colors.ink2,
-                          ),
+                          style: ds.typography.bodySm.copyWith(color: c.textSecondary),
                         ),
                     ],
                   ),
@@ -393,8 +391,9 @@ class _TrendCard extends StatelessWidget {
                 if (!isViewed)
                   Align(
                     alignment: AlignmentDirectional.centerStart,
-                    child: TextButton(
+                    child: DsButton.ghost(
                       key: const ValueKey('category-trend-jump'),
+                      label: t.analysis.trend.seePeriod(period: point.period.name),
                       onPressed: () => unawaited(
                         context.pushRoute(
                           AnalysisRouteKeys.open,
@@ -403,9 +402,6 @@ class _TrendCard extends StatelessWidget {
                             periodStart: point.period.start,
                           ),
                         ),
-                      ),
-                      child: Text(
-                        t.analysis.trend.seePeriod(period: point.period.name),
                       ),
                     ),
                   ),

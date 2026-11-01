@@ -3,7 +3,6 @@ import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/money_input.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/features/record/presentation/widgets/record_amount_controller.dart';
@@ -279,8 +278,9 @@ class _FreelanceCallout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
+    final ds = context.ds;
+    final colors = ds.colors;
+    final textTheme = ds.typography;
     // Ringkas, satu baris: penjelasannya ada di langkah tur `recordFreelance`.
     return Semantics(
       button: true,
@@ -292,26 +292,24 @@ class _FreelanceCallout extends StatelessWidget {
           child: Row(
             children: [
               DsIconTile.asset(asset: ClayIcons.stylus, tone: DsIconTileTone.warning, size: DsIconTileSize.sm),
-              const SizedBox(width: AppSpacing.space2),
+              const SizedBox(width: 8),
               Expanded(
                 child: Text.rich(
                   TextSpan(
                     children: [
                       TextSpan(
                         text: '${t.record.freelanceCalloutTitle} ',
-                        style: textTheme.titleSmall,
+                        style: textTheme.titleMd.copyWith(fontSize: 14),
                       ),
                       TextSpan(
                         text: t.record.freelanceCalloutAction,
-                        style: textTheme.bodySmall?.copyWith(
-                          color: colors.ink2,
-                        ),
+                        style: textTheme.bodySm.copyWith(color: colors.textSecondary),
                       ),
                     ],
                   ),
                 ),
               ),
-              Icon(Icons.chevron_right, color: colors.warning),
+              Icon(Icons.chevron_right, color: colors.onWarningContainer),
             ],
           ),
         ),

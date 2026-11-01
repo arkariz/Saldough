@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
@@ -18,26 +19,18 @@ class CurrencySettingSection extends StatelessWidget {
 
   Future<void> _choose(BuildContext context) async {
     final current = ActiveCurrency.value;
-    final picked = await showDialog<AppCurrency>(
-      context: context,
-      builder: (dialogContext) => SimpleDialog(
-        title: Text(t.currency.pickerTitle),
-        children: [
-          for (final currency in AppCurrency.values)
-            SimpleDialogOption(
-              key: ValueKey('currency-option-${currency.code}'),
-              onPressed: () => Navigator.of(dialogContext).pop(currency),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text('${currency.code} · ${currencyName(currency)}'),
-                  ),
-                  if (currency == current) const AppIcon(IconKey.check),
-                ],
-              ),
-            ),
-        ],
-      ),
+    final picked = await showOptionSheet<AppCurrency>(
+      context,
+      title: t.currency.pickerTitle,
+      current: current,
+      options: [
+        for (final currency in AppCurrency.values)
+          OptionSheetItem(
+            key: ValueKey('currency-option-${currency.code}'),
+            value: currency,
+            label: '${currency.code} · ${currencyName(currency)}',
+          ),
+      ],
     );
     if (picked == null || picked == current || !context.mounted) return;
 
@@ -52,14 +45,12 @@ class CurrencySettingSection extends StatelessWidget {
           ),
         ),
         actions: [
-          AppButton.text(
-            small: true,
+          DsButton.ghost(
             label: t.common.cancel,
             onPressed: () => Navigator.of(dialogContext).pop(false),
           ),
-          AppButton.text(
+          DsButton(
             key: const ValueKey('currency-change-confirm'),
-            small: true,
             label: t.currency.changeAction,
             onPressed: () => Navigator.of(dialogContext).pop(true),
           ),

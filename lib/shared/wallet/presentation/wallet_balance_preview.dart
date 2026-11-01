@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:saldough/core/presentation/widgets/fit_start.dart';
-import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
@@ -39,27 +39,27 @@ class WalletBalancePreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final base = style ?? context.numberStyles.amountSm;
+    final colors = context.ds.colors;
+    final base = style ?? context.ds.typography.amountSm;
     final amount = previewAmountSen;
     final hasPreview = amount != null && amount > 0;
     if (!hasPreview) {
       return FitStart(
-        child: Text(AppMoneyFormatter.format(wallet.currentBalance), style: base.copyWith(color: colors.ink2)),
+        child: Text(AppMoneyFormatter.format(wallet.currentBalance), style: base.copyWith(color: colors.textSecondary)),
       );
     }
 
     final after = previewIsCredit ? wallet.currentBalance + amount : wallet.currentBalance - amount;
-    final afterColor = previewIsCredit ? colors.positive : colors.ink;
+    final afterColor = previewIsCredit ? colors.income : colors.textPrimary;
     return Wrap(
       crossAxisAlignment: WrapCrossAlignment.center,
-      spacing: AppSpacing.space1,
-      runSpacing: AppSpacing.space1,
+      spacing: 4,
+      runSpacing: 4,
       children: [
         FitStart(
           child: Text(
             AppMoneyFormatter.format(wallet.currentBalance),
-            style: base.copyWith(color: colors.ink2, decoration: TextDecoration.lineThrough),
+            style: base.copyWith(color: colors.textSecondary, decoration: TextDecoration.lineThrough),
           ),
         ),
         // Panah dan nominal sesudah SATU anak `Wrap`: keduanya turun baris
@@ -67,8 +67,8 @@ class WalletBalancePreview extends StatelessWidget {
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('→', style: base.copyWith(color: colors.ink2)),
-            const SizedBox(width: AppSpacing.space1),
+            Text('→', style: base.copyWith(color: colors.textSecondary)),
+            const SizedBox(width: 4),
             Flexible(
               child: FitStart(
                 child: Text(

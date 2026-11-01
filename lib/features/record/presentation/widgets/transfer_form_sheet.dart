@@ -255,7 +255,25 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
         ),
         // Galat dompet sama di atas daftar, supaya terlihat tanpa menggulir
         // (QA PR #43 F6).
-        if (_sameWallet) AppBanner(message: t.record.sameWalletWarning, tone: AppTone.danger),
+        if (_sameWallet)
+          DecoratedBox(
+            decoration: BoxDecoration(color: context.ds.colors.errorContainer, borderRadius: DsRadius.lgAll),
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Row(
+                children: [
+                  Icon(Icons.error_outline, size: 20, color: context.ds.colors.onErrorContainer),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      t.record.sameWalletWarning,
+                      style: context.ds.typography.bodySm.copyWith(color: context.ds.colors.onErrorContainer),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         DsFieldGroup(
           children: [
             SpotlightTarget(

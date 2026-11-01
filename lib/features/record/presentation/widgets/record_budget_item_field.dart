@@ -3,7 +3,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/clay_icons.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 
 /// Apakah [option] boleh ditawarkan ke transaksi bertanggal [date]:
@@ -102,7 +101,7 @@ class RecordBudgetItemOutOfPeriodNotice extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       t.record.budgetItemOutOfPeriod(name: option.budgetName),
-      style: Theme.of(context).textTheme.bodySmall?.copyWith(color: context.appColors.warning),
+      style: context.ds.typography.bodySm.copyWith(color: context.ds.colors.onWarningContainer),
     );
   }
 }

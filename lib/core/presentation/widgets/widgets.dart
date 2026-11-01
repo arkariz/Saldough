@@ -41,6 +41,7 @@ export 'full_screen_sheet.dart';
 export 'pixel_corner_border.dart';
 export 'plus_badge.dart';
 export 'plus_locked.dart';
+export 'option_sheet.dart';
 export 'run_once.dart';
 export 'setting_icon_tile.dart';
 export 'transaction_kind.dart';

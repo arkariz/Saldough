@@ -8,7 +8,6 @@ import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/plan/active_plan.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/premium/presentation/navigation/premium_route_keys.dart';
@@ -543,7 +542,7 @@ class RecordOccurrenceNotice extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
+    final ds = context.ds;
     final rule = occurrence.rule;
     final lines = [
       t.recurring.occurrenceNotice(
@@ -557,9 +556,9 @@ class RecordOccurrenceNotice extends StatelessWidget {
     ];
     return Text(
       lines.join('\n'),
-      style: Theme.of(
-        context,
-      ).textTheme.bodySmall?.copyWith(color: lines.length > 1 ? colors.warning : colors.ink2),
+      style: ds.typography.bodySm.copyWith(
+        color: lines.length > 1 ? ds.colors.onWarningContainer : ds.colors.textSecondary,
+      ),
     );
   }
 }

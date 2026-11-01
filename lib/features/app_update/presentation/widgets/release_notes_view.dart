@@ -102,7 +102,9 @@ class ReleaseNoteGroups extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Expanded(child: Text(note.text(english: english), style: ds.typography.bodyMd)),
+                  Expanded(
+                    child: Text(note.text(english: english), style: ds.typography.bodyMd),
+                  ),
                 ],
               ),
             ),

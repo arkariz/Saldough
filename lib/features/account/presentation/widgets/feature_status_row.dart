@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:di/di.dart';
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/discovery/discovery.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
@@ -110,13 +111,9 @@ class _FeatureStatusSettingRowState extends State<FeatureStatusSettingRow> with 
     final texts = t.discovery;
     final badge = switch (status?.state) {
       null || FeatureState.unsupported => null,
-      FeatureState.active => AppBadge(texts.status.on, tone: AppTone.positive),
-      FeatureState.permissionNeeded => AppBadge(
-        texts.status.permissionNeeded,
-        tone: AppTone.warning,
-        icon: IconKey.warning,
-      ),
-      FeatureState.off || FeatureState.unset => AppBadge(texts.status.off),
+      FeatureState.active => DsBadge(label: texts.status.on, tone: DsBadgeTone.income),
+      FeatureState.permissionNeeded => DsBadge(label: texts.status.permissionNeeded, tone: DsBadgeTone.warning),
+      FeatureState.off || FeatureState.unset => DsBadge(label: texts.status.off, tone: DsBadgeTone.neutral),
     };
     final count = status?.activeCount ?? 0;
     final subtitle = widget.feature == DiscoveredFeature.notification && count > 0

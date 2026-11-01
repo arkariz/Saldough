@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
-import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/features/voice_capture/domain/speech_transcriber.dart';
 import 'package:saldough/features/voice_capture/presentation/bloc/voice_capture_bloc.dart';
 import 'package:saldough/features/voice_capture/presentation/widgets/voice_capture_sheet.dart';
@@ -48,8 +48,8 @@ void main() {
     return transcriber;
   }
 
-  AppButtonVariant typeInsteadVariant(WidgetTester tester) =>
-      tester.widget<AppButton>(find.byKey(const ValueKey('voice-type-instead'))).variant;
+  DsButtonVariant typeInsteadVariant(WidgetTester tester) =>
+      tester.widget<DsButton>(find.byKey(const ValueKey('voice-type-instead'))).variant;
 
   String textOf(WidgetTester tester, String key) => tester.widget<Text>(find.byKey(ValueKey(key))).data!;
 
@@ -60,7 +60,7 @@ void main() {
     expect(textOf(tester, 'voice-secondary-text'), t.record.voice.example);
     // Label tombol tidak diulang sebagai teks; petunjuk utama sudah cukup.
     expect(find.text(t.record.voice.startAction), findsNothing);
-    expect(typeInsteadVariant(tester), AppButtonVariant.text);
+    expect(typeInsteadVariant(tester), DsButtonVariant.ghost);
   });
 
   testWidgets('teks berjenjang: yang tertangkap jadi pesan utama, petunjuk jadi keterangan kecil', (tester) async {
@@ -98,7 +98,7 @@ void main() {
     expect(textOf(tester, 'voice-primary-text'), t.record.voice.failure.network);
     expect(find.byKey(const ValueKey('voice-secondary-text')), findsNothing);
     expect(find.text(t.record.voice.retryAction), findsOneWidget);
-    expect(typeInsteadVariant(tester), AppButtonVariant.primary);
+    expect(typeInsteadVariant(tester), DsButtonVariant.primary);
   });
 
   testWidgets('paket bahasa luring belum ada: pesan khusus, "Ketik saja" jadi tombol utama', (tester) async {
@@ -108,7 +108,7 @@ void main() {
     await tester.pump(const Duration(milliseconds: 50));
 
     expect(textOf(tester, 'voice-primary-text'), t.record.voice.failure.languageOffline);
-    expect(typeInsteadVariant(tester), AppButtonVariant.primary);
+    expect(typeInsteadVariant(tester), DsButtonVariant.primary);
   });
 
   testWidgets('tidak ada ucapan tertangkap: rekam ulang tetap jalan utama', (tester) async {
@@ -118,6 +118,6 @@ void main() {
     await tester.pump(const Duration(milliseconds: 50));
 
     expect(find.text(t.record.voice.failure.noMatch), findsOneWidget);
-    expect(typeInsteadVariant(tester), AppButtonVariant.text);
+    expect(typeInsteadVariant(tester), DsButtonVariant.ghost);
   });
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/account/presentation/bloc/category_manager_bloc.dart';
 import 'package:saldough/features/account/presentation/bloc/category_manager_state.dart';
 import 'package:saldough/shared/category/category.dart';
@@ -45,38 +45,57 @@ class _CategoryPageState extends State<CategoryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(t.category.title)),
+      appBar: AppBar(title: Text(t.category.title, style: context.ds.typography.headlineMd), centerTitle: false),
       bottomNavigationBar: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space2, AppSpacing.space4, AppSpacing.space4),
-          child: AppButton(label: t.category.addAction, onPressed: () => _add(context)),
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+          child: DsButton(label: t.category.addAction, expand: true, icon: Icons.add, onPressed: () => _add(context)),
         ),
       ),
       body: SafeArea(
         child: BlocBuilder<CategoryManagerBloc, CategoryManagerState>(
           builder: (context, state) {
             final lists = state.ofKind(_kind);
+            final ds = context.ds;
             return ListView(
-              padding: const EdgeInsets.all(AppSpacing.space4),
+              padding: const EdgeInsets.all(16),
               children: [
-                AppSegmentedControl<CategoryKind>(
-                  options: [
-                    (CategoryKind.expense, t.category.expenseTab),
-                    (CategoryKind.income, t.category.incomeTab),
+                DsSegmentedPill<CategoryKind>(
+                  segments: [
+                    DsSegment(value: CategoryKind.expense, label: t.category.expenseTab),
+                    DsSegment(value: CategoryKind.income, label: t.category.incomeTab),
                   ],
                   selected: _kind,
                   onChanged: (kind) => setState(() => _kind = kind),
                 ),
-                const SizedBox(height: AppSpacing.space4),
-                if (!state.isLoading && lists.active.isEmpty) Text(t.category.emptyActive),
-                for (final category in lists.active) _CategoryRow(category: category),
+                const SizedBox(height: 16),
+                if (!state.isLoading && lists.active.isEmpty)
+                  DsCard(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      children: [
+                        DsIconTile.asset(asset: ClayIcons.emptyTray, size: DsIconTileSize.lg),
+                        const SizedBox(height: 10),
+                        Text(
+                          t.category.emptyActive,
+                          textAlign: TextAlign.center,
+                          style: ds.typography.bodySm.copyWith(color: ds.colors.textSecondary),
+                        ),
+                      ],
+                    ),
+                  )
+                else if (lists.active.isNotEmpty)
+                  DsListCard(children: [for (final category in lists.active) _CategoryRow(category: category)]),
                 if (lists.archived.isNotEmpty) ...[
-                  const SizedBox(height: AppSpacing.space6),
-                  AppSectionLabel(t.category.archivedSection),
-                  const SizedBox(height: AppSpacing.space1),
-                  Text(t.category.archivedHint, style: TextStyle(color: context.appColors.ink2)),
-                  const SizedBox(height: AppSpacing.space1),
-                  for (final category in lists.archived) _CategoryRow(category: category),
+                  const SizedBox(height: 24),
+                  DsSectionHeader(title: t.category.archivedSection),
+                  const SizedBox(height: 4),
+                  Text(
+                    t.category.archivedHint,
+                    style: ds.typography.bodySm.copyWith(color: ds.colors.textSecondary),
+                  ),
+                  const SizedBox(height: 8),
+                  DsListCard(children: [for (final category in lists.archived) _CategoryRow(category: category)]),
                 ],
               ],
             );
@@ -116,24 +135,30 @@ class _CategoryRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.space2),
-      child: AppTappable(
-        label: category.name,
-        onTap: () => _edit(context),
-        child: AppCard(
+    final ds = context.ds;
+    final c = ds.colors;
+    final icon = categoryIcon(category);
+    final clay = ClayIcons.forIcon(icon);
+    return Opacity(
+      opacity: category.isArchived ? 0.65 : 1,
+      child: DsPressable(
+        onPressed: () => _edit(context),
+        semanticLabel: category.name,
+        pressedScale: 0.995,
+        dimWhenDisabled: false,
+        builder: (context, _) => Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
           child: Row(
             children: [
-              AppIconTile(categoryIcon(category)),
-              const SizedBox(width: AppSpacing.space3),
+              if (clay != null) DsIconTile.asset(asset: clay) else AppIconTile(icon),
+              const SizedBox(width: 12),
               Expanded(
-                child: Text(
-                  category.name,
-                  style: TextStyle(color: category.isArchived ? colors.ink2 : colors.ink),
-                ),
+                child: Text(category.name, style: ds.typography.titleMd.copyWith(fontSize: 14, color: c.textPrimary)),
               ),
-              AppButton.text(small: true, label: category.isArchived ? t.category.restoreAction : t.category.archiveAction, onPressed: () => context.read<CategoryManagerBloc>().add(CategoryManagerArchiveToggled(category))),
+              DsButton.ghost(
+                label: category.isArchived ? t.category.restoreAction : t.category.archiveAction,
+                onPressed: () => context.read<CategoryManagerBloc>().add(CategoryManagerArchiveToggled(category)),
+              ),
             ],
           ),
         ),

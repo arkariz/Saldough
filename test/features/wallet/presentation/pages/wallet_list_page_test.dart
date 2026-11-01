@@ -225,6 +225,7 @@ void main() {
         await tester.tap(find.byKey(const ValueKey('wallet-spread-head')));
         await tester.pumpAndSettle();
         expect(find.byType(AppDonutChart), findsOneWidget);
+        expect(tester.widget<AppDonutChart>(find.byType(AppDonutChart)).rounded, isTrue, reason: 'donat gaya v2: ujung bulat');
         expect(find.text(t.wallet.spreadTapClose), findsOneWidget);
         expect(find.byType(WalletSpreadBar), findsNothing);
         expect(find.text(t.wallet.spreadSeeTotal), findsNothing);

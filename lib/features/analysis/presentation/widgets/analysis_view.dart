@@ -181,7 +181,7 @@ class _LockedPeriod extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final texts = t.premium.paywall.messages.analysis;
-    final colors = context.appColors;
+    final c = context.ds.colors;
     return PlusLocked(
       key: const ValueKey('analysis-locked'),
       minHeight: 400,
@@ -192,16 +192,16 @@ class _LockedPeriod extends StatelessWidget {
       onSee: () => unawaited(
         context.pushRoute(PremiumRouteKeys.paywall, const PaywallInput(PaywallTrigger.analysisHistory)),
       ),
-      preview: AppCard(
+      preview: DsCard(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          spacing: AppSpacing.space3,
+          spacing: 12,
           children: [
             for (final width in const [0.9, 0.62, 0.78, 0.45, 0.7, 0.55])
               FractionallySizedBox(
                 widthFactor: width,
                 child: DecoratedBox(
-                  decoration: BoxDecoration(color: colors.brandSoft, borderRadius: BorderRadius.circular(4)),
+                  decoration: BoxDecoration(color: c.surfaceSunken, borderRadius: DsRadius.baseAll),
                   child: const SizedBox(height: 20),
                 ),
               ),

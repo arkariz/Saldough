@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/features/premium/domain/plus_moments.dart';
 import 'package:saldough/features/premium/domain/purchase_models.dart';
@@ -24,8 +24,8 @@ class PlusDowngradePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final texts = t.premium.downgrade;
-    final textTheme = Theme.of(context).textTheme;
-    final colors = context.appColors;
+    final ds = context.ds;
+    final c = ds.colors;
     final offer = data.offer;
     final deal = offer?.options.where((o) => o.kind == PlusPlanKind.yearlyIntro).firstOrNull;
     final changes = [
@@ -33,72 +33,102 @@ class PlusDowngradePage extends StatelessWidget {
       if (data.autoRules > 0) (IconKey.refresh, texts.autoTitle, texts.autoSub(n: data.autoRules)),
       (IconKey.budget, texts.analysisTitle, texts.analysisSub(n: data.freePeriods)),
     ];
-    Widget rows(List<(IconKey, String, String)> items) => AppListCard(
-      dividerIndent: AppListCard.iconIndent,
+    Widget rows(List<(IconKey, String, String)> items, {bool keep = false}) => DsListCard(
       children: [
         for (final (icon, title, sub) in items)
-          AppListRow(
-            compact: true,
-            leading: AppIcon(icon, color: colors.ink2),
+          DsSettingRow(
+            leading: keep ? DsIconTile.asset(asset: ClayIcons.done) : SettingIconTile(icon),
             title: title,
             subtitle: sub,
-            wrapTitle: true,
-            wrapSubtitle: true,
           ),
       ],
     );
     return Scaffold(
-      appBar: AppBar(title: Text(texts.title)),
+      appBar: AppBar(title: Text(texts.title, style: ds.typography.headlineMd), centerTitle: false),
       body: ListView(
-        padding: const EdgeInsets.all(AppSpacing.space4),
+        padding: const EdgeInsets.all(16),
         children: [
-          Text(texts.intro, style: textTheme.bodyLarge),
-          const SizedBox(height: AppSpacing.space4),
-          AppSectionHeader(texts.keepTitle),
-          rows([
+          Text(texts.intro, style: ds.typography.bodyMd.copyWith(color: c.textSecondary)),
+          const SizedBox(height: 16),
+          DsSectionHeader(title: texts.keepTitle),
+          const SizedBox(height: 8),
+          rows(keep: true, [
             (IconKey.checkCircle, texts.keepEntries, texts.keepEntriesSub),
             (IconKey.checkCircle, texts.keepCore, texts.keepCoreSub),
           ]),
-          const SizedBox(height: AppSpacing.space4),
-          AppSectionHeader(texts.changeTitle),
+          const SizedBox(height: 16),
+          DsSectionHeader(title: texts.changeTitle),
+          const SizedBox(height: 8),
           rows(changes),
           if (deal != null) ...[
-            const SizedBox(height: AppSpacing.space4),
+            const SizedBox(height: 16),
             Semantics(
               container: true,
-              child: AppCard(
+              child: DecoratedBox(
                 key: const ValueKey('downgrade-offer'),
-                color: colors.brandSoft,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (data.offer?.deadline case final until?)
-                      Text(
-                        texts.dealKicker(until: _until(until)),
-                        style: textTheme.labelMedium?.copyWith(color: colors.brandInk),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Color.lerp(c.heroSurface, Colors.white, 0.1)!,
+                      Color.lerp(c.heroSurface, Colors.black, 0.4)!,
+                    ],
+                  ),
+                  borderRadius: DsRadius.xlAll,
+                  border: Border.all(color: c.heroBorder),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(18),
+                  child: Row(
+                    children: [
+                      DsIconTile.asset(
+                        asset: ClayIcons.tierCoin,
+                        tone: DsIconTileTone.heroIncome,
+                        size: DsIconTileSize.lg,
                       ),
-                    Text(deal.priceText, style: textTheme.headlineSmall),
-                    Text(texts.dealLine(regular: deal.regularPriceText ?? deal.priceText), style: textTheme.bodyMedium),
-                  ],
+                      const SizedBox(width: 14),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if (data.offer?.deadline case final until?)
+                              Text(
+                                texts.dealKicker(until: _until(until)),
+                                style: ds.typography.labelMd.copyWith(color: c.onHeroMuted),
+                              ),
+                            Text(
+                              deal.priceText,
+                              style: ds.typography.headlineMd.copyWith(fontSize: 24, color: c.onHero),
+                            ),
+                            Text(
+                              texts.dealLine(regular: deal.regularPriceText ?? deal.priceText),
+                              style: ds.typography.bodySm.copyWith(color: c.onHeroMuted),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
           ],
         ],
       ),
-      bottomNavigationBar: AppStickyBar(
+      bottomNavigationBar: DsStickyBar(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            AppButton(
+            DsButton(
               label: deal == null ? texts.ctaPlain : texts.ctaDeal,
               expand: true,
               onPressed: () => unawaited(
                 context.pushRoute(PremiumRouteKeys.paywall, const PaywallInput(PaywallTrigger.trialRecap)),
               ),
             ),
-            const SizedBox(height: AppSpacing.space2),
-            AppButton.secondary(label: texts.free, expand: true, onPressed: () => Navigator.of(context).maybePop()),
+            const SizedBox(height: 8),
+            DsButton.secondary(label: texts.free, expand: true, onPressed: () => Navigator.of(context).maybePop()),
           ],
         ),
       ),

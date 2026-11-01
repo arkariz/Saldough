@@ -1,12 +1,10 @@
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
-import 'package:saldough/core/presentation/widgets/app_badge.dart';
-import 'package:saldough/core/presentation/widgets/app_button.dart';
-import 'package:saldough/core/presentation/widgets/app_icon.dart';
-import 'package:saldough/core/presentation/widgets/pixel_corner_border.dart';
-import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/core/presentation/widgets/clay_icons.dart';
 
 /// Kartu terkunci di atas data yang diburamkan (komponen PlusLocked): untuk
 /// batas Gratis yang berupa data, bukan baris. [preview] tetap tampil di
@@ -52,8 +50,8 @@ class PlusLocked extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
+    final ds = context.ds;
+    final c = ds.colors;
     return ConstrainedBox(
       constraints: BoxConstraints(minHeight: minHeight),
       child: Stack(
@@ -70,30 +68,43 @@ class PlusLocked extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(AppSpacing.space4),
+            padding: const EdgeInsets.all(16),
             child: Semantics(
               container: true,
               label: title,
-              child: Container(
-                padding: const EdgeInsets.all(AppSpacing.space4),
-                decoration: ShapeDecoration(color: colors.surface, shape: const PixelCornerBorder()),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    AppBadge(t.premium.plusBadge, tone: AppTone.brand, icon: IconKey.plus),
-                    const SizedBox(height: AppSpacing.space2),
-                    Text(title, textAlign: TextAlign.center, style: textTheme.titleMedium),
-                    const SizedBox(height: AppSpacing.space1),
-                    Text(
-                      text,
-                      textAlign: TextAlign.center,
-                      style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
-                    ),
-                    const SizedBox(height: AppSpacing.space3),
-                    AppButton(label: t.premium.seePlus, expand: true, onPressed: onSee),
-                    const SizedBox(height: AppSpacing.space2),
-                    AppButton.secondary(label: freeLabel, expand: true, onPressed: onFree),
-                  ],
+              child: DecoratedBox(
+                decoration: ds.elevation.card.decoration().copyWith(borderRadius: DsRadius.xlAll),
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      DecoratedBox(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: c.actionPrimary.withValues(alpha: 0.10),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: SvgPicture.asset(ClayIcons.tierCoin, width: 44, height: 44),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      DsBadge(label: t.premium.plusBadge, tone: DsBadgeTone.income),
+                      const SizedBox(height: 8),
+                      Text(title, textAlign: TextAlign.center, style: ds.typography.titleMd.copyWith(fontSize: 17)),
+                      const SizedBox(height: 4),
+                      Text(
+                        text,
+                        textAlign: TextAlign.center,
+                        style: ds.typography.bodySm.copyWith(color: c.textSecondary),
+                      ),
+                      const SizedBox(height: 16),
+                      DsButton(label: t.premium.seePlus, expand: true, onPressed: onSee),
+                      const SizedBox(height: 8),
+                      DsButton.secondary(label: freeLabel, expand: true, onPressed: onFree),
+                    ],
+                  ),
                 ),
               ),
             ),

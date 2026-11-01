@@ -1,14 +1,15 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/foundation/entitlement/entitlement.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/features/premium/domain/trial_gift.dart';
+import 'package:saldough/features/premium/presentation/widgets/plus_celebration.dart';
 import 'package:saldough/features/premium/presentation/widgets/plus_tile.dart';
 
 /// Layar hadiah uji coba (D-1, design `PlusHadiah`): bila tanggal gajian belum
@@ -77,81 +78,92 @@ class _TrialGiftPageState extends State<TrialGiftPage> {
   @override
   Widget build(BuildContext context) {
     final texts = t.premium.gift;
-    final textTheme = Theme.of(context).textTheme;
-    final colors = context.appColors;
+    final ds = context.ds;
+    final c = ds.colors;
     return Scaffold(
-      appBar: AppBar(title: Text(texts.brand)),
+      appBar: AppBar(title: Text(texts.brand, style: ds.typography.headlineMd), centerTitle: false),
       body: SafeArea(
         child: _asking
             ? ListView(
-                padding: const EdgeInsets.all(AppSpacing.space4),
+                padding: const EdgeInsets.all(16),
                 children: [
-                  AppCard(
-                    child: Column(
+                  DsCard(
+                    padding: const EdgeInsets.all(18),
+                    child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(texts.askTitle, style: textTheme.titleLarge),
-                        const SizedBox(height: AppSpacing.space2),
-                        Text(texts.askBody, style: textTheme.bodyMedium?.copyWith(color: colors.ink2)),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: AppSpacing.space3),
-                  AppCard(
-                    padding: const EdgeInsets.all(AppSpacing.space2),
-                    child: AppDayGrid(selected: _pick, onSelected: (start) => setState(() => _pick = start)),
-                  ),
-                  const SizedBox(height: AppSpacing.space3),
-                  Semantics(
-                    liveRegion: true,
-                    child: Row(
-                      children: [
-                        AppIcon(IconKey.plus, color: colors.brandInk),
-                        const SizedBox(width: AppSpacing.space2),
+                        const PlusTile(IconKey.plus),
+                        const SizedBox(width: 14),
                         Expanded(
-                          child: Text(
-                            texts.endLine(date: CycleMonthFormatter.formatDayMonth(_preview)),
-                            style: textTheme.titleSmall,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(texts.askTitle, style: ds.typography.titleMd.copyWith(fontSize: 17)),
+                              const SizedBox(height: 4),
+                              Text(texts.askBody, style: ds.typography.bodySm.copyWith(color: c.textSecondary)),
+                            ],
                           ),
                         ),
                       ],
                     ),
                   ),
+                  const SizedBox(height: 12),
+                  DsCard(
+                    padding: const EdgeInsets.all(8),
+                    child: AppDayGrid(selected: _pick, onSelected: (start) => setState(() => _pick = start)),
+                  ),
+                  const SizedBox(height: 12),
+                  Semantics(
+                    liveRegion: true,
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: c.actionPrimary.withValues(alpha: 0.08),
+                        borderRadius: DsRadius.lgAll,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(14),
+                        child: Row(
+                          children: [
+                            Icon(Icons.star_rounded, color: c.actionPrimary),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: Text(
+                                texts.endLine(date: CycleMonthFormatter.formatDayMonth(_preview)),
+                                style: ds.typography.titleMd.copyWith(fontSize: 14),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               )
-            : Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(AppSpacing.space4),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const PlusTile(IconKey.plus, size: 72),
-                      const SizedBox(height: AppSpacing.space4),
-                      Text(
-                        texts.title(date: CycleMonthFormatter.formatDayMonth(_endsOn)),
-                        textAlign: TextAlign.center,
-                        style: textTheme.titleLarge,
-                      ),
-                      const SizedBox(height: AppSpacing.space2),
-                      Text(
-                        texts.body,
-                        textAlign: TextAlign.center,
-                        style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
-                      ),
-                    ],
-                  ),
+            : SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    PlusCelebrationHero(
+                      celebrate: true,
+                      title: texts.title(date: CycleMonthFormatter.formatDayMonth(_endsOn)),
+                      body: texts.body,
+                      chips: [t.premium.plusBadge],
+                    ),
+                    const SizedBox(height: 24),
+                    const PlusUnlockedList(),
+                  ],
                 ),
               ),
       ),
-      bottomNavigationBar: AppStickyBar(
+      bottomNavigationBar: DsStickyBar(
         child: _asking
-            ? AppButton(
+            ? DsButton(
                 label: _pick.isLastDay ? texts.confirmLast : texts.confirmDay(day: _pick.day!),
                 expand: true,
-                loading: _saving,
-                onPressed: _confirm,
+                onPressed: _saving ? null : _confirm,
               )
-            : AppButton(label: texts.start, expand: true, onPressed: () => Navigator.of(context).maybePop()),
+            : DsButton(label: texts.start, expand: true, onPressed: () => Navigator.of(context).maybePop()),
       ),
     );
   }

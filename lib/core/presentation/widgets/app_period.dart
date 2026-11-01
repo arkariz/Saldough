@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/app_button.dart';
@@ -268,8 +269,9 @@ class _DayCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
+    final ds = context.ds;
+    final c = ds.colors;
+    final reduced = DsMotion.reduced(context);
     return Semantics(
       inMutuallyExclusiveGroup: true,
       checked: selected,
@@ -277,26 +279,29 @@ class _DayCell extends StatelessWidget {
       label: semanticsLabel,
       excludeSemantics: true,
       onTap: onTap,
-      child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: onTap,
-        child: SizedBox(
+      child: DsPressable(
+        onPressed: onTap,
+        pressedScale: 0.94,
+        dimWhenDisabled: false,
+        builder: (context, _) => SizedBox(
           height: AppSize.touch,
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 2),
-            child: DecoratedBox(
-              decoration: ShapeDecoration(
-                color: selected ? colors.brandSoft : colors.surface2,
-                shape: PixelCornerBorder.small(
-                  side: selected ? BorderSide(color: colors.brand, width: 2) : BorderSide.none,
-                ),
+            child: AnimatedContainer(
+              duration: reduced ? Duration.zero : DsMotion.standard,
+              decoration: BoxDecoration(
+                color: selected ? c.actionPrimary : c.surfaceSunken,
+                borderRadius: DsRadius.mdAll,
+                boxShadow: selected
+                    ? [BoxShadow(color: c.actionPrimary.withValues(alpha: 0.25), blurRadius: 6, offset: const Offset(0, 2))]
+                    : null,
               ),
               child: Center(
                 child: Text(
                   label,
-                  style: (wide ? textTheme.labelLarge : textTheme.titleMedium)?.copyWith(
-                    color: selected ? colors.brandInk : colors.ink,
-                    fontWeight: FontWeight.w600,
+                  style: ds.typography.labelMd.copyWith(
+                    fontSize: wide ? 13 : 14,
+                    color: selected ? c.onActionPrimary : c.textPrimary,
                     fontFeatures: const [FontFeature.tabularFigures()],
                   ),
                 ),

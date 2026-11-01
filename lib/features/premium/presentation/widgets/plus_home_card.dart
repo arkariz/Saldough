@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:di/di.dart';
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/plan/active_plan.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/features/premium/domain/plus_moments.dart';
 import 'package:saldough/features/premium/presentation/navigation/premium_route_keys.dart';
@@ -74,14 +74,14 @@ class _PlusHomeCardState extends State<PlusHomeCard> {
         PaywallTrigger.trialRecap,
       ),
     };
-    final textTheme = Theme.of(context).textTheme;
-    final colors = context.appColors;
+    final ds = context.ds;
+    final c = ds.colors;
     return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.space3),
+      padding: const EdgeInsets.only(bottom: 12),
       child: Semantics(
         container: true,
         label: title,
-        child: AppCard(
+        child: DsCard(
           key: const ValueKey('plus-home-card'),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,40 +89,47 @@ class _PlusHomeCardState extends State<PlusHomeCard> {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  PlusTile(card is PlusRecapCard ? IconKey.plus : IconKey.photoCamera, size: 32),
-                  const SizedBox(width: AppSpacing.space3),
+                  PlusTile(card is PlusRecapCard ? IconKey.plus : IconKey.photoCamera, size: 44),
+                  const SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(title, style: textTheme.titleMedium),
-                        Text(sub, style: textTheme.bodyMedium?.copyWith(color: colors.ink2)),
+                        Text(title, style: ds.typography.titleMd),
+                        Text(sub, style: ds.typography.bodySm.copyWith(color: c.textSecondary)),
                       ],
                     ),
                   ),
                 ],
               ),
               for (final (n, text) in lines) ...[
-                const SizedBox(height: AppSpacing.space2),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.baseline,
-                  textBaseline: TextBaseline.alphabetic,
-                  children: [
-                    SizedBox(width: 44, child: Text('$n', style: textTheme.titleMedium)),
-                    Expanded(child: Text(text, style: textTheme.bodyMedium)),
-                  ],
+                const SizedBox(height: 10),
+                DecoratedBox(
+                  decoration: BoxDecoration(color: c.surfaceSunken, borderRadius: DsRadius.mdAll),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.baseline,
+                      textBaseline: TextBaseline.alphabetic,
+                      children: [
+                        SizedBox(width: 44, child: Text('$n', style: ds.typography.amount.copyWith(fontSize: 20))),
+                        Expanded(
+                          child: Text(text, style: ds.typography.bodySm.copyWith(color: c.textPrimary)),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ],
-              const SizedBox(height: AppSpacing.space3),
+              const SizedBox(height: 12),
               Align(
                 alignment: AlignmentDirectional.centerEnd,
                 child: Wrap(
-                  spacing: AppSpacing.space1,
+                  spacing: 4,
                   children: [
-                    AppButton.text(label: texts.paywall.later, small: true, onPressed: () => unawaited(_dismiss(card))),
-                    AppButton(
+                    DsButton.ghost(label: texts.paywall.later, onPressed: () => unawaited(_dismiss(card))),
+                    DsButton(
                       label: texts.seePlus,
-                      small: true,
                       onPressed: () => unawaited(context.pushRoute(PremiumRouteKeys.paywall, PaywallInput(trigger))),
                     ),
                   ],

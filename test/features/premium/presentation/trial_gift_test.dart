@@ -56,7 +56,7 @@ void main() {
       MaterialApp(
         theme: PixelTheme.light,
         builder: (context, child) => MediaQuery(
-          data: MediaQuery.of(context).copyWith(textScaler: TextScaler.linear(scale)),
+          data: MediaQuery.of(context).copyWith(textScaler: TextScaler.linear(scale), disableAnimations: true),
           child: child!,
         ),
         home: TrialGiftPage(info: i, gift: gift),

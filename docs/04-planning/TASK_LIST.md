@@ -6073,8 +6073,11 @@ memilih mode (dan preset bila ≥ 2), dan design system lama dihapus.
       paywall dan dari toko. **Paywall dan daftar fitur v2 (1 Nov 2026):**
       `PlusTile` clay, `PlanCard` radio v2, daftar `DsSettingRow`, `DsStickyBar`
       baru, catatan `_Notice`, layar berhasil dan sudah berlangganan; ikon clay
-      `chat_bubble` ditambah (total 61). Kartu Plus Beranda, hadiah uji coba,
-      dan `PlusBadge` masih gaya lama.
+      `chat_bubble` ditambah (total 61). **Sisa Plus v2 (1 Nov 2026):** `PlusBadge` (pil
+      berbintang), `PlusLocked` (kunci periode Analisis), kartu Plus Beranda,
+      layar hadiah uji coba (hero perayaan), layar turun ke Gratis (kartu
+      penawaran hero), dan kisi tanggal `AppDayGrid` (dipakai juga onboarding
+      dan setelan periode) kini v2.
       **Ikon clay dilengkapi (31 Okt 2026, KT-DS5):** 33 ikon baru untuk
       dompet, jenis transaksi, kategori, dan status Freelance; semua
       `IconKey` benda kini punya clay (`ClayIcons.forIcon`). Digambar dari

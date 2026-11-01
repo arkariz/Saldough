@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
-import 'package:saldough/core/presentation/motion/motion.dart';
-import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/onboarding/presentation/widgets/onboarding_scene.dart';
 
-/// Satu layar onboarding: adegan bergerak di atas, panel judul dan isi di
-/// bawah. Adegan berparalaks setengah kecepatan geser (ADR-021 §3.7).
+/// Satu layar onboarding: adegan clay di atas, kartu judul dan isi di bawah.
+/// Adegan berparalaks setengah kecepatan geser (ADR-021 §3.7).
 class OnboardingSlide extends StatelessWidget {
   /// Membuat [OnboardingSlide].
   const OnboardingSlide({required this.index, required this.active, required this.controller, super.key});
@@ -23,8 +22,9 @@ class OnboardingSlide extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final (title, body) = onboardingText(index);
+    final ds = context.ds;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         children: [
           Expanded(
@@ -37,7 +37,7 @@ class OnboardingSlide extends StatelessWidget {
                       ? controller.page ?? index.toDouble()
                       : index.toDouble();
                   // Paralaks: adegan tertinggal setengah dari geseran halaman.
-                  final dx = snapToPixelGrid((page - index) * constraints.maxWidth * 0.5);
+                  final dx = (page - index) * constraints.maxWidth * 0.5;
                   return Transform.translate(offset: Offset(dx, 0), child: child);
                 },
                 child: ExcludeSemantics(
@@ -46,22 +46,22 @@ class OnboardingSlide extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: AppSpacing.space4),
+          const SizedBox(height: 16),
           Flexible(
             flex: 2,
             child: SingleChildScrollView(
-              child: AppFadeIn(
-                play: active,
-                delay: const Duration(milliseconds: 120),
-                child: AppCard(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Semantics(header: true, child: Text(title, style: Theme.of(context).textTheme.headlineSmall)),
-                      const SizedBox(height: AppSpacing.space2),
-                      Text(body, style: Theme.of(context).textTheme.bodyMedium),
-                    ],
-                  ),
+              child: DsCard(
+                padding: const EdgeInsets.all(18),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Semantics(
+                      header: true,
+                      child: Text(title, style: ds.typography.headlineMd.copyWith(fontSize: 22)),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(body, style: ds.typography.bodyMd.copyWith(color: ds.colors.textSecondary)),
+                  ],
                 ),
               ),
             ),
@@ -72,7 +72,63 @@ class OnboardingSlide extends StatelessWidget {
   }
 }
 
-/// Indikator halaman berupa blok piksel; blok aktif memanjang bertangga.
+/// Kepala langkah wajib (bahasa, mata uang, awal periode, pengingat): ikon
+/// clay besar di lingkaran bercahaya, judul, dan keterangan, rata tengah.
+class OnboardingStepHeader extends StatelessWidget {
+  /// Membuat [OnboardingStepHeader].
+  const OnboardingStepHeader({required this.asset, required this.title, required this.body, this.footer, super.key});
+
+  /// Ikon clay.
+  final String asset;
+
+  /// Judul langkah.
+  final String title;
+
+  /// Keterangan langkah.
+  final String body;
+
+  /// Isi tambahan di bawah keterangan.
+  final Widget? footer;
+
+  @override
+  Widget build(BuildContext context) {
+    final ds = context.ds;
+    final c = ds.colors;
+    return Column(
+      children: [
+        ExcludeSemantics(
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: RadialGradient(
+                colors: [c.actionPrimary.withValues(alpha: 0.18), c.actionPrimary.withValues(alpha: 0.04)],
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(18),
+              child: DsIdleMotion(kind: DsIdleKind.float, child: SvgPicture.asset(asset, width: 72, height: 72)),
+            ),
+          ),
+        ),
+        const SizedBox(height: 14),
+        Semantics(
+          header: true,
+          child: Text(title, textAlign: TextAlign.center, style: ds.typography.headlineMd.copyWith(fontSize: 22)),
+        ),
+        const SizedBox(height: 6),
+        Text(
+          body,
+          textAlign: TextAlign.center,
+          style: ds.typography.bodyMd.copyWith(color: c.textSecondary),
+        ),
+        if (footer != null) ...[const SizedBox(height: 12), footer!],
+      ],
+    );
+  }
+}
+
+/// Indikator halaman: titik berbentuk pil; yang aktif memanjang dan berisi
+/// warna aksi preset.
 class OnboardingPageIndicator extends StatelessWidget {
   /// Membuat [OnboardingPageIndicator].
   const OnboardingPageIndicator({required this.count, required this.current, super.key});
@@ -85,8 +141,8 @@ class OnboardingPageIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final duration = MotionPolicy.duration(context, const Duration(milliseconds: 240));
+    final c = context.ds.colors;
+    final duration = DsMotion.reduced(context) ? Duration.zero : DsMotion.standard;
     return Semantics(
       label: t.onboarding.pageIndicatorLabel(current: current + 1, total: count),
       child: ExcludeSemantics(
@@ -98,10 +154,11 @@ class OnboardingPageIndicator extends StatelessWidget {
                 duration: duration,
                 curve: Curves.easeOut,
                 margin: const EdgeInsets.symmetric(horizontal: 3),
-                width: i == current ? 28 : 10,
-                height: 10,
+                width: i == current ? 28 : 8,
+                height: 8,
                 decoration: BoxDecoration(
-                  color: i == current ? colors.brand : colors.surface,
+                  color: i == current ? c.actionPrimary : c.outlineSubtle,
+                  borderRadius: DsRadius.fullAll,
                 ),
               ),
           ],
@@ -111,9 +168,9 @@ class OnboardingPageIndicator extends StatelessWidget {
   }
 }
 
-/// Latar onboarding: warna yang bergeser lembut per halaman dan kisi titik
-/// piksel yang mengalir pelan secara diagonal.
-class OnboardingBackdrop extends StatefulWidget {
+/// Latar onboarding: kanvas yang bergeser lembut per halaman dengan daun dan
+/// kilau melayang (`DsAmbientLayer`).
+class OnboardingBackdrop extends StatelessWidget {
   /// Membuat [OnboardingBackdrop].
   const OnboardingBackdrop({required this.controller, super.key});
 
@@ -121,75 +178,90 @@ class OnboardingBackdrop extends StatefulWidget {
   final PageController controller;
 
   @override
-  State<OnboardingBackdrop> createState() => _OnboardingBackdropState();
-}
-
-class _OnboardingBackdropState extends State<OnboardingBackdrop> with SingleTickerProviderStateMixin {
-  late final AnimationController _drift = AnimationController(vsync: this, duration: const Duration(seconds: 12));
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (MotionPolicy.reduced(context)) {
-      _drift.stop();
-    } else if (!_drift.isAnimating) {
-      _drift.repeat();
-    }
-  }
-
-  @override
-  void dispose() {
-    _drift.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final tones = [colors.bg, colors.surface2, colors.surface2, colors.surface2, colors.surface3];
+    final c = context.ds.colors;
+    final tones = [c.surfaceCanvas, c.surfaceSunken, c.surfaceSunken, c.surfaceSunken, c.surfaceContainerHigh];
     return RepaintBoundary(
       child: AnimatedBuilder(
-        animation: Listenable.merge([widget.controller, _drift]),
-        builder: (context, _) {
-          final controller = widget.controller;
+        animation: controller,
+        builder: (context, child) {
           final page = controller.hasClients && controller.position.haveDimensions ? controller.page ?? 0 : 0.0;
           final lower = page.floor().clamp(0, tones.length - 1);
           final upper = (lower + 1).clamp(0, tones.length - 1);
           final tone = Color.lerp(tones[lower], tones[upper], page - page.floor())!;
-          return CustomPaint(
-            painter: _DotGridPainter(
-              background: tone,
-              dot: colors.ink.withValues(alpha: 0.07),
-              shift: snapToPixelGrid(_drift.value * _DotGridPainter.spacing),
-            ),
-          );
+          return ColoredBox(color: tone, child: child);
         },
+        child: const DsAmbientLayer(opacity: 0.45),
       ),
     );
   }
 }
 
-class _DotGridPainter extends CustomPainter {
-  _DotGridPainter({required this.background, required this.dot, required this.shift});
+/// Pilihan satu dari beberapa di langkah onboarding: kartu dengan garis aksi
+/// dan centang saat terpilih. [leading] untuk penanda di depan teks,
+/// [detail] untuk keterangan kecil.
+class OnboardingChoice extends StatelessWidget {
+  /// Membuat [OnboardingChoice].
+  const OnboardingChoice({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+    this.detail,
+    this.leading,
+    super.key,
+  });
 
-  static const spacing = 24.0;
+  /// Teks pilihan.
+  final String label;
 
-  final Color background;
-  final Color dot;
-  final double shift;
+  /// Pilihan sedang terpilih.
+  final bool selected;
+
+  /// Dipanggil saat diketuk.
+  final VoidCallback onTap;
+
+  /// Keterangan kecil.
+  final String? detail;
+
+  /// Penanda di depan teks.
+  final Widget? leading;
 
   @override
-  void paint(Canvas canvas, Size size) {
-    canvas.drawRect(Offset.zero & size, Paint()..color = background);
-    final paint = Paint()..color = dot;
-    for (var y = -spacing + shift; y < size.height; y += spacing) {
-      for (var x = -spacing + shift; x < size.width; x += spacing) {
-        canvas.drawRect(Rect.fromLTWH(x, y, 2, 2), paint);
-      }
-    }
+  Widget build(BuildContext context) {
+    final ds = context.ds;
+    final c = ds.colors;
+    return Semantics(
+      selected: selected,
+      inMutuallyExclusiveGroup: true,
+      child: DsPressable(
+        semanticLabel: label,
+        onPressed: onTap,
+        builder: (context, _) => AnimatedContainer(
+          duration: DsMotion.reduced(context) ? Duration.zero : DsMotion.standard,
+          constraints: const BoxConstraints(minHeight: 56),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          decoration: BoxDecoration(
+            color: selected ? c.actionPrimary.withValues(alpha: 0.06) : c.surfaceCard,
+            borderRadius: DsRadius.lgAll,
+            border: Border.all(color: selected ? c.actionPrimary : c.outlineSubtle, width: selected ? 2 : 1),
+          ),
+          child: Row(
+            children: [
+              if (leading != null) ...[leading!, const SizedBox(width: 12)],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(label, style: ds.typography.titleMd.copyWith(fontSize: 15)),
+                    if (detail != null) Text(detail!, style: ds.typography.bodySm.copyWith(color: c.textSecondary)),
+                  ],
+                ),
+              ),
+              if (selected) Icon(Icons.check_circle, color: c.actionPrimary),
+            ],
+          ),
+        ),
+      ),
+    );
   }
-
-  @override
-  bool shouldRepaint(_DotGridPainter oldDelegate) =>
-      oldDelegate.background != background || oldDelegate.shift != shift || oldDelegate.dot != dot;
 }

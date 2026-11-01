@@ -9,10 +9,10 @@ import 'package:mocktail/mocktail.dart';
 import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/foundation/navigation/app_route_registry.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/language/language.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
-import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/onboarding/presentation/onboarding_route.dart';
 import 'package:saldough/features/onboarding/presentation/pages/onboarding_page.dart';
@@ -63,7 +63,7 @@ Future<void> _passPeriod(WidgetTester tester) async {
 }
 
 bool _confirmEnabled(WidgetTester tester) =>
-    tester.widget<AppButton>(_confirm).onPressed != null;
+    tester.widget<DsButton>(_confirm).onPressed != null;
 
 /// Melewati langkah bahasa (langkah pertama mode pertama kali, ADR-028).
 Future<void> _passLanguage(WidgetTester tester) async {
@@ -295,7 +295,7 @@ void main() {
 
       expect(find.text(t.onboarding.createWalletAction), findsNothing);
       expect(find.text(t.onboarding.signInAction), findsNothing);
-      await tester.tap(find.byWidgetPredicate((w) => w is AppButton && w.variant == AppButtonVariant.primary && w.label == t.onboarding.closeAction));
+      await tester.tap(find.byWidgetPredicate((w) => w is DsButton && w.variant == DsButtonVariant.primary && w.label == t.onboarding.closeAction));
       await tester.pumpAndSettle();
 
       // Mode tinjau tidak menanyakan mata uang; gantinya di layar Akun.

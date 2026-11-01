@@ -1,12 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
-import 'package:saldough/core/presentation/motion/motion.dart';
-import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/onboarding/presentation/widgets/onboarding_currency_step.dart';
 import 'package:saldough/features/onboarding/presentation/widgets/onboarding_gate_steps.dart';
@@ -230,11 +228,10 @@ class _OnboardingPageState extends State<OnboardingPage> {
   }
 
   void _nextSlide() {
-    final duration = MotionPolicy.duration(context, const Duration(milliseconds: 420));
-    if (duration == Duration.zero) {
+    if (DsMotion.reduced(context)) {
       _controller.jumpToPage(_page + 1);
     } else {
-      _controller.nextPage(duration: duration, curve: Curves.easeInOut);
+      _controller.nextPage(duration: const Duration(milliseconds: 420), curve: Curves.easeInOut);
     }
   }
 
@@ -252,7 +249,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
       },
       child: Builder(
         builder: (context) {
-          final colors = context.appColors;
+          final c = context.ds.colors;
           final showBack = !_review && _trail.isNotEmpty && _step != _Step.slides && _step != _Step.language;
           return Scaffold(
             body: Stack(
@@ -262,7 +259,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   child: Column(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space2, AppSpacing.space2, 0),
+                        padding: const EdgeInsets.fromLTRB(16, 8, 8, 0),
                         child: SizedBox(
                           height: 48,
                           child: Row(
@@ -270,18 +267,18 @@ class _OnboardingPageState extends State<OnboardingPage> {
                               Expanded(
                                 child: Text(
                                   t.app.title,
-                                  style: labelSmStyle(context, color: colors.ink2),
+                                  style: context.ds.typography.pixelCaption.copyWith(color: c.textMuted),
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                               if (showBack)
-                                AppButton.text(
+                                DsButton.ghost(
                                   key: const ValueKey('onboarding-back'),
                                   label: t.onboarding.backAction,
                                   onPressed: _busy ? null : _back,
                                 )
                               else if (_onSlides && (!_isLast || _review))
-                                AppButton.text(
+                                DsButton.ghost(
                                   label: _review ? t.onboarding.closeAction : t.onboarding.skipAction,
                                   onPressed: _busy ? null : _leaveSlides,
                                 ),
@@ -331,10 +328,10 @@ class _OnboardingPageState extends State<OnboardingPage> {
                       ),
                       Padding(
                         padding: const EdgeInsets.fromLTRB(
-                          AppSpacing.space4,
-                          AppSpacing.space2,
-                          AppSpacing.space4,
-                          AppSpacing.space4,
+                          16,
+                          8,
+                          16,
+                          16,
                         ),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
@@ -342,10 +339,10 @@ class _OnboardingPageState extends State<OnboardingPage> {
                           children: [
                             if (_onSlides) ...[
                               OnboardingPageIndicator(count: _count, current: _page),
-                              const SizedBox(height: AppSpacing.space4),
+                              const SizedBox(height: 16),
                             ],
                             AnimatedSwitcher(
-                              duration: MotionPolicy.duration(context, const Duration(milliseconds: 240)),
+                              duration: DsMotion.reduced(context) ? Duration.zero : const Duration(milliseconds: 240),
                               switchInCurve: Curves.easeOut,
                               switchOutCurve: Curves.easeIn,
                               child: _actions(context),
@@ -370,7 +367,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
         return SizedBox(
           key: const ValueKey('language'),
           width: double.infinity,
-          child: AppButton(
+          child: DsButton(
             key: const ValueKey('onboarding-language-confirm'),
             label: t.onboarding.languageConfirm,
             onPressed: _confirmLanguage,
@@ -380,7 +377,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
         if (!_isLast) {
           final next = SizedBox(
             width: double.infinity,
-            child: AppButton(label: t.onboarding.nextAction, onPressed: _nextSlide),
+            child: DsButton(label: t.onboarding.nextAction, onPressed: _nextSlide),
           );
           // Tautan pulihkan hanya di layar geser pertama (EXPORT_BACKUP §7.3).
           if (_review || _page != 0 || widget.onRestoreRequested == null) {
@@ -392,9 +389,9 @@ class _OnboardingPageState extends State<OnboardingPage> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               next,
-              const SizedBox(height: AppSpacing.space1),
+              const SizedBox(height: 4),
               Center(
-                child: AppButton.text(
+                child: DsButton.ghost(
                   key: const ValueKey('onboarding-restore'),
                   label: t.onboarding.restoreAction,
                   onPressed: _busy ? null : _requestRestore,
@@ -408,7 +405,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
         return SizedBox(
           key: const ValueKey('close'),
           width: double.infinity,
-          child: AppButton(
+          child: DsButton(
             label: _review ? t.onboarding.closeAction : t.onboarding.nextAction,
             onPressed: _busy ? null : _leaveSlides,
           ),
@@ -418,7 +415,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
         return SizedBox(
           key: const ValueKey('currency'),
           width: double.infinity,
-          child: AppButton(
+          child: DsButton(
             key: const ValueKey('onboarding-currency-confirm'),
             label: currency == null
                 ? t.onboarding.currencyChooseFirst
@@ -430,13 +427,12 @@ class _OnboardingPageState extends State<OnboardingPage> {
         return SizedBox(
           key: const ValueKey('period'),
           width: double.infinity,
-          child: AppButton(
+          child: DsButton(
             key: const ValueKey('onboarding-period-confirm'),
             label: switch (_period.day) {
               final day? => t.onboarding.periodConfirm(day: day),
               null => t.onboarding.periodConfirmLast,
             },
-            loading: _busy,
             onPressed: _busy ? null : _confirmPeriod,
           ),
         );
@@ -446,7 +442,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
           return SizedBox(
             key: const ValueKey('reminder-answered'),
             width: double.infinity,
-            child: AppButton(
+            child: DsButton(
               key: const ValueKey('onboarding-reminder-next'),
               label: t.onboarding.nextAction,
               onPressed: _advance,
@@ -458,16 +454,15 @@ class _OnboardingPageState extends State<OnboardingPage> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            AppButton(
+            DsButton(
               key: const ValueKey('onboarding-reminder-turn-on'),
               label: t.onboarding.turnOn,
-              loading: _busy,
               onPressed: _busy ? null : _turnOnReminders,
             ),
-            const SizedBox(height: AppSpacing.space2),
+            const SizedBox(height: 8),
             // Selebar Nyalakan dan bergaya tombol, bukan teks, supaya tidak
             // terbaca sebagai Lewati.
-            AppButton.secondary(
+            DsButton.secondary(
               key: const ValueKey('onboarding-reminder-not-now'),
               label: t.onboarding.notNow,
               onPressed: _busy ? null : () => unawaited(_declineReminders()),
@@ -480,17 +475,13 @@ class _OnboardingPageState extends State<OnboardingPage> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Satu denyut saat layar akhir tiba (ADR-021 §3.7).
-            AppFadeIn(
-              delay: const Duration(milliseconds: 200),
-              child: AppButton(
-                label: t.onboarding.createWalletAction,
-                onPressed: _busy ? null : () => _finish(OnboardingOutcome.createWallet, _currency),
-              ),
+            DsButton(
+              label: t.onboarding.createWalletAction,
+              onPressed: _busy ? null : () => _finish(OnboardingOutcome.createWallet, _currency),
             ),
-            const SizedBox(height: AppSpacing.space1),
+            const SizedBox(height: 4),
             Center(
-              child: AppButton.text(
+              child: DsButton.ghost(
                 label: t.onboarding.laterAction,
                 onPressed: _busy ? null : () => _finish(OnboardingOutcome.dismissed, _currency),
               ),
@@ -498,7 +489,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
             Center(
               child: FittedBox(
                 fit: BoxFit.scaleDown,
-                child: AppButton.text(
+                child: DsButton.ghost(
                   label: t.onboarding.signInAction,
                   onPressed: _busy ? null : () => _finish(OnboardingOutcome.signIn, _currency),
                 ),

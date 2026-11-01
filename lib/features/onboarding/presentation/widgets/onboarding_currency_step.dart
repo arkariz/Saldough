@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
-import 'package:saldough/features/onboarding/presentation/widgets/onboarding_art.dart';
+import 'package:saldough/features/onboarding/presentation/widgets/onboarding_widgets.dart';
 
 /// Langkah pilih mata uang, gerbang terakhir onboarding pertama kali
 /// (ADR-025 §3.7).
@@ -26,86 +26,36 @@ class OnboardingCurrencyStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
     final options = [?suggested, ...AppCurrency.values.where((c) => c != suggested)];
-    // Satu gulungan untuk judul dan daftar: dengan teks besar, kartu judul
-    // saja bisa setinggi layar.
+    // Satu gulungan untuk judul dan daftar: dengan teks besar, kepala saja
+    // bisa setinggi layar.
     return ListView.separated(
       key: const ValueKey('onboarding-currency-list'),
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       itemCount: options.length + 1,
-      separatorBuilder: (_, index) => SizedBox(height: index == 0 ? AppSpacing.space4 : AppSpacing.space1),
+      separatorBuilder: (_, index) => SizedBox(height: index == 0 ? 20 : 8),
       itemBuilder: (context, index) {
         if (index == 0) {
-          return AppCard(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const OnboardingArt('assets/illustration/bahasa_mata_uang.png', crop: Rect.fromLTWH(0.1, 0.12, 0.8, 0.78)),
-                const SizedBox(height: AppSpacing.space3),
-                Semantics(header: true, child: Text(t.onboarding.currencyTitle, style: textTheme.headlineSmall)),
-                const SizedBox(height: AppSpacing.space2),
-                Text(t.onboarding.currencyBody, style: textTheme.bodyMedium),
-              ],
-            ),
+          return OnboardingStepHeader(
+            asset: ClayIcons.coins,
+            title: t.onboarding.currencyTitle,
+            body: t.onboarding.currencyBody,
           );
         }
         final currency = options[index - 1];
-        return _CurrencyOption(
-          currency: currency,
+        final ds = context.ds;
+        return OnboardingChoice(
+          key: ValueKey('onboarding-currency-${currency.code}'),
+          label: '${currency.code} · ${currencyName(currency)}',
+          detail: currency == suggested ? t.onboarding.currencySuggested : null,
           selected: currency == selected,
-          suggested: currency == suggested,
+          leading: SizedBox(
+            width: 40,
+            child: Text(currency.symbol, style: ds.typography.amount.copyWith(color: ds.colors.actionPrimary)),
+          ),
           onTap: () => onSelected(currency),
         );
       },
-    );
-  }
-}
-
-class _CurrencyOption extends StatelessWidget {
-  const _CurrencyOption({required this.currency, required this.selected, required this.suggested, required this.onTap});
-
-  final AppCurrency currency;
-  final bool selected;
-  final bool suggested;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
-    final name = '${currency.code} · ${currencyName(currency)}';
-    return Semantics(
-      selected: selected,
-      inMutuallyExclusiveGroup: true,
-      child: AppTappable(
-        key: ValueKey('onboarding-currency-${currency.code}'),
-        label: name,
-        onTap: onTap,
-        child: AppCard(
-          color: selected ? colors.brandSoft : null,
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4, vertical: AppSpacing.space2),
-          child: Row(
-            children: [
-              SizedBox(
-                width: 44,
-                child: Text(currency.symbol, style: context.numberStyles.amount.copyWith(color: colors.brand)),
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(name, style: textTheme.titleSmall),
-                    if (suggested)
-                      Text(t.onboarding.currencySuggested, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
-                  ],
-                ),
-              ),
-              if (selected) AppIcon(IconKey.check, color: colors.brand),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }

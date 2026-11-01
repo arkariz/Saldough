@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/language/language.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
-import 'package:saldough/features/onboarding/presentation/widgets/onboarding_art.dart';
+import 'package:saldough/features/onboarding/presentation/widgets/onboarding_widgets.dart';
 
 /// Langkah pilih bahasa, langkah pertama onboarding pertama kali (ADR-028
 /// §3.4). Bahasa saat ini sudah terpilih; mengetuk pilihan lain langsung
@@ -21,46 +20,24 @@ class OnboardingLanguageStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    final colors = context.appColors;
     return ListView(
       key: const ValueKey('onboarding-language-list'),
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       children: [
-        AppCard(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const OnboardingArt('assets/illustration/bahasa_mata_uang.png', crop: Rect.fromLTWH(0.1, 0.12, 0.8, 0.78)),
-              const SizedBox(height: AppSpacing.space3),
-              Semantics(header: true, child: Text(t.onboarding.languageTitle, style: textTheme.headlineSmall)),
-              const SizedBox(height: AppSpacing.space2),
-              Text(t.onboarding.languageBody, style: textTheme.bodyMedium),
-            ],
-          ),
+        OnboardingStepHeader(
+          asset: ClayIcons.globe,
+          title: t.onboarding.languageTitle,
+          body: t.onboarding.languageBody,
         ),
-        const SizedBox(height: AppSpacing.space4),
+        const SizedBox(height: 20),
         for (final locale in AppLocale.values) ...[
-          Semantics(
+          OnboardingChoice(
+            key: ValueKey('onboarding-language-${locale.languageCode}'),
+            label: languageName(locale),
             selected: locale == selected,
-            inMutuallyExclusiveGroup: true,
-            child: AppTappable(
-              key: ValueKey('onboarding-language-${locale.languageCode}'),
-              label: languageName(locale),
-              onTap: () => onSelected(locale),
-              child: AppCard(
-                color: locale == selected ? colors.brandSoft : null,
-                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4, vertical: AppSpacing.space2),
-                child: Row(
-                  children: [
-                    Expanded(child: Text(languageName(locale), style: textTheme.titleSmall)),
-                    if (locale == selected) AppIcon(IconKey.check, color: colors.brand),
-                  ],
-                ),
-              ),
-            ),
+            onTap: () => onSelected(locale),
           ),
-          const SizedBox(height: AppSpacing.space1),
+          const SizedBox(height: 8),
         ],
       ],
     );

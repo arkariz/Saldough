@@ -6086,6 +6086,13 @@ memilih mode (dan preset bila ≥ 2), dan design system lama dihapus.
       transaksi tersaring dan rincian kategori Analisis, kerangka halaman
       (`AppSkeletonPage` membulat), serta pelengkap Catat dan Dompet (dialog
       menyimpan, banner dompet sama, keadaan dompet kosong, pratinjau saldo).
+      **Onboarding v2 (1 Nov 2026):** adegan layar geser diganti komposisi
+      clay (ikon besar bercahaya + tiga ikon pengiring yang membal masuk dan
+      melayang; `OnboardingScene`), kepala langkah berikon clay
+      (`OnboardingStepHeader`), pilihan bahasa dan mata uang `OnboardingChoice`,
+      indikator pil, latar `DsAmbientLayer`, ringkasan penutup `DsSettingRow`,
+      maskot penutup membal dengan konfeti. Ilustrasi piksel pemilik di
+      `assets/illustration/` tidak lagi dipakai (berkas dibiarkan).
       **Ikon clay dilengkapi (31 Okt 2026, KT-DS5):** 33 ikon baru untuk
       dompet, jenis transaksi, kategori, dan status Freelance; semua
       `IconKey` benda kini punya clay (`ClayIcons.forIcon`). Digambar dari

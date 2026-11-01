@@ -75,8 +75,12 @@ class WalletSwatch extends StatelessWidget {
   final Color color;
 
   @override
-  Widget build(BuildContext context) =>
-      SizedBox.square(dimension: 8, child: DecoratedBox(decoration: BoxDecoration(color: color, shape: BoxShape.circle)));
+  Widget build(BuildContext context) => SizedBox.square(
+    dimension: 8,
+    child: DecoratedBox(
+      decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+    ),
+  );
 }
 
 /// Warna jenis dompet (tabel warna `cat-*` design system: Bank biru,
@@ -243,14 +247,12 @@ Map<String, Color> walletColorsDs(DsColorScheme scheme, List<Wallet> wallets) {
 
 /// Satu dompet sebagai kartu bento (acuan Dompet v2): tile ikon clay jenis
 /// dompet, lencana jenis, nama, saldo, dan persen porsi dengan penanda warna.
-/// [wide] membuatnya selebar penuh (dompet pertama). Saldo mengikuti sembunyikan
-/// nominal; saldo negatif bertanda minus.
+/// Saldo mengikuti sembunyikan nominal; saldo negatif bertanda minus.
 class WalletBentoCard extends StatelessWidget {
   /// Membuat [WalletBentoCard].
   const WalletBentoCard({
     required this.wallet,
     required this.onTap,
-    this.wide = false,
     this.shareText,
     this.swatchColor,
     this.linked = false,
@@ -262,9 +264,6 @@ class WalletBentoCard extends StatelessWidget {
 
   /// Dipanggil saat kartu diketuk (membuka rincian).
   final VoidCallback onTap;
-
-  /// Selebar penuh dengan tile di kiri.
-  final bool wide;
 
   /// Bagian saldo ("54%", "<1%"), atau `null`.
   final String? shareText;
@@ -281,7 +280,7 @@ class WalletBentoCard extends StatelessWidget {
     final c = ds.colors;
     final type = walletTypeLabel(wallet.iconKey);
     final asset = ClayIcons.forIcon(walletIconKey(wallet.iconKey)) ?? ClayIcons.walletNav;
-    final tile = DsIconTile.asset(asset: asset, size: wide ? DsIconTileSize.lg : DsIconTileSize.md);
+    final tile = DsIconTile.asset(asset: asset);
     final badges = Wrap(
       spacing: 4,
       runSpacing: 4,
@@ -300,7 +299,7 @@ class WalletBentoCard extends StatelessWidget {
     // Tanpa elipsis: nama panjang membungkus, tidak dipotong.
     final name = Text(
       wallet.name,
-      style: ds.typography.titleMd.copyWith(fontSize: wide ? 17 : 15),
+      style: ds.typography.titleMd.copyWith(fontSize: 15),
     );
     final amount = FittedBox(
       fit: BoxFit.scaleDown,
@@ -324,31 +323,18 @@ class WalletBentoCard extends StatelessWidget {
               border: Border.all(color: linked ? c.actionPrimary : c.outlineSubtle, width: linked ? 1.5 : 1),
               boxShadow: const [BoxShadow(color: Color(0x0F000000), blurRadius: 14, offset: Offset(0, 5))],
             ),
-            child: wide
-                ? Row(
-                    children: [
-                      tile,
-                      const SizedBox(width: 14),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [name, const SizedBox(height: 4), amount, const SizedBox(height: 6), badges],
-                        ),
-                      ),
-                    ],
-                  )
-                : Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      tile,
-                      const SizedBox(height: 12),
-                      name,
-                      const SizedBox(height: 4),
-                      amount,
-                      const SizedBox(height: 6),
-                      badges,
-                    ],
-                  ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                tile,
+                const SizedBox(height: 12),
+                name,
+                const SizedBox(height: 4),
+                amount,
+                const SizedBox(height: 6),
+                badges,
+              ],
+            ),
           ),
         ),
       ),

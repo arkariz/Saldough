@@ -601,17 +601,18 @@ void main() {
       expect(find.text(t.wallet.reorderTitle), findsOneWidget);
       expect(find.text(t.wallet.reorderHint), findsOneWidget);
       expect(find.text('Lama'), findsNothing, reason: 'dompet nonaktif tidak diurutkan');
-      expect(find.byType(WalletBentoCard), findsNothing, reason: 'grid diganti daftar atur');
-      expect(find.byKey(const ValueKey('wallet-spread')), findsNothing, reason: 'sebaran disembunyikan saat atur');
+      expect(find.text(t.wallet.reorderHandleLabel(name: 'BCA')), findsNothing, reason: 'label hanya untuk pembaca layar');
+      expect(find.byType(WalletBentoCard), findsNWidgets(3), reason: 'bentuk kartu sama dengan mode biasa');
+      expect(find.byType(DsJiggleLoop), findsNWidgets(3), reason: 'kartu bergoyang');
 
-      // Seret pegangan GoPay ke atas BCA.
+      // Tekan lama kartu GoPay lalu seret ke atas kartu BCA.
       final handle = find.byKey(const ValueKey('wallet-reorder-handle-w4'));
-      final top = tester.getCenter(find.byKey(const ValueKey('wallet-reorder-handle-w1')));
+      final target = tester.getCenter(find.byKey(const ValueKey('wallet-reorder-handle-w1')));
       final gesture = await tester.startGesture(tester.getCenter(handle));
       await tester.pump(const Duration(milliseconds: 600));
       final start = tester.getCenter(handle);
       for (var step = 1; step <= 10; step++) {
-        await gesture.moveTo(Offset.lerp(start, top - const Offset(0, 48), step / 10)!);
+        await gesture.moveTo(Offset.lerp(start, target, step / 10)!);
         await tester.pump(const Duration(milliseconds: 50));
       }
       await gesture.up();

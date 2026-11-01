@@ -331,6 +331,9 @@ class _Translations$wallet$en extends Translations$wallet$id {
 	@override String get detailRecentEmpty => 'No transactions this month for this wallet yet.';
 	@override String get detailViewAllAction => 'View all transactions';
 	@override String get detailRecordAction => 'Record transaction';
+	@override String detailShare({required Object percent}) => '${percent} of total balance';
+	@override String get detailMonthHeading => 'This month';
+	@override String get detailHistoryAction => 'History';
 	@override String get detailTransferInLabel => 'Transfers in';
 	@override String get detailTransferOutLabel => 'Transfers out';
 	@override String get detailBalanceChangeLabel => 'Balance change';
@@ -2753,6 +2756,9 @@ extension on TranslationsEn {
 			'wallet.detailRecentEmpty' => 'No transactions this month for this wallet yet.',
 			'wallet.detailViewAllAction' => 'View all transactions',
 			'wallet.detailRecordAction' => 'Record transaction',
+			'wallet.detailShare' => ({required Object percent}) => '${percent} of total balance',
+			'wallet.detailMonthHeading' => 'This month',
+			'wallet.detailHistoryAction' => 'History',
 			'wallet.detailTransferInLabel' => 'Transfers in',
 			'wallet.detailTransferOutLabel' => 'Transfers out',
 			'wallet.detailBalanceChangeLabel' => 'Balance change',
@@ -2981,11 +2987,11 @@ extension on TranslationsEn {
 			'budget.templateAddTitle' => 'Create template',
 			'budget.templateEditTitle' => 'Edit template',
 			'budget.templateRuleBody' => 'A template keeps your set of plan items. The wallet and period are chosen when you use it.',
+			_ => null,
+		} ?? switch (path) {
 			'budget.templateNameHint' => 'Example: Monthly groceries',
 			'budget.templateEnabledLabel' => 'Offer this template',
 			'budget.templateEnabledHelp' => 'Inactive templates stay saved but cannot be used to create a budget.',
-			_ => null,
-		} ?? switch (path) {
 			'budget.templateSaveAction' => 'Save template',
 			'budget.templateDeleteAction' => 'Delete template',
 			'budget.templateDeleteConfirmTitle' => 'Delete template?',
@@ -3495,11 +3501,11 @@ extension on TranslationsEn {
 			'notificationCapture.accessMissingBody' => 'Without it, Tanukonomy can\'t see your bank notifications.',
 			'notificationCapture.accessAction' => 'Allow access',
 			'notificationCapture.accessGranted' => 'Notification permission is on',
+			_ => null,
+		} ?? switch (path) {
 			'notificationCapture.disclosureTitle' => 'Before you grant permission',
 			'notificationCapture.disclosureBody' => 'Tanukonomy will be able to read notifications on your phone.\n\n• Only from apps you pick that match their filter.\n• OTP notifications are never stored.\n• Text that is hard to read may be sent to Gemini (Google).\n• Notification text stays on your phone for at most 7 days.',
 			'notificationCapture.disclosureAccept' => 'Continue',
-			_ => null,
-		} ?? switch (path) {
 			'notificationCapture.reminderPermissionDenied' => 'Notification permission was denied. Turn it on in Android settings to get reminders.',
 			'notificationCapture.sourcesTitle' => 'Apps',
 			'notificationCapture.sourcesEmpty' => 'Pick the bank or e-wallet apps whose notifications you want recorded.',

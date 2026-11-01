@@ -8,7 +8,6 @@ import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/home/domain/budget_overview_source.dart';
 import 'package:saldough/features/home/presentation/home_placeholder.dart';
 import 'package:saldough/features/home/presentation/widgets/home_summary.dart';
-import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/transaction/transaction_presentation.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
@@ -371,9 +370,7 @@ class _Badged extends StatelessWidget {
   );
 }
 
-/// Satu baris transaksi terbaru: ikon clay bila kategorinya sudah
-/// digambar, ikon piksel lama di tile datar bila belum (KT-DS5), judul,
-/// nominal bertanda, dompet dan jam, serta nama kategori.
+/// Satu baris transaksi terbaru Beranda: [TransactionLedgerRow] bersama.
 class HomeRecentRow extends StatelessWidget {
   /// Membuat [HomeRecentRow].
   const HomeRecentRow({required this.transaction, required this.walletsById, this.onTap, super.key});
@@ -387,52 +384,7 @@ class HomeRecentRow extends StatelessWidget {
   /// Dipanggil saat baris diketuk.
   final VoidCallback? onTap;
 
-  String _walletName(String id) => walletsById[id]?.name ?? '—';
-
-  String get _subtitle {
-    final time = transactionTime(transaction.date);
-    return switch (transaction) {
-      TransferTransaction(:final fromWalletId, :final toWalletId) =>
-        '${_walletName(fromWalletId)} → ${_walletName(toWalletId)} · $time',
-      IncomeTransaction(:final walletId) || ExpenseTransaction(:final walletId) => '${_walletName(walletId)} · $time',
-    };
-  }
-
   @override
-  Widget build(BuildContext context) {
-    final (moneyKind, rowKind, txKind) = switch (transaction) {
-      IncomeTransaction() => (MoneyKind.income, DsLedgerKind.income, TransactionKind.income),
-      ExpenseTransaction() => (MoneyKind.expense, DsLedgerKind.expense, TransactionKind.expense),
-      TransferTransaction() => (MoneyKind.transfer, DsLedgerKind.transfer, TransactionKind.transfer),
-    };
-    final iconKey = TransactionIcon.iconKeyFor(
-      kind: txKind,
-      categoryId: transaction.categoryId,
-      title: transaction.note,
-    );
-    final clay = transaction.sourceIconId == null ? ClayIcons.forIcon(iconKey) : null;
-    final category = txKind == TransactionKind.transfer ? null : ActiveCategories.byId(transaction.categoryId);
-    return DsLedgerRow(
-      leading: clay != null
-          ? DsIconTile.asset(
-              asset: clay,
-              tone: txKind == TransactionKind.income ? DsIconTileTone.income : DsIconTileTone.neutral,
-            )
-          : SizedBox.square(
-              dimension: 40,
-              child: Center(child: TransactionIcon.of(transaction, ringColor: context.ds.colors.surfaceCard)),
-            ),
-      title: transactionTitle(transaction),
-      amount: AppMoneyText.format(transaction.amount, moneyKind),
-      subtitle: _subtitle,
-      badge: category == null
-          ? null
-          : DsBadge(
-              label: category.name,
-              tone: txKind == TransactionKind.income ? DsBadgeTone.income : DsBadgeTone.category,
-            ),
-      kind: rowKind,
-      onTap: onTap,
-    );
-  }
+  Widget build(BuildContext context) =>
+      TransactionLedgerRow(transaction: transaction, walletsById: walletsById, onTap: onTap);
 }

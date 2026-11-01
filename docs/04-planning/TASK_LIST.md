@@ -6014,6 +6014,16 @@ memilih mode (dan preset bila ≥ 2), dan design system lama dihapus.
       selebar penuh: semua dompet sama bentuk (revisi 1 Nov 2026 atas
       masukan pemilik: bentuk mode atur harus sama dengan bentuk biasa).
       Lembar urutkan lama dihapus.
+      **Rincian dompet v2 (1 Nov 2026):** hero `DsHeroBalanceCard` (nama,
+      jenis dan status, saldo, Masuk/Keluar bulan ini, porsi dari total),
+      tiga aksi cepat clay (Catat, Catat Transfer, Riwayat; semua lewat
+      CATAT/riwayat, aturan 8), ringkasan perubahan saldo, dan daftar
+      transaksi memakai `TransactionLedgerRow` bersama (dipindah dari
+      Beranda). Tidak diadopsi dari acuan: nomor rekening dan nama pemilik
+      (tidak ada di domain), Top Up (aplikasi tidak memindahkan uang),
+      Kakeibo Insight dengan kuota 68% (karangan), tombol Unduh Mutasi PDF
+      (ekspor ada di Akun), dan catatan "enkripsi Shinto Vault". Belum:
+      lembar formulir dompet dan daftar nonaktif.
       **Ikon clay dilengkapi (31 Okt 2026, KT-DS5):** 33 ikon baru untuk
       dompet, jenis transaksi, kategori, dan status Freelance; semua
       `IconKey` benda kini punya clay (`ClayIcons.forIcon`). Digambar dari

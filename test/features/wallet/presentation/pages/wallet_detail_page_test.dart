@@ -4,10 +4,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
 import 'package:navigation/navigation.dart';
 import 'package:saldough/app/shell/app_shell_page.dart';
+import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
-import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/budget/data/repositories/budget_repository_impl.dart';
 import 'package:saldough/features/budget/domain/repositories/budget_repository.dart';
@@ -124,7 +124,7 @@ void main() {
       expect(find.byType(WalletDetailPage), findsOneWidget);
       expect(find.text('BCA'), findsWidgets);
       expect(find.text(t.wallet.typeBank), findsOneWidget);
-      expect(find.text('Rp1.300.000'), findsWidgets);
+      expect(find.text('1.300.000'), findsWidgets);
     });
 
     testWidgets(
@@ -220,13 +220,13 @@ void main() {
         await openDetail(tester, 'BCA');
 
         expect(
-          find.text('Rp5.000.000'),
-          findsOneWidget,
+          find.text('+Rp5.000.000'),
+          findsWidgets,
           reason: 'pemasukan: hanya pemasukan',
         );
         expect(
-          find.text('Rp75.000'),
-          findsOneWidget,
+          find.text('−Rp75.000'),
+          findsWidgets,
           reason: 'pengeluaran: hanya pengeluaran, transfer tidak ikut',
         );
         expect(
@@ -282,9 +282,36 @@ void main() {
           findsNothing,
         );
         // Perubahan saldo di ringkasan, dan baris transaksinya di daftar.
-        expect(find.text('−Rp75.000'), findsNWidgets(2));
+        expect(find.text('−Rp75.000'), findsNWidgets(3), reason: 'kotak Keluar, perubahan saldo, dan baris transaksi');
       },
     );
+
+    testWidgets('aksi cepat Catat Transfer membuka CATAT pada jenis Transfer dengan dompet ini sebagai asal', (
+      tester,
+    ) async {
+      await seedWallet('a', 'BCA', current: 100000000);
+      await seedWallet('b', 'GoPay', current: 0, icon: 'walletEwallet');
+      await openDetail(tester, 'BCA');
+
+      await tester.tap(find.byKey(const ValueKey('wallet-detail-transfer')));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(RecordFormHost), findsOneWidget);
+      expect(find.text(t.record.transferAction), findsWidgets);
+      expect(find.text('BCA'), findsWidgets);
+    });
+
+    testWidgets('hero memuat porsi saldo dan tombol mata menyembunyikan saldo', (tester) async {
+      await seedWallet('a', 'BCA', current: 100000000);
+      await seedWallet('b', 'GoPay', current: 100000000, icon: 'walletEwallet');
+      await openDetail(tester, 'BCA');
+      expect(find.byKey(const ValueKey('wallet-detail-share')), findsOneWidget);
+      expect(find.text(t.wallet.detailShare(percent: '50%')), findsOneWidget);
+      await tester.tap(find.byTooltip(t.home.hideAmounts));
+      await tester.pumpAndSettle();
+      expect(AmountVisibility.hidden, isTrue);
+      AmountVisibility.notifier.value = false;
+    });
 
     testWidgets('mengetuk transaksi terbaru membuka rincian transaksi', (
       tester,
@@ -338,10 +365,7 @@ void main() {
         );
         await openDetail(tester, 'BCA');
 
-        final cta = find.widgetWithText(
-          AppButton,
-          t.wallet.detailViewAllAction,
-        );
+        final cta = find.byKey(const ValueKey('wallet-detail-history'));
         await tester.ensureVisible(cta);
         await tester.tap(cta);
         await tester.pumpAndSettle();
@@ -367,7 +391,7 @@ void main() {
       await seedWallet('a', 'BCA', current: 100000000);
       await openDetail(tester, 'BCA');
 
-      final cta = find.widgetWithText(AppButton, t.wallet.detailRecordAction);
+      final cta = find.byKey(const ValueKey('wallet-detail-record'));
       await tester.ensureVisible(cta);
       await tester.tap(cta);
       await tester.pumpAndSettle();

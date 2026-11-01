@@ -304,6 +304,9 @@
     "detailRecentEmpty": "Belum ada transaksi bulan ini untuk dompet ini.",
     "detailViewAllAction": "Lihat semua transaksi",
     "detailRecordAction": "Catat transaksi",
+    "detailShare": "Porsi $percent dari total saldo",
+    "detailMonthHeading": "Ringkasan bulan ini",
+    "detailHistoryAction": "Riwayat",
     "detailTransferInLabel": "Transfer masuk",
     "detailTransferOutLabel": "Transfer keluar",
     "detailBalanceChangeLabel": "Perubahan saldo"

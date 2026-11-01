@@ -132,9 +132,7 @@ void main() {
     await tester.ensureVisible(card.first);
     await tester.tap(card.first);
     await tester.pumpAndSettle();
-    await tester.tap(
-      find.byWidgetPredicate((w) => w is AppIcon && w.iconKey == IconKey.edit),
-    );
+    await tester.tap(find.byTooltip(t.wallet.detailEditAction));
     await tester.pumpAndSettle();
   }
 

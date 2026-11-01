@@ -748,6 +748,15 @@ class Translations$wallet$id {
 	/// id: 'Catat transaksi'
 	String get detailRecordAction => 'Catat transaksi';
 
+	/// id: 'Porsi $percent dari total saldo'
+	String detailShare({required Object percent}) => 'Porsi ${percent} dari total saldo';
+
+	/// id: 'Ringkasan bulan ini'
+	String get detailMonthHeading => 'Ringkasan bulan ini';
+
+	/// id: 'Riwayat'
+	String get detailHistoryAction => 'Riwayat';
+
 	/// id: 'Transfer masuk'
 	String get detailTransferInLabel => 'Transfer masuk';
 
@@ -5923,6 +5932,9 @@ extension on Translations {
 			'wallet.detailRecentEmpty' => 'Belum ada transaksi bulan ini untuk dompet ini.',
 			'wallet.detailViewAllAction' => 'Lihat semua transaksi',
 			'wallet.detailRecordAction' => 'Catat transaksi',
+			'wallet.detailShare' => ({required Object percent}) => 'Porsi ${percent} dari total saldo',
+			'wallet.detailMonthHeading' => 'Ringkasan bulan ini',
+			'wallet.detailHistoryAction' => 'Riwayat',
 			'wallet.detailTransferInLabel' => 'Transfer masuk',
 			'wallet.detailTransferOutLabel' => 'Transfer keluar',
 			'wallet.detailBalanceChangeLabel' => 'Perubahan saldo',
@@ -6151,11 +6163,11 @@ extension on Translations {
 			'budget.templateAddTitle' => 'Buat template',
 			'budget.templateEditTitle' => 'Ubah template',
 			'budget.templateRuleBody' => 'Template menyimpan susunan pos rencanamu. Dompet dan periodenya dipilih saat template dipakai.',
+			_ => null,
+		} ?? switch (path) {
 			'budget.templateNameHint' => 'Contoh: Belanja bulanan',
 			'budget.templateEnabledLabel' => 'Tawarkan template ini',
 			'budget.templateEnabledHelp' => 'Template nonaktif tetap tersimpan, tapi tidak bisa dipakai membuat anggaran.',
-			_ => null,
-		} ?? switch (path) {
 			'budget.templateSaveAction' => 'Simpan template',
 			'budget.templateDeleteAction' => 'Hapus template',
 			'budget.templateDeleteConfirmTitle' => 'Hapus template?',
@@ -6665,11 +6677,11 @@ extension on Translations {
 			'notificationCapture.accessMissingBody' => 'Tanpa izin ini, Tanukonomy tidak bisa melihat notifikasi bank.',
 			'notificationCapture.accessAction' => 'Beri izin',
 			'notificationCapture.accessGranted' => 'Izin notifikasi aktif',
+			_ => null,
+		} ?? switch (path) {
 			'notificationCapture.disclosureTitle' => 'Sebelum memberi izin',
 			'notificationCapture.disclosureBody' => 'Tanukonomy akan bisa membaca notifikasi di ponselmu.\n\n• Hanya dari aplikasi yang kamu pilih dan cocok dengan filternya.\n• Notifikasi OTP tidak pernah disimpan.\n• Teks yang sulit dibaca bisa dikirim ke Gemini (Google).\n• Teks notifikasi disimpan di ponselmu paling lama 7 hari.',
 			'notificationCapture.disclosureAccept' => 'Lanjut',
-			_ => null,
-		} ?? switch (path) {
 			'notificationCapture.reminderPermissionDenied' => 'Izin notifikasi ditolak. Nyalakan di setelan Android untuk menerima pengingat.',
 			'notificationCapture.sourcesTitle' => 'Aplikasi',
 			'notificationCapture.sourcesEmpty' => 'Pilih aplikasi bank atau e-wallet yang notifikasinya mau dicatat.',

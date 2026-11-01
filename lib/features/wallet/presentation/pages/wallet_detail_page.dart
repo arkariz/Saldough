@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:saldough/core/currency/currency.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/record/presentation/navigation/record_route_keys.dart';
 import 'package:saldough/features/transaction/presentation/navigation/transaction_route_keys.dart';
@@ -10,6 +12,7 @@ import 'package:saldough/features/wallet/presentation/bloc/wallet_activity_bloc.
 import 'package:saldough/features/wallet/presentation/bloc/wallet_activity_state.dart';
 import 'package:saldough/features/wallet/presentation/bloc/wallet_bloc.dart';
 import 'package:saldough/features/wallet/presentation/bloc/wallet_state.dart';
+import 'package:saldough/features/wallet/presentation/wallet_shares.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_form_sheet.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_type.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
@@ -87,6 +90,12 @@ class WalletDetailPage extends StatelessWidget {
     }
   }
 
+  /// Catat Transfer dengan dompet ini sebagai asal (aturan 8: lewat CATAT).
+  Future<void> _recordTransfer(BuildContext context) => context.pushRoute(
+    RecordRouteKeys.sheet,
+    RecordSheetInput(initialWalletId: wallet.id, initialChoice: RecordChoice.transfer),
+  );
+
   /// Riwayat tersaring dompet ini, terpisah dari tab Riwayat: penyaringnya
   /// tidak lagi terbawa ke tab itu (ADR-030 §3.3).
   Future<void> _viewAllTransactions(BuildContext context, String walletId) =>
@@ -98,24 +107,28 @@ class WalletDetailPage extends StatelessWidget {
       body: SafeArea(
         child: BlocBuilder<WalletBloc, WalletState>(
           builder: (context, walletState) {
-            final current = walletState.wallets.firstWhere(
-              (w) => w.id == wallet.id,
-              orElse: () => wallet,
-            );
+            final current = walletState.wallets.firstWhere((w) => w.id == wallet.id, orElse: () => wallet);
+            final share = walletShares(walletState.activeWallets)[current.id];
             return ListView(
-              padding: const EdgeInsets.all(AppSpacing.space4),
+              padding: const EdgeInsets.all(DsSpacing.md),
               children: [
                 _TopBar(onEdit: () => _edit(context, current)),
-                const SizedBox(height: AppSpacing.space4),
-                _HeroCard(wallet: current),
-                const SizedBox(height: AppSpacing.space4),
-                AppButton(
-                  label: t.wallet.detailRecordAction,
-                  onPressed: () => _record(context),
+                const SizedBox(height: DsSpacing.sm),
+                BlocBuilder<WalletActivityBloc, WalletActivityState>(
+                  buildWhen: (a, b) => a.transactions != b.transactions || a.isLoading != b.isLoading,
+                  builder: (context, activity) => _Hero(
+                    wallet: current,
+                    shareText: current.isActive ? share?.text : null,
+                    totals: activity.isLoading ? null : _MonthTotals.of(activity.transactions, current.id),
+                  ),
                 ),
-                const SizedBox(height: AppSpacing.space6),
-                AppSectionLabel(t.wallet.detailRecentHeading),
-                const SizedBox(height: AppSpacing.space1),
+                const SizedBox(height: DsSpacing.stack),
+                _QuickActions(
+                  onRecord: () => _record(context),
+                  onTransfer: () => _recordTransfer(context),
+                  onHistory: () => _viewAllTransactions(context, current.id),
+                ),
+                const SizedBox(height: DsSpacing.lg),
                 BlocBuilder<WalletActivityBloc, WalletActivityState>(
                   builder: (context, activity) {
                     // Kerangka, bukan ruang kosong: kosong terbaca seperti
@@ -124,32 +137,34 @@ class WalletDetailPage extends StatelessWidget {
                       return Column(
                         children: [
                           for (var i = 0; i < 3; i++) ...[
-                            if (i > 0) const SizedBox(height: AppSpacing.space2),
-                            const AppSkeleton(height: 64),
+                            if (i > 0) const SizedBox(height: DsSpacing.sm),
+                            const DsSkeleton(height: 64, radius: DsRadius.lgAll),
                           ],
                         ],
                       );
                     }
                     final touched = activity.transactions;
-                    final recent = touched;
-                    final walletsById = {
-                      for (final w in walletState.wallets) w.id: w,
-                    };
+                    final walletsById = {for (final w in walletState.wallets) w.id: w};
+                    final totals = _MonthTotals.of(touched, current.id);
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        _MonthSummaryRow(
-                          transactions: touched,
-                          walletId: current.id,
+                        _MonthSummary(totals: totals),
+                        const SizedBox(height: DsSpacing.lg),
+                        DsSectionHeader(
+                          title: t.wallet.detailRecentHeading,
+                          icon: Icons.receipt_long,
+                          actionLabel: touched.length > 5 ? t.wallet.detailViewAllAction : null,
+                          onAction: touched.length > 5 ? () => _viewAllTransactions(context, current.id) : null,
                         ),
-                        const SizedBox(height: AppSpacing.space4),
-                        if (recent.isEmpty)
+                        const SizedBox(height: DsSpacing.sm),
+                        if (touched.isEmpty)
                           const _EmptyRecentTransactions()
                         else
-                          AppListCard(
+                          DsListCard(
                             children: [
-                              for (final transaction in recent.take(5))
-                                TransactionRow(
+                              for (final transaction in touched.take(5))
+                                TransactionLedgerRow(
                                   transaction: transaction,
                                   walletsById: walletsById,
                                   onTap: () => context.pushRoute(
@@ -162,11 +177,6 @@ class WalletDetailPage extends StatelessWidget {
                       ],
                     );
                   },
-                ),
-                const SizedBox(height: AppSpacing.space4),
-                AppButton.secondary(
-                  label: t.wallet.detailViewAllAction,
-                  onPressed: () => _viewAllTransactions(context, current.id),
                 ),
               ],
             );

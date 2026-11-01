@@ -304,6 +304,9 @@
     "detailRecentEmpty": "No transactions this month for this wallet yet.",
     "detailViewAllAction": "View all transactions",
     "detailRecordAction": "Record transaction",
+    "detailShare": "$percent of total balance",
+    "detailMonthHeading": "This month",
+    "detailHistoryAction": "History",
     "detailTransferInLabel": "Transfers in",
     "detailTransferOutLabel": "Transfers out",
     "detailBalanceChangeLabel": "Balance change"

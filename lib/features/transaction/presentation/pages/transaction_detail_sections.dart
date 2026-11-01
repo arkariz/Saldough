@@ -2,14 +2,10 @@ part of 'transaction_detail_page.dart';
 
 // Bagian layar rincian transaksi (dipecah dari `transaction_detail_page.dart`, ADR-030 A9).
 
-/// Bilah atas: kembali di kiri, ubah dan hapus (ikon) di kanan. Tanpa
-/// [onEdit]/[onDelete], hanya tombol kembali (transaksi milik pembayaran
-/// freelance).
+/// Bilah atas: hanya tombol kembali. Ubah dan hapus ada di tombol bawah
+/// layar, jadi tidak diulang di sini.
 class _TopBar extends StatelessWidget {
-  const _TopBar({this.onEdit, this.onDelete});
-
-  final VoidCallback? onEdit;
-  final VoidCallback? onDelete;
+  const _TopBar();
 
   @override
   Widget build(BuildContext context) {
@@ -22,13 +18,6 @@ class _TopBar extends StatelessWidget {
             label: t.transaction.detailBackLabel,
             onPressed: () => Navigator.of(context).maybePop(),
           ),
-          const Spacer(),
-          if (onEdit case final onEdit?)
-            DsIconButton(icon: Icons.edit_outlined, label: t.transaction.editAction, onPressed: onEdit),
-          if (onDelete case final onDelete?) ...[
-            const SizedBox(width: 8),
-            DsIconButton(icon: Icons.delete_outline, label: t.transaction.deleteAction, onPressed: onDelete),
-          ],
         ],
       ),
     );

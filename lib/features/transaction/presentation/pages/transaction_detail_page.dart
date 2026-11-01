@@ -147,10 +147,7 @@ class TransactionDetailPage extends StatelessWidget {
             return ListView(
               padding: const EdgeInsets.all(16),
               children: [
-                if (ownedByFreelance)
-                  const _TopBar()
-                else
-                  _TopBar(onEdit: () => _edit(context, state), onDelete: () => _delete(context)),
+                const _TopBar(),
                 const SizedBox(height: 16),
                 _HeroCard(transaction: transaction),
                 const SizedBox(height: 16),

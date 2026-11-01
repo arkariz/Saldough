@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:saldough/core/currency/amount_visibility.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/foundation/entitlement/entitlement.dart';
@@ -87,14 +89,26 @@ class AnalysisView extends StatelessWidget {
       return [
         Padding(
           padding: const EdgeInsets.only(top: AppSpacing.space8),
-          child: AppEmptyState(
-            art: EmptyArt.history,
-            title: t.analysis.empty.title,
-            body: t.analysis.empty.body,
-            actionLabel: t.analysis.empty.cta,
-            onAction: () => context.pushRoute(
-              RecordRouteKeys.sheet,
-              const RecordSheetInput(),
+          child: DsCard(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              children: [
+                DsIconTile.asset(asset: ClayIcons.emptyTray, size: DsIconTileSize.lg),
+                const SizedBox(height: 12),
+                Text(t.analysis.empty.title, textAlign: TextAlign.center, style: context.ds.typography.titleMd),
+                const SizedBox(height: 4),
+                Text(
+                  t.analysis.empty.body,
+                  textAlign: TextAlign.center,
+                  style: context.ds.typography.bodySm.copyWith(color: context.ds.colors.textMuted),
+                ),
+                const SizedBox(height: 16),
+                DsButton(
+                  label: t.analysis.empty.cta,
+                  icon: Icons.add,
+                  onPressed: () => context.pushRoute(RecordRouteKeys.sheet, const RecordSheetInput()),
+                ),
+              ],
             ),
           ),
         ),
@@ -102,9 +116,11 @@ class AnalysisView extends StatelessWidget {
     }
     final period = state.period;
     final summary = state.summary;
-    final stepper = AppPeriodStepper(
+    final stepper = DsPeriodStepper(
       title: period.label,
-      transitionDays: period.isTransition ? period.days : null,
+      tag: period.isTransition ? t.plan.transitionLabel(days: period.days) : null,
+      previousLabel: t.analysis.previousPeriod,
+      nextLabel: t.analysis.nextPeriod,
       onPrevious: state.canGoBack ? () => bloc.add(const AnalysisPeriodStepped(forward: false)) : null,
       onNext: state.isCurrent ? null : () => bloc.add(const AnalysisPeriodStepped(forward: true)),
     );
@@ -129,15 +145,13 @@ class AnalysisView extends StatelessWidget {
       _Controls(state: state),
       const SizedBox(height: AppSpacing.space4),
       if (summary == null || summary.isEmpty)
-        AppCard(
+        DsCard(
           key: const ValueKey('analysis-none'),
           child: Text(
             state.kind == CategoryKind.income
                 ? t.analysis.emptyMonthIncome(period: period.name)
                 : t.analysis.emptyMonth(period: period.name),
-            style: Theme.of(
-              context,
-            ).textTheme.bodyLarge?.copyWith(color: context.appColors.ink2),
+            style: context.ds.typography.bodyMd.copyWith(color: context.ds.colors.textSecondary),
           ),
         )
       else
@@ -145,7 +159,7 @@ class AnalysisView extends StatelessWidget {
       // Transfer tetap informasi walau jenis ini kosong (B-4, F7): mis. dompet
       // Tabungan yang hanya menerima transfer.
       if (summary != null && summary.isEmpty && summary.transfers.hasAny)
-        AppCard(
+        DsCard(
           key: const ValueKey('analysis-transfers-only'),
           padding: EdgeInsets.zero,
           child: _TransferFoot(info: summary.transfers),
@@ -217,38 +231,44 @@ class _Controls extends StatelessWidget {
         Semantics(
           container: true,
           label: t.analysis.kindLabel,
-          child: AppSegmentedControl<CategoryKind>(
+          child: DsSegmentedPill<CategoryKind>(
             key: const ValueKey('analysis-kind'),
-            options: [
-              (CategoryKind.expense, t.analysis.kind.expense),
-              (CategoryKind.income, t.analysis.kind.income),
+            segments: [
+              DsSegment(value: CategoryKind.expense, label: t.analysis.kind.expense),
+              DsSegment(value: CategoryKind.income, label: t.analysis.kind.income),
             ],
             selected: state.kind,
             onChanged: (kind) => bloc.add(AnalysisKindChanged(kind)),
           ),
         ),
         if (wallets.length > 1)
-          Align(
-            alignment: AlignmentDirectional.centerStart,
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 240),
-              child: AppMenuSelectButton<String>(
+          DsFieldGroup(
+            children: [
+              DsSelectRow<String>(
                 key: const ValueKey('analysis-wallet'),
-                icon: selected == null ? IconKey.wallets : walletIconKey(selected.iconKey),
-                label: selected?.name ?? t.analysis.allWallets,
+                icon: Icons.account_balance_wallet_outlined,
+                leading: selected == null
+                    ? null
+                    : DsIconTile.asset(
+                        asset: ClayIcons.forIcon(walletIconKey(selected.iconKey)) ?? ClayIcons.walletNav,
+                        size: DsIconTileSize.sm,
+                      ),
+                label: t.transaction.walletFilterLabel,
+                title: selected?.name ?? t.analysis.allWallets,
+                allLabel: t.analysis.allWallets,
                 options: [
                   for (final wallet in wallets)
-                    (
+                    DsMenuOption(
                       value: wallet.id,
                       label: wallet.name,
-                      icon: walletIconKey(wallet.iconKey),
+                      leading: SvgPicture.asset(
+                        ClayIcons.forIcon(walletIconKey(wallet.iconKey)) ?? ClayIcons.walletNav,
+                      ),
                     ),
                 ],
-                allLabel: t.analysis.allWallets,
-                allIcon: IconKey.wallets,
                 onSelected: (id) => bloc.add(AnalysisWalletChanged(id)),
               ),
-            ),
+            ],
           ),
       ],
     );
@@ -353,7 +373,7 @@ class _AnalysisCard extends StatelessWidget {
       return SpotlightTarget(spotlightKey: tourKey, child: widget);
     }
 
-    return AppCard(
+    return DsCard(
       key: const ValueKey('analysis-card'),
       padding: EdgeInsets.zero,
       child: Column(
@@ -362,6 +382,8 @@ class _AnalysisCard extends StatelessWidget {
           const SizedBox(height: AppSpacing.space4),
           Center(
             child: AppDonutChart(
+              rounded: true,
+              trackColor: context.ds.colors.surfaceContainerHigh,
               slices: [
                 for (final g in groups)
                   DonutSlice(
@@ -399,12 +421,11 @@ class _AnalysisCard extends StatelessWidget {
               (selected.kind == AnalysisGroupKind.category || selected.kind == AnalysisGroupKind.freelance)) ...[
             const SizedBox(height: AppSpacing.space2),
             Center(
-              child: AppButton.secondary(
+              child: DsButton.secondary(
                 key: const ValueKey('analysis-detail'),
                 label: t.analysis.category.seeCategory(
                   category: _groupName(selected),
                 ),
-                small: true,
                 onPressed: () => _openDetail(context, state, selected, from: 'link'),
               ),
             ),
@@ -412,10 +433,9 @@ class _AnalysisCard extends StatelessWidget {
           if (selected?.kind == AnalysisGroupKind.uncategorized) ...[
             const SizedBox(height: AppSpacing.space2),
             Center(
-              child: AppButton.secondary(
+              child: DsButton.secondary(
                 key: const ValueKey('analysis-fix'),
                 label: t.analysis.fix,
-                small: true,
                 onPressed: () {
                   AppAnalytics.log(AnalysisEvents.uncategorizedFixOpened);
                   unawaited(
@@ -481,14 +501,14 @@ class _Highlights extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (highlights.isEmpty) return const SizedBox.shrink();
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
+    final ds = context.ds;
+    final c = ds.colors;
     final label = compareLabel(comparison);
     return Container(
       key: const ValueKey('analysis-highlights'),
-      margin: const EdgeInsets.only(top: AppSpacing.space2),
+      margin: const EdgeInsets.only(top: 8),
       decoration: BoxDecoration(
-        border: Border(top: BorderSide(color: colors.line)),
+        border: Border(top: BorderSide(color: c.outlineSubtle)),
       ),
       child: Column(
         children: [
@@ -496,31 +516,36 @@ class _Highlights extends StatelessWidget {
             InkWell(
               key: ValueKey('analysis-highlight-${highlight.group.key}'),
               onTap: () => onOpen(highlight.group),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.space4,
-                  vertical: AppSpacing.space2,
-                ),
-                child: Row(
-                  children: [
-                    AppIconTile(
-                      highlight.group.category == null ? IconKey.freelance : categoryIcon(highlight.group.category!),
-                    ),
-                    const SizedBox(width: AppSpacing.space3),
-                    Expanded(
-                      child: Text(
-                        _highlightText(highlight, label),
-                        style: textTheme.bodyLarge,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(minHeight: 56),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: Row(
+                    children: [
+                      _highlightIcon(highlight.group),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          _highlightText(highlight, label),
+                          style: ds.typography.bodyMd.copyWith(color: c.textPrimary),
+                        ),
                       ),
-                    ),
-                    AppIcon(IconKey.chevronRight, color: colors.ink3),
-                  ],
+                      Icon(Icons.chevron_right, size: 20, color: c.textMuted),
+                    ],
+                  ),
                 ),
               ),
             ),
         ],
       ),
     );
+  }
+
+  /// Ikon clay kategori sorotan; ikon piksel lama di tile datar bila belum digambar.
+  Widget _highlightIcon(AnalysisGroup group) {
+    final key = group.category == null ? IconKey.freelance : categoryIcon(group.category!);
+    final clay = ClayIcons.forIcon(key);
+    return clay != null ? DsIconTile.asset(asset: clay) : AppIconTile(key);
   }
 
   /// "Makan Rp295.000 lebih tinggi dari rata-rata 3 bulan". Saat nominal
@@ -555,8 +580,8 @@ class _DonutCenter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
+    final ds = context.ds;
+    final muted = ds.typography.bodySm.copyWith(color: ds.colors.textSecondary);
     final group = selected;
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -566,24 +591,17 @@ class _DonutCenter extends StatelessWidget {
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
           textAlign: TextAlign.center,
-          style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
+          style: muted,
         ),
         FittedBox(
           fit: BoxFit.scaleDown,
-          child: AppMoneyText(
-            group?.amount ?? total,
-            size: MoneySize.large,
-            color: color,
-          ),
+          child: AppMoneyText(group?.amount ?? total, size: MoneySize.large, color: color),
         ),
         if (group != null)
           Text(
-            t.analysis.shareOf(
-              percent: _shareText(group.share),
-              kind: lowerKind,
-            ),
+            t.analysis.shareOf(percent: _shareText(group.share), kind: lowerKind),
             textAlign: TextAlign.center,
-            style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
+            style: muted,
           ),
       ],
     );
@@ -599,30 +617,24 @@ class _TransferFoot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
+    final ds = context.ds;
+    final c = ds.colors;
     Widget line({required String title, required int sen, String? sub}) => Row(
       children: [
-        AppIconTile(IconKey.transfer, background: colors.surface),
-        const SizedBox(width: AppSpacing.space3),
+        DsIconTile.asset(asset: ClayIcons.transfer, size: DsIconTileSize.sm),
+        const SizedBox(width: 12),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
-                crossAxisAlignment: CrossAxisAlignment.baseline,
-                textBaseline: TextBaseline.alphabetic,
                 children: [
-                  Expanded(child: Text(title, style: textTheme.titleSmall)),
-                  const SizedBox(width: AppSpacing.space2),
-                  AppMoneyText(sen, size: MoneySize.small, color: colors.ink2),
+                  Expanded(child: Text(title, style: ds.typography.titleMd.copyWith(fontSize: 14))),
+                  const SizedBox(width: 8),
+                  AppMoneyText(sen, size: MoneySize.small, color: c.textSecondary),
                 ],
               ),
-              if (sub != null)
-                Text(
-                  sub,
-                  style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
-                ),
+              if (sub != null) Text(sub, style: ds.typography.bodySm.copyWith(color: c.textSecondary)),
             ],
           ),
         ),
@@ -630,24 +642,17 @@ class _TransferFoot extends StatelessWidget {
     );
     return Container(
       key: const ValueKey('analysis-transfers'),
-      color: colors.surface2,
-      margin: const EdgeInsets.only(top: AppSpacing.space2),
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.space4,
-        vertical: AppSpacing.space3,
-      ),
+      margin: const EdgeInsets.fromLTRB(12, 8, 12, 12),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(color: c.surfaceSunken, borderRadius: DsRadius.mdAll),
       child: Column(
-        spacing: AppSpacing.space3,
+        spacing: 12,
         children: [
           if (info.perWallet) ...[
             line(title: t.analysis.transferIn, sen: info.incoming),
             line(title: t.analysis.transferOut, sen: info.outgoing),
           ] else
-            line(
-              title: t.analysis.transferTitle,
-              sen: info.total,
-              sub: t.analysis.transferSub,
-            ),
+            line(title: t.analysis.transferTitle, sen: info.total, sub: t.analysis.transferSub),
         ],
       ),
     );
@@ -660,16 +665,15 @@ class _Loading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Padding(
-      padding: EdgeInsets.only(top: AppSpacing.space2),
+      padding: EdgeInsets.only(top: 8),
       child: Column(
         key: ValueKey('analysis-loading'),
-        spacing: AppSpacing.space4,
+        spacing: 16,
         children: [
-          AppSkeleton(height: 28, width: 160),
-          AppSkeleton(height: 48),
-          AppSkeleton(height: 36, width: 140),
-          AppSkeleton(height: 116),
-          AppSkeleton(height: 272),
+          DsSkeleton(height: 52, radius: DsRadius.fullAll),
+          DsSkeleton(height: 44, radius: DsRadius.fullAll),
+          DsSkeleton(height: 272, radius: DsRadius.lgAll),
+          DsSkeleton(height: 116, radius: DsRadius.lgAll),
         ],
       ),
     );
@@ -681,20 +685,18 @@ class _LoadError extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
+    final ds = context.ds;
     return Padding(
       key: const ValueKey('analysis-error'),
       padding: const EdgeInsets.only(top: 120),
       child: Column(
         children: [
-          AppIcon(IconKey.error, size: 32, color: colors.ink2),
-          const SizedBox(height: AppSpacing.space2),
+          Icon(Icons.error_outline, size: 32, color: ds.colors.textSecondary),
+          const SizedBox(height: 8),
           Text(
             t.analysis.error,
             textAlign: TextAlign.center,
-            style: Theme.of(
-              context,
-            ).textTheme.bodyMedium?.copyWith(color: colors.ink2),
+            style: ds.typography.bodyMd.copyWith(color: ds.colors.textSecondary),
           ),
         ],
       ),

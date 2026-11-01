@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/presentation/widgets/app_icon.dart';
 import 'package:saldough/core/presentation/widgets/app_money_text.dart';
 import 'package:saldough/core/theme/theme.dart';
@@ -64,11 +65,14 @@ class AppLegendRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ds = context.ds;
     final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
     final nameStyle = child
-        ? textTheme.bodyMedium?.copyWith(color: colors.ink2)
-        : textTheme.bodyLarge?.copyWith(fontWeight: selected ? FontWeight.w700 : FontWeight.w500);
+        ? ds.typography.bodySm.copyWith(color: ds.colors.textSecondary)
+        : ds.typography.bodyMd.copyWith(
+            color: ds.colors.textPrimary,
+            fontWeight: selected ? FontWeight.w700 : FontWeight.w600,
+          );
     final row = Padding(
       padding: EdgeInsets.fromLTRB(child ? 36 : AppSpacing.space4, AppSpacing.space2, AppSpacing.space4, AppSpacing.space2),
       // Nominal paling lebar 45% baris; yang lebih panjang (teks 200%) mengecil
@@ -77,7 +81,10 @@ class AppLegendRow extends StatelessWidget {
         builder: (context, constraints) => Row(
         children: [
           if (swatch case final color?) ...[
-            SizedBox.square(dimension: 10, child: ColoredBox(color: color)),
+            SizedBox.square(
+              dimension: 10,
+              child: DecoratedBox(decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
+            ),
             const SizedBox(width: 10),
           ],
           Expanded(
@@ -104,7 +111,10 @@ class AppLegendRow extends StatelessWidget {
             child: Text(
               percent,
               textAlign: TextAlign.right,
-              style: textTheme.labelLarge?.copyWith(color: colors.ink2, fontFeatures: const [FontFeature.tabularFigures()]),
+              style: ds.typography.labelMd.copyWith(
+                color: ds.colors.textSecondary,
+                fontFeatures: const [FontFeature.tabularFigures()],
+              ),
             ),
           ),
           const SizedBox(width: 10),
@@ -131,9 +141,9 @@ class AppLegendRow extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          if (showDivider) Padding(padding: const EdgeInsets.only(left: 36), child: Divider(height: 1, thickness: 1, color: colors.line)),
+          if (showDivider) Padding(padding: const EdgeInsets.only(left: 36), child: Divider(height: 1, thickness: 1, color: ds.colors.outlineSubtle)),
           Material(
-            color: selected ? colors.surface2 : Colors.transparent,
+            color: selected ? ds.colors.actionPrimary.withValues(alpha: 0.08) : Colors.transparent,
             child: InkWell(
               onTap: onTap,
               child: ConstrainedBox(constraints: BoxConstraints(minHeight: child ? 44 : 48), child: row),

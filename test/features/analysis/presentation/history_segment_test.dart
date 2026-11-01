@@ -8,7 +8,6 @@ import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
-import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/budget/data/repositories/budget_repository_impl.dart';
 import 'package:saldough/features/budget/domain/repositories/budget_repository.dart';
@@ -211,7 +210,7 @@ void main() {
         await tester.tap(segment('Analisis'));
         await tester.pumpAndSettle();
         expect(
-          find.descendant(of: find.byType(AppPeriodStepper), matching: find.text(labelOf(previous))),
+          find.descendant(of: find.byType(DsPeriodStepper), matching: find.text(labelOf(previous))),
           findsOneWidget,
         );
         expect(find.text('Rp30.000'), findsWidgets, reason: 'total Analisis periode lalu');

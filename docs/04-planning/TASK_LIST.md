@@ -6041,6 +6041,16 @@ memilih mode (dan preset bila ≥ 2), dan design system lama dihapus.
       cari/tune di app bar tidak dibuat (sudah ada di badan layar). Isi
       segmen Analisis (acuan: Kakeibo 4 pilar, "Daun Emas") **belum**
       dirombak dan tetap lewat jembatan; acuannya memuat angka karangan.
+      **Riwayat v2, segmen Analisis (1 Nov 2026):** pemilih periode,
+      pil jenis (Pengeluaran | Pemasukan), pilihan dompet (`DsSelectRow`),
+      kartu donat bulat dengan legenda bulat (`AppLegendRow` dipasang v2),
+      pembanding, sorotan, kaki transfer, dan kartu Tren memakai komponen
+      v2 tanpa mengubah perilaku, kunci, atau uji. Grafik batang Tren
+      (`AppTrendChart`) masih gambar lama. Dari acuan Stitch **tidak**
+      dibuat: Bisikan Tanuki ("3 Daun Emas"), Kakeibo 4 pilar dan "Target
+      Seimbang" (tidak ada di domain), tren 4 minggu Mei vs April (domain
+      punya tren enam periode), Rata-rata harian, dan "Simulasi Anggaran
+      Juni" (karangan).
       **Ikon clay dilengkapi (31 Okt 2026, KT-DS5):** 33 ikon baru untuk
       dompet, jenis transaksi, kategori, dan status Freelance; semua
       `IconKey` benda kini punya clay (`ClayIcons.forIcon`). Digambar dari

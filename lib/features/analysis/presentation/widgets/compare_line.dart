@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
-import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/analysis/domain/period_comparison.dart';
@@ -46,21 +46,22 @@ class CompareLine extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
+    final ds = context.ds;
+    final c = ds.colors;
     if (isGroup && result.isNew && !isUncategorized) {
       return Padding(
         padding: const EdgeInsets.only(top: AppSpacing.space2),
         child: Center(
-          child: AppBadge(
-            t.analysis.compare.newThisMonth,
+          child: DsBadge(
+            label: t.analysis.compare.newThisMonth,
+            tone: DsBadgeTone.neutral,
             key: const ValueKey('analysis-new'),
           ),
         ),
       );
     }
     if (!result.hasBaseline) return const SizedBox.shrink();
-    final style = textTheme.bodyMedium?.copyWith(color: colors.ink2);
+    final style = ds.typography.bodySm.copyWith(color: c.textSecondary);
     final amount = AppMoneyFormatter.format(result.difference);
     final label = t.analysis.compare.vs(label: this.label);
     return Padding(
@@ -84,10 +85,10 @@ class CompareLine extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.only(top: 2),
-              child: AppIcon(
-                result.isHigher ? IconKey.arrowUp : IconKey.arrowDown,
+              child: Icon(
+                result.isHigher ? Icons.arrow_upward : Icons.arrow_downward,
                 size: 16,
-                color: colors.ink2,
+                color: c.textSecondary,
               ),
             ),
             const SizedBox(width: AppSpacing.space1),
@@ -97,10 +98,7 @@ class CompareLine extends StatelessWidget {
                   children: [
                     TextSpan(
                       text: amount,
-                      style: style?.copyWith(
-                        color: colors.ink,
-                        fontWeight: FontWeight.w600,
-                      ),
+                      style: style.copyWith(color: c.textPrimary, fontWeight: FontWeight.w600),
                     ),
                     TextSpan(text: ' $label'),
                   ],

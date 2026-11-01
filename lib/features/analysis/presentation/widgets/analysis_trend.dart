@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:saldough/core/currency/amount_visibility.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
@@ -44,8 +45,8 @@ class AnalysisTrendSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final trend = state.trend;
     if (trend.length < 2) return const SizedBox.shrink();
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
+    final ds = context.ds;
+    final c = ds.colors;
     final bloc = context.read<AnalysisBloc>();
     final selected = state.trendIndex;
     final point = trend[selected];
@@ -85,14 +86,15 @@ class AnalysisTrendSection extends StatelessWidget {
       key: const ValueKey('analysis-trend'),
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const SizedBox(height: AppSpacing.space4),
-        AppSectionHeader(t.analysis.trend.title),
+        const SizedBox(height: 16),
+        DsSectionHeader(title: t.analysis.trend.title),
+        const SizedBox(height: 8),
         SpotlightTarget(
           spotlightKey: SpotlightKey.analysisTrend,
-          child: AppCard(
+          child: DsCard(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              spacing: AppSpacing.space3,
+              spacing: 12,
               children: [
                 ExcludeSemantics(
                   child: Wrap(
@@ -100,11 +102,11 @@ class AnalysisTrendSection extends StatelessWidget {
                     runSpacing: AppSpacing.space1,
                     children: [
                       _LegendSwatch(
-                        color: colors.positive,
+                        color: c.income,
                         label: t.analysis.trend.income,
                       ),
                       _LegendSwatch(
-                        color: colors.ink,
+                        color: c.error,
                         label: t.analysis.trend.expense,
                       ),
                     ],
@@ -118,20 +120,17 @@ class AnalysisTrendSection extends StatelessWidget {
                 ),
                 Container(
                   key: const ValueKey('analysis-readout'),
-                  color: colors.surface2,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.space3,
-                    vertical: 10,
-                  ),
+                  decoration: BoxDecoration(color: c.surfaceSunken, borderRadius: DsRadius.mdAll),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
-                    spacing: AppSpacing.space1,
+                    spacing: 4,
                     children: [
-                      Text(readoutTitle, style: textTheme.labelLarge),
+                      Text(readoutTitle, style: ds.typography.labelMd.copyWith(color: c.textPrimary)),
                       _ReadoutRow(
                         label: t.analysis.trend.income,
                         text: '${_sign(point.income)}${AppMoneyFormatter.format(point.income)}',
-                        color: colors.positive,
+                        color: c.income,
                       ),
                       _ReadoutRow(
                         label: t.analysis.trend.expense,
@@ -148,16 +147,12 @@ class AnalysisTrendSection extends StatelessWidget {
                       if (!isViewed)
                         Align(
                           alignment: AlignmentDirectional.centerStart,
-                          child: TextButton(
+                          child: DsButton.ghost(
                             key: const ValueKey('analysis-trend-jump'),
                             onPressed: () => bloc.add(
                               AnalysisPeriodJumped(point.period.start),
                             ),
-                            child: Text(
-                              t.analysis.trend.seePeriod(
-                                period: point.period.name,
-                              ),
-                            ),
+                            label: t.analysis.trend.seePeriod(period: point.period.name),
                           ),
                         ),
                     ],
@@ -184,12 +179,10 @@ class _LegendSwatch extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       spacing: AppSpacing.space1,
       children: [
-        Container(width: 10, height: 10, color: color),
+        Container(width: 10, height: 10, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
         Text(
           label,
-          style: Theme.of(
-            context,
-          ).textTheme.bodyMedium?.copyWith(color: context.appColors.ink2),
+          style: context.ds.typography.bodySm.copyWith(color: context.ds.colors.textSecondary),
         ),
       ],
     );
@@ -205,14 +198,10 @@ class _ReadoutRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          label,
-          style: textTheme.bodyMedium?.copyWith(color: context.appColors.ink2),
-        ),
+        Text(label, style: context.ds.typography.bodySm.copyWith(color: context.ds.colors.textSecondary)),
         const SizedBox(width: AppSpacing.space2),
         Flexible(
           child: FittedBox(

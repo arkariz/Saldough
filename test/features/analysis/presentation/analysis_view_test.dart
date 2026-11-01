@@ -7,6 +7,7 @@ import 'package:memory_storage/memory_storage.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:navigation/navigation.dart';
 import 'package:saldough/core/currency/currency.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/foundation/entitlement/entitlement.dart';
@@ -459,7 +460,7 @@ void main() {
         expect(find.text('Lihat analisis Juni'), findsOneWidget);
         expect(
           find.descendant(
-            of: find.byType(AppPeriodStepper),
+            of: find.byType(DsPeriodStepper),
             matching: find.text('September 2026'),
           ),
           findsOneWidget,
@@ -473,7 +474,7 @@ void main() {
         await tester.pumpAndSettle();
         expect(
           find.descendant(
-            of: find.byType(AppPeriodStepper),
+            of: find.byType(DsPeriodStepper),
             matching: find.text('Juni 2026'),
           ),
           findsOneWidget,
@@ -1080,7 +1081,7 @@ void main() {
         ]);
         await pump(tester);
         expect(
-          tester.widget<AppIconButton>(find.byKey(const ValueKey('period-next'))).onPressed,
+          tester.widget<DsIconButton>(find.byKey(const ValueKey('period-next'))).onPressed,
           isNull,
         );
         await tester.tap(find.byKey(const ValueKey('period-previous')));
@@ -1088,7 +1089,7 @@ void main() {
         expect(find.text('Agustus 2026'), findsOneWidget);
         expect(find.text('Rp700.000'), findsWidgets);
         expect(
-          tester.widget<AppIconButton>(find.byKey(const ValueKey('period-next'))).onPressed,
+          tester.widget<DsIconButton>(find.byKey(const ValueKey('period-next'))).onPressed,
           isNotNull,
         );
         await tester.tap(find.byKey(const ValueKey('period-next')));
@@ -1123,7 +1124,7 @@ void main() {
           findsOneWidget,
         );
         expect(
-          find.widgetWithText(AppButton, 'Catat transaksi'),
+          find.widgetWithText(DsButton, 'Catat transaksi'),
           findsOneWidget,
         );
       },
@@ -1149,7 +1150,7 @@ void main() {
           ),
           findsOneWidget,
         );
-        expect(find.byType(AppButton), findsNothing);
+        expect(find.byType(DsButton), findsNothing);
       },
     );
 
@@ -1166,7 +1167,7 @@ void main() {
         );
         await pump(tester, now: DateTime(2026, 10, 10, 9));
         expect(find.text('1\u00A0–\u00A024\u00A0Okt'), findsOneWidget);
-        expect(find.byType(AppPeriodTag), findsOneWidget);
+        expect(find.byKey(const ValueKey('period-transition-tag')), findsOneWidget);
         expect(find.text('Periode peralihan · 24 hari'), findsOneWidget);
       },
     );

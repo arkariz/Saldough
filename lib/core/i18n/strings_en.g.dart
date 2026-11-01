@@ -2229,6 +2229,7 @@ class _Translations$premium$paywall$en extends Translations$premium$paywall$id {
 	final TranslationsEn _root; // ignore: unused_field
 
 	// Translations
+	@override String get unlockedTitle => 'Now unlocked';
 	@override String get signInForTrial => 'Sign in to try Plus';
 	@override String get subscribedTitle => 'Plus is already on';
 	@override String subscribedBody({required Object date}) => 'Your subscription is active until ${date}.';
@@ -4035,6 +4036,7 @@ extension on TranslationsEn {
 			'premium.downgrade.ctaDeal' => 'Continue with Plus',
 			'premium.downgrade.ctaPlain' => 'See Plus',
 			'premium.downgrade.free' => 'Continue with Free',
+			'premium.paywall.unlockedTitle' => 'Now unlocked',
 			'premium.paywall.signInForTrial' => 'Sign in to try Plus',
 			'premium.paywall.subscribedTitle' => 'Plus is already on',
 			'premium.paywall.subscribedBody' => ({required Object date}) => 'Your subscription is active until ${date}.',

@@ -15,6 +15,7 @@ import 'package:saldough/features/premium/presentation/bloc/paywall_state.dart';
 import 'package:saldough/features/premium/presentation/navigation/premium_route_keys.dart';
 import 'package:saldough/features/premium/presentation/pages/paywall_message.dart';
 import 'package:saldough/features/premium/presentation/widgets/plan_card.dart';
+import 'package:saldough/features/premium/presentation/widgets/plus_celebration.dart';
 import 'package:saldough/features/premium/presentation/widgets/plus_subscription.dart';
 import 'package:saldough/features/premium/presentation/widgets/plus_tile.dart';
 import 'package:state_management/state_management.dart';
@@ -463,7 +464,8 @@ class _Actions extends StatelessWidget {
   }
 }
 
-/// Layar sesudah Plus aktif ("Plus aktif"): satu tombol Selesai. Tanggal
+/// Layar sesudah Plus aktif ("Plus aktif"): hero perayaan (koin membal,
+/// konfeti), daftar yang sekarang terbuka, dan tombol Selesai. Tanggal
 /// perpanjangan dibaca dari hak yang berlaku bila sudah tersalin.
 class _DonePage extends StatelessWidget {
   const _DonePage({required this.kind});
@@ -474,43 +476,43 @@ class _DonePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final texts = t.premium.paywall;
-    final ds = context.ds;
     final until = ActivePlan.state.isPlus ? _untilOf() : null;
+    final plan = kind == null ? null : (kind == PlusPlanKind.monthly ? texts.monthly : texts.yearly);
     return Scaffold(
       body: SafeArea(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const PlusTile(IconKey.plus, size: 88),
-                const SizedBox(height: 16),
-                Text(
-                  texts.doneTitle,
-                  textAlign: TextAlign.center,
-                  style: ds.typography.headlineMd.copyWith(fontSize: 22),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  until == null
-                      ? texts.doneBody
-                      : texts.doneBodyPlan(
-                          plan: kind == PlusPlanKind.monthly ? texts.monthly : texts.yearly,
-                          date: CycleMonthFormatter.formatDateShort(until),
-                        ),
-                  textAlign: TextAlign.center,
-                  style: ds.typography.bodyMd.copyWith(color: ds.colors.textSecondary),
-                ),
-                const SizedBox(height: 24),
-                DsButton(
-                  label: texts.done,
-                  expand: true,
-                  onPressed: () => Navigator.of(context).maybePop(),
-                ),
-              ],
-            ),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              PlusCelebrationHero(
+                celebrate: true,
+                title: texts.doneTitle,
+                body: until == null || plan == null
+                    ? texts.doneBody
+                    : texts.doneBodyPlan(plan: plan, date: CycleMonthFormatter.formatDateShort(until)),
+                chips: [t.premium.plusBadge, ?plan],
+              ),
+              const SizedBox(height: 24),
+              const PlusUnlockedList(),
+            ],
           ),
+        ),
+      ),
+      bottomNavigationBar: DsStickyBar(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            DsButton(label: texts.done, expand: true, onPressed: () => Navigator.of(context).maybePop()),
+            const SizedBox(height: 8),
+            DsButton.ghost(
+              label: t.premium.features.seeAll,
+              expand: true,
+              onPressed: () => unawaited(
+                context.pushRoute(PremiumRouteKeys.features, const PlusFeaturesInput(fromPaywall: true)),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -522,8 +524,9 @@ class _DonePage extends StatelessWidget {
   }
 }
 
-/// Paywall untuk yang sudah berlangganan: menyatakan Plus aktif dan menawarkan
-/// "Kelola di Play Store" (batalkan atau ganti paket di sana), bukan membeli lagi.
+/// Paywall untuk yang sudah berlangganan: hero tenang yang menyatakan Plus
+/// aktif, daftar yang terbuka, dan "Kelola di Play Store" (batalkan atau ganti
+/// paket di sana), bukan membeli lagi.
 class _SubscribedPage extends StatelessWidget {
   const _SubscribedPage({required this.until, required this.launch});
 
@@ -533,33 +536,24 @@ class _SubscribedPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final texts = t.premium.paywall;
-    final ds = context.ds;
     return Scaffold(
       appBar: AppBar(),
       body: SafeArea(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const PlusTile(IconKey.plus, size: 88),
-                const SizedBox(height: 16),
-                Text(
-                  texts.subscribedTitle,
-                  textAlign: TextAlign.center,
-                  style: ds.typography.headlineMd.copyWith(fontSize: 22),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  until == null
-                      ? texts.subscribedOpen
-                      : texts.subscribedBody(date: CycleMonthFormatter.formatDateShort(until!)),
-                  textAlign: TextAlign.center,
-                  style: ds.typography.bodyMd.copyWith(color: ds.colors.textSecondary),
-                ),
-              ],
-            ),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              PlusCelebrationHero(
+                title: texts.subscribedTitle,
+                body: until == null
+                    ? texts.subscribedOpen
+                    : texts.subscribedBody(date: CycleMonthFormatter.formatDateShort(until!)),
+                chips: [t.premium.plusBadge],
+              ),
+              const SizedBox(height: 24),
+              const PlusUnlockedList(),
+            ],
           ),
         ),
       ),
@@ -567,7 +561,7 @@ class _SubscribedPage extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            AppButton(
+            DsButton(
               label: t.premium.account.manage,
               expand: true,
               onPressed: () => unawaited(launch(playSubscriptionsUri)),

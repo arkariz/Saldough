@@ -1710,6 +1710,7 @@
       "free": "Continue with Free"
     },
     "paywall": {
+      "unlockedTitle": "Now unlocked",
       "signInForTrial": "Sign in to try Plus",
       "subscribedTitle": "Plus is already on",
       "subscribedBody": "Your subscription is active until $date.",

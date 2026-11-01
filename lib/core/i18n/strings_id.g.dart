@@ -5259,6 +5259,9 @@ class Translations$premium$paywall$id {
 
 	// Translations
 
+	/// id: 'Yang sekarang terbuka'
+	String get unlockedTitle => 'Yang sekarang terbuka';
+
 	/// id: 'Masuk untuk mencoba Plus'
 	String get signInForTrial => 'Masuk untuk mencoba Plus';
 
@@ -7213,6 +7216,7 @@ extension on Translations {
 			'premium.downgrade.ctaDeal' => 'Lanjutkan dengan Plus',
 			'premium.downgrade.ctaPlain' => 'Lihat Plus',
 			'premium.downgrade.free' => 'Lanjut dengan Gratis',
+			'premium.paywall.unlockedTitle' => 'Yang sekarang terbuka',
 			'premium.paywall.signInForTrial' => 'Masuk untuk mencoba Plus',
 			'premium.paywall.subscribedTitle' => 'Plus sudah aktif',
 			'premium.paywall.subscribedBody' => ({required Object date}) => 'Langgananmu aktif sampai ${date}.',

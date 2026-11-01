@@ -71,48 +71,99 @@ class PlanCard extends StatelessWidget {
               border: Border.all(color: selected ? c.actionPrimary : c.outlineSubtle, width: selected ? 2 : 1),
               boxShadow: const [BoxShadow(color: Color(0x0F000000), blurRadius: 14, offset: Offset(0, 5))],
             ),
-            child: Row(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                _Radio(selected: selected),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(name, style: ds.typography.titleMd),
-                      if (tag != null) ...[const SizedBox(height: 4), DsBadge(label: tag!, tone: DsBadgeTone.income)],
-                      Text(subtitle, style: ds.typography.bodySm.copyWith(color: c.textSecondary)),
-                    ],
+                if (tag != null) ...[
+                  Align(
+                    alignment: AlignmentDirectional.centerStart,
+                    child: _TagPill(label: tag!),
                   ),
-                ),
-                const SizedBox(width: 12),
-                if (priceText == null)
-                  const DsSkeleton(width: 84, height: 20)
-                else
-                  Flexible(
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      alignment: AlignmentDirectional.centerEnd,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          if (regularPriceText != null)
-                            Text(
-                              regularPriceText!,
-                              style: ds.typography.bodySm.copyWith(
-                                color: c.textMuted,
-                                decoration: TextDecoration.lineThrough,
+                  const SizedBox(height: 10),
+                ],
+                Row(
+                  children: [
+                    _Radio(selected: selected),
+                    const SizedBox(width: 12),
+                    Expanded(child: Text(name, style: ds.typography.titleMd.copyWith(fontSize: 16))),
+                    const SizedBox(width: 12),
+                    if (priceText == null)
+                      const DsSkeleton(width: 84, height: 20)
+                    else
+                      Flexible(
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          alignment: AlignmentDirectional.centerEnd,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.baseline,
+                                textBaseline: TextBaseline.alphabetic,
+                                children: [
+                                  Text(priceText!, style: ds.typography.titleMd.copyWith(fontSize: 19)),
+                                  if (unit != null) ...[
+                                    const SizedBox(width: 2),
+                                    Text(unit!, style: ds.typography.bodySm.copyWith(color: c.textSecondary)),
+                                  ],
+                                ],
                               ),
-                            ),
-                          Text(priceText!, style: ds.typography.titleMd),
-                          if (unit != null) Text(unit!, style: ds.typography.bodySm.copyWith(color: c.textSecondary)),
-                        ],
+                              if (regularPriceText != null)
+                                Text(
+                                  regularPriceText!,
+                                  style: ds.typography.bodySm.copyWith(
+                                    color: c.textMuted,
+                                    decoration: TextDecoration.lineThrough,
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
+                  ],
+                ),
+                const SizedBox(height: 6),
+                Padding(
+                  padding: const EdgeInsetsDirectional.only(start: 34),
+                  child: Text(subtitle, style: ds.typography.bodySm.copyWith(color: c.textSecondary)),
+                ),
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Pita penawaran khusus ("Harga Pendiri"): pil `actionPrimary` pekat dengan
+/// bintang, supaya terbaca sebagai sorotan, bukan keterangan.
+class _TagPill extends StatelessWidget {
+  const _TagPill({required this.label});
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    final ds = context.ds;
+    final c = ds.colors;
+    return DecoratedBox(
+      decoration: BoxDecoration(color: c.actionPrimary, borderRadius: DsRadius.fullAll),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.star_rounded, size: 14, color: c.onActionPrimary),
+            const SizedBox(width: 4),
+            Flexible(
+              child: Text(
+                label,
+                style: ds.typography.labelMd.copyWith(color: c.onActionPrimary),
+              ),
+            ),
+          ],
         ),
       ),
     );

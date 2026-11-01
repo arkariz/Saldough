@@ -1707,6 +1707,7 @@
       "free": "Lanjut dengan Gratis"
     },
     "paywall": {
+      "unlockedTitle": "Yang sekarang terbuka",
       "signInForTrial": "Masuk untuk mencoba Plus",
       "subscribedTitle": "Plus sudah aktif",
       "subscribedBody": "Langgananmu aktif sampai $date.",

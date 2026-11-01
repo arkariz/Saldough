@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
-import 'package:saldough/core/foundation/entitlement/entitlement.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/plan/active_plan.dart';
@@ -313,7 +312,7 @@ class _Advanced extends StatelessWidget {
     void toggleAuto() {
       // Otomasi R3 hanya untuk Plus (ADR-041 §3.8): bukan Plus, sakelar
       // membuka paywall dan nilainya tidak berubah.
-      if (!ActivePlan.value.isPlus) {
+      if (!ActivePlan.isPlus) {
         unawaited(
           context.pushRoute(PremiumRouteKeys.paywall, const PaywallInput(PaywallTrigger.recurringAutomation)),
         );
@@ -384,14 +383,18 @@ class _Advanced extends StatelessWidget {
                 label: t.record.repeat.autoRecordLabel,
                 title: t.record.repeat.autoRecordHint,
                 onTap: toggleAuto,
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const PlusBadge(),
-                    IgnorePointer(
-                      child: Switch(value: value.autoRecord, onChanged: (_) {}),
-                    ),
-                  ],
+                trailing: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: AlignmentDirectional.centerEnd,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const PlusBadge(),
+                      IgnorePointer(
+                        child: Switch(value: value.autoRecord, onChanged: (_) {}),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],

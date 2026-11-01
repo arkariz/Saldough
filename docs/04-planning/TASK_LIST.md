@@ -89,13 +89,7 @@ Terakhir diperbarui: 29 Oktober 2026 (penyelarasan dokumen dengan `main` di `0.1
 | 22 — Ekspor dan cadangan manual ([EXPORT_BACKUP.md](../01-product/features/EXPORT_BACKUP.md)) | 8 | 8 | Selesai 23 Okt 2026 (dari B-42): ADR-040 Accepted, T-22.0–T-22.7 di `main`; QA emulator Android tanpa temuan S1/S2; sisa uji perangkat (iOS, Excel/Sheets, dll.) di B-67 |
 | 23 — Catat notifikasi multi-dompet, contoh, dan rutin lebih awal ([ADR-042](../02-architecture/adr/0042-notifikasi-multi-dompet-sampel-dan-rutin.md)) | 4 | 4 | **Selesai 23 Okt 2026, di `main`** (commit `c83f360`), dirilis di `0.10.0+16`. QA emulator ([VERIFICATION_PLAN_FASE_23.md](VERIFICATION_PLAN_FASE_23.md)): kompilasi Kotlin lulus, 26 baris lulus, tanpa Gagal S1/S2, 5 temuan S3; sisanya di B-83 |
 | 24 — Fondasi Plus ([ADR-041](../02-architecture/adr/0041-monetisasi-hak-plus-dan-uji-coba.md), [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md)) | 22 | 21 | Dijadwalkan 23 Okt 2026 (dari B-41); T-24.1 (ADR-041 revisi 2), T-24.2 (fondasi murni), T-24.3 (`AppUser.createdAt`), T-24.4 (penyimpanan hak), T-24.5 (batas dari Remote Config), T-24.6 (`Entitlements` lokal), T-24.7 (pengganti paket uji), T-24.8 (paywall sementara), T-24.9 (gerbang R3), T-24.10 (gerbang notifikasi), T-24.11 (kuota tafsir), T-24.12 (gerbang Analisis), T-24.13 (gerbang template dan proyek), dan T-24.14 (adaptor RevenueCat, uji palsu), dan T-24.15 (kebijakan offering, beli/pulihkan), dan T-24.16 (analitik dan dokumen rilis) selesai; T-24.17a (paywall berparameter, PlanCard, keadaan) T-24.17b (PlusLocked, lencana Plus), dan T-24.17c (status Plus di Akun, halaman fitur), T-24.17d (hadiah uji coba), dan T-24.17e (layar turun, kartu Plus, momen) selesai, jadi T-24.17 selesai; berikutnya T-24.18 (rupa sudah ada, PR #65) dan T-24.18. Uji nyata T-24.14 menunggu akun dan kunci RevenueCat; rilis build bergerbang menunggu penguji bisa masuk akun |
-| 24 — Design system baru dan preset tema ([ADR-043](../02-architecture/adr/0043-design-system-kyoto-dan-preset-tema.md), Proposed) | 4 | 1 | Berjalan sejak 29 Okt 2026 -- T-24.1 fondasi selesai; komponen menunggu referensi pemilik, pemasangan menunggu keputusan pemilik |
-| 24 — Design system baru dan preset tema ([ADR-043](../02-architecture/adr/0043-design-system-v2-dan-preset-tema.md), Proposed) | 4 | 1 | Berjalan sejak 29 Okt 2026 -- T-24.1 fondasi selesai (spek Tanukonomy Matcha); komponen dipetakan, widget menunggu permintaan pemilik dan KT-DS1–KT-DS4; pemasangan menunggu keputusan pemilik |
-| 24 — Design system baru dan preset tema ([ADR-043](../02-architecture/adr/0043-design-system-v2-dan-preset-tema.md), Proposed) | 4 | 1 | Berjalan sejak 29 Okt 2026 -- T-24.1 fondasi selesai (spek Tanukonomy Matcha); komponen dipetakan, KT-DS1–KT-DS4 diputuskan; widget menunggu permintaan pemilik; pemasangan menunggu keputusan pemilik |
-| 24 — Design system baru dan preset tema ([ADR-043](../02-architecture/adr/0043-design-system-v2-dan-preset-tema.md), Proposed) | 4 | 2 | Berjalan sejak 29 Okt 2026 -- T-24.1 fondasi selesai (spek Tanukonomy Matcha); KT-DS1–KT-DS4 diputuskan; T-24.2 widget komponen selesai; pemasangan menunggu keputusan pemilik |
-| 24 — Design system baru dan preset tema ([ADR-043](../02-architecture/adr/0043-design-system-v2-dan-preset-tema.md), Proposed) | 5 | 3 | Berjalan sejak 29 Okt 2026 -- T-24.1 fondasi selesai (spek Tanukonomy Matcha); KT-DS1–KT-DS4 diputuskan; T-24.2 widget komponen dan T-24.5 animasi selesai (animasi belum dinilai di perangkat); pemasangan menunggu keputusan pemilik |
-| 24 — Design system baru dan preset tema ([ADR-043](../02-architecture/adr/0043-design-system-v2-dan-preset-tema.md), Proposed) | 6 | 3 | Berjalan sejak 29 Okt 2026 -- T-24.1 fondasi selesai (spek Tanukonomy Matcha); KT-DS1–KT-DS4 diputuskan; T-24.2 widget komponen dan T-24.5 animasi selesai (animasi belum dinilai di perangkat); pemasangan menunggu keputusan pemilik |
-| 24 — Design system baru dan preset tema ([ADR-043](../02-architecture/adr/0043-design-system-v2-dan-preset-tema.md), Proposed) | 6 | 4 | Berjalan sejak 29 Okt 2026 -- T-24.1 fondasi selesai (spek Tanukonomy Matcha); KT-DS1–KT-DS4 diputuskan; T-24.2 widget komponen dan T-24.5 animasi selesai (animasi belum dinilai di perangkat); T-24.3 terpasang, Beranda dirombak (irisan T-24.4); layar lain menyusul |
+| 25 — Design system baru dan preset tema ([ADR-043](../02-architecture/adr/0043-design-system-v2-dan-preset-tema.md), Proposed) | 6 | 4 | Berjalan sejak 29 Okt 2026 -- T-25.1 fondasi selesai (spek Tanukonomy Matcha); KT-DS1–KT-DS4 diputuskan; T-25.2 widget komponen dan T-25.5 animasi selesai (animasi belum dinilai di perangkat); T-25.3 terpasang, Beranda dirombak (irisan T-25.4); layar lain menyusul |
 | Antrean (`B-n`, belum dijadwalkan) | 67 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
 
 ## Keputusan terbuka
@@ -123,12 +117,12 @@ diputuskan, dan catat keputusannya di tugas atau ADR yang mengerjakannya.
   transaksi penyesuaian bertanggal hari ini (ADR domain baru, menyentuh
   aturan 8). Keputusan teknis menyusul sebagai ADR.
 
-KT-DS5–KT-DS8 (ikon clay, Fase 24) diputuskan 30 Okt 2026: clay menggantikan
+KT-DS5–KT-DS8 (ikon clay, Fase 25) diputuskan 30 Okt 2026: clay menggantikan
 semua ikon piksel, tile datar dengan hanya tombol Catat bertimbul, ikon tetap
 dan tile ikut tema, Scan Struk tetap dan Kirim Daun jadi Catat Transfer;
 dicatat di [icons.md](../03-design/design-system-v2/icons.md).
 
-KT-DS1–KT-DS4 (design system v2, Fase 24) diputuskan 29 Okt 2026: bingkai
+KT-DS1–KT-DS4 (design system v2, Fase 25) diputuskan 29 Okt 2026: bingkai
 input dan checkbox ikut spek, keterangan/jam memakai `textMuted` `#6B7280`,
 label piksel terkecil 11px, badge dan tag ikut gambar (sudut 6px, Space
 Mono); dicatat di [design-system-v2/README.md](../03-design/design-system-v2/README.md).
@@ -5877,7 +5871,7 @@ Jalur kritis: T-24.2 → T-24.4 → T-24.6 → T-24.14 → T-24.18.
       selain `goog_…` di lane rilis dan patch). Tahap 2 (Play Billing
       sungguhan, kunci `goog_…` sebagai secret GitHub) menyusul.
 
-## Fase 24: Design system baru dan preset tema
+## Fase 25: Design system baru dan preset tema
 
 Permintaan pemilik 29 Okt 2026: rombak design system dan siapkan preset tema
 yang mudah ditambah developer dan dipilih pengguna
@@ -5890,7 +5884,7 @@ merombak seluruh UI; tahap ini fondasi, design system lama tidak disentuh.
 **Selesai kalau:** seluruh layar memakai design system baru, pengguna bisa
 memilih mode (dan preset bila ≥ 2), dan design system lama dihapus.
 
-- [x] **T-24.1** Fondasi design system v2 (29 Okt 2026).
+- [x] **T-25.1** Fondasi design system v2 (29 Okt 2026).
       `lib/core/design_system/`: `DsColorScheme`, `DsTypography` (Plus
       Jakarta Sans + Space Mono Bold), radius, bentuk, jarak, elevasi
       (`canvas`/`card`/`overlay`), gerak, `DsTheme.build` (tema komponen
@@ -5901,7 +5895,7 @@ memilih mode (dan preset bila ≥ 2), dan design system lama dihapus.
       tema, skema, tipografi); seluruh uji dan `flutter analyze` tanpa isu
       baru; tidak ada berkas design system lama yang berubah.
       Di luar PRD: tampilan.
-- [x] **T-24.2** Widget komponen design system v2 (29 Okt 2026) di
+- [x] **T-25.2** Widget komponen design system v2 (29 Okt 2026) di
       `lib/core/design_system/components/` sesuai
       [components.md](../03-design/design-system-v2/components.md): tombol
       (6 varian), tombol ikon, icon tile, badge, status pill, avatar, meter
@@ -5915,7 +5909,7 @@ memilih mode (dan preset bila ≥ 2), dan design system lama dihapus.
       dari widget ini dan dirender dengan huruf asli, cocok dengan referensi
       (`reference/render-light.png`, `render-dark.png`).
       Di luar PRD: tampilan.
-- [x] **T-24.5** Animasi design system v2 dari acuan Beranda beranimasi
+- [x] **T-25.5** Animasi design system v2 dari acuan Beranda beranimasi
       (30 Okt 2026), semua animasi diadopsi atas keputusan pemilik
       ([motion.md](../03-design/design-system-v2/motion.md)): hitung naik,
       balik 3D saldo, app bar menyusut, parallax, carousel, meter bernapas,
@@ -5927,13 +5921,13 @@ memilih mode (dan preset bila ≥ 2), dan design system lama dihapus.
       carousel); analyze bersih. **Belum dinilai di perangkat** (kesan
       gerak, kepadatan dan keburaman partikel).
       Di luar PRD: tampilan.
-- [ ] **T-24.6** Ikon "tanah liat 3D" di design system v2 (acuan 30 Okt
+- [ ] **T-25.6** Ikon "tanah liat 3D" di design system v2 (acuan 30 Okt
       2026, [icons.md](../03-design/design-system-v2/icons.md)). Dokumen dan
       10 SVG acuan sudah disimpan; widget (`DsIconTile` mendukung SVG,
       tile bertimbul, tombol Catat bulat, lencana level, animasi laser dan
       gelombang suara) belum dibuat. KT-DS5–KT-DS8 sudah diputuskan; sisa pekerjaan: menggambar ikon clay
       untuk seluruh kategori/dompet.
-- [x] **T-24.3** Pasang design system v2 ke aplikasi (30 Okt 2026).
+- [x] **T-25.3** Pasang design system v2 ke aplikasi (30 Okt 2026).
       `AppThemeBridge` (jembatan ke layar lama, ADR-043 §3.1 direvisi),
       `AppearanceThemeBuilder` di `MaterialApp` dan layar boot ulang,
       preferensi `settings_appearance` (mode + preset, milik perangkat),
@@ -5942,7 +5936,7 @@ memilih mode (dan preset bila ≥ 2), dan design system lama dihapus.
       gelap tidak jatuh ke token terang), uji preferensi, uji baris Akun,
       uji registri backup dan boot ulang; seluruh uji lulus.
       Di luar PRD: tampilan.
-- [ ] **T-24.4** Pindahkan layar ke design system v2, lalu hapus yang lama.
+- [ ] **T-25.4** Pindahkan layar ke design system v2, lalu hapus yang lama.
       **Irisan Beranda selesai 30 Okt 2026** (`lib/features/home/`): top
       bar menyusut, sapaan, kartu mood, kartu saldo hero, arus, carousel,
       tile aksi cepat clay, banner misi, transaksi terbaru, partikel latar.

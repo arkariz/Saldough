@@ -560,7 +560,7 @@ masuk), transfer tidak pernah jadi pemasukan atau pengeluaran, rutin tertaut
 hanya bila pasti, dan contoh notifikasi tidak pernah menyimpan OTP,
 terverifikasi di perangkat dengan notifikasi bank asli.
 
-## Fase 24: Design system baru dan preset tema
+## Fase 25: Design system baru dan preset tema
 
 Permintaan pemilik 29 Okt 2026: design system v2 dari spek Tanukonomy Matcha
 dan referensi komponen Beranda, berdampingan dengan yang lama sampai rombak

@@ -248,7 +248,7 @@ yang sedang dipasang bertahap. Kode di `lib/core/design_system/` (token,
 `docs/03-design/design-system-v2/`. Tema aktif dibangun `AppThemeBridge`
 (jembatan sementara: tema lama + ekstensi Ds), dipilih pengguna di Akun ›
 Tampilan (`settings_appearance`). **Beranda sudah memakai v2; layar lain
-belum** (T-24.4). Widget baru memakai `context.ds`, bukan `context.appColors`;
+belum** (T-25.4). Widget baru memakai `context.ds`, bukan `context.appColors`;
 jangan mencampur keduanya di satu widget. Data tiruan Beranda ada di
 `home_placeholder.dart` (saklar `kHomePlaceholderPreview`). Skill
 `tanukonomy-ui` dan paragraf di bawah masih menggambarkan ADR-034 untuk layar

@@ -4016,6 +4016,8 @@ extension on TranslationsEn {
 			'premium.card.recapRecorded' => 'entries from notifications',
 			'premium.downgrade.title' => 'Your Plus trial ended',
 			'premium.downgrade.intro' => 'Thanks for trying it. Everything you recorded stays, and you keep recording for free.',
+			_ => null,
+		} ?? switch (path) {
 			'premium.downgrade.keepTitle' => 'What stays',
 			'premium.downgrade.changeTitle' => 'What changes',
 			'premium.downgrade.keepEntries' => 'All your entries',
@@ -4079,8 +4081,6 @@ extension on TranslationsEn {
 			'premium.paywall.processing' => 'Processing…',
 			'premium.paywall.waiting' => 'Waiting for approval',
 			'premium.paywall.pending' => 'Payment pending. Plus turns on as soon as it is approved.',
-			_ => null,
-		} ?? switch (path) {
 			'premium.paywall.failed' => 'Payment did not go through. Check your payment method in the Play Store, then try again.',
 			'premium.paywall.fineYearly' => ({required Object price}) => '${price} per year, renews automatically. Cancel anytime in the Play Store.',
 			'premium.paywall.fineMonthly' => ({required Object price}) => '${price} per month, renews automatically. Cancel anytime in the Play Store.',

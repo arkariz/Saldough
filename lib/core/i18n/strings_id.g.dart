@@ -7194,6 +7194,8 @@ extension on Translations {
 			'premium.card.recapRecorded' => 'catatan dari notifikasi',
 			'premium.downgrade.title' => 'Uji coba Plus selesai',
 			'premium.downgrade.intro' => 'Terima kasih sudah mencoba. Semua yang kamu catat tetap ada, dan kamu tetap mencatat gratis.',
+			_ => null,
+		} ?? switch (path) {
 			'premium.downgrade.keepTitle' => 'Yang tetap',
 			'premium.downgrade.changeTitle' => 'Yang berubah',
 			'premium.downgrade.keepEntries' => 'Semua catatanmu',
@@ -7257,8 +7259,6 @@ extension on Translations {
 			'premium.paywall.processing' => 'Memproses…',
 			'premium.paywall.waiting' => 'Menunggu persetujuan',
 			'premium.paywall.pending' => 'Pembayaran tertunda. Plus aktif begitu disetujui.',
-			_ => null,
-		} ?? switch (path) {
 			'premium.paywall.failed' => 'Pembayaran belum berhasil. Cek metode bayarmu di Play Store, lalu coba lagi.',
 			'premium.paywall.fineYearly' => ({required Object price}) => '${price} per tahun, diperpanjang otomatis. Batalkan kapan saja di Play Store.',
 			'premium.paywall.fineMonthly' => ({required Object price}) => '${price} per bulan, diperpanjang otomatis. Batalkan kapan saja di Play Store.',

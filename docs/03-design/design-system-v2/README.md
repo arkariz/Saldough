@@ -1,7 +1,7 @@
 # Design system v2 (Tanukonomy Matcha)
 
 **Status:** terpasang 30 Okt 2026 lewat `AppThemeBridge`; **Beranda sudah
-dirombak**, layar lain belum (T-24.4).
+dirombak**, layar lain belum (T-25.4).
 Keputusan ada di [ADR-043](../../02-architecture/adr/0043-design-system-v2-dan-preset-tema.md) (Proposed).
 
 Ini design system pengganti untuk rombak UI. Ia berdampingan dengan design
@@ -75,7 +75,7 @@ Spek dari Stitch memakai peran Material 3 yang namanya sama dengan field
 `DsColorScheme`. Yang perlu dirancang sendiri hanya peran semantik di
 kelompok bawah tabel Warna.
 
-Bagian berikut dikerjakan saat pemasangan (T-24.3): label preset untuk
+Bagian berikut dikerjakan saat pemasangan (T-25.3): label preset untuk
 pengguna (i18n `appearance.presets.<id>`), penyimpanan pilihan preset dan
 mode (Terang/Gelap/Ikuti sistem), dan baris pemilihnya di Akun. Pemilih
 preset baru tampil kalau preset ada dua atau lebih.

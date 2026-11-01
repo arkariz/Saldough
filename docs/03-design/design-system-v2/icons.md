@@ -107,7 +107,7 @@ memakai tile berwarna kategori, tetapi datar.
   (ADR-034) untuk kategori, dompet, transfer, dan Freelance diganti ikon
   clay. Acuan hanya menggambar 10; sisanya (kategori bawaan, dompet, dll.)
   perlu ilustrasi baru dengan resep di atas. Daftar ikon yang harus dibuat
-  disusun saat T-24.6 dikerjakan, dari `lib/` dan `assets/icons/`.
+  disusun saat T-25.6 dikerjakan, dari `lib/` dan `assets/icons/`.
 - **KT-DS6: tile datar, hanya tombol Catat yang bertimbul.** Tile ikon
   memakai latar nada tipis + garis rambut 1px (seperti `DsIconTile` sekarang);
   kedalaman datang dari ikon clay. Tombol Catat di navigasi bawah tetap

@@ -4,7 +4,7 @@
 
 - **Decision ID:** ADR-043
 - **Tanggal:** 2026-10-29
-- **Fase roadmap:** Fase 24 (lihat TASK_LIST)
+- **Fase roadmap:** Fase 25 (lihat TASK_LIST)
 - **Status:** Proposed. Fondasi dibangun 29 Okt 2026; dipasang ke aplikasi
   dan Beranda dirombak 30 Okt 2026 (irisan vertikal); layar lain menyusul.
 - **Cakupan:** `lib/core/design_system/`, `assets/fonts/SpaceMono-Bold.ttf`,
@@ -57,7 +57,7 @@ widget komponen baru dibuat setelah pemilik memintanya.
   lewat `PixelTheme.forColors` dari warna preset aktif, lalu menambahkan
   ekstensi Ds di atasnya. Layar lama tampil sama (dengan warna preset),
   layar baru memakai `context.ds`. **Jembatan dihapus saat semua layar
-  dirombak (T-24.4).** Jangan mencampur token lama dan baru di satu widget
+  dirombak (T-25.4).** Jangan mencampur token lama dan baru di satu widget
   baru.
 - **Pemasangan:** `AppearanceThemeBuilder` (`lib/app/theme/`) membangun
   tema terang/gelap dan mode dari `ActiveAppearance` untuk `MaterialApp`
@@ -99,7 +99,7 @@ widget komponen baru dibuat setelah pemilik memintanya.
 
 [components.md](../../03-design/design-system-v2/components.md) memetakan
 komponen referensi ke token, beserta varian dan selisihnya. Widget-nya ada
-di `lib/core/design_system/components/` (T-24.2) dan hanya menerima teks
+di `lib/core/design_system/components/` (T-25.2) dan hanya menerima teks
 yang sudah diformat dan diterjemahkan pemanggil. Teks dan fitur referensi yang bertentangan dengan aturan produk
 ("Kirim Daun", "Isi Saldo", gamifikasi) tidak ikut diadopsi.
 

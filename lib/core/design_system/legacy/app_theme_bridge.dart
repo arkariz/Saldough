@@ -15,7 +15,7 @@ import 'package:saldough/core/theme/theme.dart';
 /// lalu menambahkan ekstensi Ds di atasnya, jadi layar lama dan widget Ds
 /// hidup berdampingan di tema yang sama.
 ///
-/// Hapus saat seluruh layar sudah memakai `context.ds` (T-24.4).
+/// Hapus saat seluruh layar sudah memakai `context.ds` (T-25.4).
 abstract final class AppThemeBridge {
   AppThemeBridge._();
 

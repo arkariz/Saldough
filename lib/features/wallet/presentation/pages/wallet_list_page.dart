@@ -76,17 +76,6 @@ class _WalletListPageState extends State<WalletListPage> {
         centerTitle: false,
         actions: [
           const TutorialInfoButton(tour: TourId.wallet),
-          BlocBuilder<WalletBloc, WalletState>(
-            buildWhen: (previous, current) => previous.activeWallets.length != current.activeWallets.length,
-            builder: (context, state) => state.activeWallets.length < 2
-                ? const SizedBox.shrink()
-                : DsIconButton(
-                    key: const ValueKey('wallet-reorder'),
-                    icon: Icons.tune,
-                    label: t.wallet.reorderAction,
-                    onPressed: () => _reorderWallets(context, context.read<WalletBloc>().state),
-                  ),
-          ),
           DsIconButton(icon: Icons.add, label: t.wallet.addAction, onPressed: () => _addWallet(context)),
         ],
       ),
@@ -143,7 +132,10 @@ class _WalletListPageState extends State<WalletListPage> {
                   ),
                 ],
                 const SizedBox(height: AppSpacing.space4),
-                DsSectionHeader(title: t.wallet.listHeading, icon: Icons.account_balance_wallet_outlined),
+                _WalletsHeader(
+                  count: active.length,
+                  onReorder: multi ? () => _reorderWallets(context, state) : null,
+                ),
                 const SizedBox(height: AppSpacing.space2),
                 _WalletGrid(
                   wallets: active,
@@ -315,4 +307,55 @@ class _DashedBorderPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_DashedBorderPainter oldDelegate) => oldDelegate.color != color || oldDelegate.radius != radius;
+}
+
+/// Kepala daftar dompet (acuan Dompet v2): judul "Dompet aktif" dengan
+/// lencana jumlah, keterangan satu baris, dan tombol Atur di kanan bila
+/// dompetnya dua atau lebih.
+class _WalletsHeader extends StatelessWidget {
+  const _WalletsHeader({required this.count, required this.onReorder});
+
+  final int count;
+  final VoidCallback? onReorder;
+
+  @override
+  Widget build(BuildContext context) {
+    final ds = context.ds;
+    final c = ds.colors;
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Wrap(
+                spacing: 8,
+                runSpacing: 4,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  Semantics(
+                    header: true,
+                    child: Text(t.wallet.listHeading, style: ds.typography.headlineSm),
+                  ),
+                  DsBadge(label: '$count', tone: DsBadgeTone.neutral),
+                ],
+              ),
+              const SizedBox(height: 2),
+              Text(t.wallet.listSubtitle, style: ds.typography.bodySm.copyWith(color: c.textSecondary)),
+            ],
+          ),
+        ),
+        if (onReorder != null) ...[
+          const SizedBox(width: 8),
+          DsButton.secondary(
+            key: const ValueKey('wallet-reorder'),
+            label: t.wallet.reorderAction,
+            icon: Icons.tune,
+            onPressed: onReorder,
+          ),
+        ],
+      ],
+    );
+  }
 }

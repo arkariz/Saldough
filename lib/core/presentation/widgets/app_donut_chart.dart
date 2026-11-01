@@ -31,6 +31,8 @@ class AppDonutChart extends StatelessWidget {
     required this.semanticsLabel,
     this.selected,
     this.onSelect,
+    this.rounded = false,
+    this.trackColor,
     super.key,
   });
 
@@ -48,6 +50,12 @@ class AppDonutChart extends StatelessWidget {
 
   /// Dipanggil dengan indeks irisan yang diketuk.
   final ValueChanged<int>? onSelect;
+
+  /// Gaya v2: ujung irisan membulat dengan jarak antaririsan lebih lebar.
+  final bool rounded;
+
+  /// Warna lintasan cincin di belakang irisan (gaya v2); `null` = tanpa.
+  final Color? trackColor;
 
   /// Sisi kotak diagram.
   static const double size = 216;
@@ -108,7 +116,7 @@ class AppDonutChart extends StatelessWidget {
                     },
               child: CustomPaint(
                 size: const Size.square(size),
-                painter: _DonutPainter(slices: slices, selected: selected),
+                painter: _DonutPainter(slices: slices, selected: selected, rounded: rounded, trackColor: trackColor),
               ),
             ),
           ),
@@ -130,10 +138,12 @@ class AppDonutChart extends StatelessWidget {
 }
 
 class _DonutPainter extends CustomPainter {
-  const _DonutPainter({required this.slices, required this.selected});
+  const _DonutPainter({required this.slices, required this.selected, required this.rounded, required this.trackColor});
 
   final List<DonutSlice> slices;
   final int? selected;
+  final bool rounded;
+  final Color? trackColor;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -142,26 +152,39 @@ class _DonutPainter extends CustomPainter {
     const r = AppDonutChart.radius;
     const circumference = 2 * math.pi * r;
     final visible = slices.where((s) => s.value > 0).length;
-    final gap = visible > 1 ? AppDonutChart.gap : 0.0;
+    final gap = visible > 1 ? (rounded ? 6.0 : AppDonutChart.gap) : 0.0;
     final rect = Rect.fromCircle(center: Offset(size.width / 2, size.height / 2), radius: r);
+    if (trackColor != null) {
+      canvas.drawCircle(
+        rect.center,
+        r,
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = AppDonutChart.stroke
+          ..color = trackColor!,
+      );
+    }
     var at = 0.0;
     for (final (i, slice) in slices.indexed) {
       if (slice.value <= 0) continue;
       final full = slice.value / total * circumference;
-      final length = math.max(AppDonutChart.minArc, full - gap);
+      // Ujung bulat menambah setengah tebal di tiap sisi, jadi busurnya dipendekkan.
+      final length = rounded ? math.max(0.01, full - gap - AppDonutChart.stroke) : math.max(AppDonutChart.minArc, full - gap);
       final dim = selected != null && selected != i;
       final paint = Paint()
         ..style = PaintingStyle.stroke
         ..strokeWidth = AppDonutChart.stroke
-        ..strokeCap = StrokeCap.butt
+        ..strokeCap = rounded ? StrokeCap.round : StrokeCap.butt
         ..color = dim ? slice.color.withValues(alpha: 0.25) : slice.color;
-      canvas.drawArc(rect, -math.pi / 2 + at / r, length / r, false, paint);
+      final start = at + (rounded ? (gap + AppDonutChart.stroke) / 2 : 0);
+      canvas.drawArc(rect, -math.pi / 2 + start / r, length / r, false, paint);
       at += full;
     }
   }
 
   @override
-  bool shouldRepaint(_DonutPainter old) => old.selected != selected || !_sameSlices(old.slices, slices);
+  bool shouldRepaint(_DonutPainter old) =>
+      old.selected != selected || old.rounded != rounded || old.trackColor != trackColor || !_sameSlices(old.slices, slices);
 
   static bool _sameSlices(List<DonutSlice> a, List<DonutSlice> b) {
     if (a.length != b.length) return false;

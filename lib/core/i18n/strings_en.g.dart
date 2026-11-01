@@ -266,6 +266,7 @@ class _Translations$wallet$en extends Translations$wallet$id {
 	// Translations
 	@override String get subtitle => 'Total balance of all active wallets';
 	@override String activeBadge({required Object count}) => '${count} active wallets';
+	@override String get listSubtitle => 'Your accounts, e-wallets, and active wallets.';
 	@override String get listHeading => 'Active wallets';
 	@override String get addAction => 'Add wallet';
 	@override String get inactiveHeading => 'Inactive wallets';
@@ -313,7 +314,7 @@ class _Translations$wallet$en extends Translations$wallet$id {
 	@override String get savedMessage => 'Wallet saved.';
 	@override String get updatedMessage => 'Wallet updated.';
 	@override String get deletedMessage => 'Wallet deleted.';
-	@override String get reorderAction => 'Reorder wallets';
+	@override String get reorderAction => 'Arrange';
 	@override String get reorderTitle => 'Reorder wallets';
 	@override String get reorderHint => 'Press and hold, then drag to reorder. This order applies to every wallet list and picker.';
 	@override String reorderHandleLabel({required Object name}) => 'Drag to move ${name}';
@@ -2690,6 +2691,7 @@ extension on TranslationsEn {
 			'transaction.filteredEmpty' => 'No more transactions here.',
 			'wallet.subtitle' => 'Total balance of all active wallets',
 			'wallet.activeBadge' => ({required Object count}) => '${count} active wallets',
+			'wallet.listSubtitle' => 'Your accounts, e-wallets, and active wallets.',
 			'wallet.listHeading' => 'Active wallets',
 			'wallet.addAction' => 'Add wallet',
 			'wallet.inactiveHeading' => 'Inactive wallets',
@@ -2734,7 +2736,7 @@ extension on TranslationsEn {
 			'wallet.savedMessage' => 'Wallet saved.',
 			'wallet.updatedMessage' => 'Wallet updated.',
 			'wallet.deletedMessage' => 'Wallet deleted.',
-			'wallet.reorderAction' => 'Reorder wallets',
+			'wallet.reorderAction' => 'Arrange',
 			'wallet.reorderTitle' => 'Reorder wallets',
 			'wallet.reorderHint' => 'Press and hold, then drag to reorder. This order applies to every wallet list and picker.',
 			'wallet.reorderHandleLabel' => ({required Object name}) => 'Drag to move ${name}',
@@ -2982,9 +2984,9 @@ extension on TranslationsEn {
 			'budget.templateNameHint' => 'Example: Monthly groceries',
 			'budget.templateEnabledLabel' => 'Offer this template',
 			'budget.templateEnabledHelp' => 'Inactive templates stay saved but cannot be used to create a budget.',
-			'budget.templateSaveAction' => 'Save template',
 			_ => null,
 		} ?? switch (path) {
+			'budget.templateSaveAction' => 'Save template',
 			'budget.templateDeleteAction' => 'Delete template',
 			'budget.templateDeleteConfirmTitle' => 'Delete template?',
 			'budget.templateDeleteConfirmMessage' => ({required Object name}) => 'Template "${name}" will be deleted. Budgets created from it are not deleted.',
@@ -3496,9 +3498,9 @@ extension on TranslationsEn {
 			'notificationCapture.disclosureTitle' => 'Before you grant permission',
 			'notificationCapture.disclosureBody' => 'Tanukonomy will be able to read notifications on your phone.\n\n• Only from apps you pick that match their filter.\n• OTP notifications are never stored.\n• Text that is hard to read may be sent to Gemini (Google).\n• Notification text stays on your phone for at most 7 days.',
 			'notificationCapture.disclosureAccept' => 'Continue',
-			'notificationCapture.reminderPermissionDenied' => 'Notification permission was denied. Turn it on in Android settings to get reminders.',
 			_ => null,
 		} ?? switch (path) {
+			'notificationCapture.reminderPermissionDenied' => 'Notification permission was denied. Turn it on in Android settings to get reminders.',
 			'notificationCapture.sourcesTitle' => 'Apps',
 			'notificationCapture.sourcesEmpty' => 'Pick the bank or e-wallet apps whose notifications you want recorded.',
 			'notificationCapture.addSource' => 'Add app',

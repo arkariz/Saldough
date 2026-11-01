@@ -559,6 +559,9 @@ class Translations$wallet$id {
 	/// id: '$count dompet aktif'
 	String activeBadge({required Object count}) => '${count} dompet aktif';
 
+	/// id: 'Daftar rekening, e-wallet, dan dompet aktif.'
+	String get listSubtitle => 'Daftar rekening, e-wallet, dan dompet aktif.';
+
 	/// id: 'Dompet aktif'
 	String get listHeading => 'Dompet aktif';
 
@@ -694,8 +697,8 @@ class Translations$wallet$id {
 	/// id: 'Dompet dihapus.'
 	String get deletedMessage => 'Dompet dihapus.';
 
-	/// id: 'Urutkan dompet'
-	String get reorderAction => 'Urutkan dompet';
+	/// id: 'Atur'
+	String get reorderAction => 'Atur';
 
 	/// id: 'Urutkan dompet'
 	String get reorderTitle => 'Urutkan dompet';
@@ -5858,6 +5861,7 @@ extension on Translations {
 			'transaction.filteredEmpty' => 'Tidak ada lagi transaksi di sini.',
 			'wallet.subtitle' => 'Total saldo semua dompet aktif',
 			'wallet.activeBadge' => ({required Object count}) => '${count} dompet aktif',
+			'wallet.listSubtitle' => 'Daftar rekening, e-wallet, dan dompet aktif.',
 			'wallet.listHeading' => 'Dompet aktif',
 			'wallet.addAction' => 'Tambah dompet',
 			'wallet.inactiveHeading' => 'Dompet nonaktif',
@@ -5902,7 +5906,7 @@ extension on Translations {
 			'wallet.savedMessage' => 'Dompet tersimpan.',
 			'wallet.updatedMessage' => 'Dompet diperbarui.',
 			'wallet.deletedMessage' => 'Dompet dihapus.',
-			'wallet.reorderAction' => 'Urutkan dompet',
+			'wallet.reorderAction' => 'Atur',
 			'wallet.reorderTitle' => 'Urutkan dompet',
 			'wallet.reorderHint' => 'Tekan dan seret dompet untuk mengubah urutan. Urutan ini berlaku di semua daftar dan pilihan dompet.',
 			'wallet.reorderHandleLabel' => ({required Object name}) => 'Seret untuk memindahkan ${name}',
@@ -6150,9 +6154,9 @@ extension on Translations {
 			'budget.templateNameHint' => 'Contoh: Belanja bulanan',
 			'budget.templateEnabledLabel' => 'Tawarkan template ini',
 			'budget.templateEnabledHelp' => 'Template nonaktif tetap tersimpan, tapi tidak bisa dipakai membuat anggaran.',
-			'budget.templateSaveAction' => 'Simpan template',
 			_ => null,
 		} ?? switch (path) {
+			'budget.templateSaveAction' => 'Simpan template',
 			'budget.templateDeleteAction' => 'Hapus template',
 			'budget.templateDeleteConfirmTitle' => 'Hapus template?',
 			'budget.templateDeleteConfirmMessage' => ({required Object name}) => 'Template "${name}" akan dihapus. Anggaran yang pernah dibuat darinya tidak ikut terhapus.',
@@ -6664,9 +6668,9 @@ extension on Translations {
 			'notificationCapture.disclosureTitle' => 'Sebelum memberi izin',
 			'notificationCapture.disclosureBody' => 'Tanukonomy akan bisa membaca notifikasi di ponselmu.\n\n• Hanya dari aplikasi yang kamu pilih dan cocok dengan filternya.\n• Notifikasi OTP tidak pernah disimpan.\n• Teks yang sulit dibaca bisa dikirim ke Gemini (Google).\n• Teks notifikasi disimpan di ponselmu paling lama 7 hari.',
 			'notificationCapture.disclosureAccept' => 'Lanjut',
-			'notificationCapture.reminderPermissionDenied' => 'Izin notifikasi ditolak. Nyalakan di setelan Android untuk menerima pengingat.',
 			_ => null,
 		} ?? switch (path) {
+			'notificationCapture.reminderPermissionDenied' => 'Izin notifikasi ditolak. Nyalakan di setelan Android untuk menerima pengingat.',
 			'notificationCapture.sourcesTitle' => 'Aplikasi',
 			'notificationCapture.sourcesEmpty' => 'Pilih aplikasi bank atau e-wallet yang notifikasinya mau dicatat.',
 			'notificationCapture.addSource' => 'Tambah aplikasi',

@@ -239,6 +239,7 @@
   "wallet": {
     "subtitle": "Total saldo semua dompet aktif",
     "activeBadge": "$count dompet aktif",
+    "listSubtitle": "Daftar rekening, e-wallet, dan dompet aktif.",
     "listHeading": "Dompet aktif",
     "addAction": "Tambah dompet",
     "inactiveHeading": "Dompet nonaktif",
@@ -286,7 +287,7 @@
     "savedMessage": "Dompet tersimpan.",
     "updatedMessage": "Dompet diperbarui.",
     "deletedMessage": "Dompet dihapus.",
-    "reorderAction": "Urutkan dompet",
+    "reorderAction": "Atur",
     "reorderTitle": "Urutkan dompet",
     "reorderHint": "Tekan dan seret dompet untuk mengubah urutan. Urutan ini berlaku di semua daftar dan pilihan dompet.",
     "reorderHandleLabel": "Seret untuk memindahkan $name",

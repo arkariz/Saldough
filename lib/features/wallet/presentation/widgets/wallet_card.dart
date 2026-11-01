@@ -66,7 +66,7 @@ class WalletCard extends StatelessWidget {
   }
 }
 
-/// Penanda warna dompet 8px (`tk-swatch`).
+/// Penanda warna dompet bulat 8px.
 class WalletSwatch extends StatelessWidget {
   /// Membuat [WalletSwatch].
   const WalletSwatch(this.color, {super.key});
@@ -75,7 +75,8 @@ class WalletSwatch extends StatelessWidget {
   final Color color;
 
   @override
-  Widget build(BuildContext context) => SizedBox.square(dimension: 8, child: ColoredBox(color: color));
+  Widget build(BuildContext context) =>
+      SizedBox.square(dimension: 8, child: DecoratedBox(decoration: BoxDecoration(color: color, shape: BoxShape.circle)));
 }
 
 /// Warna jenis dompet (tabel warna `cat-*` design system: Bank biru,
@@ -123,8 +124,9 @@ Map<String, Color> walletColors(AppColors colors, List<Wallet> wallets) {
 }
 
 /// Bar sebaran saldo per dompet (BalanceSpread, ringkas): satu ruas per
-/// dompet bersaldo positif, lebar sebanding saldonya, berjarak 2px, tinggi
-/// 12px, tiap ruas minimal 3px supaya dompet kecil tetap terlihat. Dibaca
+/// dompet bersaldo positif, lebar sebanding saldonya, berbentuk pil berjarak
+/// 3px di atas lintasan abu, tinggi 10px, tiap ruas minimal 6px supaya
+/// dompet kecil tetap terlihat. Dibaca
 /// pembaca layar sebagai "Sebaran saldo: BCA 54%, …" oleh pemanggil.
 class WalletSpreadBar extends StatelessWidget {
   /// Membuat [WalletSpreadBar].
@@ -136,17 +138,18 @@ class WalletSpreadBar extends StatelessWidget {
   /// Warna per `id` dompet dari [walletColors].
   final Map<String, Color> colors;
 
-  static const double _gap = 2;
-  static const double _minSegment = 3;
+  static const double _gap = 3;
+  static const double _minSegment = 6;
 
   @override
   Widget build(BuildContext context) {
     if (wallets.isEmpty) return const SizedBox.shrink();
+    final track = context.ds.colors.surfaceContainerHigh;
     return ExcludeSemantics(
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(AppRadius.full),
+      child: DecoratedBox(
+        decoration: BoxDecoration(color: track, borderRadius: DsRadius.fullAll),
         child: SizedBox(
-          height: 12,
+          height: 10,
           child: LayoutBuilder(
             builder: (context, constraints) {
               final widths = _widths(constraints.maxWidth - _gap * (wallets.length - 1));
@@ -155,7 +158,20 @@ class WalletSpreadBar extends StatelessWidget {
                 children: [
                   for (final (i, w) in wallets.indexed) ...[
                     if (i > 0) const SizedBox(width: _gap),
-                    SizedBox(width: widths[i], child: ColoredBox(color: colors[w.id]!)),
+                    SizedBox(
+                      width: widths[i],
+                      // Tiap ruas pil sendiri berkilap tipis di atasnya.
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          borderRadius: DsRadius.fullAll,
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [Color.lerp(colors[w.id], Colors.white, 0.28)!, colors[w.id]!],
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ],
               );

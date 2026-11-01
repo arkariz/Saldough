@@ -144,6 +144,8 @@ class _WalletSpreadCardState extends State<WalletSpreadCard> {
             const SizedBox(height: AppSpacing.space3),
             Center(
               child: AppDonutChart(
+                rounded: true,
+                trackColor: colors.surfaceContainerHigh,
                 slices: [
                   for (final w in shown) DonutSlice(value: w.currentBalance, color: widget.colors[w.id]!),
                 ],

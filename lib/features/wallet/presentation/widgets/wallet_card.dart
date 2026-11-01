@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_type.dart';
@@ -182,5 +183,159 @@ class WalletSpreadBar extends StatelessWidget {
       for (final (i, w) in wallets.indexed)
         if (small.contains(i) || restTotal == 0) _minSegment else rest * w.currentBalance / restTotal,
     ];
+  }
+}
+
+/// Warna tiap dompet di kartu Sebaran saldo, versi v2: pasangan kategori
+/// preset aktif. Aturan sama dengan [walletColors] (dompet pertama tiap jenis
+/// memakai warna jenisnya; yang sejenis berikutnya warna cadangan pertama
+/// yang belum terpakai).
+Map<String, Color> walletColorsDs(DsColorScheme scheme, List<Wallet> wallets) {
+  final cats = scheme.categories;
+  // Urutan: bank, tabungan, tunai, digital, kartu, lalu cadangan.
+  final palette = [
+    cats.blue,
+    cats.amber,
+    cats.green,
+    cats.teal,
+    cats.brown,
+    cats.orange,
+    cats.purple,
+    cats.rose,
+    cats.indigo,
+  ];
+  int typeIndex(String iconKey) => switch (walletIconKey(iconKey)) {
+    IconKey.walletBank => 0,
+    IconKey.walletSavings => 1,
+    IconKey.walletCash => 2,
+    IconKey.walletEwallet => 3,
+    IconKey.walletCard => 4,
+    _ => -1,
+  };
+  final used = <int>{};
+  final result = <String, Color>{};
+  for (final wallet in wallets) {
+    var index = typeIndex(wallet.iconKey);
+    if (index < 0 || used.contains(index)) {
+      index = [for (var i = 0; i < palette.length; i++) i].firstWhere((i) => !used.contains(i), orElse: () => -1);
+    }
+    if (index >= 0) used.add(index);
+    result[wallet.id] = index < 0 ? scheme.categories.slate.color : palette[index].color;
+  }
+  return result;
+}
+
+/// Satu dompet sebagai kartu bento (acuan Dompet v2): tile ikon clay jenis
+/// dompet, lencana jenis, nama, saldo, dan persen porsi dengan penanda warna.
+/// [wide] membuatnya selebar penuh (dompet pertama). Saldo mengikuti sembunyikan
+/// nominal; saldo negatif bertanda minus.
+class WalletBentoCard extends StatelessWidget {
+  /// Membuat [WalletBentoCard].
+  const WalletBentoCard({
+    required this.wallet,
+    required this.onTap,
+    this.wide = false,
+    this.shareText,
+    this.swatchColor,
+    this.linked = false,
+    super.key,
+  });
+
+  /// Dompet yang ditampilkan.
+  final Wallet wallet;
+
+  /// Dipanggil saat kartu diketuk (membuka rincian).
+  final VoidCallback onTap;
+
+  /// Selebar penuh dengan tile di kiri.
+  final bool wide;
+
+  /// Bagian saldo ("54%", "<1%"), atau `null`.
+  final String? shareText;
+
+  /// Warna dompet di kartu Sebaran saldo.
+  final Color? swatchColor;
+
+  /// Dompet ini sedang dipilih di donat Sebaran saldo.
+  final bool linked;
+
+  @override
+  Widget build(BuildContext context) {
+    final ds = context.ds;
+    final c = ds.colors;
+    final type = walletTypeLabel(wallet.iconKey);
+    final asset = ClayIcons.forIcon(walletIconKey(wallet.iconKey)) ?? ClayIcons.walletNav;
+    final tile = DsIconTile.asset(asset: asset, size: wide ? DsIconTileSize.lg : DsIconTileSize.md);
+    final badges = Wrap(
+      spacing: 4,
+      runSpacing: 4,
+      children: [
+        if (type != null) DsBadge(label: type, tone: DsBadgeTone.neutral),
+        if (shareText != null)
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (swatchColor != null) ...[WalletSwatch(swatchColor!), const SizedBox(width: 4)],
+              Text(shareText!, style: ds.typography.labelMd.copyWith(color: c.textMuted, fontSize: 11)),
+            ],
+          ),
+      ],
+    );
+    // Tanpa elipsis: nama panjang membungkus, tidak dipotong.
+    final name = Text(
+      wallet.name,
+      style: ds.typography.titleMd.copyWith(fontSize: wide ? 17 : 15),
+    );
+    final amount = FittedBox(
+      fit: BoxFit.scaleDown,
+      alignment: Alignment.centerLeft,
+      child: AppMoneyText(wallet.currentBalance, size: MoneySize.large),
+    );
+    return Opacity(
+      opacity: wallet.isActive ? 1 : 0.6,
+      child: Semantics(
+        button: true,
+        label: wallet.name,
+        child: DsPressable(
+          onPressed: onTap,
+          dimWhenDisabled: false,
+          builder: (context, _) => AnimatedContainer(
+            duration: DsMotion.reduced(context) ? Duration.zero : DsMotion.standard,
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: linked ? c.actionPrimary.withValues(alpha: 0.06) : c.surfaceCard,
+              borderRadius: DsRadius.xlAll,
+              border: Border.all(color: linked ? c.actionPrimary : c.outlineSubtle, width: linked ? 1.5 : 1),
+              boxShadow: const [BoxShadow(color: Color(0x0F000000), blurRadius: 14, offset: Offset(0, 5))],
+            ),
+            child: wide
+                ? Row(
+                    children: [
+                      tile,
+                      const SizedBox(width: 14),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [name, const SizedBox(height: 4), amount, const SizedBox(height: 6), badges],
+                        ),
+                      ),
+                    ],
+                  )
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      tile,
+                      const SizedBox(height: 12),
+                      name,
+                      const SizedBox(height: 4),
+                      amount,
+                      const SizedBox(height: 6),
+                      badges,
+                    ],
+                  ),
+          ),
+        ),
+      ),
+    );
   }
 }

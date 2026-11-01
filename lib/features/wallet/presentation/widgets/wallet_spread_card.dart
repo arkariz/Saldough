@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
@@ -83,13 +84,20 @@ class _WalletSpreadCardState extends State<WalletSpreadCard> {
   Widget build(BuildContext context) {
     final shown = _shown;
     final reduceMotion = MediaQuery.disableAnimationsOf(context);
-    return AppCard(
+    final c = context.ds.colors;
+    return Container(
       key: const ValueKey('wallet-spread'),
-      padding: EdgeInsets.zero,
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(
+        color: c.surfaceCard,
+        borderRadius: DsRadius.xlAll,
+        border: Border.all(color: c.outlineSubtle),
+        boxShadow: const [BoxShadow(color: Color(0x0F000000), blurRadius: 14, offset: Offset(0, 5))],
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _Head(open: _open, reduceMotion: reduceMotion, onTap: _toggle),
+          _Head(open: _open, reduceMotion: reduceMotion, count: shown.length, onTap: _toggle),
           if (!_open) ...[
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4),
@@ -121,12 +129,12 @@ class _WalletSpreadCardState extends State<WalletSpreadCard> {
   }
 
   Widget _body(BuildContext context, List<Wallet> shown) {
-    final colors = context.appColors;
+    final colors = context.ds.colors;
     final selectedIndex = shown.indexWhere((w) => w.id == _selected);
     final selected = selectedIndex < 0 ? null : shown[selectedIndex];
     return DecoratedBox(
       decoration: BoxDecoration(
-        border: Border(top: BorderSide(color: colors.line)),
+        border: Border(top: BorderSide(color: colors.outlineSubtle)),
       ),
       child: Padding(
         padding: const EdgeInsets.only(top: AppSpacing.space1, bottom: AppSpacing.space2),
@@ -168,17 +176,12 @@ class _WalletSpreadCardState extends State<WalletSpreadCard> {
               child: Row(
                 children: [
                   if (selected != null)
-                    AppButton.text(
-                      label: t.wallet.spreadSeeTotal,
-                      small: true,
-                      onPressed: () => _setSelected(null),
-                    ),
+                    DsButton.ghost(label: t.wallet.spreadSeeTotal, onPressed: () => _setSelected(null)),
                   const Spacer(),
-                  AppButton.text(
+                  DsButton.ghost(
                     key: const ValueKey('wallet-spread-hide'),
                     label: t.wallet.spreadHide,
-                    icon: IconKey.expandLess,
-                    small: true,
+                    icon: Icons.expand_less,
                     onPressed: _toggle,
                   ),
                 ],
@@ -191,55 +194,64 @@ class _WalletSpreadCardState extends State<WalletSpreadCard> {
   }
 }
 
-/// Kepala kartu: tombol penuh lebar dengan tile `donut_small`, judul,
-/// subjudul buka/tutup, dan chevron yang berputar 180° saat terbuka.
+/// Kepala kartu: tombol penuh lebar dengan tile grafik clay, judul dan lencana
+/// jumlah alokasi, subjudul buka/tutup, dan chevron yang berputar 180° saat
+/// terbuka.
 class _Head extends StatelessWidget {
-  const _Head({required this.open, required this.reduceMotion, required this.onTap});
+  const _Head({required this.open, required this.reduceMotion, required this.count, required this.onTap});
 
   final bool open;
   final bool reduceMotion;
+  final int count;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
+    final ds = context.ds;
+    final c = ds.colors;
     final sub = open ? t.wallet.spreadTapClose : t.wallet.spreadTapOpen;
     return Semantics(
       button: true,
       expanded: open,
       label: '${t.wallet.spreadTitle}. $sub',
       excludeSemantics: true,
-      child: InkWell(
+      child: DsPressable(
         key: const ValueKey('wallet-spread-head'),
-        onTap: onTap,
-        overlayColor: WidgetStateProperty.resolveWith(
-          (states) => states.contains(WidgetState.pressed) ? colors.surface2 : Colors.transparent,
-        ),
-        child: ConstrainedBox(
+        onPressed: onTap,
+        pressedScale: 0.99,
+        dimWhenDisabled: false,
+        builder: (context, _) => ConstrainedBox(
           constraints: const BoxConstraints(minHeight: 64),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4, vertical: AppSpacing.space3),
+            padding: const EdgeInsets.all(AppSpacing.space4),
             child: Row(
               children: [
-                AppIconTile(IconKey.balanceSpread, background: colors.brandSoft),
-                const SizedBox(width: AppSpacing.space3),
+                DsIconTile.asset(asset: ClayIcons.chart, tone: DsIconTileTone.income),
+                const SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(t.wallet.spreadTitle, style: textTheme.titleMedium),
-                      Text(sub, style: textTheme.bodyMedium?.copyWith(color: colors.ink2)),
+                      Wrap(
+                        spacing: 6,
+                        runSpacing: 2,
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        children: [
+                          Text(t.wallet.spreadTitle, style: ds.typography.titleMd),
+                          DsBadge(label: '$count', tone: DsBadgeTone.neutral),
+                        ],
+                      ),
+                      Text(sub, style: ds.typography.bodySm.copyWith(color: c.textSecondary)),
                     ],
                   ),
                 ),
-                const SizedBox(width: AppSpacing.space3),
+                const SizedBox(width: 12),
                 AnimatedRotation(
                   turns: open ? 0.5 : 0,
                   duration: reduceMotion ? Duration.zero : const Duration(milliseconds: 200),
                   curve: Curves.easeOut,
-                  child: AppIcon(IconKey.expandMore, color: colors.ink2),
+                  child: Icon(Icons.expand_more, color: c.textSecondary),
                 ),
               ],
             ),
@@ -260,7 +272,7 @@ class _Keys extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final style = Theme.of(context).textTheme.labelMedium?.copyWith(color: context.appColors.ink2);
+    final style = context.ds.typography.labelMd.copyWith(color: context.ds.colors.textSecondary);
     return Wrap(
       spacing: AppSpacing.space3,
       runSpacing: AppSpacing.space1,
@@ -344,58 +356,50 @@ class _LegendChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
-    final weight = selected ? FontWeight.w700 : null;
-    final shape = RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(AppRadius.sm),
-      side: BorderSide(color: selected ? colors.brand : colors.line),
-    );
+    final ds = context.ds;
+    final c = ds.colors;
+    final weight = selected ? FontWeight.w700 : FontWeight.w500;
     return Semantics(
       button: true,
       selected: selected,
       label: '${wallet.name}, ${share.text}',
       excludeSemantics: true,
-      child: Material(
-        color: selected ? colors.brandSoft : Colors.transparent,
-        shape: shape,
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          onTap: onTap,
-          overlayColor: WidgetStateProperty.resolveWith(
-            (states) => states.contains(WidgetState.pressed) ? colors.surface2 : Colors.transparent,
+      child: DsPressable(
+        onPressed: onTap,
+        pressedScale: 0.97,
+        dimWhenDisabled: false,
+        builder: (context, _) => AnimatedContainer(
+          duration: DsMotion.reduced(context) ? Duration.zero : DsMotion.standard,
+          constraints: const BoxConstraints(minHeight: 44),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+          decoration: BoxDecoration(
+            color: selected ? c.actionPrimary.withValues(alpha: 0.08) : Colors.transparent,
+            borderRadius: DsRadius.mdAll,
+            border: Border.all(color: selected ? c.actionPrimary : c.outlineSubtle),
           ),
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(minHeight: 48),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space3, vertical: AppSpacing.space2),
-              child: Row(
-                children: [
-                  WalletSwatch(color),
-                  const SizedBox(width: AppSpacing.space2),
-                  Expanded(
-                    child: Text(
-                      wallet.name,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: textTheme.bodyMedium?.copyWith(
-                        fontWeight: weight ?? FontWeight.w500,
-                        color: selected ? colors.ink : null,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: AppSpacing.space2),
-                  Text(
-                    share.text,
-                    style: textTheme.bodyMedium?.copyWith(
-                      fontWeight: weight ?? FontWeight.w600,
-                      color: selected ? colors.ink : colors.ink2,
-                      fontFeatures: const [FontFeature.tabularFigures()],
-                    ),
-                  ),
-                ],
+          child: Row(
+            children: [
+              WalletSwatch(color),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  wallet.name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: ds.typography.bodyMd.copyWith(fontWeight: weight, fontSize: 13),
+                ),
               ),
-            ),
+              const SizedBox(width: 8),
+              Text(
+                share.text,
+                style: ds.typography.bodyMd.copyWith(
+                  fontWeight: selected ? FontWeight.w700 : FontWeight.w600,
+                  fontSize: 13,
+                  color: selected ? c.textPrimary : c.textSecondary,
+                  fontFeatures: const [FontFeature.tabularFigures()],
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -413,9 +417,8 @@ class _Center extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
-    final small = textTheme.bodyMedium?.copyWith(color: colors.ink2);
+    final ds = context.ds;
+    final small = ds.typography.bodySm.copyWith(color: ds.colors.textSecondary);
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [

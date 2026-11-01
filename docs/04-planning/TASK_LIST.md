@@ -5998,6 +5998,15 @@ memilih mode (dan preset bila ≥ 2), dan design system lama dihapus.
       Tanggal|Ulangi; aturan F1 kembali berlaku untuk nominal, kategori,
       dompet, tanggal, dan catatan (pos anggaran tetap boleh digulir). Layar
       galat Beranda memakai `DsErrorState`.
+      **Dompet v2, irisan 1-2 (1 Nov 2026):** tab Dompet memakai
+      `WalletHeroCard` (`DsHeroBalanceCard`, tanpa kotak Masuk/Keluar karena
+      arus transaksi bukan milik fitur Dompet), kartu Sebaran saldo v2, grid
+      bento (`WalletBentoCard`: dompet pertama selebar penuh, sisanya dua
+      kolom, ikon clay, lencana jenis dan persen), kartu tambah putus-putus,
+      baris dompet nonaktif v2, dan layar galat `DsErrorState`. Tidak
+      diadopsi dari acuan: lencana "+3,5% APY", skor Kakeibo Health, kartu
+      edukasi. Belum: mode Atur di tempat (goyang dan tarik-seret; masih
+      lembar urutkan), rincian dompet, formulir dompet, dan menu titik tiga.
       **Ikon clay dilengkapi (31 Okt 2026, KT-DS5):** 33 ikon baru untuk
       dompet, jenis transaksi, kategori, dan status Freelance; semua
       `IconKey` benda kini punya clay (`ClayIcons.forIcon`). Digambar dari

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 
@@ -33,7 +35,8 @@ class WalletLoadErrorState extends StatelessWidget {
   final VoidCallback onRetry;
 
   @override
-  Widget build(BuildContext context) => AppErrorState(
+  Widget build(BuildContext context) => DsErrorState(
+    illustration: SvgPicture.asset(ClayIcons.warning, width: 40, height: 40),
     title: t.wallet.loadErrorTitle,
     body: t.wallet.loadErrorSubtitle,
     retryLabel: t.common.retry,

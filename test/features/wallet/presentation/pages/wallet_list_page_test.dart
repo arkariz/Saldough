@@ -119,7 +119,8 @@ void main() {
   /// lagi membuka formulir langsung).
   Future<void> openForm(WidgetTester tester, {String? editing}) async {
     if (editing == null) {
-      final target = find.widgetWithText(AppButton, t.wallet.addAction);
+      final legacy = find.widgetWithText(AppButton, t.wallet.addAction);
+      final target = legacy.evaluate().isNotEmpty ? legacy : find.widgetWithText(DsPressable, t.wallet.addAction);
       await tester.ensureVisible(target);
       await tester.tap(target);
       await tester.pumpAndSettle();
@@ -127,7 +128,7 @@ void main() {
     }
     final card = find.ancestor(
       of: find.text(editing),
-      matching: find.byType(WalletCard),
+      matching: find.byType(WalletBentoCard),
     );
     await tester.ensureVisible(card.first);
     await tester.tap(card.first);
@@ -162,7 +163,7 @@ void main() {
         await openWalletsTab(tester);
 
         expect(
-          find.text('Rp10.950.000'),
+          find.text('10.950.000'),
           findsWidgets,
           reason: 'total = 8.500.000 + 2.450.000, dompet nonaktif tidak ikut',
         );
@@ -171,8 +172,10 @@ void main() {
         expect(find.text('GoPay'), findsOneWidget);
         // Subjudul "Jenis · persen" (prototipe `Dompet.dc.html`): 8.500.000
         // dari 10.950.000 = 78%, sisanya 22%.
-        expect(find.text('${t.wallet.typeBank} · 78%'), findsOneWidget);
-        expect(find.text('${t.wallet.typeEwallet} · 22%'), findsOneWidget);
+        expect(find.text(t.wallet.typeBank), findsOneWidget);
+        expect(find.text('78%'), findsWidgets);
+        expect(find.text(t.wallet.typeEwallet), findsOneWidget);
+        expect(find.text('22%'), findsWidgets);
         expect(find.byType(WalletSpreadBar), findsOneWidget);
         expect(find.byType(WalletSwatch), findsWidgets);
         // Dompet nonaktif hanya satu baris ringkas (B-66), bukan daftar.
@@ -228,17 +231,17 @@ void main() {
         await tester.pumpAndSettle();
         expect(find.text(t.wallet.spreadOfTotal(percent: '1%')), findsOneWidget);
         bool linkedOf(String name) =>
-            tester.widget<WalletCard>(find.ancestor(of: find.text(name), matching: find.byType(WalletCard))).linked;
+            tester.widget<WalletBentoCard>(find.ancestor(of: find.text(name), matching: find.byType(WalletBentoCard))).linked;
         expect(linkedOf('BCA'), isFalse);
         expect(
-          tester.widgetList<WalletCard>(find.byType(WalletCard)).where((c) => c.linked).map((c) => c.wallet.id),
+          tester.widgetList<WalletBentoCard>(find.byType(WalletBentoCard)).where((c) => c.linked).map((c) => c.wallet.id),
           ['tunai'],
         );
 
         // Lihat total mengosongkan pilihan.
         await tester.tap(find.text(t.wallet.spreadSeeTotal));
         await tester.pumpAndSettle();
-        expect(tester.widgetList<WalletCard>(find.byType(WalletCard)).where((c) => c.linked), isEmpty);
+        expect(tester.widgetList<WalletBentoCard>(find.byType(WalletBentoCard)).where((c) => c.linked), isEmpty);
         expect(find.text(t.wallet.spreadOfTotal(percent: '1%')), findsNothing);
 
         // Pilih lagi, lalu Sembunyikan: kembali ringkas tanpa pilihan.
@@ -377,7 +380,7 @@ void main() {
         await seed('a', 'BCA', current: 100000000);
         await seed('b', 'GoPay', current: 50000000, icon: 'walletEwallet');
         await openWalletsTab(tester);
-        expect(find.text('Rp1.500.000'), findsWidgets);
+        expect(find.text('1.500.000'), findsWidgets);
 
         await openForm(tester, editing: 'GoPay');
         await tester.ensureVisible(find.byType(Switch));
@@ -589,7 +592,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect((await stored()).map((w) => w.id), ['w4', 'w1', 'w3', 'w2']);
-      final names = tester.widgetList<WalletCard>(find.byType(WalletCard)).map((c) => c.wallet.name);
+      final names = tester.widgetList<WalletBentoCard>(find.byType(WalletBentoCard)).map((c) => c.wallet.name);
       expect(names, ['GoPay', 'BCA', 'Tunai'], reason: 'Lama nonaktif: di halaman Dompet nonaktif (B-66)');
       expect(find.text(t.wallet.reorderedMessage), findsOneWidget);
     });

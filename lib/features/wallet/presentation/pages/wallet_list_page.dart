@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:navigation/navigation.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
-import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/wallet/presentation/bloc/wallet_bloc.dart';
 import 'package:saldough/features/wallet/presentation/bloc/wallet_state.dart';
 import 'package:saldough/features/wallet/presentation/navigation/wallet_route_keys.dart';
@@ -14,8 +14,10 @@ import 'package:saldough/features/wallet/presentation/wallet_shares.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_card.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_empty_states.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_form_sheet.dart';
+import 'package:saldough/features/wallet/presentation/widgets/wallet_hero_card.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_reorder_sheet.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_spread_card.dart';
+import 'package:saldough/shared/wallet/wallet.dart';
 import 'package:state_management/state_management.dart';
 
 /// Layar Dompet (T-2.7; FR-WAL-001..003): total saldo dompet aktif, daftar
@@ -70,7 +72,7 @@ class _WalletListPageState extends State<WalletListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(t.appShell.walletsTabLabel, style: Theme.of(context).textTheme.headlineSmall),
+        title: Text(t.appShell.walletsTabLabel, style: context.ds.typography.headlineMd),
         centerTitle: false,
         actions: [
           const TutorialInfoButton(tour: TourId.wallet),
@@ -78,14 +80,14 @@ class _WalletListPageState extends State<WalletListPage> {
             buildWhen: (previous, current) => previous.activeWallets.length != current.activeWallets.length,
             builder: (context, state) => state.activeWallets.length < 2
                 ? const SizedBox.shrink()
-                : AppIconButton(
+                : DsIconButton(
                     key: const ValueKey('wallet-reorder'),
-                    icon: IconKey.reorder,
+                    icon: Icons.tune,
                     label: t.wallet.reorderAction,
                     onPressed: () => _reorderWallets(context, context.read<WalletBloc>().state),
                   ),
           ),
-          AppIconButton(icon: IconKey.add, label: t.wallet.addAction, onPressed: () => _addWallet(context)),
+          DsIconButton(icon: Icons.add, label: t.wallet.addAction, onPressed: () => _addWallet(context)),
         ],
       ),
       body: SafeArea(
@@ -107,11 +109,9 @@ class _WalletListPageState extends State<WalletListPage> {
 
             final active = state.activeWallets;
             final inactive = state.inactiveWallets;
-            final colors = context.appColors;
-            final textTheme = Theme.of(context).textTheme;
             final shares = walletShares(active);
             final multi = active.length > 1;
-            final walletColorMap = walletColors(colors, active);
+            final walletColorMap = walletColorsDs(context.ds.colors, active);
             final linked = multi ? _linked : null;
             // TR-WALLET (ADR-021 §3.4): ringkasan, dompet pertama, tambah.
             return TourTrigger(
@@ -125,26 +125,11 @@ class _WalletListPageState extends State<WalletListPage> {
                 AppSpacing.space12,
               ),
               children: [
-                // Dompet v2 (`Dompet.dc.html`, B-66): kartu Total saldo, lalu
-                // kartu Sebaran saldo (BalanceSpread) bila dompetnya dua atau
-                // lebih.
+                // Dompet v2 (ADR-043): hero total saldo, kartu Sebaran saldo
+                // bila dompetnya dua atau lebih, lalu grid bento dompet.
                 SpotlightTarget(
                   spotlightKey: SpotlightKey.walletSummary,
-                  child: AppCard(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Text(t.home.balanceLabel, style: textTheme.bodyMedium?.copyWith(color: colors.ink2)),
-                        const SizedBox(height: 2),
-                        HeroAmount(AppMoneyFormatter.format(state.totalBalance)),
-                        const SizedBox(height: 2),
-                        Text(
-                          t.wallet.activeBadge(count: active.length),
-                          style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
-                        ),
-                      ],
-                    ),
-                  ),
+                  child: WalletHeroCard(total: state.totalBalance, activeCount: active.length),
                 ),
                 if (multi && shares.length > 1) ...[
                   const SizedBox(height: AppSpacing.space4),
@@ -158,36 +143,23 @@ class _WalletListPageState extends State<WalletListPage> {
                   ),
                 ],
                 const SizedBox(height: AppSpacing.space4),
-                AppSectionHeader(
-                  t.wallet.listHeading,
-                  badge: AppBadge('${active.length}'),
-                ),
+                DsSectionHeader(title: t.wallet.listHeading, icon: Icons.account_balance_wallet_outlined),
                 const SizedBox(height: AppSpacing.space2),
-                AppListCard(
-                  children: [
-                    for (final (i, wallet) in active.indexed)
-                      SpotlightTarget(
-                        // Hanya dompet pertama yang disorot.
-                        spotlightKey: i == 0 ? SpotlightKey.walletCard : null,
-                        child: WalletCard(
-                          wallet: wallet,
-                          shareText: multi ? shares[wallet.id]?.text : null,
-                          swatchColor: multi ? walletColorMap[wallet.id] : null,
-                          linked: linked == wallet.id,
-                          onTap: () => context.pushRoute(WalletRouteKeys.detail, WalletDetailInput(wallet)),
-                        ),
-                      ),
-                  ],
+                _WalletGrid(
+                  wallets: active,
+                  shares: multi ? shares : const {},
+                  colors: multi ? walletColorMap : const {},
+                  linked: linked,
                 ),
                 if (inactive.isNotEmpty) ...[
                   const SizedBox(height: AppSpacing.space4),
-                  AppListCard(
+                  DsFieldGroup(
                     children: [
-                      AppListRow(
+                      DsFieldRow(
                         key: const ValueKey('wallet-inactive-row'),
-                        title: t.wallet.inactiveHeading,
-                        subtitle: t.wallet.inactiveRowSub(n: inactive.length),
-                        compact: true,
+                        icon: Icons.inventory_2_outlined,
+                        label: t.wallet.inactiveHeading,
+                        title: t.wallet.inactiveRowSub(n: inactive.length),
                         chevron: true,
                         onTap: () => context.pushRoute(WalletRouteKeys.inactive, const EmptyInput()),
                       ),
@@ -197,12 +169,7 @@ class _WalletListPageState extends State<WalletListPage> {
                 const SizedBox(height: AppSpacing.space6),
                 SpotlightTarget(
                   spotlightKey: SpotlightKey.walletAdd,
-                  child: AppButton.secondary(
-                    label: t.wallet.addAction,
-                    icon: IconKey.add,
-                    expand: true,
-                    onPressed: () => _addWallet(context),
-                  ),
+                  child: _AddSlot(label: t.wallet.addAction, onTap: () => _addWallet(context)),
                 ),
               ],
               ),
@@ -239,4 +206,113 @@ Future<void> openAddWalletSheet(BuildContext context) async {
     );
     await processed;
   }
+}
+
+/// Grid bento dompet: dompet pertama selebar penuh, sisanya dua kolom.
+class _WalletGrid extends StatelessWidget {
+  const _WalletGrid({required this.wallets, required this.shares, required this.colors, required this.linked});
+
+  final List<Wallet> wallets;
+  final Map<String, WalletShare> shares;
+  final Map<String, Color> colors;
+  final String? linked;
+
+  @override
+  Widget build(BuildContext context) {
+    Widget card(Wallet wallet, int index, {bool wide = false}) => SpotlightTarget(
+      // Hanya dompet pertama yang disorot.
+      spotlightKey: index == 0 ? SpotlightKey.walletCard : null,
+      child: WalletBentoCard(
+        wallet: wallet,
+        wide: wide,
+        shareText: shares[wallet.id]?.text,
+        swatchColor: colors[wallet.id],
+        linked: linked == wallet.id,
+        onTap: () => context.pushRoute(WalletRouteKeys.detail, WalletDetailInput(wallet)),
+      ),
+    );
+    final rest = wallets.skip(1).toList();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        card(wallets.first, 0, wide: true),
+        for (var i = 0; i < rest.length; i += 2) ...[
+          const SizedBox(height: 12),
+          IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(child: card(rest[i], i + 1)),
+                const SizedBox(width: 12),
+                Expanded(child: i + 1 < rest.length ? card(rest[i + 1], i + 2) : const SizedBox.shrink()),
+              ],
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+}
+
+/// Kartu putus-putus "Tambah dompet" di bawah grid.
+class _AddSlot extends StatelessWidget {
+  const _AddSlot({required this.label, required this.onTap});
+
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final ds = context.ds;
+    final c = ds.colors;
+    return DsPressable(
+      onPressed: onTap,
+      semanticLabel: label,
+      dimWhenDisabled: false,
+      builder: (context, _) => CustomPaint(
+        painter: _DashedBorderPainter(color: c.outline, radius: 24),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(color: c.actionPrimary, shape: BoxShape.circle),
+                child: Icon(Icons.add, color: c.onActionPrimary),
+              ),
+              const SizedBox(width: 14),
+              Expanded(child: Text(label, style: ds.typography.titleMd)),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _DashedBorderPainter extends CustomPainter {
+  const _DashedBorderPainter({required this.color, required this.radius});
+
+  final Color color;
+  final double radius;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.5;
+    final path = Path()..addRRect(RRect.fromRectAndRadius(Offset.zero & size, Radius.circular(radius)));
+    for (final metric in path.computeMetrics()) {
+      var distance = 0.0;
+      while (distance < metric.length) {
+        canvas.drawPath(metric.extractPath(distance, distance + 6), paint);
+        distance += 11;
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(_DashedBorderPainter oldDelegate) => oldDelegate.color != color || oldDelegate.radius != radius;
 }

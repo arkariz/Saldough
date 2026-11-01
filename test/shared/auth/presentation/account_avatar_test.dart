@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/shared/auth/auth.dart';
@@ -10,9 +11,9 @@ Widget _host(Widget child) => MaterialApp(
 );
 
 void main() {
-  testWidgets('belum masuk: bulat dengan ikon orang', (tester) async {
+  testWidgets('belum masuk: bulat dengan maskot clay', (tester) async {
     await tester.pumpWidget(_host(const AccountAvatar(user: null)));
-    expect(find.byIcon(Icons.person_outline), findsOneWidget);
+    expect(find.byType(SvgPicture), findsOneWidget);
     final box = tester.widget<Container>(find.byType(Container).first);
     expect((box.decoration! as BoxDecoration).shape, BoxShape.circle);
   });

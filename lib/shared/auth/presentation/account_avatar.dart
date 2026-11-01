@@ -1,11 +1,13 @@
 import 'package:di/di.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/widgets/clay_icons.dart';
 import 'package:saldough/shared/auth/auth.dart';
 
 /// Avatar akun bulat: foto Google kalau ada, inisial kalau tidak, ikon akun
-/// kalau belum masuk.
+/// maskot tanuki clay yang tidur kalau belum masuk.
 class AccountAvatar extends StatelessWidget {
   /// Membuat [AccountAvatar].
   const AccountAvatar({required this.user, this.size = 40, super.key});
@@ -22,7 +24,7 @@ class AccountAvatar extends StatelessWidget {
     final user = this.user;
     final initial = (user?.displayName ?? user?.email ?? '').trim();
     final fallback = user == null || initial.isEmpty
-        ? Icon(Icons.person_outline, size: size * 0.6, color: c.textSecondary)
+        ? SvgPicture.asset(ClayIcons.mascotSleeping, width: size * 0.78, height: size * 0.78)
         : Text(
             initial.characters.first.toUpperCase(),
             style: TextStyle(fontSize: size * 0.45, fontWeight: FontWeight.w700, color: c.onActionPrimary),
@@ -51,7 +53,7 @@ class AccountAvatar extends StatelessWidget {
   }
 }
 
-/// Tombol akun di app bar Beranda: ikon akun saat belum masuk, avatar saat
+/// Tombol akun di app bar Beranda: maskot saat belum masuk, avatar saat
 /// sudah masuk (ADR-024). Mendengarkan [AuthRepository] langsung dari
 /// kontainer akar supaya Beranda tidak perlu tahu soal akun.
 class AccountAvatarButton extends StatefulWidget {
@@ -85,9 +87,6 @@ class _AccountAvatarButtonState extends State<AccountAvatarButton> {
       initialData: _auth.currentUser,
       builder: (context, snapshot) {
         final user = snapshot.data;
-        if (user == null) {
-          return DsIconButton(icon: Icons.person_outline, label: t.account.title, onPressed: widget.onPressed);
-        }
         return Tooltip(
           message: t.account.title,
           child: DsPressable(

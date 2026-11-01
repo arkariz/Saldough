@@ -212,7 +212,6 @@ class _MonthSummary extends StatelessWidget {
     );
     final change = totals.change;
     return DsCard(
-      padding: const EdgeInsets.all(14),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [

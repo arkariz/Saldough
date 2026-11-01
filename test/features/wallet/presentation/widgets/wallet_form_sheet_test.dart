@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_form_sheet.dart';
@@ -48,7 +49,7 @@ void main() {
   Finder field(int index) => find.byType(TextField).at(index);
 
   Future<void> save(WidgetTester tester, String label) async {
-    await tester.tap(find.widgetWithText(AppButton, label));
+    await tester.tap(find.widgetWithText(DsButton, label));
     await tester.pumpAndSettle();
   }
 
@@ -56,7 +57,7 @@ void main() {
     testWidgets('tombol simpan nonaktif sampai nama terisi', (tester) async {
       await open(tester);
 
-      AppButton button() => tester.widget<AppButton>(find.widgetWithText(AppButton, t.wallet.saveAddAction));
+      DsButton button() => tester.widget<DsButton>(find.widgetWithText(DsButton, t.wallet.saveAddAction));
       expect(button().onPressed, isNull);
 
       await tester.enterText(field(0), '   ');
@@ -130,7 +131,7 @@ void main() {
     testWidgets('tombol kembali menutup tanpa hasil', (tester) async {
       final results = await open(tester);
 
-      await tester.tap(find.byWidgetPredicate((w) => w is AppIcon && w.iconKey == IconKey.chevronLeft));
+      await tester.tap(find.byTooltip(t.common.close));
       await tester.pumpAndSettle();
 
       expect(results, [null]);
@@ -144,7 +145,7 @@ void main() {
       expect(find.text('BCA'), findsWidgets);
       expect(find.text('1.300.000'), findsOneWidget, reason: 'kolom terisi saldo saat ini, bukan saldo awal');
       expect(find.text(t.wallet.currentBalanceLabel), findsOneWidget);
-      expect(find.widgetWithText(AppButton, t.transaction.saveChangesAction), findsOneWidget);
+      expect(find.widgetWithText(DsButton, t.transaction.saveChangesAction), findsOneWidget);
     });
 
     testWidgets('saldo awal yang tidak disentuh TIDAK dikirim (null) -- nilai tersimpan tidak tertimpa', (
@@ -201,14 +202,14 @@ void main() {
     ) async {
       final results = await open(tester, initial: existing);
 
-      await tester.tap(find.widgetWithText(AppButton, t.wallet.deleteAction));
+      await tester.tap(find.widgetWithText(DsButton, t.wallet.deleteAction));
       await tester.pumpAndSettle();
       expect(find.text(t.wallet.deleteConfirmTitle), findsOneWidget);
       await tester.tap(find.widgetWithText(AppButton, t.common.cancel));
       await tester.pumpAndSettle();
       expect(results, isEmpty, reason: 'formulir masih terbuka');
 
-      await tester.tap(find.widgetWithText(AppButton, t.wallet.deleteAction));
+      await tester.tap(find.widgetWithText(DsButton, t.wallet.deleteAction));
       await tester.pumpAndSettle();
       await tester.tap(find.widgetWithText(AppButton, t.common.delete));
       await tester.pumpAndSettle();

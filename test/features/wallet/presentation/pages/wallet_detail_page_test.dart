@@ -290,7 +290,7 @@ void main() {
       tester,
     ) async {
       await seedWallet('a', 'BCA', current: 100000000);
-      await seedWallet('b', 'GoPay', current: 0, icon: 'walletEwallet');
+      await seedWallet('b', 'GoPay', icon: 'walletEwallet');
       await openDetail(tester, 'BCA');
 
       await tester.tap(find.byKey(const ValueKey('wallet-detail-transfer')));

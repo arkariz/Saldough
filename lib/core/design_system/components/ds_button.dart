@@ -25,6 +25,9 @@ enum DsButtonVariant {
 
   /// Kecil berhuruf piksel kapital, di dalam banner dan baris.
   compact,
+
+  /// Tindakan merusak (hapus): putih berbingkai dan berteks merah.
+  danger,
 }
 
 /// Tombol design system baru: satu tindakan, teks kata kerja + benda.
@@ -52,6 +55,10 @@ class DsButton extends StatelessWidget {
   /// Tombol tonal di kartu saldo hero.
   const DsButton.onHeroTonal({required this.label, required this.onPressed, this.icon, this.expand = true, super.key})
     : variant = DsButtonVariant.onHeroTonal;
+
+  /// Tombol tindakan merusak, mis. hapus dompet.
+  const DsButton.danger({required this.label, required this.onPressed, this.icon, this.expand = false, super.key})
+    : variant = DsButtonVariant.danger;
 
   /// Tombol ringkas ("KLAIM"). [label] ditulis kapital oleh pemanggil.
   const DsButton.compact({required this.label, required this.onPressed, super.key})
@@ -92,6 +99,13 @@ class DsButton extends StatelessWidget {
       DsButtonVariant.onHero => (c.onHero, c.onHero, c.primaryContainer, null, null),
       DsButtonVariant.onHeroTonal => (c.heroActionSecondary, c.heroActionSecondary, c.onHero, hairline, hairline),
       DsButtonVariant.compact => (c.actionPrimary, c.actionPrimaryPressed, c.onActionPrimary, null, null),
+      DsButtonVariant.danger => (
+        c.surfaceCard,
+        c.errorContainer,
+        c.error,
+        c.error.withValues(alpha: 0.4),
+        c.error,
+      ),
     };
     final compact = variant == DsButtonVariant.compact;
     final onHero = variant == DsButtonVariant.onHero || variant == DsButtonVariant.onHeroTonal;

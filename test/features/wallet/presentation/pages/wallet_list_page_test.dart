@@ -307,7 +307,7 @@ void main() {
         await tester.tap(find.text('+500rb'));
         await tester.pump();
         await tester.tap(
-          find.widgetWithText(AppButton, t.wallet.saveAddAction),
+          find.widgetWithText(DsButton, t.wallet.saveAddAction),
         );
         await tester.pumpAndSettle();
 
@@ -340,7 +340,7 @@ void main() {
       await tester.enterText(find.byType(TextField).first, 'BCA Utama');
       await tester.pump();
       await tester.tap(
-        find.widgetWithText(AppButton, t.transaction.saveChangesAction),
+        find.widgetWithText(DsButton, t.transaction.saveChangesAction),
       );
       await tester.pumpAndSettle();
 
@@ -372,7 +372,7 @@ void main() {
         await tester.tap(find.text('+1jt'));
         await tester.pump();
         await tester.tap(
-          find.widgetWithText(AppButton, t.transaction.saveChangesAction),
+          find.widgetWithText(DsButton, t.transaction.saveChangesAction),
         );
         await tester.pumpAndSettle();
 
@@ -399,7 +399,7 @@ void main() {
         await tester.tap(find.byType(Switch));
         await tester.pump();
         await tester.tap(
-          find.widgetWithText(AppButton, t.transaction.saveChangesAction),
+          find.widgetWithText(DsButton, t.transaction.saveChangesAction),
         );
         await tester.pumpAndSettle();
 
@@ -428,9 +428,9 @@ void main() {
 
         await openForm(tester, editing: 'Salah Buat');
         await tester.ensureVisible(
-          find.widgetWithText(AppButton, t.wallet.deleteAction),
+          find.widgetWithText(DsButton, t.wallet.deleteAction),
         );
-        await tester.tap(find.widgetWithText(AppButton, t.wallet.deleteAction));
+        await tester.tap(find.widgetWithText(DsButton, t.wallet.deleteAction));
         await tester.pumpAndSettle();
         await tester.tap(find.widgetWithText(AppButton, t.common.delete));
         await tester.pumpAndSettle();
@@ -459,9 +459,9 @@ void main() {
 
         await openForm(tester, editing: 'BCA');
         await tester.ensureVisible(
-          find.widgetWithText(AppButton, t.wallet.deleteAction),
+          find.widgetWithText(DsButton, t.wallet.deleteAction),
         );
-        await tester.tap(find.widgetWithText(AppButton, t.wallet.deleteAction));
+        await tester.tap(find.widgetWithText(DsButton, t.wallet.deleteAction));
         await tester.pumpAndSettle();
         await tester.tap(find.widgetWithText(AppButton, t.common.delete));
         await tester.pumpAndSettle();

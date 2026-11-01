@@ -5,67 +5,6 @@ import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_type.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
-/// Satu baris dompet di tab Dompet (prototipe `Dompet.dc.html`): tile ikon
-/// piksel jenis dompet, nama, "■ Bank · 54%", dan saldo di kanan. Saldo
-/// negatif ditulis bertanda minus tetap `ink` (FR-WAL-003). Diletakkan di
-/// dalam `AppListCard` oleh pemanggil.
-class WalletCard extends StatelessWidget {
-  /// Membuat [WalletCard].
-  const WalletCard({
-    required this.wallet,
-    required this.onTap,
-    this.shareText,
-    this.swatchColor,
-    this.linked = false,
-    super.key,
-  });
-
-  /// Dompet yang ditampilkan.
-  final Wallet wallet;
-
-  /// Dipanggil saat baris diketuk.
-  final VoidCallback onTap;
-
-  /// Bagian saldo dompet ini ("54%", "<1%"), atau `null`.
-  final String? shareText;
-
-  /// Warna dompet di kartu Sebaran saldo, ditulis sebagai penanda di depan
-  /// subjudul; `null` = tanpa penanda (satu dompet, dompet nonaktif).
-  final Color? swatchColor;
-
-  /// Dompet ini sedang dipilih di donat Sebaran saldo (`tk-row.is-linked`):
-  /// latar `surface2` dan garis `brand` 4px di kiri.
-  final bool linked;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final type = walletTypeLabel(wallet.iconKey);
-    final subtitle = [?type, ?shareText].join(' · ');
-    final row = AppListRow(
-      leading: AppIconTile(walletIconKey(wallet.iconKey)),
-      title: wallet.name,
-      wrapTitle: true,
-      subtitle: subtitle.isEmpty ? null : subtitle,
-      subtitleLeading: swatchColor == null ? null : WalletSwatch(swatchColor!),
-      trailing: AppMoneyText(wallet.currentBalance),
-      onTap: onTap,
-    );
-    return Opacity(
-      opacity: wallet.isActive ? 1 : AppSize.disabledOpacity + 0.3,
-      child: !linked
-          ? row
-          : DecoratedBox(
-              decoration: BoxDecoration(
-                color: colors.surface2,
-                border: Border(left: BorderSide(color: colors.brand, width: 4)),
-              ),
-              child: row,
-            ),
-    );
-  }
-}
-
 /// Penanda warna dompet bulat 8px.
 class WalletSwatch extends StatelessWidget {
   /// Membuat [WalletSwatch].

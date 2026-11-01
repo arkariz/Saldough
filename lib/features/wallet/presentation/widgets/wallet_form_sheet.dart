@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:saldough/core/currency/currency.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/money_input.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_type.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
@@ -145,30 +145,35 @@ class _WalletFormSheetState extends State<WalletFormSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
+    final ds = context.ds;
+    final c = ds.colors;
     final wallet = widget.initial;
-    final bigStyle = textTheme.headlineMedium?.copyWith(fontSize: 30, fontWeight: FontWeight.w700);
+    final bigStyle = ds.typography.displayLg.copyWith(
+      fontSize: 30,
+      height: 1.2,
+      fontFeatures: const [FontFeature.tabularFigures()],
+    );
     return SizedBox.expand(
       child: Padding(
         padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
         child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space4, AppSpacing.space4, AppSpacing.space6),
+          padding: const EdgeInsets.fromLTRB(DsSpacing.md, DsSpacing.md, DsSpacing.md, DsSpacing.lg),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               _Header(editing: _editing, iconKey: _iconKey),
-              const SizedBox(height: AppSpacing.space4),
-              AppSectionLabel(t.wallet.nameLabel, hint: t.wallet.nameRequiredHint),
-              const SizedBox(height: AppSpacing.space1),
-              AppCard(
-                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2),
+              const SizedBox(height: DsSpacing.md),
+              _FieldLabel(t.wallet.nameLabel, hint: t.wallet.nameRequiredHint),
+              const SizedBox(height: DsSpacing.xs),
+              DsCard(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: TextField(
                   controller: _nameController,
                   autofocus: !_editing,
                   maxLength: walletNameMaxLength,
                   textCapitalization: TextCapitalization.words,
-                  cursorColor: colors.brand,
+                  cursorColor: c.actionPrimary,
+                  style: ds.typography.bodyMd.copyWith(fontSize: 15, fontWeight: FontWeight.w600),
                   onChanged: (_) => setState(() {}),
                   buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                   decoration: InputDecoration(
@@ -177,26 +182,26 @@ class _WalletFormSheetState extends State<WalletFormSheet> {
                     enabledBorder: InputBorder.none,
                     focusedBorder: InputBorder.none,
                     hintText: t.wallet.nameHint,
-                    hintStyle: TextStyle(color: colors.ink2),
+                    hintStyle: ds.typography.bodyMd.copyWith(fontSize: 15, color: c.textMuted),
                   ),
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 2, right: AppSpacing.space1),
+                padding: const EdgeInsets.only(top: 2, right: DsSpacing.xs),
                 child: Text(
                   '${_nameController.text.characters.length}/$walletNameMaxLength · ${t.wallet.nameMaxHint}',
                   textAlign: TextAlign.end,
-                  style: labelSmStyle(context, color: colors.ink2).copyWith(fontWeight: FontWeight.w400),
+                  style: ds.typography.bodySm.copyWith(fontSize: 11, color: c.textMuted),
                 ),
               ),
-              const SizedBox(height: AppSpacing.space4),
-              AppSectionLabel(t.wallet.iconLabel),
-              const SizedBox(height: AppSpacing.space1),
+              const SizedBox(height: DsSpacing.md),
+              _FieldLabel(t.wallet.iconLabel),
+              const SizedBox(height: DsSpacing.xs),
               // Tiga kolom sama lebar (ubin ke-4 dan ke-5 di baris kedua), bukan
               // ubin berlebar tetap yang menyisakan ruang kosong di kanan.
               LayoutBuilder(
                 builder: (context, constraints) {
-                  const gap = AppSpacing.space1;
+                  const gap = 8.0;
                   final tileWidth = (constraints.maxWidth - 2 * gap) / 3;
                   return Wrap(
                     spacing: gap,
@@ -215,26 +220,29 @@ class _WalletFormSheetState extends State<WalletFormSheet> {
                   );
                 },
               ),
-              const SizedBox(height: AppSpacing.space4),
-              AppSectionLabel(_editing ? t.wallet.currentBalanceLabel : t.wallet.initialBalanceLabel),
-              const SizedBox(height: AppSpacing.space1),
-              AppCard(
+              const SizedBox(height: DsSpacing.md),
+              _FieldLabel(_editing ? t.wallet.currentBalanceLabel : t.wallet.initialBalanceLabel),
+              const SizedBox(height: DsSpacing.xs),
+              DsCard(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2, vertical: AppSpacing.space1),
-                      decoration: BoxDecoration(color: colors.surface2, borderRadius: BorderRadius.circular(8)),
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                      decoration: BoxDecoration(color: c.surfaceSunken, borderRadius: DsRadius.mdAll),
                       child: Row(
                         children: [
-                          Text(ActiveCurrency.value.symbol, style: context.numberStyles.amount.copyWith(color: colors.brand)),
-                          const SizedBox(width: AppSpacing.space2),
+                          Text(
+                            ActiveCurrency.value.symbol,
+                            style: ds.typography.headlineSm.copyWith(color: c.actionPrimary),
+                          ),
+                          const SizedBox(width: 8),
                           Expanded(
                             child: TextField(
                               controller: _balanceController,
                               keyboardType: moneyKeyboardType,
                               inputFormatters: [MoneyInputFormatter()],
-                              cursorColor: colors.brand,
+                              cursorColor: c.actionPrimary,
                               style: bigStyle,
                               onChanged: (_) => setState(() => _balanceTouched = true),
                               decoration: InputDecoration(
@@ -243,42 +251,39 @@ class _WalletFormSheetState extends State<WalletFormSheet> {
                                 enabledBorder: InputBorder.none,
                                 focusedBorder: InputBorder.none,
                                 isDense: true,
-                                contentPadding: const EdgeInsets.symmetric(vertical: AppSpacing.space1),
+                                contentPadding: const EdgeInsets.symmetric(vertical: 4),
                                 hintText: '0',
-                                hintStyle: bigStyle?.copyWith(color: colors.ink2.withValues(alpha: 0.5)),
+                                hintStyle: bigStyle.copyWith(color: c.textMuted.withValues(alpha: 0.5)),
                               ),
                             ),
                           ),
                         ],
                       ),
                     ),
-                    const SizedBox(height: AppSpacing.space2),
+                    const SizedBox(height: 8),
                     Text(
                       _editing ? t.wallet.editBalanceNote : t.wallet.initialBalanceHelp,
-                      style: textTheme.bodySmall?.copyWith(color: colors.ink2),
+                      style: ds.typography.bodySm.copyWith(color: c.textSecondary),
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: AppSpacing.space1),
+              const SizedBox(height: 8),
               Wrap(
-                spacing: AppSpacing.space1,
-                runSpacing: AppSpacing.space1,
+                spacing: 8,
+                runSpacing: 8,
                 children: [
                   for (final amount in ActiveCurrency.value.quickAmounts(QuickAmountMultipliers.walletBalance))
-                    AppChip(
+                    _QuickChip(
                       label: formatQuickAmount(amount),
                       onTap: () => _setBalance((parseMoneyInput(_balanceController.text) ?? 0) + amount),
                     ),
-                  AppChip(
-                    label: t.record.clearAmountAction,
-                    onTap: () => _setBalance(0),
-                  ),
+                  _QuickChip(label: t.record.clearAmountAction, onTap: () => _setBalance(0)),
                 ],
               ),
               if (wallet != null) ...[
-                const SizedBox(height: AppSpacing.space4),
-                AppCard(
+                const SizedBox(height: DsSpacing.md),
+                DsCard(
                   child: Row(
                     children: [
                       Expanded(
@@ -287,50 +292,98 @@ class _WalletFormSheetState extends State<WalletFormSheet> {
                           children: [
                             Text(
                               t.wallet.activeSwitchLabel,
-                              style: textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w700),
+                              style: ds.typography.bodyMd.copyWith(fontWeight: FontWeight.w700),
                             ),
                             Text(
                               t.wallet.activeSwitchHelp,
-                              style: textTheme.bodySmall?.copyWith(color: colors.ink2),
+                              style: ds.typography.bodySm.copyWith(color: c.textSecondary),
                             ),
                           ],
                         ),
                       ),
-                      const SizedBox(width: AppSpacing.space2),
-                      Switch(
-                        value: _isActive,
-                        activeThumbColor: colors.onBrand,
-                        activeTrackColor: colors.brand,
-                        onChanged: (value) => setState(() => _isActive = value),
-                      ),
+                      const SizedBox(width: 8),
+                      Switch(value: _isActive, onChanged: (value) => setState(() => _isActive = value)),
                     ],
                   ),
                 ),
               ],
-              const SizedBox(height: AppSpacing.space6),
-              AppButton(
+              const SizedBox(height: DsSpacing.lg),
+              DsButton(
                 label: _editing ? t.transaction.saveChangesAction : t.wallet.saveAddAction,
+                expand: true,
                 onPressed: _canSave ? _save : null,
               ),
               if (wallet != null) ...[
-                const SizedBox(height: AppSpacing.space6),
-                AppButton.danger(label: t.wallet.deleteAction, onPressed: _delete),
-                const SizedBox(height: AppSpacing.space1),
+                const SizedBox(height: DsSpacing.lg),
+                DsButton.danger(label: t.wallet.deleteAction, expand: true, onPressed: _delete),
+                const SizedBox(height: DsSpacing.xs),
                 Text(
                   t.wallet.deleteHelp,
                   textAlign: TextAlign.center,
-                  style: textTheme.bodySmall?.copyWith(color: colors.ink2),
+                  style: ds.typography.bodySm.copyWith(color: c.textSecondary),
                 ),
               ],
-              const SizedBox(height: AppSpacing.space2),
+              const SizedBox(height: 8),
               Text(
                 t.wallet.privacyNote,
                 textAlign: TextAlign.center,
-                style: labelSmStyle(context, color: colors.ink2).copyWith(fontWeight: FontWeight.w400),
+                style: ds.typography.bodySm.copyWith(fontSize: 11, color: c.textMuted),
               ),
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// Label bagian formulir: huruf piksel kecil, dengan petunjuk opsional di
+/// kanan.
+class _FieldLabel extends StatelessWidget {
+  const _FieldLabel(this.label, {this.hint});
+
+  final String label;
+  final String? hint;
+
+  @override
+  Widget build(BuildContext context) {
+    final ds = context.ds;
+    final c = ds.colors;
+    return Row(
+      children: [
+        Expanded(
+          child: Text(label, style: ds.typography.pixelCaption.copyWith(color: c.textMuted, fontSize: 10)),
+        ),
+        if (hint != null) Text(hint!, style: ds.typography.bodySm.copyWith(fontSize: 11, color: c.textMuted)),
+      ],
+    );
+  }
+}
+
+/// Chip penambah saldo awal (+, Hapus).
+class _QuickChip extends StatelessWidget {
+  const _QuickChip({required this.label, required this.onTap});
+
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final ds = context.ds;
+    final c = ds.colors;
+    return DsPressable(
+      onPressed: onTap,
+      pressedScale: 0.95,
+      builder: (context, _) => Container(
+        constraints: const BoxConstraints(minHeight: 36, minWidth: 44),
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: c.surfaceSunken,
+          borderRadius: DsRadius.mdAll,
+          border: Border.all(color: c.outlineSubtle),
+        ),
+        child: Text(label, style: ds.typography.labelMd.copyWith(color: c.textPrimary, fontSize: 12)),
       ),
     );
   }
@@ -344,46 +397,41 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
+    final ds = context.ds;
+    final asset = ClayIcons.forIcon(walletIconKey(iconKey)) ?? ClayIcons.walletNav;
     return Row(
       children: [
-        GestureDetector(
-          onTap: () => Navigator.of(context).pop(),
-          behavior: HitTestBehavior.opaque,
-          child: Container(
-            width: 44,
-            height: 44,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(color: colors.surface3, borderRadius: BorderRadius.circular(8)),
-            child: const AppIcon(IconKey.chevronLeft, size: 28),
-          ),
-        ),
+        DsIconButton(icon: Icons.chevron_left, label: t.common.close, onPressed: () => Navigator.of(context).pop()),
         Expanded(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2),
+            padding: const EdgeInsets.symmetric(horizontal: 8),
             child: Column(
               children: [
                 Text(
-                  (editing ? t.wallet.editStepLabel : t.wallet.addStepLabel),
+                  editing ? t.wallet.editStepLabel : t.wallet.addStepLabel,
                   textAlign: TextAlign.center,
-                  style: labelSmStyle(context, color: colors.brand),
+                  style: ds.typography.pixelCaption.copyWith(color: ds.colors.actionPrimary, fontSize: 10),
                 ),
-                Text(
-                  editing ? t.wallet.editTitle : t.wallet.addTitle,
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontSize: 22, height: 1.2),
+                Semantics(
+                  header: true,
+                  child: Text(
+                    editing ? t.wallet.editTitle : t.wallet.addTitle,
+                    textAlign: TextAlign.center,
+                    style: ds.typography.headlineSm.copyWith(fontSize: 20),
+                  ),
                 ),
               ],
             ),
           ),
         ),
-        AppIconTile(walletIconKey(iconKey), size: 44),
+        DsWiggle(trigger: iconKey.hashCode, child: DsIconTile.asset(asset: asset)),
       ],
     );
   }
 }
 
-/// Satu ubin pilihan ikon/jenis dompet: ikon di atas, label jenis di bawah.
+/// Satu ubin pilihan jenis dompet: ikon clay di atas, label jenis di bawah.
+/// Terpilih: bingkai dan latar warna aksi preset, ikon bergoyang.
 class _IconChoice extends StatelessWidget {
   const _IconChoice({required this.iconKey, required this.selected, required this.onTap});
 
@@ -393,25 +441,53 @@ class _IconChoice extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return AppChoiceBox(
+    final ds = context.ds;
+    final c = ds.colors;
+    final asset = ClayIcons.forIcon(iconKey) ?? ClayIcons.walletNav;
+    final label = walletTypeLabel(iconKey.name) ?? '';
+    return Semantics(
+      button: true,
       selected: selected,
-      onTap: onTap,
-      constraints: const BoxConstraints(minHeight: 96),
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space1, vertical: AppSpacing.space2),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          AppIcon(iconKey, size: AppSize.pixelIcon),
-          const SizedBox(height: AppSpacing.space1),
-          Text(
-            walletTypeLabel(iconKey.name) ?? '',
-            textAlign: TextAlign.center,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: Theme.of(context).textTheme.labelMedium?.copyWith(color: selected ? colors.brandInk : colors.ink2),
+      label: label,
+      excludeSemantics: true,
+      child: DsPressable(
+        onPressed: onTap,
+        pressedScale: 0.96,
+        dimWhenDisabled: false,
+        builder: (context, _) => AnimatedContainer(
+          duration: DsMotion.reduced(context) ? Duration.zero : DsMotion.standard,
+          constraints: const BoxConstraints(minHeight: 92),
+          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 10),
+          decoration: BoxDecoration(
+            color: selected ? c.actionPrimary.withValues(alpha: 0.08) : c.surfaceCard,
+            borderRadius: DsRadius.lgAll,
+            border: Border.all(color: selected ? c.actionPrimary.withValues(alpha: 0.6) : c.outlineSubtle),
           ),
-        ],
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              DsWiggle(
+                trigger: selected ? 1 : 0,
+                child: DsIconTile.asset(
+                  asset: asset,
+                  category: selected ? DsColorPair(c.actionPrimary, c.actionPrimary.withValues(alpha: 0.14)) : null,
+                ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                label,
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: ds.typography.labelMd.copyWith(
+                  fontSize: 11,
+                  letterSpacing: 0,
+                  color: selected ? c.actionPrimary : c.textSecondary,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

@@ -78,7 +78,12 @@ class _AccountPageState extends State<AccountPage> {
                     if (user == null)
                       _SignedOut(state: state, dataSection: widget.dataSection, plusSection: widget.plusSection)
                     else
-                      _SignedIn(state: state, user: user, dataSection: widget.dataSection, plusSection: widget.plusSection),
+                      _SignedIn(
+                        state: state,
+                        user: user,
+                        dataSection: widget.dataSection,
+                        plusSection: widget.plusSection,
+                      ),
                     if (widget.versionEntry case final entry?) ...[
                       const SizedBox(height: 24),
                       DsSectionHeader(title: t.account.appSection),
@@ -137,47 +142,52 @@ class _SignedOutState extends State<_SignedOut> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        // Kartu masuk: maskot di samping teks, Google sebagai tombol
-        // sekunder, email di bawahnya.
-        DsCard(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Row(
-                children: [
-                  const AccountAvatar(user: null, size: 56),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(t.account.signedOutTitle, style: ds.typography.titleMd),
-                        Text(
-                          t.account.signedOutBody,
-                          style: ds.typography.bodySm.copyWith(color: ds.colors.textSecondary),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              DsButton.secondary(
-                expand: true,
-                label: _busyLabel(t.account.googleSignInAction, state, AccountAction.googleSignIn),
-                onPressed: state.isBusy
-                    ? null
-                    : () => context.read<AccountBloc>().add(const AccountGoogleSignInRequested()),
-              ),
-              const SizedBox(height: 4),
-              DsButton.ghost(
-                key: const ValueKey('account-email-toggle'),
-                expand: true,
-                label: t.account.emailSignInToggle,
-                onPressed: () => setState(() => _showEmailForm = !_showEmailForm),
-              ),
-            ],
+        // Kartu masuk: maskot tidur di tengah, lalu teks, Google sebagai
+        // tombol utama, email di bawahnya.
+        DecoratedBox(
+          decoration: ds.elevation.card.decoration().copyWith(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [ds.colors.actionPrimary.withValues(alpha: 0.10), ds.colors.surfaceCard],
+              stops: const [0, 0.55],
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const Center(child: AccountAvatar(user: null, size: 88)),
+                const SizedBox(height: 12),
+                Text(
+                  t.account.signedOutTitle,
+                  textAlign: TextAlign.center,
+                  style: ds.typography.titleMd.copyWith(fontSize: 18),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  t.account.signedOutBody,
+                  textAlign: TextAlign.center,
+                  style: ds.typography.bodySm.copyWith(color: ds.colors.textSecondary),
+                ),
+                const SizedBox(height: 16),
+                DsButton(
+                  expand: true,
+                  label: _busyLabel(t.account.googleSignInAction, state, AccountAction.googleSignIn),
+                  onPressed: state.isBusy
+                      ? null
+                      : () => context.read<AccountBloc>().add(const AccountGoogleSignInRequested()),
+                ),
+                const SizedBox(height: 4),
+                DsButton.ghost(
+                  key: const ValueKey('account-email-toggle'),
+                  expand: true,
+                  label: t.account.emailSignInToggle,
+                  onPressed: () => setState(() => _showEmailForm = !_showEmailForm),
+                ),
+              ],
+            ),
           ),
         ),
         if (_showEmailForm) ...[
@@ -302,25 +312,35 @@ class _SignedIn extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        DsCard(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              AccountAvatar(user: user, size: 72),
-              const SizedBox(height: 12),
-              if (name != null && name.isNotEmpty)
-                Text(name, textAlign: TextAlign.center, style: ds.typography.titleMd.copyWith(fontSize: 20)),
-              if (user.email != null)
-                Text(
-                  user.email!,
-                  textAlign: TextAlign.center,
-                  style: ds.typography.bodySm.copyWith(color: ds.colors.textSecondary),
-                ),
-              if (method != null) ...[
-                const SizedBox(height: 10),
-                DsBadge(label: method, tone: DsBadgeTone.income),
+        DecoratedBox(
+          decoration: ds.elevation.card.decoration().copyWith(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [ds.colors.actionPrimary.withValues(alpha: 0.10), ds.colors.surfaceCard],
+              stops: const [0, 0.55],
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              children: [
+                AccountAvatar(user: user, size: 72),
+                const SizedBox(height: 12),
+                if (name != null && name.isNotEmpty)
+                  Text(name, textAlign: TextAlign.center, style: ds.typography.titleMd.copyWith(fontSize: 20)),
+                if (user.email != null)
+                  Text(
+                    user.email!,
+                    textAlign: TextAlign.center,
+                    style: ds.typography.bodySm.copyWith(color: ds.colors.textSecondary),
+                  ),
+                if (method != null) ...[
+                  const SizedBox(height: 10),
+                  DsBadge(label: method, tone: DsBadgeTone.income),
+                ],
               ],
-            ],
+            ),
           ),
         ),
         const SizedBox(height: 16),

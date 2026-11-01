@@ -269,17 +269,26 @@ class _WalletFormSheetState extends State<WalletFormSheet> {
                 ),
               ),
               const SizedBox(height: 8),
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: [
-                  for (final amount in ActiveCurrency.value.quickAmounts(QuickAmountMultipliers.walletBalance))
-                    _QuickChip(
-                      label: formatQuickAmount(amount),
-                      onTap: () => _setBalance((parseMoneyInput(_balanceController.text) ?? 0) + amount),
-                    ),
-                  _QuickChip(label: t.record.clearAmountAction, onTap: () => _setBalance(0)),
-                ],
+              // Satu baris horizontal: chip sama lebar berbagi lebar layar.
+              Builder(
+                builder: (context) {
+                  final chips = <Widget>[
+                    for (final amount in ActiveCurrency.value.quickAmounts(QuickAmountMultipliers.walletBalance))
+                      _QuickChip(
+                        label: formatQuickAmount(amount),
+                        onTap: () => _setBalance((parseMoneyInput(_balanceController.text) ?? 0) + amount),
+                      ),
+                    _QuickChip(label: t.record.clearAmountAction, onTap: () => _setBalance(0)),
+                  ];
+                  return Row(
+                    children: [
+                      for (final (i, chip) in chips.indexed) ...[
+                        if (i > 0) const SizedBox(width: 6),
+                        Expanded(child: chip),
+                      ],
+                    ],
+                  );
+                },
               ),
               if (wallet != null) ...[
                 const SizedBox(height: DsSpacing.md),
@@ -375,15 +384,22 @@ class _QuickChip extends StatelessWidget {
       onPressed: onTap,
       pressedScale: 0.95,
       builder: (context, _) => Container(
-        constraints: const BoxConstraints(minHeight: 36, minWidth: 44),
-        padding: const EdgeInsets.symmetric(horizontal: 12),
+        constraints: const BoxConstraints(minHeight: 40),
+        padding: const EdgeInsets.symmetric(horizontal: 4),
         alignment: Alignment.center,
         decoration: BoxDecoration(
           color: c.surfaceSunken,
           borderRadius: DsRadius.mdAll,
           border: Border.all(color: c.outlineSubtle),
         ),
-        child: Text(label, style: ds.typography.labelMd.copyWith(color: c.textPrimary, fontSize: 12)),
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            label,
+            maxLines: 1,
+            style: ds.typography.labelMd.copyWith(color: c.textPrimary, fontSize: 12),
+          ),
+        ),
       ),
     );
   }

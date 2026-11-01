@@ -128,6 +128,28 @@ void main() {
       expect(find.text(t.wallet.deleteAction), findsNothing);
     });
 
+    testWidgets('input cepat: semua chip satu baris horizontal, juga di 320dp dengan teks 2x', (tester) async {
+      tester.view
+        ..physicalSize = const Size(320, 900)
+        ..devicePixelRatio = 1;
+      tester.platformDispatcher.textScaleFactorTestValue = 2;
+      addTearDown(() {
+        tester.view.reset();
+        tester.platformDispatcher.clearTextScaleFactorTestValue();
+      });
+      await open(tester);
+
+      final clear = tester.getTopLeft(find.text(t.record.clearAmountAction)).dy;
+      final chips = find.ancestor(of: find.text(t.record.clearAmountAction), matching: find.byType(Row));
+      expect(chips, findsWidgets);
+      final row = tester.widget<Row>(chips.first);
+      expect(row.children.whereType<Expanded>().length, greaterThanOrEqualTo(4), reason: 'chip berbagi lebar sebaris');
+      for (final label in find.descendant(of: chips.first, matching: find.byType(Text)).evaluate()) {
+        expect(tester.getTopLeft(find.byWidget(label.widget)).dy, closeTo(clear, 12), reason: 'sebaris');
+      }
+      expect(tester.takeException(), isNull);
+    });
+
     testWidgets('tombol kembali menutup tanpa hasil', (tester) async {
       final results = await open(tester);
 

@@ -400,6 +400,8 @@
     "restoreDoneTitle": "Data restored from the $date backup.",
     "undoDoneTitle": "Your data is back to how it was before the restore.",
     "restoreDoneNote": "You'll need to allow notifications again on this phone. You can turn them on from Home.",
+    "restoreDoneKeptTitle": "Back in place",
+    "restoreDoneKept": ["Wallets and transactions", "Budgets and recurring", "App settings"],
     "goHome": "Back to Home",
     "chooseOtherFile": "Choose another file",
     "updateApp": "Update app",

@@ -400,6 +400,8 @@
     "restoreDoneTitle": "Data dipulihkan dari cadangan $date.",
     "undoDoneTitle": "Data dikembalikan ke keadaan sebelum pemulihan.",
     "restoreDoneNote": "Izin notifikasi perlu diberikan lagi di ponsel ini. Kamu bisa menyalakannya dari Beranda.",
+    "restoreDoneKeptTitle": "Yang sudah kembali",
+    "restoreDoneKept": ["Dompet dan transaksi", "Anggaran dan rutin", "Setelan aplikasi"],
     "goHome": "Ke Beranda",
     "chooseOtherFile": "Pilih berkas lain",
     "updateApp": "Perbarui aplikasi",

@@ -449,6 +449,12 @@ class _Translations$dataPortability$en extends Translations$dataPortability$id {
 	@override String restoreDoneTitle({required Object date}) => 'Data restored from the ${date} backup.';
 	@override String get undoDoneTitle => 'Your data is back to how it was before the restore.';
 	@override String get restoreDoneNote => 'You\'ll need to allow notifications again on this phone. You can turn them on from Home.';
+	@override String get restoreDoneKeptTitle => 'Back in place';
+	@override List<String> get restoreDoneKept => [
+		'Wallets and transactions',
+		'Budgets and recurring',
+		'App settings',
+	];
 	@override String get goHome => 'Back to Home';
 	@override String get chooseOtherFile => 'Choose another file';
 	@override String get updateApp => 'Update app';
@@ -2843,6 +2849,10 @@ extension on TranslationsEn {
 			'dataPortability.restoreDoneTitle' => ({required Object date}) => 'Data restored from the ${date} backup.',
 			'dataPortability.undoDoneTitle' => 'Your data is back to how it was before the restore.',
 			'dataPortability.restoreDoneNote' => 'You\'ll need to allow notifications again on this phone. You can turn them on from Home.',
+			'dataPortability.restoreDoneKeptTitle' => 'Back in place',
+			'dataPortability.restoreDoneKept.0' => 'Wallets and transactions',
+			'dataPortability.restoreDoneKept.1' => 'Budgets and recurring',
+			'dataPortability.restoreDoneKept.2' => 'App settings',
 			'dataPortability.goHome' => 'Back to Home',
 			'dataPortability.chooseOtherFile' => 'Choose another file',
 			'dataPortability.updateApp' => 'Update app',
@@ -2985,12 +2995,12 @@ extension on TranslationsEn {
 			'budget.templatesEmptyBadge' => 'No templates yet',
 			'budget.templatesEmptyTitle' => 'No templates yet',
 			'budget.templatesEmptyBody' => 'Save item sets you use often, such as monthly groceries, so your next budget is one tap away.',
+			_ => null,
+		} ?? switch (path) {
 			'budget.templateNeedsWallet' => 'Create an active wallet first to use a template.',
 			'budget.templatesLoadError' => 'Couldn\'t load templates',
 			'budget.templateAddTitle' => 'Create template',
 			'budget.templateEditTitle' => 'Edit template',
-			_ => null,
-		} ?? switch (path) {
 			'budget.templateRuleBody' => 'A template keeps your set of plan items. The wallet and period are chosen when you use it.',
 			'budget.templateNameHint' => 'Example: Monthly groceries',
 			'budget.templateEnabledLabel' => 'Offer this template',
@@ -3499,12 +3509,12 @@ extension on TranslationsEn {
 			'notificationCapture.accountEntryTitle' => 'Record from notifications',
 			'notificationCapture.accountEntryBody' => 'Record automatically from bank and e-wallet notifications.',
 			'notificationCapture.settingsTitle' => 'Record from notifications',
+			_ => null,
+		} ?? switch (path) {
 			'notificationCapture.enableLabel' => 'Turn on',
 			'notificationCapture.accessMissingTitle' => 'Permission needed to read notifications',
 			'notificationCapture.accessMissingBody' => 'Without it, Tanukonomy can\'t see your bank notifications.',
 			'notificationCapture.accessAction' => 'Allow access',
-			_ => null,
-		} ?? switch (path) {
 			'notificationCapture.accessGranted' => 'Notification permission is on',
 			'notificationCapture.disclosureTitle' => 'Before you grant permission',
 			'notificationCapture.disclosureBody' => 'Tanukonomy will be able to read notifications on your phone.\n\n• Only from apps you pick that match their filter.\n• OTP notifications are never stored.\n• Text that is hard to read may be sent to Gemini (Google).\n• Notification text stays on your phone for at most 7 days.',
@@ -4013,12 +4023,12 @@ extension on TranslationsEn {
 			'premium.gift.body' => 'No card, no automatic subscription. After that you keep recording for free.',
 			'premium.gift.start' => 'Start recording',
 			'premium.card.recapTitle' => ({required Object date}) => 'Plus ends on ${date}',
+			_ => null,
+		} ?? switch (path) {
 			'premium.card.recapSince' => ({required Object date}) => 'Since ${date}, Tanuki has:',
 			'premium.card.recapRecorded' => 'entries from notifications',
 			'premium.downgrade.title' => 'Your Plus trial ended',
 			'premium.downgrade.intro' => 'Thanks for trying it. Everything you recorded stays, and you keep recording for free.',
-			_ => null,
-		} ?? switch (path) {
 			'premium.downgrade.keepTitle' => 'What stays',
 			'premium.downgrade.changeTitle' => 'What changes',
 			'premium.downgrade.keepEntries' => 'All your entries',

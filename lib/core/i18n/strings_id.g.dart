@@ -1014,6 +1014,15 @@ class Translations$dataPortability$id {
 	/// id: 'Izin notifikasi perlu diberikan lagi di ponsel ini. Kamu bisa menyalakannya dari Beranda.'
 	String get restoreDoneNote => 'Izin notifikasi perlu diberikan lagi di ponsel ini. Kamu bisa menyalakannya dari Beranda.';
 
+	/// id: 'Yang sudah kembali'
+	String get restoreDoneKeptTitle => 'Yang sudah kembali';
+
+	List<String> get restoreDoneKept => [
+		'Dompet dan transaksi',
+		'Anggaran dan rutin',
+		'Setelan aplikasi',
+	];
+
 	/// id: 'Ke Beranda'
 	String get goHome => 'Ke Beranda';
 
@@ -6023,6 +6032,10 @@ extension on Translations {
 			'dataPortability.restoreDoneTitle' => ({required Object date}) => 'Data dipulihkan dari cadangan ${date}.',
 			'dataPortability.undoDoneTitle' => 'Data dikembalikan ke keadaan sebelum pemulihan.',
 			'dataPortability.restoreDoneNote' => 'Izin notifikasi perlu diberikan lagi di ponsel ini. Kamu bisa menyalakannya dari Beranda.',
+			'dataPortability.restoreDoneKeptTitle' => 'Yang sudah kembali',
+			'dataPortability.restoreDoneKept.0' => 'Dompet dan transaksi',
+			'dataPortability.restoreDoneKept.1' => 'Anggaran dan rutin',
+			'dataPortability.restoreDoneKept.2' => 'Setelan aplikasi',
 			'dataPortability.goHome' => 'Ke Beranda',
 			'dataPortability.chooseOtherFile' => 'Pilih berkas lain',
 			'dataPortability.updateApp' => 'Perbarui aplikasi',
@@ -6165,12 +6178,12 @@ extension on Translations {
 			'budget.templatesEmptyBadge' => 'Belum ada template',
 			'budget.templatesEmptyTitle' => 'Belum ada template',
 			'budget.templatesEmptyBody' => 'Simpan susunan pos yang sering dipakai, misalnya belanja bulanan, supaya anggaran berikutnya tinggal dipakai.',
+			_ => null,
+		} ?? switch (path) {
 			'budget.templateNeedsWallet' => 'Buat dompet aktif dulu untuk memakai template.',
 			'budget.templatesLoadError' => 'Template gagal dimuat',
 			'budget.templateAddTitle' => 'Buat template',
 			'budget.templateEditTitle' => 'Ubah template',
-			_ => null,
-		} ?? switch (path) {
 			'budget.templateRuleBody' => 'Template menyimpan susunan pos rencanamu. Dompet dan periodenya dipilih saat template dipakai.',
 			'budget.templateNameHint' => 'Contoh: Belanja bulanan',
 			'budget.templateEnabledLabel' => 'Tawarkan template ini',
@@ -6679,12 +6692,12 @@ extension on Translations {
 			'notificationCapture.accountEntryTitle' => 'Catat dari notifikasi',
 			'notificationCapture.accountEntryBody' => 'Catat otomatis dari notifikasi bank dan e-wallet.',
 			'notificationCapture.settingsTitle' => 'Catat dari notifikasi',
+			_ => null,
+		} ?? switch (path) {
 			'notificationCapture.enableLabel' => 'Aktifkan',
 			'notificationCapture.accessMissingTitle' => 'Butuh izin membaca notifikasi',
 			'notificationCapture.accessMissingBody' => 'Tanpa izin ini, Tanukonomy tidak bisa melihat notifikasi bank.',
 			'notificationCapture.accessAction' => 'Beri izin',
-			_ => null,
-		} ?? switch (path) {
 			'notificationCapture.accessGranted' => 'Izin notifikasi aktif',
 			'notificationCapture.disclosureTitle' => 'Sebelum memberi izin',
 			'notificationCapture.disclosureBody' => 'Tanukonomy akan bisa membaca notifikasi di ponselmu.\n\n• Hanya dari aplikasi yang kamu pilih dan cocok dengan filternya.\n• Notifikasi OTP tidak pernah disimpan.\n• Teks yang sulit dibaca bisa dikirim ke Gemini (Google).\n• Teks notifikasi disimpan di ponselmu paling lama 7 hari.',
@@ -7193,12 +7206,12 @@ extension on Translations {
 			'premium.gift.body' => 'Tanpa kartu, tanpa langganan otomatis. Sesudah itu kamu tetap mencatat gratis.',
 			'premium.gift.start' => 'Mulai mencatat',
 			'premium.card.recapTitle' => ({required Object date}) => 'Plus berakhir ${date}',
+			_ => null,
+		} ?? switch (path) {
 			'premium.card.recapSince' => ({required Object date}) => 'Sejak ${date}, Tanuki sudah:',
 			'premium.card.recapRecorded' => 'catatan dari notifikasi',
 			'premium.downgrade.title' => 'Uji coba Plus selesai',
 			'premium.downgrade.intro' => 'Terima kasih sudah mencoba. Semua yang kamu catat tetap ada, dan kamu tetap mencatat gratis.',
-			_ => null,
-		} ?? switch (path) {
 			'premium.downgrade.keepTitle' => 'Yang tetap',
 			'premium.downgrade.changeTitle' => 'Yang berubah',
 			'premium.downgrade.keepEntries' => 'Semua catatanmu',

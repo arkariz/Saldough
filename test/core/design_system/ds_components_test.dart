@@ -80,6 +80,8 @@ void main() {
           ),
         ),
       );
+      // Segmen terisi menyala berurutan selama 900 ms pertama.
+      await tester.pump(const Duration(seconds: 1));
       final colors = tester
           .widgetList<DecoratedBox>(
             find.descendant(of: find.byType(DsSegmentMeter), matching: find.byType(DecoratedBox)),

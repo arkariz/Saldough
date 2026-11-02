@@ -92,72 +92,99 @@ class _HeroCard extends StatelessWidget {
     final totalDays = budget.endDate.difference(budget.startDate).inDays;
     final today = DateTime.now();
     final day = DateTime(today.year, today.month, today.day).difference(budget.startDate).inDays + 1;
-    return DsCard(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text(t.budget.remainingLabel, style: ds.typography.bodyMd.copyWith(color: c.textSecondary)),
-              ),
-              Flexible(
-                child: DsBadge(
-                  label: active ? badge : budgetStatusLabel(progress.status),
-                  tone: active ? tone : DsBadgeTone.neutral,
+    final statusBadge = DsBadge(
+      label: active ? badge : budgetStatusLabel(progress.status),
+      tone: active ? tone : DsBadgeTone.neutral,
+    );
+    return DecoratedBox(
+      decoration: ds.elevation.card.decoration().copyWith(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [c.actionPrimary.withValues(alpha: 0.10), c.surfaceCard],
+          stops: const [0, 0.55],
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
+              children: [
+                ExcludeSemantics(
+                  child: DsIdleMotion(
+                    kind: DsIdleKind.float,
+                    child: DsIconTile.asset(
+                      asset: progress.remaining < 0 ? ClayIcons.warning : ClayIcons.piggy,
+                      tone: progress.remaining < 0 ? DsIconTileTone.warning : DsIconTileTone.neutral,
+                      size: DsIconTileSize.sm,
+                    ),
+                  ),
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 4),
-          FittedBox(
-            fit: BoxFit.scaleDown,
-            alignment: AlignmentDirectional.centerStart,
-            child: Text(
-              AppMoneyFormatter.format(progress.remaining),
-              style: ds.typography.numericalDisplay.copyWith(color: progress.remaining < 0 ? c.error : c.textPrimary),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(t.budget.remainingLabel, style: ds.typography.bodyMd.copyWith(color: c.textSecondary)),
+                ),
+                Flexible(
+                  child: progress.remaining < 0 && active ? DsPulse(child: statusBadge) : statusBadge,
+                ),
+              ],
             ),
-          ),
-          const SizedBox(height: 12),
-          DsSegmentMeter(
-            value: ratio,
-            tone: budgetMeterTone(ratio),
-            pace: active ? budget.elapsedRatio(today) : null,
-            semanticLabel: '${(ratio * 100).round()}%',
-          ),
-          const SizedBox(height: 8),
-          Wrap(
-            alignment: WrapAlignment.spaceBetween,
-            spacing: 8,
-            children: [
-              Text(
-                t.home.budgetSpentOf(
-                  spent: AppMoneyFormatter.format(progress.spent),
-                  planned: AppMoneyFormatter.format(progress.plannedAmount),
+            const SizedBox(height: 8),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: AlignmentDirectional.centerStart,
+              child: DsCountUp(
+                value: progress.remaining,
+                builder: (context, current) => Text(
+                  AppMoneyFormatter.format(current),
+                  style: ds.typography.numericalDisplay.copyWith(
+                    color: progress.remaining < 0 ? c.error : c.textPrimary,
+                  ),
                 ),
-                style: ds.typography.bodySm.copyWith(color: c.textSecondary),
               ),
-              if (active && day >= 1 && day <= totalDays)
+            ),
+            const SizedBox(height: 12),
+            DsSegmentMeter(
+              value: ratio,
+              tone: budgetMeterTone(ratio),
+              pace: active ? budget.elapsedRatio(today) : null,
+              semanticLabel: '${(ratio * 100).round()}%',
+            ),
+            const SizedBox(height: 8),
+            Wrap(
+              alignment: WrapAlignment.spaceBetween,
+              spacing: 8,
+              children: [
                 Text(
-                  t.budget.dayOfPeriod(day: day, total: totalDays),
+                  t.home.budgetSpentOf(
+                    spent: AppMoneyFormatter.format(progress.spent),
+                    planned: AppMoneyFormatter.format(progress.plannedAmount),
+                  ),
                   style: ds.typography.bodySm.copyWith(color: c.textSecondary),
                 ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Divider(height: 1, color: c.outlineSubtle),
-          const SizedBox(height: 12),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              DsBadge(label: budgetPeriodLabel(budget.period), tone: DsBadgeTone.neutral),
-              DsBadge(label: budgetRangeLabel(budget), tone: DsBadgeTone.neutral),
-              DsBadge(label: wallet?.name ?? t.budget.unknownWallet, tone: DsBadgeTone.neutral),
-            ],
-          ),
-        ],
+                if (active && day >= 1 && day <= totalDays)
+                  Text(
+                    t.budget.dayOfPeriod(day: day, total: totalDays),
+                    style: ds.typography.bodySm.copyWith(color: c.textSecondary),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Divider(height: 1, color: c.outlineSubtle),
+            const SizedBox(height: 12),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                DsBadge(label: budgetPeriodLabel(budget.period), tone: DsBadgeTone.neutral),
+                DsBadge(label: budgetRangeLabel(budget), tone: DsBadgeTone.neutral),
+                DsBadge(label: wallet?.name ?? t.budget.unknownWallet, tone: DsBadgeTone.neutral),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -218,6 +245,16 @@ class _ItemRow extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              DsIconTile.asset(
+                asset: switch (progress.status) {
+                  BudgetItemStatus.completed => ClayIcons.done,
+                  BudgetItemStatus.overspent => ClayIcons.warning,
+                  _ => item.isTransfer ? ClayIcons.transfer : ClayIcons.expenseArrow,
+                },
+                tone: overspent ? DsIconTileTone.warning : DsIconTileTone.neutral,
+                size: DsIconTileSize.sm,
+              ),
+              const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,

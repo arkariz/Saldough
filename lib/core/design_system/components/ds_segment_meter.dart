@@ -88,7 +88,7 @@ class DsSegmentMeter extends StatefulWidget {
   State<DsSegmentMeter> createState() => _DsSegmentMeterState();
 }
 
-class _DsSegmentMeterState extends State<DsSegmentMeter> with SingleTickerProviderStateMixin {
+class _DsSegmentMeterState extends State<DsSegmentMeter> with TickerProviderStateMixin {
   static const double _period = 2.2;
 
   late final AnimationController _controller = AnimationController(
@@ -96,9 +96,21 @@ class _DsSegmentMeterState extends State<DsSegmentMeter> with SingleTickerProvid
     duration: const Duration(milliseconds: 2200),
   );
 
+  /// Isi tumbuh sekali saat pertama tampil: segmen terisi menyala berurutan.
+  late final AnimationController _grow = AnimationController(vsync: this, duration: const Duration(milliseconds: 900));
+  bool _grown = false;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    if (!_grown) {
+      _grown = true;
+      if (DsMotion.reduced(context)) {
+        _grow.value = 1;
+      } else {
+        _grow.forward();
+      }
+    }
     _sync();
   }
 
@@ -121,6 +133,7 @@ class _DsSegmentMeterState extends State<DsSegmentMeter> with SingleTickerProvid
 
   @override
   void dispose() {
+    _grow.dispose();
     _controller.dispose();
     super.dispose();
   }
@@ -139,9 +152,12 @@ class _DsSegmentMeterState extends State<DsSegmentMeter> with SingleTickerProvid
 
     Widget segment(int i, double seconds) {
       final isFilled = i < filled;
-      final color = !isFilled
+      final target = !isFilled
           ? c.surfaceContainerHigh
           : (!health && widget.tone == DsMeterTone.normal && i == filled - 1 ? c.surfaceTint : fill);
+      // Segmen terisi menyala berurutan dari kiri selama 900 ms pertama.
+      final lit = isFilled ? ((_grow.value * (filled + 3) - i) / 3).clamp(0.0, 1.0) : 1.0;
+      final color = isFilled ? Color.lerp(c.surfaceContainerHigh, target, lit)! : target;
       Widget box = DecoratedBox(
         decoration: BoxDecoration(borderRadius: radius, color: color),
       );
@@ -185,7 +201,7 @@ class _DsSegmentMeterState extends State<DsSegmentMeter> with SingleTickerProvid
         child: SizedBox(
           height: health || widget.thin ? 6 : 10,
           child: AnimatedBuilder(
-            animation: _controller,
+            animation: Listenable.merge([_controller, _grow]),
             builder: (context, _) {
               final seconds = _controller.value * _period;
               final row = Row(

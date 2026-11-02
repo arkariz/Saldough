@@ -129,58 +129,63 @@ class _BudgetTemplatePageState extends State<BudgetTemplatePage> {
               _ => ListView(
                 padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
                 children: [
-                  DsCard(
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        DsIconTile.asset(asset: ClayIcons.clipboard, size: DsIconTileSize.sm),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Wrap(
-                                spacing: 8,
-                                runSpacing: 4,
-                                crossAxisAlignment: WrapCrossAlignment.center,
-                                children: [
-                                  Text(t.budget.templatesInfoTitle, style: ds.typography.titleMd),
-                                  DsBadge(
-                                    label: t.budget.templatesSavedBadge(count: state.templates.length),
-                                    tone: DsBadgeTone.neutral,
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                t.budget.templatesInfoBody,
-                                style: ds.typography.bodySm.copyWith(color: c.textSecondary),
-                              ),
-                            ],
+                  DsReveal(
+                    child: DsCard(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          DsIconTile.asset(asset: ClayIcons.clipboard, size: DsIconTileSize.sm),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Wrap(
+                                  spacing: 8,
+                                  runSpacing: 4,
+                                  crossAxisAlignment: WrapCrossAlignment.center,
+                                  children: [
+                                    Text(t.budget.templatesInfoTitle, style: ds.typography.titleMd),
+                                    DsBadge(
+                                      label: t.budget.templatesSavedBadge(count: state.templates.length),
+                                      tone: DsBadgeTone.neutral,
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  t.budget.templatesInfoBody,
+                                  style: ds.typography.bodySm.copyWith(color: c.textSecondary),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                   const SizedBox(height: 16),
                   if (state.templates.isEmpty)
-                    _EmptyTemplates(onAdd: _add)
+                    DsReveal(index: 1, child: _EmptyTemplates(onAdd: _add))
                   else
-                    for (final template in state.templates) ...[
-                      _TemplateCard(
-                        template: template,
-                        walletName: state.wallets.where((w) => w.id == template.schedule?.walletId).firstOrNull?.name,
-                        canUse: canUse,
-                        onUse: () => _use(template),
-                        onEdit: () => _edit(template),
-                        onDuplicate: () {
-                          final bloc = context.read<BudgetTemplateBloc>();
-                          if (_limited(bloc)) {
-                            unawaited(_paywall());
-                          } else {
-                            bloc.add(BudgetTemplateDuplicated(template));
-                          }
-                        },
+                    for (final (i, template) in state.templates.indexed) ...[
+                      DsReveal(
+                        index: i + 1,
+                        child: _TemplateCard(
+                          template: template,
+                          walletName: state.wallets.where((w) => w.id == template.schedule?.walletId).firstOrNull?.name,
+                          canUse: canUse,
+                          onUse: () => _use(template),
+                          onEdit: () => _edit(template),
+                          onDuplicate: () {
+                            final bloc = context.read<BudgetTemplateBloc>();
+                            if (_limited(bloc)) {
+                              unawaited(_paywall());
+                            } else {
+                              bloc.add(BudgetTemplateDuplicated(template));
+                            }
+                          },
+                        ),
                       ),
                       const SizedBox(height: 16),
                     ],
@@ -355,7 +360,10 @@ class _EmptyTemplates extends StatelessWidget {
         children: [
           DsBadge(label: t.budget.templatesEmptyBadge, tone: DsBadgeTone.warning),
           const SizedBox(height: 16),
-          DsIconTile.asset(asset: ClayIcons.clipboard, size: DsIconTileSize.lg),
+          const DsEmptyHero(
+            asset: ClayIcons.clipboard,
+            orbit: [ClayIcons.piggy, ClayIcons.calendar, ClayIcons.repeat],
+          ),
           const SizedBox(height: 12),
           Text(t.budget.templatesEmptyTitle, textAlign: TextAlign.center, style: ds.typography.titleMd),
           const SizedBox(height: 4),

@@ -127,7 +127,9 @@ class BudgetDetailPage extends StatelessWidget {
                     child: ListView(
                       padding: const EdgeInsets.fromLTRB(16, 8, 16, 96),
                       children: [
-                        _HeroCard(budget: current, progress: progress, wallet: wallet),
+                        DsReveal(
+                          child: _HeroCard(budget: current, progress: progress, wallet: wallet),
+                        ),
                         const SizedBox(height: 20),
                         _SectionTitle(
                           title: t.budget.detailItemsHeading,
@@ -143,12 +145,15 @@ class BudgetDetailPage extends StatelessWidget {
                           DsListCard(
                             children: [
                               for (final (i, itemProgress) in progress.items.indexed)
-                                _ItemRow(
-                                  spotlighted: i == 0,
-                                  progress: itemProgress,
-                                  targetWalletName: state.walletOf(itemProgress.item.targetWalletId ?? '')?.name,
-                                  onRecord: canRecord ? () => _record(context, current, itemProgress) : null,
-                                  onOpen: () => _openItem(context, current, itemProgress, canRecord: canRecord),
+                                DsReveal(
+                                  index: i + 1,
+                                  child: _ItemRow(
+                                    spotlighted: i == 0,
+                                    progress: itemProgress,
+                                    targetWalletName: state.walletOf(itemProgress.item.targetWalletId ?? '')?.name,
+                                    onRecord: canRecord ? () => _record(context, current, itemProgress) : null,
+                                    onOpen: () => _openItem(context, current, itemProgress, canRecord: canRecord),
+                                  ),
                                 ),
                             ],
                           ),

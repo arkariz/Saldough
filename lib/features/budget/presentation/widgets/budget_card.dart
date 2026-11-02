@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
-import 'package:saldough/core/presentation/widgets/clay_icons.dart';
+import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/budget/domain/entities/budget.dart';
 import 'package:saldough/features/budget/domain/entities/budget_item_status.dart';
@@ -49,10 +49,12 @@ class BudgetCard extends StatelessWidget {
     final active = progress.status == BudgetStatus.active;
     final ratio = progress.progress;
     // Satu badge per kartu: Lewat (masalah) > Rutin > status bila bukan aktif.
-    final Widget? badge = overspent
-        ? DsBadge(
-            label: t.home.budgetOverBy(amount: AppMoneyFormatter.format(-progress.remaining)),
-            tone: DsBadgeTone.danger,
+    final badge = overspent
+        ? DsPulse(
+            child: DsBadge(
+              label: t.home.budgetOverBy(amount: AppMoneyFormatter.format(-progress.remaining)),
+              tone: DsBadgeTone.danger,
+            ),
           )
         : isRecurring
         ? DsBadge(
@@ -77,7 +79,14 @@ class BudgetCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   DsIconTile.asset(
-                    asset: isRecurring ? ClayIcons.repeat : ClayIcons.piggy,
+                    asset: overspent
+                        ? ClayIcons.warning
+                        : isRecurring
+                        ? ClayIcons.repeat
+                        : ClayIcons.piggy,
+                    tone: overspent || ratio >= AppProgressBar.nearlyOutThreshold
+                        ? DsIconTileTone.warning
+                        : DsIconTileTone.neutral,
                     size: DsIconTileSize.sm,
                   ),
                   const SizedBox(width: 12),
@@ -98,11 +107,28 @@ class BudgetCard extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               // Penanda waktu hanya untuk anggaran yang sedang berjalan.
-              DsSegmentMeter(
-                value: ratio,
-                tone: budgetMeterTone(ratio),
-                pace: active ? budget.elapsedRatio(DateTime.now()) : null,
-                semanticLabel: '${(ratio * 100).round()}%',
+              Row(
+                children: [
+                  Expanded(
+                    child: DsSegmentMeter(
+                      value: ratio,
+                      tone: budgetMeterTone(ratio),
+                      pace: active ? budget.elapsedRatio(DateTime.now()) : null,
+                      semanticLabel: '${(ratio * 100).round()}%',
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  DsCountUp(
+                    value: (ratio * 100).round(),
+                    duration: const Duration(milliseconds: 900),
+                    builder: (context, current) => Text(
+                      '$current%',
+                      style: ds.typography.amountSm.copyWith(
+                        color: ratio > 1 ? c.error : c.textPrimary,
+                      ),
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 8),
               Wrap(

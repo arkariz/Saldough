@@ -100,10 +100,12 @@ class _BudgetListPageState extends State<BudgetListPage> {
                 children: [
                   SpotlightTarget(
                     spotlightKey: SpotlightKey.budgetSummary,
-                    child: BudgetSummaryCard(
-                      planned: state.activePlanned,
-                      spent: state.activeSpent,
-                      activeCount: state.activeProgress.length,
+                    child: DsReveal(
+                      child: BudgetSummaryCard(
+                        planned: state.activePlanned,
+                        spent: state.activeSpent,
+                        activeCount: state.activeProgress.length,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -126,13 +128,16 @@ class _BudgetListPageState extends State<BudgetListPage> {
                         ..add(const BudgetWalletFilterChanged(null)),
                     )
                   else
-                    for (final budget in visible) ...[
-                      BudgetCard(
-                        budget: budget,
-                        progress: state.progress[budget.id]!,
-                        walletName: state.walletOf(budget.walletId)?.name ?? t.budget.unknownWallet,
-                        onTap: () => _openDetail(context, budget.id),
-                        isRecurring: state.isRecurring(budget),
+                    for (final (i, budget) in visible.indexed) ...[
+                      DsReveal(
+                        index: i + 1,
+                        child: BudgetCard(
+                          budget: budget,
+                          progress: state.progress[budget.id]!,
+                          walletName: state.walletOf(budget.walletId)?.name ?? t.budget.unknownWallet,
+                          onTap: () => _openDetail(context, budget.id),
+                          isRecurring: state.isRecurring(budget),
+                        ),
                       ),
                       const SizedBox(height: 12),
                     ],

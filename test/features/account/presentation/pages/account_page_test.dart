@@ -209,7 +209,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const ValueKey('account-delete')));
     await tester.pumpAndSettle();
-    await tester.tap(find.widgetWithText(AppButton, t.account.deleteAction).last);
+    await tester.tap(find.widgetWithText(DsButton, t.account.deleteAction).last);
     await tester.pumpAndSettle();
 
     expect(find.text(t.account.deletePasswordTitle), findsOneWidget);

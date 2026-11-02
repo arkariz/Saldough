@@ -429,7 +429,7 @@ void main() {
         );
         await tester.tap(find.widgetWithText(DsButton, t.wallet.deleteAction));
         await tester.pumpAndSettle();
-        await tester.tap(find.widgetWithText(AppButton, t.common.delete));
+        await tester.tap(find.widgetWithText(DsButton, t.common.delete));
         await tester.pumpAndSettle();
 
         expect(await stored(), isEmpty);
@@ -460,7 +460,7 @@ void main() {
         );
         await tester.tap(find.widgetWithText(DsButton, t.wallet.deleteAction));
         await tester.pumpAndSettle();
-        await tester.tap(find.widgetWithText(AppButton, t.common.delete));
+        await tester.tap(find.widgetWithText(DsButton, t.common.delete));
         await tester.pumpAndSettle();
 
         expect((await stored()).map((w) => w.id), ['a']);

@@ -13,11 +13,12 @@ class _TopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: AppSize.topbar,
+      height: 56,
       child: Row(
         children: [
-          AppIconButton(
-            icon: IconKey.back,
+          const SizedBox(width: 4),
+          DsIconButton(
+            icon: Icons.arrow_back,
             label: t.budget.detailBackLabel,
             onPressed: () => Navigator.of(context).maybePop(),
           ),
@@ -28,25 +29,45 @@ class _TopBar extends StatelessWidget {
                 title,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: Theme.of(context).textTheme.titleLarge,
+                style: context.ds.typography.headlineMd.copyWith(fontSize: 20),
               ),
             ),
           ),
-          AppIconButton(
+          DsIconButton(
             key: const ValueKey('budget-detail-edit'),
-            icon: IconKey.edit,
+            icon: Icons.edit_outlined,
             label: t.budget.detailEditAction,
             onPressed: onEdit,
           ),
+          const SizedBox(width: 4),
         ],
       ),
     );
   }
 }
 
-/// Ringkasan anggaran: sisa (angka utama) dengan badge status, bar kotak
-/// dengan penanda waktu, terpakai dari rencana dan hari ke-berapa periode,
-/// lalu badge periode, rentang, dan dompet.
+/// Judul bagian dengan keterangan kecil di kanan (mis. jumlah pos).
+class _SectionTitle extends StatelessWidget {
+  const _SectionTitle({required this.title, this.hint});
+
+  final String title;
+  final String? hint;
+
+  @override
+  Widget build(BuildContext context) {
+    final ds = context.ds;
+    return Row(
+      children: [
+        Expanded(child: DsSectionHeader(title: title)),
+        if (hint != null) Text(hint!, style: ds.typography.bodySm.copyWith(color: ds.colors.textMuted)),
+      ],
+    );
+  }
+}
+
+/// Ringkasan anggaran: sisa (angka utama) dengan badge status, meter dengan
+/// penanda waktu, terpakai dari rencana dan hari ke-berapa periode, lalu
+/// badge periode, rentang, dan dompet.
 class _HeroCard extends StatelessWidget {
   const _HeroCard({required this.budget, required this.progress, required this.wallet});
 
@@ -56,62 +77,84 @@ class _HeroCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
+    final ds = context.ds;
+    final c = ds.colors;
     final active = progress.status == BudgetStatus.active;
     final ratio = progress.progress;
     final (badge, tone) = switch (AppProgressBar.statusFor(ratio)) {
-      AppBarStatus.safe => (t.home.budgetSafe, AppTone.positive),
-      AppBarStatus.nearlyOut => (t.home.budgetNearlyOut, AppTone.warning),
-      AppBarStatus.over => (t.home.budgetOverBy(amount: AppMoneyFormatter.format(-progress.remaining)), AppTone.danger),
+      AppBarStatus.safe => (t.home.budgetSafe, DsBadgeTone.income),
+      AppBarStatus.nearlyOut => (t.home.budgetNearlyOut, DsBadgeTone.warning),
+      AppBarStatus.over => (
+        t.home.budgetOverBy(amount: AppMoneyFormatter.format(-progress.remaining)),
+        DsBadgeTone.danger,
+      ),
     };
     final totalDays = budget.endDate.difference(budget.startDate).inDays;
     final today = DateTime.now();
     final day = DateTime(today.year, today.month, today.day).difference(budget.startDate).inDays + 1;
-    return AppCard(
+    return DsCard(
+      padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Row(
             children: [
               Expanded(
-                child: Text(t.budget.remainingLabel, style: textTheme.bodyMedium?.copyWith(color: colors.ink2)),
+                child: Text(t.budget.remainingLabel, style: ds.typography.bodyMd.copyWith(color: c.textSecondary)),
               ),
-              Flexible(child: AppBadge(active ? badge : budgetStatusLabel(progress.status), tone: active ? tone : AppTone.neutral)),
+              Flexible(
+                child: DsBadge(
+                  label: active ? badge : budgetStatusLabel(progress.status),
+                  tone: active ? tone : DsBadgeTone.neutral,
+                ),
+              ),
             ],
           ),
-          HeroAmount(AppMoneyFormatter.format(progress.remaining), color: progress.remaining < 0 ? colors.danger : null),
-          const SizedBox(height: AppSpacing.space3),
-          AppProgressBar(value: ratio, pace: active ? budget.elapsedRatio(today) : null),
-          const SizedBox(height: AppSpacing.space2),
+          const SizedBox(height: 4),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: AlignmentDirectional.centerStart,
+            child: Text(
+              AppMoneyFormatter.format(progress.remaining),
+              style: ds.typography.numericalDisplay.copyWith(color: progress.remaining < 0 ? c.error : c.textPrimary),
+            ),
+          ),
+          const SizedBox(height: 12),
+          DsSegmentMeter(
+            value: ratio,
+            tone: budgetMeterTone(ratio),
+            pace: active ? budget.elapsedRatio(today) : null,
+            semanticLabel: '${(ratio * 100).round()}%',
+          ),
+          const SizedBox(height: 8),
           Wrap(
             alignment: WrapAlignment.spaceBetween,
-            spacing: AppSpacing.space2,
+            spacing: 8,
             children: [
               Text(
                 t.home.budgetSpentOf(
                   spent: AppMoneyFormatter.format(progress.spent),
                   planned: AppMoneyFormatter.format(progress.plannedAmount),
                 ),
-                style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
+                style: ds.typography.bodySm.copyWith(color: c.textSecondary),
               ),
               if (active && day >= 1 && day <= totalDays)
                 Text(
                   t.budget.dayOfPeriod(day: day, total: totalDays),
-                  style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
+                  style: ds.typography.bodySm.copyWith(color: c.textSecondary),
                 ),
             ],
           ),
-          const SizedBox(height: AppSpacing.space3),
-          const Divider(),
-          const SizedBox(height: AppSpacing.space3),
+          const SizedBox(height: 12),
+          Divider(height: 1, color: c.outlineSubtle),
+          const SizedBox(height: 12),
           Wrap(
-            spacing: AppSpacing.space2,
-            runSpacing: AppSpacing.space2,
+            spacing: 8,
+            runSpacing: 8,
             children: [
-              AppBadge(budgetPeriodLabel(budget.period)),
-              AppBadge(budgetRangeLabel(budget)),
-              AppBadge(wallet?.name ?? t.budget.unknownWallet, icon: IconKey.wallets),
+              DsBadge(label: budgetPeriodLabel(budget.period), tone: DsBadgeTone.neutral),
+              DsBadge(label: budgetRangeLabel(budget), tone: DsBadgeTone.neutral),
+              DsBadge(label: wallet?.name ?? t.budget.unknownWallet, tone: DsBadgeTone.neutral),
             ],
           ),
         ],
@@ -120,10 +163,10 @@ class _HeroCard extends StatelessWidget {
   }
 }
 
-/// Satu pos di daftar pos (`tk-list--plain`): nama, bar tipis, keterangan
-/// jenis/rencana di kiri; sisa dan statusnya di kanan. Diketuk membuka sheet
-/// tindakan pos. Pintasan CATAT tetap terlihat di baris (ADR-018: mencatat
-/// dari rincian anggaran hanya lewat pos).
+/// Satu pos di daftar pos: nama, meter tipis, keterangan jenis/rencana di
+/// kiri; sisa dan statusnya di kanan. Diketuk membuka sheet tindakan pos.
+/// Pintasan CATAT tetap terlihat di baris (ADR-018: mencatat dari rincian
+/// anggaran hanya lewat pos).
 class _ItemRow extends StatelessWidget {
   const _ItemRow({
     required this.progress,
@@ -149,8 +192,8 @@ class _ItemRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
+    final ds = context.ds;
+    final c = ds.colors;
     final item = progress.item;
     final overspent = progress.status == BudgetItemStatus.overspent;
     final caption = [
@@ -166,57 +209,59 @@ class _ItemRow extends StatelessWidget {
     ].join(' · ');
     return SpotlightTarget(
       spotlightKey: spotlighted ? SpotlightKey.budgetDetailItem : null,
-      child: Semantics(
-        button: true,
-        label: item.name,
-        child: InkWell(
-          onTap: onOpen,
-          overlayColor: WidgetStateProperty.resolveWith(
-            (states) => states.contains(WidgetState.pressed) ? colors.surface2 : Colors.transparent,
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4, vertical: AppSpacing.space3),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text(item.name, style: textTheme.titleMedium),
-                      const SizedBox(height: AppSpacing.space2),
-                      AppProgressBar(value: progress.progress, thin: true),
-                      const SizedBox(height: AppSpacing.space2),
-                      Text(caption, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: AppSpacing.space3),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
+      child: DsPressable(
+        semanticLabel: item.name,
+        onPressed: onOpen,
+        pressedScale: 0.99,
+        builder: (context, _) => Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    AppMoneyText(progress.remaining, kind: MoneyKind.remaining),
-                    Text(
-                      budgetItemStatusLabel(progress.status),
-                      style: textTheme.bodySmall?.copyWith(color: overspent ? colors.danger : colors.ink2),
+                    Text(item.name, style: ds.typography.titleMd),
+                    const SizedBox(height: 8),
+                    DsSegmentMeter(
+                      value: progress.progress,
+                      tone: budgetMeterTone(progress.progress),
+                      thin: true,
+                      semanticLabel: '${(progress.progress * 100).round()}%',
                     ),
-                    if (onRecord case final record?) ...[
-                      const SizedBox(height: AppSpacing.space1),
-                      SpotlightTarget(
-                        spotlightKey: spotlighted ? SpotlightKey.budgetDetailRecord : null,
-                        child: AppButton.secondary(
-                          small: true,
-                          label: item.isTransfer
-                              ? t.budget.detailRecordTransferAction
-                              : t.budget.detailRecordExpenseAction,
-                          onPressed: record,
-                        ),
-                      ),
-                    ],
+                    const SizedBox(height: 8),
+                    Text(caption, style: ds.typography.bodySm.copyWith(color: c.textSecondary)),
                   ],
                 ),
-              ],
-            ),
+              ),
+              const SizedBox(width: 12),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    AppMoneyFormatter.format(progress.remaining),
+                    style: ds.typography.amountSm.copyWith(color: progress.remaining < 0 ? c.error : c.textPrimary),
+                  ),
+                  Text(
+                    budgetItemStatusLabel(progress.status),
+                    style: ds.typography.bodySm.copyWith(color: overspent ? c.error : c.textSecondary),
+                  ),
+                  if (onRecord case final record?) ...[
+                    const SizedBox(height: 4),
+                    SpotlightTarget(
+                      spotlightKey: spotlighted ? SpotlightKey.budgetDetailRecord : null,
+                      child: DsButton.compact(
+                        label: item.isTransfer
+                            ? t.budget.detailRecordTransferAction
+                            : t.budget.detailRecordExpenseAction,
+                        onPressed: record,
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ],
           ),
         ),
       ),
@@ -227,8 +272,8 @@ class _ItemRow extends StatelessWidget {
 /// Tindakan sheet pos.
 enum _ItemAction { record, edit }
 
-/// Sheet tindakan pos (prototipe: ketuk pos): catat untuk pos ini dan ubah
-/// anggaran (pos diubah di formulir anggaran).
+/// Sheet tindakan pos (ketuk pos): catat untuk pos ini dan ubah anggaran
+/// (pos diubah di formulir anggaran).
 class _ItemActionsSheet extends StatelessWidget {
   const _ItemActionsSheet({required this.progress, required this.canRecord});
 
@@ -237,37 +282,45 @@ class _ItemActionsSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
+    final ds = context.ds;
     final item = progress.item;
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Text(item.name, textAlign: TextAlign.center, style: Theme.of(context).textTheme.titleLarge),
-        Text(
-          t.home.budgetSpentOf(
-            spent: AppMoneyFormatter.format(progress.spent),
-            planned: AppMoneyFormatter.format(item.plannedAmount),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(item.name, textAlign: TextAlign.center, style: ds.typography.headlineMd.copyWith(fontSize: 20)),
+          const SizedBox(height: 4),
+          Text(
+            t.home.budgetSpentOf(
+              spent: AppMoneyFormatter.format(progress.spent),
+              planned: AppMoneyFormatter.format(item.plannedAmount),
+            ),
+            textAlign: TextAlign.center,
+            style: ds.typography.bodySm.copyWith(color: ds.colors.textSecondary),
           ),
-          textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: colors.ink2),
-        ),
-        const SizedBox(height: AppSpacing.space3),
-        if (canRecord)
-          AppListRow(
-            compact: true,
-            leading: AppIcon(IconKey.add, color: colors.ink2),
-            title: item.isTransfer ? t.budget.detailRecordTransferAction : t.budget.detailRecordExpenseAction,
-            onTap: () => Navigator.of(context).pop(_ItemAction.record),
+          const SizedBox(height: 12),
+          DsListCard(
+            children: [
+              if (canRecord)
+                DsSettingRow(
+                  leading: DsIconTile.asset(
+                    asset: item.isTransfer ? ClayIcons.transfer : ClayIcons.expenseArrow,
+                    size: DsIconTileSize.sm,
+                  ),
+                  title: item.isTransfer ? t.budget.detailRecordTransferAction : t.budget.detailRecordExpenseAction,
+                  onTap: () => Navigator.of(context).pop(_ItemAction.record),
+                ),
+              DsSettingRow(
+                leading: DsIconTile.asset(asset: ClayIcons.note, size: DsIconTileSize.sm),
+                title: t.budget.detailEditAction,
+                onTap: () => Navigator.of(context).pop(_ItemAction.edit),
+              ),
+            ],
           ),
-        AppListRow(
-          compact: true,
-          leading: AppIcon(IconKey.edit, color: colors.ink2),
-          title: t.budget.detailEditAction,
-          onTap: () => Navigator.of(context).pop(_ItemAction.edit),
-        ),
-        const SizedBox(height: AppSpacing.space4),
-      ],
+        ],
+      ),
     );
   }
 }

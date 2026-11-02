@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
-import 'package:saldough/core/presentation/widgets/app_button.dart';
 
 /// Menanyakan konfirmasi sebelum aksi yang tidak bisa dibatalkan.
 ///
@@ -23,13 +23,19 @@ Future<bool> showConfirmDelete(
   final confirmed = await showDialog<bool>(
     context: context,
     builder: (dialogContext) => AlertDialog(
-      title: Text(title ?? t.common.confirmDeleteTitle),
-      content: Text(message),
+      title: Text(
+        title ?? t.common.confirmDeleteTitle,
+        style: dialogContext.ds.typography.headlineMd.copyWith(fontSize: 20),
+      ),
+      content: Text(
+        message,
+        style: dialogContext.ds.typography.bodyMd.copyWith(color: dialogContext.ds.colors.textSecondary),
+      ),
       // Design system Dialog: "Batal" teks di kiri, tindakan permanen
       // bernada danger di kanan.
       actions: [
-        AppButton.text(label: t.common.cancel, onPressed: () => Navigator.of(dialogContext).pop(false)),
-        AppButton.danger(
+        DsButton.ghost(label: t.common.cancel, onPressed: () => Navigator.of(dialogContext).pop(false)),
+        DsButton.danger(
           label: confirmLabel ?? t.common.delete,
           onPressed: () => Navigator.of(dialogContext).pop(true),
         ),

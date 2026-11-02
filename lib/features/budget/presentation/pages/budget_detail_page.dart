@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/budget/domain/entities/budget.dart';
@@ -125,25 +125,22 @@ class BudgetDetailPage extends StatelessWidget {
                   _TopBar(title: current.name, onEdit: () => _edit(context, current)),
                   Expanded(
                     child: ListView(
-                      padding: const EdgeInsets.fromLTRB(
-                        AppSpacing.space4,
-                        AppSpacing.space2,
-                        AppSpacing.space4,
-                        AppSpacing.space12,
-                      ),
+                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 96),
                       children: [
                         _HeroCard(budget: current, progress: progress, wallet: wallet),
-                        const SizedBox(height: AppSpacing.space6),
-                        AppSectionHeader(
-                          t.budget.detailItemsHeading,
+                        const SizedBox(height: 20),
+                        _SectionTitle(
+                          title: t.budget.detailItemsHeading,
                           hint: t.budget.itemCount(count: current.items.length),
                         ),
-                        const SizedBox(height: AppSpacing.space2),
+                        const SizedBox(height: 8),
                         if (current.items.isEmpty)
-                          Text(t.budget.detailNoItems, style: TextStyle(color: context.appColors.ink2))
+                          Text(
+                            t.budget.detailNoItems,
+                            style: context.ds.typography.bodyMd.copyWith(color: context.ds.colors.textSecondary),
+                          )
                         else
-                          AppListCard(
-                            dividerIndent: AppListCard.plainIndent,
+                          DsListCard(
                             children: [
                               for (final (i, itemProgress) in progress.items.indexed)
                                 _ItemRow(
@@ -155,16 +152,19 @@ class BudgetDetailPage extends StatelessWidget {
                                 ),
                             ],
                           ),
-                        const SizedBox(height: AppSpacing.space6),
-                        AppSectionHeader(t.budget.detailLinkedHeading),
-                        const SizedBox(height: AppSpacing.space2),
+                        const SizedBox(height: 20),
+                        _SectionTitle(title: t.budget.detailLinkedHeading),
+                        const SizedBox(height: 8),
                         if (linked.isEmpty)
-                          Text(t.budget.detailLinkedEmpty, style: TextStyle(color: context.appColors.ink2))
+                          Text(
+                            t.budget.detailLinkedEmpty,
+                            style: context.ds.typography.bodyMd.copyWith(color: context.ds.colors.textSecondary),
+                          )
                         else
-                          AppListCard(
+                          DsListCard(
                             children: [
                               for (final transaction in linked)
-                                TransactionRow(
+                                TransactionLedgerRow(
                                   transaction: transaction,
                                   walletsById: walletsById,
                                   onTap: () => _openTransaction(context, transaction),

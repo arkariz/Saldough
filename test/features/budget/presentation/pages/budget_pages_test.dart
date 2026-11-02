@@ -172,7 +172,7 @@ void main() {
     expect(find.textContaining('beras 5kg'), findsOneWidget);
 
     // Pintasan di kartu pos: pengeluaran, dompet BCA dan pos Beras terpilih.
-    await tester.tap(find.widgetWithText(AppButton, t.budget.detailRecordExpenseAction));
+    await tester.tap(find.widgetWithText(DsButton, t.budget.detailRecordExpenseAction));
     await tester.pumpAndSettle();
     expect(find.byType(ExpenseFormSheet), findsOneWidget);
     expect(find.text('Beras · Rumah tangga'), findsOneWidget);
@@ -235,11 +235,11 @@ void main() {
     await tester.pumpAndSettle();
 
     // Tidak ada pintasan di tingkat anggaran; pos transfer hanya punya tombol transfer.
-    expect(find.widgetWithText(AppButton, t.budget.detailRecordExpenseAction), findsNothing);
-    expect(find.widgetWithText(AppButton, t.budget.detailRecordExpenseAction), findsNothing);
+    expect(find.widgetWithText(DsButton, t.budget.detailRecordExpenseAction), findsNothing);
+    expect(find.widgetWithText(DsButton, t.budget.detailRecordExpenseAction), findsNothing);
     expect(find.textContaining(t.budget.itemTransferTo(wallet: 'Tabungan')), findsOneWidget);
 
-    await tester.tap(find.widgetWithText(AppButton, t.budget.detailRecordTransferAction));
+    await tester.tap(find.widgetWithText(DsButton, t.budget.detailRecordTransferAction));
     await tester.pumpAndSettle();
     expect(find.byType(TransferFormSheet), findsOneWidget);
     // Pos transfer hanya ditawarkan kalau asal BCA DAN tujuan Tabungan — jadi
@@ -260,10 +260,10 @@ void main() {
     expect(find.text(t.budget.detailHowTitle), findsNothing);
     await tester.tap(find.text('Beras'));
     await tester.pumpAndSettle();
-    expect(find.widgetWithText(AppListRow, t.budget.detailRecordExpenseAction), findsOneWidget);
-    expect(find.widgetWithText(AppListRow, t.budget.detailEditAction), findsOneWidget);
+    expect(find.widgetWithText(DsSettingRow, t.budget.detailRecordExpenseAction), findsOneWidget);
+    expect(find.widgetWithText(DsSettingRow, t.budget.detailEditAction), findsOneWidget);
 
-    await tester.tap(find.widgetWithText(AppListRow, t.budget.detailRecordExpenseAction));
+    await tester.tap(find.widgetWithText(DsSettingRow, t.budget.detailRecordExpenseAction));
     await tester.pumpAndSettle();
     expect(find.byType(ExpenseFormSheet), findsOneWidget);
     expect(find.text('Beras · Rumah tangga'), findsOneWidget);

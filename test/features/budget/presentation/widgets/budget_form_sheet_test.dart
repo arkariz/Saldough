@@ -126,7 +126,12 @@ void main() {
       final row = find.byKey(const ValueKey('budget-start'));
       expect(row, findsOneWidget);
       expect(tester.getSize(row).height, lessThanOrEqualTo(64));
-      expect(find.byKey(const ValueKey('budget-period-weekly')), findsOneWidget);
+      expect(find.byKey(const ValueKey('budget-period')), findsOneWidget);
+      // Pilihan periode sebaris (horizontal), bukan bertumpuk.
+      final monthly = tester.getTopLeft(find.text(t.budget.periodMonthly));
+      final weekly = tester.getTopLeft(find.text(t.budget.periodWeekly));
+      expect((monthly.dy - weekly.dy).abs(), lessThan(2));
+      expect(weekly.dx, greaterThan(monthly.dx));
     });
 
     testWidgets('menambah pos memperbarui total di bilah bawah', (tester) async {

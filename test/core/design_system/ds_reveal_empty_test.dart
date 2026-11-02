@@ -49,6 +49,8 @@ void main() {
     });
   });
 
+  _filterChipWrapTest();
+
   testWidgets('DsSegmentMeter: segmen terisi menyala berurutan lalu penuh', (tester) async {
     await tester.pumpWidget(_host(const SizedBox(width: 200, child: DsSegmentMeter(value: 0.5, semanticLabel: '50%'))));
     Color? lastFilled() {
@@ -64,5 +66,27 @@ void main() {
     final start = lastFilled();
     await tester.pump(const Duration(seconds: 2));
     expect(lastFilled(), isNot(start));
+  });
+}
+
+void _filterChipWrapTest() {
+  testWidgets('DsFilterChip di dalam Wrap tersusun mendatar', (tester) async {
+    await tester.pumpWidget(
+      _host(
+        SizedBox(
+          width: 320,
+          child: Wrap(
+            spacing: 8,
+            children: [
+              DsFilterChip(label: 'Bulanan', selected: true, onTap: () {}),
+              DsFilterChip(label: 'Mingguan', selected: false, onTap: () {}),
+            ],
+          ),
+        ),
+      ),
+    );
+    final a = tester.getTopLeft(find.text('Bulanan'));
+    final b = tester.getTopLeft(find.text('Mingguan'));
+    expect((a.dy - b.dy).abs(), lessThan(2));
   });
 }

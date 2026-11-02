@@ -370,17 +370,33 @@ class _BudgetFormSheetState extends State<BudgetFormSheet> {
                         ),
                       ),
                       const SizedBox(height: 16),
-                      AppSectionLabel(t.budget.nameLabel, hint: t.budget.requiredHint),
-                      const SizedBox(height: 4),
-                      AppFormTextField(
-                        controller: _name,
-                        hint: t.budget.nameHint,
-                        autofocus: !_editing,
-                        onChanged: refresh,
-                      ),
-                      const SizedBox(height: 16),
                       DsFieldGroup(
                         children: [
+                          DsFieldRow(
+                            icon: Icons.edit_note,
+                            leading: DsIconTile.asset(asset: ClayIcons.note, size: DsIconTileSize.sm),
+                            label: '${t.budget.nameLabel} · ${t.budget.requiredHint}'.toUpperCase(),
+                            child: TextField(
+                              controller: _name,
+                              autofocus: !_editing,
+                              maxLength: 40,
+                              textCapitalization: TextCapitalization.sentences,
+                              cursorColor: c.actionPrimary,
+                              onChanged: refresh,
+                              style: ds.typography.bodyMd.copyWith(fontSize: 14, fontWeight: FontWeight.w600),
+                              buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                filled: false,
+                                enabledBorder: InputBorder.none,
+                                focusedBorder: InputBorder.none,
+                                isDense: true,
+                                contentPadding: EdgeInsets.zero,
+                                hintText: t.budget.nameHint,
+                                hintStyle: ds.typography.bodyMd.copyWith(fontSize: 14, color: c.textMuted),
+                              ),
+                            ),
+                          ),
                           WalletSelectField(
                             key: const ValueKey('budget-wallet'),
                             useDs: true,
@@ -391,27 +407,32 @@ class _BudgetFormSheetState extends State<BudgetFormSheet> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 4),
-                      Text(t.budget.walletHelp, style: ds.typography.bodySm.copyWith(color: c.textSecondary)),
-                      const SizedBox(height: 16),
-                      AppSectionLabel(t.budget.periodLabel),
-                      const SizedBox(height: 4),
-                      Wrap(
-                        spacing: 8,
-                        children: [
-                          for (final (period, label) in [
-                            (BudgetPeriod.monthly, t.budget.periodMonthly),
-                            (BudgetPeriod.weekly, t.budget.periodWeekly),
-                          ])
-                            DsFilterChip(
-                              key: ValueKey('budget-period-${period.name}'),
-                              label: label,
-                              selected: _period == period,
-                              onTap: () => setState(() => _period = period),
-                            ),
-                        ],
+                      const SizedBox(height: 6),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        child: Text(t.budget.walletHelp, style: ds.typography.bodySm.copyWith(color: c.textSecondary)),
                       ),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: 20),
+                      AppSectionLabel(t.budget.periodLabel),
+                      const SizedBox(height: 8),
+                      DsSegmentedPill<BudgetPeriod>(
+                        key: const ValueKey('budget-period'),
+                        segments: [
+                          DsSegment(
+                            value: BudgetPeriod.monthly,
+                            label: t.budget.periodMonthly,
+                            asset: ClayIcons.calendar,
+                          ),
+                          DsSegment(
+                            value: BudgetPeriod.weekly,
+                            label: t.budget.periodWeekly,
+                            asset: ClayIcons.dateCalendar,
+                          ),
+                        ],
+                        selected: _period,
+                        onChanged: (period) => setState(() => _period = period),
+                      ),
+                      const SizedBox(height: 8),
                       DsFieldGroup(
                         children: [
                           DsFieldRow(

@@ -37,7 +37,10 @@ class DsFilterChip extends StatelessWidget {
         pressedScale: 0.96,
         builder: (context, _) => ConstrainedBox(
           constraints: const BoxConstraints(minHeight: 44),
+          // widthFactor 1: chip selebar isinya, tidak memenuhi lebar induk
+          // (di `Wrap` Center biasa membuat tiap chip turun satu baris).
           child: Center(
+            widthFactor: 1,
             child: AnimatedContainer(
               duration: reduced ? Duration.zero : DsMotion.standard,
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),

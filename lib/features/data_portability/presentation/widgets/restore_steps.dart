@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 
 /// Label langkah pemulihan: empat dari Akun, tiga dari onboarding (belum ada
 /// data, jadi tanpa cadangan pengaman), mengikuti `Pulihkan.dc.html`.
@@ -10,8 +11,8 @@ List<String> restoreStepLabels({required bool onboarding}) {
   return onboarding ? steps.sublist(1) : steps;
 }
 
-/// Daftar langkah proses pemulihan (`tk-steps`): selesai bercentang, yang
-/// berjalan berputar, sisanya menunggu. [current] berbasis 1 pada [labels].
+/// Daftar langkah proses pemulihan: selesai bercentang clay, yang berjalan
+/// berputar, sisanya menunggu. [current] berbasis 1 pada [labels].
 class RestoreSteps extends StatelessWidget {
   /// Membuat [RestoreSteps].
   const RestoreSteps({required this.labels, required this.current, super.key});
@@ -25,12 +26,12 @@ class RestoreSteps extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
+    final ds = context.ds;
+    final c = ds.colors;
     return Semantics(
       liveRegion: true,
-      child: AppCard(
-        padding: const EdgeInsets.symmetric(vertical: AppSpacing.space2),
+      child: DsCard(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
         child: Column(
           children: [
             for (final (i, label) in labels.indexed)
@@ -40,22 +41,25 @@ class RestoreSteps extends StatelessWidget {
                   final done = n < current;
                   final active = n == current;
                   return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: AppSpacing.space2, horizontal: AppSpacing.space2),
+                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
                     child: Row(
                       children: [
-                        if (active)
-                          AppSpin(child: AppIcon(IconKey.progressActivity, color: colors.brand))
-                        else
-                          AppIcon(
-                            done ? IconKey.checkCircle : IconKey.stepWaiting,
-                            color: done ? colors.positive : colors.ink3,
+                        SizedBox.square(
+                          dimension: 24,
+                          child: Center(
+                            child: active
+                                ? AppSpin(child: Icon(Icons.autorenew, size: 22, color: c.actionPrimary))
+                                : done
+                                ? SvgPicture.asset(ClayIcons.done, width: 24, height: 24)
+                                : Icon(Icons.radio_button_unchecked, size: 20, color: c.textMuted),
                           ),
-                        const SizedBox(width: AppSpacing.space3),
+                        ),
+                        const SizedBox(width: 12),
                         Expanded(
                           child: Text(
                             label,
-                            style: textTheme.bodyMedium?.copyWith(
-                              color: active || done ? colors.ink : colors.ink2,
+                            style: ds.typography.bodyMd.copyWith(
+                              color: active || done ? c.textPrimary : c.textSecondary,
                               fontWeight: active ? FontWeight.w700 : null,
                             ),
                           ),

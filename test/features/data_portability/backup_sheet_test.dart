@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/data_portability/domain/file_transfer.dart';
 import 'package:saldough/features/data_portability/presentation/bloc/backup_bloc.dart';
 import 'package:saldough/features/data_portability/presentation/widgets/backup_sheet.dart';
@@ -25,7 +25,7 @@ void main() {
     addTearDown(bloc.close);
     await tester.pumpWidget(
       MaterialApp(
-        theme: PixelTheme.light,
+        theme: AppThemeBridge.build(DsThemePresets.fallback, Brightness.light),
         home: Scaffold(
           body: BlocProvider<BackupBloc>.value(value: bloc, child: const BackupSheet()),
         ),

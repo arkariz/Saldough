@@ -1,12 +1,14 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/discovery/discovery.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/features/data_portability/domain/restore_models.dart';
+import 'package:saldough/features/data_portability/presentation/widgets/sheet_parts.dart';
 
 /// Halaman "Data dipulihkan dari cadangan {tanggal}." sesudah aplikasi dimulai
 /// ulang (`Pulihkan.dc.html`, keadaan selesai). Dibuka shell sekali.
@@ -48,8 +50,8 @@ class _RestoreDonePageState extends State<RestoreDonePage> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
+    final ds = context.ds;
+    final reduced = DsMotion.reduced(context);
     final d = t.dataPortability;
     final date = report.backupCreatedAt;
     final title = report.kind == RestoreKind.undo || date == null
@@ -62,25 +64,21 @@ class _RestoreDonePageState extends State<RestoreDonePage> {
             children: [
               Expanded(
                 child: ListView(
-                  padding: const EdgeInsets.all(AppSpacing.space6),
+                  padding: const EdgeInsets.all(24),
                   children: [
-                    const SizedBox(height: AppSpacing.space6),
-                    Image.asset('assets/illustration/penutup.png', height: 156, excludeFromSemantics: true),
-                    const SizedBox(height: AppSpacing.space4),
-                    Text(title, textAlign: TextAlign.center, style: textTheme.headlineSmall),
+                    const SizedBox(height: 24),
+                    Center(child: _Mascot(animate: !reduced)),
+                    const SizedBox(height: 24),
+                    Text(title, textAlign: TextAlign.center, style: ds.typography.headlineMd),
                     if (_needsPermission) ...[
-                      const SizedBox(height: AppSpacing.space2),
-                      Text(
-                        d.restoreDoneNote,
-                        textAlign: TextAlign.center,
-                        style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
-                      ),
+                      const SizedBox(height: 16),
+                      SheetNotice(message: d.restoreDoneNote),
                     ],
                   ],
                 ),
               ),
-              AppStickyBar(
-                child: AppButton(
+              DsStickyBar(
+                child: DsButton(
                   key: const ValueKey('restore-home'),
                   label: d.goHome,
                   expand: true,
@@ -91,6 +89,38 @@ class _RestoreDonePageState extends State<RestoreDonePage> {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// Maskot clay di lingkaran cahaya: membal masuk, lalu diam.
+class _Mascot extends StatelessWidget {
+  const _Mascot({required this.animate});
+
+  final bool animate;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.ds.colors;
+    final mascot = DecoratedBox(
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: RadialGradient(
+          colors: [c.actionPrimary.withValues(alpha: 0.18), c.actionPrimary.withValues(alpha: 0)],
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: SvgPicture.asset(ClayIcons.mascot, width: 132, height: 132, excludeFromSemantics: true),
+      ),
+    );
+    if (!animate) return mascot;
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0.5, end: 1),
+      duration: const Duration(milliseconds: 700),
+      curve: Curves.elasticOut,
+      builder: (context, scale, child) => Transform.scale(scale: scale, child: child),
+      child: mascot,
     );
   }
 }

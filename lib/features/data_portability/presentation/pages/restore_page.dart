@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:navigation/navigation.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/count_formatter.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/features/app_update/presentation/navigation/app_update_route_keys.dart';
@@ -12,6 +12,7 @@ import 'package:saldough/features/data_portability/domain/restore_models.dart';
 import 'package:saldough/features/data_portability/presentation/bloc/restore_bloc.dart';
 import 'package:saldough/features/data_portability/presentation/bloc/restore_state.dart';
 import 'package:saldough/features/data_portability/presentation/widgets/restore_steps.dart';
+import 'package:saldough/features/data_portability/presentation/widgets/sheet_parts.dart';
 import 'package:state_management/state_management.dart';
 
 /// Pulihkan dari cadangan (`Pulihkan.dc.html`): pratinjau perbandingan, dialog
@@ -60,10 +61,14 @@ class RestorePage extends StatelessWidget {
           // Sesudah penggantian dimulai tidak ada jalan kembali (R-4).
           canPop: !running,
           child: Scaffold(
-            appBar: AppBar(title: Text(title), automaticallyImplyLeading: !running),
+            appBar: AppBar(
+              title: Text(title, style: context.ds.typography.headlineMd),
+              centerTitle: false,
+              automaticallyImplyLeading: !running,
+            ),
             body: SafeArea(
               child: switch (state.phase) {
-                RestorePhase.inspecting => const Center(child: CircularProgressIndicator()),
+                RestorePhase.inspecting => const Center(child: SheetLoading()),
                 RestorePhase.preview => _Preview(
                   preview: state.session!.preview,
                   onNext: () => _confirm(context, state.session!.preview),
@@ -87,84 +92,86 @@ class _Preview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
+    final ds = context.ds;
+    final c = ds.colors;
     final d = t.dataPortability;
     final undo = preview.source == RestoreKind.undo;
     return Column(
       children: [
         Expanded(
           child: ListView(
-            padding: const EdgeInsets.all(AppSpacing.space4),
+            padding: const EdgeInsets.all(16),
             children: [
               if (preview.isOlderThanCurrent) ...[
-                AppBanner(
+                SheetNotice(
+                  key: const ValueKey('restore-older-notice'),
                   message: d.restoreOlder(date: CycleMonthFormatter.formatDateShort(preview.backupCreatedAt)),
                 ),
-                const SizedBox(height: AppSpacing.space4),
+                const SizedBox(height: 16),
               ],
-              AppCard(
+              IntrinsicHeight(
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Expanded(
                       child: _VsColumn(
                         kicker: undo ? d.kickSafety : d.kickBackup,
                         big: CycleMonthFormatter.formatDateShort(preview.backupCreatedAt),
                         summary: preview.backup,
+                        asset: undo ? ClayIcons.restoreClock : ClayIcons.backupBox,
+                        highlighted: true,
                       ),
                     ),
-                    Container(
-                      width: 1,
-                      margin: const EdgeInsets.symmetric(horizontal: AppSpacing.space3),
-                      height: 128,
-                      color: colors.line,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 6),
+                      child: Center(child: Icon(Icons.arrow_forward_rounded, size: 20, color: c.actionPrimary)),
                     ),
                     Expanded(
-                      child: _VsColumn(kicker: d.kickNow, big: d.nowLabel, summary: preview.current),
+                      child: _VsColumn(
+                        kicker: d.kickNow,
+                        big: d.nowLabel,
+                        summary: preview.current,
+                        asset: ClayIcons.walletNav,
+                      ),
                     ),
                   ],
                 ),
               ),
               if (preview.hasChanges) ...[
-                const SizedBox(height: AppSpacing.space4),
-                AppSectionHeader(d.restoreChanges),
-                const SizedBox(height: AppSpacing.space2),
-                AppListCard(
+                const SizedBox(height: 16),
+                DsSectionHeader(title: d.restoreChanges),
+                const SizedBox(height: 8),
+                DsListCard(
                   children: [
                     if (preview.newCurrency case final code?)
-                      AppListRow(
-                        compact: true,
-                        leading: AppIcon(IconKey.payments, color: colors.ink2),
+                      DsSettingRow(
+                        leading: DsIconTile.asset(asset: ClayIcons.coins, size: DsIconTileSize.sm),
                         title: d.changeCurrency(code: code),
-                        wrapTitle: true,
                       ),
                     if (preview.lostInboxDrafts > 0)
-                      AppListRow(
-                        compact: true,
-                        leading: AppIcon(IconKey.inbox, color: colors.ink2),
+                      DsSettingRow(
+                        leading: DsIconTile.asset(asset: ClayIcons.tray, size: DsIconTileSize.sm),
                         title: d.changeDrafts(n: preview.lostInboxDrafts),
-                        wrapTitle: true,
                       ),
                   ],
                 ),
               ],
-              const SizedBox(height: AppSpacing.space4),
+              const SizedBox(height: 16),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space1),
-                child: Text(d.restoreUnchanged, style: textTheme.bodyMedium?.copyWith(color: colors.ink2)),
+                padding: const EdgeInsets.symmetric(horizontal: 4),
+                child: Text(d.restoreUnchanged, style: ds.typography.bodySm.copyWith(color: c.textSecondary)),
               ),
             ],
           ),
         ),
-        AppStickyBar(
+        DsStickyBar(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              AppButton(key: const ValueKey('restore-next'), label: d.restoreNext, expand: true, onPressed: onNext),
-              const SizedBox(height: AppSpacing.space1),
-              AppButton.text(
+              DsButton(key: const ValueKey('restore-next'), label: d.restoreNext, expand: true, onPressed: onNext),
+              const SizedBox(height: 4),
+              DsButton.ghost(
                 key: const ValueKey('restore-cancel'),
                 label: d.cancel,
                 expand: true,
@@ -178,18 +185,27 @@ class _Preview extends StatelessWidget {
   }
 }
 
-/// Satu kolom perbandingan (`tk-vs__col`): penanda, judul besar, dan empat baris.
+/// Satu kolom perbandingan: ubin clay, penanda, judul besar, dan empat baris.
+/// Kolom cadangan diberi garis aksi supaya terbaca sebagai "yang akan dipasang".
 class _VsColumn extends StatelessWidget {
-  const _VsColumn({required this.kicker, required this.big, required this.summary});
+  const _VsColumn({
+    required this.kicker,
+    required this.big,
+    required this.summary,
+    required this.asset,
+    this.highlighted = false,
+  });
 
   final String kicker;
   final String big;
   final BackupSummary summary;
+  final String asset;
+  final bool highlighted;
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
+    final ds = context.ds;
+    final c = ds.colors;
     final d = t.dataPortability;
     final first = summary.firstDate;
     final lines = [
@@ -198,15 +214,26 @@ class _VsColumn extends StatelessWidget {
       if (first != null) d.since(date: CycleMonthFormatter.formatDateShort(DateTime.parse(first))),
       summary.currency ?? 'IDR',
     ];
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(kicker, style: textTheme.labelMedium?.copyWith(color: colors.ink2)),
-        const SizedBox(height: AppSpacing.space1),
-        Text(big, style: textTheme.titleMedium),
-        const SizedBox(height: AppSpacing.space2),
-        for (final line in lines) Text(line, style: textTheme.bodyMedium?.copyWith(color: colors.ink2)),
-      ],
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        borderRadius: DsRadius.lgAll,
+        border: highlighted ? Border.all(color: c.actionPrimary, width: 1.5) : null,
+      ),
+      child: DsCard(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            DsIconTile.asset(asset: asset, size: DsIconTileSize.sm),
+            const SizedBox(height: 8),
+            Text(kicker, style: ds.typography.labelMd.copyWith(color: c.textSecondary)),
+            const SizedBox(height: 2),
+            Text(big, style: ds.typography.titleMd),
+            const SizedBox(height: 8),
+            for (final line in lines) Text(line, style: ds.typography.bodySm.copyWith(color: c.textSecondary)),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -218,17 +245,20 @@ class _Running extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
+    final ds = context.ds;
     return ListView(
-      padding: const EdgeInsets.all(AppSpacing.space4),
+      padding: const EdgeInsets.all(16),
       children: [
+        const SheetHeroTile(asset: ClayIcons.hourglass),
+        const SizedBox(height: 16),
         // Langkah 1 (menyimpan cadangan pengaman) berjalan di halaman ini;
         // langkah berikutnya di layar boot ulang. Dari onboarding tanpa langkah 1.
         RestoreSteps(labels: restoreStepLabels(onboarding: onboarding), current: 1),
-        const SizedBox(height: AppSpacing.space3),
+        const SizedBox(height: 12),
         Text(
           t.dataPortability.restoreNoCancel,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: colors.ink2),
+          textAlign: TextAlign.center,
+          style: ds.typography.bodySm.copyWith(color: ds.colors.textSecondary),
         ),
       ],
     );
@@ -243,66 +273,60 @@ class _Failure extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final d = t.dataPortability;
-    final (icon, title, body) = switch (kind) {
-      RestoreErrorKind.invalid => (IconKey.error, d.errorInvalidTitle, d.errorInvalidBody),
-      RestoreErrorKind.newer => (IconKey.appUpdate, d.errorNewerTitle, d.errorNewerBody),
-      RestoreErrorKind.space => (IconKey.error, d.errorSpaceTitle, d.errorSpaceBody),
-      RestoreErrorKind.other => (IconKey.error, d.errorOtherTitle, d.errorOtherBody),
+    final (asset, title, body) = switch (kind) {
+      RestoreErrorKind.invalid => (ClayIcons.warning, d.errorInvalidTitle, d.errorInvalidBody),
+      RestoreErrorKind.newer => (ClayIcons.rocket, d.errorNewerTitle, d.errorNewerBody),
+      RestoreErrorKind.space => (ClayIcons.warning, d.errorSpaceTitle, d.errorSpaceBody),
+      RestoreErrorKind.other => (ClayIcons.warning, d.errorOtherTitle, d.errorOtherBody),
     };
-    final colors = context.appColors;
+    final ds = context.ds;
     return Column(
       children: [
         Expanded(
           child: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(AppSpacing.space6),
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(24),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  DecoratedBox(
-                    decoration: BoxDecoration(
-                      color: colors.brandSoft,
-                      borderRadius: BorderRadius.circular(AppRadius.sm),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(AppSpacing.space4),
-                      child: AppIcon(icon, color: colors.brandInk, size: 32),
-                    ),
+                  SheetHeroTile(
+                    asset: asset,
+                    tone: kind == RestoreErrorKind.newer ? DsIconTileTone.info : DsIconTileTone.warning,
                   ),
-                  const SizedBox(height: AppSpacing.space4),
-                  Text(title, textAlign: TextAlign.center, style: Theme.of(context).textTheme.titleLarge),
-                  const SizedBox(height: AppSpacing.space2),
+                  const SizedBox(height: 16),
+                  Text(title, textAlign: TextAlign.center, style: ds.typography.headlineMd.copyWith(fontSize: 20)),
+                  const SizedBox(height: 8),
                   Text(
                     body,
                     textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: colors.ink2),
+                    style: ds.typography.bodyMd.copyWith(color: ds.colors.textSecondary),
                   ),
                 ],
               ),
             ),
           ),
         ),
-        AppStickyBar(
+        DsStickyBar(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               if (kind == RestoreErrorKind.newer)
-                AppButton(
+                DsButton(
                   key: const ValueKey('restore-update'),
                   label: d.updateApp,
                   expand: true,
                   onPressed: () => context.pushRoute(AppUpdateRouteKeys.notes, const EmptyInput()),
                 )
               else
-                AppButton(
+                DsButton(
                   key: const ValueKey('restore-other-file'),
                   label: d.chooseOtherFile,
                   expand: true,
                   onPressed: () => context.read<RestoreBloc>().add(const RestoreOtherFileRequested()),
                 ),
-              const SizedBox(height: AppSpacing.space1),
-              AppButton.text(
+              const SizedBox(height: 4),
+              DsButton.ghost(
                 key: const ValueKey('restore-close'),
                 label: d.close,
                 expand: true,

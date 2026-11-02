@@ -2,9 +2,8 @@ import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
-import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/data_portability/data/export_service.dart';
 import 'package:saldough/features/data_portability/domain/export_data.dart';
 import 'package:saldough/features/data_portability/domain/file_transfer.dart';
@@ -52,7 +51,7 @@ void main() {
     addTearDown(bloc.close);
     await tester.pumpWidget(
       MaterialApp(
-        theme: PixelTheme.light,
+        theme: AppThemeBridge.build(DsThemePresets.fallback, Brightness.light),
         home: Scaffold(
           body: BlocProvider<ExportBloc>.value(
             value: bloc,
@@ -73,7 +72,7 @@ void main() {
     expect(find.text(t.dataPortability.xlsxHelp), findsOneWidget);
     expect(find.textContaining('3 transaksi'), findsOneWidget, reason: 'ringkasan jumlah dan rentang tanggal');
     expect(find.text(t.dataPortability.exportScope), findsOneWidget);
-    expect(tester.widget<AppButton>(find.byKey(const ValueKey('export-go'))).onPressed, isNotNull);
+    expect(tester.widget<DsButton>(find.byKey(const ValueKey('export-go'))).onPressed, isNotNull);
   });
 
   testWidgets('semua transaksi di satu hari: satu tanggal saja, bukan rentang', (tester) async {
@@ -101,7 +100,7 @@ void main() {
     await pump(tester, sampleExportData(transactions: const []));
     expect(find.text(t.dataPortability.exportEmpty), findsOneWidget);
     expect(find.text(t.dataPortability.exportScope), findsNothing);
-    expect(tester.widget<AppButton>(find.byKey(const ValueKey('export-go'))).onPressed, isNull);
+    expect(tester.widget<DsButton>(find.byKey(const ValueKey('export-go'))).onPressed, isNull);
   });
 
   testWidgets('Ekspor → berkas siap → Simpan ke… menyimpan dan menutup lembar', (tester) async {

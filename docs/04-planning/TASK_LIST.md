@@ -6093,6 +6093,13 @@ memilih mode (dan preset bila ≥ 2), dan design system lama dihapus.
       indikator pil, latar `DsAmbientLayer`, ringkasan penutup `DsSettingRow`,
       maskot penutup membal dengan konfeti. Ilustrasi piksel pemilik di
       `assets/illustration/` tidak lagi dipakai (berkas dibiarkan).
+      **Data portability v2 (2 Nov 2026):** lembar Ekspor dan Cadangkan
+      (`SheetHeader`, `DsSegmentedPill` format, kartu ringkasan berikon clay,
+      dua kartu "ikut/tidak ikut", ubin centang membal saat berkas siap),
+      halaman Pulihkan (perbandingan dua kartu clay, `SheetNotice` untuk
+      cadangan lebih lama, `DsSettingRow` perubahan, langkah proses bercentang
+      clay, halaman galat per jenis) dan halaman selesai (maskot clay membal).
+      Dialog konfirmasi penggantian masih `showConfirmDelete` bersama.
       **Ikon clay dilengkapi (31 Okt 2026, KT-DS5):** 33 ikon baru untuk
       dompet, jenis transaksi, kategori, dan status Freelance; semua
       `IconKey` benda kini punya clay (`ClayIcons.forIcon`). Digambar dari

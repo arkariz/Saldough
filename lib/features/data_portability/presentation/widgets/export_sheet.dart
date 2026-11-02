@@ -1,8 +1,8 @@
 import 'package:di/di.dart';
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/count_formatter.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/features/data_portability/domain/export_gateway.dart';
@@ -40,18 +40,13 @@ class ExportSheet extends StatelessWidget {
       listenWhen: (previous, current) => !previous.finished && current.finished,
       listener: (context, _) => Navigator.of(context).maybePop(),
       builder: (context, state) => Padding(
-        padding: EdgeInsets.fromLTRB(
-          AppSpacing.space4,
-          AppSpacing.space4,
-          AppSpacing.space4,
-          AppSpacing.space4 + MediaQuery.viewInsetsOf(context).bottom,
-        ),
+        padding: EdgeInsets.fromLTRB(20, 16, 20, 20 + MediaQuery.viewInsetsOf(context).bottom),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            AppFormHeader(title: t.dataPortability.exportTitle),
-            const SizedBox(height: AppSpacing.space4),
+            SheetHeader(title: t.dataPortability.exportTitle),
+            const SizedBox(height: 16),
             switch (state.phase) {
               ExportPhase.loading => const SheetLoading(),
               ExportPhase.form || ExportPhase.empty => _Form(state: state),
@@ -64,6 +59,7 @@ class ExportSheet extends StatelessWidget {
               ExportPhase.ready => SheetFileReady(
                 title: t.dataPortability.fileReady,
                 fileName: state.file!.name,
+                fileAsset: ClayIcons.sheet,
                 fileMeta: t.dataPortability.fileMeta(
                   n: state.file!.rowCount,
                   format: state.file!.format == ExportFormat.xlsx ? 'Excel' : 'CSV',
@@ -90,56 +86,49 @@ class _Form extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
+    final ds = context.ds;
+    final c = ds.colors;
     final empty = state.phase == ExportPhase.empty;
     final preview = state.preview;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(t.dataPortability.exportFormat, style: textTheme.titleMedium),
-        const SizedBox(height: AppSpacing.space2),
-        AppSegmentedControl<ExportFormat>(
-          options: [
-            (ExportFormat.xlsx, t.dataPortability.formatXlsx),
-            (ExportFormat.csv, t.dataPortability.formatCsv),
+        Text(t.dataPortability.exportFormat, style: ds.typography.titleMd),
+        const SizedBox(height: 8),
+        DsSegmentedPill<ExportFormat>(
+          segments: [
+            DsSegment(value: ExportFormat.xlsx, label: t.dataPortability.formatXlsx, asset: ClayIcons.sheet),
+            DsSegment(value: ExportFormat.csv, label: t.dataPortability.formatCsv, asset: ClayIcons.note),
           ],
           selected: state.format,
           onChanged: (format) => context.read<ExportBloc>().add(ExportFormatChanged(format)),
         ),
-        const SizedBox(height: AppSpacing.space2),
+        const SizedBox(height: 8),
         Text(
           state.format == ExportFormat.xlsx ? t.dataPortability.xlsxHelp : t.dataPortability.csvHelp,
-          style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
+          style: ds.typography.bodySm.copyWith(color: c.textSecondary),
         ),
-        const SizedBox(height: AppSpacing.space4),
+        const SizedBox(height: 16),
         Semantics(
           liveRegion: true,
-          child: DecoratedBox(
-            decoration: BoxDecoration(color: colors.surface2, borderRadius: BorderRadius.circular(AppRadius.sm)),
-            child: Padding(
-              padding: const EdgeInsets.all(AppSpacing.space3),
-              child: Row(
-                children: [
-                  AppIcon(empty ? IconKey.eventBusy : IconKey.tableView, color: colors.ink2),
-                  const SizedBox(width: AppSpacing.space3),
-                  Expanded(
-                    child: Text(
-                      empty || preview == null ? t.dataPortability.exportEmpty : _summary(preview),
-                      style: textTheme.bodyMedium?.copyWith(color: empty ? colors.ink2 : colors.ink),
-                    ),
+          child: DsCard(
+            child: Row(
+              children: [
+                DsIconTile.asset(asset: empty ? ClayIcons.emptyTray : ClayIcons.sheet, size: DsIconTileSize.sm),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    empty || preview == null ? t.dataPortability.exportEmpty : _summary(preview),
+                    style: ds.typography.bodyMd.copyWith(color: empty ? c.textSecondary : c.textPrimary),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
-        if (!empty) ...[
-          const SizedBox(height: AppSpacing.space3),
-          SheetNote(t.dataPortability.exportScope),
-        ],
-        const SizedBox(height: AppSpacing.space4),
-        AppButton(
+        if (!empty) ...[const SizedBox(height: 12), SheetNote(t.dataPortability.exportScope)],
+        const SizedBox(height: 16),
+        DsButton(
           key: const ValueKey('export-go'),
           label: t.dataPortability.exportAction,
           expand: true,
@@ -156,7 +145,11 @@ class _Form extends StatelessWidget {
     final lastText = CycleMonthFormatter.noBreak(CycleMonthFormatter.formatDateShort(last));
     // Semua transaksi di satu hari: satu tanggal saja, bukan "22 Okt – 22 Okt".
     if (first.year == last.year && first.month == last.month && first.day == last.day) {
-      return t.dataPortability.exportSummaryDay(n: preview.count, count: CountFormatter.format(preview.count), date: lastText);
+      return t.dataPortability.exportSummaryDay(
+        n: preview.count,
+        count: CountFormatter.format(preview.count),
+        date: lastText,
+      );
     }
     final firstText = first.year == last.year
         ? CycleMonthFormatter.formatDayMonth(first)

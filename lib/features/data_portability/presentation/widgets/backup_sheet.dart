@@ -1,8 +1,8 @@
 import 'package:di/di.dart';
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/count_formatter.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/features/data_portability/domain/backup_gateway.dart';
@@ -39,18 +39,13 @@ class BackupSheet extends StatelessWidget {
       listener: (context, _) => Navigator.of(context).maybePop(),
       builder: (context, state) => SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.fromLTRB(
-            AppSpacing.space4,
-            AppSpacing.space4,
-            AppSpacing.space4,
-            AppSpacing.space4 + MediaQuery.viewInsetsOf(context).bottom,
-          ),
+          padding: EdgeInsets.fromLTRB(20, 16, 20, 20 + MediaQuery.viewInsetsOf(context).bottom),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              AppFormHeader(title: t.dataPortability.backupTitle),
-              const SizedBox(height: AppSpacing.space4),
+              SheetHeader(title: t.dataPortability.backupTitle),
+              const SizedBox(height: 16),
               switch (state.phase) {
                 BackupPhase.loading => const SheetLoading(),
                 BackupPhase.form => _Form(summary: state.summary),
@@ -63,6 +58,7 @@ class BackupSheet extends StatelessWidget {
                   title: t.dataPortability.backupReady,
                   fileName: state.file!.name,
                   fileMeta: _countsText(state.file!.summary),
+                  fileAsset: ClayIcons.backupBox,
                   notSavedText: t.dataPortability.backupNotSaved,
                   showNotSaved: state.notSaved,
                   saveKey: const ValueKey('backup-save'),
@@ -80,7 +76,10 @@ class BackupSheet extends StatelessWidget {
 
   /// "142 transaksi · 4 dompet".
   static String _countsText(BackupSummary summary) => t.dataPortability.backupFileMeta(
-    transactions: t.dataPortability.countTransactions(n: summary.transactions, count: CountFormatter.format(summary.transactions)),
+    transactions: t.dataPortability.countTransactions(
+      n: summary.transactions,
+      count: CountFormatter.format(summary.transactions),
+    ),
     wallets: t.dataPortability.countWallets(n: summary.wallets, count: CountFormatter.format(summary.wallets)),
   );
 
@@ -93,7 +92,10 @@ class BackupSheet extends StatelessWidget {
     }
     final since = DateTime.parse(first);
     return t.dataPortability.backupSummary(
-      transactions: t.dataPortability.countTransactions(n: summary.transactions, count: CountFormatter.format(summary.transactions)),
+      transactions: t.dataPortability.countTransactions(
+        n: summary.transactions,
+        count: CountFormatter.format(summary.transactions),
+      ),
       wallets: wallets,
       since: CycleMonthFormatter.noBreak(CycleMonthFormatter.formatDateShort(since)),
     );
@@ -107,29 +109,30 @@ class _Form extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
+    final ds = context.ds;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        if (summary != null)
+        if (summary != null) ...[
           Semantics(
             liveRegion: true,
-            child: DecoratedBox(
-              decoration: BoxDecoration(color: colors.surface2, borderRadius: BorderRadius.circular(AppRadius.sm)),
-              child: Padding(
-                padding: const EdgeInsets.all(AppSpacing.space3),
-                child: Row(
-                  children: [
-                    AppIcon(IconKey.backup, color: colors.ink2),
-                    const SizedBox(width: AppSpacing.space3),
-                    Expanded(child: Text(BackupSheet.summaryText(summary!), style: textTheme.bodyMedium)),
-                  ],
-                ),
+            child: DsCard(
+              child: Row(
+                children: [
+                  DsIconTile.asset(asset: ClayIcons.backupBox, size: DsIconTileSize.sm),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      BackupSheet.summaryText(summary!),
+                      style: ds.typography.bodyMd.copyWith(color: ds.colors.textPrimary),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
-        const SizedBox(height: AppSpacing.space4),
+          const SizedBox(height: 12),
+        ],
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -140,7 +143,7 @@ class _Form extends StatelessWidget {
                 included: true,
               ),
             ),
-            const SizedBox(width: AppSpacing.space3),
+            const SizedBox(width: 12),
             Expanded(
               child: _Column(
                 title: t.dataPortability.backupExcluded,
@@ -150,10 +153,10 @@ class _Form extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: AppSpacing.space4),
+        const SizedBox(height: 16),
         SheetNote(t.dataPortability.backupHint),
-        const SizedBox(height: AppSpacing.space4),
-        AppButton(
+        const SizedBox(height: 16),
+        DsButton(
           key: const ValueKey('backup-go'),
           label: t.dataPortability.backupAction,
           expand: true,
@@ -173,32 +176,38 @@ class _Column extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(title, style: textTheme.titleMedium),
-        const SizedBox(height: AppSpacing.space2),
-        for (final item in items)
-          Padding(
-            padding: const EdgeInsets.only(bottom: AppSpacing.space2),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                AppIcon(
-                  included ? IconKey.check : IconKey.close,
-                  size: 18,
-                  color: included ? colors.positive : colors.ink3,
-                ),
-                const SizedBox(width: AppSpacing.space2),
-                Expanded(
-                  child: Text(item, style: textTheme.bodyMedium?.copyWith(color: included ? null : colors.ink2)),
-                ),
-              ],
+    final ds = context.ds;
+    final c = ds.colors;
+    return DsCard(
+      padding: const EdgeInsets.all(12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: ds.typography.titleMd.copyWith(fontSize: 14)),
+          const SizedBox(height: 8),
+          for (final item in items)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(
+                    included ? Icons.check_circle_rounded : Icons.remove_circle_outline,
+                    size: 16,
+                    color: included ? c.income : c.textMuted,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      item,
+                      style: ds.typography.bodySm.copyWith(color: included ? c.textPrimary : c.textSecondary),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-      ],
+        ],
+      ),
     );
   }
 }

@@ -3,10 +3,9 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/discovery/discovery.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
-import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/data_portability/domain/backup_failure_codes.dart';
 import 'package:saldough/features/data_portability/domain/backup_summary.dart';
 import 'package:saldough/features/data_portability/domain/restore_models.dart';
@@ -41,7 +40,7 @@ void main() {
     addTearDown(bloc.close);
     await tester.pumpWidget(
       MaterialApp(
-        theme: PixelTheme.light,
+        theme: AppThemeBridge.build(DsThemePresets.fallback, Brightness.light),
         home: BlocProvider<RestoreBloc>.value(value: bloc, child: const RestorePage()),
       ),
     );
@@ -65,7 +64,7 @@ void main() {
     expect(find.text('142 transaksi'), findsOneWidget);
     expect(find.text(t.dataPortability.restoreUnchanged), findsOneWidget);
     expect(find.text(t.dataPortability.restoreChanges), findsNothing);
-    expect(find.byType(AppBanner), findsNothing);
+    expect(find.byKey(const ValueKey('restore-older-notice')), findsNothing);
     expect(find.byKey(const ValueKey('restore-next')), findsOneWidget);
     expect(find.byKey(const ValueKey('restore-cancel')), findsOneWidget);
   });
@@ -99,7 +98,7 @@ void main() {
     );
     await pump(tester);
 
-    expect(find.byType(AppBanner), findsOneWidget);
+    expect(find.byKey(const ValueKey('restore-older-notice')), findsOneWidget);
     expect(find.textContaining('dibuat 12 Okt 2026'), findsOneWidget);
     expect(find.textContaining('sesudahnya akan hilang'), findsOneWidget, reason: 'tanpa klaim tanggal (QA Q3)');
     expect(find.text(t.dataPortability.restoreChanges), findsOneWidget);
@@ -236,7 +235,7 @@ void main() {
       addTearDown(tester.view.reset);
       await tester.pumpWidget(
         MaterialApp(
-          theme: PixelTheme.light,
+          theme: AppThemeBridge.build(DsThemePresets.fallback, Brightness.light),
           home: RestoreDonePage(report: report, statuses: statuses),
         ),
       );

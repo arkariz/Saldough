@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
@@ -30,8 +31,8 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  AppButton saveButton(WidgetTester tester, String label) =>
-      tester.widget<AppButton>(find.widgetWithText(AppButton, label));
+  DsButton saveButton(WidgetTester tester, String label) =>
+      tester.widget<DsButton>(find.widgetWithText(DsButton, label));
 
   group('BudgetFormSheet (ADR-017)', () {
     testWidgets('tidak ada kolom nominal rencana; tanpa pos, simpan mati dan alasannya tampil', (tester) async {

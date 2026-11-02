@@ -1,19 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:saldough/core/currency/currency.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
-import 'package:saldough/core/presentation/widgets/app_button.dart';
-import 'package:saldough/core/presentation/widgets/app_icon.dart';
-import 'package:saldough/core/presentation/widgets/pixel_corner_border.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/money_input.dart';
 
 // Bidang formulir bersama lembar Anggaran dan Freelance (ADR-030 §3.5);
 // semula `budget_form_fields.dart` di fitur `budget`.
 
-/// Bingkai kolom isian design system (komponen TextField): `surface`, tinggi
-/// minimal `size-field` (52), garis `lineStrong` 1px, berganti `brand` 2px
-/// saat fokus, sudut piksel kecil.
+/// Bingkai kolom isian v2: `surfaceCard`, tinggi minimal 52, garis `outline`
+/// 1px (cukup kontras untuk isian), berganti `actionPrimary` 2px saat fokus,
+/// sudut membulat.
 class AppFieldBox extends StatefulWidget {
   /// Membuat [AppFieldBox] di sekitar [child] (biasanya `TextField` tanpa
   /// bingkai).
@@ -31,21 +28,20 @@ class _AppFieldBoxState extends State<AppFieldBox> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
+    final c = context.ds.colors;
     return Focus(
       canRequestFocus: false,
       skipTraversal: true,
       onFocusChange: (focused) => setState(() => _focused = focused),
       child: AnimatedContainer(
-        duration: AppDurations.fast,
-        constraints: const BoxConstraints(minHeight: AppSize.field),
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space3),
+        duration: DsMotion.reduced(context) ? Duration.zero : DsMotion.standard,
+        constraints: const BoxConstraints(minHeight: 52),
+        padding: const EdgeInsets.symmetric(horizontal: 14),
         alignment: Alignment.centerLeft,
-        decoration: ShapeDecoration(
-          color: colors.surface,
-          shape: PixelCornerBorder.small(
-            side: BorderSide(color: _focused ? colors.brand : colors.lineStrong, width: _focused ? 2 : 1),
-          ),
+        decoration: BoxDecoration(
+          color: c.surfaceCard,
+          borderRadius: DsRadius.mdAll,
+          border: Border.all(color: _focused ? c.actionPrimary : c.outline, width: _focused ? 2 : 1),
         ),
         child: widget.child,
       ),
@@ -82,14 +78,15 @@ class AppFormTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
+    final ds = context.ds;
     return AppFieldBox(
       child: TextField(
         controller: controller,
         autofocus: autofocus,
         maxLength: maxLength,
         textCapitalization: TextCapitalization.sentences,
-        cursorColor: colors.brand,
+        cursorColor: ds.colors.actionPrimary,
+        style: ds.typography.bodyMd.copyWith(color: ds.colors.textPrimary),
         onChanged: onChanged,
         buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
         decoration: InputDecoration(
@@ -98,7 +95,7 @@ class AppFormTextField extends StatelessWidget {
           enabledBorder: InputBorder.none,
           focusedBorder: InputBorder.none,
           hintText: hint,
-          hintStyle: TextStyle(color: colors.ink3),
+          hintStyle: ds.typography.bodyMd.copyWith(color: ds.colors.textMuted),
         ),
       ),
     );
@@ -125,23 +122,28 @@ class AppFormMoneyField extends StatelessWidget {
 
   /// Teks awal untuk [sen]: kosong kalau nol atau tidak bisa ditulis utuh
   /// di kolom (lihat `isMoneyInputExact`).
-  static String initialText(int? sen) => sen == null || sen <= 0 || !isMoneyInputExact(sen) ? '' : formatMoneyInput(sen);
+  static String initialText(int? sen) =>
+      sen == null || sen <= 0 || !isMoneyInputExact(sen) ? '' : formatMoneyInput(sen);
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final style = large ? context.numberStyles.amountLg : context.numberStyles.amount;
+    final ds = context.ds;
+    final c = ds.colors;
+    final style = (large ? ds.typography.amount.copyWith(fontSize: 24, height: 32 / 24) : ds.typography.amount)
+        .copyWith(
+          color: c.textPrimary,
+        );
     return AppFieldBox(
       child: Row(
         children: [
-          Text(ActiveCurrency.value.symbol, style: context.numberStyles.amountSm.copyWith(color: colors.ink2)),
-          const SizedBox(width: AppSpacing.space2),
+          Text(ActiveCurrency.value.symbol, style: ds.typography.amountSm.copyWith(color: c.textSecondary)),
+          const SizedBox(width: 8),
           Expanded(
             child: TextField(
               controller: controller,
               keyboardType: moneyKeyboardType,
               inputFormatters: [MoneyInputFormatter()],
-              cursorColor: colors.brand,
+              cursorColor: c.actionPrimary,
               style: style,
               onChanged: onChanged,
               decoration: InputDecoration(
@@ -150,9 +152,9 @@ class AppFormMoneyField extends StatelessWidget {
                 enabledBorder: InputBorder.none,
                 focusedBorder: InputBorder.none,
                 isDense: true,
-                contentPadding: const EdgeInsets.symmetric(vertical: AppSpacing.space1),
+                contentPadding: const EdgeInsets.symmetric(vertical: 4),
                 hintText: '0',
-                hintStyle: style.copyWith(color: colors.ink3),
+                hintStyle: style.copyWith(color: c.textMuted),
               ),
             ),
           ),
@@ -181,14 +183,14 @@ class AppFormQuantityField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
+    final ds = context.ds;
     return AppFieldBox(
       child: TextField(
         controller: controller,
         keyboardType: TextInputType.number,
         inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(4)],
-        cursorColor: colors.brand,
-        style: context.numberStyles.amount,
+        cursorColor: ds.colors.actionPrimary,
+        style: ds.typography.amount.copyWith(color: ds.colors.textPrimary),
         onChanged: onChanged,
         decoration: InputDecoration(
           border: InputBorder.none,
@@ -196,17 +198,16 @@ class AppFormQuantityField extends StatelessWidget {
           enabledBorder: InputBorder.none,
           focusedBorder: InputBorder.none,
           isDense: true,
-          contentPadding: const EdgeInsets.symmetric(vertical: AppSpacing.space1),
+          contentPadding: const EdgeInsets.symmetric(vertical: 4),
           hintText: '1',
-          hintStyle: TextStyle(color: colors.ink3),
+          hintStyle: ds.typography.amount.copyWith(color: ds.colors.textMuted),
         ),
       ),
     );
   }
 }
 
-/// Bar atas sheet formulir (design system Sheet): tombol tutup di kiri,
-/// judul `title` di tengah.
+/// Bar atas sheet formulir: tombol tutup di kiri, judul di tengah.
 class AppFormHeader extends StatelessWidget {
   /// Membuat [AppFormHeader].
   const AppFormHeader({required this.title, super.key});
@@ -218,14 +219,18 @@ class AppFormHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        AppIconButton(icon: IconKey.close, label: t.common.close, onPressed: () => Navigator.of(context).pop()),
+        DsIconButton(icon: Icons.close, label: t.common.close, onPressed: () => Navigator.of(context).pop()),
         Expanded(
           child: Semantics(
             header: true,
-            child: Text(title, textAlign: TextAlign.center, style: Theme.of(context).textTheme.titleLarge),
+            child: Text(
+              title,
+              textAlign: TextAlign.center,
+              style: context.ds.typography.headlineMd.copyWith(fontSize: 20),
+            ),
           ),
         ),
-        const SizedBox(width: AppSize.touch),
+        const SizedBox(width: 44),
       ],
     );
   }

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/budget/domain/entities/budget_item.dart';
 import 'package:saldough/features/budget/domain/entities/budget_item_kind.dart';
@@ -130,82 +131,99 @@ class _BudgetItemFormSheetState extends State<BudgetItemFormSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
+    final ds = context.ds;
+    final c = ds.colors;
     final editing = widget.initial != null;
     final total = _total;
     void refresh(String _) => setState(() {});
+    Widget hint(String text) => Text(text, style: ds.typography.bodySm.copyWith(color: c.textSecondary));
+    final selectedTarget = widget.targetWallets.where((w) => w.id == _targetWalletId).firstOrNull;
     return SizedBox.expand(
       child: Padding(
         padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
         child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space4, AppSpacing.space4, AppSpacing.space6),
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              AppFormHeader(
-                title: editing ? t.budget.itemEditTitle : t.budget.itemAddTitle,
-              ),
-              const SizedBox(height: AppSpacing.space4),
+              AppFormHeader(title: editing ? t.budget.itemEditTitle : t.budget.itemAddTitle),
+              const SizedBox(height: 16),
               AppSectionLabel(t.budget.itemKindLabel),
-              const SizedBox(height: AppSpacing.space1),
+              const SizedBox(height: 4),
               IgnorePointer(
                 ignoring: widget.kindLocked,
                 child: Opacity(
                   opacity: widget.kindLocked ? 0.6 : 1,
-                  child: AppSegmentedControl<BudgetItemKind>(
-                    options: [
-                      (BudgetItemKind.expense, t.budget.itemKindExpense),
-                      (BudgetItemKind.transfer, t.budget.itemKindTransfer),
+                  child: DsSegmentedPill<BudgetItemKind>(
+                    segments: [
+                      DsSegment(
+                        value: BudgetItemKind.expense,
+                        label: t.budget.itemKindExpense,
+                        asset: ClayIcons.expenseArrow,
+                      ),
+                      DsSegment(
+                        value: BudgetItemKind.transfer,
+                        label: t.budget.itemKindTransfer,
+                        asset: ClayIcons.transfer,
+                      ),
                     ],
                     selected: _kind,
                     onChanged: (value) => setState(() => _kind = value),
                   ),
                 ),
               ),
-              if (widget.kindLocked) ...[
-                const SizedBox(height: 4),
-                Text(
-                  t.budget.itemKindLockedHint,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(color: colors.ink2),
-                ),
-              ],
-              const SizedBox(height: AppSpacing.space4),
+              if (widget.kindLocked) ...[const SizedBox(height: 4), hint(t.budget.itemKindLockedHint)],
+              const SizedBox(height: 16),
               AppSectionLabel(t.budget.itemNameLabel, hint: t.budget.requiredHint),
-              const SizedBox(height: AppSpacing.space1),
+              const SizedBox(height: 4),
               AppFormTextField(controller: _name, hint: t.budget.itemNameHint, autofocus: !editing, onChanged: refresh),
-              const SizedBox(height: AppSpacing.space4),
+              const SizedBox(height: 16),
               if (_isTransfer) ...[
                 AppSectionLabel(t.budget.itemTargetWalletLabel, hint: t.budget.requiredHint),
                 const SizedBox(height: 2),
-                Text(
-                  t.budget.itemTargetWalletHelp,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(color: colors.ink2),
-                ),
-                const SizedBox(height: AppSpacing.space1),
+                hint(t.budget.itemTargetWalletHelp),
+                const SizedBox(height: 4),
                 if (widget.targetWallets.isEmpty)
-                  Text(t.budget.itemNoTargetWallet, style: TextStyle(color: colors.warning))
+                  Text(t.budget.itemNoTargetWallet, style: ds.typography.bodySm.copyWith(color: c.warning))
                 else
-                  AppMenuSelectButton<String>(
-                    icon: IconKey.transfer,
-                    label:
-                        widget.targetWallets.where((w) => w.id == _targetWalletId).firstOrNull?.name ??
-                        t.budget.itemTargetWalletLabel,
-                    isPlaceholder: !widget.targetWallets.any((w) => w.id == _targetWalletId),
-                    wrapLabel: true,
-                    options: [
-                      for (final wallet in widget.targetWallets)
-                        (value: wallet.id, label: wallet.name, icon: walletIconKey(wallet.iconKey)),
+                  DsFieldGroup(
+                    children: [
+                      DsSelectRow<String>(
+                        icon: Icons.swap_horiz,
+                        leading: DsIconTile.asset(
+                          asset: selectedTarget == null
+                              ? ClayIcons.walletNav
+                              : ClayIcons.forIcon(walletIconKey(selectedTarget.iconKey)) ?? ClayIcons.walletNav,
+                          size: DsIconTileSize.sm,
+                        ),
+                        label: t.budget.itemTargetWalletLabel,
+                        title: selectedTarget?.name ?? t.budget.itemTargetWalletLabel,
+                        placeholder: selectedTarget == null,
+                        options: [
+                          for (final wallet in widget.targetWallets)
+                            DsMenuOption(
+                              value: wallet.id,
+                              label: wallet.name,
+                              leading: SvgPicture.asset(
+                                ClayIcons.forIcon(walletIconKey(wallet.iconKey)) ?? ClayIcons.walletNav,
+                              ),
+                            ),
+                        ],
+                        onSelected: (id) => setState(() => _targetWalletId = id),
+                      ),
                     ],
-                    onSelected: (id) => setState(() => _targetWalletId = id),
                   ),
-                const SizedBox(height: AppSpacing.space4),
+                const SizedBox(height: 16),
               ] else ...[
-                AppSegmentedControl<bool>(
-                  options: [(false, t.budget.itemModeAmount), (true, t.budget.itemModeItemized)],
+                DsSegmentedPill<bool>(
+                  segments: [
+                    DsSegment(value: false, label: t.budget.itemModeAmount),
+                    DsSegment(value: true, label: t.budget.itemModeItemized),
+                  ],
                   selected: _itemized,
                   onChanged: (value) => setState(() => _itemized = value),
                 ),
-                const SizedBox(height: AppSpacing.space4),
+                const SizedBox(height: 16),
               ],
               if (!_isTransfer && _itemized) ...[
                 Row(
@@ -217,54 +235,55 @@ class _BudgetItemFormSheetState extends State<BudgetItemFormSheet> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           AppSectionLabel(t.budget.itemQuantityLabel),
-                          const SizedBox(height: AppSpacing.space1),
+                          const SizedBox(height: 4),
                           AppFormQuantityField(controller: _quantity, onChanged: refresh),
                         ],
                       ),
                     ),
-                    const SizedBox(width: AppSpacing.space2),
+                    const SizedBox(width: 8),
                     Expanded(
                       flex: 5,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           AppSectionLabel(t.budget.itemUnitPriceLabel),
-                          const SizedBox(height: AppSpacing.space1),
+                          const SizedBox(height: 4),
                           AppFormMoneyField(controller: _unitPrice, onChanged: refresh),
                         ],
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: AppSpacing.space2),
-                AppCard(
-                  color: colors.surface2,
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          t.budget.itemTotalLabel,
-                          style: labelSmStyle(context, color: colors.ink2),
+                const SizedBox(height: 8),
+                DecoratedBox(
+                  decoration: BoxDecoration(color: c.surfaceSunken, borderRadius: DsRadius.mdAll),
+                  child: Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            t.budget.itemTotalLabel,
+                            style: ds.typography.labelMd.copyWith(color: c.textSecondary),
+                          ),
                         ),
-                      ),
-                      Text(
-                        total == null ? '—' : AppMoneyFormatter.format(total),
-                        style: context.numberStyles.amount.copyWith(color: colors.ink),
-                      ),
-                    ],
+                        Text(total == null ? '—' : AppMoneyFormatter.format(total), style: ds.typography.amount),
+                      ],
+                    ),
                   ),
                 ),
               ] else ...[
                 AppSectionLabel(t.budget.itemAmountLabel),
-                const SizedBox(height: AppSpacing.space1),
+                const SizedBox(height: 4),
                 AppFormMoneyField(controller: _amount, onChanged: refresh, large: true),
               ],
-              const SizedBox(height: AppSpacing.space6),
-              AppButton(label: t.budget.itemSaveAction, onPressed: _canSave ? _save : null),
+              const SizedBox(height: 24),
+              DsButton(label: t.budget.itemSaveAction, expand: true, onPressed: _canSave ? _save : null),
               if (editing) ...[
-                const SizedBox(height: AppSpacing.space4),
-                AppButton.danger(
+                const SizedBox(height: 12),
+                DsButton.danger(
                   label: t.budget.itemDeleteAction,
+                  expand: true,
                   onPressed: () => Navigator.of(context).pop(const BudgetItemFormDeleted()),
                 ),
               ],

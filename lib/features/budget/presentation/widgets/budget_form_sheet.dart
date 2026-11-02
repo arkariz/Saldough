@@ -1,12 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
@@ -287,31 +287,23 @@ class _BudgetFormSheetState extends State<BudgetFormSheet> {
     );
   }
 
-  /// Dialog lingkup (RECURRING_AND_FORECAST §8.6): bawaannya di atas dan
-  /// bercentang; menutup dialog membatalkan simpan.
-  Future<BudgetEditScope?> _askScope(BudgetEditScope preferred) => showDialog<BudgetEditScope>(
-    context: context,
-    builder: (dialogContext) => SimpleDialog(
-      title: Text(t.budget.scopeTitle),
-      children: [
-        for (final scope in [preferred, ...BudgetEditScope.values.where((s) => s != preferred)])
-          SimpleDialogOption(
-            key: ValueKey('budget-scope-${scope.name}'),
-            onPressed: () => Navigator.of(dialogContext).pop(scope),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(switch (scope) {
-                    BudgetEditScope.thisPeriod => t.budget.scopeThisPeriod,
-                    BudgetEditScope.thisAndNext => t.budget.scopeThisAndNext,
-                  }),
-                ),
-                if (scope == preferred) const AppIcon(IconKey.check),
-              ],
-            ),
-          ),
-      ],
-    ),
+  /// Lembar lingkup (RECURRING_AND_FORECAST §8.6): bawaannya di atas dan
+  /// bercentang; menutup lembar membatalkan simpan.
+  Future<BudgetEditScope?> _askScope(BudgetEditScope preferred) => showOptionSheet<BudgetEditScope>(
+    context,
+    title: t.budget.scopeTitle,
+    current: preferred,
+    options: [
+      for (final scope in [preferred, ...BudgetEditScope.values.where((s) => s != preferred)])
+        OptionSheetItem(
+          key: ValueKey('budget-scope-${scope.name}'),
+          value: scope,
+          label: switch (scope) {
+            BudgetEditScope.thisPeriod => t.budget.scopeThisPeriod,
+            BudgetEditScope.thisAndNext => t.budget.scopeThisAndNext,
+          },
+        ),
+    ],
   );
 
   Future<void> _delete() async {
@@ -327,13 +319,13 @@ class _BudgetFormSheetState extends State<BudgetFormSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
+    final ds = context.ds;
+    final c = ds.colors;
     final budget = widget.initial;
     void refresh(String _) => setState(() {});
     final walletName = _selectedWalletName;
     // QA PR #43 F14: dompet satu baris pemilih, periode satu baris ringkas,
-    // dan total + Simpan di bilah bawah yang menempel (AppStickyBar).
+    // dan total + Simpan di bilah bawah yang menempel (DsStickyBar).
     return TourTrigger(
       tour: TourId.budgetForm,
       ready: true,
@@ -345,45 +337,53 @@ class _BudgetFormSheetState extends State<BudgetFormSheet> {
             children: [
               Expanded(
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.fromLTRB(
-                    AppSpacing.space4,
-                    AppSpacing.space4,
-                    AppSpacing.space4,
-                    AppSpacing.space6,
-                  ),
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      AppFormHeader(
-                        title: _editing ? t.budget.editTitle : t.budget.addTitle,
-                      ),
-                      const SizedBox(height: AppSpacing.space4),
-                      AppCard(
-                        color: colors.surface2,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(t.budget.ruleTitle, style: textTheme.titleMedium),
-                            const SizedBox(height: 2),
-                            Text(t.budget.ruleBody, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
-                          ],
+                      AppFormHeader(title: _editing ? t.budget.editTitle : t.budget.addTitle),
+                      const SizedBox(height: 16),
+                      DecoratedBox(
+                        decoration: BoxDecoration(color: c.surfaceSunken, borderRadius: DsRadius.mdAll),
+                        child: Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              DsIconTile.asset(asset: ClayIcons.piggy, size: DsIconTileSize.sm),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(t.budget.ruleTitle, style: ds.typography.titleMd),
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      t.budget.ruleBody,
+                                      style: ds.typography.bodySm.copyWith(color: c.textSecondary),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                      const SizedBox(height: AppSpacing.space4),
+                      const SizedBox(height: 16),
                       AppSectionLabel(t.budget.nameLabel, hint: t.budget.requiredHint),
-                      const SizedBox(height: AppSpacing.space1),
+                      const SizedBox(height: 4),
                       AppFormTextField(
                         controller: _name,
                         hint: t.budget.nameHint,
                         autofocus: !_editing,
                         onChanged: refresh,
                       ),
-                      const SizedBox(height: AppSpacing.space4),
-                      AppListCard(
-                        dividerIndent: AppListCard.iconIndent,
+                      const SizedBox(height: 16),
+                      DsFieldGroup(
                         children: [
                           WalletSelectField(
                             key: const ValueKey('budget-wallet'),
+                            useDs: true,
                             label: t.budget.walletLabel,
                             wallets: widget.wallets,
                             selectedId: _walletId,
@@ -391,19 +391,19 @@ class _BudgetFormSheetState extends State<BudgetFormSheet> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: AppSpacing.space1),
-                      Text(t.budget.walletHelp, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
-                      const SizedBox(height: AppSpacing.space4),
+                      const SizedBox(height: 4),
+                      Text(t.budget.walletHelp, style: ds.typography.bodySm.copyWith(color: c.textSecondary)),
+                      const SizedBox(height: 16),
                       AppSectionLabel(t.budget.periodLabel),
-                      const SizedBox(height: AppSpacing.space1),
+                      const SizedBox(height: 4),
                       Wrap(
-                        spacing: AppSpacing.space1,
+                        spacing: 8,
                         children: [
                           for (final (period, label) in [
                             (BudgetPeriod.monthly, t.budget.periodMonthly),
                             (BudgetPeriod.weekly, t.budget.periodWeekly),
                           ])
-                            AppChip(
+                            DsFilterChip(
                               key: ValueKey('budget-period-${period.name}'),
                               label: label,
                               selected: _period == period,
@@ -411,14 +411,14 @@ class _BudgetFormSheetState extends State<BudgetFormSheet> {
                             ),
                         ],
                       ),
-                      const SizedBox(height: AppSpacing.space1),
-                      AppListCard(
-                        dividerIndent: AppListCard.iconIndent,
+                      const SizedBox(height: 4),
+                      DsFieldGroup(
                         children: [
-                          AppListRow(
+                          DsFieldRow(
                             key: const ValueKey('budget-start'),
-                            compact: true,
-                            leading: AppIcon(IconKey.calendar, color: colors.ink2),
+                            icon: Icons.calendar_month_outlined,
+                            leading: DsIconTile.asset(asset: ClayIcons.dateCalendar, size: DsIconTileSize.sm),
+                            label: t.budget.periodLabel,
                             title: t.budget.periodStartRow(
                               date: CycleMonthFormatter.formatDayMonth(_startDate),
                               range: budgetRangeShortLabel(_draft),
@@ -426,75 +426,82 @@ class _BudgetFormSheetState extends State<BudgetFormSheet> {
                             chevron: true,
                             onTap: _pickStartDate,
                           ),
-                          SpotlightTarget(
-                            spotlightKey: SpotlightKey.budgetRepeat,
-                            child: _RepeatSwitch(
-                              value: _repeat && _canRepeat,
-                              enabled: _canRepeat && !_isPast,
-                              help: _isPast
-                                  ? t.budget.repeatPastNote
-                                  : !_canRepeat
-                                  ? t.budget.repeatUnavailable
-                                  : switch (_period) {
-                                      BudgetPeriod.monthly => t.budget.repeatHelpMonthly(
-                                        date: CycleMonthFormatter.formatDate(_period.endFrom(_startDate)),
-                                      ),
-                                      BudgetPeriod.weekly => t.budget.repeatHelpWeekly(
-                                        date: CycleMonthFormatter.formatDate(_period.endFrom(_startDate)),
-                                      ),
-                                    },
-                              onChanged: (value) {
-                                AppAnalytics.log(PlanEvents.budgetRepeatToggled(on: value));
-                                setState(() => _repeat = value);
-                              },
-                            ),
-                          ),
                         ],
                       ),
-                      const SizedBox(height: AppSpacing.space4),
+                      const SizedBox(height: 8),
+                      SpotlightTarget(
+                        spotlightKey: SpotlightKey.budgetRepeat,
+                        child: _RepeatSwitch(
+                          value: _repeat && _canRepeat,
+                          enabled: _canRepeat && !_isPast,
+                          help: _isPast
+                              ? t.budget.repeatPastNote
+                              : !_canRepeat
+                              ? t.budget.repeatUnavailable
+                              : switch (_period) {
+                                  BudgetPeriod.monthly => t.budget.repeatHelpMonthly(
+                                    date: CycleMonthFormatter.formatDate(_period.endFrom(_startDate)),
+                                  ),
+                                  BudgetPeriod.weekly => t.budget.repeatHelpWeekly(
+                                    date: CycleMonthFormatter.formatDate(_period.endFrom(_startDate)),
+                                  ),
+                                },
+                          onChanged: (value) {
+                            AppAnalytics.log(PlanEvents.budgetRepeatToggled(on: value));
+                            setState(() => _repeat = value);
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 16),
                       AppSectionLabel(t.budget.itemsLabel, hint: t.budget.requiredHint),
                       const SizedBox(height: 2),
-                      Text(t.budget.itemsHelp, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
-                      const SizedBox(height: AppSpacing.space1),
+                      Text(t.budget.itemsHelp, style: ds.typography.bodySm.copyWith(color: c.textSecondary)),
+                      const SizedBox(height: 8),
                       for (var i = 0; i < _items.length; i++) ...[
                         BudgetItemRow(
                           item: _items[i],
                           targetWalletName: _walletName(_items[i].targetWalletId),
                           onTap: () => _editItem(i),
                         ),
-                        const SizedBox(height: AppSpacing.space1),
+                        const SizedBox(height: 8),
                       ],
-                      AppButton.secondary(label: t.budget.addItemAction, onPressed: _editItem),
-                      const SizedBox(height: AppSpacing.space2),
+                      DsButton.secondary(
+                        label: t.budget.addItemAction,
+                        icon: Icons.add,
+                        expand: true,
+                        onPressed: _editItem,
+                      ),
+                      const SizedBox(height: 8),
                       if (_conflictingItem case final item?) ...[
                         Text(
                           t.budget.itemTargetConflict(name: item.name),
-                          style: textTheme.bodySmall?.copyWith(color: colors.danger),
+                          style: ds.typography.bodySm.copyWith(color: c.error),
                         ),
-                        const SizedBox(height: AppSpacing.space1),
+                        const SizedBox(height: 4),
                       ],
                       if (_items.isEmpty)
-                        Text(t.budget.itemsRequiredHint, style: textTheme.bodySmall?.copyWith(color: colors.warning))
+                        Text(t.budget.itemsRequiredHint, style: ds.typography.bodySm.copyWith(color: c.warning))
                       else if (walletName != null)
                         Text(
                           '${t.budget.itemCount(count: _items.length)} · '
                           '${t.budget.walletUnchangedNote(wallet: walletName)}',
-                          style: textTheme.bodySmall?.copyWith(color: colors.ink2),
+                          style: ds.typography.bodySm.copyWith(color: c.textSecondary),
                         ),
                       if (budget != null) ...[
-                        const SizedBox(height: AppSpacing.space6),
-                        AppButton.secondary(
+                        const SizedBox(height: 24),
+                        DsButton.secondary(
                           label: budget.isArchived ? t.budget.unarchiveAction : t.budget.archiveAction,
+                          expand: true,
                           onPressed: () => Navigator.of(context).pop(const BudgetFormArchiveToggled()),
                         ),
-                        const SizedBox(height: AppSpacing.space1),
+                        const SizedBox(height: 4),
                         Text(
                           t.budget.archiveHelp,
                           textAlign: TextAlign.center,
-                          style: textTheme.bodySmall?.copyWith(color: colors.ink2),
+                          style: ds.typography.bodySm.copyWith(color: c.textSecondary),
                         ),
-                        const SizedBox(height: AppSpacing.space4),
-                        AppButton.danger(label: t.budget.deleteAction, onPressed: _delete),
+                        const SizedBox(height: 16),
+                        DsButton.danger(label: t.budget.deleteAction, expand: true, onPressed: _delete),
                       ],
                     ],
                   ),
@@ -515,7 +522,7 @@ class _BudgetFormSheetState extends State<BudgetFormSheet> {
 
 /// Bilah bawah formulir anggaran dan template (QA PR #43 F14): total rencana
 /// (jumlah pos, ADR-017) di kiri, tombol simpan di kanan, menempel di atas
-/// navigasi sistem dan keyboard ([AppStickyBar]).
+/// navigasi sistem dan keyboard ([DsStickyBar]).
 class BudgetTotalBar extends StatelessWidget {
   /// Membuat [BudgetTotalBar].
   const BudgetTotalBar({
@@ -540,8 +547,8 @@ class BudgetTotalBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return AppStickyBar(
+    final ds = context.ds;
+    return DsStickyBar(
       child: Row(
         children: [
           Expanded(
@@ -551,20 +558,20 @@ class BudgetTotalBar extends StatelessWidget {
               children: [
                 Text(
                   label ?? t.budget.totalPlannedLabel,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(color: colors.ink2),
+                  style: ds.typography.bodySm.copyWith(color: ds.colors.textSecondary),
                 ),
                 FitStart(
                   child: Text(
                     AppMoneyFormatter.format(total),
                     key: const ValueKey('budget-total'),
-                    style: context.numberStyles.amountLg.copyWith(color: colors.ink),
+                    style: ds.typography.amount.copyWith(fontSize: 22, height: 28 / 22, color: ds.colors.textPrimary),
                   ),
                 ),
               ],
             ),
           ),
-          const SizedBox(width: AppSpacing.space3),
-          AppButton(key: const ValueKey('budget-save'), label: saveLabel, onPressed: onSave),
+          const SizedBox(width: 12),
+          DsButton(key: const ValueKey('budget-save'), label: saveLabel, onPressed: onSave),
         ],
       ),
     );
@@ -583,33 +590,23 @@ class _RepeatSwitch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4, vertical: AppSpacing.space2),
-      child: Row(
-        children: [
-          AppIcon(IconKey.schedule, color: colors.ink2),
-          const SizedBox(width: AppSpacing.space3),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(t.budget.repeatLabel, style: textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w700)),
-                Text(help, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
-              ],
-            ),
-          ),
-          const SizedBox(width: AppSpacing.space2),
-          Switch(
+    final ds = context.ds;
+    final c = ds.colors;
+    return DsListCard(
+      children: [
+        DsSettingRow(
+          leading: DsIconTile.asset(asset: ClayIcons.repeat, size: DsIconTileSize.sm),
+          title: t.budget.repeatLabel,
+          subtitle: help,
+          trailing: Switch(
             key: const ValueKey('budget-repeat-switch'),
             value: value,
-            activeThumbColor: colors.onBrand,
-            activeTrackColor: colors.brand,
+            activeThumbColor: c.onActionPrimary,
+            activeTrackColor: c.actionPrimary,
             onChanged: enabled ? onChanged : null,
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
@@ -631,50 +628,47 @@ class BudgetItemRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
+    final ds = context.ds;
+    final c = ds.colors;
     return Semantics(
       button: true,
-      child: GestureDetector(
+      child: DsCard(
         onTap: onTap,
-        behavior: HitTestBehavior.opaque,
-        child: AppCard(
-          child: Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(item.name, style: Theme.of(context).textTheme.titleMedium),
-                    const SizedBox(height: 2),
-                    BudgetBadge(
-                      label: item.isTransfer
-                          ? '${t.budget.itemKindTransfer} · ${t.budget.itemTransferTo(wallet: targetWalletName ?? t.budget.unknownWallet)}'
-                          : t.budget.itemKindExpense,
-                      color: item.isTransfer ? colors.ink2 : colors.ink,
-                    ),
-                    if (item.isItemized)
-                      Text(
-                        t.budget.itemItemizedDetail(
-                          quantity: item.quantity!,
-                          price: AppMoneyFormatter.format(item.unitPrice!),
-                        ),
-                        style: labelSmStyle(
-                          context,
-                          color: colors.ink2,
-                        ).copyWith(fontWeight: FontWeight.w400),
+        child: Row(
+          children: [
+            DsIconTile.asset(
+              asset: item.isTransfer ? ClayIcons.transfer : ClayIcons.expenseArrow,
+              size: DsIconTileSize.sm,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(item.name, style: ds.typography.titleMd),
+                  const SizedBox(height: 2),
+                  Text(
+                    item.isTransfer
+                        ? '${t.budget.itemKindTransfer} · ${t.budget.itemTransferTo(wallet: targetWalletName ?? t.budget.unknownWallet)}'
+                        : t.budget.itemKindExpense,
+                    style: ds.typography.bodySm.copyWith(color: c.textSecondary),
+                  ),
+                  if (item.isItemized)
+                    Text(
+                      t.budget.itemItemizedDetail(
+                        quantity: item.quantity!,
+                        price: AppMoneyFormatter.format(item.unitPrice!),
                       ),
-                  ],
-                ),
+                      style: ds.typography.bodySm.copyWith(color: c.textSecondary),
+                    ),
+                ],
               ),
-              const SizedBox(width: AppSpacing.space2),
-              Text(
-                AppMoneyFormatter.format(item.plannedAmount),
-                style: context.numberStyles.amountSm.copyWith(color: colors.ink),
-              ),
-              const SizedBox(width: AppSpacing.space1),
-              const AppIcon(IconKey.edit, size: 18),
-            ],
-          ),
+            ),
+            const SizedBox(width: 8),
+            Text(AppMoneyFormatter.format(item.plannedAmount), style: ds.typography.amountSm),
+            const SizedBox(width: 4),
+            Icon(Icons.edit_outlined, size: 18, color: c.textMuted),
+          ],
         ),
       ),
     );

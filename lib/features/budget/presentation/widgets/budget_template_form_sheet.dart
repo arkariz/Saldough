@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/budget/domain/entities/budget_item.dart';
 import 'package:saldough/features/budget/domain/entities/budget_template.dart';
 import 'package:saldough/features/budget/presentation/widgets/budget_form_sheet.dart';
@@ -132,8 +132,8 @@ class _BudgetTemplateFormSheetState extends State<BudgetTemplateFormSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
+    final ds = context.ds;
+    final c = ds.colors;
     final total = _items.fold(0, (sum, item) => sum + item.plannedAmount);
     // Total + Simpan menempel di bawah, sama dengan formulir anggaran (QA PR #43
     // F14).
@@ -145,87 +145,82 @@ class _BudgetTemplateFormSheetState extends State<BudgetTemplateFormSheet> {
           children: [
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(
-                  AppSpacing.space4,
-                  AppSpacing.space4,
-                  AppSpacing.space4,
-                  AppSpacing.space6,
-                ),
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    AppFormHeader(
-                      title: _editing ? t.budget.templateEditTitle : t.budget.templateAddTitle,
+                    AppFormHeader(title: _editing ? t.budget.templateEditTitle : t.budget.templateAddTitle),
+                    const SizedBox(height: 16),
+                    DecoratedBox(
+                      decoration: BoxDecoration(color: c.surfaceSunken, borderRadius: DsRadius.mdAll),
+                      child: Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            DsIconTile.asset(asset: ClayIcons.clipboard, size: DsIconTileSize.sm),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Text(
+                                t.budget.templateRuleBody,
+                                style: ds.typography.bodySm.copyWith(color: c.textSecondary),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                    const SizedBox(height: AppSpacing.space4),
-                    AppCard(
-                      color: colors.surface2,
-                      child: Text(t.budget.templateRuleBody, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
-                    ),
-                    const SizedBox(height: AppSpacing.space4),
+                    const SizedBox(height: 16),
                     AppSectionLabel(t.budget.templateNameLabel, hint: t.budget.requiredHint),
-                    const SizedBox(height: AppSpacing.space1),
+                    const SizedBox(height: 4),
                     AppFormTextField(
                       controller: _name,
                       hint: t.budget.templateNameHint,
                       autofocus: !_editing,
                       onChanged: (_) => setState(() {}),
                     ),
-                    const SizedBox(height: AppSpacing.space4),
+                    const SizedBox(height: 16),
                     AppSectionLabel(t.budget.itemsLabel, hint: t.budget.requiredHint),
                     const SizedBox(height: 2),
-                    Text(t.budget.itemsHelp, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
-                    const SizedBox(height: AppSpacing.space1),
+                    Text(t.budget.itemsHelp, style: ds.typography.bodySm.copyWith(color: c.textSecondary)),
+                    const SizedBox(height: 8),
                     for (var i = 0; i < _items.length; i++) ...[
                       BudgetItemRow(
                         item: _items[i],
                         targetWalletName: _walletName(_items[i].targetWalletId),
                         onTap: () => _editItem(i),
                       ),
-                      const SizedBox(height: AppSpacing.space1),
+                      const SizedBox(height: 8),
                     ],
-                    AppButton.secondary(label: t.budget.addItemAction, onPressed: _editItem),
+                    DsButton.secondary(
+                      label: t.budget.addItemAction,
+                      icon: Icons.add,
+                      expand: true,
+                      onPressed: _editItem,
+                    ),
                     if (_items.isEmpty) ...[
-                      const SizedBox(height: AppSpacing.space2),
-                      Text(t.budget.itemsRequiredHint, style: textTheme.bodySmall?.copyWith(color: colors.warning)),
+                      const SizedBox(height: 8),
+                      Text(t.budget.itemsRequiredHint, style: ds.typography.bodySm.copyWith(color: c.warning)),
                     ],
                     if (_editing) ...[
-                      const SizedBox(height: AppSpacing.space4),
-                      AppCard(
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    t.budget.templateEnabledLabel,
-                                    style: textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w700),
-                                  ),
-                                  Text(
-                                    t.budget.templateEnabledHelp,
-                                    style: textTheme.bodySmall?.copyWith(color: colors.ink2),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(width: AppSpacing.space2),
-                            Switch(
+                      const SizedBox(height: 16),
+                      DsListCard(
+                        children: [
+                          DsSettingRow(
+                            leading: DsIconTile.asset(asset: ClayIcons.done, size: DsIconTileSize.sm),
+                            title: t.budget.templateEnabledLabel,
+                            subtitle: t.budget.templateEnabledHelp,
+                            trailing: Switch(
                               value: _isEnabled,
-                              activeThumbColor: colors.onBrand,
-                              activeTrackColor: colors.brand,
+                              activeThumbColor: c.onActionPrimary,
+                              activeTrackColor: c.actionPrimary,
                               onChanged: (value) => setState(() => _isEnabled = value),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                    ],
-                    if (_editing) ...[
-                      const SizedBox(height: AppSpacing.space6),
-                      AppButton.danger(
-                        label: t.budget.templateDeleteAction,
-                        onPressed: _delete,
-                      ),
+                      const SizedBox(height: 24),
+                      DsButton.danger(label: t.budget.templateDeleteAction, expand: true, onPressed: _delete),
                     ],
                   ],
                 ),

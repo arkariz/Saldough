@@ -69,25 +69,6 @@ Color budgetItemStatusColor(BuildContext context, BudgetItemStatus status) {
 /// Persentase bulat untuk label, mis. `70`. Rencana nol → 0.
 int budgetPercent(int spent, int planned) => planned <= 0 ? 0 : (spent * 100 / planned).round();
 
-/// Lencana kecil berlatar permukaan, huruf kapital — dipakai untuk dompet,
-/// periode, dan status di kartu serta rincian anggaran.
-class BudgetBadge extends StatelessWidget {
-  /// Membuat [BudgetBadge].
-  const BudgetBadge({required this.label, this.color, this.background, super.key});
-
-  /// Teks lencana.
-  final String label;
-
-  /// Warna teks; bawaan `textMuted`.
-  final Color? color;
-
-  /// Tidak dipakai lagi: latar mengikuti nada [AppBadge].
-  final Color? background;
-
-  @override
-  Widget build(BuildContext context) => AppBadge(label, tone: toneFromColor(context.appColors, color));
-}
-
 /// Meter anggaran selebar induknya ([DsSegmentMeter]); [height] 6 atau kurang memakai
 /// varian tipis (baris pos).
 class BudgetProgressBar extends StatelessWidget {

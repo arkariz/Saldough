@@ -6099,7 +6099,18 @@ memilih mode (dan preset bila ≥ 2), dan design system lama dihapus.
       halaman Pulihkan (perbandingan dua kartu clay, `SheetNotice` untuk
       cadangan lebih lama, `DsSettingRow` perubahan, langkah proses bercentang
       clay, halaman galat per jenis) dan halaman selesai (maskot clay membal).
-      Dialog konfirmasi penggantian masih `showConfirmDelete` bersama.
+      Dialog konfirmasi penggantian memakai `showConfirmDelete` bersama
+      (kini v2, 2 Nov 2026).
+      **Rencana v2, putaran 1 (2 Nov 2026):** bingkai tab Rencana memakai
+      `DsSegmentedPill`; `DsSegmentMeter` dapat `pace` (penanda waktu), `thin`,
+      dan isi minimal satu segmen untuk nilai positif. Anggaran: daftar
+      (kartu, ringkasan, penyaring `DsFilterChip` + `DsSelectRow`, keadaan
+      kosong clay), rincian (hero, baris pos, lembar tindakan), formulir
+      anggaran, pos, dan template, halaman template. Bidang formulir bersama
+      (`AppFormTextField`/`MoneyField`/`QuantityField`/`AppFormHeader`) kini
+      bertoken `ds`, jadi formulir Freelance ikut berubah rupa. `showConfirmDelete`
+      v2 untuk seluruh aplikasi. `BudgetBadge` dihapus. Segmen Bulan ini dan
+      Rutin belum dirombak.
       **Ikon clay dilengkapi (31 Okt 2026, KT-DS5):** 33 ikon baru untuk
       dompet, jenis transaksi, kategori, dan status Freelance; semua
       `IconKey` benda kini punya clay (`ClayIcons.forIcon`). Digambar dari

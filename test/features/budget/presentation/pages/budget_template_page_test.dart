@@ -11,7 +11,6 @@ import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart
 import 'package:saldough/core/foundation/entitlement/entitlement.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/plan/active_plan.dart';
-import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/budget/data/adapters/budget_item_catalog_impl.dart';
 import 'package:saldough/features/budget/data/repositories/budget_repository_impl.dart';
@@ -166,7 +165,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text(t.budget.itemTargetConflict(name: 'Ke tabungan')), findsOneWidget);
-    final save = tester.widget<AppButton>(find.widgetWithText(AppButton, t.budget.saveAddAction));
+    final save = tester.widget<DsButton>(find.widgetWithText(DsButton, t.budget.saveAddAction));
     expect(save.onPressed, isNull);
   });
 
@@ -175,7 +174,7 @@ void main() {
     await openTemplates(tester);
 
     expect(find.text(t.budget.templateInactiveBadge), findsOneWidget);
-    final use = tester.widget<AppButton>(find.widgetWithText(AppButton, t.budget.templateUseAction));
+    final use = tester.widget<DsButton>(find.widgetWithText(DsButton, t.budget.templateUseAction));
     expect(use.onPressed, isNull);
   });
 

@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:di/di.dart';
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/plan/active_plan.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/budget/di/budget_template_scope.dart';
 import 'package:saldough/features/budget/domain/entities/budget_period.dart';
@@ -15,7 +15,6 @@ import 'package:saldough/features/budget/presentation/bloc/budget_bloc.dart';
 import 'package:saldough/features/budget/presentation/bloc/budget_template_bloc.dart';
 import 'package:saldough/features/budget/presentation/bloc/budget_template_state.dart';
 import 'package:saldough/features/budget/presentation/budget_actions.dart';
-import 'package:saldough/features/budget/presentation/budget_display.dart';
 import 'package:saldough/features/budget/presentation/widgets/budget_template_form_sheet.dart';
 import 'package:saldough/features/premium/presentation/navigation/premium_route_keys.dart';
 import 'package:state_management/state_management.dart';
@@ -116,11 +115,11 @@ class _BudgetTemplatePageState extends State<BudgetTemplatePage> {
   Widget build(BuildContext context) {
     return BlocBuilder<BudgetTemplateBloc, BudgetTemplateState>(
       builder: (context, state) {
-        final colors = context.appColors;
-        final textTheme = Theme.of(context).textTheme;
+        final ds = context.ds;
+        final c = ds.colors;
         final canUse = context.read<BudgetBloc>().state.activeWallets.isNotEmpty;
         return Scaffold(
-          appBar: AppBar(title: Text(t.budget.templatesTitle)),
+          appBar: AppBar(title: Text(t.budget.templatesTitle, style: ds.typography.headlineMd), centerTitle: false),
           body: SafeArea(
             child: switch (state) {
               BudgetTemplateState(isLoading: true) => const AppSkeletonPage(),
@@ -128,28 +127,42 @@ class _BudgetTemplatePageState extends State<BudgetTemplatePage> {
                 onRetry: () => context.read<BudgetTemplateBloc>().add(const BudgetTemplatesStarted()),
               ),
               _ => ListView(
-                padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space2, AppSpacing.space4, AppSpacing.space8),
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
                 children: [
-                  AppCard(
-                    color: colors.surface2,
-                    child: Column(
+                  DsCard(
+                    child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Wrap(
-                          spacing: AppSpacing.space2,
-                          runSpacing: 4,
-                          crossAxisAlignment: WrapCrossAlignment.center,
-                          children: [
-                            Text(t.budget.templatesInfoTitle, style: textTheme.titleMedium),
-                            BudgetBadge(label: t.budget.templatesSavedBadge(count: state.templates.length)),
-                          ],
+                        DsIconTile.asset(asset: ClayIcons.clipboard, size: DsIconTileSize.sm),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Wrap(
+                                spacing: 8,
+                                runSpacing: 4,
+                                crossAxisAlignment: WrapCrossAlignment.center,
+                                children: [
+                                  Text(t.budget.templatesInfoTitle, style: ds.typography.titleMd),
+                                  DsBadge(
+                                    label: t.budget.templatesSavedBadge(count: state.templates.length),
+                                    tone: DsBadgeTone.neutral,
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                t.budget.templatesInfoBody,
+                                style: ds.typography.bodySm.copyWith(color: c.textSecondary),
+                              ),
+                            ],
+                          ),
                         ),
-                        const SizedBox(height: 4),
-                        Text(t.budget.templatesInfoBody, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
                       ],
                     ),
                   ),
-                  const SizedBox(height: AppSpacing.space4),
+                  const SizedBox(height: 16),
                   if (state.templates.isEmpty)
                     _EmptyTemplates(onAdd: _add)
                   else
@@ -169,27 +182,35 @@ class _BudgetTemplatePageState extends State<BudgetTemplatePage> {
                           }
                         },
                       ),
-                      const SizedBox(height: AppSpacing.space4),
+                      const SizedBox(height: 16),
                     ],
                   if (!canUse) ...[
                     Text(
                       t.budget.templateNeedsWallet,
                       textAlign: TextAlign.center,
-                      style: textTheme.bodySmall?.copyWith(color: colors.warning),
+                      style: ds.typography.bodySm.copyWith(color: c.warning),
                     ),
-                    const SizedBox(height: AppSpacing.space2),
+                    const SizedBox(height: 8),
                   ],
                   if (state.templates.isNotEmpty)
-                    AppButton.secondary(
-                      label: t.budget.templateAddAction,
-                      onPressed: _add,
-                      badge: PlusBadge(when: () => _limited(context.read<BudgetTemplateBloc>())),
+                    Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        DsButton.secondary(label: t.budget.templateAddAction, expand: true, onPressed: _add),
+                        PositionedDirectional(
+                          top: -8,
+                          end: 12,
+                          child: IgnorePointer(
+                            child: PlusBadge(when: () => _limited(context.read<BudgetTemplateBloc>())),
+                          ),
+                        ),
+                      ],
                     ),
-                  const SizedBox(height: AppSpacing.space2),
+                  const SizedBox(height: 8),
                   Text(
                     t.budget.templatesFooter,
                     textAlign: TextAlign.center,
-                    style: textTheme.bodySmall?.copyWith(color: colors.ink2),
+                    style: ds.typography.bodySm.copyWith(color: c.textSecondary),
                   ),
                 ],
               ),
@@ -224,51 +245,63 @@ class _TemplateCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
+    final ds = context.ds;
+    final c = ds.colors;
     final enabled = template.isEnabled;
     return Opacity(
       opacity: enabled ? 1 : 0.7,
-      child: AppCard(
+      child: DsCard(
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(template.name, style: textTheme.titleLarge),
-            const SizedBox(height: 4),
+            Row(
+              children: [
+                DsIconTile.asset(asset: ClayIcons.clipboard, size: DsIconTileSize.sm),
+                const SizedBox(width: 12),
+                Expanded(child: Text(template.name, style: ds.typography.titleMd.copyWith(fontSize: 18))),
+              ],
+            ),
+            const SizedBox(height: 8),
             Wrap(
-              spacing: AppSpacing.space1,
+              spacing: 8,
               runSpacing: 4,
               children: [
-                BudgetBadge(label: t.budget.templateItemCount(count: template.items.length)),
-                if (!enabled) BudgetBadge(label: t.budget.templateInactiveBadge, color: colors.warning),
+                DsBadge(
+                  label: t.budget.templateItemCount(count: template.items.length),
+                  tone: DsBadgeTone.neutral,
+                ),
+                if (!enabled) DsBadge(label: t.budget.templateInactiveBadge, tone: DsBadgeTone.warning),
                 if (template.schedule case final schedule? when schedule.isActive)
-                  BudgetBadge(
+                  DsBadge(
                     label: switch (schedule.period) {
                       BudgetPeriod.monthly => t.budget.templateScheduledMonthly(wallet: walletName ?? '—'),
                       BudgetPeriod.weekly => t.budget.templateScheduledWeekly(wallet: walletName ?? '—'),
                     },
-                    color: colors.brand,
+                    tone: DsBadgeTone.income,
                   ),
               ],
             ),
-            const SizedBox(height: AppSpacing.space2),
-            Container(
-              padding: const EdgeInsets.all(AppSpacing.space2),
-              decoration: ShapeDecoration(color: colors.surface2, shape: const PixelCornerBorder.small()),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(t.budget.templateItemsLabel, style: textTheme.bodyMedium?.copyWith(color: colors.ink2)),
-                  const SizedBox(height: AppSpacing.space1),
-                  Text(template.items.map((item) => item.name).join(' · '), style: textTheme.bodyMedium),
-                ],
+            const SizedBox(height: 8),
+            DecoratedBox(
+              decoration: BoxDecoration(color: c.surfaceSunken, borderRadius: DsRadius.mdAll),
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(t.budget.templateItemsLabel, style: ds.typography.bodySm.copyWith(color: c.textSecondary)),
+                    const SizedBox(height: 4),
+                    Text(template.items.map((item) => item.name).join(' · '), style: ds.typography.bodyMd),
+                  ],
+                ),
               ),
             ),
-            const SizedBox(height: AppSpacing.space2),
+            const SizedBox(height: 8),
             Row(
               children: [
-                Text(t.budget.templateTotalLabel, style: textTheme.bodyMedium?.copyWith(color: colors.ink2)),
-                const SizedBox(width: AppSpacing.space2),
+                Text(t.budget.templateTotalLabel, style: ds.typography.bodySm.copyWith(color: c.textSecondary)),
+                const SizedBox(width: 8),
                 // `Expanded` + rata kanan: nominal menempel ke tepi kanan dan
                 // mengecil kalau tidak muat, bukan berhenti di tengah.
                 Expanded(
@@ -277,24 +310,25 @@ class _TemplateCard extends StatelessWidget {
                     alignment: AlignmentDirectional.centerEnd,
                     child: Text(
                       AppMoneyFormatter.format(template.plannedAmount),
-                      style: context.numberStyles.amountLg.copyWith(color: colors.ink),
+                      style: ds.typography.amount.copyWith(fontSize: 22, height: 28 / 22),
                     ),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: AppSpacing.space4),
-            AppButton(label: t.budget.templateUseAction, onPressed: enabled && canUse ? onUse : null),
-            const SizedBox(height: AppSpacing.space2),
+            const SizedBox(height: 16),
+            DsButton(label: t.budget.templateUseAction, expand: true, onPressed: enabled && canUse ? onUse : null),
+            const SizedBox(height: 8),
             Row(
               children: [
                 Expanded(
-                  child: AppButton.secondary(label: t.budget.templateEditAction, onPressed: onEdit),
+                  child: DsButton.secondary(label: t.budget.templateEditAction, expand: true, onPressed: onEdit),
                 ),
-                const SizedBox(width: AppSpacing.space2),
+                const SizedBox(width: 8),
                 Expanded(
-                  child: AppButton.secondary(
+                  child: DsButton.secondary(
                     label: t.budget.templateDuplicateAction,
+                    expand: true,
                     onPressed: onDuplicate,
                   ),
                 ),
@@ -314,28 +348,24 @@ class _EmptyTemplates extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
-    return AppCard(
-      padding: const EdgeInsets.all(AppSpacing.space6),
+    final ds = context.ds;
+    return DsCard(
+      padding: const EdgeInsets.all(24),
       child: Column(
         children: [
-          BudgetBadge(label: t.budget.templatesEmptyBadge, color: colors.warning),
-          const SizedBox(height: AppSpacing.space4),
-          const AppIcon(IconKey.budget, size: 72),
-          const SizedBox(height: AppSpacing.space4),
-          Text(t.budget.templatesEmptyTitle, textAlign: TextAlign.center, style: textTheme.titleLarge),
-          const SizedBox(height: AppSpacing.space1),
+          DsBadge(label: t.budget.templatesEmptyBadge, tone: DsBadgeTone.warning),
+          const SizedBox(height: 16),
+          DsIconTile.asset(asset: ClayIcons.clipboard, size: DsIconTileSize.lg),
+          const SizedBox(height: 12),
+          Text(t.budget.templatesEmptyTitle, textAlign: TextAlign.center, style: ds.typography.titleMd),
+          const SizedBox(height: 4),
           Text(
             t.budget.templatesEmptyBody,
             textAlign: TextAlign.center,
-            style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
+            style: ds.typography.bodySm.copyWith(color: ds.colors.textSecondary),
           ),
-          const SizedBox(height: AppSpacing.space6),
-          SizedBox(
-            width: double.infinity,
-            child: AppButton(label: t.budget.templateAddAction, onPressed: onAdd),
-          ),
+          const SizedBox(height: 20),
+          DsButton(label: t.budget.templateAddAction, expand: true, onPressed: onAdd),
         ],
       ),
     );
@@ -348,19 +378,6 @@ class _LoadError extends StatelessWidget {
   final VoidCallback onRetry;
 
   @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.space6),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(t.budget.templatesLoadError, style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(height: AppSpacing.space4),
-            AppButton(label: t.common.retry, onPressed: onRetry),
-          ],
-        ),
-      ),
-    );
-  }
+  Widget build(BuildContext context) =>
+      DsErrorState(title: t.budget.templatesLoadError, retryLabel: t.common.retry, onRetry: onRetry);
 }

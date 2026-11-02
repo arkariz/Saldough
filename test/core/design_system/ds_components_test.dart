@@ -22,7 +22,10 @@ void main() {
       await tester.pumpWidget(_host(const DsButton.secondary(label: 'Batal', onPressed: null)));
       final opacity = tester.widget<Opacity>(find.ancestor(of: find.text('Batal'), matching: find.byType(Opacity)));
       expect(opacity.opacity, DsOpacity.disabled);
-      expect(tester.getSemantics(find.text('Batal')), matchesSemantics(isButton: true, hasEnabledState: true, label: 'Batal'));
+      expect(
+        tester.getSemantics(find.text('Batal')),
+        matchesSemantics(isButton: true, hasEnabledState: true, label: 'Batal'),
+      );
     });
 
     testWidgets('area sentuh minimal 44 walau tombol ringkas', (tester) async {
@@ -52,6 +55,22 @@ void main() {
       expect(DsSegmentMeter.filledFor(-1, 10), 0);
     });
 
+    test('nilai positif kecil tetap mengisi satu segmen; nol tetap kosong', () {
+      expect(DsSegmentMeter.filledFor(0.05, 10), 1);
+      expect(DsSegmentMeter.filledFor(0, 10), 0);
+    });
+
+    testWidgets('pace menambah garis penanda hanya bila diberikan', (tester) async {
+      await tester.pumpWidget(
+        _host(const SizedBox(width: 200, child: DsSegmentMeter(value: 0.4, semanticLabel: '40%', pace: 0.5))),
+      );
+      expect(find.byKey(const ValueKey('meter-pace')), findsOneWidget);
+      await tester.pumpWidget(
+        _host(const SizedBox(width: 200, child: DsSegmentMeter(value: 0.4, semanticLabel: '40%'))),
+      );
+      expect(find.byKey(const ValueKey('meter-pace')), findsNothing);
+    });
+
     testWidgets('warna isi mengikuti nada', (tester) async {
       await tester.pumpWidget(
         _host(
@@ -62,7 +81,9 @@ void main() {
         ),
       );
       final colors = tester
-          .widgetList<DecoratedBox>(find.descendant(of: find.byType(DsSegmentMeter), matching: find.byType(DecoratedBox)))
+          .widgetList<DecoratedBox>(
+            find.descendant(of: find.byType(DsSegmentMeter), matching: find.byType(DecoratedBox)),
+          )
           .map((b) => (b.decoration as BoxDecoration).color)
           .toList();
       expect(colors, hasLength(10));
@@ -201,11 +222,18 @@ void main() {
       MaterialApp(
         theme: DsTheme.dark,
         home: Scaffold(
-          appBar: const DsTopBar(wordmark: 'tanukonomy', actions: [DsAvatar(semanticLabel: 'Akun')]),
+          appBar: const DsTopBar(
+            wordmark: 'tanukonomy',
+            actions: [DsAvatar(semanticLabel: 'Akun')],
+          ),
           body: ListView(
             padding: const EdgeInsets.all(16),
             children: [
-              const DsPageHeader(title: 'Halo, Kenji!', subtitle: 'Ringkasan hari ini', trailing: DsStatusPill(label: 'LVL 12', pulse: false)),
+              const DsPageHeader(
+                title: 'Halo, Kenji!',
+                subtitle: 'Ringkasan hari ini',
+                trailing: DsStatusPill(label: 'LVL 12', pulse: false),
+              ),
               const SizedBox(height: 14),
               const DsMascotCard(
                 mascot: Icon(Icons.pets),
@@ -229,7 +257,11 @@ void main() {
               Row(
                 children: [
                   Expanded(
-                    child: DsQuickActionTile(tile: const DsIconTile(icon: Icons.insights), label: 'Laporan', onPressed: () {}),
+                    child: DsQuickActionTile(
+                      tile: const DsIconTile(icon: Icons.insights),
+                      label: 'Laporan',
+                      onPressed: () {},
+                    ),
                   ),
                 ],
               ),
@@ -244,8 +276,17 @@ void main() {
               DsSectionHeader(title: 'Transaksi terbaru', actionLabel: 'Semua', onAction: () {}),
               const DsListCard(
                 children: [
-                  DsLedgerRow(leading: DsIconTile(icon: Icons.coffee), title: 'Kopi', amount: 'Rp 28.000'),
-                  DsLedgerRow(leading: DsIconTile(icon: Icons.work), title: 'Gaji', amount: 'Rp 9.000.000', kind: DsLedgerKind.income),
+                  DsLedgerRow(
+                    leading: DsIconTile(icon: Icons.coffee),
+                    title: 'Kopi',
+                    amount: 'Rp 28.000',
+                  ),
+                  DsLedgerRow(
+                    leading: DsIconTile(icon: Icons.work),
+                    title: 'Gaji',
+                    amount: 'Rp 9.000.000',
+                    kind: DsLedgerKind.income,
+                  ),
                 ],
               ),
               const DsFootnote(text: 'DISIMPAN DI PERANGKAT'),

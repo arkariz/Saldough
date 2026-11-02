@@ -28,7 +28,10 @@ enum DsMeterTone {
 
 /// Meter tersegmen: segmen sama lebar berjarak 4px, terisi dari kiri.
 ///
-/// [value] 0–1; segmen terisi = `floor(value × segments)`. Pada varian
+/// [value] 0–1; segmen terisi = `floor(value × segments)`, tetapi nilai di
+/// atas 0 selalu mengisi minimal satu segmen (anggaran terpakai 5% tidak
+/// boleh tampak kosong). [pace] (0–1) menambah garis penanda seberapa jauh
+/// periode sudah berjalan. [thin] memakai tinggi 6 untuk baris pos. Pada varian
 /// [DsSegmentMeterVariant.budget] segmen terisi terakhir sedikit lebih
 /// terang sebagai penanda posisi.
 ///
@@ -45,6 +48,8 @@ class DsSegmentMeter extends StatefulWidget {
     this.tone = DsMeterTone.normal,
     this.segments = 10,
     this.breathing = false,
+    this.pace,
+    this.thin = false,
     super.key,
   });
 
@@ -66,8 +71,18 @@ class DsSegmentMeter extends StatefulWidget {
   /// Label pembaca layar, mis. "74% terpakai".
   final String semanticLabel;
 
-  /// Jumlah segmen terisi untuk [value].
-  static int filledFor(double value, int segments) => (value.clamp(0, 1) * segments).floor();
+  /// Rasio periode yang sudah berjalan (0–1), atau `null` tanpa penanda.
+  final double? pace;
+
+  /// Tinggi 6 untuk varian anggaran (baris pos).
+  final bool thin;
+
+  /// Jumlah segmen terisi untuk [value]; nilai positif minimal satu segmen.
+  static int filledFor(double value, int segments) {
+    final v = value.clamp(0, 1);
+    final filled = (v * segments).floor();
+    return filled == 0 && v > 0 ? 1 : filled;
+  }
 
   @override
   State<DsSegmentMeter> createState() => _DsSegmentMeterState();
@@ -168,18 +183,49 @@ class _DsSegmentMeterState extends State<DsSegmentMeter> with SingleTickerProvid
       label: widget.semanticLabel,
       child: ExcludeSemantics(
         child: SizedBox(
-          height: health ? 6 : 10,
+          height: health || widget.thin ? 6 : 10,
           child: AnimatedBuilder(
             animation: _controller,
             builder: (context, _) {
               final seconds = _controller.value * _period;
-              return Row(
+              final row = Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   for (var i = 0; i < widget.segments; i++) ...[
                     if (i > 0) const SizedBox(width: 4),
                     segment(i, seconds),
                   ],
+                ],
+              );
+              final pace = widget.pace;
+              if (pace == null) return row;
+              return Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Positioned.fill(child: row),
+                  Positioned.fill(
+                    child: LayoutBuilder(
+                      builder: (context, box) => Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          Positioned(
+                            left: (box.maxWidth * pace.clamp(0, 1) - 1).clamp(0, box.maxWidth - 2),
+                            top: -3,
+                            bottom: -3,
+                            width: 2,
+                            child: DecoratedBox(
+                              key: const ValueKey('meter-pace'),
+                              decoration: BoxDecoration(
+                                color: c.textPrimary,
+                                borderRadius: DsRadius.fullAll,
+                                border: Border.all(color: c.surfaceCard),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ],
               );
             },

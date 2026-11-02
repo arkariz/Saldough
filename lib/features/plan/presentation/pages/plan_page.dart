@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
-import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 
 /// Segmen tab Rencana (ADR-035 §3.7, PLAN_TAB_LAYOUT §3).
@@ -17,7 +17,7 @@ enum PlanSegment {
   recurring,
 }
 
-/// Tab **Rencana** (T-15.4): satu app bar, [AppSubTabs] di bawahnya, dan
+/// Tab **Rencana** (T-15.4): satu app bar, [DsSegmentedPill] di bawahnya, dan
 /// isi segmen dalam `IndexedStack` supaya tiap segmen menjaga posisi
 /// gulirnya.
 ///
@@ -52,7 +52,7 @@ class PlanPage extends StatelessWidget {
     final visible = TourVisibility.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(t.appShell.planTabLabel, style: Theme.of(context).textTheme.headlineSmall),
+        title: Text(t.appShell.planTabLabel, style: context.ds.typography.headlineMd),
         centerTitle: false,
         // Menu tur segmen yang tampil (KO-4); dulu di kartu ringkasan tiap
         // segmen, kini kartu ringkasan tanpa tombol (ADR-034).
@@ -67,16 +67,21 @@ class PlanPage extends StatelessWidget {
           ),
         ],
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(48),
-          child: SpotlightTarget(
-            spotlightKey: SpotlightKey.planTabs,
-            child: AppSubTabs<PlanSegment>(
-              options: [for (final segment in PlanSegment.values) (segment, labelOf(segment))],
-              selected: selected,
-              onChanged: (segment) {
-                if (segment != selected) AppAnalytics.log(PlanEvents.planSegmentViewed(segment.name));
-                onChanged(segment);
-              },
+          preferredSize: const Size.fromHeight(60),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 4, 16, 12),
+            child: SpotlightTarget(
+              spotlightKey: SpotlightKey.planTabs,
+              child: DsSegmentedPill<PlanSegment>(
+                segments: [
+                  for (final segment in PlanSegment.values) DsSegment(value: segment, label: labelOf(segment)),
+                ],
+                selected: selected,
+                onChanged: (segment) {
+                  if (segment != selected) AppAnalytics.log(PlanEvents.planSegmentViewed(segment.name));
+                  onChanged(segment);
+                },
+              ),
             ),
           ),
         ),

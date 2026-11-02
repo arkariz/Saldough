@@ -93,7 +93,7 @@ void main() {
         ),
       ),
     );
-    expect(find.text(t.budget.repeatLabel), findsOneWidget);
+    expect(find.text(t.budget.repeatLabel.toUpperCase()), findsOneWidget);
     expect(find.text(t.budget.repeatUnavailable), findsOneWidget);
     expect(tester.widget<Switch>(find.byKey(const ValueKey('budget-repeat-switch'))).onChanged, isNull);
     expect(tester.takeException(), isNull);

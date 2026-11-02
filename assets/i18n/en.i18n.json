@@ -569,6 +569,8 @@
     "templateCopyName": "$name (copy)",
     "templateNameLabel": "Template name",
     "repeatLabel": "Repeat every period",
+    "repeatOn": "On",
+    "repeatOff": "Off",
     "repeatHelpMonthly": "Repeats every month from $date with the same items.",
     "repeatHelpWeekly": "Repeats every week from $date with the same items.",
     "repeatUnavailable": "Monthly budgets can repeat when they start on the 1st–28th.",

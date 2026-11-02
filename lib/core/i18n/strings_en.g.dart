@@ -607,6 +607,8 @@ class _Translations$budget$en extends Translations$budget$id {
 	@override String templateCopyName({required Object name}) => '${name} (copy)';
 	@override String get templateNameLabel => 'Template name';
 	@override String get repeatLabel => 'Repeat every period';
+	@override String get repeatOn => 'On';
+	@override String get repeatOff => 'Off';
 	@override String repeatHelpMonthly({required Object date}) => 'Repeats every month from ${date} with the same items.';
 	@override String repeatHelpWeekly({required Object date}) => 'Repeats every week from ${date} with the same items.';
 	@override String get repeatUnavailable => 'Monthly budgets can repeat when they start on the 1st–28th.';
@@ -3016,6 +3018,8 @@ extension on TranslationsEn {
 			'budget.templateCopyName' => ({required Object name}) => '${name} (copy)',
 			'budget.templateNameLabel' => 'Template name',
 			'budget.repeatLabel' => 'Repeat every period',
+			'budget.repeatOn' => 'On',
+			'budget.repeatOff' => 'Off',
 			'budget.repeatHelpMonthly' => ({required Object date}) => 'Repeats every month from ${date} with the same items.',
 			'budget.repeatHelpWeekly' => ({required Object date}) => 'Repeats every week from ${date} with the same items.',
 			'budget.repeatUnavailable' => 'Monthly budgets can repeat when they start on the 1st–28th.',
@@ -3507,10 +3511,10 @@ extension on TranslationsEn {
 			'discovery.quickStart.turnOn' => 'Turn on',
 			'discovery.quickStart.noBuiltIn' => 'No known bank or e-wallet apps on this device. Pick your own app.',
 			'notificationCapture.accountEntryTitle' => 'Record from notifications',
-			'notificationCapture.accountEntryBody' => 'Record automatically from bank and e-wallet notifications.',
-			'notificationCapture.settingsTitle' => 'Record from notifications',
 			_ => null,
 		} ?? switch (path) {
+			'notificationCapture.accountEntryBody' => 'Record automatically from bank and e-wallet notifications.',
+			'notificationCapture.settingsTitle' => 'Record from notifications',
 			'notificationCapture.enableLabel' => 'Turn on',
 			'notificationCapture.accessMissingTitle' => 'Permission needed to read notifications',
 			'notificationCapture.accessMissingBody' => 'Without it, Tanukonomy can\'t see your bank notifications.',
@@ -4021,10 +4025,10 @@ extension on TranslationsEn {
 			'premium.gift.endLine' => ({required Object date}) => 'Plus on until ${date}',
 			'premium.gift.title' => ({required Object date}) => 'Plus is on until ${date}, the end of your first period.',
 			'premium.gift.body' => 'No card, no automatic subscription. After that you keep recording for free.',
-			'premium.gift.start' => 'Start recording',
-			'premium.card.recapTitle' => ({required Object date}) => 'Plus ends on ${date}',
 			_ => null,
 		} ?? switch (path) {
+			'premium.gift.start' => 'Start recording',
+			'premium.card.recapTitle' => ({required Object date}) => 'Plus ends on ${date}',
 			'premium.card.recapSince' => ({required Object date}) => 'Since ${date}, Tanuki has:',
 			'premium.card.recapRecorded' => 'entries from notifications',
 			'premium.downgrade.title' => 'Your Plus trial ended',

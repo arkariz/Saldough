@@ -184,11 +184,16 @@ class _BudgetTemplateFormSheetState extends State<BudgetTemplateFormSheet> {
                     const SizedBox(height: 2),
                     Text(t.budget.itemsHelp, style: ds.typography.bodySm.copyWith(color: c.textSecondary)),
                     const SizedBox(height: 8),
-                    for (var i = 0; i < _items.length; i++) ...[
-                      BudgetItemRow(
-                        item: _items[i],
-                        targetWalletName: _walletName(_items[i].targetWalletId),
-                        onTap: () => _editItem(i),
+                    if (_items.isNotEmpty) ...[
+                      DsListCard(
+                        children: [
+                          for (var i = 0; i < _items.length; i++)
+                            BudgetItemRow(
+                              item: _items[i],
+                              targetWalletName: _walletName(_items[i].targetWalletId),
+                              onTap: () => _editItem(i),
+                            ),
+                        ],
                       ),
                       const SizedBox(height: 8),
                     ],

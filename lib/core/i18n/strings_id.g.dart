@@ -1458,6 +1458,12 @@ class Translations$budget$id {
 	/// id: 'Ulangi tiap periode'
 	String get repeatLabel => 'Ulangi tiap periode';
 
+	/// id: 'Menyala'
+	String get repeatOn => 'Menyala';
+
+	/// id: 'Mati'
+	String get repeatOff => 'Mati';
+
 	/// id: 'Dibuat ulang tiap bulan mulai $date dengan pos yang sama.'
 	String repeatHelpMonthly({required Object date}) => 'Dibuat ulang tiap bulan mulai ${date} dengan pos yang sama.';
 
@@ -6199,6 +6205,8 @@ extension on Translations {
 			'budget.templateCopyName' => ({required Object name}) => '${name} (salinan)',
 			'budget.templateNameLabel' => 'Nama template',
 			'budget.repeatLabel' => 'Ulangi tiap periode',
+			'budget.repeatOn' => 'Menyala',
+			'budget.repeatOff' => 'Mati',
 			'budget.repeatHelpMonthly' => ({required Object date}) => 'Dibuat ulang tiap bulan mulai ${date} dengan pos yang sama.',
 			'budget.repeatHelpWeekly' => ({required Object date}) => 'Dibuat ulang tiap minggu mulai ${date} dengan pos yang sama.',
 			'budget.repeatUnavailable' => 'Anggaran bulanan bisa diulang bila mulai tanggal 1–28.',
@@ -6690,10 +6698,10 @@ extension on Translations {
 			'discovery.quickStart.turnOn' => 'Nyalakan',
 			'discovery.quickStart.noBuiltIn' => 'Tidak ada aplikasi bank atau dompet digital yang dikenal di perangkat ini. Pilih aplikasimu sendiri.',
 			'notificationCapture.accountEntryTitle' => 'Catat dari notifikasi',
-			'notificationCapture.accountEntryBody' => 'Catat otomatis dari notifikasi bank dan e-wallet.',
-			'notificationCapture.settingsTitle' => 'Catat dari notifikasi',
 			_ => null,
 		} ?? switch (path) {
+			'notificationCapture.accountEntryBody' => 'Catat otomatis dari notifikasi bank dan e-wallet.',
+			'notificationCapture.settingsTitle' => 'Catat dari notifikasi',
 			'notificationCapture.enableLabel' => 'Aktifkan',
 			'notificationCapture.accessMissingTitle' => 'Butuh izin membaca notifikasi',
 			'notificationCapture.accessMissingBody' => 'Tanpa izin ini, Tanukonomy tidak bisa melihat notifikasi bank.',
@@ -7204,10 +7212,10 @@ extension on Translations {
 			'premium.gift.endLine' => ({required Object date}) => 'Plus aktif sampai ${date}',
 			'premium.gift.title' => ({required Object date}) => 'Plus aktif sampai ${date}, akhir periode pertamamu.',
 			'premium.gift.body' => 'Tanpa kartu, tanpa langganan otomatis. Sesudah itu kamu tetap mencatat gratis.',
-			'premium.gift.start' => 'Mulai mencatat',
-			'premium.card.recapTitle' => ({required Object date}) => 'Plus berakhir ${date}',
 			_ => null,
 		} ?? switch (path) {
+			'premium.gift.start' => 'Mulai mencatat',
+			'premium.card.recapTitle' => ({required Object date}) => 'Plus berakhir ${date}',
 			'premium.card.recapSince' => ({required Object date}) => 'Sejak ${date}, Tanuki sudah:',
 			'premium.card.recapRecorded' => 'catatan dari notifikasi',
 			'premium.downgrade.title' => 'Uji coba Plus selesai',

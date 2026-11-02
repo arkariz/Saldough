@@ -569,6 +569,8 @@
     "templateCopyName": "$name (salinan)",
     "templateNameLabel": "Nama template",
     "repeatLabel": "Ulangi tiap periode",
+    "repeatOn": "Menyala",
+    "repeatOff": "Mati",
     "repeatHelpMonthly": "Dibuat ulang tiap bulan mulai $date dengan pos yang sama.",
     "repeatHelpWeekly": "Dibuat ulang tiap minggu mulai $date dengan pos yang sama.",
     "repeatUnavailable": "Anggaran bulanan bisa diulang bila mulai tanggal 1–28.",

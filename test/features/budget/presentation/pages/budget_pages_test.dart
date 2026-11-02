@@ -131,7 +131,7 @@ void main() {
     await openBudgetTab(tester);
 
     expect(find.text(t.budget.noWalletTitle), findsOneWidget);
-    expect(find.widgetWithText(AppButton, t.budget.addAction), findsNothing);
+    expect(find.widgetWithText(DsButton, t.budget.addAction), findsNothing);
   });
 
   testWidgets('kartu anggaran menampilkan nama, dompet, terpakai, dan sisa (T-4.5)', (tester) async {

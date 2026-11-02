@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/budget/presentation/bloc/budget_bloc.dart';
 import 'package:saldough/features/budget/presentation/bloc/budget_state.dart';
@@ -56,7 +56,9 @@ class _BudgetListPageState extends State<BudgetListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: widget.embedded ? null : AppBar(title: Text(t.appShell.budgetTabLabel)),
+      appBar: widget.embedded
+          ? null
+          : AppBar(title: Text(t.appShell.budgetTabLabel, style: context.ds.typography.headlineMd), centerTitle: false),
       body: SafeArea(
         top: !widget.embedded,
         child: BlocBuilder<BudgetBloc, BudgetState>(
@@ -73,10 +75,10 @@ class _BudgetListPageState extends State<BudgetListPage> {
                 tour: TourId.budget,
                 ready: true,
                 child: ListView(
-                  padding: const EdgeInsets.all(AppSpacing.space4),
+                  padding: const EdgeInsets.all(16),
                   children: [
                     BudgetEmptyState(onAdd: canAdd ? () => addBudget(context) : null),
-                    const SizedBox(height: AppSpacing.space4),
+                    const SizedBox(height: 16),
                     SpotlightTarget(
                       spotlightKey: SpotlightKey.budgetTemplates,
                       child: _TemplatesButton(onTap: () => openBudgetTemplates(context)),
@@ -94,12 +96,7 @@ class _BudgetListPageState extends State<BudgetListPage> {
               tour: TourId.budget,
               ready: true,
               child: ListView(
-                padding: const EdgeInsets.fromLTRB(
-                  AppSpacing.space4,
-                  AppSpacing.space2,
-                  AppSpacing.space4,
-                  AppSpacing.space12,
-                ),
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 96),
                 children: [
                   SpotlightTarget(
                     spotlightKey: SpotlightKey.budgetSummary,
@@ -109,7 +106,7 @@ class _BudgetListPageState extends State<BudgetListPage> {
                       activeCount: state.activeProgress.length,
                     ),
                   ),
-                  const SizedBox(height: AppSpacing.space4),
+                  const SizedBox(height: 16),
                   SpotlightTarget(
                     spotlightKey: SpotlightKey.budgetFilter,
                     child: BudgetFilterBar(
@@ -121,7 +118,7 @@ class _BudgetListPageState extends State<BudgetListPage> {
                       onWalletChanged: (walletId) => bloc.add(BudgetWalletFilterChanged(walletId)),
                     ),
                   ),
-                  const SizedBox(height: AppSpacing.space4),
+                  const SizedBox(height: 16),
                   if (visible.isEmpty)
                     BudgetFilteredEmptyState(
                       onReset: () => bloc
@@ -130,7 +127,6 @@ class _BudgetListPageState extends State<BudgetListPage> {
                     )
                   else
                     for (final budget in visible) ...[
-                      const SizedBox(height: AppSpacing.space1),
                       BudgetCard(
                         budget: budget,
                         progress: state.progress[budget.id]!,
@@ -138,13 +134,13 @@ class _BudgetListPageState extends State<BudgetListPage> {
                         onTap: () => _openDetail(context, budget.id),
                         isRecurring: state.isRecurring(budget),
                       ),
-                      const SizedBox(height: AppSpacing.space2),
+                      const SizedBox(height: 12),
                     ],
-                  const SizedBox(height: AppSpacing.space2),
+                  const SizedBox(height: 4),
                   if (canAdd)
-                    AppButton.secondary(
+                    DsButton.secondary(
                       label: t.budget.addAction,
-                      icon: IconKey.add,
+                      icon: Icons.add,
                       expand: true,
                       onPressed: () => addBudget(context),
                     ),
@@ -171,6 +167,8 @@ class _TemplatesButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(child: AppButton.text(label: t.budget.templatesAction, onPressed: onTap));
+    return Center(
+      child: DsButton.ghost(label: t.budget.templatesAction, onPressed: onTap),
+    );
   }
 }

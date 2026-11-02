@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/budget/presentation/bloc/budget_state.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
@@ -72,11 +73,10 @@ class BudgetFilterBar extends StatelessWidget {
               // Aktif · Selesai · Semua, tanpa angka (PLAN_TAB_LAYOUT §4.9);
               // anggaran nonaktif tetap terlihat di Semua.
               for (final filter in _shown) ...[
-                if (filter != _shown.first) const SizedBox(width: AppSpacing.space2),
-                AppChip(
+                if (filter != _shown.first) const SizedBox(width: 8),
+                DsFilterChip(
                   label: _label(filter),
                   selected: statusFilter == filter,
-                  onBg: true,
                   onTap: () => onStatusChanged(filter),
                 ),
               ],
@@ -84,16 +84,34 @@ class BudgetFilterBar extends StatelessWidget {
           ),
         ),
         if (wallets.length > 1) ...[
-          const SizedBox(height: AppSpacing.space2),
-          AppMenuSelectButton<String>(
-            icon: selected == null ? IconKey.wallets : walletIconKey(selected.iconKey),
-            label: selected?.name ?? t.budget.filterWalletAll,
-            options: [
-              for (final wallet in wallets) (value: wallet.id, label: wallet.name, icon: walletIconKey(wallet.iconKey)),
+          const SizedBox(height: 8),
+          DsFieldGroup(
+            children: [
+              DsSelectRow<String>(
+                icon: Icons.account_balance_wallet_outlined,
+                leading: DsIconTile.asset(
+                  asset: selected == null
+                      ? ClayIcons.walletNav
+                      : ClayIcons.forIcon(walletIconKey(selected.iconKey)) ?? ClayIcons.walletNav,
+                  size: DsIconTileSize.sm,
+                ),
+                label: t.budget.filterWalletAll,
+                title: selected?.name ?? t.budget.filterWalletAll,
+                placeholder: selected == null,
+                allLabel: t.budget.filterWalletAll,
+                options: [
+                  for (final wallet in wallets)
+                    DsMenuOption(
+                      value: wallet.id,
+                      label: wallet.name,
+                      leading: SvgPicture.asset(
+                        ClayIcons.forIcon(walletIconKey(wallet.iconKey)) ?? ClayIcons.walletNav,
+                      ),
+                    ),
+                ],
+                onSelected: onWalletChanged,
+              ),
             ],
-            allLabel: t.budget.filterWalletAll,
-            allIcon: IconKey.wallets,
-            onSelected: onWalletChanged,
           ),
         ],
       ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
@@ -87,7 +88,7 @@ class BudgetBadge extends StatelessWidget {
   Widget build(BuildContext context) => AppBadge(label, tone: toneFromColor(context.appColors, color));
 }
 
-/// [AppProgressBar] anggaran selebar induknya; [height] 6 atau kurang memakai
+/// Meter anggaran selebar induknya ([DsSegmentMeter]); [height] 6 atau kurang memakai
 /// varian tipis (baris pos).
 class BudgetProgressBar extends StatelessWidget {
   /// Membuat [BudgetProgressBar] untuk rasio [value].
@@ -101,6 +102,19 @@ class BudgetProgressBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppProgressBar(value: value, thin: height <= 6);
+    return DsSegmentMeter(
+      value: value,
+      tone: budgetMeterTone(value),
+      thin: height <= 6,
+      semanticLabel: '${(value * 100).round()}%',
+    );
   }
 }
+
+/// Nada meter untuk rasio [value]: memakai ambang `AppProgressBar` (85% dan
+/// 100%) supaya hanya ada satu sumber ambang.
+DsMeterTone budgetMeterTone(double value) => switch (AppProgressBar.statusFor(value)) {
+  AppBarStatus.safe => DsMeterTone.normal,
+  AppBarStatus.nearlyOut => DsMeterTone.warning,
+  AppBarStatus.over => DsMeterTone.danger,
+};

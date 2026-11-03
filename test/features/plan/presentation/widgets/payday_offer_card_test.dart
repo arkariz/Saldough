@@ -2,13 +2,15 @@ import 'package:di/di.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/plan/presentation/widgets/payday_offer_card.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
+
+import '../../../../helpers/reduced_motion.dart';
 
 void main() {
   late GetIt container;
@@ -48,7 +50,8 @@ void main() {
   Future<void> pumpCard(WidgetTester tester) async {
     await tester.pumpWidget(
       MaterialApp(
-        theme: PixelTheme.light,
+        builder: reducedMotion,
+        theme: AppThemeBridge.build(DsThemePresets.fallback, Brightness.light),
         home: Scaffold(
           body: PaydayOfferCard(container: container, now: () => now),
         ),

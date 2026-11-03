@@ -2,12 +2,12 @@ import 'dart:async';
 
 import 'package:di/di.dart';
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/budget/presentation/navigation/budget_route_keys.dart';
 import 'package:saldough/features/plan/domain/payday_offer.dart';
 import 'package:saldough/shared/category/category.dart';
@@ -127,42 +127,52 @@ class _PaydayOfferCardState extends State<PaydayOfferCard> {
     final day = _day;
     if (day == null) return const SizedBox.shrink();
     final texts = t.discovery.payday;
-    final textTheme = Theme.of(context).textTheme;
-    final colors = context.appColors;
+    final ds = context.ds;
     return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.space4),
-      child: AppCard(
-        key: const ValueKey('payday-offer-card'),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(texts.title(d: day), style: textTheme.titleMedium),
-                  const SizedBox(height: AppSpacing.space1),
-                  Text(
-                    texts.body(d: day),
-                    style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
-                  ),
-                  const SizedBox(height: AppSpacing.space3),
-                  AppButton.secondary(
-                    key: const ValueKey('payday-offer-set'),
-                    small: true,
-                    label: texts.action,
-                    onPressed: () => unawaited(_set(day)),
-                  ),
-                ],
+      padding: const EdgeInsets.only(bottom: 16),
+      child: DsReveal(
+        child: DsCard(
+          key: const ValueKey('payday-offer-card'),
+          padding: const EdgeInsets.fromLTRB(14, 14, 6, 14),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              DsIdleMotion(
+                kind: DsIdleKind.float,
+                child: DsIconTile.asset(asset: ClayIcons.coins, size: DsIconTileSize.lg),
               ),
-            ),
-            AppIconButton(
-              key: const ValueKey('payday-offer-close'),
-              icon: IconKey.close,
-              label: t.common.close,
-              onPressed: () => unawaited(_close()),
-            ),
-          ],
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(texts.title(d: day), style: ds.typography.titleMd),
+                    const SizedBox(height: 2),
+                    Text(
+                      texts.body(d: day),
+                      style: ds.typography.bodySm.copyWith(color: ds.colors.textSecondary),
+                    ),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      width: 140,
+                      child: DsInlineAction(
+                        key: const ValueKey('payday-offer-set'),
+                        tone: DsInlineActionTone.primary,
+                        label: texts.action,
+                        onPressed: () => unawaited(_set(day)),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              DsIconButton(
+                key: const ValueKey('payday-offer-close'),
+                icon: Icons.close,
+                label: t.common.close,
+                onPressed: () => unawaited(_close()),
+              ),
+            ],
+          ),
         ),
       ),
     );

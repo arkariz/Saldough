@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:saldough/core/design_system/design_system.dart';
 import 'package:flutter/services.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/features/app_update/presentation/bloc/app_update_state.dart';
 

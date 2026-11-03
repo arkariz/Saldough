@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:saldough/core/presentation/widgets/fit_start.dart';
 import 'package:saldough/core/design_system/design_system.dart';
+import 'package:saldough/core/presentation/widgets/fit_start.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/currency/currency.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/features/onboarding/presentation/widgets/onboarding_widgets.dart';

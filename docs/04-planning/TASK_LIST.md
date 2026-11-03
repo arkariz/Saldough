@@ -6136,6 +6136,16 @@ memilih mode (dan preset bila ≥ 2), dan design system lama dihapus.
       (nasihat/Kakeibo di luar produk), teks "Tersinkronisasi otomatis via
       Kuil Keuangan" (tidak ada sinkronisasi), label Jepang pada kategori,
       dan "% dari pemasukan" (belum ada sumbernya di segmen ini).
+      **Bulan ini v2 (3 Nov 2026):** kepala periode (`AppPeriodHeader`: ubin
+      kalender clay, pil Atur), pemilih bulan `DsFilterChip`, kartu Uang
+      nganggur memakai `DsSummaryHero` (bilah rencana keluar dibanding
+      pemasukan, baris rincian di kotak kaca), kartu Saldo dompet ≈ (garis
+      grafik tergambar dari kiri, penanda bulat, lembar Rincian v2), kartu
+      tinjau awal bulan (langkah bercentang clay + meter + aksi seragam
+      `DsInlineActions`), banner Siapkan dana, tawaran gajian, daftar
+      Berikutnya, dan lembar Awal bulan keuangan (kisi tanggal, pratinjau
+      dengan garis waktu bertumbuh, `AppCheckRow` membulat).
+      `DsSectionHeader` tidak lagi meluap dengan tautan panjang.
       **Ikon clay dilengkapi (31 Okt 2026, KT-DS5):** 33 ikon baru untuk
       dompet, jenis transaksi, kategori, dan status Freelance; semua
       `IconKey` benda kini punya clay (`ClayIcons.forIcon`). Digambar dari

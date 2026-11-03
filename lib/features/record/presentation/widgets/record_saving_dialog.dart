@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:saldough/core/design_system/design_system.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/features/record/presentation/bloc/record_state.dart';

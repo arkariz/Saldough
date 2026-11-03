@@ -1,10 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/analysis/presentation/navigation/analysis_route_keys.dart';
 import 'package:saldough/features/plan/domain/month_review.dart';
@@ -41,52 +42,63 @@ class MonthReviewCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = context.read<PlanMonthBloc>();
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
+    final ds = context.ds;
+    final c = ds.colors;
     final steps = state.reviewSteps;
     final done = state.review.doneSteps;
     final progress = t.plan.reviewProgress(done: state.reviewDoneCount, total: steps.length);
     if (state.review.dismissed) {
-      return AppTappable(
+      final label = t.plan.reviewCollapsed(month: monthLabel, done: state.reviewDoneCount, total: steps.length);
+      return DsPressable(
         key: const ValueKey('month-review-collapsed'),
-        label: t.plan.reviewCollapsed(month: monthLabel, done: state.reviewDoneCount, total: steps.length),
-        onTap: () => bloc.add(const PlanReviewDismissed(dismissed: false)),
-        child: Row(
-          children: [
-            Expanded(
-              // Labelnya sudah dibacakan `AppTappable` (T-16.16 K7).
-              child: ExcludeSemantics(
-                child: Text(
-                  t.plan.reviewCollapsed(month: monthLabel, done: state.reviewDoneCount, total: steps.length),
-                  style: textTheme.bodyMedium,
-                ),
+        semanticLabel: label,
+        onPressed: () => bloc.add(const PlanReviewDismissed(dismissed: false)),
+        pressedScale: 0.99,
+        builder: (context, _) => DsCard(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+          child: Row(
+            children: [
+              DsIconTile.asset(asset: ClayIcons.clipboard, size: DsIconTileSize.sm),
+              const SizedBox(width: 12),
+              Expanded(
+                // Labelnya sudah dibacakan `DsPressable` (T-16.16 K7).
+                child: ExcludeSemantics(child: Text(label, style: ds.typography.bodyMd)),
               ),
-            ),
-            const AppIcon(IconKey.chevronRight, size: 18),
-          ],
+              Icon(Icons.chevron_right, size: 20, color: c.textMuted),
+            ],
+          ),
         ),
       );
     }
 
-    Widget step(MonthReviewStep step, String text, List<Widget> actions, {bool keepActions = false}) {
+    Widget step(MonthReviewStep step, String text, List<DsInlineAction> actions, {bool keepActions = false}) {
       final checked = done.contains(step);
       return Padding(
-        padding: const EdgeInsets.only(top: AppSpacing.space2),
+        padding: const EdgeInsets.only(top: 12),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            AppIcon(
-              checked ? IconKey.check : IconKey.info,
-              size: 18,
-              color: checked ? colors.brand : colors.ink2,
+            SizedBox.square(
+              dimension: 24,
+              child: Center(
+                child: checked
+                    ? SvgPicture.asset(ClayIcons.done, width: 24, height: 24)
+                    : Icon(Icons.radio_button_unchecked, size: 20, color: c.textMuted),
+              ),
             ),
-            const SizedBox(width: AppSpacing.space1),
+            const SizedBox(width: 10),
             Expanded(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text(text, style: textTheme.bodyMedium),
-                  if (!checked || keepActions) Wrap(spacing: AppSpacing.space1, children: actions),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 2),
+                    child: Text(
+                      text,
+                      style: ds.typography.bodyMd.copyWith(color: checked ? c.textSecondary : c.textPrimary),
+                    ),
+                  ),
+                  if (!checked || keepActions) ...[const SizedBox(height: 6), DsInlineActions(actions: actions)],
                 ],
               ),
             ),
@@ -97,85 +109,105 @@ class MonthReviewCard extends StatelessWidget {
 
     void mark(MonthReviewStep s) => bloc.add(PlanReviewStepDone(s));
     final estimate = state.estimatedRules.firstOrNull;
-    return AppCard(
-      key: const ValueKey('month-review-card'),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  t.plan.reviewTitle(month: monthLabel),
-                  style: labelSmStyle(context, color: colors.ink2),
+    return DsReveal(
+      child: DsCard(
+        key: const ValueKey('month-review-card'),
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
+              children: [
+                DsIdleMotion(
+                  kind: DsIdleKind.float,
+                  child: DsIconTile.asset(asset: ClayIcons.clipboard, size: DsIconTileSize.sm),
                 ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(t.plan.reviewTitle(month: monthLabel), style: ds.typography.titleMd),
+                ),
+                if (steps.isNotEmpty) DsBadge(label: progress, tone: DsBadgeTone.warm),
+              ],
+            ),
+            if (steps.isNotEmpty) ...[
+              const SizedBox(height: 12),
+              DsSegmentMeter(
+                value: state.reviewDoneCount / steps.length,
+                segments: steps.length,
+                semanticLabel: progress,
               ),
-              if (steps.isNotEmpty) Text(progress, style: textTheme.bodySmall),
             ],
-          ),
-          // Periode peralihan: kartu muncul sekali dengan penjelasannya (P-9).
-          if (state.range.isTransition)
-            Padding(
-              padding: const EdgeInsets.only(top: AppSpacing.space2),
-              child: Text(
-                t.plan.transitionReview(
-                  start: switch (state.activeStart.day) {
-                    final day? => t.plan.financialMonthOnDay(day: day),
-                    null => t.plan.financialMonthOnLastDay,
-                  },
-                  range: state.range.rangeLabel,
+            // Periode peralihan: kartu muncul sekali dengan penjelasannya (P-9).
+            if (state.range.isTransition)
+              Padding(
+                padding: const EdgeInsets.only(top: 12),
+                child: Text(
+                  t.plan.transitionReview(
+                    start: switch (state.activeStart.day) {
+                      final day? => t.plan.financialMonthOnDay(day: day),
+                      null => t.plan.financialMonthOnLastDay,
+                    },
+                    range: state.range.rangeLabel,
+                  ),
+                  key: const ValueKey('month-review-transition'),
+                  style: ds.typography.bodySm.copyWith(color: c.textSecondary),
                 ),
-                key: const ValueKey('month-review-transition'),
-                style: textTheme.bodyMedium,
               ),
-            ),
-          if (steps.contains(MonthReviewStep.budgets))
-            step(
-              MonthReviewStep.budgets,
-              t.plan.reviewBudgets(amount: AppMoneyFormatter.format(state.recurringBudgetTotal)),
-              [
-                AppButton.text(small: true, label: t.plan.reviewOk, onPressed: () => mark(MonthReviewStep.budgets)),
-                AppButton.text(small: true, label: t.plan.reviewEdit, onPressed: onShowBudget),
-              ],
-            ),
-          if (estimate != null && steps.contains(MonthReviewStep.estimates))
-            step(
-              MonthReviewStep.estimates,
-              t.plan.reviewEstimate(
-                name: estimate.note.isEmpty ? t.record.repeat.fallbackName : estimate.note,
-                amount: AppMoneyFormatter.format(estimate.amount),
+            if (steps.contains(MonthReviewStep.budgets))
+              step(
+                MonthReviewStep.budgets,
+                t.plan.reviewBudgets(amount: AppMoneyFormatter.format(state.recurringBudgetTotal)),
+                [
+                  DsInlineAction(label: t.plan.reviewEdit, onPressed: onShowBudget),
+                  DsInlineAction(
+                    tone: DsInlineActionTone.primary,
+                    label: t.plan.reviewOk,
+                    onPressed: () => mark(MonthReviewStep.budgets),
+                  ),
+                ],
               ),
-              [
-                AppButton.text(small: true, label: t.plan.reviewOk, onPressed: () => mark(MonthReviewStep.estimates)),
-                AppButton.text(small: true, label: t.plan.reviewEditEstimate, onPressed: onShowRecurring),
-              ],
-            ),
-          if (steps.contains(MonthReviewStep.lookback))
-            step(
-              MonthReviewStep.lookback,
-              accuracyText(state) ?? t.plan.reviewLookback(month: state.previousRange.label),
-              [
-                AppButton.text(
-                  small: true,
-                  label: done.contains(MonthReviewStep.lookback) ? t.plan.reviewSeeAgain : t.plan.reviewSee,
-                  onPressed: () async {
-                    await showLookbackSheet(context, state);
-                    mark(MonthReviewStep.lookback);
-                  },
+            if (estimate != null && steps.contains(MonthReviewStep.estimates))
+              step(
+                MonthReviewStep.estimates,
+                t.plan.reviewEstimate(
+                  name: estimate.note.isEmpty ? t.record.repeat.fallbackName : estimate.note,
+                  amount: AppMoneyFormatter.format(estimate.amount),
                 ),
-              ],
-              // Kilas balik boleh dibuka berkali-kali sampai kartu ditutup (B-18, T-19.11):
-              // pintu "Lihat rincian {bulan}" ke Analisis tetap terjangkau.
-              keepActions: true,
+                [
+                  DsInlineAction(label: t.plan.reviewEditEstimate, onPressed: onShowRecurring),
+                  DsInlineAction(
+                    tone: DsInlineActionTone.primary,
+                    label: t.plan.reviewOk,
+                    onPressed: () => mark(MonthReviewStep.estimates),
+                  ),
+                ],
+              ),
+            if (steps.contains(MonthReviewStep.lookback))
+              step(
+                MonthReviewStep.lookback,
+                accuracyText(state) ?? t.plan.reviewLookback(month: state.previousRange.label),
+                [
+                  DsInlineAction(
+                    label: done.contains(MonthReviewStep.lookback) ? t.plan.reviewSeeAgain : t.plan.reviewSee,
+                    onPressed: () async {
+                      await showLookbackSheet(context, state);
+                      mark(MonthReviewStep.lookback);
+                    },
+                  ),
+                ],
+                // Kilas balik boleh dibuka berkali-kali sampai kartu ditutup (B-18, T-19.11):
+                // pintu "Lihat rincian {bulan}" ke Analisis tetap terjangkau.
+                keepActions: true,
+              ),
+            const SizedBox(height: 16),
+            DsButton(label: t.plan.reviewDone, expand: true, onPressed: () => bloc.add(const PlanReviewCompleted())),
+            DsButton.ghost(
+              label: t.plan.reviewLater,
+              expand: true,
+              onPressed: () => bloc.add(const PlanReviewDismissed()),
             ),
-          const SizedBox(height: AppSpacing.space4),
-          AppButton(label: t.plan.reviewDone, onPressed: () => bloc.add(const PlanReviewCompleted())),
-          AppButton.text(
-            small: true,
-            label: t.plan.reviewLater,
-            onPressed: () => bloc.add(const PlanReviewDismissed()),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -218,11 +250,15 @@ Future<void> showLookbackSheet(BuildContext context, PlanMonthState state) {
   return showAppSheet<void>(
     context,
     builder: (sheetContext) {
-      final textTheme = Theme.of(sheetContext).textTheme;
-      Widget line(String label, String planned, String actual, {bool bold = false}) {
-        final style = textTheme.bodyMedium?.copyWith(fontWeight: bold ? FontWeight.w700 : null);
+      final ds = sheetContext.ds;
+      final c = ds.colors;
+      Widget line(String label, String planned, String actual, {bool bold = false, bool head = false}) {
+        final style = (head ? ds.typography.labelMd : ds.typography.bodyMd).copyWith(
+          fontWeight: bold ? FontWeight.w700 : null,
+          color: head ? c.textSecondary : null,
+        );
         return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 2),
+          padding: const EdgeInsets.symmetric(vertical: 5),
           child: Row(
             children: [
               Expanded(flex: 3, child: Text(label, style: style)),
@@ -241,48 +277,67 @@ Future<void> showLookbackSheet(BuildContext context, PlanMonthState state) {
 
       return SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.space4),
+          padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(t.plan.lookbackTitle(month: state.previousRange.label), style: textTheme.titleMedium),
-              const SizedBox(height: AppSpacing.space2),
-              line('', t.plan.lookbackPlanned, t.plan.lookbackActual, bold: true),
-              for (final (label, planned, actual) in rows)
-                line(label, AppMoneyFormatter.format(planned), AppMoneyFormatter.format(actual)),
-              const Divider(),
-              line(
-                t.plan.lookbackFree,
-                AppMoneyFormatter.format(plan.planned),
-                AppMoneyFormatter.format(plan.remaining),
-                bold: true,
+              Center(
+                child: DsIconTile.asset(asset: ClayIcons.report, size: DsIconTileSize.lg),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                t.plan.lookbackTitle(month: state.previousRange.label),
+                textAlign: TextAlign.center,
+                style: ds.typography.headlineMd.copyWith(fontSize: 20),
+              ),
+              const SizedBox(height: 12),
+              DsCard(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                child: Column(
+                  children: [
+                    line('', t.plan.lookbackPlanned, t.plan.lookbackActual, head: true),
+                    for (final (label, planned, actual) in rows)
+                      line(label, AppMoneyFormatter.format(planned), AppMoneyFormatter.format(actual)),
+                    Divider(height: 12, color: c.outlineSubtle),
+                    line(
+                      t.plan.lookbackFree,
+                      AppMoneyFormatter.format(plan.planned),
+                      AppMoneyFormatter.format(plan.remaining),
+                      bold: true,
+                    ),
+                  ],
+                ),
               ),
               if (accuracy != null) ...[
-                const SizedBox(height: AppSpacing.space2),
-                Text(accuracy, key: const ValueKey('lookback-accuracy'), style: textTheme.bodySmall),
+                const SizedBox(height: 12),
+                Text(
+                  accuracy,
+                  key: const ValueKey('lookback-accuracy'),
+                  style: ds.typography.bodySm.copyWith(color: c.textSecondary),
+                ),
               ] else if (biggest.$3 != biggest.$2) ...[
-                const SizedBox(height: AppSpacing.space2),
-                Text(t.plan.lookbackBiggest(line: biggest.$1), style: textTheme.bodySmall),
+                const SizedBox(height: 12),
+                Text(
+                  t.plan.lookbackBiggest(line: biggest.$1),
+                  style: ds.typography.bodySm.copyWith(color: c.textSecondary),
+                ),
               ],
               // Pintu ke Analisis periode itu (FINANCIAL_ANALYSIS F8.1, T-19.6).
-              const SizedBox(height: AppSpacing.space2),
-              Align(
-                alignment: AlignmentDirectional.centerStart,
-                child: AppButton.text(
-                  key: const ValueKey('lookback-see-analysis'),
-                  small: true,
-                  label: t.plan.lookbackSeeAnalysis(month: state.previousRange.name),
-                  onPressed: () {
-                    Navigator.of(sheetContext).pop();
-                    unawaited(
-                      context.pushRoute(
-                        AnalysisRouteKeys.open,
-                        AnalysisInput(source: AnalysisSource.lookback, periodStart: state.previousRange.start),
-                      ),
-                    );
-                  },
-                ),
+              const SizedBox(height: 12),
+              DsButton.secondary(
+                key: const ValueKey('lookback-see-analysis'),
+                expand: true,
+                label: t.plan.lookbackSeeAnalysis(month: state.previousRange.name),
+                onPressed: () {
+                  Navigator.of(sheetContext).pop();
+                  unawaited(
+                    context.pushRoute(
+                      AnalysisRouteKeys.open,
+                      AnalysisInput(source: AnalysisSource.lookback, periodStart: state.previousRange.start),
+                    ),
+                  );
+                },
               ),
             ],
           ),

@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/features/budget/domain/entities/budget_period.dart';
 import 'package:saldough/features/budget/domain/entities/budget_template.dart';
@@ -111,10 +111,10 @@ class _FinancialMonthSheetState extends State<FinancialMonthSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
-    final muted = textTheme.bodyMedium?.copyWith(color: colors.ink2);
-    const gutter = EdgeInsets.symmetric(horizontal: AppSpacing.space4);
+    final ds = context.ds;
+    final c = ds.colors;
+    final muted = ds.typography.bodySm.copyWith(color: c.textSecondary);
+    const gutter = EdgeInsets.symmetric(horizontal: 16);
     final preview = _changed ? financialMonthPreview(widget.schedule, widget.today, _pick) : null;
     final allOn = _off.isEmpty;
     return SizedBox.expand(
@@ -122,36 +122,44 @@ class _FinancialMonthSheetState extends State<FinancialMonthSheet> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(AppSpacing.space1, AppSpacing.space1, AppSpacing.space1, 0),
+            padding: const EdgeInsets.fromLTRB(4, 4, 4, 0),
             child: AppFormHeader(title: t.plan.financialMonthTitle),
           ),
           Expanded(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.only(bottom: AppSpacing.space4),
+              padding: const EdgeInsets.only(bottom: 16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Padding(padding: gutter, child: Text(t.plan.financialMonthHint, style: muted)),
-                  const SizedBox(height: AppSpacing.space3),
                   Padding(
                     padding: gutter,
-                    child: AppDayGrid(selected: _pick, onSelected: (start) => setState(() => _pick = start)),
+                    child: Text(t.plan.financialMonthHint, style: muted),
+                  ),
+                  const SizedBox(height: 12),
+                  Padding(
+                    padding: gutter,
+                    child: DsCard(
+                      padding: const EdgeInsets.all(8),
+                      child: AppDayGrid(selected: _pick, onSelected: (start) => setState(() => _pick = start)),
+                    ),
                   ),
                   if (preview != null) ...[
-                    const SizedBox(height: AppSpacing.space3),
+                    const SizedBox(height: 12),
                     Padding(
                       padding: gutter,
-                      child: _Preview(preview: preview, start: _pick, today: widget.today),
+                      child: DsReveal(
+                        child: _Preview(preview: preview, start: _pick, today: widget.today),
+                      ),
                     ),
                     if (widget.budgets.isNotEmpty) ...[
-                      const SizedBox(height: AppSpacing.space4),
+                      const SizedBox(height: 16),
                       Padding(
                         padding: gutter,
                         child: Row(
                           children: [
-                            Expanded(child: Text(t.plan.financialMonthBudgetsTitle, style: textTheme.titleMedium)),
+                            Expanded(child: Text(t.plan.financialMonthBudgetsTitle, style: ds.typography.titleMd)),
                             if (widget.budgets.length >= 2)
-                              AppButton.text(
+                              DsButton.ghost(
                                 key: const ValueKey('financial-month-bulk'),
                                 label: allOn ? t.plan.financialMonthClearAll : t.plan.financialMonthSelectAll,
                                 onPressed: () => setState(() {
@@ -172,45 +180,53 @@ class _FinancialMonthSheetState extends State<FinancialMonthSheet> {
                           style: muted,
                         ),
                       ),
-                      const SizedBox(height: AppSpacing.space1),
-                      for (final budget in widget.budgets)
-                        AppCheckRow(
-                          key: ValueKey('financial-month-budget-${budget.templateId}'),
-                          title: budget.name,
-                          value: !_off.contains(budget.templateId),
-                          subtitle: _off.contains(budget.templateId)
-                              ? t.plan.financialMonthBudgetKept(start: _on(widget.schedule.active))
-                              : t.plan.financialMonthBudgetMoved(
-                                  until: CycleMonthFormatter.noBreak(
-                                    CycleMonthFormatter.formatDayMonth(preview.current.lastDay),
-                                  ),
-                                  next: CycleMonthFormatter.noBreak(CycleMonthFormatter.formatDayMonth(preview.current.end)),
-                                ),
-                          onChanged: (on) => setState(() {
-                            if (on) {
-                              _off.remove(budget.templateId);
-                            } else {
-                              _off.add(budget.templateId);
-                            }
-                          }),
+                      const SizedBox(height: 8),
+                      Padding(
+                        padding: gutter,
+                        child: DsListCard(
+                          children: [
+                            for (final budget in widget.budgets)
+                              AppCheckRow(
+                                key: ValueKey('financial-month-budget-${budget.templateId}'),
+                                title: budget.name,
+                                value: !_off.contains(budget.templateId),
+                                subtitle: _off.contains(budget.templateId)
+                                    ? t.plan.financialMonthBudgetKept(start: _on(widget.schedule.active))
+                                    : t.plan.financialMonthBudgetMoved(
+                                        until: CycleMonthFormatter.noBreak(
+                                          CycleMonthFormatter.formatDayMonth(preview.current.lastDay),
+                                        ),
+                                        next: CycleMonthFormatter.noBreak(
+                                          CycleMonthFormatter.formatDayMonth(preview.current.end),
+                                        ),
+                                      ),
+                                onChanged: (on) => setState(() {
+                                  if (on) {
+                                    _off.remove(budget.templateId);
+                                  } else {
+                                    _off.add(budget.templateId);
+                                  }
+                                }),
+                              ),
+                          ],
                         ),
+                      ),
                     ],
                   ],
                 ],
               ),
             ),
           ),
-          AppStickyBar(
+          DsStickyBar(
             child: Row(
               children: [
-                AppButton.text(label: t.common.cancel, onPressed: () => Navigator.of(context).pop(false)),
-                const SizedBox(width: AppSpacing.space2),
+                DsButton.ghost(label: t.common.cancel, onPressed: () => Navigator.of(context).pop(false)),
+                const SizedBox(width: 8),
                 Expanded(
-                  child: AppButton(
+                  child: DsButton(
                     key: const ValueKey('financial-month-save'),
                     label: t.common.save,
                     expand: true,
-                    loading: _saving,
                     onPressed: _changed && !_saving ? () => unawaited(_save()) : null,
                   ),
                 ),
@@ -223,8 +239,8 @@ class _FinancialMonthSheetState extends State<FinancialMonthSheet> {
   }
 }
 
-/// Pratinjau (`tk-inset`): judul, kalimat periode peralihan, garis waktu,
-/// lalu "Periode sebelumnya tidak berubah."
+/// Pratinjau: ubin kalender clay, judul, kalimat periode peralihan, garis
+/// waktu, lalu "Periode sebelumnya tidak berubah."
 class _Preview extends StatelessWidget {
   const _Preview({required this.preview, required this.start, required this.today});
 
@@ -234,25 +250,37 @@ class _Preview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
+    final ds = context.ds;
+    final c = ds.colors;
     final current = preview.current;
-    return ColoredBox(
+    return DecoratedBox(
       key: const ValueKey('financial-month-preview'),
-      color: colors.surface2,
+      decoration: BoxDecoration(
+        color: c.actionPrimary.withValues(alpha: 0.07),
+        borderRadius: DsRadius.lgAll,
+        border: Border.all(color: c.actionPrimary.withValues(alpha: 0.22)),
+      ),
       child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.space3),
+        padding: const EdgeInsets.all(14),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
-              switch (start.day) {
-                final day? => t.plan.financialMonthPreviewTitle(day: day),
-                null => t.plan.financialMonthPreviewTitleLastDay,
-              },
-              style: textTheme.titleMedium,
+            Row(
+              children: [
+                DsIconTile.asset(asset: ClayIcons.calendar, size: DsIconTileSize.sm),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    switch (start.day) {
+                      final day? => t.plan.financialMonthPreviewTitle(day: day),
+                      null => t.plan.financialMonthPreviewTitleLastDay,
+                    },
+                    style: ds.typography.titleMd,
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: AppSpacing.space2),
+            const SizedBox(height: 10),
             Text(
               // Contoh C (c ≤ hari ini): periode peralihan sudah selesai, dan
               // periode berjalan sesudah disimpan adalah periode berikutnya.
@@ -267,9 +295,9 @@ class _Preview extends StatelessWidget {
                       next: preview.next.rangeLabel,
                     ),
               key: const ValueKey('financial-month-preview-sentence'),
-              style: textTheme.bodyMedium,
+              style: ds.typography.bodyMd,
             ),
-            const SizedBox(height: AppSpacing.space2),
+            const SizedBox(height: 12),
             AppPeriodTimeline(
               previousDays: preview.previous.days,
               currentDays: current.days,
@@ -277,8 +305,8 @@ class _Preview extends StatelessWidget {
               startLabel: CycleMonthFormatter.noBreak(CycleMonthFormatter.formatDayMonth(current.start)),
               endLabel: CycleMonthFormatter.noBreak(CycleMonthFormatter.formatDayMonth(current.end)),
             ),
-            const SizedBox(height: AppSpacing.space2),
-            Text(t.plan.financialMonthPreviewPast, style: textTheme.bodyMedium?.copyWith(color: colors.ink2)),
+            const SizedBox(height: 8),
+            Text(t.plan.financialMonthPreviewPast, style: ds.typography.bodySm.copyWith(color: c.textSecondary)),
           ],
         ),
       ),

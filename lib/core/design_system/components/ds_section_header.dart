@@ -30,22 +30,33 @@ class DsSectionHeader extends StatelessWidget {
           const SizedBox(width: 6),
         ],
         Expanded(
+          flex: 3,
           child: Semantics(
             header: true,
             child: Text(title, style: ds.typography.titleMd.copyWith(fontSize: 15), overflow: TextOverflow.ellipsis),
           ),
         ),
         if (actionLabel != null)
-          DsPressable(
-            onPressed: onAction,
-            builder: (context, _) => ConstrainedBox(
-              constraints: const BoxConstraints(minHeight: 44),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(actionLabel!, style: ds.typography.pixelLabel.copyWith(color: c.actionPrimary)),
-                  Icon(Icons.chevron_right, size: 13, color: c.actionPrimary),
-                ],
+          Flexible(
+            flex: 2,
+            child: DsPressable(
+              onPressed: onAction,
+              builder: (context, _) => ConstrainedBox(
+                constraints: const BoxConstraints(minHeight: 44),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        actionLabel!,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: ds.typography.pixelLabel.copyWith(color: c.actionPrimary),
+                      ),
+                    ),
+                    Icon(Icons.chevron_right, size: 13, color: c.actionPrimary),
+                  ],
+                ),
               ),
             ),
           ),

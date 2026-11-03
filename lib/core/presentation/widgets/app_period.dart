@@ -5,7 +5,6 @@ import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/app_button.dart';
 import 'package:saldough/core/presentation/widgets/app_icon.dart';
 import 'package:saldough/core/presentation/widgets/clay_icons.dart';
-import 'package:saldough/core/presentation/widgets/pixel_corner_border.dart';
 import 'package:saldough/core/theme/theme.dart';
 
 /// Nama periode keuangan yang sedang dilihat (komponen PeriodHeader, ADR-038,
@@ -63,22 +62,29 @@ class AppPeriodHeader extends StatelessWidget {
         ),
         if (onTap != null) ...[
           const SizedBox(width: 8),
-          // Petunjuk dapat diketuk (FEATURE_DISCOVERY §6.1): pil tonal "Atur".
-          DecoratedBox(
-            decoration: BoxDecoration(
-              color: c.surfaceSunken,
-              borderRadius: DsRadius.fullAll,
-              border: Border.all(color: c.outlineSubtle),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(t.discovery.period.hint, style: ds.typography.labelMd.copyWith(color: c.textSecondary)),
-                  const SizedBox(width: 2),
-                  Icon(Icons.chevron_right, size: 16, color: c.textSecondary),
-                ],
+          // Petunjuk dapat diketuk (FEATURE_DISCOVERY §6.1): pil tonal "Atur";
+          // mengecil di teks sangat besar supaya judul tetap terbaca.
+          Flexible(
+            flex: 0,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: c.surfaceSunken,
+                  borderRadius: DsRadius.fullAll,
+                  border: Border.all(color: c.outlineSubtle),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(t.discovery.period.hint, style: ds.typography.labelMd.copyWith(color: c.textSecondary)),
+                      const SizedBox(width: 2),
+                      Icon(Icons.chevron_right, size: 16, color: c.textSecondary),
+                    ],
+                  ),
+                ),
               ),
             ),
           ),
@@ -326,10 +332,10 @@ class _DayCell extends StatelessWidget {
   }
 }
 
-/// Garis waktu periode (DayPicker `tk-ptl`): tiga ruas selebar jumlah
-/// harinya — periode sebelumnya dan berikutnya `line-strong`, periode yang
-/// berubah `ink` — dan dua tanggal batas di bawahnya. Hanya menggambarkan
-/// kalimat di atasnya, jadi tersembunyi dari pembaca layar.
+/// Garis waktu periode: tiga ruas membulat selebar jumlah harinya (periode
+/// sebelumnya dan berikutnya abu, periode yang berubah berisi aksi dan
+/// tumbuh dari kiri saat tampil) dan dua tanggal batas di bawahnya. Hanya
+/// menggambarkan kalimat di atasnya, jadi tersembunyi dari pembaca layar.
 class AppPeriodTimeline extends StatelessWidget {
   /// Membuat [AppPeriodTimeline].
   const AppPeriodTimeline({
@@ -358,16 +364,37 @@ class AppPeriodTimeline extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
+    final ds = context.ds;
+    final c = ds.colors;
+    final reduced = DsMotion.reduced(context);
     final total = previousDays + currentDays + nextDays;
-    final tickStyle = Theme.of(context).textTheme.bodySmall?.copyWith(
-      color: colors.ink2,
+    final tickStyle = ds.typography.bodySm.copyWith(
+      color: c.textSecondary,
       fontWeight: FontWeight.w500,
       fontFeatures: const [FontFeature.tabularFigures()],
     );
-    Widget segment(int days, Color color) => Expanded(
+    Widget segment(int days, Color color, {bool grow = false}) => Expanded(
       flex: days,
-      child: CustomPaint(painter: _DashPainter(color), child: const SizedBox(height: 8)),
+      child: ClipRRect(
+        borderRadius: DsRadius.fullAll,
+        child: SizedBox(
+          height: 10,
+          child: grow
+              ? TweenAnimationBuilder<double>(
+                  tween: Tween(begin: reduced ? 1 : 0, end: 1),
+                  duration: const Duration(milliseconds: 700),
+                  curve: DsMotion.easeOutExpo,
+                  builder: (context, value, _) => Align(
+                    alignment: AlignmentDirectional.centerStart,
+                    child: FractionallySizedBox(
+                      widthFactor: value,
+                      child: ColoredBox(color: color),
+                    ),
+                  ),
+                )
+              : ColoredBox(color: color),
+        ),
+      ),
     );
     return ExcludeSemantics(
       child: Column(
@@ -375,14 +402,14 @@ class AppPeriodTimeline extends StatelessWidget {
         children: [
           Row(
             children: [
-              segment(previousDays, colors.lineStrong),
-              const SizedBox(width: AppSpacing.space1),
-              segment(currentDays, colors.ink),
-              const SizedBox(width: AppSpacing.space1),
-              segment(nextDays, colors.lineStrong),
+              segment(previousDays, c.surfaceContainerHigh),
+              const SizedBox(width: 4),
+              segment(currentDays, c.actionPrimary, grow: true),
+              const SizedBox(width: 4),
+              segment(nextDays, c.surfaceContainerHigh),
             ],
           ),
-          const SizedBox(height: AppSpacing.space1),
+          const SizedBox(height: 6),
           SizedBox(
             height: 16,
             child: LayoutBuilder(
@@ -411,27 +438,9 @@ class AppPeriodTimeline extends StatelessWidget {
   }
 }
 
-/// Ruas bergaris putus kotak 6px berjarak 2px.
-class _DashPainter extends CustomPainter {
-  const _DashPainter(this.color);
-
-  final Color color;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()..color = color;
-    for (var x = 0.0; x < size.width; x += 8) {
-      canvas.drawRect(Rect.fromLTWH(x, 0, (size.width - x).clamp(0, 6), size.height), paint);
-    }
-  }
-
-  @override
-  bool shouldRepaint(_DashPainter oldDelegate) => oldDelegate.color != color;
-}
-
-/// Baris Checkbox (komponen Checkbox): kotak 24px bersudut piksel di awal
-/// baris, judul nama butir, subjudul akibatnya yang boleh membungkus.
-/// Seluruh baris target sentuh, minimal 56px.
+/// Baris Checkbox v2: kotak membulat 24 di awal baris (isi aksi dengan
+/// centang yang muncul membal), judul nama butir, subjudul akibatnya yang
+/// boleh membungkus. Seluruh baris target sentuh, minimal 56.
 class AppCheckRow extends StatelessWidget {
   /// Membuat [AppCheckRow].
   const AppCheckRow({
@@ -456,46 +465,53 @@ class AppCheckRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
+    final ds = context.ds;
+    final c = ds.colors;
+    final reduced = DsMotion.reduced(context);
     return Semantics(
       checked: value,
       label: title,
       hint: subtitle,
       excludeSemantics: true,
       onTap: () => onChanged(!value),
-      child: InkWell(
-        onTap: () => onChanged(!value),
-        child: ConstrainedBox(
+      child: DsPressable(
+        onPressed: () => onChanged(!value),
+        pressedScale: 0.99,
+        dimWhenDisabled: false,
+        builder: (context, _) => ConstrainedBox(
           constraints: const BoxConstraints(minHeight: 56),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4, vertical: AppSpacing.space3),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
                   padding: const EdgeInsets.only(top: 2),
-                  child: SizedBox.square(
-                    dimension: 24,
-                    child: DecoratedBox(
-                      decoration: ShapeDecoration(
-                        color: value ? colors.brand : colors.surface,
-                        shape: PixelCornerBorder.small(
-                          side: value ? BorderSide.none : BorderSide(color: colors.lineStrong, width: 2),
-                        ),
-                      ),
-                      child: value ? AppIcon(IconKey.check, size: AppSize.iconSm, color: colors.onBrand) : null,
+                  child: AnimatedContainer(
+                    duration: reduced ? Duration.zero : DsMotion.standard,
+                    width: 24,
+                    height: 24,
+                    decoration: BoxDecoration(
+                      color: value ? c.actionPrimary : c.surfaceCard,
+                      borderRadius: DsRadius.smAll,
+                      border: value ? null : Border.all(color: c.outline, width: 2),
+                    ),
+                    child: AnimatedScale(
+                      duration: reduced ? Duration.zero : const Duration(milliseconds: 250),
+                      curve: Curves.easeOutBack,
+                      scale: value ? 1 : 0,
+                      child: Icon(Icons.check, size: 16, color: c.onActionPrimary),
                     ),
                   ),
                 ),
-                const SizedBox(width: AppSpacing.space3),
+                const SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(title, style: textTheme.titleMedium),
+                      Text(title, style: ds.typography.titleMd),
                       if (subtitle case final subtitle?)
-                        Text(subtitle, style: textTheme.bodyMedium?.copyWith(color: colors.ink2)),
+                        Text(subtitle, style: ds.typography.bodySm.copyWith(color: c.textSecondary)),
                     ],
                   ),
                 ),

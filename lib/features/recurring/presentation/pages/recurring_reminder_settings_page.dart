@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:di/di.dart';
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/discovery/discovery.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/recurring/domain/reminder_scheduler.dart';
 import 'package:saldough/features/recurring/domain/reminder_settings.dart';
 import 'package:saldough/features/recurring/domain/sync_recurring_reminders.dart';
@@ -69,23 +69,55 @@ class _RecurringReminderSettingsPageState extends State<RecurringReminderSetting
   @override
   Widget build(BuildContext context) {
     final enabled = _enabled;
+    final ds = context.ds;
     return Scaffold(
-      appBar: AppBar(title: Text(t.recurring.remindersTitle)),
+      appBar: AppBar(
+        title: Text(t.recurring.remindersTitle, style: ds.typography.headlineMd),
+        centerTitle: false,
+      ),
       body: SafeArea(
         child: enabled == null
             ? const AppSkeletonPage()
             : ListView(
-                padding: const EdgeInsets.all(AppSpacing.space4),
+                padding: const EdgeInsets.all(16),
                 children: [
-                  AppListCard(
-                    children: [
-                      AppSwitchRow(
-                        title: t.recurring.remindersTitle,
-                        subtitle: t.recurring.remindersBody,
-                        value: enabled,
-                        onChanged: (value) => unawaited(_toggle(value)),
+                  DsReveal(
+                    child: DsCard(
+                      padding: const EdgeInsets.fromLTRB(24, 20, 24, 20),
+                      child: Column(
+                        children: [
+                          // Alarm yang bergoyang saat pengingat menyala.
+                          if (enabled)
+                            const DsEmptyHero(asset: ClayIcons.alarm, orbit: [ClayIcons.bell], size: 112)
+                          else
+                            DsIconTile.asset(asset: ClayIcons.alarm, size: DsIconTileSize.lg),
+                          const SizedBox(height: 8),
+                          Text(
+                            t.recurring.remindersBody,
+                            textAlign: TextAlign.center,
+                            style: ds.typography.bodySm.copyWith(color: ds.colors.textSecondary),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  DsReveal(
+                    index: 1,
+                    child: DsListCard(
+                      children: [
+                        MergeSemantics(
+                          child: DsSettingRow(
+                            leading: DsIconTile.asset(asset: ClayIcons.bell, size: DsIconTileSize.sm),
+                            title: t.recurring.remindersTitle,
+                            trailing: Switch(
+                              value: enabled,
+                              onChanged: (value) => unawaited(_toggle(value)),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),

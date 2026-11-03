@@ -6118,6 +6118,13 @@ memilih mode (dan preset bila ≥ 2), dan design system lama dihapus.
       Anggaran jadi kartu hero gelap dengan sisa berhitung naik; kartu
       anggaran punya persen berhitung dan denyut untuk badge lewat batas;
       rincian berhero berkilau dan pos muncul berurutan.
+      **Rutin v2 (3 Nov 2026):** `DsSummaryHero` (kartu ringkasan hero
+      bersama Anggaran dan Rutin), daftar Rutin (baris berkotak tanggal dan
+      ikon clay, kelompok berlabel kapital dengan titik berdenyut, kelompok
+      terlipat beranimasi, kartu menganggur/saran/tercatat otomatis, kosong
+      dengan `DsEmptyHero`), kartu Menunggu dan pengingat, rincian (hero,
+      progres cicilan `DsSegmentMeter`, pilihan pos anggaran lewat
+      `showOptionSheet`), dan setelan pengingat. Segmen Bulan ini belum.
       **Ikon clay dilengkapi (31 Okt 2026, KT-DS5):** 33 ikon baru untuk
       dompet, jenis transaksi, kategori, dan status Freelance; semua
       `IconKey` benda kini punya clay (`ClayIcons.forIcon`). Digambar dari

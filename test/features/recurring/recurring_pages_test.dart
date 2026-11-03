@@ -108,6 +108,17 @@ void main() {
     await tester.pumpAndSettle();
   }
 
+  testWidgets('baris rutin bernominal besar muat di 360dp', (tester) async {
+    ActiveDay.sync(today);
+    await rules.saveRule(rule('Gaji besar sekali untuk uji', 1250000000, DateTime(2026, 10)));
+    await rules.saveRule(rule('Internet', 35000000, DateTime(2026, 10, 3)));
+    await pump(tester, const RecurringSegmentView());
+    tester.view.physicalSize = const Size(360, 1600);
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+    expect(find.textContaining('Gaji besar'), findsWidgets);
+  });
+
   testWidgets('tanggal berganti saat aplikasi hidup: kemunculan hari itu jadi menunggu (T-15.17)', (tester) async {
     ActiveDay.sync(today);
     await rules.saveRule(rule('Internet', 35000000, DateTime(2026, 10, 3)));

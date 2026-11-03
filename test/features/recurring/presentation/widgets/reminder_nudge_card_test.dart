@@ -8,13 +8,14 @@ import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/discovery/discovery.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/recurring/domain/reminder_scheduler.dart';
 import 'package:saldough/features/recurring/domain/reminder_settings.dart';
 import 'package:saldough/features/recurring/presentation/widgets/reminder_nudge_card.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
+
 import '../../../../helpers/fake_feature_statuses.dart';
+import '../../../../helpers/reduced_motion.dart';
 
 class _MockScheduler extends Mock implements ReminderScheduler {}
 
@@ -51,7 +52,8 @@ void main() {
   Future<void> pump(WidgetTester tester, Widget Function(GetIt) child) async {
     await tester.pumpWidget(
       MaterialApp(
-        theme: PixelTheme.light,
+        builder: reducedMotion,
+        theme: AppThemeBridge.build(DsThemePresets.fallback, Brightness.light),
         home: Scaffold(body: ListView(children: [child(container)])),
       ),
     );

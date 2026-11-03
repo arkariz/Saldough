@@ -2,11 +2,12 @@ import 'dart:async';
 
 import 'package:di/di.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/plan/active_plan.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/premium/presentation/navigation/premium_route_keys.dart';
@@ -67,35 +68,20 @@ class RecurringDetailPage extends StatelessWidget {
     final bloc = context.read<RecurringBloc>();
     final options = linkableBudgetItems(rule, state.budgetOptions);
     const unlink = '';
-    final picked = await showDialog<String>(
-      context: context,
-      builder: (dialogContext) => SimpleDialog(
-        title: Text(t.recurring.budgetLinkPickerTitle),
-        children: [
-          if (options.isEmpty)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space6, vertical: AppSpacing.space2),
-              child: Text(t.recurring.budgetLinkEmpty),
+    final picked = await showOptionSheet<String>(
+      context,
+      title: t.recurring.budgetLinkPickerTitle,
+      subtitle: options.isEmpty ? t.recurring.budgetLinkEmpty : null,
+      current: rule.budgetItemKey,
+      options: [
+        for (final option in options)
+          if (option.templateItemId case final id?)
+            OptionSheetItem(
+              value: id,
+              label: t.recurring.budgetLinkValue(item: option.itemName, budget: option.budgetName),
             ),
-          for (final option in options)
-            SimpleDialogOption(
-              onPressed: () => Navigator.of(dialogContext).pop(option.templateItemId),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(t.recurring.budgetLinkValue(item: option.itemName, budget: option.budgetName)),
-                  ),
-                  if (option.templateItemId == rule.budgetItemKey) const AppIcon(IconKey.check),
-                ],
-              ),
-            ),
-          if (rule.budgetItemKey != null)
-            SimpleDialogOption(
-              onPressed: () => Navigator.of(dialogContext).pop(unlink),
-              child: Text(t.recurring.budgetLinkRemove),
-            ),
-        ],
-      ),
+        if (rule.budgetItemKey != null) OptionSheetItem(value: unlink, label: t.recurring.budgetLinkRemove),
+      ],
     );
     if (picked == null || picked == rule.budgetItemKey) return;
     bloc.add(RecurringBudgetLinkChanged(ruleId: rule.id, key: picked == unlink ? null : picked));
@@ -113,8 +99,8 @@ class RecurringDetailPage extends StatelessWidget {
             body: Center(child: Text(t.recurring.notFound)),
           );
         }
-        final colors = context.appColors;
-        final textTheme = Theme.of(context).textTheme;
+        final ds = context.ds;
+        final c = ds.colors;
         final bloc = context.read<RecurringBloc>();
         final today = state.today;
         final recorded = state.recordedFor(rule.id);
@@ -155,19 +141,30 @@ class RecurringDetailPage extends StatelessWidget {
           RecurringKind.expense => t.record.kindExpense,
           RecurringKind.transfer => t.record.kindTransfer,
         };
-        final moneyKind = switch (rule.kind) {
-          RecurringKind.income => MoneyKind.income,
-          RecurringKind.expense => MoneyKind.expense,
-          RecurringKind.transfer => MoneyKind.transfer,
+        final kindColor = switch (rule.kind) {
+          RecurringKind.income => c.income,
+          RecurringKind.expense => c.textPrimary,
+          RecurringKind.transfer => c.textSecondary,
         };
+        final clay =
+            ClayIcons.forIcon(icon) ??
+            switch (rule.kind) {
+              RecurringKind.income => ClayIcons.incomeArrow,
+              RecurringKind.expense => ClayIcons.expenseArrow,
+              RecurringKind.transfer => ClayIcons.transfer,
+            };
         final lastDate = lastOccurrence(rule);
         return Scaffold(
           appBar: AppBar(
-            title: Text(rule.note.isEmpty ? t.record.repeat.fallbackName : rule.note),
+            title: Text(
+              rule.note.isEmpty ? t.record.repeat.fallbackName : rule.note,
+              style: ds.typography.headlineMd.copyWith(fontSize: 20),
+            ),
+            centerTitle: false,
             actions: [
               PopupMenuButton<_MenuAction>(
                 tooltip: t.recurring.moreActions,
-                icon: AppIcon(IconKey.moreVert, color: colors.ink),
+                icon: Icon(Icons.more_vert, color: c.textPrimary),
                 onSelected: (action) => _onMenu(context, action, rule),
                 itemBuilder: (_) => [
                   PopupMenuItem(
@@ -182,10 +179,10 @@ class RecurringDetailPage extends StatelessWidget {
             ],
           ),
           // Satu tombol primer menempel di bawah (prototipe `RincianRutin.dc.html`).
-          bottomNavigationBar: AppStickyBar(
-            child: AppButton(
+          bottomNavigationBar: DsStickyBar(
+            child: DsButton(
               expand: true,
-              icon: IconKey.edit,
+              icon: Icons.edit_outlined,
               label: t.recurring.editAction,
               onPressed: () => context.pushRoute(RecordRouteKeys.sheet, RecordSheetInput(editRule: rule)),
             ),
@@ -193,109 +190,169 @@ class RecurringDetailPage extends StatelessWidget {
           body: SafeArea(
             bottom: false,
             child: ListView(
-              padding: const EdgeInsets.fromLTRB(AppSpacing.space4, 0, AppSpacing.space4, AppSpacing.space6),
+              padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
               children: [
-                AppCard(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Row(
+                DsReveal(
+                  child: DecoratedBox(
+                    decoration: ds.elevation.card.decoration().copyWith(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [c.actionPrimary.withValues(alpha: 0.10), c.surfaceCard],
+                        stops: const [0, 0.55],
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          AppIconTile(icon),
-                          const SizedBox(width: AppSpacing.space3),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  [kindLabel, ?category?.name].join(' · '),
-                                  style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
+                          Row(
+                            children: [
+                              DsIdleMotion(
+                                kind: DsIdleKind.float,
+                                child: DsIconTile.asset(asset: clay, size: DsIconTileSize.lg),
+                              ),
+                              const SizedBox(width: 14),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      [kindLabel, ?category?.name].join(' · '),
+                                      style: ds.typography.bodySm.copyWith(color: c.textSecondary),
+                                    ),
+                                    // Nominal kira-kira memakai tanda ≈ dari `signedAmount`.
+                                    FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      alignment: AlignmentDirectional.centerStart,
+                                      child: DsCountUp(
+                                        value: rule.amount,
+                                        builder: (context, current) => Text(
+                                          signedAmount(
+                                            rule.kind,
+                                            current,
+                                            approximate: rule.amountMode == RecurringAmountMode.estimated,
+                                          ),
+                                          style: ds.typography.numericalDisplay.copyWith(color: kindColor),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                // Nominal kira-kira memakai tanda ≈ dari `signedAmount`.
-                                if (rule.amountMode == RecurringAmountMode.estimated)
-                                  Text(
-                                    signedAmount(rule.kind, rule.amount, approximate: true),
-                                    style: context.numberStyles.amountLg.copyWith(color: colors.ink),
-                                  )
-                                else
-                                  AppMoneyText(rule.amount, kind: moneyKind, size: MoneySize.large),
-                              ],
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 12),
+                          Divider(height: 1, color: c.outlineSubtle),
+                          const SizedBox(height: 8),
+                          _InfoRow(label: t.recurring.detailSchedule, value: scheduleText(rule)),
+                          if (wallet != null) _InfoRow(label: t.recurring.detailWallet, value: wallet),
+                          if (lastDate != null)
+                            _InfoRow(
+                              label: t.recurring.detailEnds,
+                              value: [
+                                if (total != null) t.recurring.countLine(n: total),
+                                CycleMonthFormatter.formatDateShort(lastDate),
+                              ].join(', '),
+                            ),
+                          if (rule.kind != RecurringKind.income)
+                            _InfoRow(
+                              label: t.recurring.detailPayment,
+                              value: rule.effectivePaymentMode == RecurringPaymentMode.autoDebit
+                                  ? t.recurring.autoDebitLine
+                                  : t.recurring.reminderLine(n: rule.remindDaysBefore),
+                            ),
+                          if (rule.isPaused) _InfoRow(label: t.recurring.detailStatus, value: t.recurring.pausedLine),
+                          if (total != null && done != null) ...[
+                            const SizedBox(height: 8),
+                            _InstallmentProgress(done: done, total: total),
+                            const SizedBox(height: 4),
+                            Text(
+                              t.recurring.progressLine(k: done, n: total),
+                              style: ds.typography.bodySm.copyWith(color: c.textSecondary),
+                            ),
+                          ],
+                          // W7 bebas cicilan (ADR-036 §3.7).
+                          if (installmentFreeOf(rule, today: today) case final free?) ...[
+                            const SizedBox(height: 12),
+                            DecoratedBox(
+                              decoration: BoxDecoration(color: c.incomeContainer, borderRadius: DsRadius.mdAll),
+                              child: Padding(
+                                padding: const EdgeInsets.all(12),
+                                child: Row(
+                                  children: [
+                                    SvgPicture.asset(ClayIcons.done, width: 24, height: 24),
+                                    const SizedBox(width: 10),
+                                    Expanded(
+                                      child: Text(
+                                        t.recurring.installmentFreeLine(
+                                          month: CycleMonthFormatter.formatMonthYearShort(free.from),
+                                          amount: AppMoneyFormatter.format(free.perMonth),
+                                        ),
+                                        key: const ValueKey('recurring-installment-free'),
+                                        style: ds.typography.bodySm.copyWith(color: c.onIncomeContainer),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                if (priceUp) ...[
+                  const SizedBox(height: 16),
+                  DsReveal(
+                    index: 1,
+                    child: DsCard(
+                      padding: const EdgeInsets.all(12),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              DsIconTile.asset(
+                                asset: ClayIcons.warning,
+                                tone: DsIconTileTone.warning,
+                                size: DsIconTileSize.sm,
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Text(
+                                  t.recurring.priceUp(
+                                    amount: AppMoneyFormatter.format(last.amount),
+                                    usual: AppMoneyFormatter.format(rule.amount),
+                                  ),
+                                  style: ds.typography.bodyMd,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Align(
+                            alignment: AlignmentDirectional.centerEnd,
+                            child: DsButton.compact(
+                              label: t.recurring.priceUpdateAction(amount: AppMoneyFormatter.format(last.amount)),
+                              onPressed: () => bloc.add(RecurringAmountUpdated(ruleId: rule.id, amount: last.amount)),
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: AppSpacing.space3),
-                      const Divider(height: 1),
-                      const SizedBox(height: AppSpacing.space2),
-                      _InfoRow(label: t.recurring.detailSchedule, value: scheduleText(rule)),
-                      if (wallet != null) _InfoRow(label: t.recurring.detailWallet, value: wallet),
-                      if (lastDate != null)
-                        _InfoRow(
-                          label: t.recurring.detailEnds,
-                          value: [
-                            if (total != null) t.recurring.countLine(n: total),
-                            CycleMonthFormatter.formatDateShort(lastDate),
-                          ].join(', '),
-                        ),
-                      if (rule.kind != RecurringKind.income)
-                        _InfoRow(
-                          label: t.recurring.detailPayment,
-                          value: rule.effectivePaymentMode == RecurringPaymentMode.autoDebit
-                              ? t.recurring.autoDebitLine
-                              : t.recurring.reminderLine(n: rule.remindDaysBefore),
-                        ),
-                      if (rule.isPaused) _InfoRow(label: t.recurring.detailStatus, value: t.recurring.pausedLine),
-                      if (total != null && done != null) ...[
-                        const SizedBox(height: AppSpacing.space2),
-                        _InstallmentProgress(done: done, total: total),
-                        const SizedBox(height: AppSpacing.space1),
-                        Text(
-                          t.recurring.progressLine(k: done, n: total),
-                          style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
-                        ),
-                      ],
-                      // W7 bebas cicilan (ADR-036 §3.7).
-                      if (installmentFreeOf(rule, today: today) case final free?) ...[
-                        const SizedBox(height: AppSpacing.space3),
-                        Container(
-                          padding: const EdgeInsets.all(AppSpacing.space3),
-                          decoration: ShapeDecoration(
-                            color: colors.surface2,
-                            shape: const PixelCornerBorder.small(),
-                          ),
-                          child: Text(
-                            t.recurring.installmentFreeLine(
-                              month: CycleMonthFormatter.formatMonthYearShort(free.from),
-                              amount: AppMoneyFormatter.format(free.perMonth),
-                            ),
-                            key: const ValueKey('recurring-installment-free'),
-                            style: textTheme.bodyMedium?.copyWith(color: colors.positive),
-                          ),
-                        ),
-                      ],
-                    ],
-                  ),
-                ),
-                if (priceUp) ...[
-                  const SizedBox(height: AppSpacing.space4),
-                  AppBanner(
-                    message: t.recurring.priceUp(
-                      amount: AppMoneyFormatter.format(last.amount),
-                      usual: AppMoneyFormatter.format(rule.amount),
                     ),
-                    icon: IconKey.warning,
-                    actionLabel: t.recurring.priceUpdateAction(amount: AppMoneyFormatter.format(last.amount)),
-                    onAction: () => bloc.add(RecurringAmountUpdated(ruleId: rule.id, amount: last.amount)),
                   ),
                 ],
-                const SizedBox(height: AppSpacing.space6),
-                AppSectionHeader(t.recurring.settingsTitle),
-                AppListCard(
-                  dividerIndent: AppListCard.plainIndent,
+                const SizedBox(height: 24),
+                DsSectionHeader(title: t.recurring.settingsTitle),
+                const SizedBox(height: 8),
+                DsListCard(
                   children: [
                     MergeSemantics(
-                      child: AppListRow(
-                        compact: true,
+                      child: DsSettingRow(
+                        leading: DsIconTile.asset(asset: ClayIcons.bell, size: DsIconTileSize.sm),
                         title: t.recurring.ruleRemindersLabel,
                         trailing: Switch(
                           value: rule.reminders,
@@ -308,10 +365,8 @@ class RecurringDetailPage extends StatelessWidget {
                     if (rule.reminders && rootContainer != null) ReminderRuleNote(container: rootContainer!),
                     if (rule.amountMode == RecurringAmountMode.fixed)
                       MergeSemantics(
-                        child: AppListRow(
-                          compact: true,
-                          wrapTitle: true,
-                          wrapSubtitle: true,
+                        child: DsSettingRow(
+                          leading: DsIconTile.asset(asset: ClayIcons.repeat, size: DsIconTileSize.sm),
                           title: t.record.repeat.autoRecordLabel,
                           subtitle: t.record.repeat.autoRecordHint,
                           trailing: Row(
@@ -336,11 +391,9 @@ class RecurringDetailPage extends StatelessWidget {
                         ),
                       ),
                     if (rule.kind == RecurringKind.expense)
-                      AppListRow(
+                      DsSettingRow(
                         key: const ValueKey('recurring-budget-link'),
-                        compact: true,
-                        wrapSubtitle: true,
-                        chevron: true,
+                        leading: DsIconTile.asset(asset: ClayIcons.piggy, size: DsIconTileSize.sm),
                         title: t.recurring.budgetLinkLabel,
                         subtitle: switch (linkedBudgetItem(rule, state.budgetOptions)) {
                           final item? => t.recurring.budgetLinkValue(item: item.itemName, budget: item.budgetName),
@@ -351,63 +404,84 @@ class RecurringDetailPage extends StatelessWidget {
                   ],
                 ),
                 if (next.isNotEmpty && !rule.isPaused) ...[
-                  const SizedBox(height: AppSpacing.space6),
-                  AppSectionHeader(t.recurring.nextTitle),
-                  AppListCard(
-                    dividerIndent: AppListCard.plainIndent,
+                  const SizedBox(height: 24),
+                  DsSectionHeader(title: t.recurring.nextTitle),
+                  const SizedBox(height: 8),
+                  DsListCard(
                     children: [
-                      for (final o in next)
-                        _OccurrenceLine(
-                          date: o.date,
-                          today: today,
-                          title: occurrenceDateText(o.date, today),
-                          amount: rule.amount,
-                          kind: moneyKind,
-                          skipped: o.status == OccurrenceStatus.skipped,
-                          extraAction: o.status == OccurrenceStatus.skipped
-                              ? null
-                              : (
-                                  t.recurring.recordEarlyAction,
-                                  () => rule.amountMode == RecurringAmountMode.fixed
-                                      ? bloc.add(RecurringOccurrenceRecorded(ruleId: rule.id, date: o.date))
-                                      : unawaited(
-                                          context.pushRoute(
-                                            RecordRouteKeys.sheet,
-                                            RecordSheetInput(occurrenceRule: rule, occurrenceDate: o.date),
+                      for (final (i, o) in next.indexed)
+                        DsReveal(
+                          index: i,
+                          child: _OccurrenceLine(
+                            date: o.date,
+                            today: today,
+                            title: occurrenceDateText(o.date, today),
+                            amount: rule.amount,
+                            kind: rule.kind,
+                            skipped: o.status == OccurrenceStatus.skipped,
+                            extraAction: o.status == OccurrenceStatus.skipped
+                                ? null
+                                : (
+                                    t.recurring.recordEarlyAction,
+                                    () => rule.amountMode == RecurringAmountMode.fixed
+                                        ? bloc.add(RecurringOccurrenceRecorded(ruleId: rule.id, date: o.date))
+                                        : unawaited(
+                                            context.pushRoute(
+                                              RecordRouteKeys.sheet,
+                                              RecordSheetInput(occurrenceRule: rule, occurrenceDate: o.date),
+                                            ),
                                           ),
-                                        ),
-                                ),
-                          action: o.status == OccurrenceStatus.skipped
-                              ? (
-                                  t.recurring.unskipAction,
-                                  () => bloc.add(RecurringOccurrenceUnskipped(ruleId: rule.id, date: o.date)),
-                                )
-                              : (
-                                  t.recurring.skipAction,
-                                  () => bloc.add(RecurringOccurrenceSkipped(ruleId: rule.id, date: o.date)),
-                                ),
+                                  ),
+                            action: o.status == OccurrenceStatus.skipped
+                                ? (
+                                    t.recurring.unskipAction,
+                                    () => bloc.add(RecurringOccurrenceUnskipped(ruleId: rule.id, date: o.date)),
+                                  )
+                                : (
+                                    t.recurring.skipAction,
+                                    () => bloc.add(RecurringOccurrenceSkipped(ruleId: rule.id, date: o.date)),
+                                  ),
+                          ),
                         ),
                     ],
                   ),
                 ],
-                const SizedBox(height: AppSpacing.space6),
-                AppSectionHeader(t.recurring.recordedTitle),
+                const SizedBox(height: 24),
+                DsSectionHeader(title: t.recurring.recordedTitle),
+                const SizedBox(height: 8),
                 if (recorded.isEmpty)
-                  Text(t.recurring.noRecorded, style: textTheme.bodyMedium?.copyWith(color: colors.ink2))
+                  DsReveal(
+                    child: DsCard(
+                      padding: const EdgeInsets.fromLTRB(24, 12, 24, 16),
+                      child: Column(
+                        children: [
+                          const DsEmptyHero(asset: ClayIcons.receipt, orbit: [ClayIcons.clock], size: 96),
+                          const SizedBox(height: 4),
+                          Text(
+                            t.recurring.noRecorded,
+                            textAlign: TextAlign.center,
+                            style: ds.typography.bodySm.copyWith(color: c.textSecondary),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
                 else
-                  AppListCard(
-                    dividerIndent: AppListCard.plainIndent,
+                  DsListCard(
                     children: [
-                      for (final transaction in recorded.take(_historyCount))
-                        _OccurrenceLine(
-                          date: transaction.recurrence!.occurrenceDate,
-                          today: today,
-                          title: occurrenceDateText(transaction.recurrence!.occurrenceDate, today),
-                          amount: transaction.amount,
-                          kind: moneyKind,
-                          muted: true,
-                          onTap: () =>
-                              context.pushRoute(TransactionRouteKeys.detail, TransactionDetailInput(transaction)),
+                      for (final (i, transaction) in recorded.take(_historyCount).indexed)
+                        DsReveal(
+                          index: i,
+                          child: _OccurrenceLine(
+                            date: transaction.recurrence!.occurrenceDate,
+                            today: today,
+                            title: occurrenceDateText(transaction.recurrence!.occurrenceDate, today),
+                            amount: transaction.amount,
+                            kind: rule.kind,
+                            muted: true,
+                            onTap: () =>
+                                context.pushRoute(TransactionRouteKeys.detail, TransactionDetailInput(transaction)),
+                          ),
                         ),
                     ],
                   ),
@@ -420,7 +494,7 @@ class RecurringDetailPage extends StatelessWidget {
   }
 }
 
-/// Baris label–nilai di kartu kepala (`inset__row`).
+/// Baris label–nilai di kartu kepala.
 class _InfoRow extends StatelessWidget {
   const _InfoRow({required this.label, required this.value});
 
@@ -429,16 +503,20 @@ class _InfoRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
+    final ds = context.ds;
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: AppSpacing.space1),
+      padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: textTheme.bodyMedium?.copyWith(color: context.appColors.ink2)),
-          const SizedBox(width: AppSpacing.space4),
+          Text(label, style: ds.typography.bodySm.copyWith(color: ds.colors.textSecondary)),
+          const SizedBox(width: 16),
           Expanded(
-            child: Text(value, textAlign: TextAlign.end, style: textTheme.bodyMedium?.copyWith(color: context.appColors.ink)),
+            child: Text(
+              value,
+              textAlign: TextAlign.end,
+              style: ds.typography.bodyMd.copyWith(fontWeight: FontWeight.w600),
+            ),
           ),
         ],
       ),
@@ -446,8 +524,9 @@ class _InfoRow extends StatelessWidget {
   }
 }
 
-/// Progres cicilan sebagai kotak per kemunculan (prototipe: 12 kotak, yang
-/// tercatat `brand`). Lebih dari 24 kali memakai [AppProgressBar].
+/// Progres cicilan sebagai meter tersegmen: satu segmen per kemunculan
+/// (hingga 24), yang tercatat menyala berurutan; lebih banyak dari itu
+/// memakai meter 10 segmen.
 class _InstallmentProgress extends StatelessWidget {
   const _InstallmentProgress({required this.done, required this.total});
 
@@ -456,27 +535,20 @@ class _InstallmentProgress extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    if (total > 24) return AppProgressBar(value: (done / total).clamp(0, 1).toDouble());
-    return Semantics(
-      label: t.recurring.progressLine(k: done, n: total),
-      child: ExcludeSemantics(
-        child: Row(
-          children: [
-            for (var i = 0; i < total; i++) ...[
-              if (i > 0) const SizedBox(width: 3),
-              Expanded(child: Container(height: 10, color: i < done ? colors.brand : colors.surface2)),
-            ],
-          ],
-        ),
-      ),
+    final perOccurrence = total <= 24;
+    // Setengah langkah di atas supaya pembulatan ke bawah tidak kehilangan
+    // satu segmen; nol tetap nol.
+    final value = done <= 0 ? 0.0 : (perOccurrence ? (done + 0.5) / total : done / total).clamp(0.0, 1.0);
+    return DsSegmentMeter(
+      value: value,
+      segments: perOccurrence ? total : 10,
+      semanticLabel: t.recurring.progressLine(k: done, n: total),
     );
   }
 }
 
-/// Baris jadwal (`rencana.css` `.sched`): kolom tanggal, judul, nominal,
-/// lalu aksi (Lewati) atau panah. Yang dilewati dicoret; yang tercatat
-/// diredupkan.
+/// Baris jadwal: kotak tanggal, judul, nominal bertanda, lalu aksi (Lewati)
+/// atau panah. Yang dilewati dicoret; yang tercatat diredupkan.
 class _OccurrenceLine extends StatelessWidget {
   const _OccurrenceLine({
     required this.date,
@@ -495,7 +567,7 @@ class _OccurrenceLine extends StatelessWidget {
   final DateTime today;
   final String title;
   final int amount;
-  final MoneyKind kind;
+  final RecurringKind kind;
   final bool skipped;
   final bool muted;
   final (String, VoidCallback)? action;
@@ -506,65 +578,82 @@ class _OccurrenceLine extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
+    final ds = context.ds;
+    final c = ds.colors;
     final dim = skipped || muted;
-    final ink = dim ? colors.ink3 : colors.ink;
+    final amountColor = dim
+        ? c.textMuted
+        : switch (kind) {
+            RecurringKind.income => c.income,
+            RecurringKind.expense => c.textPrimary,
+            RecurringKind.transfer => c.textSecondary,
+          };
     final row = ConstrainedBox(
-      constraints: const BoxConstraints(minHeight: AppSize.row),
+      constraints: const BoxConstraints(minHeight: 56),
       child: Padding(
-        padding: EdgeInsets.fromLTRB(
-          AppSpacing.space4,
-          AppSpacing.space2,
-          action == null ? AppSpacing.space4 : AppSpacing.space2,
-          AppSpacing.space2,
-        ),
+        padding: EdgeInsets.fromLTRB(14, 8, action == null ? 14 : 8, 8),
         child: Row(
           children: [
             SizedBox(
-              width: AppSize.tile,
-              child: Column(
-                children: [
-                  Text(
-                    '${date.day}',
-                    style: context.numberStyles.amountLg.copyWith(fontSize: 18, height: 22 / 18, color: ink),
+              width: 44,
+              child: DecoratedBox(
+                decoration: BoxDecoration(color: c.surfaceSunken, borderRadius: DsRadius.mdAll),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        '${date.day}',
+                        style: ds.typography.amount.copyWith(
+                          fontSize: 17,
+                          height: 20 / 17,
+                          color: dim ? c.textMuted : c.textPrimary,
+                        ),
+                      ),
+                      Text(
+                        CycleMonthFormatter.formatMonthShort(date),
+                        style: ds.typography.bodySm.copyWith(fontSize: 11, color: c.textSecondary),
+                      ),
+                    ],
                   ),
-                  Text(CycleMonthFormatter.formatMonthShort(date), style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
-                ],
+                ),
               ),
             ),
-            const SizedBox(width: AppSpacing.space3),
+            const SizedBox(width: 12),
             Expanded(
               child: Text(
                 title,
-                style: textTheme.titleMedium?.copyWith(
-                  color: ink,
+                style: ds.typography.titleMd.copyWith(
+                  color: dim ? c.textMuted : c.textPrimary,
                   decoration: skipped ? TextDecoration.lineThrough : null,
                 ),
               ),
             ),
-            const SizedBox(width: AppSpacing.space2),
+            const SizedBox(width: 8),
             // Nominal mengecil di layar sempit supaya aksi tetap utuh.
             Flexible(
               child: FittedBox(
                 fit: BoxFit.scaleDown,
                 alignment: AlignmentDirectional.centerEnd,
-                child: AppMoneyText(amount, kind: kind, color: dim ? colors.ink3 : null),
+                child: Text(signedAmount(kind, amount), style: ds.typography.amount.copyWith(color: amountColor)),
               ),
             ),
             if (action case (final label, final onPressed)) ...[
-              const SizedBox(width: AppSpacing.space1),
-              AppButton.text(small: true, label: label, onPressed: onPressed),
+              const SizedBox(width: 4),
+              DsButton.ghost(label: label, onPressed: onPressed),
             ],
             if (onTap != null) ...[
-              const SizedBox(width: AppSpacing.space1),
-              AppIcon(IconKey.chevronRight, size: 20, color: colors.ink3),
+              const SizedBox(width: 4),
+              Icon(Icons.chevron_right, size: 20, color: c.textMuted),
             ],
           ],
         ),
       ),
     );
-    final line = onTap == null ? row : AppTappable(label: title, onTap: onTap, child: row);
+    final line = onTap == null
+        ? row
+        : DsPressable(semanticLabel: title, onPressed: onTap, pressedScale: 0.99, builder: (context, _) => row);
     final extra = extraAction;
     if (extra == null) return line;
     // Di bawah baris, bukan di sampingnya: baris sudah penuh di layar sempit.
@@ -573,10 +662,10 @@ class _OccurrenceLine extends StatelessWidget {
       children: [
         line,
         Padding(
-          padding: const EdgeInsets.fromLTRB(AppSpacing.space4, 0, AppSpacing.space4, AppSpacing.space2),
+          padding: const EdgeInsets.fromLTRB(14, 0, 14, 10),
           child: Align(
             alignment: AlignmentDirectional.centerEnd,
-            child: AppButton.secondary(small: true, label: extra.$1, onPressed: extra.$2),
+            child: DsButton.compact(label: extra.$1, onPressed: extra.$2),
           ),
         ),
       ],

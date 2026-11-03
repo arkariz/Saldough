@@ -6,7 +6,6 @@ import 'package:saldough/core/discovery/discovery.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/recurring/presentation/widgets/reminder_status_builder.dart';
 
@@ -66,42 +65,45 @@ class ReminderNudgeCard extends StatelessWidget {
           ),
         );
       }
-      final textTheme = Theme.of(context).textTheme;
-      final colors = context.appColors;
-      final card = AppCard(
-        key: const ValueKey('reminder-nudge'),
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4, vertical: AppSpacing.space3),
-        child: Row(
-          children: [
-            AppIconTile(IconKey.schedule, background: colors.brandSoft),
-            const SizedBox(width: AppSpacing.space3),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    needsPermission ? t.recurring.remindersTitle : texts.reminder.button,
-                    style: textTheme.titleSmall,
-                  ),
-                  Text(
-                    needsPermission ? texts.status.permissionNeeded : texts.reminder.body,
-                    style: textTheme.bodySmall?.copyWith(color: colors.ink2),
-                  ),
-                ],
+      final ds = context.ds;
+      final card = DsReveal(
+        child: DsCard(
+          key: const ValueKey('reminder-nudge'),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+          child: Row(
+            children: [
+              DsIdleMotion(
+                kind: DsIdleKind.float,
+                child: DsIconTile.asset(asset: ClayIcons.alarm, tone: DsIconTileTone.info, size: DsIconTileSize.sm),
               ),
-            ),
-            const SizedBox(width: AppSpacing.space3),
-            AppButton.secondary(
-              key: const ValueKey('reminder-nudge-action'),
-              small: true,
-              label: needsPermission ? texts.allowAccess : texts.turnOn,
-              onPressed: () => unawaited(enable()),
-            ),
-          ],
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      needsPermission ? t.recurring.remindersTitle : texts.reminder.button,
+                      style: ds.typography.titleMd,
+                    ),
+                    Text(
+                      needsPermission ? texts.status.permissionNeeded : texts.reminder.body,
+                      style: ds.typography.bodySm.copyWith(color: ds.colors.textSecondary),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 12),
+              DsButton.compact(
+                key: const ValueKey('reminder-nudge-action'),
+                label: needsPermission ? texts.allowAccess : texts.turnOn,
+                onPressed: () => unawaited(enable()),
+              ),
+            ],
+          ),
         ),
       );
       final padded = Padding(
-        padding: EdgeInsets.only(top: bottomGap ? 0 : AppSpacing.space6, bottom: bottomGap ? AppSpacing.space4 : 0),
+        padding: EdgeInsets.only(top: bottomGap ? 0 : 24, bottom: bottomGap ? 16 : 0),
         child: spotlight ? SpotlightTarget(spotlightKey: SpotlightKey.homeReminder, child: card) : card,
       );
       return spotlight ? TourTrigger(tour: TourId.home, ready: true, child: padded) : padded;
@@ -125,21 +127,18 @@ class ReminderRuleNote extends StatelessWidget {
     surface: 'rutin_detail',
     builder: (context, state, enable) {
       final texts = t.discovery;
+      final ds = context.ds;
       return Padding(
         key: const ValueKey('reminder-rule-note'),
-        padding: const EdgeInsets.fromLTRB(AppSpacing.space4, 0, AppSpacing.space4, AppSpacing.space3),
+        padding: const EdgeInsets.fromLTRB(14, 0, 14, 12),
         child: Row(
           children: [
             Expanded(
-              child: Text(
-                texts.reminder.rowNote,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: context.appColors.ink2),
-              ),
+              child: Text(texts.reminder.rowNote, style: ds.typography.bodySm.copyWith(color: ds.colors.textSecondary)),
             ),
-            const SizedBox(width: AppSpacing.space3),
-            AppButton.secondary(
+            const SizedBox(width: 12),
+            DsButton.compact(
               key: const ValueKey('reminder-rule-note-action'),
-              small: true,
               label: state == FeatureState.permissionNeeded ? texts.allowAccess : texts.turnOn,
               onPressed: () => unawaited(enable()),
             ),

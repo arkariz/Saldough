@@ -7,7 +7,6 @@ import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/plan/active_plan.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/record/presentation/navigation/record_route_keys.dart';
@@ -67,113 +66,64 @@ class RecurringPendingTile extends StatelessWidget {
         ),
         if (raised != null)
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4),
+            padding: const EdgeInsets.symmetric(horizontal: 14),
             child: Text(
-              t.recurring.priceUpFound(
-                name: rule.note,
-                amount: AppMoneyFormatter.format(raised.amount),
-              ),
+              t.recurring.priceUpFound(name: rule.note, amount: AppMoneyFormatter.format(raised.amount)),
               key: ValueKey('recurring-price-up-${rule.id}'),
               textAlign: TextAlign.end,
-              style: Theme.of(
-                context,
-              ).textTheme.bodySmall?.copyWith(color: context.appColors.ink2),
+              style: context.ds.typography.bodySm.copyWith(color: context.ds.colors.textSecondary),
             ),
           )
         else if (unseen)
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4),
+            padding: const EdgeInsets.symmetric(horizontal: 14),
             child: Text(
               t.recurring.unseenLabel,
               key: ValueKey('recurring-unseen-${rule.id}'),
               textAlign: TextAlign.end,
-              style: Theme.of(
-                context,
-              ).textTheme.bodySmall?.copyWith(color: context.appColors.ink2),
+              style: context.ds.typography.bodySm.copyWith(color: context.ds.colors.textSecondary),
             ),
           ),
         Padding(
-          padding: const EdgeInsets.fromLTRB(
-            AppSpacing.space4,
-            0,
-            AppSpacing.space4,
-            AppSpacing.space2,
-          ),
+          padding: const EdgeInsets.fromLTRB(14, 0, 14, 10),
           child: Wrap(
             alignment: WrapAlignment.end,
             crossAxisAlignment: WrapCrossAlignment.center,
-            spacing: AppSpacing.space2,
+            spacing: 4,
             children: [
-              AppButton.text(
-                small: true,
+              DsButton.ghost(
                 label: t.recurring.skipAction,
-                onPressed: () => bloc.add(
-                  RecurringOccurrenceSkipped(ruleId: rule.id, date: date),
-                ),
+                onPressed: () => bloc.add(RecurringOccurrenceSkipped(ruleId: rule.id, date: date)),
               ),
               if (raised != null) ...[
-                AppButton.text(
-                  small: true,
+                DsButton.ghost(
                   label: t.recurring.priceUpKeep,
                   onPressed: () {
-                    AppAnalytics.log(
-                      RecurringEvents.priceIncreaseAction('keep'),
-                    );
-                    bloc.add(
-                      RecurringOccurrenceLinked(
-                        ruleId: rule.id,
-                        date: date,
-                        transactionId: raised.id,
-                      ),
-                    );
+                    AppAnalytics.log(RecurringEvents.priceIncreaseAction('keep'));
+                    bloc.add(RecurringOccurrenceLinked(ruleId: rule.id, date: date, transactionId: raised.id));
                   },
                 ),
-                AppButton.secondary(
-                  small: true,
+                DsButton.compact(
                   label: t.recurring.priceUpUpdate,
                   onPressed: () {
-                    AppAnalytics.log(
-                      RecurringEvents.priceIncreaseAction('update'),
-                    );
+                    AppAnalytics.log(RecurringEvents.priceIncreaseAction('update'));
                     bloc
-                      ..add(
-                        RecurringOccurrenceLinked(
-                          ruleId: rule.id,
-                          date: date,
-                          transactionId: raised.id,
-                        ),
-                      )
-                      ..add(
-                        RecurringAmountUpdated(
-                          ruleId: rule.id,
-                          amount: raised.amount,
-                        ),
-                      );
+                      ..add(RecurringOccurrenceLinked(ruleId: rule.id, date: date, transactionId: raised.id))
+                      ..add(RecurringAmountUpdated(ruleId: rule.id, amount: raised.amount));
                   },
                 ),
               ] else if (unseen)
-                AppButton.text(
-                  small: true,
+                DsButton.ghost(
                   label: t.recurring.notYetAction,
                   onPressed: () => bloc.add(RecurringOccurrenceSnoozed(ruleId: rule.id)),
                 )
               else if (fixed)
-                AppButton.text(
-                  small: true,
-                  label: t.recurring.editFirstAction,
-                  onPressed: () => _editFirst(context, date),
-                ),
+                DsButton.ghost(label: t.recurring.editFirstAction, onPressed: () => _editFirst(context, date)),
               if (raised == null)
-                AppButton.secondary(
-                  small: true,
+                DsButton.compact(
                   label: t.recurring.recordAction,
                   onPressed: fixed
-                      ? () => bloc.add(
-                          RecurringOccurrenceRecorded(
-                            ruleId: rule.id,
-                            date: date,
-                          ),
-                        )
+                      ? () => bloc.add(RecurringOccurrenceRecorded(ruleId: rule.id, date: date))
                       : () => _editFirst(context, date),
                 ),
             ],
@@ -202,8 +152,10 @@ List<RecurringEntry> pendingEntries(RecurringState state) => [
 Widget? recordAllButton(BuildContext context, List<RecurringEntry> pending) {
   final fixed = pending.where((e) => e.rule.amountMode == RecurringAmountMode.fixed).length;
   if (fixed < 2) return null;
-  return AppButton.secondary(
+  return DsButton.secondary(
     label: t.recurring.recordAllAction,
+    icon: Icons.done_all,
+    expand: true,
     onPressed: () => context.read<RecurringBloc>().add(const RecurringPendingRecordedAll()),
   );
 }
@@ -284,19 +236,19 @@ class RecurringPendingCard extends StatelessWidget {
                   // Prototipe `BerandaRutin.dc.html`: judul bagian dengan tautan
                   // ke segmen Rutin, kartu daftar kemunculan menunggu.
                   final card = Padding(
-                    padding: const EdgeInsets.only(top: AppSpacing.space6),
+                    padding: const EdgeInsets.only(top: 24),
                     child: SpotlightTarget(
                       spotlightKey: spotlight?.key,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          AppSectionHeader(
-                            '${t.recurring.pendingCardTitle} (${pending.length})',
+                          DsSectionHeader(
+                            title: '${t.recurring.pendingCardTitle} (${pending.length})',
                             actionLabel: t.recurring.seeAllAction,
                             onAction: onShowAll,
                           ),
-                          const SizedBox(height: AppSpacing.space2),
-                          AppListCard(
+                          const SizedBox(height: 8),
+                          DsListCard(
                             children: [
                               for (final entry in pending.take(_maxShown))
                                 RecurringPendingTile(
@@ -306,7 +258,7 @@ class RecurringPendingCard extends StatelessWidget {
                             ],
                           ),
                           if (recordAll != null) ...[
-                            const SizedBox(height: AppSpacing.space2),
+                            const SizedBox(height: 8),
                             recordAll,
                           ],
                         ],

@@ -182,10 +182,12 @@ class RecurringRow extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 8),
-              Flexible(
-                flex: 0,
+              // Nominal mengecil bila lebar sempit; judul tetap mendapat sisanya.
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 104),
                 child: FittedBox(
                   fit: BoxFit.scaleDown,
+                  alignment: AlignmentDirectional.centerEnd,
                   child: Text(
                     signedAmount(rule.kind, amount, approximate: approximate),
                     style: ds.typography.amount.copyWith(color: amountColor),

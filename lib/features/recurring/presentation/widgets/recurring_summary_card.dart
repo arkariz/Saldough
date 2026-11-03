@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 
@@ -23,53 +23,37 @@ class RecurringSummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
+    final ds = context.ds;
     final remaining = AppMoneyFormatter.format(summary.remainingOut);
-    Widget row(String label, Widget amount) => Row(
-      children: [
-        Expanded(child: Text(label, style: textTheme.bodyMedium?.copyWith(color: colors.ink2))),
-        Flexible(
-          child: FittedBox(fit: BoxFit.scaleDown, alignment: AlignmentDirectional.centerEnd, child: amount),
-        ),
+    String show(int sen) => summary.hasEstimate ? '≈${AppMoneyFormatter.format(sen)}' : AppMoneyFormatter.format(sen);
+    return DsSummaryHero(
+      label: t.recurring.remainingTitle(month: monthLabel),
+      amount: summary.remainingOut,
+      format: show,
+      ratio: summary.totalOut <= 0 ? 0 : summary.recordedOut / summary.totalOut,
+      asset: ClayIcons.calendar,
+      semanticLabel: summary.hasEstimate ? t.recurring.approxSemantics(amount: remaining) : remaining,
+      stats: [
+        DsSummaryStat(label: t.recurring.plannedLabel, value: AppMoneyFormatter.format(summary.totalOut)),
+        DsSummaryStat(label: t.recurring.outLabel, value: AppMoneyFormatter.format(summary.recordedOut)),
       ],
-    );
-    // Prototipe `RencanaRutin.dc.html`: angka utama di kartu, rencana dan
-    // sudah keluar di bidang cekung `surface2`.
-    return AppCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(t.recurring.remainingTitle(month: monthLabel), style: textTheme.bodyMedium?.copyWith(color: colors.ink2)),
-          Semantics(
-            label: summary.hasEstimate ? t.recurring.approxSemantics(amount: remaining) : remaining,
-            excludeSemantics: true,
-            child: HeroAmount(summary.hasEstimate ? '≈$remaining' : remaining),
-          ),
-          const SizedBox(height: AppSpacing.space3),
-          Container(
-            padding: const EdgeInsets.all(AppSpacing.space3),
-            color: colors.surface2,
-            child: Column(
+      footer: subscriptions == null
+          ? null
+          : Row(
               children: [
-                row(t.recurring.plannedLabel, AppMoneyText(summary.totalOut, size: MoneySize.small)),
-                const SizedBox(height: AppSpacing.space2),
-                row(t.recurring.outLabel, AppMoneyText(summary.recordedOut, kind: MoneyKind.expense, size: MoneySize.small)),
+                Icon(Icons.subscriptions_outlined, size: 16, color: ds.colors.onHeroMuted),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    t.recurring.subscriptionsLine(
+                      perMonth: AppMoneyFormatter.format(subscriptions!.perMonth),
+                      perYear: AppMoneyFormatter.format(subscriptions!.perYear),
+                    ),
+                    style: ds.typography.bodySm.copyWith(color: ds.colors.onHeroMuted),
+                  ),
+                ),
               ],
             ),
-          ),
-          if (subscriptions case final totals?) ...[
-            const SizedBox(height: AppSpacing.space2),
-            Text(
-              t.recurring.subscriptionsLine(
-                perMonth: AppMoneyFormatter.format(totals.perMonth),
-                perYear: AppMoneyFormatter.format(totals.perYear),
-              ),
-              style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
-            ),
-          ],
-        ],
-      ),
     );
   }
 }

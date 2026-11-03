@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
 import 'package:saldough/core/foundation/entitlement/entitlement.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/plan/active_plan.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/recurring/presentation/bloc/recurring_bloc.dart';
 import 'package:saldough/features/recurring/presentation/bloc/recurring_state.dart';
 import 'package:saldough/features/recurring/presentation/pages/recurring_detail_page.dart';
@@ -23,6 +23,7 @@ import 'package:saldough/shared/wallet/wallet.dart';
 import 'package:state_management/state_management.dart';
 
 import '../../helpers/mocks.dart';
+import '../../helpers/reduced_motion.dart';
 
 void main() {
   // Otomasi R3 hanya untuk Plus (ADR-041 §3.8); uji ini menguji perilakunya.
@@ -96,7 +97,8 @@ void main() {
     addTearDown(bloc.close);
     await tester.pumpWidget(
       MaterialApp(
-        theme: PixelTheme.light,
+        builder: reducedMotion,
+        theme: AppThemeBridge.build(DsThemePresets.fallback, Brightness.light),
         home: BlocProvider.value(
           value: bloc,
           child: EffectListener<RecurringBloc, RecurringState>(child: Scaffold(body: child)),
@@ -110,12 +112,12 @@ void main() {
     ActiveDay.sync(today);
     await rules.saveRule(rule('Internet', 35000000, DateTime(2026, 10, 3)));
     await pump(tester, const RecurringSegmentView());
-    expect(find.text(t.recurring.groupPending), findsNothing);
+    expect(find.text(t.recurring.groupPending.toUpperCase()), findsNothing);
 
     clock = DateTime(2026, 10, 3, 10);
     ActiveDay.sync(clock);
     await tester.pumpAndSettle();
-    expect(find.text(t.recurring.groupPending), findsOneWidget);
+    expect(find.text(t.recurring.groupPending.toUpperCase()), findsOneWidget);
   });
 
   testWidgets('kosong: penjelasan satu kalimat dan chip pembuka', (tester) async {
@@ -151,9 +153,9 @@ void main() {
     );
     await pump(tester, const RecurringSegmentView());
 
-    expect(find.text(t.recurring.groupPending), findsOneWidget);
-    expect(find.text(t.recurring.groupThisMonth), findsOneWidget);
-    expect(find.text(t.recurring.groupLater), findsOneWidget);
+    expect(find.text(t.recurring.groupPending.toUpperCase()), findsOneWidget);
+    expect(find.text(t.recurring.groupThisMonth.toUpperCase()), findsOneWidget);
+    expect(find.text(t.recurring.groupLater.toUpperCase()), findsOneWidget);
     // Dijeda terlipat jadi satu baris (PLAN_TAB_LAYOUT §4.9).
     expect(find.text('${t.recurring.groupPaused} (1)'), findsOneWidget);
     expect(find.text('Gym'), findsNothing);
@@ -179,13 +181,13 @@ void main() {
     await rules.saveRule(rule('Cicilan', 291400000, DateTime(2026, 10, 25)));
     await pump(tester, const RecurringSegmentView());
 
-    expect(find.text(t.recurring.remainingTitle(month: '1\u00A0–\u00A024\u00A0Okt')), findsOneWidget);
+    expect(find.text(t.recurring.remainingTitle(month: '1\u00A0–\u00A024\u00A0Okt').toUpperCase()), findsOneWidget);
     // Sisa periode ini hanya Listrik 5 Okt; Cicilan 25 Okt sudah periode berikutnya.
     // Sisa dan rencana periode sama-sama Rp200.000; tanpa Cicilan (Rp3.114.000).
     expect(find.descendant(of: find.byType(RecurringSummaryCard), matching: find.text('Rp200.000')), findsNWidgets(2));
     expect(find.text('Rp3.114.000'), findsNothing);
-    final later = tester.getTopLeft(find.text(t.recurring.groupLater)).dy;
-    expect(tester.getTopLeft(find.text(t.recurring.groupThisMonth)).dy, lessThan(later));
+    final later = tester.getTopLeft(find.text(t.recurring.groupLater.toUpperCase())).dy;
+    expect(tester.getTopLeft(find.text(t.recurring.groupThisMonth.toUpperCase())).dy, lessThan(later));
     expect(tester.getTopLeft(find.textContaining('Listrik').first).dy, lessThan(later));
     expect(tester.getTopLeft(find.textContaining('Cicilan').first).dy, greaterThan(later));
   });
@@ -256,7 +258,9 @@ void main() {
         await pump(tester, const RecurringSegmentView());
         await tester.tap(find.text(t.recurring.recordAction));
         await tester.pumpAndSettle();
-        expect(gaps, [const AnalyticsEvent('recurrence_date_gap', {'bucket': '0', 'via': 'one_tap'})]);
+        expect(gaps, [
+          const AnalyticsEvent('recurrence_date_gap', {'bucket': '0', 'via': 'one_tap'}),
+        ]);
       });
 
       testWidgets('Catat semua (3): tiga peristiwa 0 via record_all', (tester) async {
@@ -274,7 +278,9 @@ void main() {
         final failing = MockTransactionRepository();
         when(() => failing.listTransactionsInMonth(any())).thenAnswer((_) async => right(const <Transaction>[]));
         when(() => failing.saveTransaction(any(), previousDate: any(named: 'previousDate'))).thenAnswer(
-          (_) async => left<Failure, Unit>(const SystemFailure(code: FailureCode('TEST_FORCED_FAILURE'), message: 'dipaksa gagal')),
+          (_) async => left<Failure, Unit>(
+            const SystemFailure(code: FailureCode('TEST_FORCED_FAILURE'), message: 'dipaksa gagal'),
+          ),
         );
         await rules.saveRule(rule('Netflix', 6500000, DateTime(2026, 10)));
         await rules.saveRule(rule('Gym', 30000000, DateTime(2026, 10, 2)));
@@ -430,33 +436,42 @@ void main() {
       expect(find.byKey(const ValueKey('recurring-suggestions')), findsNothing);
     });
 
-    testWidgets('Gratis: label belum terlihat, tautan harga naik, rutin menganggur, dan saran tidak tampil (ADR-041 §3.8)', (
-      tester,
-    ) async {
-      ActivePlan.notifier.value = const FreePlan();
-      await rules.saveRule(
-        rule('Asuransi', 20000000, DateTime(2026, 9, 30)).copyWith(paymentMode: RecurringPaymentMode.autoDebit),
-      );
-      await rules.saveRule(rule('Netflix', 6500000, DateTime(2026, 10)));
-      await transactions.saveTransaction(
-        ExpenseTransaction(id: 'notif', date: DateTime(2026, 10, 2), amount: 7900000, note: '', walletId: 'bca'),
-      );
-      for (final month in [8, 9, 10]) {
-        await transactions.saveTransaction(
-          ExpenseTransaction(id: 'gym-$month', date: DateTime(2026, month), amount: 30000000, note: 'Gym', walletId: 'bca'),
+    testWidgets(
+      'Gratis: label belum terlihat, tautan harga naik, rutin menganggur, dan saran tidak tampil (ADR-041 §3.8)',
+      (
+        tester,
+      ) async {
+        ActivePlan.notifier.value = const FreePlan();
+        await rules.saveRule(
+          rule('Asuransi', 20000000, DateTime(2026, 9, 30)).copyWith(paymentMode: RecurringPaymentMode.autoDebit),
         );
-      }
-      await pump(tester, const RecurringSegmentView(), monthsBack: suggestionMonths);
-      expect(find.byKey(const ValueKey('recurring-unseen-Asuransi')), findsNothing);
-      expect(find.byKey(const ValueKey('recurring-price-up-Netflix')), findsNothing);
-      expect(find.byKey(const ValueKey('recurring-suggestions')), findsNothing);
-      // Aturannya tetap tampil dan bisa dicatat satu ketuk (aturan 8).
-      expect(find.text(t.recurring.recordAction), findsWidgets);
+        await rules.saveRule(rule('Netflix', 6500000, DateTime(2026, 10)));
+        await transactions.saveTransaction(
+          ExpenseTransaction(id: 'notif', date: DateTime(2026, 10, 2), amount: 7900000, note: '', walletId: 'bca'),
+        );
+        for (final month in [8, 9, 10]) {
+          await transactions.saveTransaction(
+            ExpenseTransaction(
+              id: 'gym-$month',
+              date: DateTime(2026, month),
+              amount: 30000000,
+              note: 'Gym',
+              walletId: 'bca',
+            ),
+          );
+        }
+        await pump(tester, const RecurringSegmentView(), monthsBack: suggestionMonths);
+        expect(find.byKey(const ValueKey('recurring-unseen-Asuransi')), findsNothing);
+        expect(find.byKey(const ValueKey('recurring-price-up-Netflix')), findsNothing);
+        expect(find.byKey(const ValueKey('recurring-suggestions')), findsNothing);
+        // Aturannya tetap tampil dan bisa dicatat satu ketuk (aturan 8).
+        expect(find.text(t.recurring.recordAction), findsWidgets);
 
-      ActivePlan.notifier.value = const PlusPlan(source: PlanSource.prelaunch);
-      await tester.pumpAndSettle();
-      expect(find.byKey(const ValueKey('recurring-suggestions')), findsOneWidget);
-    });
+        ActivePlan.notifier.value = const PlusPlan(source: PlanSource.prelaunch);
+        await tester.pumpAndSettle();
+        expect(find.byKey(const ValueKey('recurring-suggestions')), findsOneWidget);
+      },
+    );
 
     testWidgets('analitik: Lewati mengirim occurrence_skipped tanpa nominal (T-17.8)', (tester) async {
       final events = <AnalyticsEvent>[];

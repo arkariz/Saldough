@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:di/di.dart';
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/foundation/entitlement/entitlement.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
@@ -9,7 +10,6 @@ import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/plan/active_plan.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
@@ -50,7 +50,10 @@ class RecurringPage extends StatelessWidget {
         return BlocProvider.value(
           value: bloc,
           child: EffectListener<RecurringBloc, RecurringState>(
-            child: RunOnce(action: () => bloc.add(const RecurringStarted()), child: RecurringSegmentView(rootContainer: parentContainer)),
+            child: RunOnce(
+              action: () => bloc.add(const RecurringStarted()),
+              child: RecurringSegmentView(rootContainer: parentContainer),
+            ),
           ),
         );
       },
@@ -92,7 +95,7 @@ class RecurringSegmentView extends StatelessWidget {
             onRetry: () => context.read<RecurringBloc>().add(const RecurringStarted()),
           );
         }
-        const padding = EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space4, AppSpacing.space4, AppSpacing.space12);
+        const padding = EdgeInsets.fromLTRB(16, 16, 16, 96);
         // Sepertinya rutin (ADR-037 §3.3), juga saat belum ada rutin.
         // Saran dan rutin menganggur bagian otomasi R3: hanya untuk Plus
         // (ADR-041 §3.8); datanya tidak disentuh.
@@ -120,21 +123,51 @@ class RecurringSegmentView extends StatelessWidget {
             child: ListView(
               padding: padding,
               children: [
-                // EmptyState (ilustrasi Anggaran/Rencana); pemula rutin sebagai
-                // chip di bawahnya, tombol tambah di akhir daftar.
-                AppEmptyState(art: EmptyArt.budget, title: t.recurring.emptyTitle, body: t.recurring.emptyBody),
-                const SpotlightTarget(
-                  spotlightKey: SpotlightKey.recurringStarters,
-                  child: RecurringStarterChips(),
+                // Ilustrasi kosong yang hidup; pemula rutin sebagai chip di
+                // bawahnya, tombol tambah di akhir daftar.
+                DsReveal(
+                  child: DsCard(
+                    padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
+                    child: Column(
+                      children: [
+                        const DsEmptyHero(
+                          asset: ClayIcons.calendar,
+                          orbit: [ClayIcons.repeat, ClayIcons.alarm, ClayIcons.coins],
+                        ),
+                        const SizedBox(height: 12),
+                        Text(
+                          t.recurring.emptyTitle,
+                          textAlign: TextAlign.center,
+                          style: context.ds.typography.titleMd.copyWith(fontSize: 18),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          t.recurring.emptyBody,
+                          textAlign: TextAlign.center,
+                          style: context.ds.typography.bodySm.copyWith(color: context.ds.colors.textMuted),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-                const SizedBox(height: AppSpacing.space4),
+                const SizedBox(height: 16),
+                const DsReveal(
+                  index: 1,
+                  child: SpotlightTarget(spotlightKey: SpotlightKey.recurringStarters, child: RecurringStarterChips()),
+                ),
+                const SizedBox(height: 16),
                 if (suggestions.isNotEmpty) ...[
                   _SuggestionCard(suggestions: suggestions),
-                  const SizedBox(height: AppSpacing.space4),
+                  const SizedBox(height: 16),
                 ],
                 SpotlightTarget(
                   spotlightKey: SpotlightKey.recurringAdd,
-                  child: AppButton(label: t.recurring.addAction, onPressed: () => _add(context)),
+                  child: DsButton(
+                    label: t.recurring.addAction,
+                    icon: Icons.add,
+                    expand: true,
+                    onPressed: () => _add(context),
+                  ),
                 ),
               ],
             ),
@@ -162,6 +195,7 @@ class RecurringSegmentView extends StatelessWidget {
             if (filter == null || e.rule.kind == filter) e,
         ];
         final bloc = context.read<RecurringBloc>();
+        final ds = context.ds;
         return TourTrigger(
           tour: TourId.recurring,
           ready: true,
@@ -170,30 +204,26 @@ class RecurringSegmentView extends StatelessWidget {
             children: [
               SpotlightTarget(
                 spotlightKey: SpotlightKey.recurringSummary,
-                child: RecurringSummaryCard(
-                  summary: summary,
-                  // Nama periode (P-11): "Okt", atau rentang bila bukan bulan kalender.
-                  monthLabel: state.period.shortName,
-                  subscriptions: subscriptionTotals(state.rules),
+                child: DsReveal(
+                  child: RecurringSummaryCard(
+                    summary: summary,
+                    // Nama periode (P-11): "Okt", atau rentang bila bukan bulan kalender.
+                    monthLabel: state.period.shortName,
+                    subscriptions: subscriptionTotals(state.rules),
+                  ),
                 ),
               ),
-              const SizedBox(height: AppSpacing.space4),
+              const SizedBox(height: 16),
               // Tombol permanen pengingat (FEATURE_DISCOVERY P-1): di bawah
               // kartu sisa tagihan, hilang begitu efektif.
               if (rootContainer case final root?) ReminderNudgeCard(container: root, bottomGap: true),
               // W6 rutin menganggur: satu kartu, yang pertama (ADR-037 §3.1).
-              if (idle != null) ...[
-                _IdleCard(rule: idle),
-                const SizedBox(height: AppSpacing.space4),
-              ],
+              if (idle != null) ...[_IdleCard(rule: idle), const SizedBox(height: 16)],
               if (state.autoRecorded.isNotEmpty) ...[
                 _AutoRecordedCard(entries: state.autoRecorded),
-                const SizedBox(height: AppSpacing.space4),
+                const SizedBox(height: 16),
               ],
-              if (suggestions.isNotEmpty) ...[
-                _SuggestionCard(suggestions: suggestions),
-                const SizedBox(height: AppSpacing.space4),
-              ],
+              if (suggestions.isNotEmpty) ...[_SuggestionCard(suggestions: suggestions), const SizedBox(height: 16)],
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
@@ -205,29 +235,39 @@ class RecurringSegmentView extends StatelessWidget {
                       (RecurringKind.expense, t.recurring.chipExpense),
                       (RecurringKind.transfer, t.recurring.chipTransfer),
                     ]) ...[
-                      AppChip(
+                      DsFilterChip(
                         label: label,
                         selected: filter == kind,
-                        onBg: true,
                         onTap: () => bloc.add(RecurringKindFilterChanged(kind)),
                       ),
-                      const SizedBox(width: AppSpacing.space2),
+                      const SizedBox(width: 8),
                     ],
                   ],
                 ),
               ),
-              const SizedBox(height: AppSpacing.space2),
+              const SizedBox(height: 8),
               if (visible.isEmpty)
-                AppEmptyState(
-                  title: t.recurring.filteredEmpty,
-                  actionLabel: t.recurring.showAllAction,
-                  onAction: () => bloc.add(const RecurringKindFilterChanged(null)),
-                  textAction: true,
+                DsReveal(
+                  child: DsCard(
+                    padding: const EdgeInsets.fromLTRB(24, 16, 24, 20),
+                    child: Column(
+                      children: [
+                        const DsEmptyHero(asset: ClayIcons.emptyTray, orbit: [ClayIcons.tag], size: 104),
+                        const SizedBox(height: 8),
+                        Text(t.recurring.filteredEmpty, textAlign: TextAlign.center, style: ds.typography.titleMd),
+                        const SizedBox(height: 12),
+                        DsButton.ghost(
+                          label: t.recurring.showAllAction,
+                          onPressed: () => bloc.add(const RecurringKindFilterChanged(null)),
+                        ),
+                      ],
+                    ),
+                  ),
                 )
               else
                 for (final group in RecurringGroup.values)
                   if (visible.where((e) => e.group == group).toList() case final rows when rows.isNotEmpty) ...[
-                    const SizedBox(height: AppSpacing.space2),
+                    const SizedBox(height: 12),
                     if (group == RecurringGroup.paused || group == RecurringGroup.ended)
                       _FoldedGroup(
                         label: '${_groupLabel(group)} (${rows.length})',
@@ -235,36 +275,40 @@ class RecurringSegmentView extends StatelessWidget {
                       )
                     else ...[
                       _GroupLabel(_groupLabel(group), dot: group == RecurringGroup.pending),
-                      const SizedBox(height: AppSpacing.space2),
+                      const SizedBox(height: 8),
                       if (group == RecurringGroup.pending) ...[
-                        AppListCard(
-                          dividerIndent: AppListCard.tileIndent + AppSize.tile + AppSpacing.space3,
+                        DsListCard(
                           children: [
                             // Hanya baris pertama yang disorot.
                             for (final (i, entry) in rows.indexed)
-                              SpotlightTarget(
-                                spotlightKey: i == 0 ? SpotlightKey.recurringPending : null,
-                                child: RecurringPendingTile(entry: entry, state: state),
+                              DsReveal(
+                                index: i,
+                                child: SpotlightTarget(
+                                  spotlightKey: i == 0 ? SpotlightKey.recurringPending : null,
+                                  child: RecurringPendingTile(entry: entry, state: state),
+                                ),
                               ),
                           ],
                         ),
                         if (recordAllButton(context, rows) case final recordAll?) ...[
-                          const SizedBox(height: AppSpacing.space2),
+                          const SizedBox(height: 8),
                           recordAll,
                         ],
                       ] else
-                        AppListCard(
-                          dividerIndent: AppListCard.tileIndent + AppSize.tile + AppSpacing.space3,
-                          children: [for (final entry in rows) _row(context, state, entry)],
+                        DsListCard(
+                          children: [
+                            for (final (i, entry) in rows.indexed)
+                              DsReveal(index: i, child: _row(context, state, entry)),
+                          ],
                         ),
                     ],
                   ],
-              const SizedBox(height: AppSpacing.space4),
+              const SizedBox(height: 16),
               SpotlightTarget(
                 spotlightKey: SpotlightKey.recurringAdd,
-                child: AppButton.secondary(
+                child: DsButton.secondary(
                   label: t.recurring.addAction,
-                  icon: IconKey.add,
+                  icon: Icons.add,
                   expand: true,
                   onPressed: () => _add(context),
                 ),
@@ -313,13 +357,18 @@ class _FoldedGroupState extends State<_FoldedGroup> {
       children: [
         Align(
           alignment: Alignment.centerLeft,
-          child: AppButton.text(
+          child: DsButton.ghost(
             label: widget.label,
-            icon: _open ? IconKey.expandLess : IconKey.chevronRight,
+            icon: _open ? Icons.expand_less : Icons.chevron_right,
             onPressed: () => setState(() => _open = !_open),
           ),
         ),
-        if (_open) AppListCard(children: widget.children),
+        AnimatedSize(
+          duration: DsMotion.reduced(context) ? Duration.zero : const Duration(milliseconds: 250),
+          curve: Curves.easeOutCubic,
+          alignment: Alignment.topCenter,
+          child: _open ? DsListCard(children: widget.children) : const SizedBox(width: double.infinity),
+        ),
       ],
     );
   }
@@ -334,35 +383,64 @@ class _IdleCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = context.read<RecurringBloc>();
-    final textTheme = Theme.of(context).textTheme;
+    final ds = context.ds;
     final name = rule.note.isEmpty ? t.record.repeat.fallbackName : rule.note;
-    return AppCard(
-      key: ValueKey('recurring-idle-${rule.id}'),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(t.recurring.idleTitle(name: name), style: textTheme.titleSmall),
-          const SizedBox(height: AppSpacing.space1),
-          Text(t.recurring.idleBody, style: textTheme.bodySmall?.copyWith(color: context.appColors.ink2)),
-          Wrap(
-            alignment: WrapAlignment.end,
-            spacing: AppSpacing.space1,
-            children: [
-              AppButton.text(small: true, label: t.recurring.idleKeep, onPressed: () {
-                  AppAnalytics.log(RecurringEvents.idleAction('keep'));
-                  bloc.add(RecurringIdleDismissed(rule.id));
-                }),
-              AppButton.text(small: true, label: t.recurring.pauseAction, onPressed: () {
-                  AppAnalytics.log(RecurringEvents.idleAction('pause'));
-                  bloc.add(RecurringPauseToggled(rule.id));
-                }),
-              AppButton.text(small: true, label: t.recurring.endAction, onPressed: () {
-                  AppAnalytics.log(RecurringEvents.idleAction('end'));
-                  bloc.add(RecurringEnded(rule.id));
-                }),
-            ],
-          ),
-        ],
+    return DsReveal(
+      child: DsCard(
+        key: ValueKey('recurring-idle-${rule.id}'),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                DsIconTile.asset(asset: ClayIcons.hourglass, tone: DsIconTileTone.warning, size: DsIconTileSize.sm),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(t.recurring.idleTitle(name: name), style: ds.typography.titleMd),
+                      const SizedBox(height: 2),
+                      Text(
+                        t.recurring.idleBody,
+                        style: ds.typography.bodySm.copyWith(color: ds.colors.textSecondary),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 4),
+            Wrap(
+              alignment: WrapAlignment.end,
+              spacing: 4,
+              children: [
+                DsButton.ghost(
+                  label: t.recurring.idleKeep,
+                  onPressed: () {
+                    AppAnalytics.log(RecurringEvents.idleAction('keep'));
+                    bloc.add(RecurringIdleDismissed(rule.id));
+                  },
+                ),
+                DsButton.ghost(
+                  label: t.recurring.pauseAction,
+                  onPressed: () {
+                    AppAnalytics.log(RecurringEvents.idleAction('pause'));
+                    bloc.add(RecurringPauseToggled(rule.id));
+                  },
+                ),
+                DsButton.ghost(
+                  label: t.recurring.endAction,
+                  onPressed: () {
+                    AppAnalytics.log(RecurringEvents.idleAction('end'));
+                    bloc.add(RecurringEnded(rule.id));
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -378,39 +456,60 @@ class _SuggestionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = context.read<RecurringBloc>();
-    final textTheme = Theme.of(context).textTheme;
-    return AppCard(
-      key: const ValueKey('recurring-suggestions'),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(t.recurring.suggestTitle, style: textTheme.titleSmall),
-          for (final s in suggestions) ...[
-            const SizedBox(height: AppSpacing.space2),
-            Text(
-              t.recurring.suggestLine(
-                name: s.latest.note,
-                amount: AppMoneyFormatter.format(s.latest.amount),
-                day: s.latest.date.day,
-              ),
-              style: textTheme.bodyMedium,
-            ),
-            Wrap(
-              alignment: WrapAlignment.end,
-              spacing: AppSpacing.space1,
+    final ds = context.ds;
+    return DsReveal(
+      index: 1,
+      child: DsCard(
+        key: const ValueKey('recurring-suggestions'),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
               children: [
-                AppButton.text(small: true, label: t.recurring.suggestDismiss, onPressed: () {
-                    AppAnalytics.log(RecurringEvents.suggestionAction('dismiss'));
-                    bloc.add(RecurringSuggestionDismissed(s.key));
-                  }),
-                AppButton.text(key: ValueKey('recurring-suggest-${s.key}'), small: true, label: t.recurring.suggestAccept, onPressed: () {
-                    AppAnalytics.log(RecurringEvents.suggestionAction('accept'));
-                    unawaited(context.pushRoute(RecordRouteKeys.sheet, RecordSheetInput(makeRecurringFrom: s.latest)));
-                  }),
+                DsIdleMotion(
+                  kind: DsIdleKind.float,
+                  child: DsIconTile.asset(asset: ClayIcons.repeat, tone: DsIconTileTone.info, size: DsIconTileSize.sm),
+                ),
+                const SizedBox(width: 12),
+                Expanded(child: Text(t.recurring.suggestTitle, style: ds.typography.titleMd)),
               ],
             ),
+            for (final s in suggestions) ...[
+              const SizedBox(height: 10),
+              Text(
+                t.recurring.suggestLine(
+                  name: s.latest.note,
+                  amount: AppMoneyFormatter.format(s.latest.amount),
+                  day: s.latest.date.day,
+                ),
+                style: ds.typography.bodyMd,
+              ),
+              Wrap(
+                alignment: WrapAlignment.end,
+                spacing: 4,
+                children: [
+                  DsButton.ghost(
+                    label: t.recurring.suggestDismiss,
+                    onPressed: () {
+                      AppAnalytics.log(RecurringEvents.suggestionAction('dismiss'));
+                      bloc.add(RecurringSuggestionDismissed(s.key));
+                    },
+                  ),
+                  DsButton.compact(
+                    key: ValueKey('recurring-suggest-${s.key}'),
+                    label: t.recurring.suggestAccept,
+                    onPressed: () {
+                      AppAnalytics.log(RecurringEvents.suggestionAction('accept'));
+                      unawaited(
+                        context.pushRoute(RecordRouteKeys.sheet, RecordSheetInput(makeRecurringFrom: s.latest)),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }
@@ -426,34 +525,45 @@ class _AutoRecordedCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = context.read<RecurringBloc>();
-    final textTheme = Theme.of(context).textTheme;
-    return AppCard(
-      key: const ValueKey('recurring-auto-recorded'),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(t.recurring.autoRecordedTitle, style: textTheme.titleSmall),
-          for (final e in entries)
+    final ds = context.ds;
+    return DsReveal(
+      child: DsCard(
+        key: const ValueKey('recurring-auto-recorded'),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
             Row(
               children: [
-                Expanded(
-                  child: Text(
-                    '${e.ruleName.isEmpty ? t.record.repeat.fallbackName : e.ruleName} · '
-                    '${CycleMonthFormatter.formatDayMonth(e.occurrenceDate)}',
-                    style: textTheme.bodyMedium,
-                  ),
-                ),
-                AppButton.text(small: true, label: t.recurring.undoAction, onPressed: () => bloc.add(RecurringAutoRecordUndone(e))),
+                DsIconTile.asset(asset: ClayIcons.done, tone: DsIconTileTone.income, size: DsIconTileSize.sm),
+                const SizedBox(width: 12),
+                Expanded(child: Text(t.recurring.autoRecordedTitle, style: ds.typography.titleMd)),
               ],
             ),
-        ],
+            for (final e in entries)
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      '${e.ruleName.isEmpty ? t.record.repeat.fallbackName : e.ruleName} · '
+                      '${CycleMonthFormatter.formatDayMonth(e.occurrenceDate)}',
+                      style: ds.typography.bodyMd,
+                    ),
+                  ),
+                  DsButton.ghost(
+                    label: t.recurring.undoAction,
+                    onPressed: () => bloc.add(RecurringAutoRecordUndone(e)),
+                  ),
+                ],
+              ),
+          ],
+        ),
       ),
     );
   }
 }
 
-/// Label kelompok di daftar Rutin (`rencana.css` `.group-label`): `label`
-/// `ink2`, titik `brand` untuk Menunggu dicatat.
+/// Label kelompok di daftar Rutin: judul kapital kecil, titik aksi yang
+/// berdenyut untuk Menunggu dicatat.
 class _GroupLabel extends StatelessWidget {
   const _GroupLabel(this.label, {this.dot = false});
 
@@ -462,16 +572,26 @@ class _GroupLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
+    final ds = context.ds;
+    final c = ds.colors;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space1),
+      padding: const EdgeInsets.symmetric(horizontal: 4),
       child: Row(
         children: [
-          if (dot) ...[Container(width: 8, height: 8, color: colors.brand), const SizedBox(width: 6)],
+          if (dot) ...[
+            DsPulse(
+              borderRadius: DsRadius.fullAll,
+              child: DecoratedBox(
+                decoration: BoxDecoration(color: c.actionPrimary, shape: BoxShape.circle),
+                child: const SizedBox.square(dimension: 8),
+              ),
+            ),
+            const SizedBox(width: 8),
+          ],
           Flexible(
             child: Semantics(
               header: true,
-              child: Text(label, style: Theme.of(context).textTheme.labelLarge?.copyWith(color: colors.ink2)),
+              child: Text(label.toUpperCase(), style: ds.typography.pixelCaption.copyWith(color: c.textSecondary)),
             ),
           ),
         ],

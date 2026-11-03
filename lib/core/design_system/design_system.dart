@@ -41,6 +41,7 @@ export 'components/ds_skeleton.dart';
 export 'components/ds_status_board.dart';
 export 'components/ds_status_carousel.dart';
 export 'components/ds_sticky_bar.dart';
+export 'components/ds_summary_hero.dart';
 export 'components/ds_tap_tip.dart';
 export 'components/ds_top_bar.dart';
 export 'ds_theme.dart';

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
-import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/record/presentation/navigation/record_route_keys.dart';
 import 'package:saldough/features/recurring/domain/recurring_starters.dart';
 import 'package:saldough/shared/capture/capture.dart';
@@ -60,20 +59,15 @@ class RecurringStarterChips extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Wrap(
-      spacing: AppSpacing.space1,
-      runSpacing: AppSpacing.space1,
+      spacing: 8,
+      runSpacing: 4,
       children: [
         for (final starter in RecurringStarter.values)
-          if (existingNames.contains(labelOf(starter).toLowerCase()))
-            AppChip(
-              label: '✓ ${labelOf(starter)}',
-              onTap: () => context.pushRoute(RecordRouteKeys.sheet, inputFor(starter, now())),
-            )
-          else
-            AppChip(
-              label: labelOf(starter),
-              onTap: () => context.pushRoute(RecordRouteKeys.sheet, inputFor(starter, now())),
-            ),
+          DsFilterChip(
+            label: existingNames.contains(labelOf(starter).toLowerCase()) ? '✓ ${labelOf(starter)}' : labelOf(starter),
+            selected: false,
+            onTap: () => context.pushRoute(RecordRouteKeys.sheet, inputFor(starter, now())),
+          ),
       ],
     );
   }

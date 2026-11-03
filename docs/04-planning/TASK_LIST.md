@@ -6163,6 +6163,11 @@ memilih mode (dan preset bila ≥ 2), dan design system lama dihapus.
       karena isinya mencakup bulan depan, indikator, dan grafik saldo. Hanya
       teks (`plan.thisMonthSegmentLabel`, `tour.planTabsBody`); kunci dan
       nama kelas (`PlanSegment.thisMonth`) tidak diganti.
+      **Transisi gulir di daftar Rutin dan Anggaran (3 Nov 2026, permintaan
+      pemilik):** `DsScrollReveal` kini juga membungkus pita 7 hari, kartu
+      menganggur/otomatis/saran, grup Menunggu, dan tiap kartu rutin di Rutin,
+      serta tiap kartu di daftar Anggaran. Kartu ringkasan paling atas dan
+      isi grup terlipat tidak dibungkus.
       **Ikon clay dilengkapi (31 Okt 2026, KT-DS5):** 33 ikon baru untuk
       dompet, jenis transaksi, kategori, dan status Freelance; semua
       `IconKey` benda kini punya clay (`ClayIcons.forIcon`). Digambar dari

@@ -131,12 +131,14 @@ class _BudgetListPageState extends State<BudgetListPage> {
                     for (final (i, budget) in visible.indexed) ...[
                       DsReveal(
                         index: i + 1,
-                        child: BudgetCard(
-                          budget: budget,
-                          progress: state.progress[budget.id]!,
-                          walletName: state.walletOf(budget.walletId)?.name ?? t.budget.unknownWallet,
-                          onTap: () => _openDetail(context, budget.id),
-                          isRecurring: state.isRecurring(budget),
+                        child: DsScrollReveal(
+                          child: BudgetCard(
+                            budget: budget,
+                            progress: state.progress[budget.id]!,
+                            walletName: state.walletOf(budget.walletId)?.name ?? t.budget.unknownWallet,
+                            onTap: () => _openDetail(context, budget.id),
+                            isRecurring: state.isRecurring(budget),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 12),

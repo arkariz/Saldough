@@ -230,19 +230,24 @@ class _RecurringSegmentViewState extends State<RecurringSegmentView> {
               ),
               if (dues.isNotEmpty) ...[
                 const SizedBox(height: 20),
-                RecurringWeekRibbon(today: state.today, dues: dues),
+                DsScrollReveal(
+                  child: RecurringWeekRibbon(today: state.today, dues: dues),
+                ),
               ],
               const SizedBox(height: 16),
               // Tombol permanen pengingat (FEATURE_DISCOVERY P-1): di bawah
               // kartu sisa tagihan, hilang begitu efektif.
               if (widget.rootContainer case final root?) ReminderNudgeCard(container: root, bottomGap: true),
               // W6 rutin menganggur: satu kartu, yang pertama (ADR-037 §3.1).
-              if (idle != null) ...[_IdleCard(rule: idle), const SizedBox(height: 16)],
+              if (idle != null) ...[DsScrollReveal(child: _IdleCard(rule: idle)), const SizedBox(height: 16)],
               if (state.autoRecorded.isNotEmpty) ...[
-                _AutoRecordedCard(entries: state.autoRecorded),
+                DsScrollReveal(child: _AutoRecordedCard(entries: state.autoRecorded)),
                 const SizedBox(height: 16),
               ],
-              if (suggestions.isNotEmpty) ...[_SuggestionCard(suggestions: suggestions), const SizedBox(height: 16)],
+              if (suggestions.isNotEmpty) ...[
+                DsScrollReveal(child: _SuggestionCard(suggestions: suggestions)),
+                const SizedBox(height: 16),
+              ],
               // Penyaring jenis bergulir; pengubah urutan tetap di kanan.
               Row(
                 children: [
@@ -308,10 +313,12 @@ class _RecurringSegmentViewState extends State<RecurringSegmentView> {
                       _GroupLabel(_groupLabel(group), dot: group == RecurringGroup.pending),
                       const SizedBox(height: 8),
                       if (group == RecurringGroup.pending) ...[
-                        RecurringPendingGroup(
-                          rows: rows,
-                          state: state,
-                          firstSpotlight: SpotlightKey.recurringPending,
+                        DsScrollReveal(
+                          child: RecurringPendingGroup(
+                            rows: rows,
+                            state: state,
+                            firstSpotlight: SpotlightKey.recurringPending,
+                          ),
                         ),
                         if (recordAllButton(context, rows) case final recordAll?) ...[
                           const SizedBox(height: 8),
@@ -322,7 +329,10 @@ class _RecurringSegmentViewState extends State<RecurringSegmentView> {
                           spacing: 10,
                           children: [
                             for (final (i, entry) in _sorted(rows).indexed)
-                              DsReveal(index: i, child: _row(context, state, entry)),
+                              DsReveal(
+                                index: i,
+                                child: DsScrollReveal(child: _row(context, state, entry)),
+                              ),
                           ],
                         ),
                     ],

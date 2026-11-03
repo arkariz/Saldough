@@ -114,7 +114,7 @@ void main() {
     TutorialProgressRepository? tutorials,
     void Function(AnalysisInput input)? onAnalysis,
   }) async {
-    tester.view.physicalSize = Size(width, 1600);
+    tester.view.physicalSize = Size(width, 3600);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
     final bloc = PlanMonthBloc(
@@ -168,9 +168,10 @@ void main() {
     expect(find.text('Rp2.995.500'), findsOneWidget);
     // Juga baris Gaji 25 Okt di Berikutnya.
     expect(find.text('+Rp12.000.000'), findsNWidgets(2));
-    expect(find.text('−Rp5.879.000'), findsOneWidget);
-    expect(find.text('−Rp3.068.500'), findsOneWidget);
-    expect(find.text('−Rp57.000'), findsOneWidget);
+    // Juga di kartu Distribusi rencana keluar.
+    expect(find.text('−Rp5.879.000'), findsWidgets);
+    expect(find.text('−Rp3.068.500'), findsWidgets);
+    expect(find.text('−Rp57.000'), findsWidgets);
     expect(12000000 - 5879000 - 3068500 - 57000, 2995500);
   });
 
@@ -180,8 +181,9 @@ void main() {
     final semantics = tester.ensureSemantics();
     await pump(tester);
     expect(find.text('≈Rp10.921.000'), findsOneWidget);
-    expect(find.text('≈Rp561.000'), findsOneWidget);
-    expect(find.text(t.plan.lowestOn(date: '24 Okt')), findsOneWidget);
+    expect(find.text('≈Rp561.000'), findsWidgets);
+    // Ubin, legenda, dan tooltip grafik.
+    expect(find.text(t.plan.lowestOn(date: '24 Okt')), findsWidgets);
     expect(
       find.bySemanticsLabel(t.plan.chartSemantics(low: 'Rp561.000', date: '24 Okt', end: 'Rp10.921.000')),
       findsOneWidget,

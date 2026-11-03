@@ -19,6 +19,8 @@ import 'package:saldough/features/plan/presentation/widgets/balance_forecast_car
 import 'package:saldough/features/plan/presentation/widgets/funding_banner.dart';
 import 'package:saldough/features/plan/presentation/widgets/month_review_card.dart';
 import 'package:saldough/features/plan/presentation/widgets/payday_offer_card.dart';
+import 'package:saldough/features/plan/presentation/widgets/plan_distribution.dart';
+import 'package:saldough/features/plan/presentation/widgets/plan_indicators.dart';
 import 'package:saldough/features/plan/presentation/widgets/unplanned_card.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:state_management/state_management.dart';
@@ -197,21 +199,25 @@ class PlanMonthView extends StatelessWidget {
               ?paydayOffer,
               // Blok 0: tinjau awal bulan (J4, ADR-036 §3.7).
               if (state.showReview && !state.isFuture) ...[
-                MonthReviewCard(
-                  state: state,
-                  monthLabel: labelOf(state.range),
-                  onShowBudget: onShowBudget,
-                  onShowRecurring: onShowRecurring,
+                DsScrollReveal(
+                  child: MonthReviewCard(
+                    state: state,
+                    monthLabel: labelOf(state.range),
+                    onShowBudget: onShowBudget,
+                    onShowRecurring: onShowRecurring,
+                  ),
                 ),
                 const SizedBox(height: 16),
               ],
               // Blok 0: siapkan dana (W1, ADR-036 §3.6).
               if (funding.isNotEmpty) ...[
-                FundingBanner(
-                  warnings: funding,
-                  onShowWallet: (walletId) => bloc
-                    ..add(const PlanMonthSelected(0))
-                    ..add(PlanMonthWalletChanged(walletId)),
+                DsScrollReveal(
+                  child: FundingBanner(
+                    warnings: funding,
+                    onShowWallet: (walletId) => bloc
+                      ..add(const PlanMonthSelected(0))
+                      ..add(PlanMonthWalletChanged(walletId)),
+                  ),
                 ),
                 const SizedBox(height: 16),
               ],
@@ -242,13 +248,15 @@ class PlanMonthView extends StatelessWidget {
               const SizedBox(height: 12),
               SpotlightTarget(
                 spotlightKey: SpotlightKey.planUnplanned,
-                child: UnplannedCard(
-                  plan: state.plan,
-                  isForecast: state.isFuture,
-                  withoutPayday: state.transitionWithoutPayday,
-                  monthLabel: monthLabel,
-                  onShowRecurring: onShowRecurring,
-                  onShowBudget: onShowBudget,
+                child: DsScrollReveal(
+                  child: UnplannedCard(
+                    plan: state.plan,
+                    isForecast: state.isFuture,
+                    withoutPayday: state.transitionWithoutPayday,
+                    monthLabel: monthLabel,
+                    onShowRecurring: onShowRecurring,
+                    onShowBudget: onShowBudget,
+                  ),
                 ),
               ),
               // Wawasan teks netral (W8, W7, ADR-036 §3.7).
@@ -282,22 +290,38 @@ class PlanMonthView extends StatelessWidget {
                     style: mutedSmall,
                   ),
                 ),
-              const SizedBox(height: 16),
-              SpotlightTarget(
-                spotlightKey: SpotlightKey.planForecast,
-                child: BalanceForecastCard(
-                  projection: state.projection,
-                  lastDay: range.lastDay,
-                  wallets: state.wallets,
-                  walletId: state.walletId,
-                  onWalletChanged: (id) => bloc.add(PlanMonthWalletChanged(id)),
-                  unplannedAvailable: state.unplannedAverage != null,
-                  includeUnplanned: state.includeUnplanned,
-                  onUnplannedToggled: (value) => bloc.add(PlanMonthUnplannedToggled(enabled: value)),
-                  isFuture: state.isFuture,
+              const SizedBox(height: 20),
+              DsScrollReveal(
+                child: PlanIndicators(
+                  plan: state.plan,
+                  lowest: state.projection.lowest,
+                  committedShare: committed?.share,
+                  previousShare: committed?.previous,
+                  unplannedPerDay: state.unplannedAverage,
                 ),
               ),
-              if (!state.isFuture) ?pending,
+              const SizedBox(height: 20),
+              SpotlightTarget(
+                spotlightKey: SpotlightKey.planForecast,
+                child: DsScrollReveal(
+                  child: BalanceForecastCard(
+                    projection: state.projection,
+                    lastDay: range.lastDay,
+                    wallets: state.wallets,
+                    walletId: state.walletId,
+                    onWalletChanged: (id) => bloc.add(PlanMonthWalletChanged(id)),
+                    unplannedAvailable: state.unplannedAverage != null,
+                    includeUnplanned: state.includeUnplanned,
+                    onUnplannedToggled: (value) => bloc.add(PlanMonthUnplannedToggled(enabled: value)),
+                    isFuture: state.isFuture,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              DsScrollReveal(
+                child: PlanDistribution(plan: state.plan),
+              ),
+              if (!state.isFuture && pending != null) ...[const SizedBox(height: 4), DsScrollReveal(child: pending!)],
               const SizedBox(height: 24),
               DsSectionHeader(title: t.plan.nextTitle, actionLabel: t.plan.seeAllRecurring, onAction: onShowRecurring),
               if (next.isNotEmpty) ...[

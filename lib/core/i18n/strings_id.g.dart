@@ -3820,6 +3820,36 @@ class Translations$plan$id {
 	/// id: 'Saldo dompet ≈'
 	String get balanceTitle => 'Saldo dompet ≈';
 
+	/// id: 'Indikator bulan ini'
+	String get indicatorsTitle => 'Indikator bulan ini';
+
+	/// id: 'Terikat rencana'
+	String get indLockedTitle => 'Terikat rencana';
+
+	/// id: 'Bulan lalu $percent%'
+	String indLockedPrev({required Object percent}) => 'Bulan lalu ${percent}%';
+
+	/// id: 'dari pemasukan'
+	String get indLockedOf => 'dari pemasukan';
+
+	/// id: 'Anggaran terpakai'
+	String get indBudgetTitle => 'Anggaran terpakai';
+
+	/// id: 'Di luar rencana / hari'
+	String get indPerDayTitle => 'Di luar rencana / hari';
+
+	/// id: 'Belum cukup riwayat'
+	String get indPerDayNone => 'Belum cukup riwayat';
+
+	/// id: 'Saldo terendah'
+	String get indLowTitle => 'Saldo terendah';
+
+	/// id: 'Saldo harian ≈'
+	String get legendBalance => 'Saldo harian ≈';
+
+	/// id: 'Distribusi rencana keluar'
+	String get distTitle => 'Distribusi rencana keluar';
+
 	/// id: 'Semua'
 	String get allWallets => 'Semua';
 
@@ -7085,6 +7115,16 @@ extension on Translations {
 			'plan.infoResult' => '= Uang nganggur',
 			'plan.infoNotBalance' => 'Bukan saldo dompet.',
 			'plan.balanceTitle' => 'Saldo dompet ≈',
+			'plan.indicatorsTitle' => 'Indikator bulan ini',
+			'plan.indLockedTitle' => 'Terikat rencana',
+			'plan.indLockedPrev' => ({required Object percent}) => 'Bulan lalu ${percent}%',
+			'plan.indLockedOf' => 'dari pemasukan',
+			'plan.indBudgetTitle' => 'Anggaran terpakai',
+			'plan.indPerDayTitle' => 'Di luar rencana / hari',
+			'plan.indPerDayNone' => 'Belum cukup riwayat',
+			'plan.indLowTitle' => 'Saldo terendah',
+			'plan.legendBalance' => 'Saldo harian ≈',
+			'plan.distTitle' => 'Distribusi rencana keluar',
 			'plan.allWallets' => 'Semua',
 			'plan.endOf' => ({required Object date}) => 'Akhir ${date}',
 			'plan.lowestOn' => ({required Object date}) => 'Terendah · ${date}',
@@ -7247,6 +7287,8 @@ extension on Translations {
 			'premium.account.restore' => 'Pulihkan pembelian',
 			'premium.account.restoreDone' => 'Selesai. Langganan di akun Google Play ini akan aktif kembali bila ada.',
 			'premium.features.title' => 'Yang dikerjakan Plus',
+			_ => null,
+		} ?? switch (path) {
 			'premium.features.seeAll' => 'Lihat semua fitur Plus',
 			'premium.features.intro' => 'Tanuki yang bekerja, jadi kamu tidak perlu banyak mengetik dan lebih tahu posisi uangmu.',
 			'premium.features.cta' => 'Lihat paket',
@@ -7257,8 +7299,6 @@ extension on Translations {
 			'premium.features.watches.title' => 'Berjaga',
 			'premium.features.watches.text' => 'Peringatan sebelum anggaran habis atau uang nganggur menipis, plus Ringkasan Senin.',
 			'premium.features.answers.title' => 'Menjawab pertanyaan',
-			_ => null,
-		} ?? switch (path) {
 			'premium.features.answers.text' => 'Tanya soal uangmu dalam bahasa sehari-hari, diketik atau lewat suara.',
 			'premium.features.plans.title' => 'Merencanakan',
 			'premium.features.plans.text' => 'Coba bagaimana kalau, buat Target dengan perkiraan tanggal tercapai, dan lihat 12 bulan ke depan.',

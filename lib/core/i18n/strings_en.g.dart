@@ -1504,6 +1504,16 @@ class _Translations$plan$en extends Translations$plan$id {
 	@override String get infoResult => '= Unplanned money';
 	@override String get infoNotBalance => 'Not your wallet balance.';
 	@override String get balanceTitle => 'Wallet balance ≈';
+	@override String get indicatorsTitle => 'This month\'s indicators';
+	@override String get indLockedTitle => 'Committed';
+	@override String indLockedPrev({required Object percent}) => 'Last month ${percent}%';
+	@override String get indLockedOf => 'of income';
+	@override String get indBudgetTitle => 'Budget used';
+	@override String get indPerDayTitle => 'Off-plan / day';
+	@override String get indPerDayNone => 'Not enough history';
+	@override String get indLowTitle => 'Lowest balance';
+	@override String get legendBalance => 'Daily balance ≈';
+	@override String get distTitle => 'Planned outflow mix';
 	@override String get allWallets => 'All';
 	@override String endOf({required Object date}) => 'End of ${date}';
 	@override String lowestOn({required Object date}) => 'Lowest · ${date}';
@@ -3868,6 +3878,16 @@ extension on TranslationsEn {
 			'plan.infoResult' => '= Unplanned money',
 			'plan.infoNotBalance' => 'Not your wallet balance.',
 			'plan.balanceTitle' => 'Wallet balance ≈',
+			'plan.indicatorsTitle' => 'This month\'s indicators',
+			'plan.indLockedTitle' => 'Committed',
+			'plan.indLockedPrev' => ({required Object percent}) => 'Last month ${percent}%',
+			'plan.indLockedOf' => 'of income',
+			'plan.indBudgetTitle' => 'Budget used',
+			'plan.indPerDayTitle' => 'Off-plan / day',
+			'plan.indPerDayNone' => 'Not enough history',
+			'plan.indLowTitle' => 'Lowest balance',
+			'plan.legendBalance' => 'Daily balance ≈',
+			'plan.distTitle' => 'Planned outflow mix',
 			'plan.allWallets' => 'All',
 			'plan.endOf' => ({required Object date}) => 'End of ${date}',
 			'plan.lowestOn' => ({required Object date}) => 'Lowest · ${date}',
@@ -4030,6 +4050,8 @@ extension on TranslationsEn {
 			'premium.account.restore' => 'Restore purchases',
 			'premium.account.restoreDone' => 'Done. A subscription on this Google Play account will turn on again if there is one.',
 			'premium.features.title' => 'What Plus does',
+			_ => null,
+		} ?? switch (path) {
 			'premium.features.seeAll' => 'See all Plus features',
 			'premium.features.intro' => 'Tanuki does the work, so you spend less time recording and more time knowing where your money stands.',
 			'premium.features.cta' => 'See plans',
@@ -4040,8 +4062,6 @@ extension on TranslationsEn {
 			'premium.features.watches.title' => 'Keeps watch',
 			'premium.features.watches.text' => 'A warning before a budget runs out or free money runs thin, plus a Monday summary.',
 			'premium.features.answers.title' => 'Answers questions',
-			_ => null,
-		} ?? switch (path) {
 			'premium.features.answers.text' => 'Ask about your money in everyday words, typed or spoken.',
 			'premium.features.plans.title' => 'Plans ahead',
 			'premium.features.plans.text' => 'Try what if, set Goals with an expected date, and see 12 months ahead.',

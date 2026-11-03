@@ -6146,6 +6146,17 @@ memilih mode (dan preset bila ≥ 2), dan design system lama dihapus.
       Berikutnya, dan lembar Awal bulan keuangan (kisi tanggal, pratinjau
       dengan garis waktu bertumbuh, `AppCheckRow` membulat).
       `DsSectionHeader` tidak lagi meluap dengan tautan panjang.
+      **Bulan ini, pengayaan (3 Nov 2026, acuan Stitch Arus Keuangan):**
+      grafik saldo mengikuti acuan (`PlanBalanceChart`: kurva monoton halus,
+      gradasi, panduan putus-putus dengan label sumbu, simpul terendah, titik
+      fokus bergaris tegak, tooltip, tergambar dari kiri), kisi Indikator
+      bulan ini (`PlanIndicators`: terikat rencana, anggaran terpakai, di luar
+      rencana per hari, saldo terendah) dan Distribusi rencana keluar
+      (`PlanDistribution`), semuanya dari angka yang sudah dihitung layar.
+      Komponen baru `DsScrollReveal`: kartu memudar, naik, dan membesar
+      sedikit saat masuk dari tepi bawah dan meredup saat keluar lewat atas,
+      mengikuti posisi gulir. Tidak dibuat dari acuan: kartu Wawasan Guru
+      Tanuki/Kakeibo, sakelar benchmark, dan unduh rekap.
       **Ikon clay dilengkapi (31 Okt 2026, KT-DS5):** 33 ikon baru untuk
       dompet, jenis transaksi, kategori, dan status Freelance; semua
       `IconKey` benda kini punya clay (`ClayIcons.forIcon`). Digambar dari

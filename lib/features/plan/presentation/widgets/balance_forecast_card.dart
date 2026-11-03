@@ -4,6 +4,7 @@ import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
+import 'package:saldough/features/plan/presentation/widgets/plan_balance_chart.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
@@ -57,10 +58,6 @@ class BalanceForecastCard extends StatefulWidget {
 }
 
 class _BalanceForecastCardState extends State<BalanceForecastCard> {
-  int? _selected;
-
-  static String _approx(int sen) => '≈${AppMoneyFormatter.formatApprox(sen)}';
-
   void _showDetails(BuildContext context) => showAppSheet<void>(
     context,
     builder: (_) => StatefulBuilder(
@@ -164,8 +161,6 @@ class _BalanceForecastCardState extends State<BalanceForecastCard> {
     final projection = widget.projection;
     final low = projection.lowest;
     final days = projection.days;
-    final selected = _selected == null || _selected! >= days.length ? null : days[_selected!];
-    final reduced = DsMotion.reduced(context);
     return CustomPaint(
       painter: _DashedBorderPainter(color: c.outline),
       child: DecoratedBox(
@@ -246,32 +241,22 @@ class _BalanceForecastCardState extends State<BalanceForecastCard> {
                 ),
               ),
               if (days.length > 1) ...[
-                const SizedBox(height: 12),
-                SizedBox(
-                  height: 20,
-                  child: selected == null
-                      ? null
-                      : Align(
-                          alignment: AlignmentDirectional.centerStart,
-                          child: DecoratedBox(
-                            decoration: BoxDecoration(
-                              color: c.actionPrimary.withValues(alpha: 0.10),
-                              borderRadius: DsRadius.fullAll,
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-                              child: Text(
-                                t.plan.chartPoint(
-                                  date: CycleMonthFormatter.formatDayMonth(selected.date),
-                                  amount: _approx(selected.balance),
-                                ),
-                                style: ds.typography.labelMd.copyWith(fontSize: 11, color: c.actionPrimary),
-                              ),
-                            ),
-                          ),
-                        ),
+                const SizedBox(height: 14),
+                // Legenda seperti acuan: titik aksi untuk kurva, cincin untuk terendah.
+                Wrap(
+                  spacing: 16,
+                  runSpacing: 4,
+                  children: [
+                    _LegendDot(color: c.actionPrimary, label: t.plan.legendBalance),
+                    if (low != null)
+                      _LegendDot(
+                        color: low.balance < 0 ? c.error : c.textPrimary,
+                        ring: true,
+                        label: t.plan.lowestOn(date: CycleMonthFormatter.formatDayMonth(low.date)),
+                      ),
+                  ],
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 10),
                 Semantics(
                   container: true,
                   label: low == null
@@ -282,64 +267,7 @@ class _BalanceForecastCardState extends State<BalanceForecastCard> {
                           end: AppMoneyFormatter.format(projection.endBalance),
                         ),
                   excludeSemantics: true,
-                  child: LayoutBuilder(
-                    builder: (context, constraints) {
-                      void select(double dx) => setState(
-                        () => _selected = (dx / constraints.maxWidth * (days.length - 1)).round().clamp(
-                          0,
-                          days.length - 1,
-                        ),
-                      );
-                      // Garis tergambar dari kiri ke kanan sekali saat pertama tampil.
-                      return TweenAnimationBuilder<double>(
-                        tween: Tween(begin: reduced ? 1 : 0, end: 1),
-                        duration: const Duration(milliseconds: 1100),
-                        curve: DsMotion.easeOutExpo,
-                        builder: (context, progress, _) => GestureDetector(
-                          onHorizontalDragStart: (d) => select(d.localPosition.dx),
-                          onHorizontalDragUpdate: (d) => select(d.localPosition.dx),
-                          onTapDown: (d) => select(d.localPosition.dx),
-                          child: CustomPaint(
-                            size: Size(constraints.maxWidth, 120),
-                            painter: _ChartPainter(
-                              balances: [for (final d in days) d.balance],
-                              line: c.actionPrimary,
-                              zero: c.textMuted,
-                              negative: c.error,
-                              marker: c.textPrimary,
-                              ring: c.surfaceCard,
-                              lowIndex: low == null ? null : days.indexOf(low),
-                              selectedIndex: _selected,
-                              progress: progress,
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Flexible(
-                      child: Text(
-                        widget.isFuture ? CycleMonthFormatter.formatDayMonth(days.first.date) : t.plan.todayLabel,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: ds.typography.bodySm.copyWith(color: c.textSecondary),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Flexible(
-                      child: Text(
-                        CycleMonthFormatter.formatDayMonth(widget.lastDay),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: ds.typography.bodySm.copyWith(color: c.textSecondary),
-                      ),
-                    ),
-                  ],
+                  child: PlanBalanceChart(days: days, low: low, isFuture: widget.isFuture),
                 ),
               ],
             ],
@@ -388,108 +316,40 @@ class _Tile extends StatelessWidget {
   }
 }
 
-/// Saldo per hari sebagai anak tangga: garis putus-putus karena perkiraan,
-/// area tipis di atas nol (aksi) dan di bawahnya (merah), garis nol, penanda
-/// bulat untuk titik terendah dan titik terpilih. [progress] (0–1) menggambar
-/// dari kiri ke kanan.
-class _ChartPainter extends CustomPainter {
-  _ChartPainter({
-    required this.balances,
-    required this.line,
-    required this.zero,
-    required this.negative,
-    required this.marker,
-    required this.ring,
-    required this.lowIndex,
-    required this.selectedIndex,
-    this.progress = 1,
-  });
+class _LegendDot extends StatelessWidget {
+  const _LegendDot({required this.color, required this.label, this.ring = false});
 
-  final List<int> balances;
-  final Color line;
-  final Color zero;
-  final Color negative;
-  final Color marker;
-  final Color ring;
-  final int? lowIndex;
-  final int? selectedIndex;
-  final double progress;
+  final Color color;
+  final String label;
+  final bool ring;
 
   @override
-  void paint(Canvas canvas, Size size) {
-    if (balances.length < 2) return;
-    final minValue = [...balances, 0].reduce((a, b) => a < b ? a : b).toDouble();
-    final maxValue = [...balances, 0].reduce((a, b) => a > b ? a : b).toDouble();
-    final span = (maxValue - minValue).abs() < 1 ? 1.0 : maxValue - minValue;
-    double x(int i) => i / (balances.length - 1) * size.width;
-    double y(num value) => size.height - 6 - (value - minValue) / span * (size.height - 12);
-    final zeroY = y(0);
-
-    canvas
-      ..save()
-      ..clipRect(Rect.fromLTRB(0, -8, size.width * progress, size.height + 8));
-
-    // Anak tangga: datar sepanjang hari, lalu turun/naik tegak.
-    final steps = Path()..moveTo(x(0), y(balances[0]));
-    for (var i = 1; i < balances.length; i++) {
-      steps
-        ..lineTo(x(i), y(balances[i - 1]))
-        ..lineTo(x(i), y(balances[i]));
-    }
-    final area = Path.from(steps)
-      ..lineTo(x(balances.length - 1), zeroY)
-      ..lineTo(x(0), zeroY)
-      ..close();
-    canvas
-      ..save()
-      ..clipRect(Rect.fromLTRB(0, 0, size.width, zeroY))
-      ..drawPath(area, Paint()..color = line.withValues(alpha: 0.12))
-      ..restore()
-      ..save()
-      ..clipRect(Rect.fromLTRB(0, zeroY, size.width, size.height))
-      ..drawPath(area, Paint()..color = negative.withValues(alpha: 0.18))
-      ..restore();
-    if (minValue < 0) {
-      canvas.drawLine(Offset(0, zeroY), Offset(size.width, zeroY), Paint()..color = zero);
-    }
-
-    final stroke = Paint()
-      ..color = line
-      ..strokeWidth = 2.5
-      ..strokeCap = StrokeCap.round
-      ..style = PaintingStyle.stroke;
-    for (final metric in steps.computeMetrics()) {
-      for (var d = 0.0; d < metric.length; d += 8) {
-        canvas.drawPath(metric.extractPath(d, (d + 5).clamp(0, metric.length)), stroke);
-      }
-    }
-    canvas.restore();
-
-    void dot(int i, double radius, Color fill) {
-      final center = Offset(x(i), y(balances[i]));
-      canvas
-        ..drawCircle(center, radius + 2.5, Paint()..color = ring)
-        ..drawCircle(center, radius, Paint()..color = fill);
-    }
-
-    if (progress >= 0.98) {
-      if (lowIndex case final i? when i >= 0 && i < balances.length) {
-        dot(i, 4.5, balances[i] < 0 ? negative : marker);
-      }
-      if (selectedIndex case final i? when i < balances.length) {
-        canvas.drawLine(Offset(x(i), 0), Offset(x(i), size.height), Paint()..color = zero.withValues(alpha: 0.6));
-        dot(i, 5.5, line);
-      }
-    }
+  Widget build(BuildContext context) {
+    final ds = context.ds;
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 10,
+          height: 10,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: ring ? ds.colors.surfaceCard : color,
+            border: ring ? Border.all(color: color, width: 2) : null,
+          ),
+        ),
+        const SizedBox(width: 6),
+        Flexible(
+          child: Text(
+            label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: ds.typography.labelMd.copyWith(fontSize: 11, color: ds.colors.textPrimary),
+          ),
+        ),
+      ],
+    );
   }
-
-  @override
-  bool shouldRepaint(_ChartPainter old) =>
-      old.balances != balances ||
-      old.selectedIndex != selectedIndex ||
-      old.line != line ||
-      old.ring != ring ||
-      old.progress != progress;
 }
 
 /// Bingkai putus-putus untuk angka perkiraan (PLAN_TAB_LAYOUT §7.2).

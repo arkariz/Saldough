@@ -33,6 +33,7 @@ export 'components/ds_period_stepper.dart';
 export 'components/ds_pressable.dart';
 export 'components/ds_quick_action_tile.dart';
 export 'components/ds_reveal.dart';
+export 'components/ds_scroll_reveal.dart';
 export 'components/ds_search_field.dart';
 export 'components/ds_section_header.dart';
 export 'components/ds_segment_meter.dart';

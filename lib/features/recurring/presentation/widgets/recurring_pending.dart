@@ -55,6 +55,15 @@ class RecurringPendingTile extends StatelessWidget {
     // W3 dari notifikasi (ADR-037 §3.3): transaksinya ada tapi nominalnya
     // naik; Catat di sini akan menggandakannya, jadi tawarkan tautan.
     final raised = plus ? priceIncreaseCandidate(rule, date, state.transactions) : null;
+    final days = state.today;
+    final badge = DsBadge(
+      label: dueText(date, days),
+      tone: switch (dueStateOf(date, days)) {
+        DueState.overdue => DsBadgeTone.warning,
+        DueState.today => DsBadgeTone.warm,
+        DueState.upcoming => DsBadgeTone.neutral,
+      },
+    );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -63,18 +72,19 @@ class RecurringPendingTile extends StatelessWidget {
           entry: entry,
           toWalletName: state.walletName(rule.toWalletId),
           today: state.today,
+          badge: badge,
           onTap: () => _editFirst(context, date),
         ),
-        // Satu blok rapat di bawah baris: lencana jatuh tempo di kiri, aksi di
-        // kanan (turun baris bila sempit), sejajar dengan judul baris.
+        // Aksi seragam selebar isi baris (sejajar judul): Lewati di kiri,
+        // tindakan utama di kanan.
         Padding(
-          padding: const EdgeInsets.fromLTRB(70, 0, 14, 12),
+          padding: const EdgeInsets.fromLTRB(70, 0, 14, 14),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               if (raised != null)
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 6),
+                  padding: const EdgeInsets.only(bottom: 8),
                   child: Text(
                     t.recurring.priceUpFound(name: rule.note, amount: AppMoneyFormatter.format(raised.amount)),
                     key: ValueKey('recurring-price-up-${rule.id}'),
@@ -83,67 +93,53 @@ class RecurringPendingTile extends StatelessWidget {
                 )
               else if (unseen)
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 6),
+                  padding: const EdgeInsets.only(bottom: 8),
                   child: Text(
                     t.recurring.unseenLabel,
                     key: ValueKey('recurring-unseen-${rule.id}'),
                     style: context.ds.typography.bodySm.copyWith(color: context.ds.colors.textSecondary),
                   ),
                 ),
-              Wrap(
-                alignment: WrapAlignment.spaceBetween,
-                crossAxisAlignment: WrapCrossAlignment.center,
-                runSpacing: 4,
-                spacing: 8,
-                children: [
-                  DsBadge(
-                    label: dueText(date, state.today),
-                    tone: switch (dueStateOf(date, state.today)) {
-                      DueState.overdue => DsBadgeTone.warning,
-                      DueState.today => DsBadgeTone.warm,
-                      DueState.upcoming => DsBadgeTone.neutral,
-                    },
+              DsInlineActions(
+                actions: [
+                  DsInlineAction(
+                    label: t.recurring.skipAction,
+                    onPressed: () => bloc.add(RecurringOccurrenceSkipped(ruleId: rule.id, date: date)),
                   ),
-                  Wrap(
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    children: [
-                      DsButton.ghost(
-                        label: t.recurring.skipAction,
-                        onPressed: () => bloc.add(RecurringOccurrenceSkipped(ruleId: rule.id, date: date)),
-                      ),
-                      if (raised != null) ...[
-                        DsButton.ghost(
-                          label: t.recurring.priceUpKeep,
-                          onPressed: () {
-                            AppAnalytics.log(RecurringEvents.priceIncreaseAction('keep'));
-                            bloc.add(RecurringOccurrenceLinked(ruleId: rule.id, date: date, transactionId: raised.id));
-                          },
-                        ),
-                        DsButton.compact(
-                          label: t.recurring.priceUpUpdate,
-                          onPressed: () {
-                            AppAnalytics.log(RecurringEvents.priceIncreaseAction('update'));
-                            bloc
-                              ..add(RecurringOccurrenceLinked(ruleId: rule.id, date: date, transactionId: raised.id))
-                              ..add(RecurringAmountUpdated(ruleId: rule.id, amount: raised.amount));
-                          },
-                        ),
-                      ] else if (unseen)
-                        DsButton.ghost(
-                          label: t.recurring.notYetAction,
-                          onPressed: () => bloc.add(RecurringOccurrenceSnoozed(ruleId: rule.id)),
-                        )
-                      else if (fixed)
-                        DsButton.ghost(label: t.recurring.editFirstAction, onPressed: () => _editFirst(context, date)),
-                      if (raised == null)
-                        DsButton.compact(
-                          label: t.recurring.recordAction,
-                          onPressed: fixed
-                              ? () => bloc.add(RecurringOccurrenceRecorded(ruleId: rule.id, date: date))
-                              : () => _editFirst(context, date),
-                        ),
-                    ],
-                  ),
+                  if (raised != null) ...[
+                    DsInlineAction(
+                      label: t.recurring.priceUpKeep,
+                      onPressed: () {
+                        AppAnalytics.log(RecurringEvents.priceIncreaseAction('keep'));
+                        bloc.add(RecurringOccurrenceLinked(ruleId: rule.id, date: date, transactionId: raised.id));
+                      },
+                    ),
+                    DsInlineAction(
+                      tone: DsInlineActionTone.primary,
+                      label: t.recurring.priceUpUpdate,
+                      onPressed: () {
+                        AppAnalytics.log(RecurringEvents.priceIncreaseAction('update'));
+                        bloc
+                          ..add(RecurringOccurrenceLinked(ruleId: rule.id, date: date, transactionId: raised.id))
+                          ..add(RecurringAmountUpdated(ruleId: rule.id, amount: raised.amount));
+                      },
+                    ),
+                  ] else ...[
+                    if (unseen)
+                      DsInlineAction(
+                        label: t.recurring.notYetAction,
+                        onPressed: () => bloc.add(RecurringOccurrenceSnoozed(ruleId: rule.id)),
+                      )
+                    else if (fixed)
+                      DsInlineAction(label: t.recurring.editFirstAction, onPressed: () => _editFirst(context, date)),
+                    DsInlineAction(
+                      tone: DsInlineActionTone.primary,
+                      label: t.recurring.recordAction,
+                      onPressed: fixed
+                          ? () => bloc.add(RecurringOccurrenceRecorded(ruleId: rule.id, date: date))
+                          : () => _editFirst(context, date),
+                    ),
+                  ],
                 ],
               ),
             ],

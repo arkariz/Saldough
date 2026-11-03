@@ -21,6 +21,7 @@ class RecurringRow extends StatelessWidget {
     required this.toWalletName,
     required this.today,
     required this.onTap,
+    this.badge,
     super.key,
   });
 
@@ -35,6 +36,9 @@ class RecurringRow extends StatelessWidget {
 
   /// Ketukan baris.
   final VoidCallback onTap;
+
+  /// Lencana di bawah nominal (mis. jatuh tempo), atau `null`.
+  final Widget? badge;
 
   @override
   Widget build(BuildContext context) {
@@ -183,16 +187,29 @@ class RecurringRow extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               // Nominal mengecil bila lebar sempit; judul tetap mendapat sisanya.
-              ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 104),
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  alignment: AlignmentDirectional.centerEnd,
-                  child: Text(
-                    signedAmount(rule.kind, amount, approximate: approximate),
-                    style: ds.typography.amount.copyWith(color: amountColor),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 104),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: AlignmentDirectional.centerEnd,
+                      child: Text(
+                        signedAmount(rule.kind, amount, approximate: approximate),
+                        style: ds.typography.amount.copyWith(color: amountColor),
+                      ),
+                    ),
                   ),
-                ),
+                  if (badge != null) ...[
+                    const SizedBox(height: 4),
+                    ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 104),
+                      child: FittedBox(fit: BoxFit.scaleDown, alignment: AlignmentDirectional.centerEnd, child: badge),
+                    ),
+                  ],
+                ],
               ),
               if (status == OccurrenceStatus.recorded) ...[
                 const SizedBox(width: 6),

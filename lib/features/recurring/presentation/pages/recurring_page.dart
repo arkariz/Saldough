@@ -403,30 +403,29 @@ class _IdleCard extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 4),
-            Wrap(
-              alignment: WrapAlignment.end,
-              spacing: 4,
-              children: [
-                DsButton.ghost(
-                  label: t.recurring.idleKeep,
-                  onPressed: () {
-                    AppAnalytics.log(RecurringEvents.idleAction('keep'));
-                    bloc.add(RecurringIdleDismissed(rule.id));
-                  },
-                ),
-                DsButton.ghost(
+            const SizedBox(height: 12),
+            DsInlineActions(
+              actions: [
+                DsInlineAction(
                   label: t.recurring.pauseAction,
                   onPressed: () {
                     AppAnalytics.log(RecurringEvents.idleAction('pause'));
                     bloc.add(RecurringPauseToggled(rule.id));
                   },
                 ),
-                DsButton.ghost(
+                DsInlineAction(
                   label: t.recurring.endAction,
                   onPressed: () {
                     AppAnalytics.log(RecurringEvents.idleAction('end'));
                     bloc.add(RecurringEnded(rule.id));
+                  },
+                ),
+                DsInlineAction(
+                  tone: DsInlineActionTone.primary,
+                  label: t.recurring.idleKeep,
+                  onPressed: () {
+                    AppAnalytics.log(RecurringEvents.idleAction('keep'));
+                    bloc.add(RecurringIdleDismissed(rule.id));
                   },
                 ),
               ],
@@ -476,19 +475,19 @@ class _SuggestionCard extends StatelessWidget {
                 ),
                 style: ds.typography.bodyMd,
               ),
-              Wrap(
-                alignment: WrapAlignment.end,
-                spacing: 4,
-                children: [
-                  DsButton.ghost(
+              const SizedBox(height: 8),
+              DsInlineActions(
+                actions: [
+                  DsInlineAction(
                     label: t.recurring.suggestDismiss,
                     onPressed: () {
                       AppAnalytics.log(RecurringEvents.suggestionAction('dismiss'));
                       bloc.add(RecurringSuggestionDismissed(s.key));
                     },
                   ),
-                  DsButton.compact(
+                  DsInlineAction(
                     key: ValueKey('recurring-suggest-${s.key}'),
+                    tone: DsInlineActionTone.primary,
                     label: t.recurring.suggestAccept,
                     onPressed: () {
                       AppAnalytics.log(RecurringEvents.suggestionAction('accept'));

@@ -241,6 +241,12 @@ void main() {
     expect(find.text(t.recurring.pendingTotal(amount: 'Rp415.000')), findsOneWidget);
     expect(find.text(t.recurring.dueYesterday), findsOneWidget);
     expect(find.text(t.recurring.overdueBy(n: 4)), findsOneWidget);
+    // Aksi tiap baris seragam: tinggi sama dan sebaris.
+    final actions = tester
+        .widgetList(find.byType(DsInlineAction))
+        .map((w) => tester.getRect(find.byWidget(w)))
+        .toList();
+    expect(actions.map((r) => r.height.round()).toSet(), hasLength(1));
     expect(tester.takeException(), isNull);
   });
 

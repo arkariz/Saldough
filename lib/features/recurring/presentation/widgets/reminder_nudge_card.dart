@@ -93,10 +93,14 @@ class ReminderNudgeCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 12),
-              DsButton.compact(
-                key: const ValueKey('reminder-nudge-action'),
-                label: needsPermission ? texts.allowAccess : texts.turnOn,
-                onPressed: () => unawaited(enable()),
+              SizedBox(
+                width: 112,
+                child: DsInlineAction(
+                  key: const ValueKey('reminder-nudge-action'),
+                  tone: DsInlineActionTone.primary,
+                  label: needsPermission ? texts.allowAccess : texts.turnOn,
+                  onPressed: () => unawaited(enable()),
+                ),
               ),
             ],
           ),
@@ -137,10 +141,14 @@ class ReminderRuleNote extends StatelessWidget {
               child: Text(texts.reminder.rowNote, style: ds.typography.bodySm.copyWith(color: ds.colors.textSecondary)),
             ),
             const SizedBox(width: 12),
-            DsButton.compact(
-              key: const ValueKey('reminder-rule-note-action'),
-              label: state == FeatureState.permissionNeeded ? texts.allowAccess : texts.turnOn,
-              onPressed: () => unawaited(enable()),
+            SizedBox(
+              width: 112,
+              child: DsInlineAction(
+                key: const ValueKey('reminder-rule-note-action'),
+                tone: DsInlineActionTone.primary,
+                label: state == FeatureState.permissionNeeded ? texts.allowAccess : texts.turnOn,
+                onPressed: () => unawaited(enable()),
+              ),
             ),
           ],
         ),

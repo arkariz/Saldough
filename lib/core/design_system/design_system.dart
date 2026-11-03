@@ -23,6 +23,7 @@ export 'components/ds_flip_switcher.dart';
 export 'components/ds_hero_balance_card.dart';
 export 'components/ds_icon_tile.dart';
 export 'components/ds_idle_motion.dart';
+export 'components/ds_inline_action.dart';
 export 'components/ds_inline_banner.dart';
 export 'components/ds_keypad.dart';
 export 'components/ds_ledger_row.dart';

@@ -333,12 +333,15 @@ class RecurringDetailPage extends StatelessWidget {
                               ),
                             ],
                           ),
-                          Align(
-                            alignment: AlignmentDirectional.centerEnd,
-                            child: DsButton.compact(
-                              label: t.recurring.priceUpdateAction(amount: AppMoneyFormatter.format(last.amount)),
-                              onPressed: () => bloc.add(RecurringAmountUpdated(ruleId: rule.id, amount: last.amount)),
-                            ),
+                          const SizedBox(height: 10),
+                          DsInlineActions(
+                            actions: [
+                              DsInlineAction(
+                                tone: DsInlineActionTone.primary,
+                                label: t.recurring.priceUpdateAction(amount: AppMoneyFormatter.format(last.amount)),
+                                onPressed: () => bloc.add(RecurringAmountUpdated(ruleId: rule.id, amount: last.amount)),
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -613,15 +616,23 @@ class _NextLine extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
-                        child: Text(
-                          occurrenceDateText(date, today),
-                          overflow: TextOverflow.ellipsis,
-                          style: ds.typography.titleMd.copyWith(
-                            color: skipped ? c.textMuted : c.textPrimary,
-                            decoration: skipped ? TextDecoration.lineThrough : null,
-                          ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              occurrenceDateText(date, today),
+                              overflow: TextOverflow.ellipsis,
+                              style: ds.typography.titleMd.copyWith(
+                                color: skipped ? c.textMuted : c.textPrimary,
+                                decoration: skipped ? TextDecoration.lineThrough : null,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            DsBadge(label: dueText(date, today), tone: lit ? DsBadgeTone.warm : DsBadgeTone.neutral),
+                          ],
                         ),
                       ),
                       const SizedBox(width: 8),
@@ -638,20 +649,26 @@ class _NextLine extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 6),
-                  Wrap(
-                    spacing: 6,
-                    runSpacing: 2,
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    children: [
-                      DsBadge(label: dueText(date, today), tone: lit ? DsBadgeTone.warm : DsBadgeTone.neutral),
-                      if (!skipped) DsButton.compact(label: t.recurring.recordEarlyAction, onPressed: onRecordEarly),
-                      DsButton.ghost(
-                        label: skipped ? t.recurring.unskipAction : t.recurring.skipAction,
-                        onPressed: onToggleSkip,
+                  const SizedBox(height: 8),
+                  if (skipped)
+                    Align(
+                      alignment: AlignmentDirectional.centerStart,
+                      child: SizedBox(
+                        width: 150,
+                        child: DsInlineAction(label: t.recurring.unskipAction, onPressed: onToggleSkip),
                       ),
-                    ],
-                  ),
+                    )
+                  else
+                    DsInlineActions(
+                      actions: [
+                        DsInlineAction(label: t.recurring.skipAction, onPressed: onToggleSkip),
+                        DsInlineAction(
+                          tone: DsInlineActionTone.primary,
+                          label: t.recurring.recordEarlyAction,
+                          onPressed: onRecordEarly,
+                        ),
+                      ],
+                    ),
                 ],
               ),
             ),

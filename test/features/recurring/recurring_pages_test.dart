@@ -16,6 +16,7 @@ import 'package:saldough/features/recurring/presentation/bloc/recurring_state.da
 import 'package:saldough/features/recurring/presentation/pages/recurring_detail_page.dart';
 import 'package:saldough/features/recurring/presentation/pages/recurring_page.dart';
 import 'package:saldough/features/recurring/presentation/widgets/recurring_summary_card.dart';
+import 'package:saldough/features/recurring/presentation/widgets/recurring_week_ribbon.dart';
 import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
@@ -175,7 +176,7 @@ void main() {
     // Sisa rutin keluar Okt: Netflix 65.000 (Kos sudah keluar, Gym dijeda).
     expect(find.text('Rp65.000'), findsOneWidget);
 
-    await tester.tap(find.text(t.recurring.chipIncome));
+    await tester.tap(find.widgetWithText(DsFilterChip, t.recurring.chipIncome));
     await tester.pumpAndSettle();
     expect(find.text(t.recurring.filteredEmpty), findsOneWidget);
   });
@@ -216,6 +217,37 @@ void main() {
     expect(recorded.recurrence?.ruleId, 'Netflix');
     expect(recorded.recurrence?.occurrenceDate.isAfter(DateTime(clock.year, clock.month, clock.day)), isTrue);
     expect(recorded.amount, 6500000);
+  });
+
+  testWidgets('pita 7 hari: jatuh tempo pekan ini tampil dengan nama; sorotan Terdekat di ringkasan', (tester) async {
+    ActiveDay.sync(today);
+    await rules.saveRule(rule('Internet', 35000000, DateTime(2026, 10, 3)));
+    await rules.saveRule(rule('Kos', 150000000, DateTime(2026, 10, 25)));
+    await pump(tester, const RecurringSegmentView());
+
+    expect(find.text(t.recurring.ribbonTitle), findsOneWidget);
+    // 3 Okt = besok: nama muncul di pita dan di sorotan Terdekat.
+    expect(find.text('Internet'), findsWidgets);
+    expect(find.text('${t.recurring.nearestLabel}: ${t.recurring.dueTomorrow}'), findsOneWidget);
+    // Kos 25 Okt di luar tujuh hari: tidak masuk pita.
+    expect(weekDues([rule('Kos', 1, DateTime(2026, 10, 25))], today), isEmpty);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('urutan: tombol urut menukar tempo terdekat dengan nominal terbesar', (tester) async {
+    ActiveDay.sync(today);
+    await rules.saveRule(rule('Kecil', 1000000, DateTime(2026, 10, 10)));
+    await rules.saveRule(rule('Besar', 90000000, DateTime(2026, 10, 20)));
+    await pump(tester, const RecurringSegmentView());
+    tester.view.physicalSize = const Size(400, 2400);
+    await tester.pumpAndSettle();
+
+    double top(String name) => tester.getTopLeft(find.textContaining(name).first).dy;
+    expect(top('Kecil'), lessThan(top('Besar')), reason: 'tempo terdekat dulu');
+    await tester.tap(find.text(t.recurring.sortSoonest));
+    await tester.pumpAndSettle();
+    expect(find.text(t.recurring.sortAmount), findsOneWidget);
+    expect(top('Besar'), lessThan(top('Kecil')), reason: 'nominal terbesar dulu');
   });
 
   testWidgets('rincian: Berikutnya bergaris waktu dengan lencana jatuh tempo; muat di 360dp', (tester) async {

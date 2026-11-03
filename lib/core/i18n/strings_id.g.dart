@@ -3369,6 +3369,33 @@ class Translations$recurring$id {
 	/// id: 'Total $amount'
 	String pendingTotal({required Object amount}) => 'Total ${amount}';
 
+	/// id: '7 hari ke depan'
+	String get ribbonTitle => '7 hari ke depan';
+
+	/// id: 'Tidak ada jatuh tempo'
+	String get ribbonNone => 'Tidak ada jatuh tempo';
+
+	/// id: 'Terdekat'
+	String get nearestLabel => 'Terdekat';
+
+	/// id: 'Peluang hemat'
+	String get saveChanceLabel => 'Peluang hemat';
+
+	/// id: '$n layanan idle'
+	String idleServices({required Object n}) => '${n} layanan idle';
+
+	/// id: '/bln'
+	String get perMonthShort => '/bln';
+
+	/// id: 'Terdekat'
+	String get sortSoonest => 'Terdekat';
+
+	/// id: 'Terbesar'
+	String get sortAmount => 'Terbesar';
+
+	/// id: 'Lihat rincian'
+	String get moreDetails => 'Lihat rincian';
+
 	/// id: 'Tercatat'
 	String get recordedTitle => 'Tercatat';
 
@@ -6912,6 +6939,15 @@ extension on Translations {
 			'recurring.dueIn' => ({required Object n}) => '${n} hari lagi',
 			'recurring.overdueBy' => ({required Object n}) => 'Terlambat ${n} hari',
 			'recurring.pendingTotal' => ({required Object amount}) => 'Total ${amount}',
+			'recurring.ribbonTitle' => '7 hari ke depan',
+			'recurring.ribbonNone' => 'Tidak ada jatuh tempo',
+			'recurring.nearestLabel' => 'Terdekat',
+			'recurring.saveChanceLabel' => 'Peluang hemat',
+			'recurring.idleServices' => ({required Object n}) => '${n} layanan idle',
+			'recurring.perMonthShort' => '/bln',
+			'recurring.sortSoonest' => 'Terdekat',
+			'recurring.sortAmount' => 'Terbesar',
+			'recurring.moreDetails' => 'Lihat rincian',
 			'recurring.recordedTitle' => 'Tercatat',
 			'recurring.skipAction' => 'Lewati',
 			'recurring.recordEarlyAction' => 'Catat sekarang',
@@ -7221,6 +7257,8 @@ extension on Translations {
 			'premium.features.watches.title' => 'Berjaga',
 			'premium.features.watches.text' => 'Peringatan sebelum anggaran habis atau uang nganggur menipis, plus Ringkasan Senin.',
 			'premium.features.answers.title' => 'Menjawab pertanyaan',
+			_ => null,
+		} ?? switch (path) {
 			'premium.features.answers.text' => 'Tanya soal uangmu dalam bahasa sehari-hari, diketik atau lewat suara.',
 			'premium.features.plans.title' => 'Merencanakan',
 			'premium.features.plans.text' => 'Coba bagaimana kalau, buat Target dengan perkiraan tanggal tercapai, dan lihat 12 bulan ke depan.',
@@ -7230,8 +7268,6 @@ extension on Translations {
 			'premium.features.keeps.text' => 'Cadangan otomatis tiap hari ke Google Drive milikmu.',
 			'premium.gift.brand' => 'Tanukonomy',
 			'premium.gift.askTitle' => 'Biasanya gajian tanggal berapa?',
-			_ => null,
-		} ?? switch (path) {
 			'premium.gift.askBody' => 'Uji coba Plus berakhir bersama periode keuangan pertamamu, jadi tanggal ini menentukan lamanya.',
 			'premium.gift.confirmDay' => ({required Object day}) => 'Pakai tanggal ${day}',
 			'premium.gift.confirmLast' => 'Pakai hari terakhir bulan',

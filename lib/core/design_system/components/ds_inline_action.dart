@@ -13,7 +13,7 @@ enum DsInlineActionTone {
   tonal,
 }
 
-/// Aksi di dalam kartu atau baris daftar: tinggi tampak 36, huruf label 13
+/// Aksi di dalam kartu atau baris daftar: tinggi tampak 36 (30 bila [dense]), huruf label 13
 /// sama untuk semua nada, sudut 12, area sentuh 44. Dipakai lewat
 /// [DsInlineActions] supaya lebar dan tinggi seragam.
 class DsInlineAction extends StatelessWidget {
@@ -23,6 +23,7 @@ class DsInlineAction extends StatelessWidget {
     required this.onPressed,
     this.tone = DsInlineActionTone.tonal,
     this.icon,
+    this.dense = false,
     super.key,
   });
 
@@ -38,6 +39,9 @@ class DsInlineAction extends StatelessWidget {
   /// Ikon opsional di depan [label] (16).
   final IconData? icon;
 
+  /// Ringkas (tinggi 30, huruf 12): aksi di kaki kartu daftar.
+  final bool dense;
+
   @override
   Widget build(BuildContext context) {
     final ds = context.ds;
@@ -52,8 +56,8 @@ class DsInlineAction extends StatelessWidget {
         child: Center(
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 150),
-            height: 36,
-            padding: const EdgeInsets.symmetric(horizontal: 12),
+            height: dense ? 30 : 36,
+            padding: EdgeInsets.symmetric(horizontal: dense ? 10 : 12),
             alignment: Alignment.center,
             decoration: BoxDecoration(
               color: primary
@@ -71,7 +75,11 @@ class DsInlineAction extends StatelessWidget {
                   Text(
                     label,
                     maxLines: 1,
-                    style: ds.typography.labelMd.copyWith(fontSize: 13, fontWeight: FontWeight.w700, color: ink),
+                    style: ds.typography.labelMd.copyWith(
+                      fontSize: dense ? 12 : 13,
+                      fontWeight: FontWeight.w700,
+                      color: ink,
+                    ),
                   ),
                 ],
               ),

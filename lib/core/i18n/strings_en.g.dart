@@ -1343,6 +1343,15 @@ class _Translations$recurring$en extends Translations$recurring$id {
 	@override String dueIn({required Object n}) => 'In ${n} days';
 	@override String overdueBy({required Object n}) => '${n} days late';
 	@override String pendingTotal({required Object amount}) => 'Total ${amount}';
+	@override String get ribbonTitle => 'Next 7 days';
+	@override String get ribbonNone => 'Nothing due';
+	@override String get nearestLabel => 'Next up';
+	@override String get saveChanceLabel => 'Savings chance';
+	@override String idleServices({required Object n}) => '${n} idle services';
+	@override String get perMonthShort => '/mo';
+	@override String get sortSoonest => 'Soonest';
+	@override String get sortAmount => 'Largest';
+	@override String get moreDetails => 'View details';
 	@override String get recordedTitle => 'Recorded';
 	@override String get skipAction => 'Skip';
 	@override String get recordEarlyAction => 'Record now';
@@ -3713,6 +3722,15 @@ extension on TranslationsEn {
 			'recurring.dueIn' => ({required Object n}) => 'In ${n} days',
 			'recurring.overdueBy' => ({required Object n}) => '${n} days late',
 			'recurring.pendingTotal' => ({required Object amount}) => 'Total ${amount}',
+			'recurring.ribbonTitle' => 'Next 7 days',
+			'recurring.ribbonNone' => 'Nothing due',
+			'recurring.nearestLabel' => 'Next up',
+			'recurring.saveChanceLabel' => 'Savings chance',
+			'recurring.idleServices' => ({required Object n}) => '${n} idle services',
+			'recurring.perMonthShort' => '/mo',
+			'recurring.sortSoonest' => 'Soonest',
+			'recurring.sortAmount' => 'Largest',
+			'recurring.moreDetails' => 'View details',
 			'recurring.recordedTitle' => 'Recorded',
 			'recurring.skipAction' => 'Skip',
 			'recurring.recordEarlyAction' => 'Record now',
@@ -4022,6 +4040,8 @@ extension on TranslationsEn {
 			'premium.features.watches.title' => 'Keeps watch',
 			'premium.features.watches.text' => 'A warning before a budget runs out or free money runs thin, plus a Monday summary.',
 			'premium.features.answers.title' => 'Answers questions',
+			_ => null,
+		} ?? switch (path) {
 			'premium.features.answers.text' => 'Ask about your money in everyday words, typed or spoken.',
 			'premium.features.plans.title' => 'Plans ahead',
 			'premium.features.plans.text' => 'Try what if, set Goals with an expected date, and see 12 months ahead.',
@@ -4031,8 +4051,6 @@ extension on TranslationsEn {
 			'premium.features.keeps.text' => 'An automatic daily backup to your own Google Drive.',
 			'premium.gift.brand' => 'Tanukonomy',
 			'premium.gift.askTitle' => 'When is payday, usually?',
-			_ => null,
-		} ?? switch (path) {
 			'premium.gift.askBody' => 'Your Plus trial ends with your first financial period, so this date sets how long it lasts.',
 			'premium.gift.confirmDay' => ({required Object day}) => 'Use day ${day}',
 			'premium.gift.confirmLast' => 'Use the last day of the month',

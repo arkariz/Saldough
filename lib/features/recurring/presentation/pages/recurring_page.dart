@@ -18,10 +18,11 @@ import 'package:saldough/features/recurring/di/recurring_scope.dart';
 import 'package:saldough/features/recurring/presentation/bloc/recurring_bloc.dart';
 import 'package:saldough/features/recurring/presentation/bloc/recurring_state.dart';
 import 'package:saldough/features/recurring/presentation/navigation/recurring_route_keys.dart';
+import 'package:saldough/features/recurring/presentation/widgets/recurring_card.dart';
 import 'package:saldough/features/recurring/presentation/widgets/recurring_pending.dart';
-import 'package:saldough/features/recurring/presentation/widgets/recurring_row.dart';
 import 'package:saldough/features/recurring/presentation/widgets/recurring_starter_chips.dart';
 import 'package:saldough/features/recurring/presentation/widgets/recurring_summary_card.dart';
+import 'package:saldough/features/recurring/presentation/widgets/recurring_week_ribbon.dart';
 import 'package:saldough/features/recurring/presentation/widgets/reminder_nudge_card.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:state_management/state_management.dart';
@@ -62,12 +63,20 @@ class RecurringPage extends StatelessWidget {
 }
 
 /// Isi segmen Rutin di atas `RecurringBloc` yang sudah terpasang.
-class RecurringSegmentView extends StatelessWidget {
+class RecurringSegmentView extends StatefulWidget {
   /// Membuat [RecurringSegmentView].
   const RecurringSegmentView({this.rootContainer, super.key});
 
   /// Kontainer akar untuk kartu tombol pengingat (Fase 21); `null` = tanpa.
   final GetIt? rootContainer;
+
+  @override
+  State<RecurringSegmentView> createState() => _RecurringSegmentViewState();
+}
+
+class _RecurringSegmentViewState extends State<RecurringSegmentView> {
+  /// Urutan daftar: tempo terdekat (bawaan) atau nominal terbesar.
+  bool _byAmount = false;
 
   static void _add(BuildContext context) =>
       context.pushRoute(RecordRouteKeys.sheet, const RecordSheetInput(repeat: RecurringPattern()));
@@ -100,14 +109,15 @@ class RecurringSegmentView extends StatelessWidget {
         // Saran dan rutin menganggur bagian otomasi R3: hanya untuk Plus
         // (ADR-041 §3.8); datanya tidak disentuh.
         final plus = ActivePlan.isPlus;
-        final idle = !plus
-            ? null
+        final idleAll = !plus
+            ? const <RecurringRule>[]
             : idleRules(
                 state.rules,
                 windowStart: DateTime(state.today.year, state.today.month - 1),
                 today: state.today,
                 transactions: state.transactions,
-              ).firstOrNull;
+              );
+        final idle = idleAll.firstOrNull;
         final suggestions = !plus
             ? const <RecurringSuggestion>[]
             : suggestRecurring(
@@ -196,6 +206,7 @@ class RecurringSegmentView extends StatelessWidget {
         ];
         final bloc = context.read<RecurringBloc>();
         final ds = context.ds;
+        final dues = weekDues(state.rules, state.today);
         return TourTrigger(
           tour: TourId.recurring,
           ready: true,
@@ -210,13 +221,21 @@ class RecurringSegmentView extends StatelessWidget {
                     // Nama periode (P-11): "Okt", atau rentang bila bukan bulan kalender.
                     monthLabel: state.period.shortName,
                     subscriptions: subscriptionTotals(state.rules),
+                    today: state.today,
+                    nearest: dues.firstOrNull,
+                    idleCount: idleAll.length,
+                    idleTotal: idleAll.fold(0, (sum, r) => sum + r.amount),
                   ),
                 ),
               ),
+              if (dues.isNotEmpty) ...[
+                const SizedBox(height: 20),
+                RecurringWeekRibbon(today: state.today, dues: dues),
+              ],
               const SizedBox(height: 16),
               // Tombol permanen pengingat (FEATURE_DISCOVERY P-1): di bawah
               // kartu sisa tagihan, hilang begitu efektif.
-              if (rootContainer case final root?) ReminderNudgeCard(container: root, bottomGap: true),
+              if (widget.rootContainer case final root?) ReminderNudgeCard(container: root, bottomGap: true),
               // W6 rutin menganggur: satu kartu, yang pertama (ADR-037 §3.1).
               if (idle != null) ...[_IdleCard(rule: idle), const SizedBox(height: 16)],
               if (state.autoRecorded.isNotEmpty) ...[
@@ -224,26 +243,38 @@ class RecurringSegmentView extends StatelessWidget {
                 const SizedBox(height: 16),
               ],
               if (suggestions.isNotEmpty) ...[_SuggestionCard(suggestions: suggestions), const SizedBox(height: 16)],
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    // Tanpa angka hitungan (PLAN_TAB_LAYOUT §4.9).
-                    for (final (kind, label) in [
-                      (null, t.recurring.chipAll),
-                      (RecurringKind.income, t.recurring.chipIncome),
-                      (RecurringKind.expense, t.recurring.chipExpense),
-                      (RecurringKind.transfer, t.recurring.chipTransfer),
-                    ]) ...[
-                      DsFilterChip(
-                        label: label,
-                        selected: filter == kind,
-                        onTap: () => bloc.add(RecurringKindFilterChanged(kind)),
+              // Penyaring jenis bergulir; pengubah urutan tetap di kanan.
+              Row(
+                children: [
+                  Expanded(
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          // Tanpa angka hitungan (PLAN_TAB_LAYOUT §4.9).
+                          for (final (kind, label) in [
+                            (null, t.recurring.chipAll),
+                            (RecurringKind.income, t.recurring.chipIncome),
+                            (RecurringKind.expense, t.recurring.chipExpense),
+                            (RecurringKind.transfer, t.recurring.chipTransfer),
+                          ]) ...[
+                            DsFilterChip(
+                              label: label,
+                              selected: filter == kind,
+                              onTap: () => bloc.add(RecurringKindFilterChanged(kind)),
+                            ),
+                            const SizedBox(width: 8),
+                          ],
+                        ],
                       ),
-                      const SizedBox(width: 8),
-                    ],
-                  ],
-                ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  _SortChip(
+                    label: _byAmount ? t.recurring.sortAmount : t.recurring.sortSoonest,
+                    onTap: () => setState(() => _byAmount = !_byAmount),
+                  ),
+                ],
               ),
               const SizedBox(height: 8),
               if (visible.isEmpty)
@@ -271,7 +302,7 @@ class RecurringSegmentView extends StatelessWidget {
                     if (group == RecurringGroup.paused || group == RecurringGroup.ended)
                       _FoldedGroup(
                         label: '${_groupLabel(group)} (${rows.length})',
-                        children: [for (final entry in rows) _row(context, state, entry)],
+                        children: [for (final entry in _sorted(rows)) _row(context, state, entry)],
                       )
                     else ...[
                       _GroupLabel(_groupLabel(group), dot: group == RecurringGroup.pending),
@@ -287,9 +318,10 @@ class RecurringSegmentView extends StatelessWidget {
                           recordAll,
                         ],
                       ] else
-                        DsListCard(
+                        Column(
+                          spacing: 10,
                           children: [
-                            for (final (i, entry) in rows.indexed)
+                            for (final (i, entry) in _sorted(rows).indexed)
                               DsReveal(index: i, child: _row(context, state, entry)),
                           ],
                         ),
@@ -298,9 +330,9 @@ class RecurringSegmentView extends StatelessWidget {
               const SizedBox(height: 16),
               SpotlightTarget(
                 spotlightKey: SpotlightKey.recurringAdd,
-                child: DsButton.secondary(
+                child: DsButton(
                   label: t.recurring.addAction,
-                  icon: Icons.add,
+                  icon: Icons.add_circle_outline,
                   expand: true,
                   onPressed: () => _add(context),
                 ),
@@ -312,11 +344,16 @@ class RecurringSegmentView extends StatelessWidget {
     );
   }
 
-  static Widget _row(BuildContext context, RecurringState state, RecurringEntry entry) => RecurringRow(
+  List<RecurringEntry> _sorted(List<RecurringEntry> rows) =>
+      _byAmount ? ([...rows]..sort((a, b) => b.rule.amount.compareTo(a.rule.amount))) : rows;
+
+  static Widget _row(BuildContext context, RecurringState state, RecurringEntry entry) => RecurringCard(
     entry: entry,
+    walletName: state.walletName(entry.rule.walletId),
     toWalletName: state.walletName(entry.rule.toWalletId),
     today: state.today,
     onTap: () => _open(context, entry.rule.id),
+    onTogglePause: () => context.read<RecurringBloc>().add(RecurringPauseToggled(entry.rule.id)),
   );
 
   static String _groupLabel(RecurringGroup group) => switch (group) {
@@ -359,7 +396,7 @@ class _FoldedGroupState extends State<_FoldedGroup> {
           duration: DsMotion.reduced(context) ? Duration.zero : const Duration(milliseconds: 250),
           curve: Curves.easeOutCubic,
           alignment: Alignment.topCenter,
-          child: _open ? DsListCard(children: widget.children) : const SizedBox(width: double.infinity),
+          child: _open ? Column(spacing: 10, children: widget.children) : const SizedBox(width: double.infinity),
         ),
       ],
     );
@@ -586,6 +623,49 @@ class _GroupLabel extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Pil pengubah urutan di ujung baris penyaring: ikon tukar dan label urutan
+/// aktif.
+class _SortChip extends StatelessWidget {
+  const _SortChip({required this.label, required this.onTap});
+
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final ds = context.ds;
+    final c = ds.colors;
+    return DsPressable(
+      onPressed: onTap,
+      pressedScale: 0.96,
+      builder: (context, _) => ConstrainedBox(
+        constraints: const BoxConstraints(minHeight: 44),
+        child: Center(
+          widthFactor: 1,
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              color: c.surfaceCard,
+              borderRadius: DsRadius.fullAll,
+              border: Border.all(color: c.outlineSubtle),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.swap_vert, size: 16, color: c.actionPrimary),
+                  const SizedBox(width: 6),
+                  Text(label, style: ds.typography.labelMd.copyWith(fontSize: 12, color: c.textSecondary)),
+                ],
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

@@ -78,26 +78,18 @@ class DsSummaryHero extends StatelessWidget {
     final clamped = ratio.clamp(0.0, 1.0);
 
     Widget glass(DsSummaryStat stat) => Expanded(
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.10),
-          borderRadius: DsRadius.mdAll,
-          border: Border.all(color: Colors.white.withValues(alpha: 0.14)),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(stat.label, style: ds.typography.bodySm.copyWith(color: c.onHeroMuted)),
-              const SizedBox(height: 2),
-              FittedBox(
-                fit: BoxFit.scaleDown,
-                alignment: AlignmentDirectional.centerStart,
-                child: Text(stat.value, style: ds.typography.amount.copyWith(color: c.onHero)),
-              ),
-            ],
-          ),
+      child: DsSummaryGlass(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(stat.label, style: ds.typography.bodySm.copyWith(color: c.onHeroMuted)),
+            const SizedBox(height: 2),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: AlignmentDirectional.centerStart,
+              child: Text(stat.value, style: ds.typography.amount.copyWith(color: c.onHero)),
+            ),
+          ],
         ),
       ),
     );
@@ -236,4 +228,24 @@ class DsSummaryHero extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Kotak kaca di dalam [DsSummaryHero] (isi bebas): latar putih 10%, garis
+/// putih 14%, sudut 12.
+class DsSummaryGlass extends StatelessWidget {
+  /// Membuat [DsSummaryGlass].
+  const DsSummaryGlass({required this.child, super.key});
+
+  /// Isi.
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => DecoratedBox(
+    decoration: BoxDecoration(
+      color: Colors.white.withValues(alpha: 0.10),
+      borderRadius: DsRadius.mdAll,
+      border: Border.all(color: Colors.white.withValues(alpha: 0.14)),
+    ),
+    child: Padding(padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10), child: child),
+  );
 }

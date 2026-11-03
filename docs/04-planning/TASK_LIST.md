@@ -6125,6 +6125,17 @@ memilih mode (dan preset bila ≥ 2), dan design system lama dihapus.
       dengan `DsEmptyHero`), kartu Menunggu dan pengingat, rincian (hero,
       progres cicilan `DsSegmentMeter`, pilihan pos anggaran lewat
       `showOptionSheet`), dan setelan pengingat. Segmen Bulan ini belum.
+      **Rutin v2, acuan Stitch (3 Nov 2026):** komposisi daftar Rutin
+      mengikuti acuan pemilik: hero dengan dua kotak kaca (Terdekat dan
+      Peluang hemat, yang kedua hanya Plus), pita 7 hari ke depan
+      (`RecurringWeekRibbon`), pengubah urutan (tempo terdekat / nominal
+      terbesar), dan umpan kartu per rutin (`RecurringCard`: ubin clay 48,
+      penanda kategori, jatuh tempo relatif, kaki berisi cara bayar, Jeda).
+      Kelompok Menunggu dicatat tetap kartu beraksi (`RecurringPendingGroup`).
+      Sengaja tidak dibuat dari acuan: kartu "Petuah Kakeibo Guru Tanuki"
+      (nasihat/Kakeibo di luar produk), teks "Tersinkronisasi otomatis via
+      Kuil Keuangan" (tidak ada sinkronisasi), label Jepang pada kategori,
+      dan "% dari pemasukan" (belum ada sumbernya di segmen ini).
       **Ikon clay dilengkapi (31 Okt 2026, KT-DS5):** 33 ikon baru untuk
       dompet, jenis transaksi, kategori, dan status Freelance; semua
       `IconKey` benda kini punya clay (`ClayIcons.forIcon`). Digambar dari

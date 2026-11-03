@@ -64,23 +64,24 @@ class RecurringWeekRibbon extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 8),
-        SizedBox(
-          height: 104 * MediaQuery.textScalerOf(context).scale(1).clamp(1.0, 2.0),
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(vertical: 4),
-            clipBehavior: Clip.none,
-            itemCount: 7,
-            separatorBuilder: (_, _) => const SizedBox(width: 10),
-            itemBuilder: (context, i) {
-              final date = DateTime(today.year, today.month, today.day + i);
-              final due = dues.where((d) => d.date == date).toList();
-              return DsReveal(
-                index: i,
-                child: _Day(date: date, isToday: i == 0, due: due),
-              );
-            },
-          ),
+        // Tujuh hari sebaris selebar layar: tanpa gulir, tanpa nama rutin
+        // (nama ada di umpan di bawah dan di pembaca layar).
+        Row(
+          children: [
+            for (var i = 0; i < 7; i++) ...[
+              if (i > 0) const SizedBox(width: 6),
+              Expanded(
+                child: DsReveal(
+                  index: i,
+                  child: _Day(
+                    date: DateTime(today.year, today.month, today.day + i),
+                    isToday: i == 0,
+                    due: dues.where((d) => d.date == DateTime(today.year, today.month, today.day + i)).toList(),
+                  ),
+                ),
+              ),
+            ],
+          ],
         ),
       ],
     );
@@ -100,48 +101,53 @@ class _Day extends StatelessWidget {
     final c = ds.colors;
     final has = due.isNotEmpty;
     final weekday = CycleMonthFormatter.formatWeekday(date).substring(0, 3);
-    final name = has ? (due.first.rule.note.isEmpty ? t.record.repeat.fallbackName : due.first.rule.note) : null;
-    final more = due.length - 1;
-    final dot = Container(
-      width: has ? 8 : 6,
-      height: has ? 8 : 6,
-      decoration: BoxDecoration(shape: BoxShape.circle, color: has ? c.actionPrimary : c.outlineSubtle),
+    Widget dot({required bool on}) => Container(
+      width: 6,
+      height: 6,
+      decoration: BoxDecoration(shape: BoxShape.circle, color: on ? c.actionPrimary : c.outlineSubtle),
     );
     return Semantics(
-      label: [
-        '$weekday ${date.day}',
-        if (has) ...[for (final d in due) d.rule.note],
-      ].join(', '),
+      label: ['$weekday ${date.day}', for (final d in due) d.rule.note].join(', '),
       child: Container(
-        width: has ? 84 : 64,
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 6),
+        padding: const EdgeInsets.symmetric(vertical: 8),
         decoration: BoxDecoration(
           color: has ? c.actionPrimary.withValues(alpha: 0.10) : c.surfaceCard,
-          borderRadius: DsRadius.lgAll,
+          borderRadius: DsRadius.mdAll,
           border: Border.all(
             color: isToday ? c.actionPrimary : (has ? c.actionPrimary.withValues(alpha: 0.25) : c.outlineSubtle),
           ),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              has ? '$weekday · ${date.day}' : weekday,
-              style: ds.typography.labelMd.copyWith(fontSize: 11, color: has ? c.actionPrimary : c.textSecondary),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                weekday,
+                style: ds.typography.labelMd.copyWith(fontSize: 11, color: has ? c.actionPrimary : c.textSecondary),
+              ),
             ),
             const SizedBox(height: 2),
-            if (has)
-              Text(
-                more > 0 ? '$name +$more' : name!,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: ds.typography.titleMd.copyWith(fontSize: 14),
-              )
-            else
-              Text('${date.day}', style: ds.typography.titleMd),
-            const SizedBox(height: 6),
-            if (has) DsPulse(borderRadius: DsRadius.fullAll, child: dot) else dot,
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                '${date.day}',
+                style: ds.typography.titleMd.copyWith(color: has ? c.actionPrimary : c.textPrimary),
+              ),
+            ),
+            const SizedBox(height: 4),
+            // Satu titik per jatuh tempo (maksimal tiga).
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              spacing: 3,
+              children: [
+                if (!has)
+                  dot(on: false)
+                else
+                  for (var i = 0; i < due.length.clamp(1, 3); i++)
+                    if (i == 0) DsPulse(borderRadius: DsRadius.fullAll, child: dot(on: true)) else dot(on: true),
+              ],
+            ),
           ],
         ),
       ),

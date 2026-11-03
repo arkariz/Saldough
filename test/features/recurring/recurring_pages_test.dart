@@ -226,8 +226,16 @@ void main() {
     await pump(tester, const RecurringSegmentView());
 
     expect(find.text(t.recurring.ribbonTitle), findsOneWidget);
-    // 3 Okt = besok: nama muncul di pita dan di sorotan Terdekat.
+    // 3 Okt = besok: nama ada di sorotan Terdekat dan di umpan, bukan di pita.
     expect(find.text('Internet'), findsWidgets);
+    expect(
+      find.descendant(of: find.byType(RecurringWeekRibbon), matching: find.text('Internet')),
+      findsNothing,
+      reason: 'pita ringkas: hari, tanggal, titik',
+    );
+    // Tujuh hari sebaris, muat tanpa gulir.
+    final ribbon = tester.getRect(find.byType(RecurringWeekRibbon));
+    expect(ribbon.height, lessThan(130));
     expect(find.text('${t.recurring.nearestLabel}: ${t.recurring.dueTomorrow}'), findsOneWidget);
     // Kos 25 Okt di luar tujuh hari: tidak masuk pita.
     expect(weekDues([rule('Kos', 1, DateTime(2026, 10, 25))], today), isEmpty);

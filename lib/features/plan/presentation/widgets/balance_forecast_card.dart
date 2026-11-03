@@ -161,118 +161,114 @@ class _BalanceForecastCardState extends State<BalanceForecastCard> {
     final projection = widget.projection;
     final low = projection.lowest;
     final days = projection.days;
-    return CustomPaint(
-      painter: _DashedBorderPainter(color: c.outline),
-      child: DecoratedBox(
-        decoration: BoxDecoration(color: c.surfaceCard, borderRadius: DsRadius.lgAll),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+    // Kartu biasa, sama dengan kartu lain: perkiraan ditandai tanda ≈ dan
+    // legenda, bukan bingkai putus-putus.
+    return DsCard(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Kepala: ikon grafik clay, judul, dan pintu Rincian. Chip dompet di
+          // baris sendiri: di 360dp judul dan lebih dari dua chip tidak muat.
+          Row(
             children: [
-              // Kepala: ikon grafik clay, judul, dan pintu Rincian. Chip dompet di
-              // baris sendiri: di 360dp judul dan lebih dari dua chip tidak muat.
-              Row(
-                children: [
-                  DsIconTile.asset(asset: ClayIcons.chart, size: DsIconTileSize.sm),
-                  const SizedBox(width: 10),
-                  Expanded(child: Text(t.plan.balanceTitle, style: ds.typography.titleMd)),
-                  SizedBox(
-                    width: 104,
-                    child: DsInlineAction(
-                      dense: true,
-                      label: '${t.plan.detailsAction} ›',
-                      onPressed: () => _showDetails(context),
-                    ),
-                  ),
-                ],
-              ),
-              if (widget.wallets.length > 1) ...[
-                const SizedBox(height: 8),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      DsFilterChip(
-                        label: t.plan.allWallets,
-                        selected: widget.walletId == null,
-                        onTap: () => widget.onWalletChanged(null),
-                      ),
-                      for (final wallet in widget.wallets) ...[
-                        const SizedBox(width: 8),
-                        DsFilterChip(
-                          label: wallet.name,
-                          selected: widget.walletId == wallet.id,
-                          onTap: () => widget.onWalletChanged(wallet.id),
-                        ),
-                      ],
-                    ],
-                  ),
-                ),
-              ],
-              const SizedBox(height: 8),
-              if (widget.isFuture && days.isNotEmpty) ...[
-                _Tile(
-                  label: t.plan.startOf(date: CycleMonthFormatter.formatDayMonth(days.first.date)),
-                  amount: projection.startBalance,
-                ),
-                const SizedBox(height: 8),
-              ],
-              IntrinsicHeight(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  spacing: 10,
-                  children: [
-                    Expanded(
-                      child: _Tile(
-                        label: t.plan.endOf(date: CycleMonthFormatter.formatDayMonth(widget.lastDay)),
-                        amount: projection.endBalance,
-                      ),
-                    ),
-                    if (low != null)
-                      Expanded(
-                        child: _Tile(
-                          label: t.plan.lowestOn(date: CycleMonthFormatter.formatDayMonth(low.date)),
-                          amount: low.balance,
-                          warn: low.balance < 0,
-                        ),
-                      ),
-                  ],
+              DsIconTile.asset(asset: ClayIcons.chart, size: DsIconTileSize.sm),
+              const SizedBox(width: 10),
+              Expanded(child: Text(t.plan.balanceTitle, style: ds.typography.titleMd)),
+              SizedBox(
+                width: 104,
+                child: DsInlineAction(
+                  dense: true,
+                  label: '${t.plan.detailsAction} ›',
+                  onPressed: () => _showDetails(context),
                 ),
               ),
-              if (days.length > 1) ...[
-                const SizedBox(height: 14),
-                // Legenda seperti acuan: titik aksi untuk kurva, cincin untuk terendah.
-                Wrap(
-                  spacing: 16,
-                  runSpacing: 4,
-                  children: [
-                    _LegendDot(color: c.actionPrimary, label: t.plan.legendBalance),
-                    if (low != null)
-                      _LegendDot(
-                        color: low.balance < 0 ? c.error : c.textPrimary,
-                        ring: true,
-                        label: t.plan.lowestOn(date: CycleMonthFormatter.formatDayMonth(low.date)),
-                      ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                Semantics(
-                  container: true,
-                  label: low == null
-                      ? null
-                      : t.plan.chartSemantics(
-                          low: AppMoneyFormatter.format(low.balance),
-                          date: CycleMonthFormatter.formatDayMonth(low.date),
-                          end: AppMoneyFormatter.format(projection.endBalance),
-                        ),
-                  excludeSemantics: true,
-                  child: PlanBalanceChart(days: days, low: low, isFuture: widget.isFuture),
-                ),
-              ],
             ],
           ),
-        ),
+          if (widget.wallets.length > 1) ...[
+            const SizedBox(height: 8),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  DsFilterChip(
+                    label: t.plan.allWallets,
+                    selected: widget.walletId == null,
+                    onTap: () => widget.onWalletChanged(null),
+                  ),
+                  for (final wallet in widget.wallets) ...[
+                    const SizedBox(width: 8),
+                    DsFilterChip(
+                      label: wallet.name,
+                      selected: widget.walletId == wallet.id,
+                      onTap: () => widget.onWalletChanged(wallet.id),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ],
+          const SizedBox(height: 8),
+          if (widget.isFuture && days.isNotEmpty) ...[
+            _Tile(
+              label: t.plan.startOf(date: CycleMonthFormatter.formatDayMonth(days.first.date)),
+              amount: projection.startBalance,
+            ),
+            const SizedBox(height: 8),
+          ],
+          IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              spacing: 10,
+              children: [
+                Expanded(
+                  child: _Tile(
+                    label: t.plan.endOf(date: CycleMonthFormatter.formatDayMonth(widget.lastDay)),
+                    amount: projection.endBalance,
+                  ),
+                ),
+                if (low != null)
+                  Expanded(
+                    child: _Tile(
+                      label: t.plan.lowestOn(date: CycleMonthFormatter.formatDayMonth(low.date)),
+                      amount: low.balance,
+                      warn: low.balance < 0,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          if (days.length > 1) ...[
+            const SizedBox(height: 14),
+            // Legenda seperti acuan: titik aksi untuk kurva, cincin untuk terendah.
+            Wrap(
+              spacing: 16,
+              runSpacing: 4,
+              children: [
+                _LegendDot(color: c.actionPrimary, label: t.plan.legendBalance),
+                if (low != null)
+                  _LegendDot(
+                    color: low.balance < 0 ? c.error : c.textPrimary,
+                    ring: true,
+                    label: t.plan.lowestOn(date: CycleMonthFormatter.formatDayMonth(low.date)),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Semantics(
+              container: true,
+              label: low == null
+                  ? null
+                  : t.plan.chartSemantics(
+                      low: AppMoneyFormatter.format(low.balance),
+                      date: CycleMonthFormatter.formatDayMonth(low.date),
+                      end: AppMoneyFormatter.format(projection.endBalance),
+                    ),
+              excludeSemantics: true,
+              child: PlanBalanceChart(days: days, low: low, isFuture: widget.isFuture),
+            ),
+          ],
+        ],
       ),
     );
   }
@@ -350,28 +346,4 @@ class _LegendDot extends StatelessWidget {
       ],
     );
   }
-}
-
-/// Bingkai putus-putus untuk angka perkiraan (PLAN_TAB_LAYOUT §7.2).
-class _DashedBorderPainter extends CustomPainter {
-  _DashedBorderPainter({required this.color});
-
-  final Color color;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = color
-      ..strokeWidth = 1.5
-      ..style = PaintingStyle.stroke;
-    final path = Path()..addRRect(RRect.fromRectAndRadius(Offset.zero & size, const Radius.circular(16)));
-    for (final metric in path.computeMetrics()) {
-      for (var d = 0.0; d < metric.length; d += 10) {
-        canvas.drawPath(metric.extractPath(d, d + 5), paint);
-      }
-    }
-  }
-
-  @override
-  bool shouldRepaint(_DashedBorderPainter old) => old.color != color;
 }

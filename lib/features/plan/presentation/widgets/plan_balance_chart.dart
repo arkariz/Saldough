@@ -22,8 +22,8 @@ String axisLabel(int sen) {
 }
 
 /// Grafik **saldo per hari** (acuan "Tren Aliran Kas"): kurva halus berwarna
-/// aksi dengan gradasi di bawahnya, panduan mendatar putus-putus dengan label
-/// sumbu, titik simpul di terendah, titik fokus dengan garis tegak putus-putus,
+/// aksi dengan gradasi di bawahnya, panduan mendatar garis rambut dengan label
+/// sumbu, titik simpul di terendah, titik fokus dengan garis tegak tipis,
 /// dan tooltip di atasnya. Geser atau ketuk memindahkan fokus; kurva
 /// tergambar dari kiri ke kanan sekali saat pertama tampil. Bagian di bawah
 /// nol berwarna merah.
@@ -337,15 +337,13 @@ class _ChartPainter extends CustomPainter {
     final plotRight = size.width;
     final baseline = size.height - _ChartGeometry.bottom;
 
-    // Panduan mendatar putus-putus dan label sumbu y.
+    // Panduan mendatar garis rambut dan label sumbu y.
     final guidePaint = Paint()
       ..color = guide
       ..strokeWidth = 1;
     for (final tick in geometry.ticks) {
       final y = geometry.y(size, tick);
-      for (var x = plotLeft; x < plotRight; x += 6) {
-        canvas.drawLine(Offset(x, y), Offset(math.min(x + 3, plotRight), y), guidePaint);
-      }
+      canvas.drawLine(Offset(plotLeft, y), Offset(plotRight, y), guidePaint);
       _text(canvas, axisLabel(tick.round()), labelStyle, Offset(plotLeft - 6, y), align: TextAlign.right);
     }
 
@@ -424,14 +422,14 @@ class _ChartPainter extends CustomPainter {
     if (lowIndex case final i? when i >= 0 && i < geometry.balances.length && i != activeIndex) {
       node(i, radius: 3.5, stroke: geometry.balances[i] < 0 ? negative : marker, fill: ring);
     }
-    // Fokus: garis tegak putus-putus dan titik berisi.
-    const focusTop = _ChartGeometry.top;
-    final focusPaint = Paint()
-      ..color = line
-      ..strokeWidth = 1.5;
-    for (var y = focusTop; y < baseline; y += 5) {
-      canvas.drawLine(Offset(activeX, y), Offset(activeX, math.min(y + 2.5, baseline)), focusPaint);
-    }
+    // Fokus: garis tegak tipis dan titik berisi.
+    canvas.drawLine(
+      Offset(activeX, _ChartGeometry.top),
+      Offset(activeX, baseline),
+      Paint()
+        ..color = line.withValues(alpha: 0.45)
+        ..strokeWidth = 1.5,
+    );
     final activeBalance = geometry.balances[activeIndex];
     node(
       activeIndex,

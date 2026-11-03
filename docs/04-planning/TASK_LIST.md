@@ -6148,8 +6148,9 @@ memilih mode (dan preset bila ≥ 2), dan design system lama dihapus.
       `DsSectionHeader` tidak lagi meluap dengan tautan panjang.
       **Bulan ini, pengayaan (3 Nov 2026, acuan Stitch Arus Keuangan):**
       grafik saldo mengikuti acuan (`PlanBalanceChart`: kurva monoton halus,
-      gradasi, panduan putus-putus dengan label sumbu, simpul terendah, titik
-      fokus bergaris tegak, tooltip, tergambar dari kiri), kisi Indikator
+      gradasi, panduan garis rambut dengan label sumbu, simpul terendah, titik
+      fokus bergaris tegak, tooltip, tergambar dari kiri; tanpa garis
+      putus-putus, kartunya `DsCard` biasa — perkiraan ditandai ≈ dan legenda), kisi Indikator
       bulan ini (`PlanIndicators`: terikat rencana, anggaran terpakai, di luar
       rencana per hari, saldo terendah) dan Distribusi rencana keluar
       (`PlanDistribution`), semuanya dari angka yang sudah dihitung layar.

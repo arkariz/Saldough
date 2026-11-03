@@ -3351,6 +3351,24 @@ class Translations$recurring$id {
 	/// id: 'Berikutnya'
 	String get nextTitle => 'Berikutnya';
 
+	/// id: 'Hari ini'
+	String get dueToday => 'Hari ini';
+
+	/// id: 'Besok'
+	String get dueTomorrow => 'Besok';
+
+	/// id: 'Kemarin'
+	String get dueYesterday => 'Kemarin';
+
+	/// id: '$n hari lagi'
+	String dueIn({required Object n}) => '${n} hari lagi';
+
+	/// id: 'Terlambat $n hari'
+	String overdueBy({required Object n}) => 'Terlambat ${n} hari';
+
+	/// id: 'Total $amount'
+	String pendingTotal({required Object amount}) => 'Total ${amount}';
+
 	/// id: 'Tercatat'
 	String get recordedTitle => 'Tercatat';
 
@@ -6888,6 +6906,12 @@ extension on Translations {
 			'recurring.loadError' => 'Transaksi berulang gagal dimuat.',
 			'recurring.retryAction' => 'Coba lagi',
 			'recurring.nextTitle' => 'Berikutnya',
+			'recurring.dueToday' => 'Hari ini',
+			'recurring.dueTomorrow' => 'Besok',
+			'recurring.dueYesterday' => 'Kemarin',
+			'recurring.dueIn' => ({required Object n}) => '${n} hari lagi',
+			'recurring.overdueBy' => ({required Object n}) => 'Terlambat ${n} hari',
+			'recurring.pendingTotal' => ({required Object amount}) => 'Total ${amount}',
 			'recurring.recordedTitle' => 'Tercatat',
 			'recurring.skipAction' => 'Lewati',
 			'recurring.recordEarlyAction' => 'Catat sekarang',
@@ -7206,14 +7230,14 @@ extension on Translations {
 			'premium.features.keeps.text' => 'Cadangan otomatis tiap hari ke Google Drive milikmu.',
 			'premium.gift.brand' => 'Tanukonomy',
 			'premium.gift.askTitle' => 'Biasanya gajian tanggal berapa?',
+			_ => null,
+		} ?? switch (path) {
 			'premium.gift.askBody' => 'Uji coba Plus berakhir bersama periode keuangan pertamamu, jadi tanggal ini menentukan lamanya.',
 			'premium.gift.confirmDay' => ({required Object day}) => 'Pakai tanggal ${day}',
 			'premium.gift.confirmLast' => 'Pakai hari terakhir bulan',
 			'premium.gift.endLine' => ({required Object date}) => 'Plus aktif sampai ${date}',
 			'premium.gift.title' => ({required Object date}) => 'Plus aktif sampai ${date}, akhir periode pertamamu.',
 			'premium.gift.body' => 'Tanpa kartu, tanpa langganan otomatis. Sesudah itu kamu tetap mencatat gratis.',
-			_ => null,
-		} ?? switch (path) {
 			'premium.gift.start' => 'Mulai mencatat',
 			'premium.card.recapTitle' => ({required Object date}) => 'Plus berakhir ${date}',
 			'premium.card.recapSince' => ({required Object date}) => 'Sejak ${date}, Tanuki sudah:',

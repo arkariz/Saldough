@@ -13,6 +13,7 @@ import 'package:saldough/features/record/presentation/navigation/record_route_ke
 import 'package:saldough/features/recurring/di/recurring_scope.dart';
 import 'package:saldough/features/recurring/presentation/bloc/recurring_bloc.dart';
 import 'package:saldough/features/recurring/presentation/bloc/recurring_state.dart';
+import 'package:saldough/features/recurring/presentation/recurring_display.dart';
 import 'package:saldough/features/recurring/presentation/widgets/recurring_row.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:state_management/state_management.dart';
@@ -64,72 +65,168 @@ class RecurringPendingTile extends StatelessWidget {
           today: state.today,
           onTap: () => _editFirst(context, date),
         ),
-        if (raised != null)
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14),
-            child: Text(
-              t.recurring.priceUpFound(name: rule.note, amount: AppMoneyFormatter.format(raised.amount)),
-              key: ValueKey('recurring-price-up-${rule.id}'),
-              textAlign: TextAlign.end,
-              style: context.ds.typography.bodySm.copyWith(color: context.ds.colors.textSecondary),
-            ),
-          )
-        else if (unseen)
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14),
-            child: Text(
-              t.recurring.unseenLabel,
-              key: ValueKey('recurring-unseen-${rule.id}'),
-              textAlign: TextAlign.end,
-              style: context.ds.typography.bodySm.copyWith(color: context.ds.colors.textSecondary),
-            ),
-          ),
+        // Satu blok rapat di bawah baris: lencana jatuh tempo di kiri, aksi di
+        // kanan (turun baris bila sempit), sejajar dengan judul baris.
         Padding(
-          padding: const EdgeInsets.fromLTRB(14, 0, 14, 10),
-          child: Wrap(
-            alignment: WrapAlignment.end,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            spacing: 4,
+          padding: const EdgeInsets.fromLTRB(70, 0, 14, 12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              DsButton.ghost(
-                label: t.recurring.skipAction,
-                onPressed: () => bloc.add(RecurringOccurrenceSkipped(ruleId: rule.id, date: date)),
-              ),
-              if (raised != null) ...[
-                DsButton.ghost(
-                  label: t.recurring.priceUpKeep,
-                  onPressed: () {
-                    AppAnalytics.log(RecurringEvents.priceIncreaseAction('keep'));
-                    bloc.add(RecurringOccurrenceLinked(ruleId: rule.id, date: date, transactionId: raised.id));
-                  },
-                ),
-                DsButton.compact(
-                  label: t.recurring.priceUpUpdate,
-                  onPressed: () {
-                    AppAnalytics.log(RecurringEvents.priceIncreaseAction('update'));
-                    bloc
-                      ..add(RecurringOccurrenceLinked(ruleId: rule.id, date: date, transactionId: raised.id))
-                      ..add(RecurringAmountUpdated(ruleId: rule.id, amount: raised.amount));
-                  },
-                ),
-              ] else if (unseen)
-                DsButton.ghost(
-                  label: t.recurring.notYetAction,
-                  onPressed: () => bloc.add(RecurringOccurrenceSnoozed(ruleId: rule.id)),
+              if (raised != null)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 6),
+                  child: Text(
+                    t.recurring.priceUpFound(name: rule.note, amount: AppMoneyFormatter.format(raised.amount)),
+                    key: ValueKey('recurring-price-up-${rule.id}'),
+                    style: context.ds.typography.bodySm.copyWith(color: context.ds.colors.textSecondary),
+                  ),
                 )
-              else if (fixed)
-                DsButton.ghost(label: t.recurring.editFirstAction, onPressed: () => _editFirst(context, date)),
-              if (raised == null)
-                DsButton.compact(
-                  label: t.recurring.recordAction,
-                  onPressed: fixed
-                      ? () => bloc.add(RecurringOccurrenceRecorded(ruleId: rule.id, date: date))
-                      : () => _editFirst(context, date),
+              else if (unseen)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 6),
+                  child: Text(
+                    t.recurring.unseenLabel,
+                    key: ValueKey('recurring-unseen-${rule.id}'),
+                    style: context.ds.typography.bodySm.copyWith(color: context.ds.colors.textSecondary),
+                  ),
                 ),
+              Wrap(
+                alignment: WrapAlignment.spaceBetween,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                runSpacing: 4,
+                spacing: 8,
+                children: [
+                  DsBadge(
+                    label: dueText(date, state.today),
+                    tone: switch (dueStateOf(date, state.today)) {
+                      DueState.overdue => DsBadgeTone.warning,
+                      DueState.today => DsBadgeTone.warm,
+                      DueState.upcoming => DsBadgeTone.neutral,
+                    },
+                  ),
+                  Wrap(
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      DsButton.ghost(
+                        label: t.recurring.skipAction,
+                        onPressed: () => bloc.add(RecurringOccurrenceSkipped(ruleId: rule.id, date: date)),
+                      ),
+                      if (raised != null) ...[
+                        DsButton.ghost(
+                          label: t.recurring.priceUpKeep,
+                          onPressed: () {
+                            AppAnalytics.log(RecurringEvents.priceIncreaseAction('keep'));
+                            bloc.add(RecurringOccurrenceLinked(ruleId: rule.id, date: date, transactionId: raised.id));
+                          },
+                        ),
+                        DsButton.compact(
+                          label: t.recurring.priceUpUpdate,
+                          onPressed: () {
+                            AppAnalytics.log(RecurringEvents.priceIncreaseAction('update'));
+                            bloc
+                              ..add(RecurringOccurrenceLinked(ruleId: rule.id, date: date, transactionId: raised.id))
+                              ..add(RecurringAmountUpdated(ruleId: rule.id, amount: raised.amount));
+                          },
+                        ),
+                      ] else if (unseen)
+                        DsButton.ghost(
+                          label: t.recurring.notYetAction,
+                          onPressed: () => bloc.add(RecurringOccurrenceSnoozed(ruleId: rule.id)),
+                        )
+                      else if (fixed)
+                        DsButton.ghost(label: t.recurring.editFirstAction, onPressed: () => _editFirst(context, date)),
+                      if (raised == null)
+                        DsButton.compact(
+                          label: t.recurring.recordAction,
+                          onPressed: fixed
+                              ? () => bloc.add(RecurringOccurrenceRecorded(ruleId: rule.id, date: date))
+                              : () => _editFirst(context, date),
+                        ),
+                    ],
+                  ),
+                ],
+              ),
             ],
           ),
         ),
       ],
+    );
+  }
+}
+
+/// Kelompok **Menunggu dicatat** di segmen Rutin: kartu bernuansa aksi
+/// dengan kepala (jumlah dan total) lalu tiap kemunculan beserta aksinya.
+/// Baris pertama bisa jadi target tur ([firstSpotlight]).
+class RecurringPendingGroup extends StatelessWidget {
+  /// Membuat [RecurringPendingGroup].
+  const RecurringPendingGroup({required this.rows, required this.state, this.firstSpotlight, super.key});
+
+  /// Kemunculan menunggu, urut terlama dulu.
+  final List<RecurringEntry> rows;
+
+  /// State bloc.
+  final RecurringState state;
+
+  /// Kunci tur untuk baris pertama.
+  final SpotlightKey? firstSpotlight;
+
+  @override
+  Widget build(BuildContext context) {
+    final ds = context.ds;
+    final c = ds.colors;
+    final total = rows.fold<int>(0, (sum, e) => sum + e.rule.amount);
+    final approximate = rows.any((e) => e.rule.amountMode == RecurringAmountMode.estimated);
+    final totalText = '${approximate ? '≈' : ''}${AppMoneyFormatter.format(total)}';
+    return DecoratedBox(
+      decoration: ds.elevation.card.decoration().copyWith(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [c.actionPrimary.withValues(alpha: 0.10), c.surfaceCard],
+          stops: const [0, 0.35],
+        ),
+        border: Border.all(color: c.actionPrimary.withValues(alpha: 0.28)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(14, 12, 14, 4),
+            child: Row(
+              children: [
+                DsIdleMotion(
+                  kind: DsIdleKind.float,
+                  child: DsIconTile.asset(
+                    asset: ClayIcons.alarm,
+                    tone: DsIconTileTone.warning,
+                    size: DsIconTileSize.sm,
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: AlignmentDirectional.centerStart,
+                    child: Text(t.recurring.pendingTotal(amount: totalText), style: ds.typography.titleMd),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                DsBadge(label: '${rows.length}', tone: DsBadgeTone.warm),
+              ],
+            ),
+          ),
+          for (final (i, entry) in rows.indexed) ...[
+            if (i > 0) Divider(height: 1, indent: 14, endIndent: 14, color: c.outlineSubtle),
+            DsReveal(
+              index: i,
+              child: SpotlightTarget(
+                spotlightKey: i == 0 ? firstSpotlight : null,
+                child: RecurringPendingTile(entry: entry, state: state),
+              ),
+            ),
+          ],
+        ],
+      ),
     );
   }
 }

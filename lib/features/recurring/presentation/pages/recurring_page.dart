@@ -277,18 +277,10 @@ class RecurringSegmentView extends StatelessWidget {
                       _GroupLabel(_groupLabel(group), dot: group == RecurringGroup.pending),
                       const SizedBox(height: 8),
                       if (group == RecurringGroup.pending) ...[
-                        DsListCard(
-                          children: [
-                            // Hanya baris pertama yang disorot.
-                            for (final (i, entry) in rows.indexed)
-                              DsReveal(
-                                index: i,
-                                child: SpotlightTarget(
-                                  spotlightKey: i == 0 ? SpotlightKey.recurringPending : null,
-                                  child: RecurringPendingTile(entry: entry, state: state),
-                                ),
-                              ),
-                          ],
+                        RecurringPendingGroup(
+                          rows: rows,
+                          state: state,
+                          firstSpotlight: SpotlightKey.recurringPending,
                         ),
                         if (recordAllButton(context, rows) case final recordAll?) ...[
                           const SizedBox(height: 8),

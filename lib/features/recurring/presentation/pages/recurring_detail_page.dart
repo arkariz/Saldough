@@ -407,43 +407,36 @@ class RecurringDetailPage extends StatelessWidget {
                   const SizedBox(height: 24),
                   DsSectionHeader(title: t.recurring.nextTitle),
                   const SizedBox(height: 8),
-                  DsListCard(
-                    children: [
-                      for (final (i, o) in next.indexed)
-                        DsReveal(
-                          index: i,
-                          child: _OccurrenceLine(
-                            date: o.date,
-                            today: today,
-                            title: occurrenceDateText(o.date, today),
-                            amount: rule.amount,
-                            kind: rule.kind,
-                            skipped: o.status == OccurrenceStatus.skipped,
-                            extraAction: o.status == OccurrenceStatus.skipped
-                                ? null
-                                : (
-                                    t.recurring.recordEarlyAction,
-                                    () => rule.amountMode == RecurringAmountMode.fixed
-                                        ? bloc.add(RecurringOccurrenceRecorded(ruleId: rule.id, date: o.date))
-                                        : unawaited(
-                                            context.pushRoute(
-                                              RecordRouteKeys.sheet,
-                                              RecordSheetInput(occurrenceRule: rule, occurrenceDate: o.date),
-                                            ),
-                                          ),
-                                  ),
-                            action: o.status == OccurrenceStatus.skipped
-                                ? (
-                                    t.recurring.unskipAction,
-                                    () => bloc.add(RecurringOccurrenceUnskipped(ruleId: rule.id, date: o.date)),
-                                  )
-                                : (
-                                    t.recurring.skipAction,
-                                    () => bloc.add(RecurringOccurrenceSkipped(ruleId: rule.id, date: o.date)),
-                                  ),
-                          ),
-                        ),
-                    ],
+                  DsReveal(
+                    child: DsCard(
+                      padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
+                      child: Column(
+                        children: [
+                          for (final (i, o) in next.indexed)
+                            _NextLine(
+                              date: o.date,
+                              today: today,
+                              amount: rule.amount,
+                              kind: rule.kind,
+                              approximate: rule.amountMode == RecurringAmountMode.estimated,
+                              first: i == 0,
+                              last: i == next.length - 1,
+                              skipped: o.status == OccurrenceStatus.skipped,
+                              onRecordEarly: () => rule.amountMode == RecurringAmountMode.fixed
+                                  ? bloc.add(RecurringOccurrenceRecorded(ruleId: rule.id, date: o.date))
+                                  : unawaited(
+                                      context.pushRoute(
+                                        RecordRouteKeys.sheet,
+                                        RecordSheetInput(occurrenceRule: rule, occurrenceDate: o.date),
+                                      ),
+                                    ),
+                              onToggleSkip: () => o.status == OccurrenceStatus.skipped
+                                  ? bloc.add(RecurringOccurrenceUnskipped(ruleId: rule.id, date: o.date))
+                                  : bloc.add(RecurringOccurrenceSkipped(ruleId: rule.id, date: o.date)),
+                            ),
+                        ],
+                      ),
+                    ),
                   ),
                 ],
                 const SizedBox(height: 24),
@@ -547,8 +540,130 @@ class _InstallmentProgress extends StatelessWidget {
   }
 }
 
-/// Baris jadwal: kotak tanggal, judul, nominal bertanda, lalu aksi (Lewati)
-/// atau panah. Yang dilewati dicoret; yang tercatat diredupkan.
+/// Satu kemunculan di garis waktu **Berikutnya**: titik di rel (yang pertama
+/// menyala dan berdenyut), tanggal + lencana jatuh tempo + nominal, lalu aksi
+/// rapat di bawahnya. Yang dilewati dicoret dengan Batal lewati.
+class _NextLine extends StatelessWidget {
+  const _NextLine({
+    required this.date,
+    required this.today,
+    required this.amount,
+    required this.kind,
+    required this.approximate,
+    required this.first,
+    required this.last,
+    required this.skipped,
+    required this.onRecordEarly,
+    required this.onToggleSkip,
+  });
+
+  final DateTime date;
+  final DateTime today;
+  final int amount;
+  final RecurringKind kind;
+  final bool approximate;
+  final bool first;
+  final bool last;
+  final bool skipped;
+  final VoidCallback onRecordEarly;
+  final VoidCallback onToggleSkip;
+
+  @override
+  Widget build(BuildContext context) {
+    final ds = context.ds;
+    final c = ds.colors;
+    final lit = first && !skipped;
+    final amountColor = skipped
+        ? c.textMuted
+        : switch (kind) {
+            RecurringKind.income => c.income,
+            RecurringKind.expense => c.textPrimary,
+            RecurringKind.transfer => c.textSecondary,
+          };
+    final dot = DecoratedBox(
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: lit ? c.actionPrimary : c.surfaceCard,
+        border: Border.all(color: lit ? c.actionPrimary : c.outline, width: 2),
+      ),
+      child: const SizedBox.square(dimension: 12),
+    );
+    return IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          SizedBox(
+            width: 20,
+            child: Column(
+              children: [
+                const SizedBox(height: 4),
+                if (lit) DsPulse(borderRadius: DsRadius.fullAll, child: dot) else dot,
+                if (!last)
+                  Expanded(
+                    child: Container(width: 2, margin: const EdgeInsets.symmetric(vertical: 4), color: c.outlineSubtle),
+                  ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.only(bottom: last ? 0 : 14),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          occurrenceDateText(date, today),
+                          overflow: TextOverflow.ellipsis,
+                          style: ds.typography.titleMd.copyWith(
+                            color: skipped ? c.textMuted : c.textPrimary,
+                            decoration: skipped ? TextDecoration.lineThrough : null,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 120),
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          alignment: AlignmentDirectional.centerEnd,
+                          child: Text(
+                            signedAmount(kind, amount, approximate: approximate),
+                            style: ds.typography.amount.copyWith(color: amountColor),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 6),
+                  Wrap(
+                    spacing: 6,
+                    runSpacing: 2,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      DsBadge(label: dueText(date, today), tone: lit ? DsBadgeTone.warm : DsBadgeTone.neutral),
+                      if (!skipped) DsButton.compact(label: t.recurring.recordEarlyAction, onPressed: onRecordEarly),
+                      DsButton.ghost(
+                        label: skipped ? t.recurring.unskipAction : t.recurring.skipAction,
+                        onPressed: onToggleSkip,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Baris riwayat tercatat: kotak tanggal, judul, nominal bertanda, dan panah.
+/// Diredupkan karena sudah selesai.
 class _OccurrenceLine extends StatelessWidget {
   const _OccurrenceLine({
     required this.date,
@@ -556,10 +671,7 @@ class _OccurrenceLine extends StatelessWidget {
     required this.title,
     required this.amount,
     required this.kind,
-    this.skipped = false,
     this.muted = false,
-    this.action,
-    this.extraAction,
     this.onTap,
   });
 
@@ -568,19 +680,14 @@ class _OccurrenceLine extends StatelessWidget {
   final String title;
   final int amount;
   final RecurringKind kind;
-  final bool skipped;
   final bool muted;
-  final (String, VoidCallback)? action;
-
-  /// Aksi tambahan sebelum [action], mis. Catat sekarang (ADR-042 §3.3).
-  final (String, VoidCallback)? extraAction;
   final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     final ds = context.ds;
     final c = ds.colors;
-    final dim = skipped || muted;
+    final dim = muted;
     final amountColor = dim
         ? c.textMuted
         : switch (kind) {
@@ -591,7 +698,7 @@ class _OccurrenceLine extends StatelessWidget {
     final row = ConstrainedBox(
       constraints: const BoxConstraints(minHeight: 56),
       child: Padding(
-        padding: EdgeInsets.fromLTRB(14, 8, action == null ? 14 : 8, 8),
+        padding: const EdgeInsets.fromLTRB(14, 8, 14, 8),
         child: Row(
           children: [
             SizedBox(
@@ -626,7 +733,6 @@ class _OccurrenceLine extends StatelessWidget {
                 title,
                 style: ds.typography.titleMd.copyWith(
                   color: dim ? c.textMuted : c.textPrimary,
-                  decoration: skipped ? TextDecoration.lineThrough : null,
                 ),
               ),
             ),
@@ -639,10 +745,6 @@ class _OccurrenceLine extends StatelessWidget {
                 child: Text(signedAmount(kind, amount), style: ds.typography.amount.copyWith(color: amountColor)),
               ),
             ),
-            if (action case (final label, final onPressed)) ...[
-              const SizedBox(width: 4),
-              DsButton.ghost(label: label, onPressed: onPressed),
-            ],
             if (onTap != null) ...[
               const SizedBox(width: 4),
               Icon(Icons.chevron_right, size: 20, color: c.textMuted),
@@ -651,24 +753,8 @@ class _OccurrenceLine extends StatelessWidget {
         ),
       ),
     );
-    final line = onTap == null
+    return onTap == null
         ? row
         : DsPressable(semanticLabel: title, onPressed: onTap, pressedScale: 0.99, builder: (context, _) => row);
-    final extra = extraAction;
-    if (extra == null) return line;
-    // Di bawah baris, bukan di sampingnya: baris sudah penuh di layar sempit.
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        line,
-        Padding(
-          padding: const EdgeInsets.fromLTRB(14, 0, 14, 10),
-          child: Align(
-            alignment: AlignmentDirectional.centerEnd,
-            child: DsButton.compact(label: extra.$1, onPressed: extra.$2),
-          ),
-        ),
-      ],
-    );
   }
 }

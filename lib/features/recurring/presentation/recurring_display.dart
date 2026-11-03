@@ -49,3 +49,42 @@ String scheduleText(RecurringRule rule) {
 /// [today].
 String occurrenceDateText(DateTime date, DateTime today) =>
     date.year == today.year ? CycleMonthFormatter.formatDayMonth(date) : CycleMonthFormatter.formatDateShort(date);
+
+/// Seberapa dekat/terlambatnya kemunculan [date] dari [today].
+enum DueState {
+  /// Sudah lewat.
+  overdue,
+
+  /// Hari ini.
+  today,
+
+  /// Besok atau lebih.
+  upcoming,
+}
+
+/// Selisih hari kalender [date] dari [today] (negatif = sudah lewat).
+int daysFrom(DateTime date, DateTime today) =>
+    DateTime.utc(date.year, date.month, date.day).difference(DateTime.utc(today.year, today.month, today.day)).inDays;
+
+/// Keadaan jatuh tempo [date] menurut [today].
+DueState dueStateOf(DateTime date, DateTime today) {
+  final days = daysFrom(date, today);
+  return days < 0
+      ? DueState.overdue
+      : days == 0
+      ? DueState.today
+      : DueState.upcoming;
+}
+
+/// Teks relatif jatuh tempo: "Hari ini", "Besok", "5 hari lagi", "Kemarin",
+/// "Terlambat 3 hari".
+String dueText(DateTime date, DateTime today) {
+  final days = daysFrom(date, today);
+  return switch (days) {
+    0 => t.recurring.dueToday,
+    1 => t.recurring.dueTomorrow,
+    -1 => t.recurring.dueYesterday,
+    > 1 => t.recurring.dueIn(n: days),
+    _ => t.recurring.overdueBy(n: -days),
+  };
+}

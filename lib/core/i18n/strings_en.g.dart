@@ -1337,6 +1337,12 @@ class _Translations$recurring$en extends Translations$recurring$id {
 	@override String get loadError => 'Couldn\'t load recurring transactions.';
 	@override String get retryAction => 'Try again';
 	@override String get nextTitle => 'Next';
+	@override String get dueToday => 'Today';
+	@override String get dueTomorrow => 'Tomorrow';
+	@override String get dueYesterday => 'Yesterday';
+	@override String dueIn({required Object n}) => 'In ${n} days';
+	@override String overdueBy({required Object n}) => '${n} days late';
+	@override String pendingTotal({required Object amount}) => 'Total ${amount}';
 	@override String get recordedTitle => 'Recorded';
 	@override String get skipAction => 'Skip';
 	@override String get recordEarlyAction => 'Record now';
@@ -3701,6 +3707,12 @@ extension on TranslationsEn {
 			'recurring.loadError' => 'Couldn\'t load recurring transactions.',
 			'recurring.retryAction' => 'Try again',
 			'recurring.nextTitle' => 'Next',
+			'recurring.dueToday' => 'Today',
+			'recurring.dueTomorrow' => 'Tomorrow',
+			'recurring.dueYesterday' => 'Yesterday',
+			'recurring.dueIn' => ({required Object n}) => 'In ${n} days',
+			'recurring.overdueBy' => ({required Object n}) => '${n} days late',
+			'recurring.pendingTotal' => ({required Object amount}) => 'Total ${amount}',
 			'recurring.recordedTitle' => 'Recorded',
 			'recurring.skipAction' => 'Skip',
 			'recurring.recordEarlyAction' => 'Record now',
@@ -4019,14 +4031,14 @@ extension on TranslationsEn {
 			'premium.features.keeps.text' => 'An automatic daily backup to your own Google Drive.',
 			'premium.gift.brand' => 'Tanukonomy',
 			'premium.gift.askTitle' => 'When is payday, usually?',
+			_ => null,
+		} ?? switch (path) {
 			'premium.gift.askBody' => 'Your Plus trial ends with your first financial period, so this date sets how long it lasts.',
 			'premium.gift.confirmDay' => ({required Object day}) => 'Use day ${day}',
 			'premium.gift.confirmLast' => 'Use the last day of the month',
 			'premium.gift.endLine' => ({required Object date}) => 'Plus on until ${date}',
 			'premium.gift.title' => ({required Object date}) => 'Plus is on until ${date}, the end of your first period.',
 			'premium.gift.body' => 'No card, no automatic subscription. After that you keep recording for free.',
-			_ => null,
-		} ?? switch (path) {
 			'premium.gift.start' => 'Start recording',
 			'premium.card.recapTitle' => ({required Object date}) => 'Plus ends on ${date}',
 			'premium.card.recapSince' => ({required Object date}) => 'Since ${date}, Tanuki has:',

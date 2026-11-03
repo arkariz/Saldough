@@ -218,6 +218,32 @@ void main() {
     expect(recorded.amount, 6500000);
   });
 
+  testWidgets('rincian: Berikutnya bergaris waktu dengan lencana jatuh tempo; muat di 360dp', (tester) async {
+    await rules.saveRule(rule('Netflix', 6500000, DateTime(2026, 9)));
+    await pump(tester, const RecurringDetailPage(ruleId: 'Netflix'));
+    tester.view.physicalSize = const Size(360, 2400);
+    await tester.pumpAndSettle();
+
+    // Hari ini 2 Okt; kemunculan berikutnya 1 Nov = 30 hari lagi.
+    expect(find.text(t.recurring.dueIn(n: 30)), findsOneWidget);
+    expect(find.text(t.recurring.recordEarlyAction), findsWidgets);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Menunggu dicatat: kepala berisi total dan lencana terlambat, tanpa meluap di 360dp', (tester) async {
+    ActiveDay.sync(today);
+    await rules.saveRule(rule('Internet', 35000000, DateTime(2026, 10)));
+    await rules.saveRule(rule('Netflix', 6500000, DateTime(2026, 9, 28)));
+    await pump(tester, const RecurringSegmentView());
+    tester.view.physicalSize = const Size(360, 2000);
+    await tester.pumpAndSettle();
+
+    expect(find.text(t.recurring.pendingTotal(amount: 'Rp415.000')), findsOneWidget);
+    expect(find.text(t.recurring.dueYesterday), findsOneWidget);
+    expect(find.text(t.recurring.overdueBy(n: 4)), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('rincian: Lewati menulis tanggal dilewati; Jeda lewat menu', (tester) async {
     await rules.saveRule(rule('Netflix', 6500000, DateTime(2026, 9)));
     await pump(tester, const RecurringDetailPage(ruleId: 'Netflix'));

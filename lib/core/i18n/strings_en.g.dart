@@ -938,7 +938,7 @@ class _Translations$tour$en extends Translations$tour$id {
 	@override String get homeVoiceTitle => 'Record by voice';
 	@override String get homeVoiceBody => 'Long-press the Record button, say one transaction, then check the form before recording it.';
 	@override String get planTabsTitle => 'Plan';
-	@override String get planTabsBody => 'This month, budgets, and recurring transactions live here. Tap to switch.';
+	@override String get planTabsBody => 'Overview, budgets, and recurring transactions live here. Tap to switch.';
 	@override String get planUnplannedTitle => 'Unplanned money';
 	@override String get planUnplannedBody => 'This month’s income minus everything already committed.';
 	@override String get planForecastTitle => 'Wallet balance ≈';
@@ -1489,7 +1489,7 @@ class _Translations$plan$en extends Translations$plan$id {
 	@override String transitionLabel({required Object days}) => 'Transition period · ${days} days';
 	@override String get transitionNoPayday => 'This range has no payday.';
 	@override String transitionReview({required Object start, required Object range}) => 'Your financial month now starts on ${start}. This period is ${range}.';
-	@override String get thisMonthSegmentLabel => 'This month';
+	@override String get thisMonthSegmentLabel => 'Overview';
 	@override String unplannedTitle({required Object month}) => 'Unplanned money · ${month}';
 	@override String get incomeRow => 'Income';
 	@override String get billsRow => 'Recurring bills';
@@ -3352,7 +3352,7 @@ extension on TranslationsEn {
 			'tour.homeVoiceTitle' => 'Record by voice',
 			'tour.homeVoiceBody' => 'Long-press the Record button, say one transaction, then check the form before recording it.',
 			'tour.planTabsTitle' => 'Plan',
-			'tour.planTabsBody' => 'This month, budgets, and recurring transactions live here. Tap to switch.',
+			'tour.planTabsBody' => 'Overview, budgets, and recurring transactions live here. Tap to switch.',
 			'tour.planUnplannedTitle' => 'Unplanned money',
 			'tour.planUnplannedBody' => 'This month’s income minus everything already committed.',
 			'tour.planForecastTitle' => 'Wallet balance ≈',
@@ -3863,7 +3863,7 @@ extension on TranslationsEn {
 			'plan.transitionLabel' => ({required Object days}) => 'Transition period · ${days} days',
 			'plan.transitionNoPayday' => 'This range has no payday.',
 			'plan.transitionReview' => ({required Object start, required Object range}) => 'Your financial month now starts on ${start}. This period is ${range}.',
-			'plan.thisMonthSegmentLabel' => 'This month',
+			'plan.thisMonthSegmentLabel' => 'Overview',
 			'plan.unplannedTitle' => ({required Object month}) => 'Unplanned money · ${month}',
 			'plan.incomeRow' => 'Income',
 			'plan.billsRow' => 'Recurring bills',

@@ -7,7 +7,7 @@ import 'package:saldough/core/tutorial/tutorial.dart';
 
 /// Segmen tab Rencana (ADR-035 §3.7, PLAN_TAB_LAYOUT §3).
 enum PlanSegment {
-  /// Bulan ini: uang nganggur dan perkiraan saldo (R1b).
+  /// Ringkasan (kunci lama `thisMonth`): uang nganggur, indikator, dan perkiraan saldo (R1b).
   thisMonth,
 
   /// Anggaran: isi layar Anggaran yang lama (`BudgetListPage`).

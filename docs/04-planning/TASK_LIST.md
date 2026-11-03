@@ -6158,6 +6158,11 @@ memilih mode (dan preset bila ≥ 2), dan design system lama dihapus.
       sedikit saat masuk dari tepi bawah dan meredup saat keluar lewat atas,
       mengikuti posisi gulir. Tidak dibuat dari acuan: kartu Wawasan Guru
       Tanuki/Kakeibo, sakelar benchmark, dan unduh rekap.
+      **Segmen pertama tab Rencana diganti nama (3 Nov 2026, keputusan
+      pemilik):** "Bulan ini" menjadi **Ringkasan** (en: **Overview**),
+      karena isinya mencakup bulan depan, indikator, dan grafik saldo. Hanya
+      teks (`plan.thisMonthSegmentLabel`, `tour.planTabsBody`); kunci dan
+      nama kelas (`PlanSegment.thisMonth`) tidak diganti.
       **Ikon clay dilengkapi (31 Okt 2026, KT-DS5):** 33 ikon baru untuk
       dompet, jenis transaksi, kategori, dan status Freelance; semua
       `IconKey` benda kini punya clay (`ClayIcons.forIcon`). Digambar dari

@@ -2378,8 +2378,8 @@ class Translations$tour$id {
 	/// id: 'Rencana'
 	String get planTabsTitle => 'Rencana';
 
-	/// id: 'Bulan ini, anggaran, dan transaksi berulang ada di sini. Ketuk untuk berpindah.'
-	String get planTabsBody => 'Bulan ini, anggaran, dan transaksi berulang ada di sini. Ketuk untuk berpindah.';
+	/// id: 'Ringkasan, anggaran, dan transaksi berulang ada di sini. Ketuk untuk berpindah.'
+	String get planTabsBody => 'Ringkasan, anggaran, dan transaksi berulang ada di sini. Ketuk untuk berpindah.';
 
 	/// id: 'Uang nganggur'
 	String get planUnplannedTitle => 'Uang nganggur';
@@ -3775,8 +3775,8 @@ class Translations$plan$id {
 	/// id: 'Awal bulan keuanganmu kini $start. Periode ini $range.'
 	String transitionReview({required Object start, required Object range}) => 'Awal bulan keuanganmu kini ${start}. Periode ini ${range}.';
 
-	/// id: 'Bulan ini'
-	String get thisMonthSegmentLabel => 'Bulan ini';
+	/// id: 'Ringkasan'
+	String get thisMonthSegmentLabel => 'Ringkasan';
 
 	/// id: 'Uang nganggur · $month'
 	String unplannedTitle({required Object month}) => 'Uang nganggur · ${month}';
@@ -6589,7 +6589,7 @@ extension on Translations {
 			'tour.homeVoiceTitle' => 'Catat pakai suara',
 			'tour.homeVoiceBody' => 'Tekan lama tombol Catat, ucapkan satu transaksi, lalu periksa formulirnya sebelum dicatat.',
 			'tour.planTabsTitle' => 'Rencana',
-			'tour.planTabsBody' => 'Bulan ini, anggaran, dan transaksi berulang ada di sini. Ketuk untuk berpindah.',
+			'tour.planTabsBody' => 'Ringkasan, anggaran, dan transaksi berulang ada di sini. Ketuk untuk berpindah.',
 			'tour.planUnplannedTitle' => 'Uang nganggur',
 			'tour.planUnplannedBody' => 'Pemasukan bulan ini dikurangi anggaran tetap dan tagihan wajibmu.',
 			'tour.planForecastTitle' => 'Saldo dompet ≈',
@@ -7100,7 +7100,7 @@ extension on Translations {
 			'plan.transitionLabel' => ({required Object days}) => 'Periode peralihan · ${days} hari',
 			'plan.transitionNoPayday' => 'Rentang ini tidak memuat gajian.',
 			'plan.transitionReview' => ({required Object start, required Object range}) => 'Awal bulan keuanganmu kini ${start}. Periode ini ${range}.',
-			'plan.thisMonthSegmentLabel' => 'Bulan ini',
+			'plan.thisMonthSegmentLabel' => 'Ringkasan',
 			'plan.unplannedTitle' => ({required Object month}) => 'Uang nganggur · ${month}',
 			'plan.incomeRow' => 'Pemasukan',
 			'plan.billsRow' => 'Tagihan rutin',

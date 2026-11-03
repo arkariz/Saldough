@@ -2,12 +2,12 @@ import 'dart:async';
 
 import 'package:di/di.dart';
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
@@ -112,20 +112,45 @@ class PlanMonthView extends StatelessWidget {
     return BlocBuilder<PlanMonthBloc, PlanMonthState>(
       builder: (context, state) {
         if (state.isLoading) return const AppSkeletonPage();
-        const padding = EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space4, AppSpacing.space4, AppSpacing.space12);
+        const padding = EdgeInsets.fromLTRB(16, 16, 16, 96);
         if (state.loadFailed) {
-          return AppErrorState(
+          return DsErrorState(
             title: t.plan.loadError,
             retryLabel: t.recurring.retryAction,
             onRetry: () => context.read<PlanMonthBloc>().add(const PlanMonthLoaded()),
           );
         }
-        final textTheme = Theme.of(context).textTheme;
+        final ds = context.ds;
         if (state.isEmpty) {
           return ListView(
             padding: padding,
             children: [
-              AppEmptyState(art: EmptyArt.budget, title: t.plan.emptyTitle, body: t.plan.emptyBody),
+              DsReveal(
+                child: DsCard(
+                  padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
+                  child: Column(
+                    children: [
+                      const DsEmptyHero(
+                        asset: ClayIcons.dateCalendar,
+                        orbit: [ClayIcons.coins, ClayIcons.repeat, ClayIcons.chart],
+                      ),
+                      const SizedBox(height: 12),
+                      Text(
+                        t.plan.emptyTitle,
+                        textAlign: TextAlign.center,
+                        style: ds.typography.titleMd.copyWith(fontSize: 18),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        t.plan.emptyBody,
+                        textAlign: TextAlign.center,
+                        style: ds.typography.bodySm.copyWith(color: ds.colors.textMuted),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
               ?starters,
             ],
           );
@@ -140,7 +165,7 @@ class PlanMonthView extends StatelessWidget {
         final funding = state.fundingWarnings;
         final committed = state.committedShareFor(state.selected);
         final installmentFree = nearestInstallmentFree(state.rules, today: state.today);
-        final mutedSmall = textTheme.bodySmall?.copyWith(color: context.appColors.ink2);
+        final mutedSmall = ds.typography.bodySm.copyWith(color: ds.colors.textSecondary);
         return TourTrigger(
           tour: TourId.planMonth,
           ready: true,
@@ -154,7 +179,12 @@ class PlanMonthView extends StatelessWidget {
                 child: AppPeriodHeader(
                   label: range.name,
                   transitionDays: range.isTransition ? range.days : null,
-                  onTap: () => unawaited(context.pushRoute(BudgetRouteKeys.financialMonth, const FinancialMonthInput(source: FinancialMonthSource.plan))),
+                  onTap: () => unawaited(
+                    context.pushRoute(
+                      BudgetRouteKeys.financialMonth,
+                      const FinancialMonthInput(source: FinancialMonthSource.plan),
+                    ),
+                  ),
                   // Tur peralihan hanya untuk periode berjalan (FINANCIAL_PERIOD §8A).
                   wrapTag: (tag) => SpotlightTarget(
                     spotlightKey: state.selected == 0 ? SpotlightKey.planTransition : null,
@@ -162,7 +192,7 @@ class PlanMonthView extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: AppSpacing.space2),
+              const SizedBox(height: 8),
               // Tawaran gajian untuk pengguna lama (FEATURE_DISCOVERY §6.2).
               ?paydayOffer,
               // Blok 0: tinjau awal bulan (J4, ADR-036 §3.7).
@@ -173,7 +203,7 @@ class PlanMonthView extends StatelessWidget {
                   onShowBudget: onShowBudget,
                   onShowRecurring: onShowRecurring,
                 ),
-                const SizedBox(height: AppSpacing.space4),
+                const SizedBox(height: 16),
               ],
               // Blok 0: siapkan dana (W1, ADR-036 §3.6).
               if (funding.isNotEmpty) ...[
@@ -183,7 +213,7 @@ class PlanMonthView extends StatelessWidget {
                     ..add(const PlanMonthSelected(0))
                     ..add(PlanMonthWalletChanged(walletId)),
                 ),
-                const SizedBox(height: AppSpacing.space4),
+                const SizedBox(height: 16),
               ],
               // Pemilih bulan (PLAN_TAB_LAYOUT §4.3): bulan berjalan + 2,
               // tiap chip membawa perkiraan akhir bulannya.
@@ -194,10 +224,9 @@ class PlanMonthView extends StatelessWidget {
                   child: Row(
                     children: [
                       for (final (k, m) in state.months.indexed) ...[
-                        if (k > 0) const SizedBox(width: AppSpacing.space2),
-                        AppChip(
+                        if (k > 0) const SizedBox(width: 8),
+                        DsFilterChip(
                           key: ValueKey('plan-month-$k'),
-                          onBg: true,
                           // Bulan keuangan 25 Okt–24 Nov disebut "Nov" (T-16.16 K8).
                           label:
                               '${CycleMonthFormatter.formatMonthShort(m.lastDay)} '
@@ -210,7 +239,7 @@ class PlanMonthView extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: AppSpacing.space4),
+              const SizedBox(height: 12),
               SpotlightTarget(
                 spotlightKey: SpotlightKey.planUnplanned,
                 child: UnplannedCard(
@@ -225,7 +254,7 @@ class PlanMonthView extends StatelessWidget {
               // Wawasan teks netral (W8, W7, ADR-036 §3.7).
               if (committed != null)
                 Padding(
-                  padding: const EdgeInsets.only(top: AppSpacing.space2),
+                  padding: const EdgeInsets.only(top: 8),
                   child: Text(
                     committed.previous == null
                         ? t.plan.committedShare(percent: committed.share, month: monthLabel)
@@ -240,7 +269,7 @@ class PlanMonthView extends StatelessWidget {
                 ),
               if (installmentFree != null)
                 Padding(
-                  padding: const EdgeInsets.only(top: AppSpacing.space1),
+                  padding: const EdgeInsets.only(top: 4),
                   child: Text(
                     t.plan.installmentFree(
                       name: installmentFree.rule.note.isEmpty
@@ -253,7 +282,7 @@ class PlanMonthView extends StatelessWidget {
                     style: mutedSmall,
                   ),
                 ),
-              const SizedBox(height: AppSpacing.space4),
+              const SizedBox(height: 16),
               SpotlightTarget(
                 spotlightKey: SpotlightKey.planForecast,
                 child: BalanceForecastCard(
@@ -269,12 +298,18 @@ class PlanMonthView extends StatelessWidget {
                 ),
               ),
               if (!state.isFuture) ?pending,
-              const SizedBox(height: AppSpacing.space6),
-              AppSectionHeader(t.plan.nextTitle, actionLabel: t.plan.seeAllRecurring, onAction: onShowRecurring),
+              const SizedBox(height: 24),
+              DsSectionHeader(title: t.plan.nextTitle, actionLabel: t.plan.seeAllRecurring, onAction: onShowRecurring),
               if (next.isNotEmpty) ...[
-                const SizedBox(height: AppSpacing.space2),
-                AppListCard(
-                  children: [for (final o in next) _NextRow(occurrence: o)],
+                const SizedBox(height: 8),
+                DsListCard(
+                  children: [
+                    for (final (i, o) in next.indexed)
+                      DsReveal(
+                        index: i,
+                        child: _NextRow(occurrence: o),
+                      ),
+                  ],
                 ),
               ],
             ],
@@ -305,8 +340,8 @@ class _NextRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
+    final ds = context.ds;
+    final c = ds.colors;
     final rule = occurrence.rule;
     final sign = switch (rule.kind) {
       RecurringKind.income => '+',
@@ -315,37 +350,57 @@ class _NextRow extends StatelessWidget {
     };
     final approx = rule.amountMode == RecurringAmountMode.estimated ? '≈' : '';
     final date = occurrence.date;
-    // Baris jadwal (`rencana.css` `.sched`): kolom tanggal, nama, nominal.
+    // Baris jadwal: kotak tanggal, nama, nominal bertanda.
     return ConstrainedBox(
-      constraints: const BoxConstraints(minHeight: 56),
+      constraints: const BoxConstraints(minHeight: 60),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4, vertical: AppSpacing.space2),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
         child: Row(
           children: [
             SizedBox(
-              width: AppSize.tile,
-              child: Column(
-                children: [
-                  Text('${date.day}', style: context.numberStyles.amountLg.copyWith(fontSize: 18, height: 22 / 18)),
-                  Text(
-                    CycleMonthFormatter.formatWeekday(date).substring(0, 3),
-                    style: textTheme.bodySmall?.copyWith(color: colors.ink2),
+              width: 44,
+              child: DecoratedBox(
+                decoration: BoxDecoration(color: c.surfaceSunken, borderRadius: DsRadius.mdAll),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text('${date.day}', style: ds.typography.amount.copyWith(fontSize: 17, height: 20 / 17)),
+                      Text(
+                        CycleMonthFormatter.formatWeekday(date).substring(0, 3),
+                        style: ds.typography.bodySm.copyWith(fontSize: 11, color: c.textSecondary),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
-            const SizedBox(width: AppSpacing.space3),
+            const SizedBox(width: 12),
             Expanded(
-              child: Text(rule.note.isEmpty ? t.record.repeat.fallbackName : rule.note, style: textTheme.titleMedium),
+              child: Text(
+                rule.note.isEmpty ? t.record.repeat.fallbackName : rule.note,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: ds.typography.titleMd,
+              ),
             ),
-            Text(
-              '$approx$sign${AppMoneyFormatter.format(rule.amount)}',
-              style: context.numberStyles.amount.copyWith(
-                color: switch (rule.kind) {
-                  RecurringKind.income => colors.positive,
-                  RecurringKind.expense => colors.ink,
-                  RecurringKind.transfer => colors.ink2,
-                },
+            const SizedBox(width: 8),
+            ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 110),
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: AlignmentDirectional.centerEnd,
+                child: Text(
+                  '$approx$sign${AppMoneyFormatter.format(rule.amount)}',
+                  style: ds.typography.amount.copyWith(
+                    color: switch (rule.kind) {
+                      RecurringKind.income => c.income,
+                      RecurringKind.expense => c.textPrimary,
+                      RecurringKind.transfer => c.textSecondary,
+                    },
+                  ),
+                ),
               ),
             ),
           ],

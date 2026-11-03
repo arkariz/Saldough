@@ -29,10 +29,11 @@ class DsSummaryHero extends StatelessWidget {
     required this.amount,
     required this.format,
     required this.ratio,
-    required this.stats,
     required this.asset,
     required this.semanticLabel,
+    this.stats = const [],
     this.badge,
+    this.labelTrailing,
     this.negative = false,
     this.footer,
     super.key,
@@ -56,8 +57,11 @@ class DsSummaryHero extends StatelessWidget {
   /// Bagian terpakai 0–1 untuk bilah.
   final double ratio;
 
-  /// Kotak statistik, berdampingan.
+  /// Kotak statistik, berdampingan; boleh kosong.
   final List<DsSummaryStat> stats;
+
+  /// Widget di ujung baris label (mis. tombol info), di kiri ilustrasi.
+  final Widget? labelTrailing;
 
   /// Ilustrasi clay yang melayang di pojok.
   final String asset;
@@ -154,29 +158,36 @@ class DsSummaryHero extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Row(
-                      children: [
-                        Flexible(
-                          child: Text(
-                            label.toUpperCase(),
-                            overflow: TextOverflow.ellipsis,
-                            style: ds.typography.pixelCaption.copyWith(color: c.onHeroMuted),
-                          ),
-                        ),
-                        if (badge != null) ...[
-                          const SizedBox(width: 8),
-                          DecoratedBox(
-                            decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.14),
-                              borderRadius: DsRadius.fullAll,
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-                              child: Text(badge!, style: ds.typography.labelMd.copyWith(fontSize: 11, color: c.onHero)),
+                    Padding(
+                      padding: const EdgeInsetsDirectional.only(end: 60),
+                      child: Row(
+                        children: [
+                          Flexible(
+                            child: Text(
+                              label.toUpperCase(),
+                              overflow: TextOverflow.ellipsis,
+                              style: ds.typography.pixelCaption.copyWith(color: c.onHeroMuted),
                             ),
                           ),
+                          if (badge != null) ...[
+                            const SizedBox(width: 8),
+                            DecoratedBox(
+                              decoration: BoxDecoration(
+                                color: Colors.white.withValues(alpha: 0.14),
+                                borderRadius: DsRadius.fullAll,
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                                child: Text(
+                                  badge!,
+                                  style: ds.typography.labelMd.copyWith(fontSize: 11, color: c.onHero),
+                                ),
+                              ),
+                            ),
+                          ],
+                          if (labelTrailing != null) ...[const SizedBox(width: 4), labelTrailing!],
                         ],
-                      ],
+                      ),
                     ),
                     const SizedBox(height: 6),
                     FittedBox(
@@ -216,8 +227,10 @@ class DsSummaryHero extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 14),
-                    Row(spacing: 10, children: [for (final stat in stats) glass(stat)]),
+                    if (stats.isNotEmpty) ...[
+                      const SizedBox(height: 14),
+                      Row(spacing: 10, children: [for (final stat in stats) glass(stat)]),
+                    ],
                     if (footer != null) ...[const SizedBox(height: 12), footer!],
                   ],
                 ),

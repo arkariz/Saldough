@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/plan/presentation/widgets/unplanned_card.dart';
 import 'package:saldough/features/recurring/presentation/recurring_display.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
+
+import '../../../../helpers/reduced_motion.dart';
 
 /// Nol ditulis "Rp0" tanpa tanda di rincian (T-18.18, QA T-18.9 PO-6).
 void main() {
@@ -26,7 +28,8 @@ void main() {
     );
     await tester.pumpWidget(
       MaterialApp(
-        theme: PixelTheme.light,
+        builder: reducedMotion,
+        theme: AppThemeBridge.build(DsThemePresets.fallback, Brightness.light),
         home: Scaffold(
           body: SingleChildScrollView(
             child: UnplannedCard(plan: plan, monthLabel: 'Okt', onShowRecurring: () {}, onShowBudget: () {}),

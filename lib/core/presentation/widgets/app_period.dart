@@ -4,14 +4,15 @@ import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/app_button.dart';
 import 'package:saldough/core/presentation/widgets/app_icon.dart';
+import 'package:saldough/core/presentation/widgets/clay_icons.dart';
 import 'package:saldough/core/presentation/widgets/pixel_corner_border.dart';
 import 'package:saldough/core/theme/theme.dart';
 
 /// Nama periode keuangan yang sedang dilihat (komponen PeriodHeader, ADR-038,
-/// FINANCIAL_PERIOD P-11): nama bulan atau rentang, lalu penanda periode
-/// peralihan bila [transitionDays] diisi. Dengan [onTap] ia tombol yang
-/// membuka lembar Awal bulan keuangan (hanya di Rencana › Bulan ini); tanpa
-/// [onTap] hanya teks (Beranda, Analisis).
+/// FINANCIAL_PERIOD P-11): ubin kalender clay, nama bulan atau rentang, lalu
+/// penanda periode peralihan bila [transitionDays] diisi. Dengan [onTap] ia
+/// tombol yang membuka lembar Awal bulan keuangan (hanya di Rencana › Bulan
+/// ini) dengan pil tonal "Atur"; tanpa [onTap] hanya teks (Beranda, Analisis).
 class AppPeriodHeader extends StatelessWidget {
   /// Membuat [AppPeriodHeader].
   const AppPeriodHeader({required this.label, this.transitionDays, this.onTap, this.wrapTag, super.key});
@@ -30,54 +31,60 @@ class AppPeriodHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final style = Theme.of(context).textTheme.titleLarge?.copyWith(
-      color: colors.ink,
-      fontFeatures: const [FontFeature.tabularFigures()],
-    );
+    final ds = context.ds;
+    final c = ds.colors;
     final days = transitionDays;
     final semantics = [
       label,
       if (days != null) t.plan.transitionLabel(days: days),
       if (onTap != null) t.plan.financialMonthChange,
     ].join('. ');
-    final title = onTap == null
-        ? Text(label, style: style)
-        : Material(
-            color: Colors.transparent,
-            shape: const PixelCornerBorder.small(),
-            clipBehavior: Clip.antiAlias,
-            child: InkWell(
-              key: const ValueKey('period-header'),
-              onTap: onTap,
-              highlightColor: colors.surface2,
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(minHeight: AppSize.touch),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Flexible(child: Text(label, style: style)),
-                      const SizedBox(width: AppSpacing.space1),
-                      // Petunjuk dapat diketuk (FEATURE_DISCOVERY §6.1): pil
-                      // tonal "Atur", bukan sekadar label.
-                      DecoratedBox(
-                        decoration: ShapeDecoration(color: colors.surface2, shape: const PixelCornerBorder.small()),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2, vertical: AppSpacing.space1),
-                          child: Text(
-                            t.discovery.period.hint,
-                            style: Theme.of(context).textTheme.labelMedium?.copyWith(color: colors.ink2),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+    final tag = days == null ? null : (wrapTag?.call(AppPeriodTag(days: days)) ?? AppPeriodTag(days: days));
+    final bar = Row(
+      children: [
+        DsIconTile.asset(asset: ClayIcons.dateCalendar, size: DsIconTileSize.sm),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: ds.typography.titleMd.copyWith(
+                  fontSize: 18,
+                  fontFeatures: const [FontFeature.tabularFigures()],
                 ),
               ),
+              ?tag,
+            ],
+          ),
+        ),
+        if (onTap != null) ...[
+          const SizedBox(width: 8),
+          // Petunjuk dapat diketuk (FEATURE_DISCOVERY §6.1): pil tonal "Atur".
+          DecoratedBox(
+            decoration: BoxDecoration(
+              color: c.surfaceSunken,
+              borderRadius: DsRadius.fullAll,
+              border: Border.all(color: c.outlineSubtle),
             ),
-          );
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(t.discovery.period.hint, style: ds.typography.labelMd.copyWith(color: c.textSecondary)),
+                  const SizedBox(width: 2),
+                  Icon(Icons.chevron_right, size: 16, color: c.textSecondary),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ],
+    );
     return Semantics(
       container: true,
       label: semantics,
@@ -85,25 +92,23 @@ class AppPeriodHeader extends StatelessWidget {
       button: onTap != null,
       onTap: onTap,
       child: ConstrainedBox(
-        constraints: const BoxConstraints(minHeight: AppSize.touch),
-        child: Wrap(
-          spacing: AppSpacing.space2,
-          runSpacing: AppSpacing.space1,
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: [
-            // Tombol menjorok ke kiri sejauh jarak dalamnya, supaya teksnya
-            // segaris dengan isi halaman.
-            if (onTap != null) Transform.translate(offset: const Offset(-AppSpacing.space2, 0), child: title) else title,
-            if (days != null) wrapTag?.call(AppPeriodTag(days: days)) ?? AppPeriodTag(days: days),
-          ],
-        ),
+        constraints: const BoxConstraints(minHeight: 44),
+        child: onTap == null
+            ? bar
+            : DsPressable(
+                key: const ValueKey('period-header'),
+                onPressed: onTap,
+                pressedScale: 0.99,
+                builder: (context, _) => bar,
+              ),
       ),
     );
   }
 }
 
 /// Penanda netral "Periode peralihan · n hari" (PeriodHeader
-/// `tk-period__tag`): `ink-2`, tanpa latar dan tanpa warna peringatan.
+/// `tk-period__tag`): teks sekunder dengan ikon kalender, tanpa latar dan
+/// tanpa warna peringatan.
 class AppPeriodTag extends StatelessWidget {
   /// Membuat [AppPeriodTag].
   const AppPeriodTag({required this.days, super.key});
@@ -113,18 +118,19 @@ class AppPeriodTag extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
+    final ds = context.ds;
+    final c = ds.colors;
     return Row(
       key: const ValueKey('period-transition-tag'),
       mainAxisSize: MainAxisSize.min,
       children: [
-        AppIcon(IconKey.calendar, size: 16, color: colors.ink2),
-        const SizedBox(width: AppSpacing.space1),
+        Icon(Icons.event_repeat, size: 14, color: c.textSecondary),
+        const SizedBox(width: 4),
         Flexible(
           child: Text(
             t.plan.transitionLabel(days: days),
-            style: Theme.of(context).textTheme.labelLarge?.copyWith(
-              color: colors.ink2,
+            style: ds.typography.bodySm.copyWith(
+              color: c.textSecondary,
               fontFeatures: const [FontFeature.tabularFigures()],
             ),
           ),
@@ -293,7 +299,13 @@ class _DayCell extends StatelessWidget {
                 color: selected ? c.actionPrimary : c.surfaceSunken,
                 borderRadius: DsRadius.mdAll,
                 boxShadow: selected
-                    ? [BoxShadow(color: c.actionPrimary.withValues(alpha: 0.25), blurRadius: 6, offset: const Offset(0, 2))]
+                    ? [
+                        BoxShadow(
+                          color: c.actionPrimary.withValues(alpha: 0.25),
+                          blurRadius: 6,
+                          offset: const Offset(0, 2),
+                        ),
+                      ]
                     : null,
               ),
               child: Center(

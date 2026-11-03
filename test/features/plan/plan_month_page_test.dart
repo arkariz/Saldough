@@ -5,12 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
 import 'package:navigation/navigation.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/analysis/presentation/navigation/analysis_route_keys.dart';
@@ -24,6 +24,8 @@ import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 import 'package:state_management/state_management.dart';
+
+import '../../helpers/reduced_motion.dart';
 
 /// Anggaran hanya untuk rentang pertama yang diminta (bulan berjalan).
 final class _Budgets implements PlanBudgetSource {
@@ -135,9 +137,9 @@ void main() {
     )..add(const PlanMonthLoaded());
     addTearDown(bloc.close);
     final app = MaterialApp(
-      theme: PixelTheme.light,
+      theme: AppThemeBridge.build(DsThemePresets.fallback, Brightness.light),
       builder: tutorials == null
-          ? null
+          ? reducedMotion
           : (context, child) => MediaQuery(
               data: MediaQuery.of(context).copyWith(disableAnimations: true),
               child: SpotlightHost(repository: tutorials, child: child!),
@@ -163,7 +165,7 @@ void main() {
 
   testWidgets('Uang nganggur Rp2.995.500 = jumlah baris di bawahnya (§4.9)', (tester) async {
     await pump(tester);
-    expect(find.text(t.plan.unplannedTitle(month: 'Okt')), findsOneWidget);
+    expect(find.text(t.plan.unplannedTitle(month: 'Okt').toUpperCase()), findsOneWidget);
     expect(find.text('Rp2.995.500'), findsOneWidget);
     // Juga baris Gaji 25 Okt di Berikutnya.
     expect(find.text('+Rp12.000.000'), findsNWidgets(2));
@@ -193,7 +195,7 @@ void main() {
     expect(tester.takeException(), isNull);
     expect(find.text(t.plan.nextTitle), findsOneWidget);
     // Baris jadwal: kolom tanggal berisi hari, urut tanggal (ADR-034).
-    final next = find.byType(AppListCard).last;
+    final next = find.byType(DsListCard).last;
     double top(String day) => tester.getTopLeft(find.descendant(of: next, matching: find.text(day))).dy;
     expect(top('5'), lessThan(top('10')));
     expect(top('10'), lessThan(top('25')));
@@ -510,11 +512,11 @@ void main() {
       expect(find.text('1\u00A0–\u00A024\u00A0Okt'), findsOneWidget);
       expect(find.text('Periode peralihan · 24 hari'), findsOneWidget);
       expect(find.text('Rentang ini tidak memuat gajian.'), findsOneWidget);
-      final hero = tester.widget<HeroAmount>(
-        find.descendant(of: find.byType(UnplannedCard), matching: find.byType(HeroAmount)),
+      final hero = tester.widget<DsSummaryHero>(
+        find.descendant(of: find.byType(UnplannedCard), matching: find.byType(DsSummaryHero)),
       );
-      expect(hero.formatted, startsWith('−'));
-      expect(hero.color, isNull);
+      expect(hero.format(hero.amount), startsWith('−'));
+      expect(hero.negative, isFalse, reason: 'tanpa gajian: negatif tanpa warna peringatan');
 
       // Tinjau awal bulan muncul sekali dengan kalimat peralihan, walau sudah
       // lewat hari ke-7 periode.

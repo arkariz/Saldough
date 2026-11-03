@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 
@@ -47,16 +47,24 @@ class UnplannedCard extends StatelessWidget {
   static void _showInfo(BuildContext context) => showAppSheet<void>(
     context,
     builder: (sheetContext) {
-      final textTheme = Theme.of(sheetContext).textTheme;
+      final ds = sheetContext.ds;
       return SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.space4),
+          padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(t.plan.infoTitle, style: textTheme.titleMedium),
-              const SizedBox(height: AppSpacing.space2),
+              Center(
+                child: DsIconTile.asset(asset: ClayIcons.coins, size: DsIconTileSize.lg),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                t.plan.infoTitle,
+                textAlign: TextAlign.center,
+                style: ds.typography.headlineMd.copyWith(fontSize: 20),
+              ),
+              const SizedBox(height: 12),
               for (final line in [
                 t.plan.infoIncome,
                 t.plan.infoBills,
@@ -64,14 +72,12 @@ class UnplannedCard extends StatelessWidget {
                 t.plan.infoOffPlan,
                 t.plan.infoResult,
               ])
-                Text(line, style: textTheme.bodyMedium),
-              const SizedBox(height: AppSpacing.space2),
-              Text(
-                t.plan.infoNotBalance,
-                style: textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 6),
+                  child: Text(line, style: ds.typography.bodyMd),
                 ),
-              ),
+              const SizedBox(height: 6),
+              Text(t.plan.infoNotBalance, style: ds.typography.bodyMd.copyWith(fontWeight: FontWeight.w700)),
             ],
           ),
         ),
@@ -81,65 +87,42 @@ class UnplannedCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
+    final ds = context.ds;
+    final c = ds.colors;
     final remaining = plan.remaining;
-    final textTheme = Theme.of(context).textTheme;
-    // Prototipe `RencanaBulanIni.dc.html`: label + info di atas angka utama,
-    // rincian di bidang cekung `surface2`.
-    return AppCard(
-      child: Column(
+    final outflow = plan.plannedRecurringOut + plan.budgetPlanned;
+    return DsSummaryHero(
+      label: t.plan.unplannedTitle(month: monthLabel),
+      badge: isForecast ? t.plan.forecastBadge : null,
+      amount: remaining,
+      negative: remaining < 0 && !withoutPayday,
+      format: AppMoneyFormatter.format,
+      ratio: plan.plannedIncome <= 0 ? 0 : outflow / plan.plannedIncome,
+      asset: ClayIcons.coins,
+      semanticLabel: '${t.plan.unplannedTitle(month: monthLabel)} ${AppMoneyFormatter.format(remaining)}',
+      labelTrailing: DsIconButton.onHero(
+        icon: Icons.info_outline,
+        label: t.plan.infoAction,
+        onPressed: () => _showInfo(context),
+      ),
+      footer: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  t.plan.unplannedTitle(month: monthLabel),
-                  style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
-                ),
-              ),
-              if (isForecast) AppBadge(t.plan.forecastBadge),
-              AppIconButton(
-                icon: IconKey.info,
-                label: t.plan.infoAction,
-                onPressed: () => _showInfo(context),
-              ),
-            ],
-          ),
-          HeroAmount(
-            AppMoneyFormatter.format(remaining),
-            color: remaining < 0 && !withoutPayday ? colors.danger : null,
-          ),
           if (withoutPayday)
-            Text(
-              t.plan.transitionNoPayday,
-              key: const ValueKey('unplanned-no-payday'),
-              style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: Text(
+                t.plan.transitionNoPayday,
+                key: const ValueKey('unplanned-no-payday'),
+                style: ds.typography.bodySm.copyWith(color: c.onHeroMuted),
+              ),
             ),
-          const SizedBox(height: AppSpacing.space3),
-          Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.space3,
-              vertical: AppSpacing.space1,
-            ),
-            color: colors.surface2,
+          DsSummaryGlass(
             child: Column(
               children: [
-                _Row(
-                  label: t.plan.incomeRow,
-                  amount: plan.plannedIncome,
-                  onTap: onShowRecurring,
-                ),
-                _Row(
-                  label: t.plan.billsRow,
-                  amount: -plan.plannedRecurringOut,
-                  onTap: onShowRecurring,
-                ),
-                _Row(
-                  label: t.plan.budgetRow,
-                  amount: -plan.budgetPlanned,
-                  onTap: onShowBudget,
-                ),
+                _Row(label: t.plan.incomeRow, amount: plan.plannedIncome, onTap: onShowRecurring),
+                _Row(label: t.plan.billsRow, amount: -plan.plannedRecurringOut, onTap: onShowRecurring),
+                _Row(label: t.plan.budgetRow, amount: -plan.budgetPlanned, onTap: onShowBudget),
                 if (offPlan != 0) _Row(label: t.plan.offPlanRow, amount: offPlan),
               ],
             ),
@@ -159,30 +142,37 @@ class _Row extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
+    final ds = context.ds;
+    final c = ds.colors;
     // Nol tanpa tanda: "Rp0", bukan "+Rp0" (T-18.18).
     final sign = amount < 0 ? '−' : (amount > 0 ? '+' : '');
     final row = ConstrainedBox(
-      constraints: const BoxConstraints(minHeight: 40),
+      constraints: const BoxConstraints(minHeight: 36),
       child: Row(
         children: [
           Expanded(
-            child: Text(
-              label,
-              style: textTheme.bodyMedium?.copyWith(
-                color: context.appColors.ink2,
+            child: Text(label, style: ds.typography.bodySm.copyWith(color: c.onHeroMuted)),
+          ),
+          const SizedBox(width: 8),
+          Flexible(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: AlignmentDirectional.centerEnd,
+              child: Text(
+                '$sign${AppMoneyFormatter.format(amount.abs())}',
+                style: ds.typography.amountSm.copyWith(color: amount > 0 ? c.primaryFixed : c.onHero),
               ),
             ),
           ),
-          Text(
-            '$sign${AppMoneyFormatter.format(amount.abs())}',
-            style: context.numberStyles.amountSm.copyWith(
-              color: amount > 0 ? context.appColors.positive : context.appColors.ink,
-            ),
-          ),
+          if (onTap != null) ...[
+            const SizedBox(width: 4),
+            Icon(Icons.chevron_right, size: 18, color: c.onHeroMuted),
+          ],
         ],
       ),
     );
-    return onTap == null ? row : AppTappable(label: label, onTap: onTap, child: row);
+    return onTap == null
+        ? row
+        : DsPressable(semanticLabel: label, onPressed: onTap, pressedScale: 0.99, builder: (context, _) => row);
   }
 }

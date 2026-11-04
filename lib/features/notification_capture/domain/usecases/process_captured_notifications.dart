@@ -9,6 +9,7 @@ import 'package:saldough/features/notification_capture/domain/repositories/notif
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_store.dart';
 import 'package:saldough/features/notification_capture/domain/services/active_capture_inputs.dart';
 import 'package:saldough/features/notification_capture/domain/services/auto_record_policy.dart';
+import 'package:saldough/features/notification_capture/domain/services/capture_finalizer.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_inbox_changes.dart';
 import 'package:saldough/features/notification_capture/domain/services/notification_draft_composer.dart';
 import 'package:saldough/features/notification_capture/domain/services/notification_text.dart';
@@ -61,6 +62,7 @@ final class ProcessCapturedNotifications {
     this.recurringRules,
     this.matchLog,
     this.recurringChanges,
+    this.finalizer = const CaptureFinalizer(),
     this.isPlus,
     this.freeSources,
     DateTime Function()? clock,
@@ -109,6 +111,9 @@ final class ProcessCapturedNotifications {
 
   /// Sinyal rutin berubah, sesudah ada yang tertaut.
   final RecurringChanges? recurringChanges;
+
+  /// Penutup bersama: tautan rutin dan pos anggaran (ADR-044 §3.2).
+  final CaptureFinalizer finalizer;
 
   /// Paket Plus; `null` = tanpa batas (uji). Di Gratis hanya [freeSources]
   /// sumber pertama di daftar yang diproses dan tingkat otomatis dianggap
@@ -226,7 +231,8 @@ final class ProcessCapturedNotifications {
       // pengguna menyatakan notifikasi ini adalah rutin itu, jadi bila
       // kemunculannya tidak jelas, tangkapan ditinjau -- tidak dicatat tanpa
       // tautan dan tidak ditautkan ke rutin lain.
-      final boundRule = _boundRule(rules, notification.packageName, composed);      final boundMatch = boundRule == null ? null : await _boundMatch(boundRule, draft, date, ledgers);
+      final boundRule = _boundRule(rules, notification.packageName, composed);
+      final boundMatch = boundRule == null ? null : await _boundMatch(boundRule, draft, date, ledgers);
       final boundUnclear = boundRule != null && !(boundMatch != null && boundMatch.exact);
 
       if (composed.autoEligible && !duplicate && !boundUnclear && policy.allows(draft)) {
@@ -283,7 +289,9 @@ final class ProcessCapturedNotifications {
     final pattern = composed.pattern;
     if (pattern == null || !pattern.verified) return null;
     return rules
-        .where((r) => r.notificationBinding?.packageName == packageName && r.notificationBinding?.patternId == pattern.id)
+        .where(
+          (r) => r.notificationBinding?.packageName == packageName && r.notificationBinding?.patternId == pattern.id,
+        )
         .firstOrNull;
   }
 
@@ -347,9 +355,10 @@ final class ProcessCapturedNotifications {
   }) async {
     var transaction = transactionFromDraft(draft, id: _newId(), fallbackDate: notification.postedAt);
     if (transaction == null) return (null, false);
-    final match = forcedMatch ?? (rules.isEmpty ? null : matchOccurrences(transaction, rules: rules, transactions: ledger));
+    final match =
+        forcedMatch ?? (rules.isEmpty ? null : matchOccurrences(transaction, rules: rules, transactions: ledger));
     final autoLink = match != null && match.exact && matchCandidates(match.rule, match.date, ledger).isEmpty;
-    if (autoLink) transaction = transaction.withRecurrence(match.link(linkedBy: RecurrenceLinkedBy.auto));
+    transaction = await finalizer.finalize(transaction, match: autoLink ? match : null);
     final result = await recordTransaction(transaction, source: this);
     if (result.isLeft()) return (null, false);
     if (autoLink) {

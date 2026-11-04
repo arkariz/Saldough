@@ -6,6 +6,7 @@ import 'package:saldough/features/notification_capture/domain/entities/captured_
 import 'package:saldough/features/notification_capture/domain/entities/notification_capture_settings.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_store.dart';
 import 'package:saldough/features/notification_capture/domain/services/active_capture_inputs.dart';
+import 'package:saldough/features/notification_capture/domain/services/capture_finalizer.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_inbox_changes.dart';
 import 'package:saldough/features/notification_capture/domain/services/notification_draft_composer.dart';
 import 'package:saldough/shared/capture/capture.dart';
@@ -192,7 +193,10 @@ final class CaptureInboxActions {
       case Right(:final value):
         final transaction = value.where((t) => t.id == entry.transactionId).firstOrNull;
         if (transaction != null && transaction.recurrence != null) {
-          final saved = await recordTransaction(transaction.withRecurrence(null), previousTransaction: transaction);
+          final saved = await recordTransaction(
+            CaptureFinalizer.release(transaction),
+            previousTransaction: transaction,
+          );
           if (saved.isLeft()) return saved;
           AppAnalytics.log(RecurringEvents.occurrenceUnlinked);
         }

@@ -12,8 +12,10 @@ import 'package:saldough/features/notification_capture/domain/entities/notificat
 import 'package:saldough/features/notification_capture/domain/entities/notification_pattern.dart';
 import 'package:saldough/features/notification_capture/domain/entities/notification_source.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_store.dart';
+import 'package:saldough/features/notification_capture/domain/services/capture_finalizer.dart';
 import 'package:saldough/features/notification_capture/domain/usecases/capture_inbox_actions.dart';
 import 'package:saldough/features/notification_capture/domain/usecases/process_captured_notifications.dart';
+import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
@@ -397,6 +399,123 @@ void main() {
       expect((await log.list(now)).getOrElse((_) => []), isEmpty);
     });
 
+    group('pos anggaran dari rutin (ADR-044 §3.2)', () {
+      final kopiPos = BudgetItemOption(
+        budgetId: 'b1',
+        budgetName: 'Okt',
+        itemId: 'pos-kopi',
+        itemName: 'Kopi',
+        walletId: 'bri',
+        templateItemId: 'tpl-kopi',
+        startDate: DateTime(2026, 9, 25),
+        endDate: DateTime(2026, 10, 25),
+      );
+
+      ProcessCapturedNotifications withCatalog(
+        RecurringRuleRepository rules,
+        RecurrenceMatchLogRepository log,
+        BudgetItemCatalog? catalog,
+      ) => ProcessCapturedNotifications(
+        gateway: gateway,
+        store: store,
+        composer: notificationComposer(),
+        recordTransaction: recordTransaction,
+        walletRepository: wallets,
+        transactionRepository: ledger,
+        categories: () => notificationCategories,
+        currencyCode: () => 'IDR',
+        languageCode: () => 'id',
+        recurringRules: rules,
+        matchLog: log,
+        finalizer: CaptureFinalizer(budgetItems: catalog),
+        clock: () => now,
+        newId: () => 'tx${nextId++}',
+      );
+
+      Future<void> arrange(RecurringRuleRepository rules, {String? key = 'tpl-kopi'}) async {
+        await rules.saveRule(kopi().copyWith(budgetItemKey: key));
+        await enable(AutoRecordLevel.whenComplete);
+        gateway.queue = [notif('a', payment)];
+      }
+
+      test('rutin tertaut pos: tercatat otomatis tertaut rutin dan terbebankan ke pos periodenya', () async {
+        final rules = RecurringRuleRepositoryImpl(storage: storage);
+        final log = RecurrenceMatchLogRepositoryImpl(storage: storage, clock: () => now);
+        await arrange(rules);
+        await withCatalog(rules, log, _FakeCatalog([kopiPos]))();
+
+        final tx = (await ledgerNow()).single as ExpenseTransaction;
+        expect(tx.recurrence?.ruleId, 'kopi');
+        expect(tx.budgetItemId, 'pos-kopi');
+      });
+
+      test('tanpa katalog anggaran: tertaut rutin, pos kosong', () async {
+        final rules = RecurringRuleRepositoryImpl(storage: storage);
+        final log = RecurrenceMatchLogRepositoryImpl(storage: storage, clock: () => now);
+        await arrange(rules);
+        await withCatalog(rules, log, null)();
+
+        final tx = (await ledgerNow()).single as ExpenseTransaction;
+        expect(tx.recurrence?.ruleId, 'kopi');
+        expect(tx.budgetItemId, isNull);
+      });
+
+      test('rutin tanpa tautan pos: tidak menebak pos', () async {
+        final rules = RecurringRuleRepositoryImpl(storage: storage);
+        final log = RecurrenceMatchLogRepositoryImpl(storage: storage, clock: () => now);
+        await arrange(rules, key: null);
+        await withCatalog(rules, log, _FakeCatalog([kopiPos]))();
+
+        final tx = (await ledgerNow()).single as ExpenseTransaction;
+        expect(tx.recurrence?.ruleId, 'kopi');
+        expect(tx.budgetItemId, isNull);
+      });
+
+      test('pos periode lain atau diarsipkan tidak dipakai', () async {
+        final rules = RecurringRuleRepositoryImpl(storage: storage);
+        final log = RecurrenceMatchLogRepositoryImpl(storage: storage, clock: () => now);
+        await arrange(rules);
+        final archived = BudgetItemOption(
+          budgetId: 'b0',
+          budgetName: 'Sep',
+          itemId: 'pos-lama',
+          itemName: 'Kopi',
+          walletId: 'bri',
+          templateItemId: 'tpl-kopi',
+          startDate: DateTime(2026, 8, 25),
+          endDate: DateTime(2026, 9, 25),
+        );
+        await withCatalog(rules, log, _FakeCatalog([archived]))();
+
+        expect(((await ledgerNow()).single as ExpenseTransaction).budgetItemId, isNull);
+      });
+
+      test('Lepaskan melepas tautan rutin sekaligus pos yang datang dari tautan itu', () async {
+        final rules = RecurringRuleRepositoryImpl(storage: storage);
+        final log = RecurrenceMatchLogRepositoryImpl(storage: storage, clock: () => now);
+        await arrange(rules);
+        await withCatalog(rules, log, _FakeCatalog([kopiPos]))();
+        final entry = (await log.list(now)).getOrElse((_) => []).single;
+
+        final actions = CaptureInboxActions(
+          store: store,
+          recordTransaction: recordTransaction,
+          transactionRepository: ledger,
+          composer: notificationComposer(),
+          walletRepository: wallets,
+          categories: () => notificationCategories,
+          currencyCode: () => 'IDR',
+          languageCode: () => 'id',
+          matchLog: log,
+        );
+        await actions.unlink(entry);
+
+        final tx = (await ledgerNow()).single as ExpenseTransaction;
+        expect(tx.recurrence, isNull);
+        expect(tx.budgetItemId, isNull);
+      });
+    });
+
     test('nominal beda atau rutin kira-kira: tercatat tanpa tautan', () async {
       final rules = RecurringRuleRepositoryImpl(storage: storage);
       final log = RecurrenceMatchLogRepositoryImpl(storage: storage, clock: () => now);
@@ -591,4 +710,13 @@ final class _FailingInboxStore implements NotificationCaptureStore {
 
   @override
   Future<Either<Failure, Unit>> saveProcessedIds(Map<String, DateTime> ids) => _inner.saveProcessedIds(ids);
+}
+
+class _FakeCatalog implements BudgetItemCatalog {
+  _FakeCatalog(this.options);
+
+  final List<BudgetItemOption> options;
+
+  @override
+  Future<Either<Failure, List<BudgetItemOption>>> listOptions() async => right(options);
 }

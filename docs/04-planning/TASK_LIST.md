@@ -6237,20 +6237,30 @@ S sehari, M beberapa hari, L lebih dari seminggu.
 
 **Tahap 0: fondasi**
 
-- [ ] **T-26.1** (S) Bawa tindak lanjut QA Fase 23 ke branch kerja:
+- [x] **T-26.1** (S) Bawa tindak lanjut QA Fase 23 ke branch kerja:
       cherry-pick `e15abd6e` (F23-1, F23-5, F23-6, keputusan F23-2, ADR-042
       revisi 2). `57269a79` (saklar T-23.6) **tidak** dibawa.
-      Verifikasi: `flutter analyze` dan uji notifikasi lulus.
+      Selesai 4 Nov 2026 (`f0e7ad3e`): satu konflik di TASK_LIST diselesaikan
+      (baris Fase 23 jadi 5/5, T-23.5 disisipkan, B-83 memakai teks baru).
+      `flutter analyze` bersih, uji notifikasi lulus.
 - [ ] **T-26.2** (L) `CaptureResolver` dan kelas kartu (`planned`, `recognized`,
       `needsInput`) di domain murni (ADR-044 §3.1): aturan aplikasi → rencana
       (rutin, pos) → ingatan pedagang → aturan umum; pemutus seri lewat nama
       rutin di teks; jendela termasuk bayar lebih awal.
       Verifikasi: uji sintetis per urutan dan per kelas; ambigu tidak ditebak.
-- [ ] **T-26.3** (M) `CaptureFinalizer` (§3.2): tautan rutin dan `budgetItemId`
+- [x] **T-26.3** (M) `CaptureFinalizer` (§3.2): tautan rutin dan `budgetItemId`
       lewat `budgetItemForOccurrence` di semua jalur (otomatis, kartu, jurnal),
       lalu sinyal. Menutup celah `transactionFromDraft`.
-      Verifikasi: transaksi otomatis dari rutin bertaut pos membebani pos yang
-      benar; progres anggaran naik.
+      Selesai 4 Nov 2026 untuk jalur otomatis: `CaptureFinalizer`
+      (`domain/services/capture_finalizer.dart`) dipakai `ProcessCapturedNotifications`
+      dan dikawat di DI dengan `BudgetItemCatalog`; Lepaskan (`CaptureInboxActions.unlink`)
+      kini juga melepas pos yang datang dari tautan (`CaptureFinalizer.release`).
+      Jalur kartu sudah mengisi pos lewat CATAT (`expense_form_sheet.dart:144`);
+      jalur jurnal memakai finalizer yang sama di T-26.10. Tanpa katalog atau
+      rutin tanpa tautan pos, pos dibiarkan kosong (tidak menebak).
+      Verifikasi: 5 uji baru di `process_captured_notifications_test.dart`
+      (rutin tertaut pos terbebankan, tanpa katalog, rutin tanpa pos, pos
+      periode lain tidak dipakai, Lepaskan melepas pos).
 - [ ] **T-26.4** (M) Anti-duplikat dua arah dan status "tercatat" andal (§3.3,
       termasuk B-83b): cek ulang saat kartu tampil, tutup otomatis lewat
       `LedgerChanges`, aksi Tautkan/Tetap catat.

@@ -336,6 +336,35 @@ abstract final class DiscoveryEvents {
   static AnalyticsEvent paydayCard(String action) => AnalyticsEvent('discovery_payday_card', {'action': action});
 }
 
+/// Peristiwa kotak masuk Catat dari notifikasi v2 (ADR-044, NOTIFICATION_CAPTURE_V2
+/// §12, Fase 26): bahan ukuran keberhasilan (ketuk per transaksi, kartu yang
+/// diubah dulu, duplikat tertangkap). Hanya jenis aksi, kelas kartu, dan
+/// jumlah; tanpa nominal, nama atau paket aplikasi, dan isi notifikasi
+/// (ADR-023).
+abstract final class CaptureEvents {
+  CaptureEvents._();
+
+  /// Kotak masuk dimuat dengan kartu yang menunggu: jumlah per kelas kartu
+  /// (`planned`, `recognized`, `needs_input`).
+  static AnalyticsEvent inboxOpened({required int planned, required int recognized, required int needsInput}) =>
+      AnalyticsEvent('capture_inbox_opened', {
+        'planned': planned,
+        'recognized': recognized,
+        'needs_input': needsInput,
+      });
+
+  /// Aksi pada satu kartu. [action]: `one_tap` (Catat tanpa formulir),
+  /// `confirm_all` (tiap kartu dalam Catat semua), `edit_first` (Ubah dulu),
+  /// `record` (Catat yang membuka CATAT), `dismiss`, `close_duplicate`, atau
+  /// `link_existing`. [cardClass]: `planned`, `recognized`, atau `needs_input`.
+  static AnalyticsEvent cardAction({required String action, required String cardClass}) =>
+      AnalyticsEvent('capture_card_action', {'action': action, 'card_class': cardClass});
+
+  /// CATAT dari kartu disimpan. [via]: `edit_first` atau `record`.
+  static AnalyticsEvent recordSaved({required String via, required String cardClass}) =>
+      AnalyticsEvent('capture_record_saved', {'via': via, 'card_class': cardClass});
+}
+
 /// Peristiwa ekspor, cadangan, dan pemulihan (EXPORT_BACKUP §12, Fase 22).
 /// Hanya jenis dan ember jumlah baris; tanpa nominal, nama, atau isi data
 /// (ADR-023).
@@ -408,7 +437,8 @@ abstract final class PremiumEvents {
 
   /// Pembelian gagal; [reason] `network`, `billing`, atau `other`. Pembatalan
   /// pengguna bukan kegagalan dan tidak dicatat di sini.
-  static AnalyticsEvent purchaseFailed({required String reason}) => AnalyticsEvent('purchase_failed', {'reason': reason});
+  static AnalyticsEvent purchaseFailed({required String reason}) =>
+      AnalyticsEvent('purchase_failed', {'reason': reason});
 
   /// Pemulihan pembelian dijalankan. Bukan `restore_completed`, nama itu
   /// milik pemulihan data (Fase 22).

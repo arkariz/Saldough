@@ -700,6 +700,87 @@ void main() {
         expect(find.text(t.notificationCapture.oneTapRecorded(amount: 'Rp50.000', app: 'BRImo')), findsOneWidget);
       });
 
+      group('peristiwa analitik (ukuran keberhasilan, NOTIFICATION_CAPTURE_V2 §12)', () {
+        late List<AnalyticsEvent> events;
+
+        setUp(() {
+          events = [];
+          AppAnalytics.debugSink = events.add;
+          addTearDown(() => AppAnalytics.debugSink = null);
+        });
+
+        List<AnalyticsEvent> only(String name) => events.where((e) => e.name == name).toList();
+
+        testWidgets('membuka kotak masuk mencatat jumlah kartu per kelas', (tester) async {
+          await store.saveInbox([known('a'), known('b', category: null)]);
+          await open(tester, NotificationCaptureRouteKeys.inbox);
+
+          expect(
+            only('capture_inbox_opened').single,
+            CaptureEvents.inboxOpened(planned: 0, recognized: 1, needsInput: 1),
+          );
+        });
+
+        testWidgets('satu ketuk mencatat one_tap dengan kelas kartu', (tester) async {
+          await store.saveInbox([known('a')]);
+          await open(tester, NotificationCaptureRouteKeys.inbox);
+
+          await tester.tap(find.byKey(const ValueKey('inbox-confirm-a')));
+          await tester.pumpAndSettle();
+
+          expect(
+            only('capture_card_action').single,
+            CaptureEvents.cardAction(action: 'one_tap', cardClass: 'recognized'),
+          );
+        });
+
+        testWidgets('Catat semua mencatat confirm_all untuk tiap kartu', (tester) async {
+          await store.saveInbox([known('a'), known('b', amount: 1200000, ago: const Duration(minutes: 5))]);
+          await open(tester, NotificationCaptureRouteKeys.inbox);
+
+          await tester.tap(find.byKey(const ValueKey('inbox-confirm-all')));
+          await tester.pumpAndSettle();
+
+          expect(only('capture_card_action').map((e) => e.parameters['action']), ['confirm_all', 'confirm_all']);
+        });
+
+        testWidgets('Abaikan mencatat dismiss; tanpa nominal, nama aplikasi, atau teks notifikasi', (tester) async {
+          await store.saveInbox([known('a', category: null)]);
+          await open(tester, NotificationCaptureRouteKeys.inbox);
+
+          await tester.tap(find.text(t.notificationCapture.dismissAction));
+          await tester.pumpAndSettle();
+
+          expect(
+            only('capture_card_action').single,
+            CaptureEvents.cardAction(action: 'dismiss', cardClass: 'needs_input'),
+          );
+          for (final event in events) {
+            for (final value in event.parameters.values) {
+              expect('$value', isNot(contains('BRImo')));
+              expect('$value', isNot(contains('KOPI')));
+              expect('$value', isNot(contains('50000')));
+            }
+          }
+        });
+
+        testWidgets('Sudah, tutup pada duplikat mencatat close_duplicate', (tester) async {
+          await ledger.saveTransaction(
+            ExpenseTransaction(id: 'manual', date: at, amount: 5000000, note: 'Kopi', walletId: 'bri'),
+          );
+          await store.saveInbox([known('a')]);
+          await open(tester, NotificationCaptureRouteKeys.inbox);
+
+          await tester.tap(find.byKey(const ValueKey('inbox-close-duplicate')));
+          await tester.pumpAndSettle();
+
+          expect(
+            only('capture_card_action').single,
+            CaptureEvents.cardAction(action: 'close_duplicate', cardClass: 'needs_input'),
+          );
+        });
+      });
+
       testWidgets('Batalkan sesudah satu ketuk: transaksi dihapus dan kartu kembali', (tester) async {
         await store.saveInbox([known('a')]);
         await open(tester, NotificationCaptureRouteKeys.inbox);

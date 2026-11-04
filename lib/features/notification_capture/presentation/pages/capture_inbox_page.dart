@@ -38,9 +38,19 @@ class CaptureInboxPage extends StatelessWidget {
   /// Catat lewat CATAT. Bila draf cocok dengan satu kemunculan rutin,
   /// CATAT terisi kategori dan catatan dari rutin (yang kosong saja) dan
   /// transaksinya tertaut ke kemunculan itu (ADR-035 §3.4).
-  Future<void> _record(BuildContext context, CaptureInboxEntry entry, OccurrenceMatch? match) async {
+  Future<void> _record(
+    BuildContext context,
+    CaptureInboxEntry entry,
+    OccurrenceMatch? match, {
+    required String via,
+    required String cardClass,
+  }) async {
     final bloc = context.read<CaptureInboxBloc>();
-    if (await openCaptureRecord(context, entry, match)) bloc.add(CaptureInboxRecorded(entry.id));
+    AppAnalytics.log(CaptureEvents.cardAction(action: via, cardClass: cardClass));
+    if (await openCaptureRecord(context, entry, match)) {
+      AppAnalytics.log(CaptureEvents.recordSaved(via: via, cardClass: cardClass));
+      bloc.add(CaptureInboxRecorded(entry.id));
+    }
   }
 
   Future<void> _makePattern(BuildContext context, CaptureInboxEntry entry) async {
@@ -155,7 +165,7 @@ class _InboxBodyState extends State<_InboxBody> with WidgetsBindingObserver {
             final eligible = [
               for (final e in state.pending)
                 if (oneTapAllowed(
-                  cardClass: cardClassOf(e, match: state.matches[e.id], existing: state.duplicates[e.id]),
+                  cardClass: state.cardClassFor(e),
                   isPlus: ActivePlan.isPlus,
                 ))
                   e,
@@ -212,7 +222,13 @@ class _InboxBodyState extends State<_InboxBody> with WidgetsBindingObserver {
                       existing: state.duplicates[entry.id],
                       oneTap: eligible.contains(entry),
                       onConfirm: () => inbox.add(CaptureInboxConfirmed([(entry, state.matches[entry.id])])),
-                      onRecord: () => page._record(context, entry, state.matches[entry.id]),
+                      onRecord: () => page._record(
+                        context,
+                        entry,
+                        state.matches[entry.id],
+                        via: eligible.contains(entry) ? 'edit_first' : 'record',
+                        cardClass: captureClassName(state.cardClassFor(entry)),
+                      ),
                       onDismiss: () => inbox.add(CaptureInboxDismissed(entry.id)),
                       onMakePattern: () => page._makePattern(context, entry),
                       onLink: (existing, match) =>

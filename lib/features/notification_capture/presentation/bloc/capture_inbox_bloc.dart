@@ -2,12 +2,14 @@ import 'dart:async';
 
 import 'package:dependencies/dependencies.dart' hide State;
 import 'package:flutter/material.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/app_action_snack_bar.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/notification_capture/domain/entities/capture_inbox_entry.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_store.dart';
+import 'package:saldough/features/notification_capture/domain/services/capture_card_class.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_inbox_changes.dart';
 import 'package:saldough/features/notification_capture/domain/usecases/capture_inbox_actions.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
@@ -64,6 +66,10 @@ final class CaptureInboxState extends UiState<CaptureInboxState> {
     duplicates: duplicates ?? this.duplicates,
     effect: effect,
   );
+
+  /// Kelas kartu [entry] menurut rencana dan duplikat yang sedang berlaku.
+  CaptureCardClass cardClassFor(CaptureInboxEntry entry) =>
+      cardClassOf(entry, match: matches[entry.id], existing: duplicates[entry.id]);
 
   @override
   List<Object?> get props => [isLoading, pending, auto, matches, linked, duplicates];
@@ -160,7 +166,7 @@ final class CaptureInboxBloc extends Bloc<CaptureInboxEvent, CaptureInboxState> 
     required CaptureInboxChanges changes,
     LedgerChanges? ledgerChanges,
   }) : super(const CaptureInboxState()) {
-    on<CaptureInboxStarted>((_, emit) => _reload(emit));
+    on<CaptureInboxStarted>(_onStarted);
     on<CaptureInboxRefreshed>((_, emit) => _reload(emit));
     on<CaptureInboxDismissed>(_onDismissed);
     on<CaptureInboxRecorded>(_onRecorded);
@@ -198,8 +204,29 @@ final class CaptureInboxBloc extends Bloc<CaptureInboxEvent, CaptureInboxState> 
     );
   }
 
+  Future<void> _onStarted(CaptureInboxStarted event, Emitter<CaptureInboxState> emit) async {
+    await _reload(emit);
+    final classes = [for (final e in state.pending) state.cardClassFor(e)];
+    if (classes.isEmpty) return;
+    AppAnalytics.log(
+      CaptureEvents.inboxOpened(
+        planned: classes.where((c) => c == CaptureCardClass.planned).length,
+        recognized: classes.where((c) => c == CaptureCardClass.recognized).length,
+        needsInput: classes.where((c) => c == CaptureCardClass.needsInput).length,
+      ),
+    );
+  }
+
   Future<void> _onDismissed(CaptureInboxDismissed event, Emitter<CaptureInboxState> emit) async {
     final entry = state.pending.where((e) => e.id == event.id).firstOrNull;
+    if (entry != null) {
+      AppAnalytics.log(
+        CaptureEvents.cardAction(
+          action: state.duplicates.containsKey(entry.id) ? 'close_duplicate' : 'dismiss',
+          cardClass: captureClassName(state.cardClassFor(entry)),
+        ),
+      );
+    }
     await _actions.remove(event.id);
     await _reload(
       emit,
@@ -249,7 +276,13 @@ final class CaptureInboxBloc extends Bloc<CaptureInboxEvent, CaptureInboxState> 
   Future<void> _onConfirmed(CaptureInboxConfirmed event, Emitter<CaptureInboxState> emit) async {
     final done = <(CaptureInboxEntry, Transaction)>[];
     for (final (entry, match) in event.items) {
-      if (await _actions.confirm(entry, match: match) case Right(:final value)) done.add((entry, value));
+      final cardClass = captureClassName(state.cardClassFor(entry));
+      if (await _actions.confirm(entry, match: match) case Right(:final value)) {
+        done.add((entry, value));
+        AppAnalytics.log(
+          CaptureEvents.cardAction(action: event.items.length > 1 ? 'confirm_all' : 'one_tap', cardClass: cardClass),
+        );
+      }
     }
     await _reload(emit, effect: done.isEmpty ? _confirmFailed() : _confirmedWithUndo(done));
   }
@@ -288,7 +321,13 @@ final class CaptureInboxBloc extends Bloc<CaptureInboxEvent, CaptureInboxState> 
   }
 
   Future<void> _onLinkedToExisting(CaptureInboxLinkedToExisting event, Emitter<CaptureInboxState> emit) async {
+    final linkedEntry = state.pending.where((e) => e.id == event.id).firstOrNull;
     final result = await _actions.linkExisting(event.id, event.existing, event.match);
+    if (result.isRight() && linkedEntry != null) {
+      AppAnalytics.log(
+        CaptureEvents.cardAction(action: 'link_existing', cardClass: captureClassName(state.cardClassFor(linkedEntry))),
+      );
+    }
     await _reload(
       emit,
       effect: result.isRight()

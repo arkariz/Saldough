@@ -6385,8 +6385,23 @@ S sehari, M beberapa hari, L lebih dari seminggu.
       Verifikasi: 190 uji notifikasi lulus (kelas kartu, matriks gerbang,
       confirm/undo dengan rutin dan pos, satu ketuk, Catat semua, Gratis, Cek
       satu tangkapan); galeri debug di 360dp teks 1× dan 2× tanpa overflow.
-- [ ] **T-26.8** (S) `VERIFICATION_PLAN_FASE_26.md` dan ukuran keberhasilan
+- [x] **T-26.8** (S) `VERIFICATION_PLAN_FASE_26.md` dan ukuran keberhasilan
       (median ketuk, kartu dikoreksi, duplikat lolos) dari data jalur internal.
+      Selesai 4 Nov 2026: [VERIFICATION_PLAN_FASE_26.md](VERIFICATION_PLAN_FASE_26.md)
+      (risiko R1–R8, prasyarat data uji tanpa nama bank, prioritas P1–P3, daftar
+      periksa perangkat A–G untuk MVP 1a; bagian H untuk 1b menyusul setelah
+      spike T-26.9) dan definisi ukuran keberhasilan dengan sumber datanya.
+      Peristiwa analitik minimal `CaptureEvents` (`capture_inbox_opened`,
+      `capture_card_action`, `capture_record_saved`; hanya jenis aksi, kelas
+      kartu, dan jumlah) dipasang di kotak masuk dan dicatat di
+      `PLAY_DATA_SAFETY.md`.
+      ⚠ "Kartu dikoreksi" diukur sebagai **proksi** (`edit_first` ÷ yang boleh
+      satu ketuk): CATAT hanya mengembalikan "disimpan", bukan isian yang
+      berubah, jadi perubahan isian sungguhan dinilai manual (B4). Ambang
+      (<20%) dan pagar nominal besar tetap **KT-N2 (ditunda)**.
+      Verifikasi: 9 uji baru (`capture_events_test` dan peristiwa di kotak masuk:
+      pembukaan, satu ketuk, Catat semua, Abaikan, Sudah tutup; tanpa nominal,
+      nama aplikasi, atau teks); suite 2.602 lulus.
 
 **Tahap 1b: MVP notifikasi bertindak**
 

@@ -260,6 +260,9 @@ layar tidak andal), bubble (L, izin overlay dan risiko kebijakan Play).
 
 ## 12. Ukuran keberhasilan (usulan, bukan data)
 
+Definisi, sumber data (`CaptureEvents`), dan status ambang tiap ukuran ada di
+[VERIFICATION_PLAN_FASE_26.md](../../04-planning/VERIFICATION_PLAN_FASE_26.md).
+
 - Median ketuk per transaksi ≤1 untuk kartu yang dikenali (Plus); 2 untuk Gratis.
 - Kartu yang dikoreksi pengguna <20%; nominal terbaca benar >80%.
 - Transaksi ganda lolos = 0; transaksi dari notifikasi tertaut ke rutin/pos

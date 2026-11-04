@@ -18,6 +18,13 @@ enum CaptureCardClass {
   needsInput,
 }
 
+/// Nama kelas untuk peristiwa analitik: `planned`, `recognized`, `needs_input`.
+String captureClassName(CaptureCardClass cardClass) => switch (cardClass) {
+  CaptureCardClass.planned => 'planned',
+  CaptureCardClass.recognized => 'recognized',
+  CaptureCardClass.needsInput => 'needs_input',
+};
+
 /// Kelas kartu [entry]. [match] adalah kemunculan rutin yang cocok (tunggal,
 /// tidak ditebak) dan [existing] catatan di buku besar yang tampak sama
 /// (duplikat selalu perlu diputuskan pengguna).

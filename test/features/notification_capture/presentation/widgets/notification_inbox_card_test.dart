@@ -323,8 +323,9 @@ void main() {
 
       await tester.tap(find.byKey(const ValueKey('inbox-teach-b')));
       await tester.pumpAndSettle();
+      // Kotak masuk yang terbuka juga mencatat capture_inbox_opened: dipisah dari penemuan.
       expect(
-        events.single,
+        events.where((e) => e.name == 'notification_row_tapped').single,
         DiscoveryEvents.notificationRowTapped(state: 'active', surface: 'home', action: 'teach_pattern'),
       );
     });

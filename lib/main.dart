@@ -3,6 +3,10 @@ import 'dart:developer' as developer;
 
 import 'package:flutter/widgets.dart';
 import 'package:saldough/app/bootstrap.dart';
+// SPIKE T-26.9: perpustakaan titik masuk mesin tanpa layar harus terjangkau dari
+// main agar ikut dalam kernel/AOT; native menjalankannya lewat DartEntrypoint.
+// ignore: unused_import
+import 'package:saldough/app/capture_worker/capture_worker_main.dart';
 import 'package:saldough/app/data_portability/app_reboot.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/foundation/analytics/app_bootstrap_firebase.dart';

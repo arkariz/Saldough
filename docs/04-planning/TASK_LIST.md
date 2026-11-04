@@ -6405,11 +6405,28 @@ S sehari, M beberapa hari, L lebih dari seminggu.
 
 **Tahap 1b: MVP notifikasi bertindak**
 
-- [ ] **T-26.9** (L, spike dulu) Bukti konsep: layanan pendengar menyalakan
+- [x] **T-26.9** (L, spike dulu) Bukti konsep: layanan pendengar menyalakan
       mesin Dart tanpa layar (`captureWorkerMain`), membaca Hive hanya baca, dan
       memasang notifikasi dengan tombol, diuji di ≥3 perangkat/vendor termasuk
       satu yang agresif mematikan layanan. Hasil menentukan jurnal saja atau
       penulisan langsung (KT-N3) dan menjadikan ADR-044 Accepted.
+      **Spike selesai sebagian 4 Nov 2026, di satu emulator** (Google
+      `sdk_gphone64_arm64`, Android 17): jalur utuh terbukti (listener →
+      `FlutterEngine` → Dart → Hive baca → `CaptureResolver` → notifikasi
+      bertombol → `BroadcastReceiver` → jurnal), AOT ±0,6 dtk dan +69 MB
+      sementara, UI bersamaan tidak bentrok. Kode: `CaptureWorker.kt`,
+      `CaptureActionable.kt`, `CaptureActionReceiver.kt`,
+      `lib/app/capture_worker/capture_worker_main.dart`, dikunci build yang
+      bisa di-debug dan berkas penanda. Rincian: `VERIFICATION_PLAN_FASE_26.md`
+      bagian H.
+      ⚠ Kriteria "≥3 perangkat/vendor" **belum terpenuhi** (hanya 1 emulator)
+      dan KT-N3 belum diputuskan (jurnal saja tetap dasar). ADR-044 tetap
+      Proposed sampai pengujian di perangkat nyata (internal test) dan satu
+      vendor yang agresif mematikan layanan. Data emulator aplikasi terhapus
+      saat saya memasang ulang untuk uji profil (data uji, bukan data nyata).
+      Temuan untuk T-26.10–T-26.12: entrypoint diimpor dari `main.dart`;
+      watchdog per-jalan; kuras antrean; konfigurasi native ditulis ulang dari
+      Dart tiap aplikasi dibuka.
 - [ ] **T-26.10** (L) `CaptureJournal` native, penerapan jurnal saat aplikasi
       dibuka sebelum Beranda tampil, id transaksi dari id tangkapan (idempoten),
       penyimpanan status Plus untuk mesin tanpa layar.

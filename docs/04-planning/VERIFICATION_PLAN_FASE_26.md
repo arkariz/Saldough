@@ -12,7 +12,7 @@ Android saja (Catat dari notifikasi tidak ada di iOS). Jalur rilis: **internal t
 |---|---|---|
 | Tahap 0 | T-26.1–T-26.5 (fondasi: tindak lanjut QA Fase 23, penentu bersama, penutup bersama, duplikat dua arah, pola lintas aplikasi) | Bagian A–D di bawah |
 | MVP 1a | T-26.6, T-26.7 (Mulai cepat, kartu tiga jenis, satu ketuk, Catat semua, Cek langsung) | Bagian A–G di bawah |
-| MVP 1b | T-26.9–T-26.13 (notifikasi bertindak, mesin tanpa layar, jurnal) | **Belum**; bagian H ditambahkan saat spike T-26.9 selesai |
+| MVP 1b | T-26.9–T-26.13 (notifikasi bertindak, mesin tanpa layar, jurnal) | Spike T-26.9 dijalankan di satu emulator (bagian H); perangkat dan vendor lain, T-26.10–T-26.13 **belum** |
 
 Bagian 1b tidak boleh dianggap lulus sebelum diuji; rilis internal MVP 1a boleh berjalan tanpa 1b.
 
@@ -136,6 +136,30 @@ Bagian 1b tidak boleh dianggap lulus sebelum diuji; rilis internal MVP 1a boleh 
 | G2 | Sumber, pola, rutin, dan kotak masuk dari build sebelumnya (`adb install -r`) | Terbaca tanpa migrasi; id pola bawaan baru (`builtin.any.*`) | |
 | G3 | Cadangkan dan pulihkan | Tidak terpengaruh | |
 | G4 | Mode gelap dan bahasa Inggris untuk semua teks baru | Teks `en` lengkap, kontras cukup | |
+
+### H. Spike mesin tanpa layar (T-26.9, hasil 4 Nov 2026)
+
+Bukan daftar periksa; hasil percobaan di **satu** perangkat: emulator Google `sdk_gphone64_arm64`, Android 17 (API 37). Kode spike: `CaptureWorker.kt`, `CaptureActionable.kt`, `CaptureActionReceiver.kt`, `lib/app/capture_worker/capture_worker_main.dart` (hanya jalan di build yang bisa di-debug dan berkas `files/capture_worker_spike` ada).
+
+| # | Yang dicoba | Hasil |
+|---|---|---|
+| H1 | Notifikasi dari sumber terdaftar masuk saat aplikasi tertutup; layanan pendengar menyalakan `FlutterEngine` dengan entrypoint Dart | **Berhasil.** Mesin dibuat di proses layanan yang sama; Dart hidup, membaca Hive (1 dompet, 17 kategori), menjalankan `CaptureResolver` yang sama dengan aplikasi (kelas `recognized`, nominal dan dompet benar), menutup Hive, memasang notifikasi, lalu mesin dimatikan |
+| H2 | Notifikasi punya tombol **Catat** dan **Abaikan**; ketuk **Catat** dari bayangan notifikasi | **Berhasil.** `BroadcastReceiver` menulis keputusan ke jurnal native tanpa membuka aplikasi (tidak ada Activity yang muncul); notifikasi diganti hasilnya |
+| H3 | Waktu dari notifikasi masuk sampai notifikasi bertombol, build **profil (AOT)** | Dingin ±0,6 dtk (mesin 377 ms, Dart hidup +214 ms, baca dan selesaikan ±25 ms) |
+| H4 | Sama, build debug (JIT) | Dingin 1,0–1,4 dtk; hangat (proses yang sama) 0,4–0,5 dtk (mesin 24 ms) |
+| H5 | Memori (PSS proses layanan) | AOT: 71 MB diam → 140 MB saat mesin hidup (+69 MB) → 113 MB sesudah dimatikan (+42 MB tertahan). Debug: 68 → 386 → 123 MB. Perlu diukur ulang di perangkat nyata |
+| H6 | UI dibuka ±1 dtk sementara mesin tanpa layar menahan Hive terbuka (9 dtk) | UI memuat data normal dalam ±3 dtk; **tanpa galat kunci atau Hive**, di proses yang sama. Mesin tanpa layar hanya membaca, jadi tak ada tulisan bertabrakan; pemadatan Hive dari dua isolate tidak diuji |
+| H7 | Dua notifikasi berselang 1,2 dtk, mesin masih berjalan | Yang kedua dicatat "menunggu di antrean" tetapi **tidak pernah diproses** (mesin hanya mengambil satu pekerjaan). Implementasi akhir harus menguras antrean sampai kosong |
+| H8 | Mesin dinyalakan dari proses yang baru dimulai oleh layanan (tanpa Activity) | Berhasil; `FlutterEngine(context)` memuat pustaka dan mendaftarkan semua plugin (termasuk Firebase) tanpa galat yang terlihat |
+
+Temuan yang mengubah rancangan:
+1. **Perpustakaan titik masuk harus terjangkau dari `main.dart`** (impor yang tidak dipakai), kalau tidak "library not found" dan mesin gagal. `@pragma('vm:entry-point')` saja tidak cukup.
+2. **Watchdog harus per-jalan dan dibatalkan saat selesai**: versi pertama spike membiarkan watchdog lama mematikan mesin berikutnya di tengah jalan.
+3. **Konfigurasi native ditulis ulang dari setelan Dart tiap aplikasi dibuka** (`syncNotificationCapture`); itu benar untuk produksi, tetapi menyalakan fitur lewat berkas konfigurasi hanya bertahan sampai aplikasi dibuka.
+4. **Antrean harus dikuras** (H7). Dart mengambil tangkapan lewat `pending()` yang sudah ada, bukan satu pekerjaan per mesin.
+5. Mulai dingin ±0,6 dtk dan +69 MB sementara cukup untuk perangkat ini; pada perangkat dengan memori kecil atau vendor yang agresif mematikan proses angkanya bisa buruk (belum diukur).
+
+Belum dicoba (wajib sebelum ADR-044 Accepted): sedikitnya dua perangkat nyata dari vendor lain (satu yang agresif mematikan layanan di latar), Android versi lebih rendah, layar kunci dengan kunci sungguhan (`setAuthenticationRequired`), proses dimatikan di tengah jalan, mode hemat daya, build rilis dengan R8, dan penulisan jurnal ke aplikasi saat dibuka (T-26.10).
 
 ## Ukuran keberhasilan
 

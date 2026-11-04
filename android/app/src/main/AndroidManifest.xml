@@ -58,6 +58,8 @@
                 <action android:name="android.service.notification.NotificationListenerService" />
             </intent-filter>
         </service>
+        <!-- SPIKE T-26.9: tombol notifikasi bertindak Catat dan Abaikan. -->
+        <receiver android:exported="false" android:name=".notificationcapture.CaptureActionReceiver" />
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data

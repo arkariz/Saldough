@@ -70,8 +70,14 @@ class TransactionNotificationListener : NotificationListenerService() {
         val icon = NotificationIcons.forNotification(this, sbn)
         if (!CaptureQueue.add(this, item, sbn.key, notification.`when`, icon)) return
 
-        if (!NotificationCapturePlugin.notifyCaptured() && config.remindWhenClosed) {
-            CaptureReminders.showGeneric(this, config, item, source.label, icon)
+        if (!NotificationCapturePlugin.notifyCaptured()) {
+            // SPIKE T-26.9: mesin Dart tanpa layar bila diaktifkan (build debug).
+            val spiked = applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0 &&
+                CaptureWorker.enabled(this) &&
+                CaptureWorker.run(this, item, source.label)
+            if (!spiked && config.remindWhenClosed) {
+                CaptureReminders.showGeneric(this, config, item, source.label, icon)
+            }
         }
     }
 

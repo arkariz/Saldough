@@ -202,6 +202,10 @@ CATAT terisi.
    Yang gagal diterapkan (mis. dompet sudah dihapus) masuk kotak masuk dengan alasan.
 6. Bila mesin aplikasi hidup di latar, jalur yang ada dipakai.
 
+**Terbukti di spike T-26.9** (4 Nov 2026, satu emulator): langkah 2–5 berjalan
+tanpa membuka aplikasi, ±0,6 dtk dengan AOT; ketuk Catat menulis jurnal. Perangkat
+nyata dan vendor lain belum diuji (lihat `VERIFICATION_PLAN_FASE_26.md` H).
+
 **Konsekuensi.** Saldo di aplikasi benar saat aplikasi dibuka berikutnya;
 pengingat rutin dan anti-duplikat mesin tanpa layar harus membaca jurnal.
 Keandalan layanan bergantung vendor Android (antrean mentah tetap cadangan).

@@ -184,6 +184,15 @@ deklarasi layanan pendengar di `AndroidManifest`.
 ## 7. Revisi
 
 - **Revisi 0 (4 Nov 2026):** rancangan awal bersama pemilik.
+- **Revisi 2 (4 Nov 2026, hasil spike T-26.9):** §3.5 terbukti berjalan di satu
+  emulator (Android 17, arm64): layanan menyalakan `FlutterEngine` dengan
+  entrypoint Dart, mesin membaca Hive dan menjalankan `CaptureResolver` yang
+  sama, memasang notifikasi dengan tombol Catat/Abaikan, dan tombolnya ditangani
+  `BroadcastReceiver` tanpa membuka aplikasi. AOT ±0,6 dtk dan +69 MB sementara;
+  UI yang dibuka bersamaan tidak bentrok. Tambahan syarat: perpustakaan titik
+  masuk diimpor dari `main.dart`, watchdog per-jalan, dan antrean dikuras sampai
+  kosong. **Status tetap Proposed**: belum diuji di perangkat nyata lain vendor
+  (hasil dan daftar yang belum di `VERIFICATION_PLAN_FASE_26.md` bagian H).
 - **Revisi 1 (4 Nov 2026):** garis Gratis/Plus (§3.8) disetujui pemilik (KT-N1
   ditutup); ambang otomatis dan kartu dikoreksi (KT-N2) ditunda. Kesamaan satu
   ketuk kartu dengan segmen Rutin diperiksa di T-26.7.

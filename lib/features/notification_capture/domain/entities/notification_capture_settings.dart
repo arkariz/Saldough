@@ -8,6 +8,11 @@ enum NotificationDelivery {
 
   /// Notifikasi Tanukonomy per tangkapan, plus kotak masuk.
   reminderAndInbox,
+
+  /// Bawaan (ADR-044 §3.5): Plus mendapat notifikasi bertindak tanpa perlu
+  /// menyalakannya; Gratis hanya kotak masuk sampai pengguna menyalakannya.
+  /// Mematikan menyimpan [inboxOnly], menyalakan menyimpan [reminderAndInbox].
+  automatic,
 }
 
 /// Seberapa berani tangkapan dicatat tanpa ditinjau (ADR-032 §3.4).
@@ -27,7 +32,7 @@ final class NotificationCaptureSettings extends Equatable {
   /// Membuat [NotificationCaptureSettings].
   const NotificationCaptureSettings({
     this.enabled = false,
-    this.delivery = NotificationDelivery.inboxOnly,
+    this.delivery = NotificationDelivery.automatic,
     this.autoRecordLevel = AutoRecordLevel.reviewAll,
     this.sources = const [],
     this.disabledBuiltInPatternIds = const {},
@@ -61,6 +66,14 @@ final class NotificationCaptureSettings extends Equatable {
     }
     return null;
   }
+
+  /// Notifikasi saat tangkapan masuk dan aplikasi tertutup: nyala bila dipilih,
+  /// atau (bawaan) bila paket Plus.
+  bool remindsWhenClosed({required bool isPlus}) => switch (delivery) {
+    NotificationDelivery.reminderAndInbox => true,
+    NotificationDelivery.inboxOnly => false,
+    NotificationDelivery.automatic => isPlus,
+  };
 
   /// Salinan dengan field yang diganti.
   NotificationCaptureSettings copyWith({

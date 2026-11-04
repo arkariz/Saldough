@@ -371,7 +371,14 @@ final class NotificationSettingsBloc extends Bloc<NotificationSettingsEvent, Not
   /// dan menyalakan fitur dalam satu simpanan, lalu menyegarkan state.
   /// Bukan event karena pemanggil menunggu hasilnya untuk memutuskan lanjut
   /// ke izin akses.
-  Future<QuickStartResult> applyQuickStart(List<NotificationSource> picked) async {
+  ///
+  /// [askNotificationPermission]: Plus mendapat notifikasi bertindak secara bawaan
+  /// (ADR-044 §3.5), jadi izin memunculkan notifikasi diminta di sini, sebelum
+  /// pengguna keluar ke setelan akses.
+  Future<QuickStartResult> applyQuickStart(
+    List<NotificationSource> picked, {
+    bool askNotificationPermission = false,
+  }) async {
     final settings = state.settings.copyWith(
       enabled: true,
       sources: mergeQuickStartSources(state.settings.sources, picked),
@@ -379,6 +386,7 @@ final class NotificationSettingsBloc extends Bloc<NotificationSettingsEvent, Not
     if ((await _store.saveSettings(settings)).isLeft()) return QuickStartResult.failed;
     _statusChanges?.notify();
     await syncNotificationCapture(_gateway, settings);
+    if (askNotificationPermission && !await _gateway.canPostReminders()) await _gateway.requestReminderPermission();
     final granted = await _gateway.isAccessGranted();
     quickStartAppsCount = settings.sources.where((source) => source.enabled).length;
     add(const NotificationSettingsStarted());

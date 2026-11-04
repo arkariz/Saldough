@@ -128,7 +128,7 @@ Map<String, dynamic> _settingsToJson(NotificationCaptureSettings s) => {
 
 NotificationCaptureSettings _settingsFromJson(Map<String, dynamic> j) => NotificationCaptureSettings(
   enabled: j['enabled'] as bool? ?? false,
-  delivery: _enum(NotificationDelivery.values, j['delivery'], NotificationDelivery.inboxOnly),
+  delivery: _enum(NotificationDelivery.values, j['delivery'], NotificationDelivery.automatic),
   autoRecordLevel: _enum(AutoRecordLevel.values, j['autoRecordLevel'], AutoRecordLevel.reviewAll),
   disabledBuiltInPatternIds: {for (final id in j['disabledBuiltInPatternIds'] as List? ?? const []) id as String},
   saveSamples: j['saveSamples'] as bool? ?? false,

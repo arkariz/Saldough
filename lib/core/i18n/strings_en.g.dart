@@ -1275,6 +1275,13 @@ class _Translations$notificationCapture$en extends Translations$notificationCapt
 	@override String get reminderCapturedBody => 'Tap to view.';
 	@override String reminderReviewTitle({required Object amount, required Object app}) => 'Check ${amount} from ${app}';
 	@override String get reminderReviewBody => 'Tap to record it.';
+	@override String get actionableRecordedTitle => 'Recorded';
+	@override String get actionableRecordedBody => 'Added to your records when you open the app.';
+	@override String get actionableUndoneTitle => 'Cancelled';
+	@override String get actionableUndoneBody => 'Waiting in the inbox.';
+	@override String actionableGroupSummary({required Object count}) => '${count} transactions waiting to be checked';
+	@override String get actionableRecordAll => 'Record all';
+	@override String actionableRecordedMany({required Object count}) => '${count} transactions recorded';
 	@override String reminderRecordedTitle({required Object amount, required Object app}) => 'Recorded ${amount} · ${app}';
 	@override String get reminderRecordedBody => 'Tap to view.';
 	@override String get debugSamplesTitle => 'Captured text samples (debug)';
@@ -3675,6 +3682,13 @@ extension on TranslationsEn {
 			'notificationCapture.reminderCapturedBody' => 'Tap to view.',
 			'notificationCapture.reminderReviewTitle' => ({required Object amount, required Object app}) => 'Check ${amount} from ${app}',
 			'notificationCapture.reminderReviewBody' => 'Tap to record it.',
+			'notificationCapture.actionableRecordedTitle' => 'Recorded',
+			'notificationCapture.actionableRecordedBody' => 'Added to your records when you open the app.',
+			'notificationCapture.actionableUndoneTitle' => 'Cancelled',
+			'notificationCapture.actionableUndoneBody' => 'Waiting in the inbox.',
+			'notificationCapture.actionableGroupSummary' => ({required Object count}) => '${count} transactions waiting to be checked',
+			'notificationCapture.actionableRecordAll' => 'Record all',
+			'notificationCapture.actionableRecordedMany' => ({required Object count}) => '${count} transactions recorded',
 			'notificationCapture.reminderRecordedTitle' => ({required Object amount, required Object app}) => 'Recorded ${amount} · ${app}',
 			'notificationCapture.reminderRecordedBody' => 'Tap to view.',
 			'notificationCapture.debugSamplesTitle' => 'Captured text samples (debug)',
@@ -4053,6 +4067,8 @@ extension on TranslationsEn {
 			'premium.signInBody' => 'This feature is part of Plus. Sign in with your account to use it. Recording stays free and works without an account.',
 			'premium.signInAction' => 'Sign in',
 			'premium.plusOnlyTitle' => 'This feature is part of Plus',
+			_ => null,
+		} ?? switch (path) {
 			'premium.plusOnlyBody' => 'Plus subscriptions aren\'t available yet. Recording stays free.',
 			'premium.account.section' => 'Plus',
 			'premium.account.rowTitle' => 'Tanukonomy Plus',
@@ -4060,8 +4076,6 @@ extension on TranslationsEn {
 			'premium.account.subTrial' => ({required Object date}) => 'Until ${date}. No card needed.',
 			'premium.account.subActive' => ({required Object date}) => 'Active until ${date}',
 			'premium.account.subActiveOpen' => 'Active',
-			_ => null,
-		} ?? switch (path) {
 			'premium.account.subGrace' => ({required Object date}) => 'Payment did not go through. Plus stays on until ${date}.',
 			'premium.account.subOnHold' => 'Subscription on hold because payment did not go through. Fix it in the Play Store.',
 			'premium.account.subTester' => ({required Object date}) => 'From the tester program until ${date}',

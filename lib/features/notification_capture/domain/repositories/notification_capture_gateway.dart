@@ -28,7 +28,21 @@ final class InstalledApp extends Equatable {
 /// layanan native tidak tahu bahasa yang dipilih pengguna.
 final class ReminderTexts extends Equatable {
   /// Membuat [ReminderTexts].
-  const ReminderTexts({required this.channelName, required this.capturedTitle, required this.capturedBody});
+  const ReminderTexts({
+    required this.channelName,
+    required this.capturedTitle,
+    required this.capturedBody,
+    this.actionRecord = '',
+    this.actionDismiss = '',
+    this.actionUndo = '',
+    this.recordedTitle = '',
+    this.recordedBody = '',
+    this.undoneTitle = '',
+    this.undoneBody = '',
+    this.groupSummary = '',
+    this.recordAll = '',
+    this.recordedMany = '',
+  });
 
   /// Nama kanal notifikasi di setelan Android.
   final String channelName;
@@ -39,8 +53,52 @@ final class ReminderTexts extends Equatable {
   /// Isi pengingat generik.
   final String capturedBody;
 
+  /// Tombol Catat pada notifikasi bertindak (ADR-044 §3.5).
+  final String actionRecord;
+
+  /// Tombol Abaikan.
+  final String actionDismiss;
+
+  /// Tombol Batalkan pada hasil.
+  final String actionUndo;
+
+  /// Judul hasil Catat.
+  final String recordedTitle;
+
+  /// Isi hasil Catat.
+  final String recordedBody;
+
+  /// Judul hasil Batalkan.
+  final String undoneTitle;
+
+  /// Isi hasil Batalkan.
+  final String undoneBody;
+
+  /// Ringkasan kelompok; `{count}` diganti jumlah.
+  final String groupSummary;
+
+  /// Tombol Catat semua pada ringkasan kelompok.
+  final String recordAll;
+
+  /// Judul hasil Catat semua; `{count}` diganti jumlah.
+  final String recordedMany;
+
   @override
-  List<Object?> get props => [channelName, capturedTitle, capturedBody];
+  List<Object?> get props => [
+    channelName,
+    capturedTitle,
+    capturedBody,
+    actionRecord,
+    actionDismiss,
+    actionUndo,
+    recordedTitle,
+    recordedBody,
+    undoneTitle,
+    undoneBody,
+    groupSummary,
+    recordAll,
+    recordedMany,
+  ];
 }
 
 /// Pintu ke layanan notifikasi platform (ADR-032 §3.1). Implementasi Android
@@ -62,13 +120,15 @@ abstract interface class NotificationCaptureGateway {
   Future<bool> requestReminderPermission();
 
   /// Mengirim sumber aktif, kata kunci, dan teks pengingat ke layanan native.
-  /// [remindWhenClosed] = mode pengingat.
+  /// [remindWhenClosed] = notifikasi dinyalakan pengguna; [autoNotify] =
+  /// bawaan (ADR-044 §3.5): native menyalakannya hanya bila paket Plus.
   Future<Either<Failure, Unit>> configure({
     required bool enabled,
     required List<NotificationSource> sources,
     required bool remindWhenClosed,
     required ReminderTexts texts,
     bool saveSamples = false,
+    bool autoNotify = false,
   });
 
   /// Tangkapan yang menunggu di antrean native.

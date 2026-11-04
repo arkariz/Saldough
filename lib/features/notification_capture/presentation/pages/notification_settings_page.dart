@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:navigation/navigation.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/plan/active_plan.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/notification_capture/domain/entities/captured_notification.dart';
@@ -78,7 +79,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> wit
             final bloc = context.read<NotificationSettingsBloc>();
             final settings = state.settings;
             final autoRecord = settings.autoRecordLevel != AutoRecordLevel.reviewAll;
-            final reminder = settings.delivery == NotificationDelivery.reminderAndInbox;
+            final reminder = settings.remindsWhenClosed(isPlus: ActivePlan.isPlus);
             // Urut dari yang wajib (nyala, izin, aplikasi) ke yang opsional
             // (perilaku), ADR-032 §3.9.
             return ListView(

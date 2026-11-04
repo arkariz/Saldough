@@ -132,7 +132,7 @@ class _NotificationCaptureHostState extends State<NotificationCaptureHost> with 
       return;
     }
     // Di latar (mesin masih hidup) dan mode pengingat: satu notifikasi per tangkapan.
-    if (settings.delivery != NotificationDelivery.reminderAndInbox) return;
+    if (!settings.remindsWhenClosed(isPlus: ActivePlan.isPlus)) return;
     for (final entry in result.recorded) {
       await _gateway!.showReminder(
         captureId: entry.captureId,

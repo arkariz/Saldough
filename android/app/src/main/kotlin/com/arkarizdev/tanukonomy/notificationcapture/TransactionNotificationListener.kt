@@ -70,14 +70,12 @@ class TransactionNotificationListener : NotificationListenerService() {
         val icon = NotificationIcons.forNotification(this, sbn)
         if (!CaptureQueue.add(this, item, sbn.key, notification.`when`, icon)) return
 
-        if (!NotificationCapturePlugin.notifyCaptured()) {
-            // SPIKE T-26.9: mesin Dart tanpa layar bila diaktifkan (build debug).
-            val spiked = applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0 &&
-                CaptureWorker.enabled(this) &&
-                CaptureWorker.run(this)
-            if (!spiked && config.remindWhenClosed) {
-                CaptureReminders.showGeneric(this, config, item, source.label, icon)
-            }
+        // Aplikasi tertutup (tidak ada mesin Dart yang mendengarkan): bila notifikasi
+        // menyala (dipilih, atau bawaan untuk Plus; ADR-044 §3.5), mesin tanpa layar
+        // menyelesaikan tangkapan dan memasang notifikasinya (bertombol untuk Plus).
+        // Gagal menyala atau menyelesaikan: pengingat generik seperti sebelumnya.
+        if (!NotificationCapturePlugin.notifyCaptured() && config.notifies(this)) {
+            CaptureWorker.run(this)
         }
     }
 

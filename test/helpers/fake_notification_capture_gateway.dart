@@ -39,6 +39,12 @@ final class FakeNotificationCaptureGateway implements NotificationCaptureGateway
   /// Mode pengingat terakhir.
   bool? configuredRemind;
 
+  /// Pengingat bawaan (otomatis untuk Plus) terakhir.
+  bool? configuredAutoNotify;
+
+  /// Teks pengingat dan notifikasi bertindak terakhir.
+  ReminderTexts? configuredTexts;
+
   /// Aplikasi terpasang.
   List<InstalledApp> apps = const [];
 
@@ -87,10 +93,13 @@ final class FakeNotificationCaptureGateway implements NotificationCaptureGateway
     required bool remindWhenClosed,
     required ReminderTexts texts,
     bool saveSamples = false,
+    bool autoNotify = false,
   }) async {
     configuredSaveSamples = saveSamples;
     configuredSources = sources;
     configuredRemind = remindWhenClosed;
+    configuredAutoNotify = autoNotify;
+    configuredTexts = texts;
     return right(unit);
   }
 

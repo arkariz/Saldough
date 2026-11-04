@@ -51,14 +51,26 @@ final class MethodChannelNotificationCaptureGateway with RepositoryGuard impleme
     required bool remindWhenClosed,
     required ReminderTexts texts,
     bool saveSamples = false,
+    bool autoNotify = false,
   }) => guardVoid(
     () => _methods.invokeMethod<void>('configure', {
       'enabled': enabled,
       'saveSamples': saveSamples,
       'remindWhenClosed': remindWhenClosed,
+      'autoNotify': autoNotify,
       'channelName': texts.channelName,
       'capturedTitle': texts.capturedTitle,
       'capturedBody': texts.capturedBody,
+      'actionRecord': texts.actionRecord,
+      'actionDismiss': texts.actionDismiss,
+      'actionUndo': texts.actionUndo,
+      'recordedTitle': texts.recordedTitle,
+      'recordedBody': texts.recordedBody,
+      'undoneTitle': texts.undoneTitle,
+      'undoneBody': texts.undoneBody,
+      'groupSummary': texts.groupSummary,
+      'recordAll': texts.recordAll,
+      'recordedMany': texts.recordedMany,
       'sources': [
         for (final s in sources)
           if (s.enabled) {'packageName': s.packageName, 'label': s.appLabel, 'keywords': s.keywords},
@@ -227,6 +239,7 @@ final class UnsupportedNotificationCaptureGateway implements NotificationCapture
     required bool remindWhenClosed,
     required ReminderTexts texts,
     bool saveSamples = false,
+    bool autoNotify = false,
   }) async => right(unit);
 
   @override

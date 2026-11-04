@@ -102,9 +102,14 @@ untuk dua isolate. Maka:
    tangkapan (idempoten). Yang gagal masuk kotak masuk dengan alasan.
 6. Anti-duplikat mesin tanpa layar dan pengingat rutin membaca jurnal.
 
-Keamanan: `setAuthenticationRequired(true)` pada tombol Catat (API 31+);
-nominal mengikuti `AmountVisibility`; versi publik layar kunci tanpa angka;
-Status Plus disimpan (dengan kedaluwarsa) untuk mesin tanpa layar, tidak
+Keamanan: `setAuthenticationRequired(true)` pada tombol Catat (API 31+).
+Nominal di notifikasi **tidak** mengikuti `AmountVisibility` (keputusan pemilik
+4 Nov 2026: tidak dibuat). Pengiriman memakai tiga keadaan
+(`NotificationDelivery`): bawaan otomatis (Plus dengan sumber terpilih mendapat
+notifikasi bertombol; Gratis tidak), dinyalakan sendiri (Gratis ikut, tanpa
+tombol: membuka CATAT terisi), dan dimatikan sendiri (juga untuk Plus). Banyak
+tangkapan: satu notifikasi mandiri dengan **Catat semua**, bukan ringkasan
+grup (Android 7+ menyembunyikan tombol ringkasan grup). Status Plus disimpan (dengan kedaluwarsa) untuk mesin tanpa layar, tidak
 diketahui = Gratis. Keandalan best effort per vendor; antrean mentah adalah
 cadangan, diproses saat aplikasi dibuka. Catat **otomatis** tidak berjalan di
 mesin tanpa layar (tetap saat aplikasi dibuka).
@@ -182,6 +187,12 @@ deklarasi layanan pendengar di `AndroidManifest`.
 - **KT-N3** Penulisan langsung dari mesin tanpa layar sesudah spike.
 
 ## 7. Revisi
+
+- **Revisi 4 (4 Nov 2026, T-26.11):** kunci produksi dibuka (tanpa berkas
+  penanda atau syarat build debug); tiga keadaan pengiriman, Gratis ikut mesin
+  tanpa layar tanpa tombol, Catat semua mandiri, teks lewat i18n, tanpa
+  `AmountVisibility`. Terbukti di emulator yang sama (H13–H18). Status tetap
+  Proposed: perangkat nyata dan vendor lain belum.
 
 - **Revisi 0 (4 Nov 2026):** rancangan awal bersama pemilik.
 - **Revisi 3 (4 Nov 2026, T-26.10):** jurnal native, penerapan di

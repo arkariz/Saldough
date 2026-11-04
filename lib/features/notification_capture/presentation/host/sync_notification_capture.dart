@@ -13,11 +13,23 @@ Future<void> syncNotificationCapture(NotificationCaptureGateway gateway, Notific
     enabled: settings.enabled,
     sources: settings.sources,
     remindWhenClosed: settings.delivery == NotificationDelivery.reminderAndInbox,
+    // Bawaan: native menyalakan notifikasi hanya bila Plus (salinan status di CapturePlan).
+    autoNotify: settings.delivery == NotificationDelivery.automatic,
     saveSamples: settings.saveSamples,
     texts: ReminderTexts(
       channelName: texts.reminderChannel,
       capturedTitle: texts.reminderCapturedTitle,
       capturedBody: texts.reminderCapturedBody,
+      actionRecord: texts.recordAction,
+      actionDismiss: texts.dismissAction,
+      actionUndo: texts.undoAction,
+      recordedTitle: texts.actionableRecordedTitle,
+      recordedBody: texts.actionableRecordedBody,
+      undoneTitle: texts.actionableUndoneTitle,
+      undoneBody: texts.actionableUndoneBody,
+      groupSummary: texts.actionableGroupSummary(count: '{count}'),
+      recordAll: texts.actionableRecordAll,
+      recordedMany: texts.actionableRecordedMany(count: '{count}'),
     ),
   );
 }

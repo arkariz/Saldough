@@ -84,6 +84,36 @@ object CaptureJournal {
         return found
     }
 
+    /** Memutuskan [decision] untuk semua entri yang belum diputuskan; mengembalikan id-nya. */
+    @Synchronized
+    fun decideAll(context: Context, decision: String, now: Long = System.currentTimeMillis()): List<String> {
+        val array = read(context)
+        val decided = mutableListOf<String>()
+        for (i in 0 until array.length()) {
+            val item = array.getJSONObject(i)
+            if (item.has("decision")) continue
+            item.put("decision", decision)
+            item.put("decidedAt", now)
+            decided.add(item.getString("id"))
+        }
+        if (decided.isNotEmpty()) write(context, array)
+        return decided
+    }
+
+    /** Membatalkan keputusan semua [ids] (Batalkan semua). */
+    @Synchronized
+    fun undecideAll(context: Context, ids: Collection<String>) {
+        val array = read(context)
+        for (i in 0 until array.length()) {
+            val item = array.getJSONObject(i)
+            if (item.optString("id") in ids) {
+                item.remove("decision")
+                item.remove("decidedAt")
+            }
+        }
+        write(context, array)
+    }
+
     /** Entri untuk Dart. */
     @Synchronized
     fun entries(context: Context, now: Long = System.currentTimeMillis()): List<Map<String, Any?>> {

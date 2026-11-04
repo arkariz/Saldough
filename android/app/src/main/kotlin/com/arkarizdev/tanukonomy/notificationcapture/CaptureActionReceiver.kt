@@ -13,6 +13,23 @@ import android.util.Log
 class CaptureActionReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         val id = intent.getStringExtra(CaptureActionable.EXTRA_ID) ?: return
+        // Catat semua / Batalkan semua bekerja pada banyak entri sekaligus.
+        when (intent.action) {
+            CaptureActionable.ACTION_RECORD_ALL -> {
+                val ids = CaptureJournal.decideAll(context, "record")
+                Log.i(CaptureWorker.TAG, "Catat semua: ${ids.size} keputusan ditulis ke jurnal")
+                ids.forEach { CaptureActionable.cancel(context, it) }
+                if (ids.isNotEmpty()) CaptureActionable.recordedMany(context, ids)
+                return
+            }
+            CaptureActionable.ACTION_UNDO_ALL -> {
+                val ids = intent.getStringArrayListExtra(CaptureActionable.EXTRA_IDS).orEmpty()
+                CaptureJournal.undecideAll(context, ids)
+                Log.i(CaptureWorker.TAG, "Batalkan semua: ${ids.size} keputusan dibatalkan")
+                CaptureActionable.undoneMany(context)
+                return
+            }
+        }
         val decision = when (intent.action) {
             CaptureActionable.ACTION_RECORD -> "record"
             CaptureActionable.ACTION_DISMISS -> "dismiss"

@@ -92,7 +92,7 @@ class _QuickStartPageState extends State<QuickStartPage> with WidgetsBindingObse
         await openNotificationPaywall(context);
         return;
       }
-      final result = await bloc.applyQuickStart(picked);
+      final result = await bloc.applyQuickStart(picked, askNotificationPermission: ActivePlan.isPlus);
       if (!mounted) return;
       setState(() => _busy = false);
       if (result == QuickStartResult.failed) {

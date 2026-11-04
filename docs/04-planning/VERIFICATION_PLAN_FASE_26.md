@@ -168,6 +168,19 @@ Hasil tambahan T-26.10 (4 Nov 2026, emulator yang sama, build debug):
 | H11 | Status Plus | Mesin tanpa layar membaca salinan native: Plus → tombol Catat; tanpa salinan = Gratis (tanpa tombol) |
 | H12 | Notifikasi bertindak saat izin POST_NOTIFICATIONS belum diberikan | Tidak ada notifikasi dan **tidak ada entri jurnal** (jurnal baru ditulis bila notifikasi benar-benar dipasang); tangkapan tetap diproses biasa saat aplikasi dibuka |
 
+Hasil tambahan T-26.11 (4 Nov 2026, emulator yang sama, build debug, tanpa berkas penanda):
+
+| # | Yang dicoba | Hasil |
+|---|---|---|
+| H13 | Plus, sumber terpilih, `autoNotify` tanpa penanda | **Berhasil.** Mesin tanpa layar menyala sendiri, notifikasi bertombol Catat/Abaikan, teks mengikuti bahasa perangkat |
+| H14 | Dua tangkapan berselang detik | Keduanya diproses (putaran kedua menguras antrean); notifikasi terpisah |
+| H15 | Dua tangkapan lengkap sekaligus | Notifikasi mandiri "2 transaksi menunggu dicek" dengan tombol **Catat semua**; sebagai **ringkasan grup tombolnya tidak tampil** (Android 17), karena itu dibuat mandiri |
+| H16 | Ketuk **Catat semua**, lalu **Batalkan** | Dua keputusan masuk jurnal, hasil "2 transaksi tercatat"; Batalkan menghapus keduanya dari jurnal ("Dibatalkan") |
+| H17 | Gratis + `autoNotify` | Mesin tidak menyala, tidak ada notifikasi |
+| H18 | Gratis + pengingat dinyalakan sendiri | Mesin menyala (`plus=false`), notifikasi informasi tanpa tombol |
+
+Belum diuji di perangkat: pengingat generik saat mesin tanpa layar gagal.
+
 Belum dicoba (wajib sebelum ADR-044 Accepted): sedikitnya dua perangkat nyata dari vendor lain (satu yang agresif mematikan layanan di latar), Android versi lebih rendah, layar kunci dengan kunci sungguhan (`setAuthenticationRequired`), proses dimatikan sungguhan di tengah penerapan jurnal (hanya diuji lewat entri ulang), mode hemat daya, dan build rilis dengan R8.
 
 ## Ukuran keberhasilan

@@ -3185,6 +3185,27 @@ class Translations$notificationCapture$id {
 	/// id: 'Ketuk untuk mencatat.'
 	String get reminderReviewBody => 'Ketuk untuk mencatat.';
 
+	/// id: 'Tercatat'
+	String get actionableRecordedTitle => 'Tercatat';
+
+	/// id: 'Masuk ke catatanmu saat aplikasi dibuka.'
+	String get actionableRecordedBody => 'Masuk ke catatanmu saat aplikasi dibuka.';
+
+	/// id: 'Dibatalkan'
+	String get actionableUndoneTitle => 'Dibatalkan';
+
+	/// id: 'Menunggu di kotak masuk.'
+	String get actionableUndoneBody => 'Menunggu di kotak masuk.';
+
+	/// id: '${count} transaksi menunggu dicek'
+	String actionableGroupSummary({required Object count}) => '${count} transaksi menunggu dicek';
+
+	/// id: 'Catat semua'
+	String get actionableRecordAll => 'Catat semua';
+
+	/// id: '${count} transaksi tercatat'
+	String actionableRecordedMany({required Object count}) => '${count} transaksi tercatat';
+
 	/// id: 'Tercatat ${amount} · ${app}'
 	String reminderRecordedTitle({required Object amount, required Object app}) => 'Tercatat ${amount} · ${app}';
 
@@ -6932,6 +6953,13 @@ extension on Translations {
 			'notificationCapture.reminderCapturedBody' => 'Ketuk untuk melihat.',
 			'notificationCapture.reminderReviewTitle' => ({required Object amount, required Object app}) => 'Cek ${amount} dari ${app}',
 			'notificationCapture.reminderReviewBody' => 'Ketuk untuk mencatat.',
+			'notificationCapture.actionableRecordedTitle' => 'Tercatat',
+			'notificationCapture.actionableRecordedBody' => 'Masuk ke catatanmu saat aplikasi dibuka.',
+			'notificationCapture.actionableUndoneTitle' => 'Dibatalkan',
+			'notificationCapture.actionableUndoneBody' => 'Menunggu di kotak masuk.',
+			'notificationCapture.actionableGroupSummary' => ({required Object count}) => '${count} transaksi menunggu dicek',
+			'notificationCapture.actionableRecordAll' => 'Catat semua',
+			'notificationCapture.actionableRecordedMany' => ({required Object count}) => '${count} transaksi tercatat',
 			'notificationCapture.reminderRecordedTitle' => ({required Object amount, required Object app}) => 'Tercatat ${amount} · ${app}',
 			'notificationCapture.reminderRecordedBody' => 'Ketuk untuk melihat.',
 			'notificationCapture.debugSamplesTitle' => 'Contoh teks terdeteksi (debug)',
@@ -7310,6 +7338,8 @@ extension on Translations {
 			'premium.signInBody' => 'Fitur ini bagian dari Plus. Masuk dengan akunmu untuk memakainya. Mencatat tetap gratis dan tanpa akun.',
 			'premium.signInAction' => 'Masuk',
 			'premium.plusOnlyTitle' => 'Fitur ini bagian dari Plus',
+			_ => null,
+		} ?? switch (path) {
 			'premium.plusOnlyBody' => 'Berlangganan Plus belum tersedia. Mencatat tetap gratis.',
 			'premium.account.section' => 'Plus',
 			'premium.account.rowTitle' => 'Tanukonomy Plus',
@@ -7317,8 +7347,6 @@ extension on Translations {
 			'premium.account.subTrial' => ({required Object date}) => 'Sampai ${date}. Tanpa kartu.',
 			'premium.account.subActive' => ({required Object date}) => 'Aktif sampai ${date}',
 			'premium.account.subActiveOpen' => 'Aktif',
-			_ => null,
-		} ?? switch (path) {
 			'premium.account.subGrace' => ({required Object date}) => 'Pembayaran belum berhasil. Plus tetap aktif sampai ${date}.',
 			'premium.account.subOnHold' => 'Langganan ditahan karena pembayaran belum berhasil. Perbaiki di Play Store.',
 			'premium.account.subTester' => ({required Object date}) => 'Dari program penguji sampai ${date}',

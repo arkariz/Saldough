@@ -6476,9 +6476,30 @@ S sehari, M beberapa hari, L lebih dari seminggu.
       belum jalan di build jalur internal. Penguncian produksi (fitur menyala,
       Plus, izin) dan teks notifikasi lewat i18n, AmountVisibility, serta versi
       publik layar kunci adalah T-26.11.
-- [ ] **T-26.11** (M) Notifikasi bertindak: Catat/Abaikan/Batalkan,
-      `setAuthenticationRequired`, `AmountVisibility`, versi publik layar kunci,
-      penggabungan banyak tangkapan.
+- [x] **T-26.11** (M) Membuka kunci produksi dan memoles notifikasi bertindak
+      (4 Nov 2026). Mesin tanpa layar tidak lagi dikunci build debug dan berkas
+      penanda: nyala dari `CaptureConfig.notifies(context)`. Keputusan pemilik:
+      (1) **tiga keadaan pengiriman** (`NotificationDelivery`): bawaan
+      `automatic` = Plus dengan sumber terpilih otomatis dapat notifikasi
+      bertombol, Gratis tidak; `reminderAndInbox` = pengingat dinyalakan
+      sendiri, bisa untuk Gratis; `inboxOnly` = dimatikan sendiri, berlaku juga
+      untuk Plus; (2) **Gratis ikut mesin tanpa layar**: notifikasi informasi
+      tanpa tombol yang membuka CATAT terisi; (3) **tanpa
+      `AmountVisibility`** di notifikasi. Teks tombol dan hasil lewat i18n
+      (`ReminderTexts` dikirim saat sinkron), ikon aplikasi sumber ikut,
+      bahasa dan mata uang mesin tanpa layar mengikuti setelan tersimpan,
+      izin notifikasi diminta di Mulai cepat bagi Plus. Banyak tangkapan: satu
+      notifikasi **mandiri** "N transaksi menunggu dicek" dengan **Catat semua**,
+      hasilnya "N transaksi tercatat" dengan **Batalkan** (semua). Sengaja
+      bukan ringkasan grup karena Android 7+ tidak menampilkan tombol
+      ringkasan grup (terbukti di emulator). Tombol Catat di layar kunci
+      meminta perangkat dibuka (`setAuthenticationRequired`, API 31+).
+      Yang belum dihidupkan dari perangkat nyata: lihat
+      `VERIFICATION_PLAN_FASE_26.md` H13–H18. Uji: `notification_delivery_test`,
+      uji halaman setelan dan Mulai cepat, `notification_capture_host_test`.
+      Pengingat generik tetap muncul bila mesin tanpa layar gagal atau berhenti
+      sebelum menangani semuanya (`fallbackForUnhandled`; belum diuji di
+      perangkat).
 - [ ] **T-26.12** (M) Pengingat rutin dan anti-duplikat mesin tanpa layar
       membaca jurnal; pengingat dibatalkan untuk kemunculan yang sudah dicatat.
 - [ ] **T-26.13** (M) Pembaruan pengungkapan, `PLAY_DATA_SAFETY.md`, dan tinjauan

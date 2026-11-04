@@ -190,6 +190,19 @@ class NotificationCapturePlugin(private val activity: Activity) : MethodChannel.
             capturedTitle = call.argument<String>("capturedTitle").orEmpty(),
             capturedBody = call.argument<String>("capturedBody").orEmpty(),
             saveSamples = call.argument<Boolean>("saveSamples") ?: false,
+            autoNotify = call.argument<Boolean>("autoNotify") ?: false,
+            texts = ActionTexts(
+                record = call.argument<String>("actionRecord").orEmpty(),
+                dismiss = call.argument<String>("actionDismiss").orEmpty(),
+                undo = call.argument<String>("actionUndo").orEmpty(),
+                recordedTitle = call.argument<String>("recordedTitle").orEmpty(),
+                recordedBody = call.argument<String>("recordedBody").orEmpty(),
+                undoneTitle = call.argument<String>("undoneTitle").orEmpty(),
+                undoneBody = call.argument<String>("undoneBody").orEmpty(),
+                groupSummary = call.argument<String>("groupSummary").orEmpty(),
+                recordAll = call.argument<String>("recordAll").orEmpty(),
+                recordedMany = call.argument<String>("recordedMany").orEmpty(),
+            ),
         )
         config.save(context)
         CaptureReminders.ensureChannel(context, config.channelName)

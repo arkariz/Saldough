@@ -15,8 +15,10 @@ import 'package:flutter/widgets.dart';
 // ignore: depend_on_referenced_packages
 import 'package:hive_ce/hive.dart';
 import 'package:hive_storage/hive_storage.dart';
+import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/foundation/entitlement/entitlement.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/language/language.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/notification_capture/data/notification_capture_store_impl.dart';
 import 'package:saldough/features/notification_capture/data/notification_rule_interpreter.dart';
@@ -77,6 +79,19 @@ Future<void> _drain(
   List<String> handled,
   Future<void> Function(String) log,
 ) async {
+  // Bahasa dan mata uang pilihan pengguna, seperti bootstrap aplikasi: teks
+  // notifikasi dan nominalnya harus sama dengan yang dilihat di aplikasi.
+  final savedLanguage = (await LanguagePreferenceRepositoryImpl(storage: storage).load()).getOrElse((_) => null);
+  if (savedLanguage != null) {
+    await LocaleSettings.setLocale(savedLanguage);
+  } else {
+    await LocaleSettings.useDeviceLocale();
+  }
+  ActiveLanguage.notifier.value = LocaleSettings.currentLocale;
+  ActiveCurrency.notifier.value = (await CurrencyPreferenceRepositoryImpl(storage: storage).load()).getOrElse(
+    (_) => AppCurrency.idr,
+  );
+
   final store = NotificationCaptureStoreImpl(storage: storage);
   final settings = (await store.loadSettings()).getOrElse((_) => const NotificationCaptureSettings());
   final wallets = await loadActiveWallets(WalletRepositoryImpl(storage: storage));
@@ -106,7 +121,8 @@ Future<void> _drain(
     ],
   );
   // Gratis: hanya sumber pertama di daftar yang diproses (sama dengan aplikasi).
-  final allowed = isPlus
+  // Tanpa sumber tersimpan tidak ada yang dibatasi (tangkapan tanpa sumber dilewati di bawah).
+  final allowed = isPlus || settings.sources.isEmpty
       ? null
       : {for (final s in settings.sources.take(EntitlementLimits.defaults.freeNotificationSources)) s.packageName};
 
@@ -134,8 +150,8 @@ Future<void> _drain(
         patterns: patterns,
         wallets: wallets,
         categories: categories,
-        currencyCode: 'IDR',
-        languageCode: 'id',
+        currencyCode: ActiveCurrency.value.code,
+        languageCode: LocaleSettings.currentLocale.languageCode,
         rules: rules,
       );
       final amount = resolved.draft.amountSen;
@@ -165,6 +181,7 @@ Future<void> _drain(
           app: source.appLabel,
         ),
         'body': resolved.draft.note.trim().isEmpty ? texts.reminderReviewBody : resolved.draft.note,
+        'icon': item['icon'],
         'payload': withActions
             ? jsonEncode({
                 'entry': captureInboxEntryToJson(entry),

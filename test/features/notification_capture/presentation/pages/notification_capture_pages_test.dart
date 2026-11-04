@@ -263,6 +263,31 @@ void main() {
       expect(find.text(t.discovery.quickStart.turnOn), findsOneWidget);
     });
 
+    testWidgets('Plus: izin memunculkan notifikasi diminta sebelum ke setelan akses (notifikasi bertindak bawaan)', (
+      tester,
+    ) async {
+      gateway.apps = const [bri];
+      await open(tester, NotificationCaptureRouteKeys.quickStart);
+      await pick(tester, const [bri]);
+
+      await tester.tap(find.text(t.discovery.quickStart.turnOn));
+      await tester.pumpAndSettle();
+
+      expect(gateway.reminderPermissionRequests, 1);
+    });
+
+    testWidgets('Gratis: izin notifikasi tidak diminta (notifikasi bukan bawaan bagi Gratis)', (tester) async {
+      ActivePlan.notifier.value = const FreePlan();
+      gateway.apps = const [bri];
+      await open(tester, NotificationCaptureRouteKeys.quickStart);
+      await pick(tester, const [bri]);
+
+      await tester.tap(find.text(t.discovery.quickStart.turnOn));
+      await tester.pumpAndSettle();
+
+      expect(gateway.reminderPermissionRequests, 0);
+    });
+
     testWidgets('aplikasi mana pun bisa dipilih, bukan hanya bank yang dikenal', (tester) async {
       gateway
         ..apps = const [calculator]
@@ -440,7 +465,9 @@ void main() {
     });
 
     testWidgets('mode pengingat ditolak izinnya tetap kotak masuk saja', (tester) async {
-      await store.saveSettings(const NotificationCaptureSettings(enabled: true));
+      await store.saveSettings(
+        const NotificationCaptureSettings(enabled: true, delivery: NotificationDelivery.inboxOnly),
+      );
       await open(tester, NotificationCaptureRouteKeys.settings);
 
       final reminder = find.descendant(
@@ -455,6 +482,67 @@ void main() {
       expect(gateway.reminderPermissionRequests, 1);
       final settings = (await store.loadSettings()).getOrElse((_) => throw StateError(''));
       expect(settings.delivery, NotificationDelivery.inboxOnly);
+    });
+
+    group('notifikasi saat aplikasi tertutup (ADR-044 §3.5)', () {
+      Finder reminderSwitch() =>
+          find.descendant(of: find.byKey(const ValueKey('notification-reminder')), matching: find.byType(Switch));
+
+      Future<bool> reminderOn(WidgetTester tester) async {
+        await tester.scrollUntilVisible(reminderSwitch(), 200);
+        return tester.widget<Switch>(reminderSwitch()).value;
+      }
+
+      testWidgets('Plus, bawaan: sakelar sudah menyala tanpa disentuh', (tester) async {
+        await store.saveSettings(const NotificationCaptureSettings(enabled: true));
+        await open(tester, NotificationCaptureRouteKeys.settings);
+
+        expect(await reminderOn(tester), isTrue);
+      });
+
+      testWidgets('Gratis, bawaan: sakelar mati', (tester) async {
+        ActivePlan.notifier.value = const FreePlan();
+        await store.saveSettings(const NotificationCaptureSettings(enabled: true));
+        await open(tester, NotificationCaptureRouteKeys.settings);
+
+        expect(await reminderOn(tester), isFalse);
+      });
+
+      testWidgets('Plus mematikan: tersimpan sebagai mati (bukan kembali ke bawaan)', (tester) async {
+        await store.saveSettings(const NotificationCaptureSettings(enabled: true));
+        await open(tester, NotificationCaptureRouteKeys.settings);
+        await reminderOn(tester);
+        await tester.ensureVisible(reminderSwitch());
+        await tester.pumpAndSettle();
+
+        await tester.tap(reminderSwitch());
+        await tester.pumpAndSettle();
+
+        final settings = (await store.loadSettings()).getOrElse((_) => throw StateError(''));
+        expect(settings.delivery, NotificationDelivery.inboxOnly);
+        expect(settings.remindsWhenClosed(isPlus: true), isFalse);
+        expect(gateway.configuredRemind, isFalse);
+        expect(gateway.configuredAutoNotify, isFalse);
+      });
+
+      testWidgets('bawaan dikirim ke native sebagai otomatis, dengan teks notifikasi bertindak', (tester) async {
+        await store.saveSettings(const NotificationCaptureSettings(enabled: true));
+        await open(tester, NotificationCaptureRouteKeys.settings);
+        await tester.tap(find.byType(Switch).first);
+        await tester.pumpAndSettle();
+        await tester.tap(find.byType(Switch).first);
+        await tester.pumpAndSettle();
+
+        expect(gateway.configuredAutoNotify, isTrue);
+        expect(gateway.configuredRemind, isFalse);
+        final texts = gateway.configuredTexts!;
+        expect(texts.actionRecord, t.notificationCapture.recordAction);
+        expect(texts.actionDismiss, t.notificationCapture.dismissAction);
+        expect(texts.actionUndo, t.notificationCapture.undoAction);
+        expect(texts.recordedTitle, t.notificationCapture.actionableRecordedTitle);
+        expect(texts.groupSummary, contains('{count}'));
+        expect(texts.recordedMany, contains('{count}'));
+      });
     });
 
     testWidgets('tingkat otomatis tersimpan dan sumber baru dikirim ke native', (tester) async {

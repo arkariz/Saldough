@@ -1,6 +1,10 @@
+import 'dart:async';
+
 import 'package:di/di.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter/widgets.dart';
 import 'package:navigation/navigation.dart';
+import 'package:saldough/core/foundation/navigation/route_navigation.dart';
+import 'package:saldough/features/account/presentation/navigation/account_route_keys.dart';
 import 'package:saldough/features/premium/domain/plus_purchasing.dart';
 import 'package:saldough/features/premium/domain/trial_gift.dart';
 import 'package:saldough/features/premium/presentation/bloc/paywall_bloc.dart';
@@ -24,13 +28,21 @@ final class PremiumRouteModule extends FeatureRouteModule {
       builder: (context, input) {
         final container = ScopeProvider.of(context);
         return BlocProvider(
-          create: (_) =>
-              PaywallBloc(purchasing: container<PlusPurchasing>())
-                ..add(const PaywallStarted()),
+          create: (_) => PaywallBloc(purchasing: container<PlusPurchasing>())..add(const PaywallStarted()),
           child: PaywallPage(
             trigger: input.trigger,
             signedIn: container<AuthRepository>().currentUser != null,
-            onSignIn: () => context.pop()
+            // Dari Akun, layar Akun sudah di bawah paywall: cukup kembali. Dari
+            // tempat lain (mis. batas sumber notifikasi), paywall ditutup lalu
+            // Akun dibuka, tempat masuk berada; kembali ke layar asal sesudahnya.
+            onSignIn: () {
+              final navigator = Navigator.of(context);
+              final root = navigator.context;
+              navigator.pop();
+              if (input.trigger != PaywallTrigger.account) {
+                unawaited(root.pushRoute(AccountRouteKeys.page, const EmptyInput()));
+              }
+            },
           ),
         );
       },
@@ -42,8 +54,7 @@ final class PremiumRouteModule extends FeatureRouteModule {
     ),
     RouteNode.typed<TrialGiftInput>(
       key: PremiumRouteKeys.trialGift,
-      builder: (context, input) =>
-          TrialGiftPage(info: input.info, gift: ScopeProvider.of(context)<TrialGift>()),
+      builder: (context, input) => TrialGiftPage(info: input.info, gift: ScopeProvider.of(context)<TrialGift>()),
     ),
     RouteNode.typed<DowngradeInput>(
       key: PremiumRouteKeys.downgrade,

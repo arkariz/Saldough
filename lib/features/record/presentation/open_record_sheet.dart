@@ -89,6 +89,7 @@ Future<bool> openRecordSheet(
   RecurringRule? editRule,
   RecurringRule? occurrenceRule,
   DateTime? occurrenceDate,
+  void Function(String? categoryId, String note)? onSaved,
 }) async {
   final recordDraft = switch ((makeRecurringFrom, editRule)) {
     (final Transaction source, _) => draftFromTransaction(source),
@@ -234,7 +235,18 @@ Future<bool> openRecordSheet(
       barrierDismissible: false,
       builder: (_) => RecordSavingDialog(bloc: bloc),
     );
-    return bloc.state.saveCount > savedBefore;
+    final saved = bloc.state.saveCount > savedBefore;
+    if (saved && onSaved != null) {
+      switch (result) {
+        case ExpenseRecorded(:final categoryId, :final note):
+          onSaved(categoryId, note);
+        case IncomeRecorded(:final categoryId, :final note):
+          onSaved(categoryId, note);
+        default:
+          onSaved(null, '');
+      }
+    }
+    return saved;
   }
   return false;
 }

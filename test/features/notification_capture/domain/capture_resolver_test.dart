@@ -16,6 +16,9 @@ final class _Memory implements MerchantMemory {
   final Map<String, String> byNote;
 
   @override
+  Future<void> refresh() async {}
+
+  @override
   String? categoryFor({required String packageName, required String note}) => byNote[note];
 }
 

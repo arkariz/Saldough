@@ -38,6 +38,19 @@ object CaptureReminders {
         show(context, item.id, title, config.capturedBody, config.channelName, icon)
     }
 
+    /** Ketukan pada badan notifikasi: membuka aplikasi untuk tangkapan [captureId] (CATAT terisi). */
+    fun openAppIntent(context: Context, captureId: String): PendingIntent {
+        val intent = Intent(context, MainActivity::class.java)
+            .putExtra(EXTRA_CAPTURE_ID, captureId)
+            .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        return PendingIntent.getActivity(
+            context,
+            captureId.hashCode(),
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+        )
+    }
+
     /** [icon]: PNG ikon tangkapan (logo bank/merchant), jadi ikon besar. */
     fun show(
         context: Context,
@@ -49,15 +62,7 @@ object CaptureReminders {
     ) {
         if (!canPost(context)) return
         ensureChannel(context, channelName)
-        val intent = Intent(context, MainActivity::class.java)
-            .putExtra(EXTRA_CAPTURE_ID, captureId)
-            .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        val pending = PendingIntent.getActivity(
-            context,
-            captureId.hashCode(),
-            intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
-        )
+        val pending = openAppIntent(context, captureId)
         @Suppress("DEPRECATION")
         val builder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             Notification.Builder(context, CHANNEL_ID)

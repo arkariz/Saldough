@@ -10,15 +10,12 @@ import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/plan/active_plan.dart';
 import 'package:saldough/core/presentation/widgets/app_action_snack_bar.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
-import 'package:saldough/features/notification_capture/domain/entities/capture_inbox_entry.dart';
 import 'package:saldough/features/notification_capture/domain/entities/notification_capture_settings.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_gateway.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_store.dart';
-import 'package:saldough/features/notification_capture/domain/usecases/capture_inbox_actions.dart';
 import 'package:saldough/features/notification_capture/domain/usecases/process_captured_notifications.dart';
 import 'package:saldough/features/notification_capture/presentation/host/sync_notification_capture.dart';
 import 'package:saldough/features/notification_capture/presentation/navigation/notification_capture_route_keys.dart';
-import 'package:saldough/features/record/presentation/navigation/record_route_keys.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 
 /// Pemicu pemrosesan Catat dari notifikasi (ADR-032 §3.1), dipasang shell di
@@ -44,7 +41,6 @@ class _NotificationCaptureHostState extends State<NotificationCaptureHost> with 
   NotificationCaptureGateway? _gateway;
   late NotificationCaptureStore _store;
   ProcessCapturedNotifications? _process;
-  late CaptureInboxActions _actions;
   final _subscriptions = <StreamSubscription<Object?>>[];
   AppLifecycleState _lifecycle = AppLifecycleState.resumed;
 
@@ -65,7 +61,6 @@ class _NotificationCaptureHostState extends State<NotificationCaptureHost> with 
     _gateway = gateway;
     _store = container<NotificationCaptureStore>();
     _process = container<ProcessCapturedNotifications>();
-    _actions = container<CaptureInboxActions>();
     _subscriptions
       ..add(gateway.captured.listen((_) => unawaited(_run())))
       ..add(gateway.reminderTaps.listen((id) => unawaited(_openCapture(id))));
@@ -162,23 +157,13 @@ class _NotificationCaptureHostState extends State<NotificationCaptureHost> with 
     return (await container<SourceIconRepository>().read(id)).getOrElse((_) => null);
   }
 
-  /// Ketukan pengingat: tangkapan yang menunggu langsung membuka CATAT
-  /// terisi; selain itu (tercatat otomatis, atau belum diproses) kotak masuk.
+  /// Ketukan notifikasi (pengingat atau bertombol): selalu kotak masuk, tempat
+  /// tangkapannya menunggu sebagai kartu (satu ketuk, duplikat, dan Catat semua
+  /// ada di sana), bukan langsung CATAT. Tangkapan diproses dulu supaya kartunya ada.
   Future<void> _openCapture(String id) async {
     await _run();
     if (!mounted) return;
-    final inbox = (await _store.loadInbox()).getOrElse((_) => const <CaptureInboxEntry>[]);
-    final entry = inbox.where((e) => e.id == id).firstOrNull;
-    if (!mounted) return;
-    if (entry == null) {
-      await context.pushRoute(NotificationCaptureRouteKeys.inbox, const EmptyInput());
-      return;
-    }
-    final saved = await context.pushRoute<RecordSheetInput, bool>(
-      RecordRouteKeys.sheet,
-      RecordSheetInput(draft: entry.draft),
-    );
-    if (saved ?? false) await _actions.remove(entry.id);
+    await context.pushRoute(NotificationCaptureRouteKeys.inbox, const EmptyInput());
   }
 
   @override

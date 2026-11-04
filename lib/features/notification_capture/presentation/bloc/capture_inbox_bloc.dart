@@ -185,6 +185,13 @@ final class CaptureInboxBloc extends Bloc<CaptureInboxEvent, CaptureInboxState> 
   late final StreamSubscription<void> _changes;
   StreamSubscription<void>? _ledger;
 
+  /// Belajar dari kartu yang dicatat (E1); mengembalikan Batalkan atau `null`.
+  Future<Future<void> Function()?> rememberCategory(
+    CaptureInboxEntry entry, {
+    required String? categoryId,
+    required String note,
+  }) => _actions.rememberCategory(entry, categoryId: categoryId, note: note);
+
   Future<void> _reload(Emitter<CaptureInboxState> emit, {UiEffect? effect}) async {
     final pending = (await _store.loadInbox()).getOrElse((_) => const []);
     final auto = (await _store.loadAutoRecorded()).getOrElse((_) => const []);

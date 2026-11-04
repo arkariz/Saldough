@@ -8,6 +8,7 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.graphics.drawable.Icon
 import android.os.Build
+import android.os.Bundle
 import com.arkarizdev.tanukonomy.R
 
 /**
@@ -31,6 +32,9 @@ object CaptureActionable {
     const val ACTION_UNDO_ALL = "com.arkarizdev.tanukonomy.capture.UNDO_ALL"
     const val EXTRA_ID = "capture_id"
     const val EXTRA_IDS = "capture_ids"
+
+    /** Penanda di notifikasi bertombol (Catat/Abaikan), supaya hasil dan info tidak ikut diubah. */
+    private const val EXTRA_ACTIONABLE = "capture_actionable"
     private const val RESULT_TIMEOUT_MS = 30_000L
 
     private fun manager(context: Context) = context.getSystemService(NotificationManager::class.java)
@@ -51,7 +55,9 @@ object CaptureActionable {
             .setContentTitle(title)
             .setContentText(body)
             .setStyle(Notification.BigTextStyle().bigText(body))
-            .setAutoCancel(false)
+            .setContentIntent(CaptureReminders.openAppIntent(context, captureId))
+            .setAutoCancel(true)
+            .addExtras(Bundle().apply { putBoolean(EXTRA_ACTIONABLE, true) })
             .addAction(action(context, captureId, ACTION_RECORD, texts.record))
             .addAction(action(context, captureId, ACTION_DISMISS, texts.dismiss))
             .apply {
@@ -88,23 +94,27 @@ object CaptureActionable {
     private fun active(context: Context) = manager(context).activeNotifications.filter { it.tag == TAG }
 
     /**
-     * Dua notifikasi bertombol atau lebih: satu notifikasi mandiri dengan Catat semua; kurang dari itu, tanpa itu.
-     * Sengaja bukan ringkasan grup: Android 7+ tidak menampilkan tombol ringkasan grup.
+     * Dua notifikasi bertombol atau lebih: tiap notifikasi mendapat tombol
+     * ketiga **Catat semua**; kurang dari itu, tanpa. Sengaja bukan notifikasi
+     * ringkasan terpisah (jadi kartu keempat yang membingungkan) dan bukan
+     * ringkasan grup (Android 7+ menyembunyikan tombolnya).
      */
     private fun updateSummary(context: Context) {
-        val count = active(context).size
-        if (count < 2) {
-            manager(context).cancel(SUMMARY_TAG, SUMMARY_ID)
-            return
-        }
+        val manager = manager(context)
+        val active = active(context).filter { it.notification.extras.getBoolean(EXTRA_ACTIONABLE) }
         val texts = CaptureConfig.load(context).texts
-        val notification = Notification.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.mipmap.ic_launcher)
-            .setContentTitle(texts.groupSummary.replace("{count}", count.toString()))
-            .setAutoCancel(false)
-            .addAction(action(context, SUMMARY_TAG, ACTION_RECORD_ALL, texts.recordAll))
-            .build()
-        manager(context).notify(SUMMARY_TAG, SUMMARY_ID, notification)
+        val wantAll = active.size >= 2
+        for (sbn in active) {
+            val actions = sbn.notification.actions.orEmpty()
+            val hasAll = actions.size >= 3
+            if (hasAll == wantAll) continue
+            val base = actions.take(2)
+            val builder = Notification.Builder.recoverBuilder(context, sbn.notification)
+                .setOnlyAlertOnce(true)
+                .setActions(*base.toTypedArray())
+            if (wantAll) builder.addAction(action(context, SUMMARY_TAG, ACTION_RECORD_ALL, texts.recordAll))
+            manager.notify(TAG, sbn.id, builder.build())
+        }
     }
 
     /** Hasil Catat: sudah masuk jurnal; Batalkan masih bisa sebelum aplikasi menerapkannya. */

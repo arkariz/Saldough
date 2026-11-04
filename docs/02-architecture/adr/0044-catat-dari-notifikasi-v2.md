@@ -110,8 +110,8 @@ Nominal di notifikasi **tidak** mengikuti `AmountVisibility` (keputusan pemilik
 (`NotificationDelivery`): bawaan otomatis (Plus dengan sumber terpilih mendapat
 notifikasi bertombol; Gratis tidak), dinyalakan sendiri (Gratis ikut, tanpa
 tombol: membuka CATAT terisi), dan dimatikan sendiri (juga untuk Plus). Banyak
-tangkapan: satu notifikasi mandiri dengan **Catat semua**, bukan ringkasan
-grup (Android 7+ menyembunyikan tombol ringkasan grup). Status Plus disimpan (dengan kedaluwarsa) untuk mesin tanpa layar, tidak
+tangkapan: tiap notifikasi bertombol mendapat tombol **Catat semua**; bukan
+ringkasan grup (Android 7+ menyembunyikan tombolnya) dan bukan kartu terpisah. Status Plus disimpan (dengan kedaluwarsa) untuk mesin tanpa layar, tidak
 diketahui = Gratis. Keandalan best effort per vendor; antrean mentah adalah
 cadangan, diproses saat aplikasi dibuka. Catat **otomatis** tidak berjalan di
 mesin tanpa layar (tetap saat aplikasi dibuka).
@@ -189,6 +189,10 @@ deklarasi layanan pendengar di `AndroidManifest`.
 - **KT-N3** Penulisan langsung dari mesin tanpa layar sesudah spike.
 
 ## 7. Revisi
+
+- **Revisi 6 (4 Nov 2026, T-26.14):** ingatan pedagang (`MerchantMemory`) kini
+  punya implementasi: kategori yang dikonfirmasi lewat CATAT dari kartu diingat
+  per (aplikasi, catatan) dan dipakai penentu bersama (§3.1).
 
 - **Revisi 5 (4 Nov 2026, T-26.12):** pengingat rutin mengikuti jurnal lewat
   penyesuaian jadwal oleh mesin tanpa layar (§3.5 butir 6).

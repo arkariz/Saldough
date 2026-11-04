@@ -19,6 +19,7 @@ import 'package:saldough/features/notification_capture/presentation/widgets/acce
 import 'package:saldough/features/notification_capture/presentation/widgets/open_capture_record.dart';
 import 'package:saldough/features/transaction/presentation/navigation/transaction_route_keys.dart';
 import 'package:saldough/shared/capture/capture.dart';
+import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/transaction/transaction_presentation.dart';
@@ -47,10 +48,32 @@ class CaptureInboxPage extends StatelessWidget {
   }) async {
     final bloc = context.read<CaptureInboxBloc>();
     AppAnalytics.log(CaptureEvents.cardAction(action: via, cardClass: cardClass));
-    if (await openCaptureRecord(context, entry, match)) {
-      AppAnalytics.log(CaptureEvents.recordSaved(via: via, cardClass: cardClass));
-      bloc.add(CaptureInboxRecorded(entry.id));
-    }
+    String? savedCategory;
+    var savedNote = '';
+    final saved = await openCaptureRecord(
+      context,
+      entry,
+      match,
+      onSaved: (categoryId, note) {
+        savedCategory = categoryId;
+        savedNote = note;
+      },
+    );
+    if (!saved) return;
+    AppAnalytics.log(CaptureEvents.recordSaved(via: via, cardClass: cardClass));
+    bloc.add(CaptureInboxRecorded(entry.id));
+    // Belajar (E1): kategori baru atau yang diubah diingat untuk pedagang ini, dengan Batalkan.
+    final undo = await bloc.rememberCategory(entry, categoryId: savedCategory, note: savedNote);
+    if (undo == null || !context.mounted) return;
+    final categoryName = ActiveCategories.notifier.value.where((c) => c.id == savedCategory).firstOrNull?.name ?? '';
+    final texts = t.notificationCapture;
+    ScaffoldMessenger.of(context).showSnackBar(
+      actionSnackBar(
+        context,
+        content: Text(texts.rememberedSnack(note: savedNote.trim(), app: entry.appLabel, category: categoryName)),
+        action: SnackBarAction(label: texts.rememberedUndo, onPressed: () => unawaited(undo())),
+      ),
+    );
   }
 
   Future<void> _makePattern(BuildContext context, CaptureInboxEntry entry) async {

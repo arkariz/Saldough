@@ -6488,11 +6488,12 @@ S sehari, M beberapa hari, L lebih dari seminggu.
       `AmountVisibility`** di notifikasi. Teks tombol dan hasil lewat i18n
       (`ReminderTexts` dikirim saat sinkron), ikon aplikasi sumber ikut,
       bahasa dan mata uang mesin tanpa layar mengikuti setelan tersimpan,
-      izin notifikasi diminta di Mulai cepat bagi Plus. Banyak tangkapan: satu
-      notifikasi **mandiri** "N transaksi menunggu dicek" dengan **Catat semua**,
-      hasilnya "N transaksi tercatat" dengan **Batalkan** (semua). Sengaja
-      bukan ringkasan grup karena Android 7+ tidak menampilkan tombol
-      ringkasan grup (terbukti di emulator). Tombol Catat di layar kunci
+      izin notifikasi diminta di Mulai cepat bagi Plus. Banyak tangkapan: dua atau lebih
+      notifikasi bertombol membuat tiap kartu mendapat tombol ketiga **Catat semua**
+      (hasilnya "N transaksi tercatat" dengan **Batalkan** semua). Bukan
+      ringkasan grup (Android 7+ menyembunyikan tombolnya) dan bukan kartu
+      ringkasan terpisah (jadi kartu keempat yang membingungkan, temuan
+      pemilik 4 Nov 2026). Tombol Catat di layar kunci
       meminta perangkat dibuka (`setAuthenticationRequired`, API 31+).
       Yang belum dihidupkan dari perangkat nyata: lihat
       `VERIFICATION_PLAN_FASE_26.md` H13–H18. Uji: `notification_delivery_test`,
@@ -6528,6 +6529,21 @@ S sehari, M beberapa hari, L lebih dari seminggu.
       **Di luar repo (pemilik):** kebijakan privasi situs, unggah build ke
       jalur internal test, dan verifikasi di perangkat nyata
       (`VERIFICATION_PLAN_FASE_26.md`) sebelum ADR-044 Accepted.
+
+- [x] **T-26.14** (M) E1a "Ingat": ingatan pedagang (4 Nov 2026, irisan pertama
+      B-85). Sebelumnya port `MerchantMemory` tidak punya implementasi, jadi
+      mengoreksi kategori kartu tidak mengubah notifikasi berikutnya (temuan
+      pemilik: "es buah" tetap tanpa tombol). Kini mencatat kartu lewat CATAT
+      dengan kategori baru atau yang diubah menyimpan pasangan (aplikasi,
+      catatan ternormalisasi) → kategori di perangkat (`MerchantMemoryStore`,
+      kunci `capture_merchant_memory`, ikut cadangan, maks 500, yang tertua
+      dibuang), lalu snackbar "Diingat: ..." dengan **Batalkan**. Resolver
+      membacanya (kelas `recognized` bila sisanya lengkap), di aplikasi dan di
+      mesin tanpa layar. Gratis (garis ADR-044 §3.8). `RecordSheetInput.onSaved`
+      memberi kategori akhir ke kotak masuk. Jalur "Cek" satu tangkapan juga
+      belajar, tanpa snackbar. Uji: `merchant_memory_test` (7). Sisa B-85: tanya
+      "Ini transaksi? Ya/Bukan" dan bentuk dipelajari, serta banyak dompet per
+      aplikasi tanpa formulir.
 
 Enhancement (E1–E5) ada di Antrean B-85–B-89, dibuka sesudah gerbang tahap 1.
 
@@ -6604,7 +6620,7 @@ menambah dan memindahkannya ada di
 | B-82 | **Buku Stempel** (gratis; edisi musiman khusus Plus): stempel piksel untuk tonggak (periode lengkap, saldo cocok, rutin tak terlewat, target tercapai) dan edisi Ramadan, 17 Agustus, Tahun Baru; tanpa streak, poin, atau peringkat (KT-R13). | pemilik menyerahkan aset, lalu agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §16, [laporan bisnis](https://claude.ai/artifact/SKsV87e4f7hX8h58Qvv7G5) Gamifikasi |
 | B-83 | **Sisa pengamatan QA Fase 22–23**: (a) halaman "Data dipulihkan" tetap meminta izin notifikasi walau sudah aktif; (b) F23-4: daftar rutin sempat menampilkan kemunculan yang sudah tercatat sebagai "Later" (ulangi di perangkat nyata); (c) uji layar otomatis untuk Aturan dompet, Ikat ke rutin, dan Contoh notifikasi. | agen | [VERIFICATION_PLAN_FASE_23.md](VERIFICATION_PLAN_FASE_23.md) |
 | B-84 | **Arsip proyek freelance**: status aktif/arsip di `FreelanceProject` supaya batas Gratis bisa menghitung proyek aktif saja (sekarang menghitung semua proyek, ADR-041 §3.13 butir 2). Butuh ADR domain kecil dan rupa. | agen | ADR-041 §3.13, T-24.13 |
-| B-85 | **E1 "Ingat" dan bentuk dipelajari**: aturan lahir dari kartu, tanya "Ini transaksi? Ya/Bukan", banyak dompet per aplikasi tanpa formulir. Sesudah gerbang tahap 1. | agen | [NOTIFICATION_CAPTURE_V2.md](../01-product/features/NOTIFICATION_CAPTURE_V2.md) §7–§8, ADR-044 §3.4 |
+| B-85 | **E1 "Ingat" dan bentuk dipelajari** (ingatan pedagang selesai di T-26.14; sisa: Ya/Bukan, bentuk dipelajari, banyak dompet): aturan lahir dari kartu, tanya "Ini transaksi? Ya/Bukan", banyak dompet per aplikasi tanpa formulir. Sesudah gerbang tahap 1. | agen | [NOTIFICATION_CAPTURE_V2.md](../01-product/features/NOTIFICATION_CAPTURE_V2.md) §7–§8, ADR-044 §3.4 |
 | B-86 | **E2 saran pos anggaran** untuk pengeluaran bebas (nama pos di teks atau ingatan pedagang), hanya saran. | agen | NOTIFICATION_CAPTURE_V2.md §5 |
 | B-87 | **E3 catat otomatis per bentuk**: tawaran setelah konfirmasi pertama tanpa ubahan, pagar nominal besar, tanda "baru". Plus. | agen | NOTIFICATION_CAPTURE_V2.md §8, ADR-044 §3.7 |
 | B-88 | **E4 Lanjutan**: daftar aturan, "Ajari pola" yang disederhanakan, filter, contoh; migrasi `walletRules`/pola/ikatan menjadi aturan. | agen | ADR-044 §3.7 |

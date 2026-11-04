@@ -38,6 +38,7 @@ final class RecordSheetInput extends RouteInput {
     this.editRule,
     this.occurrenceRule,
     this.occurrenceDate,
+    this.onSaved,
   });
 
   /// Dompet awal (pintasan rincian dompet, FR-REC-002).
@@ -81,6 +82,11 @@ final class RecordSheetInput extends RouteInput {
 
   /// Tanggal kemunculan untuk [occurrenceRule].
   final DateTime? occurrenceDate;
+
+  /// Dipanggil sekali sesudah transaksi benar-benar tersimpan, dengan kategori
+  /// dan catatan akhirnya (kategori `null` bila kosong atau transfer). Dipakai
+  /// kotak masuk notifikasi untuk belajar (ingatan pedagang, E1).
+  final void Function(String? categoryId, String note)? onSaved;
 }
 
 /// Input sunting transaksi (FR-TXN-005). Rutenya selesai dengan transaksi

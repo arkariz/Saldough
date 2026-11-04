@@ -11,7 +11,9 @@ import 'package:saldough/features/notification_capture/domain/services/capture_f
 import 'package:saldough/features/notification_capture/domain/services/capture_inbox_changes.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_resolver.dart';
 import 'package:saldough/features/notification_capture/domain/services/notification_draft_composer.dart';
+import 'package:saldough/features/notification_capture/domain/services/store_backed_merchant_memory.dart';
 import 'package:saldough/features/notification_capture/domain/services/transaction_from_draft.dart';
+import 'package:saldough/shared/capture/capture.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
@@ -32,6 +34,7 @@ final class CaptureInboxActions {
     required this.categories,
     required this.currencyCode,
     required this.languageCode,
+    this.merchantMemory,
     this.changes,
     this.recurringRules,
     this.matchLog,
@@ -42,6 +45,9 @@ final class CaptureInboxActions {
 
   /// Sinyal perubahan kotak masuk, atau `null`.
   final CaptureInboxChanges? changes;
+
+  /// Ingatan pedagang (E1); `null` = tidak belajar.
+  final StoreBackedMerchantMemory? merchantMemory;
 
   /// Rutin untuk label "Cocok dengan rutin" (ADR-035 §3.4); `null` = tanpa.
   final RecurringRuleRepository? recurringRules;
@@ -129,6 +135,23 @@ final class CaptureInboxActions {
     ]);
     changes?.notify();
     return saved;
+  }
+
+  /// Belajar dari kartu yang dicatat lewat CATAT: bila kategori akhir
+  /// [categoryId] baru atau berbeda dari draf kartu, ingat untuk catatan
+  /// [note] dari aplikasi kartu itu. Mengembalikan fungsi Batalkan, atau
+  /// `null` bila tidak ada yang dipelajari (transfer, tanpa kategori atau
+  /// catatan, kategori sama dengan draf kartu).
+  Future<Future<void> Function()?> rememberCategory(
+    CaptureInboxEntry entry, {
+    required String? categoryId,
+    required String note,
+  }) async {
+    final memory = merchantMemory;
+    if (memory == null || categoryId == null || entry.draft.kind == DraftKind.transfer) return null;
+    if (normalizeMerchant(note).isEmpty || categoryId == entry.draft.categoryId) return null;
+    final previous = await memory.remember(packageName: entry.packageName, note: note, categoryId: categoryId);
+    return () => memory.restore(packageName: entry.packageName, note: note, previous: previous);
   }
 
   /// Kemunculan rutin yang cocok dengan draf tiap item [entries] (satu

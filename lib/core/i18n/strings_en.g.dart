@@ -1268,6 +1268,8 @@ class _Translations$notificationCapture$en extends Translations$notificationCapt
 	);
 	@override String get bannerAction => 'Check';
 	@override String autoRecordedSnack({required Object amount, required Object app}) => 'Recorded automatically: ${amount} · ${app}';
+	@override String rememberedSnack({required Object note, required Object app, required Object category}) => 'Remembered: "${note}" from ${app} goes to ${category}';
+	@override String get rememberedUndo => 'Undo';
 	@override String autoRecordedSnackMany({required Object n}) => '${n} transactions recorded automatically from notifications';
 	@override String get reminderChannel => 'Record from notifications';
 	@override String get reminderCapturedTitle => 'New transaction from {app}';
@@ -3656,6 +3658,8 @@ extension on TranslationsEn {
 			'notificationCapture.banner' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '${n} transaction from notifications to check', other: '${n} transactions from notifications to check', ), 
 			'notificationCapture.bannerAction' => 'Check',
 			'notificationCapture.autoRecordedSnack' => ({required Object amount, required Object app}) => 'Recorded automatically: ${amount} · ${app}',
+			'notificationCapture.rememberedSnack' => ({required Object note, required Object app, required Object category}) => 'Remembered: "${note}" from ${app} goes to ${category}',
+			'notificationCapture.rememberedUndo' => 'Undo',
 			'notificationCapture.autoRecordedSnackMany' => ({required Object n}) => '${n} transactions recorded automatically from notifications',
 			'notificationCapture.reminderChannel' => 'Record from notifications',
 			'notificationCapture.reminderCapturedTitle' => 'New transaction from {app}',
@@ -4055,10 +4059,10 @@ extension on TranslationsEn {
 			'premium.account.subActive' => ({required Object date}) => 'Active until ${date}',
 			'premium.account.subActiveOpen' => 'Active',
 			'premium.account.subGrace' => ({required Object date}) => 'Payment did not go through. Plus stays on until ${date}.',
-			'premium.account.subOnHold' => 'Subscription on hold because payment did not go through. Fix it in the Play Store.',
-			'premium.account.subTester' => ({required Object date}) => 'From the tester program until ${date}',
 			_ => null,
 		} ?? switch (path) {
+			'premium.account.subOnHold' => 'Subscription on hold because payment did not go through. Fix it in the Play Store.',
+			'premium.account.subTester' => ({required Object date}) => 'From the tester program until ${date}',
 			'premium.account.subTesterOpen' => 'From the tester program',
 			'premium.account.badgeTrial' => 'Trial',
 			'premium.account.badgeCheck' => 'Check',

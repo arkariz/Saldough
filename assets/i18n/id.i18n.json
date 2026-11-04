@@ -1226,6 +1226,8 @@
     },
     "bannerAction": "Cek",
     "autoRecordedSnack": "Tercatat otomatis: ${amount} · ${app}",
+    "rememberedSnack": "Diingat: \"${note}\" dari ${app} masuk ${category}",
+    "rememberedUndo": "Batalkan",
     "autoRecordedSnackMany": "${n} transaksi tercatat otomatis dari notifikasi",
     "reminderChannel": "Catat dari notifikasi",
     "reminderCapturedTitle": "Transaksi dari {app} terdeteksi",

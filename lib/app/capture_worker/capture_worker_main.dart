@@ -19,6 +19,7 @@ import 'package:saldough/core/foundation/entitlement/entitlement.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/language/language.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
+import 'package:saldough/features/notification_capture/data/merchant_memory_store_impl.dart';
 import 'package:saldough/features/notification_capture/data/notification_capture_store_impl.dart';
 import 'package:saldough/features/notification_capture/data/notification_rule_interpreter.dart';
 import 'package:saldough/features/notification_capture/domain/entities/capture_inbox_entry.dart';
@@ -30,6 +31,7 @@ import 'package:saldough/features/notification_capture/domain/services/capture_c
 import 'package:saldough/features/notification_capture/domain/services/capture_inbox_codec.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_resolver.dart';
 import 'package:saldough/features/notification_capture/domain/services/notification_draft_composer.dart';
+import 'package:saldough/features/notification_capture/domain/services/store_backed_merchant_memory.dart';
 import 'package:saldough/features/recurring/data/local_notification_reminder_scheduler.dart';
 import 'package:saldough/features/recurring/data/reminder_settings_repository_impl.dart';
 import 'package:saldough/features/recurring/domain/resync_reminders_for_capture.dart';
@@ -145,6 +147,7 @@ Future<void> _drain(
   NotificationRuleInterpreter ruleInterpreter(CaptureLanguage language) =>
       NotificationRuleInterpreter(language: language, categories: () => ActiveCategories.notifier.value);
   final resolver = CaptureResolver(
+    memory: StoreBackedMerchantMemory(MerchantMemoryStoreImpl(storage: storage)),
     composer: NotificationDraftComposer(
       composer: CaptureDraftComposer(ruleInterpreterFor: ruleInterpreter, cloudInterpreter: _NoCloud()),
       ruleInterpreterFor: ruleInterpreter,

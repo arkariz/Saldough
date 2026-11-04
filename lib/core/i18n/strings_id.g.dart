@@ -3164,6 +3164,12 @@ class Translations$notificationCapture$id {
 	/// id: 'Tercatat otomatis: ${amount} · ${app}'
 	String autoRecordedSnack({required Object amount, required Object app}) => 'Tercatat otomatis: ${amount} · ${app}';
 
+	/// id: 'Diingat: "${note}" dari ${app} masuk ${category}'
+	String rememberedSnack({required Object note, required Object app, required Object category}) => 'Diingat: "${note}" dari ${app} masuk ${category}';
+
+	/// id: 'Batalkan'
+	String get rememberedUndo => 'Batalkan';
+
 	/// id: '${n} transaksi tercatat otomatis dari notifikasi'
 	String autoRecordedSnackMany({required Object n}) => '${n} transaksi tercatat otomatis dari notifikasi';
 
@@ -6907,6 +6913,8 @@ extension on Translations {
 			'notificationCapture.banner' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n, other: '${n} transaksi dari notifikasi menunggu dicek', ), 
 			'notificationCapture.bannerAction' => 'Cek',
 			'notificationCapture.autoRecordedSnack' => ({required Object amount, required Object app}) => 'Tercatat otomatis: ${amount} · ${app}',
+			'notificationCapture.rememberedSnack' => ({required Object note, required Object app, required Object category}) => 'Diingat: "${note}" dari ${app} masuk ${category}',
+			'notificationCapture.rememberedUndo' => 'Batalkan',
 			'notificationCapture.autoRecordedSnackMany' => ({required Object n}) => '${n} transaksi tercatat otomatis dari notifikasi',
 			'notificationCapture.reminderChannel' => 'Catat dari notifikasi',
 			'notificationCapture.reminderCapturedTitle' => 'Transaksi dari {app} terdeteksi',
@@ -7306,10 +7314,10 @@ extension on Translations {
 			'premium.account.subActive' => ({required Object date}) => 'Aktif sampai ${date}',
 			'premium.account.subActiveOpen' => 'Aktif',
 			'premium.account.subGrace' => ({required Object date}) => 'Pembayaran belum berhasil. Plus tetap aktif sampai ${date}.',
-			'premium.account.subOnHold' => 'Langganan ditahan karena pembayaran belum berhasil. Perbaiki di Play Store.',
-			'premium.account.subTester' => ({required Object date}) => 'Dari program penguji sampai ${date}',
 			_ => null,
 		} ?? switch (path) {
+			'premium.account.subOnHold' => 'Langganan ditahan karena pembayaran belum berhasil. Perbaiki di Play Store.',
+			'premium.account.subTester' => ({required Object date}) => 'Dari program penguji sampai ${date}',
 			'premium.account.subTesterOpen' => 'Dari program penguji',
 			'premium.account.badgeTrial' => 'Uji coba',
 			'premium.account.badgeCheck' => 'Cek',

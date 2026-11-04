@@ -15,9 +15,14 @@ import 'package:saldough/shared/recurring/recurring.dart';
 /// Masukan CATAT untuk kartu [entry]. Bila draf cocok dengan satu kemunculan
 /// rutin ([match]), CATAT terisi kategori dan catatan dari rutin (yang kosong
 /// saja) dan transaksinya tertaut ke kemunculan itu (ADR-035 §3.4).
-RecordSheetInput recordSheetInputFor(CaptureInboxEntry entry, OccurrenceMatch? match) {
-  if (match == null) return RecordSheetInput(draft: entry.draft);
+RecordSheetInput recordSheetInputFor(
+  CaptureInboxEntry entry,
+  OccurrenceMatch? match, {
+  void Function(String? categoryId, String note)? onSaved,
+}) {
+  if (match == null) return RecordSheetInput(draft: entry.draft, onSaved: onSaved);
   return RecordSheetInput(
+    onSaved: onSaved,
     draft: enrichFromPlan(entry.draft, match),
     occurrenceRule: match.rule,
     occurrenceDate: match.date,
@@ -25,8 +30,19 @@ RecordSheetInput recordSheetInputFor(CaptureInboxEntry entry, OccurrenceMatch? m
 }
 
 /// Membuka CATAT terisi untuk [entry]; `true` bila disimpan.
-Future<bool> openCaptureRecord(BuildContext context, CaptureInboxEntry entry, OccurrenceMatch? match) async =>
-    await context.pushRoute<RecordSheetInput, bool>(RecordRouteKeys.sheet, recordSheetInputFor(entry, match)) ?? false;
+///
+/// [onSaved] menerima kategori dan catatan akhir sesudah tersimpan (belajar, E1).
+Future<bool> openCaptureRecord(
+  BuildContext context,
+  CaptureInboxEntry entry,
+  OccurrenceMatch? match, {
+  void Function(String? categoryId, String note)? onSaved,
+}) async =>
+    await context.pushRoute<RecordSheetInput, bool>(
+      RecordRouteKeys.sheet,
+      recordSheetInputFor(entry, match, onSaved: onSaved),
+    ) ??
+    false;
 
 /// Pintu "Cek" dari Beranda dan Riwayat (ADR-044 §3.8): bila hanya satu
 /// tangkapan menunggu, langsung ke CATAT terisi (lewat Simpan: 2 ketuk), bukan
@@ -43,5 +59,20 @@ Future<void> openCaptureInbox(BuildContext context, GetIt container) async {
   final actions = container<CaptureInboxActions>();
   final match = (await actions.matchesFor([entry]))[entry.id];
   if (!context.mounted) return;
-  if (await openCaptureRecord(context, entry, match)) await actions.remove(entry.id);
+  String? savedCategory;
+  var savedNote = '';
+  final saved = await openCaptureRecord(
+    context,
+    entry,
+    match,
+    onSaved: (categoryId, note) {
+      savedCategory = categoryId;
+      savedNote = note;
+    },
+  );
+  if (saved) {
+    await actions.remove(entry.id);
+    // Tanpa Batalkan di jalur ini (tidak ada snackbar): kategori baru tetap diingat.
+    await actions.rememberCategory(entry, categoryId: savedCategory, note: savedNote);
+  }
 }

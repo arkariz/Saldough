@@ -41,6 +41,7 @@ final class RecordRouteModule extends FeatureRouteModule {
           editRule: input.editRule,
           occurrenceRule: input.occurrenceRule,
           occurrenceDate: input.occurrenceDate,
+          onSaved: input.onSaved,
         ),
       ),
     ),

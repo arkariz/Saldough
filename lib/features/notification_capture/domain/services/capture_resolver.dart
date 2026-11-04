@@ -1,6 +1,3 @@
-// Satu method disengaja: port kecil untuk satu kebutuhan baca (E1, B-85).
-// ignore_for_file: one_member_abstracts
-
 import 'package:saldough/features/notification_capture/domain/entities/capture_inbox_entry.dart';
 import 'package:saldough/features/notification_capture/domain/entities/captured_notification.dart';
 import 'package:saldough/features/notification_capture/domain/entities/notification_pattern.dart';
@@ -19,6 +16,9 @@ import 'package:saldough/shared/wallet/wallet.dart';
 /// kecil; implementasinya datang bersama "Ingat". Tanpa ingatan, langkah ini
 /// dilewati.
 abstract interface class MerchantMemory {
+  /// Memuat ingatan terbaru; dipanggil resolver sebelum bekerja.
+  Future<void> refresh();
+
   /// Kategori yang diingat untuk [note] dari [packageName], atau `null`.
   String? categoryFor({required String packageName, required String note});
 }
@@ -283,6 +283,7 @@ final class CaptureResolver {
     required String? patternId,
     required List<RecurringRule> rules,
   }) async {
+    await memory?.refresh();
     final date = plain.date ?? postedAt;
     final ledger = await ledgerAround(date);
     final plan = resolvePlan(

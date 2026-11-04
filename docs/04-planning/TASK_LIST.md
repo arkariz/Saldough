@@ -6243,11 +6243,41 @@ S sehari, M beberapa hari, L lebih dari seminggu.
       Selesai 4 Nov 2026 (`f0e7ad3e`): satu konflik di TASK_LIST diselesaikan
       (baris Fase 23 jadi 5/5, T-23.5 disisipkan, B-83 memakai teks baru).
       `flutter analyze` bersih, uji notifikasi lulus.
-- [ ] **T-26.2** (L) `CaptureResolver` dan kelas kartu (`planned`, `recognized`,
+- [x] **T-26.2** (L) `CaptureResolver` dan kelas kartu (`planned`, `recognized`,
       `needsInput`) di domain murni (ADR-044 §3.1): aturan aplikasi → rencana
       (rutin, pos) → ingatan pedagang → aturan umum; pemutus seri lewat nama
       rutin di teks; jendela termasuk bayar lebih awal.
       Verifikasi: uji sintetis per urutan dan per kelas; ambigu tidak ditebak.
+      Selesai 4 Nov 2026 (`domain/services/capture_resolver.dart`):
+      - **Satu jalur.** `CaptureResolver.resolve` (tangkapan baru) dan
+        `resolveStored` (kartu tersimpan): penyusun draf (aturan aplikasi,
+        dompet sumber, pola, aturan umum) → rencana (`resolvePlan`: pola terikat
+        dulu, lalu kandidat rutin) → kategori dan catatan dari rutin
+        (`enrichFromPlan`) → ingatan pedagang (port `MerchantMemory`, belum ada
+        implementasi: E1/B-85) → catatan yang sama di buku besar. Keluaran
+        `ResolvedCapture` memuat draf asli (`plainDraft`), draf yang dilengkapi
+        (`draft`), `plan`, `existing`, `cardClass`, dan jejak `notes`.
+      - **Pemutus seri.** Beberapa kandidat: yang namanya muncul di teks
+        (minimal 3 huruf) dipilih bila hanya satu; selain itu ambigu, tanpa
+        saran, kartu perlu diputuskan. Hasil pemutus nama hanya **saran**: tidak
+        pernah ditautkan otomatis (`tieBroken`).
+      - **Dipakai** oleh `ProcessCapturedNotifications` (menggantikan logika
+        pola terikat dan pencocokan di dalamnya; perilaku tetap, 190 uji lama
+        lulus) dan `CaptureInboxActions.matchesFor` (kini ikut pemutus nama).
+        Catat otomatis memakai draf yang dilengkapi rencana **hanya** bila
+        tertaut otomatis; selain itu draf asli.
+      - **Perbaikan.** Satu ketuk (`confirm`) dan CATAT kini sama-sama melengkapi
+        kategori dan catatan dari rutin; sebelumnya satu ketuk pada kartu cocok
+        rutin tanpa kategori mencatat tanpa kategori. Kartu dengan beberapa
+        kemunculan yang cocok (ambigu) kini `needsInput`.
+      - Jendela bayar lebih awal: tetap ±3 hari (rutin kira-kira dan tetap) dan
+        ±7 hari untuk pola terikat; tidak dilebarkan supaya tidak menambah salah
+        cocok.
+      - Pos anggaran dari rutin tetap diisi `CaptureFinalizer` saat disimpan
+        (T-26.3); pos tanpa rutin adalah E2 (B-86).
+      Verifikasi: 212 uji notifikasi lulus (14 uji penentu: urutan, kelas,
+      ambigu, pemutus nama, pola terikat, duplikat, kartu tersimpan; 2 uji
+      pemroses).
 - [x] **T-26.3** (M) `CaptureFinalizer` (§3.2): tautan rutin dan `budgetItemId`
       lewat `budgetItemForOccurrence` di semua jalur (otomatis, kartu, jurnal),
       lalu sinyal. Menutup celah `transactionFromDraft`.

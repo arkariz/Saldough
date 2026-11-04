@@ -6,6 +6,7 @@ import 'package:navigation/navigation.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/features/notification_capture/domain/entities/capture_inbox_entry.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_store.dart';
+import 'package:saldough/features/notification_capture/domain/services/capture_resolver.dart';
 import 'package:saldough/features/notification_capture/domain/usecases/capture_inbox_actions.dart';
 import 'package:saldough/features/notification_capture/presentation/navigation/notification_capture_route_keys.dart';
 import 'package:saldough/features/record/presentation/navigation/record_route_keys.dart';
@@ -15,13 +16,9 @@ import 'package:saldough/shared/recurring/recurring.dart';
 /// rutin ([match]), CATAT terisi kategori dan catatan dari rutin (yang kosong
 /// saja) dan transaksinya tertaut ke kemunculan itu (ADR-035 §3.4).
 RecordSheetInput recordSheetInputFor(CaptureInboxEntry entry, OccurrenceMatch? match) {
-  final draft = entry.draft;
-  if (match == null) return RecordSheetInput(draft: draft);
+  if (match == null) return RecordSheetInput(draft: entry.draft);
   return RecordSheetInput(
-    draft: draft.copyWith(
-      categoryId: draft.categoryId == null ? () => match.rule.categoryId : null,
-      note: draft.note.trim().isEmpty ? match.rule.note : null,
-    ),
+    draft: enrichFromPlan(entry.draft, match),
     occurrenceRule: match.rule,
     occurrenceDate: match.date,
   );

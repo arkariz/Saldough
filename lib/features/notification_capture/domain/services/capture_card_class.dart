@@ -25,9 +25,20 @@ enum CaptureCardClass {
 /// "Tanpa tebakan": dompet, jenis, dan nominal terbaca tanpa `issues`; untuk
 /// transfer kedua dompet terpetakan; kategori berasal dari draf (rencana,
 /// aturan, atau ingatan).
-CaptureCardClass cardClassOf(CaptureInboxEntry entry, {OccurrenceMatch? match, Transaction? existing}) {
-  final draft = entry.draft;
-  if (existing != null || entry.possibleDuplicate) return CaptureCardClass.needsInput;
+CaptureCardClass cardClassOf(CaptureInboxEntry entry, {OccurrenceMatch? match, Transaction? existing}) =>
+    cardClassOfDraft(entry.draft, match: match, duplicate: existing != null || entry.possibleDuplicate);
+
+/// Kelas untuk [draft] yang belum jadi kartu (dipakai penentu). [duplicate]:
+/// catatan yang sama sudah ada atau tangkapan serupa baru saja masuk.
+/// [planUnclear]: pola terikat ke rutin tetapi kemunculannya tidak jelas, atau
+/// beberapa kemunculan cocok; tidak ditebak, jadi perlu diputuskan pengguna.
+CaptureCardClass cardClassOfDraft(
+  RecordDraft draft, {
+  OccurrenceMatch? match,
+  bool duplicate = false,
+  bool planUnclear = false,
+}) {
+  if (duplicate || planUnclear) return CaptureCardClass.needsInput;
   final complete =
       draft.amountSen != null &&
       draft.walletId != null &&

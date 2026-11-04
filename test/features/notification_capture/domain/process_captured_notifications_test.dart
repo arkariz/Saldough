@@ -582,6 +582,52 @@ void main() {
         },
       );
 
+      test('satu ketuk pada kartu cocok rutin tanpa kategori: kategori dan catatan dari rutin, bukan kosong', () async {
+        final rules = RecurringRuleRepositoryImpl(storage: storage);
+        await rules.saveRule(kopi());
+        final entry = CaptureInboxEntry(
+          id: 'x',
+          packageName: 'id.co.bri.brimo',
+          appLabel: 'BRImo',
+          text: 'Pembayaran Rp25.000 ke ZXQ berhasil',
+          capturedAt: now,
+          draft: RecordDraft(kind: DraftKind.expense, amountSen: 2500000, walletId: 'bri', date: now),
+        );
+        await store.saveInbox([entry]);
+        final actions = actionsWith(rules, null);
+        final match = (await actions.matchesFor([entry]))[entry.id]!;
+
+        await actions.confirm(entry, match: match);
+
+        final tx = (await ledgerNow()).single as ExpenseTransaction;
+        expect(tx.categoryId, 'builtin.food');
+        expect(tx.note, 'Kopi langganan');
+      });
+
+      test('dua rutin cocok, nama satu ada di teks: kartu mendapat saran, catat otomatis tidak menautkan', () async {
+        final rules = RecurringRuleRepositoryImpl(storage: storage);
+        final log = RecurrenceMatchLogRepositoryImpl(storage: storage, clock: () => now);
+        await rules.saveRule(kopi());
+        await rules.saveRule(kopi(id: 'kopi2').copyWith(note: 'KOPI KENANGAN'));
+        await enable(AutoRecordLevel.whenComplete);
+        gateway.queue = [notif('a', payment)];
+        await withCatalog(rules, log, null)();
+
+        // Pemutus nama hanya saran: tidak pernah ditautkan otomatis.
+        final tx = (await ledgerNow()).single;
+        expect(tx.recurrence, isNull);
+        final entry = CaptureInboxEntry(
+          id: 'z',
+          packageName: 'id.co.bri.brimo',
+          appLabel: 'BRImo',
+          text: payment,
+          capturedAt: now,
+          draft: RecordDraft(kind: DraftKind.expense, amountSen: 2500000, walletId: 'bri', date: now),
+        );
+        final match = (await actionsWith(rules, null).matchesFor([entry]))['z'];
+        expect(match?.rule.id, 'kopi2');
+      });
+
       test('satu ketuk tanpa rutin: dicatat dari draf, tanpa tautan', () async {
         await enable(AutoRecordLevel.reviewAll);
         gateway.queue = [notif('a', payment)];

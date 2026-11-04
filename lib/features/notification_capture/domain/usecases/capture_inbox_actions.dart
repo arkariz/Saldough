@@ -9,9 +9,9 @@ import 'package:saldough/features/notification_capture/domain/services/active_ca
 import 'package:saldough/features/notification_capture/domain/services/auto_record_policy.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_finalizer.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_inbox_changes.dart';
+import 'package:saldough/features/notification_capture/domain/services/capture_resolver.dart';
 import 'package:saldough/features/notification_capture/domain/services/notification_draft_composer.dart';
 import 'package:saldough/features/notification_capture/domain/services/transaction_from_draft.dart';
-import 'package:saldough/shared/capture/capture.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
@@ -149,49 +149,20 @@ final class CaptureInboxActions {
     final result = <String, OccurrenceMatch>{};
     for (final entry in entries) {
       final draft = entry.draft;
-      final amount = draft.amountSen;
-      final walletId = draft.walletId;
-      if (amount == null || walletId == null) continue;
+      if (draft.amountSen == null || draft.walletId == null) continue;
       final date = draft.date ?? entry.capturedAt;
-      final kind = switch (draft.kind) {
-        DraftKind.income => RecurringKind.income,
-        DraftKind.expense => RecurringKind.expense,
-        DraftKind.transfer => RecurringKind.transfer,
-      };
-      // Pola yang terikat ke rutin (ADR-042 §3.4) menentukan rutinnya sendiri;
-      // bila kemunculannya tidak jelas, tidak ada saran (tidak menebak).
-      final bound = entry.patternId == null
-          ? null
-          : rules
-                .where(
-                  (r) =>
-                      r.notificationBinding?.packageName == entry.packageName &&
-                      r.notificationBinding?.patternId == entry.patternId,
-                )
-                .firstOrNull;
-      if (bound != null) {
-        final match = matchBoundOccurrence(
-          bound,
-          kind: kind,
-          walletId: walletId,
-          toWalletId: draft.toWalletId,
-          amount: amount,
-          date: date,
-          transactions: await around(date),
-        );
-        if (match != null) result[entry.id] = match;
-        continue;
-      }
-      final candidates = occurrenceCandidates(
-        kind: kind,
-        walletId: walletId,
-        toWalletId: draft.toWalletId,
-        amount: amount,
+      // Penentu bersama: pola terikat menentukan rutinnya sendiri, selain itu
+      // kandidat tunggal (atau yang namanya muncul di teks); ambigu tanpa saran.
+      final plan = resolvePlan(
+        draft: draft,
         date: date,
+        packageName: entry.packageName,
+        text: entry.text,
         rules: rules,
-        transactions: await around(date),
+        ledger: await around(date),
+        patternId: entry.patternId,
       );
-      if (candidates.length == 1) result[entry.id] = candidates.single;
+      if (plan.match case final match?) result[entry.id] = match;
     }
     return result;
   }
@@ -255,7 +226,11 @@ final class CaptureInboxActions {
   /// Pemanggil menjaga syaratnya (`cardClassOf`, `oneTapAllowed`); draf yang
   /// belum lengkap gagal tanpa menyentuh data.
   Future<Either<Failure, Transaction>> confirm(CaptureInboxEntry entry, {OccurrenceMatch? match}) async {
-    final built = transactionFromDraft(entry.draft, id: _newId(), fallbackDate: entry.capturedAt);
+    final built = transactionFromDraft(
+      enrichFromPlan(entry.draft, match),
+      id: _newId(),
+      fallbackDate: entry.capturedAt,
+    );
     if (built == null) {
       return left(const ValidationFailure(code: incompleteDraftCode, message: 'draf belum lengkap'));
     }

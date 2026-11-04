@@ -11,6 +11,7 @@ import 'package:saldough/features/notification_capture/domain/services/active_ca
 import 'package:saldough/features/notification_capture/domain/services/auto_record_policy.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_finalizer.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_inbox_changes.dart';
+import 'package:saldough/features/notification_capture/domain/services/capture_resolver.dart';
 import 'package:saldough/features/notification_capture/domain/services/notification_draft_composer.dart';
 import 'package:saldough/features/notification_capture/domain/services/notification_text.dart';
 import 'package:saldough/features/notification_capture/domain/services/transaction_from_draft.dart';
@@ -63,6 +64,7 @@ final class ProcessCapturedNotifications {
     this.matchLog,
     this.recurringChanges,
     this.finalizer = const CaptureFinalizer(),
+    this.memory,
     this.isPlus,
     this.freeSources,
     DateTime Function()? clock,
@@ -114,6 +116,9 @@ final class ProcessCapturedNotifications {
 
   /// Penutup bersama: tautan rutin dan pos anggaran (ADR-044 §3.2).
   final CaptureFinalizer finalizer;
+
+  /// Ingatan pedagang untuk kategori (E1, B-85); `null` = dilewati.
+  final MerchantMemory? memory;
 
   /// Paket Plus; `null` = tanpa batas (uji). Di Gratis hanya [freeSources]
   /// sumber pertama di daftar yang diproses dan tingkat otomatis dianggap
@@ -186,6 +191,11 @@ final class ProcessCapturedNotifications {
     final rules = (await recurringRules?.listRules())?.getOrElse((_) => const []) ?? const <RecurringRule>[];
     var linkedAny = false;
     final ledgers = <String, List<Transaction>>{};
+    final resolver = CaptureResolver(
+      composer: composer,
+      ledgerAround: (date) => _ledgerAround(date, ledgers),
+      memory: memory,
+    );
     final recorded = <AutoRecordedEntry>[];
     final queued = <CaptureInboxEntry>[];
     final handled = <String>[];
@@ -206,7 +216,9 @@ final class ProcessCapturedNotifications {
         continue;
       }
 
-      final composed = await composer.compose(
+      // Satu penentu bersama (ADR-044 §3.1): aturan aplikasi dan pola, rencana
+      // (rutin), ingatan, lalu catatan yang sama di buku besar.
+      final resolved = await resolver.resolve(
         notification,
         source: source,
         patterns: patterns,
@@ -214,36 +226,40 @@ final class ProcessCapturedNotifications {
         categories: categories(),
         currencyCode: currencyCode(),
         languageCode: languageCode(),
+        rules: rules,
       );
+      final composed = resolved.composed!;
       // Ikon disimpan sekali per isi; id-nya ikut draf, item kotak masuk,
       // dan transaksi (ADR-032 §3.10).
       final iconId = await _saveIcon(notification.icon);
-      final draft = composed.draft.copyWith(sourceIconId: () => iconId);
+      final draft = resolved.draft.copyWith(sourceIconId: () => iconId);
+      final plainDraft = resolved.plainDraft.copyWith(sourceIconId: () => iconId);
       final date = draft.date ?? notification.postedAt;
-      final ledger = ledgers[_monthKey(date)] ??= (await transactionRepository.listTransactionsInMonth(
-        date,
-      )).getOrElse((_) => const []);
-      final duplicate =
-          AutoRecordPolicy.matchesLedger(draft, date, ledger) ||
-          _nearbyCapture(draft, notification, inbox: inbox, auto: auto);
+      final duplicate = resolved.existing != null || _nearbyCapture(draft, notification, inbox: inbox, auto: auto);
 
-      // Rutin yang terikat ke pola ini (ADR-042 §3.4). Terikat berarti
-      // pengguna menyatakan notifikasi ini adalah rutin itu, jadi bila
-      // kemunculannya tidak jelas, tangkapan ditinjau -- tidak dicatat tanpa
-      // tautan dan tidak ditautkan ke rutin lain.
-      final boundRule = _boundRule(rules, notification.packageName, composed);
-      final boundMatch = boundRule == null ? null : await _boundMatch(boundRule, draft, date, ledgers);
-      final boundUnclear = boundRule != null && !(boundMatch != null && boundMatch.exact);
+      // Pola yang terikat ke rutin (ADR-042 §3.4) menentukan rutinnya sendiri;
+      // bila kemunculannya tidak jelas, tangkapan ditinjau -- tidak dicatat
+      // tanpa tautan dan tidak ditautkan ke rutin lain.
+      final plan = resolved.plan;
+      final boundUnclear = plan.boundUnclear;
+      // Tertaut otomatis hanya bila cocok persis, tunggal (bukan hasil pemutus
+      // nama), dan tidak ada transaksi lain yang sudah memenuhi kemunculannya
+      // (KT-R11). Hanya saat itu rencana ikut melengkapi draf yang dicatat.
+      final match = plan.match;
+      final autoLink =
+          match != null &&
+          match.exact &&
+          !plan.tieBroken &&
+          matchCandidates(match.rule, match.date, await _ledgerAround(date, ledgers)).isEmpty;
+      final recordDraft = autoLink ? draft : plainDraft;
 
-      if (composed.autoEligible && !duplicate && !boundUnclear && policy.allows(draft)) {
+      if (composed.autoEligible && !duplicate && !boundUnclear && policy.allows(recordDraft)) {
         final (entry, linked) = await _record(
-          draft,
+          recordDraft,
           notification,
           source.appLabel,
           now,
-          rules: rules,
-          ledger: await _ledgerAround(date, ledgers),
-          forcedMatch: boundMatch,
+          match: autoLink ? match : null,
         );
         linkedAny |= linked;
         if (entry != null) {
@@ -283,42 +299,6 @@ final class ProcessCapturedNotifications {
     return CaptureProcessResult(recorded: recorded, queued: queued);
   }
 
-  /// Rutin yang terikat ke pola yang cocok dengan [composed], atau `null`.
-  /// Hanya pola terverifikasi; pola tebakan tidak pernah mengikat.
-  RecurringRule? _boundRule(List<RecurringRule> rules, String packageName, NotificationDraft composed) {
-    final pattern = composed.pattern;
-    if (pattern == null || !pattern.verified) return null;
-    return rules
-        .where(
-          (r) => r.notificationBinding?.packageName == packageName && r.notificationBinding?.patternId == pattern.id,
-        )
-        .firstOrNull;
-  }
-
-  Future<OccurrenceMatch?> _boundMatch(
-    RecurringRule rule,
-    RecordDraft draft,
-    DateTime date,
-    Map<String, List<Transaction>> ledgers,
-  ) async {
-    final amount = draft.amountSen;
-    final walletId = draft.walletId;
-    if (amount == null || walletId == null) return null;
-    return matchBoundOccurrence(
-      rule,
-      kind: switch (draft.kind) {
-        DraftKind.income => RecurringKind.income,
-        DraftKind.expense => RecurringKind.expense,
-        DraftKind.transfer => RecurringKind.transfer,
-      },
-      walletId: walletId,
-      toWalletId: draft.toWalletId,
-      amount: amount,
-      date: date,
-      transactions: await _ledgerAround(date, ledgers),
-    );
-  }
-
   /// Transaksi bulan [date] serta bulan sebelum dan sesudahnya, untuk
   /// pencocokan rutin (jendela ±3 hari bisa melintasi bulan).
   Future<List<Transaction>> _ledgerAround(DateTime date, Map<String, List<Transaction>> ledgers) async {
@@ -340,28 +320,23 @@ final class ProcessCapturedNotifications {
     return (await repository.save(png)).fold((_) => null, (id) => id);
   }
 
-  /// Mencatat draf; bila cocok persis dengan tepat satu kemunculan rutin
-  /// dan tidak ada transaksi lain yang juga cocok, transaksinya langsung
-  /// tertaut (`linkedBy: auto`, KT-R11) dan masuk log tautan. Mengembalikan
-  /// entri log otomatis dan apakah ada yang tertaut.
+  /// Mencatat draf; bila [match] ada (cocok persis dengan tepat satu kemunculan
+  /// rutin dan tidak ada transaksi lain yang juga cocok), transaksinya langsung
+  /// tertaut (`linkedBy: auto`, KT-R11) bersama pos periodenya dan masuk log
+  /// tautan. Mengembalikan entri log otomatis dan apakah ada yang tertaut.
   Future<(AutoRecordedEntry?, bool)> _record(
     RecordDraft draft,
     CapturedNotification notification,
     String appLabel,
     DateTime now, {
-    required List<RecurringRule> rules,
-    required List<Transaction> ledger,
-    OccurrenceMatch? forcedMatch,
+    OccurrenceMatch? match,
   }) async {
     var transaction = transactionFromDraft(draft, id: _newId(), fallbackDate: notification.postedAt);
     if (transaction == null) return (null, false);
-    final match =
-        forcedMatch ?? (rules.isEmpty ? null : matchOccurrences(transaction, rules: rules, transactions: ledger));
-    final autoLink = match != null && match.exact && matchCandidates(match.rule, match.date, ledger).isEmpty;
-    transaction = await finalizer.finalize(transaction, match: autoLink ? match : null);
+    transaction = await finalizer.finalize(transaction, match: match);
     final result = await recordTransaction(transaction, source: this);
     if (result.isLeft()) return (null, false);
-    if (autoLink) {
+    if (match != null) {
       AppAnalytics.log(RecurringEvents.occurrenceLinkedAuto);
       AppAnalytics.log(PeriodEvents.recurrenceDateGap(transaction.date, match.date, via: 'auto'));
       await matchLog?.add(
@@ -376,7 +351,7 @@ final class ProcessCapturedNotifications {
         ),
       );
     }
-    return (_autoEntry(transaction, draft, notification, appLabel, now), autoLink);
+    return (_autoEntry(transaction, draft, notification, appLabel, now), match != null);
   }
 
   AutoRecordedEntry _autoEntry(

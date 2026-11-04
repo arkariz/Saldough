@@ -1163,7 +1163,7 @@ class _Translations$notificationCapture$en extends Translations$notificationCapt
 	@override String get accessAction => 'Allow access';
 	@override String get accessGranted => 'Notification permission is on';
 	@override String get disclosureTitle => 'Before you grant permission';
-	@override String get disclosureBody => 'Tanukonomy will be able to read notifications on your phone.\n\n• Only from apps you pick that match their filter.\n• OTP notifications are never stored.\n• Text that is hard to read may be sent to Gemini (Google).\n• Notification text stays on your phone for at most 7 days.';
+	@override String get disclosureBody => 'Tanukonomy will be able to read notifications on your phone.\n\n• Only from apps you pick that match their filter.\n• OTP notifications are never stored.\n• Text that is hard to read may be sent to Gemini (Google).\n• Notification text stays on your phone for at most 7 days.\n\nAfter Continue, Android opens its notification access list. Pick Tanukonomy and turn it on.';
 	@override String get disclosureAccept => 'Continue';
 	@override String get reminderPermissionDenied => 'Notification permission was denied. Turn it on in Android settings to get reminders.';
 	@override String get sourcesTitle => 'Apps';
@@ -1963,6 +1963,7 @@ class _Translations$discovery$quickStart$en extends Translations$discovery$quick
 	@override String get title => 'Pick your bank or e-wallet apps';
 	@override String get body => 'Notifications from the apps you pick are read on this device and become draft transactions. You review them first.';
 	@override String get turnOn => 'Turn on';
+	@override String get walletHint => 'Pick a wallet for each app.';
 	@override String get pickHint => 'Pick at least one app.';
 	@override String pickedCount({required Object n}) => '${n} apps selected.';
 	@override String get freeLimit => 'Free plan: one app. More with Plus.';
@@ -3538,11 +3539,12 @@ extension on TranslationsEn {
 			'discovery.quickStart.title' => 'Pick your bank or e-wallet apps',
 			'discovery.quickStart.body' => 'Notifications from the apps you pick are read on this device and become draft transactions. You review them first.',
 			'discovery.quickStart.turnOn' => 'Turn on',
+			'discovery.quickStart.walletHint' => 'Pick a wallet for each app.',
 			'discovery.quickStart.pickHint' => 'Pick at least one app.',
 			'discovery.quickStart.pickedCount' => ({required Object n}) => '${n} apps selected.',
-			'discovery.quickStart.freeLimit' => 'Free plan: one app. More with Plus.',
 			_ => null,
 		} ?? switch (path) {
+			'discovery.quickStart.freeLimit' => 'Free plan: one app. More with Plus.',
 			'notificationCapture.accountEntryTitle' => 'Record from notifications',
 			'notificationCapture.accountEntryBody' => 'Record automatically from bank and e-wallet notifications.',
 			'notificationCapture.settingsTitle' => 'Record from notifications',
@@ -3552,7 +3554,7 @@ extension on TranslationsEn {
 			'notificationCapture.accessAction' => 'Allow access',
 			'notificationCapture.accessGranted' => 'Notification permission is on',
 			'notificationCapture.disclosureTitle' => 'Before you grant permission',
-			'notificationCapture.disclosureBody' => 'Tanukonomy will be able to read notifications on your phone.\n\n• Only from apps you pick that match their filter.\n• OTP notifications are never stored.\n• Text that is hard to read may be sent to Gemini (Google).\n• Notification text stays on your phone for at most 7 days.',
+			'notificationCapture.disclosureBody' => 'Tanukonomy will be able to read notifications on your phone.\n\n• Only from apps you pick that match their filter.\n• OTP notifications are never stored.\n• Text that is hard to read may be sent to Gemini (Google).\n• Notification text stays on your phone for at most 7 days.\n\nAfter Continue, Android opens its notification access list. Pick Tanukonomy and turn it on.',
 			'notificationCapture.disclosureAccept' => 'Continue',
 			'notificationCapture.reminderPermissionDenied' => 'Notification permission was denied. Turn it on in Android settings to get reminders.',
 			'notificationCapture.sourcesTitle' => 'Apps',
@@ -4054,9 +4056,9 @@ extension on TranslationsEn {
 			'premium.account.subOnHold' => 'Subscription on hold because payment did not go through. Fix it in the Play Store.',
 			'premium.account.subTester' => ({required Object date}) => 'From the tester program until ${date}',
 			'premium.account.subTesterOpen' => 'From the tester program',
-			'premium.account.badgeTrial' => 'Trial',
 			_ => null,
 		} ?? switch (path) {
+			'premium.account.badgeTrial' => 'Trial',
 			'premium.account.badgeCheck' => 'Check',
 			'premium.account.manage' => 'Manage in the Play Store',
 			'premium.account.restore' => 'Restore purchases',

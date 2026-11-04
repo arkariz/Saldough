@@ -2857,8 +2857,8 @@ class Translations$notificationCapture$id {
 	/// id: 'Sebelum memberi izin'
 	String get disclosureTitle => 'Sebelum memberi izin';
 
-	/// id: 'Tanukonomy akan bisa membaca notifikasi di ponselmu. • Hanya dari aplikasi yang kamu pilih dan cocok dengan filternya. • Notifikasi OTP tidak pernah disimpan. • Teks yang sulit dibaca bisa dikirim ke Gemini (Google). • Teks notifikasi disimpan di ponselmu paling lama 7 hari.'
-	String get disclosureBody => 'Tanukonomy akan bisa membaca notifikasi di ponselmu.\n\n• Hanya dari aplikasi yang kamu pilih dan cocok dengan filternya.\n• Notifikasi OTP tidak pernah disimpan.\n• Teks yang sulit dibaca bisa dikirim ke Gemini (Google).\n• Teks notifikasi disimpan di ponselmu paling lama 7 hari.';
+	/// id: 'Tanukonomy akan bisa membaca notifikasi di ponselmu. • Hanya dari aplikasi yang kamu pilih dan cocok dengan filternya. • Notifikasi OTP tidak pernah disimpan. • Teks yang sulit dibaca bisa dikirim ke Gemini (Google). • Teks notifikasi disimpan di ponselmu paling lama 7 hari. Sesudah Lanjut, Android membuka daftar akses notifikasi. Pilih Tanukonomy lalu nyalakan.'
+	String get disclosureBody => 'Tanukonomy akan bisa membaca notifikasi di ponselmu.\n\n• Hanya dari aplikasi yang kamu pilih dan cocok dengan filternya.\n• Notifikasi OTP tidak pernah disimpan.\n• Teks yang sulit dibaca bisa dikirim ke Gemini (Google).\n• Teks notifikasi disimpan di ponselmu paling lama 7 hari.\n\nSesudah Lanjut, Android membuka daftar akses notifikasi. Pilih Tanukonomy lalu nyalakan.';
 
 	/// id: 'Lanjut'
 	String get disclosureAccept => 'Lanjut';
@@ -4804,6 +4804,9 @@ class Translations$discovery$quickStart$id {
 
 	/// id: 'Nyalakan'
 	String get turnOn => 'Nyalakan';
+
+	/// id: 'Pilih dompet untuk tiap aplikasi.'
+	String get walletHint => 'Pilih dompet untuk tiap aplikasi.';
 
 	/// id: 'Pilih minimal satu aplikasi.'
 	String get pickHint => 'Pilih minimal satu aplikasi.';
@@ -6785,11 +6788,12 @@ extension on Translations {
 			'discovery.quickStart.title' => 'Pilih aplikasi bank atau dompet digitalmu',
 			'discovery.quickStart.body' => 'Notifikasi dari aplikasi yang kamu pilih dibaca di perangkat dan jadi draf catatan. Kamu tinjau dulu.',
 			'discovery.quickStart.turnOn' => 'Nyalakan',
+			'discovery.quickStart.walletHint' => 'Pilih dompet untuk tiap aplikasi.',
 			'discovery.quickStart.pickHint' => 'Pilih minimal satu aplikasi.',
 			'discovery.quickStart.pickedCount' => ({required Object n}) => '${n} aplikasi dipilih.',
-			'discovery.quickStart.freeLimit' => 'Paket Gratis: satu aplikasi. Lebih dari itu dengan Plus.',
 			_ => null,
 		} ?? switch (path) {
+			'discovery.quickStart.freeLimit' => 'Paket Gratis: satu aplikasi. Lebih dari itu dengan Plus.',
 			'notificationCapture.accountEntryTitle' => 'Catat dari notifikasi',
 			'notificationCapture.accountEntryBody' => 'Catat otomatis dari notifikasi bank dan e-wallet.',
 			'notificationCapture.settingsTitle' => 'Catat dari notifikasi',
@@ -6799,7 +6803,7 @@ extension on Translations {
 			'notificationCapture.accessAction' => 'Beri izin',
 			'notificationCapture.accessGranted' => 'Izin notifikasi aktif',
 			'notificationCapture.disclosureTitle' => 'Sebelum memberi izin',
-			'notificationCapture.disclosureBody' => 'Tanukonomy akan bisa membaca notifikasi di ponselmu.\n\n• Hanya dari aplikasi yang kamu pilih dan cocok dengan filternya.\n• Notifikasi OTP tidak pernah disimpan.\n• Teks yang sulit dibaca bisa dikirim ke Gemini (Google).\n• Teks notifikasi disimpan di ponselmu paling lama 7 hari.',
+			'notificationCapture.disclosureBody' => 'Tanukonomy akan bisa membaca notifikasi di ponselmu.\n\n• Hanya dari aplikasi yang kamu pilih dan cocok dengan filternya.\n• Notifikasi OTP tidak pernah disimpan.\n• Teks yang sulit dibaca bisa dikirim ke Gemini (Google).\n• Teks notifikasi disimpan di ponselmu paling lama 7 hari.\n\nSesudah Lanjut, Android membuka daftar akses notifikasi. Pilih Tanukonomy lalu nyalakan.',
 			'notificationCapture.disclosureAccept' => 'Lanjut',
 			'notificationCapture.reminderPermissionDenied' => 'Izin notifikasi ditolak. Nyalakan di setelan Android untuk menerima pengingat.',
 			'notificationCapture.sourcesTitle' => 'Aplikasi',
@@ -7301,9 +7305,9 @@ extension on Translations {
 			'premium.account.subOnHold' => 'Langganan ditahan karena pembayaran belum berhasil. Perbaiki di Play Store.',
 			'premium.account.subTester' => ({required Object date}) => 'Dari program penguji sampai ${date}',
 			'premium.account.subTesterOpen' => 'Dari program penguji',
-			'premium.account.badgeTrial' => 'Uji coba',
 			_ => null,
 		} ?? switch (path) {
+			'premium.account.badgeTrial' => 'Uji coba',
 			'premium.account.badgeCheck' => 'Cek',
 			'premium.account.manage' => 'Kelola di Play Store',
 			'premium.account.restore' => 'Pulihkan pembelian',

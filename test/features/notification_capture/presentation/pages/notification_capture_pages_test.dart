@@ -1,7 +1,9 @@
 import 'dart:ui' as ui;
 
 import 'package:api_storage/api_storage.dart';
+import 'package:dependencies/dependencies.dart';
 import 'package:di/di.dart';
+import 'package:failures/failures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -198,6 +200,67 @@ void main() {
       expect(gateway.configuredSources, hasLength(2));
       expect(find.text(t.discovery.quickStart.turnOn), findsNothing);
       expect(find.text('buka'), findsOneWidget);
+    });
+
+    testWidgets('satu dompet: dompetnya dipakai otomatis, tanpa pertanyaan (ADR-044 §3.4)', (tester) async {
+      gateway
+        ..apps = const [bri]
+        ..accessGranted = true;
+      await open(tester, NotificationCaptureRouteKeys.quickStart);
+      await pick(tester, const [bri]);
+
+      expect(find.byKey(const ValueKey('quick-start-wallet-id.co.bri.brimo')), findsNothing);
+      await tester.tap(find.text(t.discovery.quickStart.turnOn));
+      await tester.pumpAndSettle();
+
+      expect((await settings()).sources.single.walletId, 'bri');
+    });
+
+    testWidgets('beberapa dompet: tiap aplikasi ditanya dompetnya, tidak ditebak', (tester) async {
+      await wallets.saveWallet(
+        const Wallet(id: 'bca', name: 'BCA', iconKey: 'walletBank', initialBalance: 0, currentBalance: 0),
+      );
+      gateway
+        ..apps = const [bri]
+        ..accessGranted = true;
+      await open(tester, NotificationCaptureRouteKeys.quickStart);
+      await pick(tester, const [bri]);
+
+      // Belum dipilih: Nyalakan mati dengan alasan.
+      final picker = find.byKey(const ValueKey('quick-start-wallet-id.co.bri.brimo'));
+      expect(picker, findsOneWidget);
+      expect(find.text(t.discovery.quickStart.walletHint), findsOneWidget);
+      expect(tester.widget<AppButton>(find.byKey(const ValueKey('quick-start-turn-on'))).onPressed, isNull);
+
+      await tester.ensureVisible(picker);
+      await tester.pumpAndSettle();
+      await tester.tap(picker);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('BCA').last);
+      await tester.pumpAndSettle();
+      expect(tester.widget<AppButton>(find.byKey(const ValueKey('quick-start-turn-on'))).onPressed, isNotNull);
+
+      await tester.tap(find.text(t.discovery.quickStart.turnOn));
+      await tester.pumpAndSettle();
+
+      expect((await settings()).sources.single.walletId, 'bca');
+    });
+
+    testWidgets('gagal menyimpan: pesan galat terlihat dan layar bertahan', (tester) async {
+      container
+        ..unregister<NotificationCaptureStore>()
+        ..registerSingleton<NotificationCaptureStore>(_SettingsFailingStore(store));
+      gateway
+        ..apps = const [bri]
+        ..accessGranted = true;
+      await open(tester, NotificationCaptureRouteKeys.quickStart);
+      await pick(tester, const [bri]);
+
+      await tester.tap(find.text(t.discovery.quickStart.turnOn));
+      await tester.pumpAndSettle();
+
+      expect(find.text(t.common.genericErrorMessage), findsOneWidget);
+      expect(find.text(t.discovery.quickStart.turnOn), findsOneWidget);
     });
 
     testWidgets('aplikasi mana pun bisa dipilih, bukan hanya bank yang dikenal', (tester) async {
@@ -594,6 +657,43 @@ void main() {
       expect(find.text('Transaksi Rp50.000 berhasil'), findsOneWidget);
     });
 
+    group('izin dicabut (ADR-044, temuan review UX)', () {
+      testWidgets('fitur menyala tetapi izin tidak ada: banner dengan Izinkan, bukan kotak masuk yang tampak kosong', (
+        tester,
+      ) async {
+        await store.saveSettings(const NotificationCaptureSettings(enabled: true));
+        gateway.accessGranted = false;
+        await open(tester, NotificationCaptureRouteKeys.inbox);
+
+        expect(find.byKey(const ValueKey('inbox-access-banner')), findsOneWidget);
+        await tester.tap(find.byKey(const ValueKey('inbox-access-grant')));
+        await tester.pumpAndSettle();
+        expect(find.text(t.notificationCapture.disclosureTitle), findsOneWidget);
+        await tester.tap(find.text(t.notificationCapture.disclosureAccept));
+        await tester.pumpAndSettle();
+        expect(gateway.accessSettingsOpened, 1);
+      });
+
+      testWidgets('izin ada: tanpa banner', (tester) async {
+        await store.saveSettings(const NotificationCaptureSettings(enabled: true));
+        gateway.accessGranted = true;
+        await open(tester, NotificationCaptureRouteKeys.inbox);
+
+        expect(find.byKey(const ValueKey('inbox-access-banner')), findsNothing);
+      });
+
+      testWidgets('fitur mati: tanpa banner', (tester) async {
+        gateway.accessGranted = false;
+        await open(tester, NotificationCaptureRouteKeys.inbox);
+
+        expect(find.byKey(const ValueKey('inbox-access-banner')), findsNothing);
+      });
+
+      testWidgets('dialog izin menjelaskan langkah sesudah Lanjut', (tester) async {
+        expect(t.notificationCapture.disclosureBody, contains('Pilih Tanukonomy'));
+      });
+    });
+
     group('duplikat dua arah (ADR-044 §3.3)', () {
       CaptureInboxEntry card({String id = 'a'}) => CaptureInboxEntry(
         id: id,
@@ -923,4 +1023,42 @@ void main() {
       expect(find.text(t.premium.signInTitle), findsOneWidget);
     });
   });
+}
+
+/// Penyimpanan yang gagal menyimpan setelan (Mulai cepat: galat harus terlihat).
+final class _SettingsFailingStore implements NotificationCaptureStore {
+  _SettingsFailingStore(this._inner);
+
+  final NotificationCaptureStore _inner;
+
+  @override
+  Future<Either<Failure, Unit>> saveSettings(NotificationCaptureSettings settings) async =>
+      const Left(SystemFailure(code: FailureCode.unknown, message: 'disk penuh'));
+
+  @override
+  Future<Either<Failure, NotificationCaptureSettings>> loadSettings() => _inner.loadSettings();
+
+  @override
+  Future<Either<Failure, List<NotificationPattern>>> loadPatterns() => _inner.loadPatterns();
+
+  @override
+  Future<Either<Failure, Unit>> savePatterns(List<NotificationPattern> patterns) => _inner.savePatterns(patterns);
+
+  @override
+  Future<Either<Failure, List<CaptureInboxEntry>>> loadInbox() => _inner.loadInbox();
+
+  @override
+  Future<Either<Failure, Unit>> saveInbox(List<CaptureInboxEntry> entries) => _inner.saveInbox(entries);
+
+  @override
+  Future<Either<Failure, List<AutoRecordedEntry>>> loadAutoRecorded() => _inner.loadAutoRecorded();
+
+  @override
+  Future<Either<Failure, Unit>> saveAutoRecorded(List<AutoRecordedEntry> entries) => _inner.saveAutoRecorded(entries);
+
+  @override
+  Future<Either<Failure, Map<String, DateTime>>> loadProcessedIds() => _inner.loadProcessedIds();
+
+  @override
+  Future<Either<Failure, Unit>> saveProcessedIds(Map<String, DateTime> ids) => _inner.saveProcessedIds(ids);
 }

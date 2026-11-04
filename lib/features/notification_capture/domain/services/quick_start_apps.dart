@@ -14,9 +14,14 @@ List<InstalledApp> quickStartApps(Iterable<InstalledApp> installed, {String? own
       return byLabel != 0 ? byLabel : a.packageName.compareTo(b.packageName);
     });
 
-/// Sumber baru untuk [app] dengan filter bawaan (ADR-032 §3.1).
-NotificationSource quickStartSource(InstalledApp app) =>
-    NotificationSource(packageName: app.packageName, appLabel: app.label, keywords: defaultNotificationKeywords);
+/// Sumber baru untuk [app] dengan filter bawaan (ADR-032 §3.1) dan, bila
+/// diketahui, [walletId] dompet bawaannya.
+NotificationSource quickStartSource(InstalledApp app, {String? walletId}) => NotificationSource(
+  packageName: app.packageName,
+  appLabel: app.label,
+  keywords: defaultNotificationKeywords,
+  walletId: walletId,
+);
 
 /// Menggabungkan [picked] ke [existing]: sumber yang sudah ada dipertahankan
 /// (filter dan dompetnya) dan dinyalakan; yang baru ditambahkan di akhir.

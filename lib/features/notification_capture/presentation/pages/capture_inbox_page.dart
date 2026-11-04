@@ -13,6 +13,7 @@ import 'package:saldough/features/notification_capture/presentation/bloc/capture
 import 'package:saldough/features/notification_capture/presentation/bloc/notification_settings_bloc.dart';
 import 'package:saldough/features/notification_capture/presentation/navigation/notification_capture_route_keys.dart';
 import 'package:saldough/features/notification_capture/presentation/pages/notification_pattern_page.dart';
+import 'package:saldough/features/notification_capture/presentation/widgets/access_disclosure.dart';
 import 'package:saldough/features/record/presentation/navigation/record_route_keys.dart';
 import 'package:saldough/features/transaction/presentation/navigation/transaction_route_keys.dart';
 import 'package:saldough/shared/capture/capture.dart';
@@ -104,15 +105,30 @@ class _InboxBody extends StatefulWidget {
   State<_InboxBody> createState() => _InboxBodyState();
 }
 
-class _InboxBodyState extends State<_InboxBody> {
+class _InboxBodyState extends State<_InboxBody> with WidgetsBindingObserver {
   /// `null` sampai isi pertama termuat: dibuka di segmen yang berisi item
   /// (Perlu dicek bila ada yang menunggu, kalau tidak Otomatis; QA PR #43
   /// F17), sesudah itu pilihan pengguna.
   _InboxTab? _picked;
 
   @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  // Kembali dari setelan akses sistem: cek ulang izinnya.
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      context.read<NotificationSettingsBloc>().add(const NotificationSettingsResumed());
+    }
+  }
+
+  @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     if (widget.page.teachEntryId case final id?) {
       WidgetsBinding.instance.addPostFrameCallback((_) => unawaited(_teach(id)));
     }
@@ -156,6 +172,7 @@ class _InboxBodyState extends State<_InboxBody> {
             return ListView(
               padding: const EdgeInsets.fromLTRB(AppSpacing.space4, 0, AppSpacing.space4, AppSpacing.space8),
               children: [
+                const _AccessBanner(),
                 AppSegmentedControl<_InboxTab>(
                   options: [(_InboxTab.pending, texts.inboxPendingTitle), (_InboxTab.auto, texts.inboxAutoTitle)],
                   selected: tab,
@@ -245,6 +262,49 @@ class _InboxBodyState extends State<_InboxBody> {
           },
         ),
       ),
+    );
+  }
+}
+
+/// Izin membaca notifikasi dicabut: tanpa banner ini kotak masuk tampak kosong
+/// ("Tidak ada yang perlu dicek") padahal tidak ada notifikasi yang masuk.
+class _AccessBanner extends StatelessWidget {
+  const _AccessBanner();
+
+  @override
+  Widget build(BuildContext context) {
+    final texts = t.notificationCapture;
+    final textTheme = Theme.of(context).textTheme;
+    final colors = context.appColors;
+    return BlocBuilder<NotificationSettingsBloc, NotificationSettingsState>(
+      builder: (context, state) {
+        if (state.isLoading || !state.settings.enabled || state.accessGranted) return const SizedBox.shrink();
+        return Padding(
+          padding: const EdgeInsets.only(top: AppSpacing.space2, bottom: AppSpacing.space3),
+          child: AppCard(
+            key: const ValueKey('inbox-access-banner'),
+            color: colors.warningSoft,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(texts.accessMissingTitle, style: textTheme.titleSmall),
+                const SizedBox(height: AppSpacing.space1),
+                Text(texts.accessMissingBody, style: textTheme.bodyMedium),
+                const SizedBox(height: AppSpacing.space2),
+                AppButton(
+                  key: const ValueKey('inbox-access-grant'),
+                  small: true,
+                  label: texts.accessAction,
+                  onPressed: () async {
+                    final bloc = context.read<NotificationSettingsBloc>();
+                    if (await showAccessDisclosure(context)) await bloc.openAccessSettings();
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

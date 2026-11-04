@@ -1105,6 +1105,7 @@
       "title": "Pilih aplikasi bank atau dompet digitalmu",
       "body": "Notifikasi dari aplikasi yang kamu pilih dibaca di perangkat dan jadi draf catatan. Kamu tinjau dulu.",
       "turnOn": "Nyalakan",
+      "walletHint": "Pilih dompet untuk tiap aplikasi.",
       "pickHint": "Pilih minimal satu aplikasi.",
       "pickedCount": "${n} aplikasi dipilih.",
       "freeLimit": "Paket Gratis: satu aplikasi. Lebih dari itu dengan Plus."
@@ -1120,7 +1121,7 @@
     "accessAction": "Beri izin",
     "accessGranted": "Izin notifikasi aktif",
     "disclosureTitle": "Sebelum memberi izin",
-    "disclosureBody": "Tanukonomy akan bisa membaca notifikasi di ponselmu.\n\n• Hanya dari aplikasi yang kamu pilih dan cocok dengan filternya.\n• Notifikasi OTP tidak pernah disimpan.\n• Teks yang sulit dibaca bisa dikirim ke Gemini (Google).\n• Teks notifikasi disimpan di ponselmu paling lama 7 hari.",
+    "disclosureBody": "Tanukonomy akan bisa membaca notifikasi di ponselmu.\n\n• Hanya dari aplikasi yang kamu pilih dan cocok dengan filternya.\n• Notifikasi OTP tidak pernah disimpan.\n• Teks yang sulit dibaca bisa dikirim ke Gemini (Google).\n• Teks notifikasi disimpan di ponselmu paling lama 7 hari.\n\nSesudah Lanjut, Android membuka daftar akses notifikasi. Pilih Tanukonomy lalu nyalakan.",
     "disclosureAccept": "Lanjut",
     "reminderPermissionDenied": "Izin notifikasi ditolak. Nyalakan di setelan Android untuk menerima pengingat.",
     "sourcesTitle": "Aplikasi",

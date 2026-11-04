@@ -14,6 +14,7 @@ import 'package:saldough/features/notification_capture/domain/services/quick_sta
 import 'package:saldough/features/notification_capture/presentation/bloc/notification_settings_bloc.dart';
 import 'package:saldough/features/notification_capture/presentation/widgets/access_disclosure.dart';
 import 'package:saldough/features/notification_capture/presentation/widgets/plus_gate.dart';
+import 'package:saldough/shared/wallet/wallet.dart';
 import 'package:state_management/state_management.dart';
 
 /// Paket aplikasi ini; tidak ditawarkan sebagai sumber notifikasi.
@@ -37,6 +38,9 @@ class QuickStartPage extends StatefulWidget {
 class _QuickStartPageState extends State<QuickStartPage> with WidgetsBindingObserver {
   late Future<Either<Failure, List<InstalledApp>>> _apps = context.read<NotificationSettingsBloc>().loadInstalledApps();
   Set<String>? _selected;
+
+  /// Dompet pilihan pengguna per paket (dipakai bila ada lebih dari satu dompet).
+  final _walletOf = <String, String>{};
   bool _saved = false;
   bool _busy = false;
   String _query = '';
@@ -61,14 +65,25 @@ class _QuickStartPageState extends State<QuickStartPage> with WidgetsBindingObse
     }
   }
 
+  /// Dompet bawaan sumber [packageName]: pilihan pengguna, atau satu-satunya
+  /// dompet aktif. Dengan beberapa dompet dan belum dipilih: `null` (tidak
+  /// menebak, jadi pengguna ditanya).
+  String? _walletFor(String packageName, List<Wallet> wallets) {
+    final chosen = _walletOf[packageName];
+    if (chosen != null && wallets.any((w) => w.id == chosen)) return chosen;
+    return wallets.length == 1 ? wallets.single.id : null;
+  }
+
   Future<void> _turnOn(List<InstalledApp> candidates) async {
     if (_busy) return;
     final bloc = context.read<NotificationSettingsBloc>();
     if (!_saved) {
       setState(() => _busy = true);
+      final wallets = bloc.state.wallets;
       final picked = [
         for (final app in candidates)
-          if (_selected?.contains(app.packageName) ?? false) quickStartSource(app),
+          if (_selected?.contains(app.packageName) ?? false)
+            quickStartSource(app, walletId: _walletFor(app.packageName, wallets)),
       ];
       // Gratis: hanya satu aplikasi (ADR-041 §3.8); lebih dari itu membuka
       // paywall dan pengguna mengurangi pilihannya.
@@ -80,7 +95,11 @@ class _QuickStartPageState extends State<QuickStartPage> with WidgetsBindingObse
       final result = await bloc.applyQuickStart(picked);
       if (!mounted) return;
       setState(() => _busy = false);
-      if (result == QuickStartResult.failed) return;
+      if (result == QuickStartResult.failed) {
+        // Gagal menyimpan harus terlihat, bukan tombol yang diam saja.
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(t.common.genericErrorMessage)));
+        return;
+      }
       _saved = true;
       if (result == QuickStartResult.ready) {
         _completed(bloc);
@@ -137,7 +156,13 @@ class _QuickStartPageState extends State<QuickStartPage> with WidgetsBindingObse
     final colors = context.appColors;
     final selected = _selected ?? const <String>{};
     final hasSource = state.settings.sources.any((source) => source.enabled);
-    final canTurnOn = selected.isNotEmpty || hasSource;
+    final wallets = state.wallets;
+    // Dengan beberapa dompet, tiap aplikasi pilihan perlu dompet (tidak ditebak).
+    final missingWallet = [
+      for (final packageName in selected)
+        if (_walletFor(packageName, wallets) == null && wallets.isNotEmpty) packageName,
+    ];
+    final canTurnOn = (selected.isNotEmpty && missingWallet.isEmpty) || (selected.isEmpty && hasSource);
     final needsAccess = _saved && !state.accessGranted;
     final shown = [
       for (final app in candidates)
@@ -178,7 +203,9 @@ class _QuickStartPageState extends State<QuickStartPage> with WidgetsBindingObse
               // Tombol Nyalakan mati selama belum ada pilihan: katakan kenapa.
               Text(
                 key: const ValueKey('quick-start-hint'),
-                canTurnOn ? texts.pickedCount(n: selected.length) : texts.pickHint,
+                selected.isEmpty
+                    ? (hasSource ? texts.pickedCount(n: 0) : texts.pickHint)
+                    : (missingWallet.isEmpty ? texts.pickedCount(n: selected.length) : texts.walletHint),
                 style: textTheme.bodySmall?.copyWith(color: colors.ink2),
               ),
               if (!ActivePlan.isPlus) Text(texts.freeLimit, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
@@ -204,7 +231,7 @@ class _QuickStartPageState extends State<QuickStartPage> with WidgetsBindingObse
               else
                 AppListCard(
                   children: [
-                    for (final app in shown)
+                    for (final app in shown) ...[
                       AppListRow(
                         key: ValueKey('quick-start-${app.packageName}'),
                         leading: _icon(app),
@@ -216,6 +243,9 @@ class _QuickStartPageState extends State<QuickStartPage> with WidgetsBindingObse
                         ),
                         onTap: () => _toggle(app.packageName, on: !selected.contains(app.packageName)),
                       ),
+                      // Banyak dompet: tiap aplikasi pilihan ditanya dompetnya.
+                      if (selected.contains(app.packageName) && wallets.length > 1) _walletPicker(app, wallets),
+                    ],
                   ],
                 ),
             ],
@@ -231,6 +261,26 @@ class _QuickStartPageState extends State<QuickStartPage> with WidgetsBindingObse
           ),
         ),
       ],
+    );
+  }
+
+  Widget _walletPicker(InstalledApp app, List<Wallet> wallets) {
+    final chosen = _walletFor(app.packageName, wallets);
+    final wallet = wallets.where((w) => w.id == chosen).firstOrNull;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(AppSpacing.space4, 0, AppSpacing.space4, AppSpacing.space3),
+      child: AppMenuSelectButton<String>(
+        key: ValueKey('quick-start-wallet-${app.packageName}'),
+        icon: wallet == null ? IconKey.wallets : walletIconKey(wallet.iconKey),
+        label: wallet?.name ?? t.notificationCapture.walletLabel,
+        isPlaceholder: wallet == null,
+        wrapLabel: true,
+        options: [for (final w in wallets) (value: w.id, label: w.name, icon: walletIconKey(w.iconKey))],
+        onSelected: (id) => setState(() {
+          if (id != null) _walletOf[app.packageName] = id;
+          _saved = false;
+        }),
+      ),
     );
   }
 

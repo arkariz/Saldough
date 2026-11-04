@@ -6297,14 +6297,28 @@ S sehari, M beberapa hari, L lebih dari seminggu.
 
 **Tahap 1a: MVP dalam aplikasi**
 
-- [ ] **T-26.6** (M) Mulai cepat tanpa daftar putih: semua aplikasi terpasang
+- [x] **T-26.6** (M) Mulai cepat tanpa daftar putih: semua aplikasi terpasang
       dengan pencarian, dompet per aplikasi, galat penyimpanan terlihat, banner
       izin di kotak masuk saat akses dicabut, petunjuk setelah dialog izin.
       Menutup temuan review UX 1–5 (4 Nov 2026).
-      Sudah (lewat T-26.5): daftar semua aplikasi + pencarian, tanpa centang
-      bawaan, alasan tombol mati, catatan batas Gratis, Coba lagi. Sisa: dompet
-      per aplikasi, galat penyimpanan, banner izin di kotak masuk, petunjuk
-      setelah dialog izin.
+      Selesai 4 Nov 2026 (bersama T-26.5 untuk daftar aplikasi dan pencarian):
+      - **Dompet per aplikasi.** Satu dompet aktif dipakai otomatis tanpa
+        pertanyaan; beberapa dompet: tiap aplikasi pilihan ditanya lewat
+        `AppMenuSelectButton`, tidak ditebak, dan Nyalakan mati dengan alasan
+        ("Pilih dompet untuk tiap aplikasi") sampai semuanya dipilih.
+        `quickStartSource(app, walletId:)`.
+      - **Galat penyimpanan terlihat.** Gagal menyimpan memunculkan snackbar
+        galat dan layar bertahan (sebelumnya tombol diam saja).
+      - **Banner izin di kotak masuk.** Fitur menyala tetapi akses notifikasi
+        dicabut: banner "Butuh izin membaca notifikasi" dengan Beri izin
+        (lewat pengungkapan), diperiksa ulang saat kembali dari setelan sistem.
+        Sebelumnya kotak masuk tampak kosong ("Tidak ada yang perlu dicek").
+      - **Petunjuk setelah dialog izin.** Isi dialog menambahkan "Sesudah
+        Lanjut, Android membuka daftar akses notifikasi. Pilih Tanukonomy lalu
+        nyalakan."
+      Verifikasi: 169 uji notifikasi lulus (satu dompet otomatis, beberapa
+      dompet ditanya, gagal menyimpan, banner ada/tidak ada, petunjuk izin);
+      galeri debug dijalankan di 360dp teks 1× dan 2× tanpa overflow.
 - [ ] **T-26.7** (L) Kartu tiga jenis dan konfirmasi satu ketuk (Plus) dengan
       "Catat semua" (§3.6); "Cek" membuka CATAT langsung bila satu tangkapan
       menunggu (Gratis); judul slide Beranda sesuai tujuan; satu pintu ke

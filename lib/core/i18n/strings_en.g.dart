@@ -1163,7 +1163,7 @@ class _Translations$notificationCapture$en extends Translations$notificationCapt
 	@override String get accessAction => 'Allow access';
 	@override String get accessGranted => 'Notification permission is on';
 	@override String get disclosureTitle => 'Before you grant permission';
-	@override String get disclosureBody => 'Tanukonomy will be able to read notifications on your phone.\n\n• Only from apps you pick that match their filter.\n• OTP notifications are never stored.\n• Text that is hard to read may be sent to Gemini (Google).\n• Notification text stays on your phone for at most 7 days.\n\nAfter Continue, Android opens its notification access list. Pick Tanukonomy and turn it on.';
+	@override String get disclosureBody => 'Tanukonomy will be able to read notifications on your phone.\n\n• Only from apps you pick that match their filter.\n• OTP notifications are never stored.\n• Text that is hard to read may be sent to Gemini (Google).\n• Notification text stays on your phone for at most 7 days.\n• New notifications may be processed in the background while Tanukonomy is closed, so the Record button on the notification works.\n\nAfter Continue, Android opens its notification access list. Pick Tanukonomy and turn it on.';
 	@override String get disclosureAccept => 'Continue';
 	@override String get reminderPermissionDenied => 'Notification permission was denied. Turn it on in Android settings to get reminders.';
 	@override String get sourcesTitle => 'Apps';
@@ -3565,7 +3565,7 @@ extension on TranslationsEn {
 			'notificationCapture.accessAction' => 'Allow access',
 			'notificationCapture.accessGranted' => 'Notification permission is on',
 			'notificationCapture.disclosureTitle' => 'Before you grant permission',
-			'notificationCapture.disclosureBody' => 'Tanukonomy will be able to read notifications on your phone.\n\n• Only from apps you pick that match their filter.\n• OTP notifications are never stored.\n• Text that is hard to read may be sent to Gemini (Google).\n• Notification text stays on your phone for at most 7 days.\n\nAfter Continue, Android opens its notification access list. Pick Tanukonomy and turn it on.',
+			'notificationCapture.disclosureBody' => 'Tanukonomy will be able to read notifications on your phone.\n\n• Only from apps you pick that match their filter.\n• OTP notifications are never stored.\n• Text that is hard to read may be sent to Gemini (Google).\n• Notification text stays on your phone for at most 7 days.\n• New notifications may be processed in the background while Tanukonomy is closed, so the Record button on the notification works.\n\nAfter Continue, Android opens its notification access list. Pick Tanukonomy and turn it on.',
 			'notificationCapture.disclosureAccept' => 'Continue',
 			'notificationCapture.reminderPermissionDenied' => 'Notification permission was denied. Turn it on in Android settings to get reminders.',
 			'notificationCapture.sourcesTitle' => 'Apps',

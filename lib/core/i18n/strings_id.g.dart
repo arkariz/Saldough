@@ -2857,8 +2857,8 @@ class Translations$notificationCapture$id {
 	/// id: 'Sebelum memberi izin'
 	String get disclosureTitle => 'Sebelum memberi izin';
 
-	/// id: 'Tanukonomy akan bisa membaca notifikasi di ponselmu. • Hanya dari aplikasi yang kamu pilih dan cocok dengan filternya. • Notifikasi OTP tidak pernah disimpan. • Teks yang sulit dibaca bisa dikirim ke Gemini (Google). • Teks notifikasi disimpan di ponselmu paling lama 7 hari. Sesudah Lanjut, Android membuka daftar akses notifikasi. Pilih Tanukonomy lalu nyalakan.'
-	String get disclosureBody => 'Tanukonomy akan bisa membaca notifikasi di ponselmu.\n\n• Hanya dari aplikasi yang kamu pilih dan cocok dengan filternya.\n• Notifikasi OTP tidak pernah disimpan.\n• Teks yang sulit dibaca bisa dikirim ke Gemini (Google).\n• Teks notifikasi disimpan di ponselmu paling lama 7 hari.\n\nSesudah Lanjut, Android membuka daftar akses notifikasi. Pilih Tanukonomy lalu nyalakan.';
+	/// id: 'Tanukonomy akan bisa membaca notifikasi di ponselmu. • Hanya dari aplikasi yang kamu pilih dan cocok dengan filternya. • Notifikasi OTP tidak pernah disimpan. • Teks yang sulit dibaca bisa dikirim ke Gemini (Google). • Teks notifikasi disimpan di ponselmu paling lama 7 hari. • Notifikasi baru bisa diproses di latar saat Tanukonomy tertutup, supaya tombol Catat di notifikasi bisa dipakai. Sesudah Lanjut, Android membuka daftar akses notifikasi. Pilih Tanukonomy lalu nyalakan.'
+	String get disclosureBody => 'Tanukonomy akan bisa membaca notifikasi di ponselmu.\n\n• Hanya dari aplikasi yang kamu pilih dan cocok dengan filternya.\n• Notifikasi OTP tidak pernah disimpan.\n• Teks yang sulit dibaca bisa dikirim ke Gemini (Google).\n• Teks notifikasi disimpan di ponselmu paling lama 7 hari.\n• Notifikasi baru bisa diproses di latar saat Tanukonomy tertutup, supaya tombol Catat di notifikasi bisa dipakai.\n\nSesudah Lanjut, Android membuka daftar akses notifikasi. Pilih Tanukonomy lalu nyalakan.';
 
 	/// id: 'Lanjut'
 	String get disclosureAccept => 'Lanjut';
@@ -6836,7 +6836,7 @@ extension on Translations {
 			'notificationCapture.accessAction' => 'Beri izin',
 			'notificationCapture.accessGranted' => 'Izin notifikasi aktif',
 			'notificationCapture.disclosureTitle' => 'Sebelum memberi izin',
-			'notificationCapture.disclosureBody' => 'Tanukonomy akan bisa membaca notifikasi di ponselmu.\n\n• Hanya dari aplikasi yang kamu pilih dan cocok dengan filternya.\n• Notifikasi OTP tidak pernah disimpan.\n• Teks yang sulit dibaca bisa dikirim ke Gemini (Google).\n• Teks notifikasi disimpan di ponselmu paling lama 7 hari.\n\nSesudah Lanjut, Android membuka daftar akses notifikasi. Pilih Tanukonomy lalu nyalakan.',
+			'notificationCapture.disclosureBody' => 'Tanukonomy akan bisa membaca notifikasi di ponselmu.\n\n• Hanya dari aplikasi yang kamu pilih dan cocok dengan filternya.\n• Notifikasi OTP tidak pernah disimpan.\n• Teks yang sulit dibaca bisa dikirim ke Gemini (Google).\n• Teks notifikasi disimpan di ponselmu paling lama 7 hari.\n• Notifikasi baru bisa diproses di latar saat Tanukonomy tertutup, supaya tombol Catat di notifikasi bisa dipakai.\n\nSesudah Lanjut, Android membuka daftar akses notifikasi. Pilih Tanukonomy lalu nyalakan.',
 			'notificationCapture.disclosureAccept' => 'Lanjut',
 			'notificationCapture.reminderPermissionDenied' => 'Izin notifikasi ditolak. Nyalakan di setelan Android untuk menerima pengingat.',
 			'notificationCapture.sourcesTitle' => 'Aplikasi',

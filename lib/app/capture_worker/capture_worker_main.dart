@@ -1,5 +1,4 @@
-// Mesin Dart tanpa layar untuk Catat dari notifikasi (ADR-044 §3.5, spike
-// T-26.9, T-26.10). Dinyalakan layanan pendengar saat mesin aplikasi tidak
+// Mesin Dart tanpa layar untuk Catat dari notifikasi (ADR-044 §3.5). Dinyalakan layanan pendengar saat mesin aplikasi tidak
 // hidup. Hanya MEMBACA Hive; hasilnya (notifikasi bertombol dan muatan jurnal)
 // dikirim ke native, dan aplikasi yang menerapkannya ke Hive saat dibuka
 // (`ApplyCaptureJournal`).

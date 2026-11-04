@@ -3,7 +3,7 @@ import 'dart:developer' as developer;
 
 import 'package:flutter/widgets.dart';
 import 'package:saldough/app/bootstrap.dart';
-// SPIKE T-26.9: perpustakaan titik masuk mesin tanpa layar harus terjangkau dari
+// Perpustakaan titik masuk mesin tanpa layar (ADR-044 §3.5) harus terjangkau dari
 // main agar ikut dalam kernel/AOT; native menjalankannya lewat DartEntrypoint.
 // ignore: unused_import
 import 'package:saldough/app/capture_worker/capture_worker_main.dart';

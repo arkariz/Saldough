@@ -205,6 +205,32 @@ diuji tanpa akun.
   dimatikan atau aplikasinya dihapus dari daftar. Tidak mengubah baris Keamanan
   Data (tetap diproses di perangkat), tetapi pengungkapan jelas dan kebijakan
   privasi di situs (repo `tanukonomy-web`) perlu menyebutnya sebelum rilis.
+  **Catat dari notifikasi v2** (ADR-044, Fase 26, T-26.13; ditinjau 4 Nov 2026):
+  tidak ada jenis data baru dan tidak ada data baru yang keluar dari
+  perangkat. Yang baru, semuanya di perangkat:
+  (a) **mesin Dart tanpa layar**: layanan pendengar menyalakan mesin Flutter di
+  latar (tanpa layar, hanya membaca Hive) untuk menafsirkan notifikasi yang
+  sudah masuk antrean dan memasang notifikasi bertombol; tanpa Gemini;
+  (b) **jurnal keputusan** (`capture_journal`, SharedPreferences): draf yang
+  sudah diselesaikan (nominal, dompet, catatan) dan keputusan Catat/Abaikan
+  sampai aplikasi dibuka dan menerapkannya; paling lama 7 hari, dibuang saat
+  diterapkan;
+  (c) **salinan status Plus** (`capture_plan`) agar mesin tanpa layar tahu
+  hak pengguna, kedaluwarsa 14 hari (tak diketahui = Gratis);
+  (d) **tombol di notifikasi** (Catat, Abaikan, Batalkan, Catat semua) yang
+  keputusannya baru ditulis ke buku besar saat aplikasi dibuka.
+  Log nominal mesin tanpa layar hanya di build yang bisa di-debug. Manifest:
+  tidak ada izin baru (`POST_NOTIFICATIONS` dan layanan pendengar sudah ada
+  sejak ADR-032); satu penerima baru `CaptureActionReceiver`, **tidak
+  diekspor**. Tanpa foreground service, tanpa exact alarm, tanpa
+  `QUERY_ALL_PACKAGES`. Teks pengungkapan di aplikasi (`notificationCapture.
+  disclosureBody`) kini menyebut pemrosesan di latar. **Tersisa di luar repo
+  ini (pemilik):** kebijakan privasi di situs (repo `tanukonomy-web`) perlu
+  menyebut pemrosesan di latar dan jurnal sementara; formulir Data Safety
+  tidak berubah dari baris "Info finansial lainnya" di atas; formulir
+  deklarasi layanan pendengar notifikasi di Play Console (bila diminta saat
+  unggah) memakai alasan yang sama dengan ADR-032: fitur inti pencatatan,
+  hanya dari aplikasi yang dipilih pengguna.
 - **Pengingat rutin** (ADR-035 §3.8, T-15.8) — notifikasi lokal lewat
   `flutter_local_notifications`; jadwal disusun di perangkat dari rutin
   pengguna dan tidak ada data yang keluar dari perangkat, jadi **tidak**

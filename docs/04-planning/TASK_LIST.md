@@ -6518,9 +6518,16 @@ S sehari, M beberapa hari, L lebih dari seminggu.
       `match` dari jurnal dan menjalankan penyesuaian (alur terbukti); efek
       penjadwalan sungguhan belum diuji di perangkat karena butuh rutin dengan
       pengingat menyala.
-- [ ] **T-26.13** (M) Pembaruan pengungkapan, `PLAY_DATA_SAFETY.md`, dan tinjauan
-      deklarasi layanan di `AndroidManifest` sebelum produksi; build internal
-      test.
+- [x] **T-26.13** (M) Pengungkapan dan tinjauan manifest (4 Nov 2026).
+      `disclosureBody` (id, en) menyebut pemrosesan di latar; `PLAY_DATA_SAFETY.md`
+      mencatat mesin tanpa layar, jurnal, salinan status Plus, dan tombol
+      notifikasi (tanpa jenis data baru, tanpa data keluar perangkat); manifest
+      ditinjau: tanpa izin baru, `CaptureActionReceiver` tidak diekspor, layanan
+      pendengar tetap dilindungi `BIND_NOTIFICATION_LISTENER_SERVICE`; log Dart
+      (nominal, dompet) hanya di build debug; sisa label spike dibersihkan.
+      **Di luar repo (pemilik):** kebijakan privasi situs, unggah build ke
+      jalur internal test, dan verifikasi di perangkat nyata
+      (`VERIFICATION_PLAN_FASE_26.md`) sebelum ADR-044 Accepted.
 
 Enhancement (E1–E5) ada di Antrean B-85–B-89, dibuka sesudah gerbang tahap 1.
 

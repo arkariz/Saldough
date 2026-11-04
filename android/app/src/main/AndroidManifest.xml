@@ -58,7 +58,9 @@
                 <action android:name="android.service.notification.NotificationListenerService" />
             </intent-filter>
         </service>
-        <!-- SPIKE T-26.9: tombol notifikasi bertindak Catat dan Abaikan. -->
+        <!-- Catat dari notifikasi v2 (ADR-044 §3.5): tombol Catat, Abaikan, Batalkan, dan
+             Catat semua pada notifikasi bertindak. Tidak diekspor: hanya PendingIntent
+             milik aplikasi ini yang bisa memanggilnya. -->
         <receiver android:exported="false" android:name=".notificationcapture.CaptureActionReceiver" />
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->

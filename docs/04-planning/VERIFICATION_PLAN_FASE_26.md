@@ -183,7 +183,7 @@ Hasil tambahan T-26.11 (4 Nov 2026, emulator yang sama, build debug, tanpa berka
 
 Belum diuji di perangkat: pengingat generik saat mesin tanpa layar gagal; **pengingat rutin sungguhan batal setelah Catat lewat tombol** (perlu rutin dengan pengingat menyala dan notifikasi yang cocok dengannya; periksa juga bahwa `cancel` plugin berfungsi dari mesin tanpa layar).
 
-Belum dicoba (wajib sebelum ADR-044 Accepted): sedikitnya dua perangkat nyata dari vendor lain (satu yang agresif mematikan layanan di latar), Android versi lebih rendah, layar kunci dengan kunci sungguhan (`setAuthenticationRequired`), proses dimatikan sungguhan di tengah penerapan jurnal (hanya diuji lewat entri ulang), mode hemat daya, dan build rilis dengan R8.
+Belum dicoba (wajib sebelum ADR-044 Accepted): sedikitnya dua perangkat nyata dari vendor lain (satu yang agresif mematikan layanan di latar), Android versi lebih rendah, layar kunci dengan kunci sungguhan (`setAuthenticationRequired`), proses dimatikan sungguhan di tengah penerapan jurnal (hanya diuji lewat entri ulang), mode hemat daya, dan build rilis dengan R8 (4 Nov 2026: `flutter build apk --release` berhasil dikompilasi dengan R8, tetapi belum dijalankan di perangkat; memasangnya di emulator butuh mencopot build debug).
 
 ## Ukuran keberhasilan
 

@@ -13,8 +13,8 @@ import io.flutter.plugin.common.MethodChannel
 import java.io.File
 
 /**
- * Mesin Dart tanpa layar untuk Catat dari notifikasi (ADR-044 §3.5, spike
- * T-26.9, T-26.10). Dinyalakan layanan pendengar saat mesin aplikasi tidak
+ * Mesin Dart tanpa layar untuk Catat dari notifikasi (ADR-044 §3.5).
+ * Dinyalakan layanan pendengar saat mesin aplikasi tidak
  * hidup: Dart membaca antrean ([pending]), membaca Hive (hanya baca), memakai
  * penentu yang sama dengan aplikasi, lalu memasang notifikasi dengan tombol
  * Catat/Abaikan. Keputusan ditulis ke [CaptureJournal]; aplikasi yang
@@ -24,8 +24,7 @@ import java.io.File
  * ditangani lewat `done`; bila ada tangkapan baru yang belum ditangani
  * (datang saat mesin berjalan), mesin dinyalakan lagi.
  *
- * Hanya jalan di build yang bisa di-debug dan berkas `files/capture_worker_spike`
- * ada, sampai pengujian perangkat nyata selesai (ADR-044 revisi 2).
+ * Log Dart (nominal, dompet) hanya ditulis di build yang bisa di-debug.
  */
 object CaptureWorker {
     const val TAG = "CaptureSpike"
@@ -105,7 +104,10 @@ object CaptureWorker {
                         },
                     )
                     "log" -> {
-                        Log.i(TAG, "dart: ${call.arguments} (total +${elapsed()}ms)")
+                        // Log Dart memuat nominal dan dompet: hanya build yang bisa di-debug.
+                        if (app.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0) {
+                            Log.i(TAG, "dart: ${call.arguments} (total +${elapsed()}ms)")
+                        }
                         result.success(null)
                     }
                     "postActionable" -> {

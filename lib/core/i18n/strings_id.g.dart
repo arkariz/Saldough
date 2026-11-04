@@ -2022,8 +2022,8 @@ class Translations$home$id {
 	/// id: 'Catat Transfer'
 	String get actionTransfer => 'Catat Transfer';
 
-	/// id: 'Scan Struk'
-	String get actionScan => 'Scan Struk';
+	/// id: 'Notifikasi'
+	String get actionNotification => 'Notifikasi';
 
 	/// id: 'Laporan'
 	String get actionReport => 'Laporan';
@@ -2057,9 +2057,6 @@ class Translations$home$id {
 
 	/// id: 'Terakhir'
 	String get stepLast => 'Terakhir';
-
-	/// id: 'Segera'
-	String get soon => 'Segera';
 
 	/// id: 'Disimpan di perangkatmu'
 	String get footnote => 'Disimpan di perangkatmu';
@@ -6486,7 +6483,7 @@ extension on Translations {
 			'home.statusCarouselPrevious' => 'Kartu status sebelumnya',
 			'home.statusCarouselNext' => 'Kartu status berikutnya',
 			'home.actionTransfer' => 'Catat Transfer',
-			'home.actionScan' => 'Scan Struk',
+			'home.actionNotification' => 'Notifikasi',
 			'home.actionReport' => 'Laporan',
 			'home.actionMission' => 'Misi Hemat',
 			'home.firstSubtitle' => 'Mulai dari dompet pertamamu, lalu catat transaksinya.',
@@ -6498,7 +6495,6 @@ extension on Translations {
 			'home.stepOptional' => 'Opsional',
 			'home.stepNext' => 'Berikutnya',
 			'home.stepLast' => 'Terakhir',
-			'home.soon' => 'Segera',
 			'home.footnote' => 'Disimpan di perangkatmu',
 			'home.preview.levelNew' => 'LVL 1 · BENIH MAGANG',
 			'home.preview.level' => 'LVL 12 STEWARD',
@@ -6797,9 +6793,9 @@ extension on Translations {
 			'notificationCapture.accessMissingBody' => 'Tanpa izin ini, Tanukonomy tidak bisa melihat notifikasi bank.',
 			'notificationCapture.accessAction' => 'Beri izin',
 			'notificationCapture.accessGranted' => 'Izin notifikasi aktif',
+			'notificationCapture.disclosureTitle' => 'Sebelum memberi izin',
 			_ => null,
 		} ?? switch (path) {
-			'notificationCapture.disclosureTitle' => 'Sebelum memberi izin',
 			'notificationCapture.disclosureBody' => 'Tanukonomy akan bisa membaca notifikasi di ponselmu.\n\n• Hanya dari aplikasi yang kamu pilih dan cocok dengan filternya.\n• Notifikasi OTP tidak pernah disimpan.\n• Teks yang sulit dibaca bisa dikirim ke Gemini (Google).\n• Teks notifikasi disimpan di ponselmu paling lama 7 hari.\n• Notifikasi baru bisa diproses di latar saat Tanukonomy tertutup, supaya tombol Catat di notifikasi bisa dipakai.\n\nSesudah Lanjut, Android membuka daftar akses notifikasi. Pilih Tanukonomy lalu nyalakan.',
 			'notificationCapture.disclosureAccept' => 'Lanjut',
 			'notificationCapture.reminderPermissionDenied' => 'Izin notifikasi ditolak. Nyalakan di setelan Android untuk menerima pengingat.',
@@ -7311,9 +7307,9 @@ extension on Translations {
 			'premium.account.subActiveOpen' => 'Aktif',
 			'premium.account.subGrace' => ({required Object date}) => 'Pembayaran belum berhasil. Plus tetap aktif sampai ${date}.',
 			'premium.account.subOnHold' => 'Langganan ditahan karena pembayaran belum berhasil. Perbaiki di Play Store.',
+			'premium.account.subTester' => ({required Object date}) => 'Dari program penguji sampai ${date}',
 			_ => null,
 		} ?? switch (path) {
-			'premium.account.subTester' => ({required Object date}) => 'Dari program penguji sampai ${date}',
 			'premium.account.subTesterOpen' => 'Dari program penguji',
 			'premium.account.badgeTrial' => 'Uji coba',
 			'premium.account.badgeCheck' => 'Cek',

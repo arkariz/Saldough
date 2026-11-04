@@ -44,8 +44,12 @@ class HomePage extends StatefulWidget {
     this.featureNudge,
     this.forecast,
     this.statusBoard,
+    this.notificationAction,
     super.key,
   });
+
+  /// Tile aksi cepat Catat dari notifikasi, disisipkan akar komposisi (`null` = tidak ada).
+  final Widget? notificationAction;
 
   /// Membuka alur CATAT.
   final Future<void> Function() onRecord;
@@ -234,6 +238,7 @@ class _HomePageState extends State<HomePage> {
               onOpenReport: () => unawaited(
                 context.pushRoute(AnalysisRouteKeys.open, const AnalysisInput(source: AnalysisSource.home)),
               ),
+              notificationAction: widget.notificationAction,
               onClaimed: () => setState(() => _claims++),
             ),
           ],

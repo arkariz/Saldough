@@ -807,7 +807,7 @@ class _Translations$home$en extends Translations$home$id {
 	@override String get statusCarouselPrevious => 'Previous status card';
 	@override String get statusCarouselNext => 'Next status card';
 	@override String get actionTransfer => 'Record Transfer';
-	@override String get actionScan => 'Scan Receipt';
+	@override String get actionNotification => 'Notifications';
 	@override String get actionReport => 'Report';
 	@override String get actionMission => 'Saving Missions';
 	@override String get firstSubtitle => 'Start with your first wallet, then record a transaction.';
@@ -819,7 +819,6 @@ class _Translations$home$en extends Translations$home$id {
 	@override String get stepOptional => 'Optional';
 	@override String get stepNext => 'Next';
 	@override String get stepLast => 'Last';
-	@override String get soon => 'Soon';
 	@override String get footnote => 'Stored on your device';
 	@override late final _Translations$home$preview$en preview = _Translations$home$preview$en._(_root);
 }
@@ -3233,7 +3232,7 @@ extension on TranslationsEn {
 			'home.statusCarouselPrevious' => 'Previous status card',
 			'home.statusCarouselNext' => 'Next status card',
 			'home.actionTransfer' => 'Record Transfer',
-			'home.actionScan' => 'Scan Receipt',
+			'home.actionNotification' => 'Notifications',
 			'home.actionReport' => 'Report',
 			'home.actionMission' => 'Saving Missions',
 			'home.firstSubtitle' => 'Start with your first wallet, then record a transaction.',
@@ -3245,7 +3244,6 @@ extension on TranslationsEn {
 			'home.stepOptional' => 'Optional',
 			'home.stepNext' => 'Next',
 			'home.stepLast' => 'Last',
-			'home.soon' => 'Soon',
 			'home.footnote' => 'Stored on your device',
 			'home.preview.levelNew' => 'LVL 1 · SEEDLING',
 			'home.preview.level' => 'LVL 12 STEWARD',
@@ -3544,9 +3542,9 @@ extension on TranslationsEn {
 			'notificationCapture.accessMissingBody' => 'Without it, Tanukonomy can\'t see your bank notifications.',
 			'notificationCapture.accessAction' => 'Allow access',
 			'notificationCapture.accessGranted' => 'Notification permission is on',
+			'notificationCapture.disclosureTitle' => 'Before you grant permission',
 			_ => null,
 		} ?? switch (path) {
-			'notificationCapture.disclosureTitle' => 'Before you grant permission',
 			'notificationCapture.disclosureBody' => 'Tanukonomy will be able to read notifications on your phone.\n\n• Only from apps you pick that match their filter.\n• OTP notifications are never stored.\n• Text that is hard to read may be sent to Gemini (Google).\n• Notification text stays on your phone for at most 7 days.\n• New notifications may be processed in the background while Tanukonomy is closed, so the Record button on the notification works.\n\nAfter Continue, Android opens its notification access list. Pick Tanukonomy and turn it on.',
 			'notificationCapture.disclosureAccept' => 'Continue',
 			'notificationCapture.reminderPermissionDenied' => 'Notification permission was denied. Turn it on in Android settings to get reminders.',
@@ -4058,9 +4056,9 @@ extension on TranslationsEn {
 			'premium.account.subActiveOpen' => 'Active',
 			'premium.account.subGrace' => ({required Object date}) => 'Payment did not go through. Plus stays on until ${date}.',
 			'premium.account.subOnHold' => 'Subscription on hold because payment did not go through. Fix it in the Play Store.',
+			'premium.account.subTester' => ({required Object date}) => 'From the tester program until ${date}',
 			_ => null,
 		} ?? switch (path) {
-			'premium.account.subTester' => ({required Object date}) => 'From the tester program until ${date}',
 			'premium.account.subTesterOpen' => 'From the tester program',
 			'premium.account.badgeTrial' => 'Trial',
 			'premium.account.badgeCheck' => 'Check',

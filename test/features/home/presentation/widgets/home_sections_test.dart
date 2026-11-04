@@ -27,20 +27,40 @@ void main() {
   });
 
   group('HomeQuickActions', () {
-    testWidgets('Scan Struk nonaktif berlabel Segera; tile lain bisa diketuk', (tester) async {
+    testWidgets('tanpa tile notifikasi (platform tanpa dukungan): tidak ada slot kosong atau Scan Struk', (
+      tester,
+    ) async {
       var transfer = 0;
       var report = 0;
       await tester.pumpWidget(
         _host(HomeQuickActions(onRecordTransfer: () => transfer++, onOpenReport: () => report++)),
       );
-      expect(find.text(t.home.actionScan), findsOneWidget);
-      expect(find.text(t.home.soon), findsOneWidget);
-      await tester.tap(find.byKey(const ValueKey('home-action-scan')), warnIfMissed: false);
-      expect(transfer + report, 0);
+      expect(find.byKey(const ValueKey('home-action-scan')), findsNothing);
+      expect(find.byKey(const ValueKey('home-action-notification')), findsNothing);
       await tester.tap(find.text(t.home.actionTransfer));
       await tester.tap(find.text(t.home.actionReport));
       expect((transfer, report), (1, 1));
       expect(find.text(t.home.actionMission), findsOneWidget);
+    });
+
+    testWidgets('tile notifikasi disisipkan di baris dan bisa diketuk', (tester) async {
+      var opened = 0;
+      await tester.pumpWidget(
+        _host(
+          HomeQuickActions(
+            onRecordTransfer: () {},
+            onOpenReport: () {},
+            notificationAction: DsQuickActionTile(
+              key: const ValueKey('home-action-notification'),
+              tile: DsIconTile.asset(asset: ClayIcons.bell),
+              label: t.home.actionNotification,
+              onPressed: () => opened++,
+            ),
+          ),
+        ),
+      );
+      await tester.tap(find.text(t.home.actionNotification));
+      expect(opened, 1);
     });
 
     testWidgets('tidak ada kata kirim: aplikasi mencatat, bukan melakukan', (tester) async {

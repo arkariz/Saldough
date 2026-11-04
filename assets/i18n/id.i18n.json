@@ -755,7 +755,7 @@
     "statusCarouselPrevious": "Kartu status sebelumnya",
     "statusCarouselNext": "Kartu status berikutnya",
     "actionTransfer": "Catat Transfer",
-    "actionScan": "Scan Struk",
+    "actionNotification": "Notifikasi",
     "actionReport": "Laporan",
     "actionMission": "Misi Hemat",
     "firstSubtitle": "Mulai dari dompet pertamamu, lalu catat transaksinya.",
@@ -768,7 +768,6 @@
     "stepNext": "Berikutnya",
     "stepLast": "Terakhir",
     "budgetAction": "Buat anggaran",
-    "soon": "Segera",
     "footnote": "Disimpan di perangkatmu",
     "preview": {
       "levelNew": "LVL 1 · BENIH MAGANG",

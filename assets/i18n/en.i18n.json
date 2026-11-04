@@ -755,7 +755,7 @@
     "statusCarouselPrevious": "Previous status card",
     "statusCarouselNext": "Next status card",
     "actionTransfer": "Record Transfer",
-    "actionScan": "Scan Receipt",
+    "actionNotification": "Notifications",
     "actionReport": "Report",
     "actionMission": "Saving Missions",
     "firstSubtitle": "Start with your first wallet, then record a transaction.",
@@ -768,7 +768,6 @@
     "stepNext": "Next",
     "stepLast": "Last",
     "budgetAction": "Create budget",
-    "soon": "Soon",
     "footnote": "Stored on your device",
     "preview": {
       "levelNew": "LVL 1 · SEEDLING",

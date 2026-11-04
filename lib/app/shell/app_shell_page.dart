@@ -22,9 +22,11 @@ import 'package:saldough/features/home/di/home_scope.dart';
 import 'package:saldough/features/home/presentation/bloc/home_bloc.dart';
 import 'package:saldough/features/home/presentation/bloc/home_state.dart';
 import 'package:saldough/features/home/presentation/pages/home_page.dart';
+import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_gateway.dart';
 import 'package:saldough/features/notification_capture/presentation/host/notification_capture_host.dart';
 import 'package:saldough/features/notification_capture/presentation/widgets/capture_inbox_banner.dart';
 import 'package:saldough/features/notification_capture/presentation/widgets/notification_inbox_card.dart';
+import 'package:saldough/features/notification_capture/presentation/widgets/notification_quick_action.dart';
 import 'package:saldough/features/plan/presentation/funding_loader.dart';
 import 'package:saldough/features/plan/presentation/pages/plan_month_page.dart';
 import 'package:saldough/features/plan/presentation/pages/plan_page.dart';
@@ -167,6 +169,10 @@ class _AppShellPageState extends State<AppShellPage> {
     _onDestinationSelected(context, _planTabIndex);
   }
 
+  /// Catat dari notifikasi hanya ada di platform yang mendukungnya (Android).
+  static bool _captureSupported(GetIt container) =>
+      container.isRegistered<NotificationCaptureGateway>() && container<NotificationCaptureGateway>().isSupported;
+
   @override
   Widget build(BuildContext context) {
     final parentContainer = ScopeProvider.of(context);
@@ -191,6 +197,9 @@ class _AppShellPageState extends State<AppShellPage> {
         // Kotak masuk notifikasi (Android): pintu permanen Catat dari
         // notifikasi, P-6 sesudah kartu pembaruan.
         statusBoard: _statusBoard,
+        notificationAction: _captureSupported(parentContainer)
+            ? NotificationQuickAction(container: parentContainer)
+            : null,
         notice: NotificationInboxCard(container: parentContainer, board: _statusBoard),
         pendingRecurring: RecurringPendingCard(
           board: _statusBoard,

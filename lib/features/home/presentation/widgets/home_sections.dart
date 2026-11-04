@@ -164,6 +164,7 @@ class HomeQuickActions extends StatefulWidget {
   const HomeQuickActions({
     required this.onRecordTransfer,
     required this.onOpenReport,
+    this.notificationAction,
     this.onClaimed,
     super.key,
   });
@@ -173,6 +174,9 @@ class HomeQuickActions extends StatefulWidget {
 
   /// Membuka Analisis periode berjalan.
   final VoidCallback onOpenReport;
+
+  /// Tile Catat dari notifikasi, disisipkan akar komposisi (`null` di platform tanpa dukungan).
+  final Widget? notificationAction;
 
   /// Dipanggil sekali per klaim misi.
   final VoidCallback? onClaimed;
@@ -211,17 +215,8 @@ class _HomeQuickActionsState extends State<HomeQuickActions> {
         label: t.home.actionTransfer,
         onPressed: widget.onRecordTransfer,
       ),
-      // Scan Struk belum ada: tile pudar, tidak bisa diketuk, dan diberi
-      // lencana "Segera" supaya tidak tampak rusak.
-      _Badged(
-        badge: DsBadge(label: t.home.soon, tone: DsBadgeTone.warm),
-        child: DsQuickActionTile(
-          key: const ValueKey('home-action-scan'),
-          tile: DsIconTile.asset(asset: ClayIcons.scan, tone: DsIconTileTone.income),
-          label: t.home.actionScan,
-          onPressed: null,
-        ),
-      ),
+      // Pintu tetap Catat dari notifikasi (disisipkan akar komposisi; hanya Android).
+      ?widget.notificationAction,
       DsQuickActionTile(
         key: const ValueKey('home-action-report'),
         tile: DsIconTile.asset(asset: ClayIcons.report, tone: DsIconTileTone.info),

@@ -227,10 +227,10 @@ tingkat otomatis dan pola baru ke Plus:
 | "Cek" di Beranda membuka CATAT langsung bila hanya satu tangkapan menunggu (2 ketuk) | Catat otomatis per bentuk |
 
 Anti-duplikat tidak boleh dikunci: tanpanya pengguna Gratis mencatat ganda.
-Satu pengecualian atas "satu ketuk = Plus" (keputusan implementasi T-26.7, 4 Nov
-2026): kartu cocok rencana dari **rutin bernominal tetap yang persis** tetap
-satu ketuk di Gratis, karena aksi yang sama sudah gratis di segmen Rutin
-(ADR-041 §3.8); kartu dikenali dan rutin kira-kira tetap Plus.
+Satu ketuk di kartu kotak masuk **seluruhnya Plus**, termasuk kartu cocok
+rencana dari rutin bernominal tetap (pemilik 4 Nov 2026, supaya Plus bernilai
+lebih). Satu ketuk di segmen Rutin (ADR-041 §3.8) tidak berubah: itu layar lain
+dan gerbangnya sendiri.
 Jalan terpendek Gratis tetap membuka aplikasi (tombol Catat di notifikasi Plus).
 Satu ketuk untuk rutin bernominal tetap di segmen Rutin sudah ada; garis di
 kartu kotak masuk mengikuti segmen itu supaya tidak ada dua perilaku untuk

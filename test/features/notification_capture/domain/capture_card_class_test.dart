@@ -91,25 +91,16 @@ void main() {
   });
 
   group('oneTapAllowed (garis Gratis/Plus, ADR-044 §3.8)', () {
-    test('perlu diisi: tidak pernah', () {
-      expect(
-        oneTapAllowed(cardClass: CaptureCardClass.needsInput, match: null, isPlus: true),
-        isFalse,
-      );
+    test('perlu diisi: tidak pernah, juga untuk Plus', () {
+      expect(oneTapAllowed(cardClass: CaptureCardClass.needsInput, isPlus: true), isFalse);
+      expect(oneTapAllowed(cardClass: CaptureCardClass.needsInput, isPlus: false), isFalse);
     });
 
-    test('rutin tetap yang persis: Gratis juga (aksi yang sama gratis di segmen Rutin, ADR-041 §3.8)', () {
-      expect(oneTapAllowed(cardClass: CaptureCardClass.planned, match: match(), isPlus: false), isTrue);
-    });
-
-    test('rutin kira-kira: Plus saja', () {
-      expect(oneTapAllowed(cardClass: CaptureCardClass.planned, match: match(exact: false), isPlus: false), isFalse);
-      expect(oneTapAllowed(cardClass: CaptureCardClass.planned, match: match(exact: false), isPlus: true), isTrue);
-    });
-
-    test('dikenali: Plus saja', () {
-      expect(oneTapAllowed(cardClass: CaptureCardClass.recognized, match: null, isPlus: false), isFalse);
-      expect(oneTapAllowed(cardClass: CaptureCardClass.recognized, match: null, isPlus: true), isTrue);
+    test('cocok rencana dan dikenali: Plus saja, termasuk rutin tetap yang persis', () {
+      for (final cardClass in [CaptureCardClass.planned, CaptureCardClass.recognized]) {
+        expect(oneTapAllowed(cardClass: cardClass, isPlus: true), isTrue);
+        expect(oneTapAllowed(cardClass: cardClass, isPlus: false), isFalse);
+      }
     });
   });
 }

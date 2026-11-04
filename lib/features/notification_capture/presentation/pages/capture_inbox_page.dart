@@ -151,12 +151,11 @@ class _InboxBodyState extends State<_InboxBody> with WidgetsBindingObserver {
             final inbox = context.read<CaptureInboxBloc>();
             final tab = _tabFor(state);
             // Kartu yang boleh dicatat satu ketuk (ADR-044 §3.6): dikenali atau
-            // cocok rencana, bukan duplikat; Gratis hanya rutin tetap yang persis.
+            // cocok rencana, bukan duplikat; hanya Plus.
             final eligible = [
               for (final e in state.pending)
                 if (oneTapAllowed(
                   cardClass: cardClassOf(e, match: state.matches[e.id], existing: state.duplicates[e.id]),
-                  match: state.matches[e.id],
                   isPlus: ActivePlan.isPlus,
                 ))
                   e,

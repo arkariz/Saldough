@@ -136,6 +136,10 @@ Gratis: pengenalan rutin dan pos, anti-duplikat, pos dari rutin, CATAT terisi,
 hanya satu tangkapan menunggu. Plus: satu ketuk di kartu, tombol Catat di
 notifikasi, Catat semua, dan otomatis per bentuk. Anti-duplikat tidak boleh
 dikunci. Selaras ADR-041 §3.8 (tingkat otomatis dan pola baru sudah Plus).
+Satu ketuk di kartu kotak masuk seluruhnya Plus, termasuk kartu cocok rencana
+dari rutin bernominal tetap (pemilik 4 Nov 2026, supaya Plus bernilai lebih);
+satu ketuk di segmen Rutin (ADR-041 §3.8) tidak berubah, itu layar lain dengan
+gerbangnya sendiri.
 
 ### 3.9 Tanpa saklar build; kendali rilis lewat jalur
 

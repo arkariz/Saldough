@@ -6339,11 +6339,11 @@ S sehari, M beberapa hari, L lebih dari seminggu.
         `undoConfirm`; snackbar "Tercatat Rp… · app" dengan Batalkan. Tombol
         Catat langsung mencatat, **Ubah dulu** membuka CATAT. **Catat semua yang
         cocok (n)** untuk Plus bila ada dua kartu atau lebih yang boleh satu ketuk.
-      - **Gerbang** `oneTapAllowed`: ⚠ keputusan implementasi yang menyimpang
-        sedikit dari garis "satu ketuk = Plus": kartu cocok rencana dari rutin
-        **bernominal tetap yang persis tetap Gratis**, karena aksi yang sama sudah
-        satu ketuk tanpa cabang hak di segmen Rutin (ADR-041 §3.8). Kartu dikenali
-        dan rutin kira-kira: Plus. Satu fungsi, mudah diubah bila pemilik memilih lain.
+      - **Gerbang** `oneTapAllowed`: kartu cocok rencana dan dikenali, **hanya
+        Plus** (pemilik 4 Nov 2026, supaya Plus bernilai lebih; sempat dibuat
+        rutin tetap yang persis Gratis mengikuti segmen Rutin, ADR-041 §3.8, lalu
+        diputuskan semuanya Plus). Satu ketuk di segmen Rutin tidak berubah: itu
+        layar lain dengan gerbangnya sendiri. Gratis tetap Catat → CATAT terisi.
       - **"Cek"** dari Beranda dan Riwayat: bila hanya satu tangkapan, langsung
         ke CATAT terisi (`openCaptureInbox`), selain itu kotak masuk.
       - Judul slide Beranda: "Catat dari notifikasi" bila tak ada yang menunggu
@@ -6352,7 +6352,7 @@ S sehari, M beberapa hari, L lebih dari seminggu.
         Lencana "Catat otomatis mati" tidak ditempel di kartu.
       - Tidak ada tombol Plus bertanda di kartu Gratis (tidak ada pemicu paywall
         yang cocok; tawaran Plus ada di E3).
-      Verifikasi: 192 uji notifikasi lulus (kelas kartu, matriks gerbang,
+      Verifikasi: 190 uji notifikasi lulus (kelas kartu, matriks gerbang,
       confirm/undo dengan rutin dan pos, satu ketuk, Catat semua, Gratis, Cek
       satu tangkapan); galeri debug di 360dp teks 1× dan 2× tanpa overflow.
 - [ ] **T-26.8** (S) `VERIFICATION_PLAN_FASE_26.md` dan ukuran keberhasilan

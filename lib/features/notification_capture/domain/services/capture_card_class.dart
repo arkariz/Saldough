@@ -39,15 +39,10 @@ CaptureCardClass cardClassOf(CaptureInboxEntry entry, {OccurrenceMatch? match, T
   return CaptureCardClass.needsInput;
 }
 
-/// Boleh dicatat satu ketuk dari kartu (ADR-044 §3.6, §3.8).
-///
-/// Kemunculan rutin bernominal tetap yang cocok persis tetap **Gratis**:
-/// aksi yang sama sudah satu ketuk di segmen Rutin tanpa cabang hak (ADR-041
-/// §3.8), jadi kartu ini tidak boleh punya gerbang berbeda. Selebihnya
-/// (rutin kira-kira, kartu dikenali) Plus.
-bool oneTapAllowed({required CaptureCardClass cardClass, required OccurrenceMatch? match, required bool isPlus}) =>
-    switch (cardClass) {
-      CaptureCardClass.needsInput => false,
-      CaptureCardClass.planned => isPlus || (match?.exact ?? false),
-      CaptureCardClass.recognized => isPlus,
-    };
+/// Boleh dicatat satu ketuk dari kartu (ADR-044 §3.6, §3.8): kartu cocok
+/// rencana atau dikenali, **hanya Plus** (keputusan pemilik 4 Nov 2026,
+/// supaya Plus punya nilai lebih). Gratis tetap lewat CATAT terisi. Satu
+/// ketuk untuk rutin bernominal tetap di segmen Rutin tidak terpengaruh: itu
+/// layar lain dengan gerbangnya sendiri (ADR-041 §3.8).
+bool oneTapAllowed({required CaptureCardClass cardClass, required bool isPlus}) =>
+    isPlus && cardClass != CaptureCardClass.needsInput;

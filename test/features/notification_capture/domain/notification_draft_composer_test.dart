@@ -142,6 +142,30 @@ void main() {
       expect(result.autoEligible, isFalse);
     });
 
+    test('pola bawaan berlaku untuk aplikasi mana pun, bukan daftar bank tertanam (ADR-044 §3.4)', () async {
+      const asing = NotificationSource(
+        packageName: 'com.contoh.aplikasi.baru',
+        appLabel: 'Aplikasi Baru',
+        keywords: ['dana'],
+        walletId: 'bri',
+      );
+      final result = await compose(
+        'Dana masuk Rp75.000 dari ANI, pembayaran tagihan',
+        source: asing,
+        patterns: builtInNotificationPatterns,
+      );
+      expect(result.pattern?.builtIn, isTrue);
+      expect(result.pattern?.packageName, anyPackage);
+      expect(result.draft.kind, DraftKind.income);
+      expect(result.draft.amountSen, 7500000);
+      expect(result.autoEligible, isFalse);
+    });
+
+    test('pola bawaan: id unik dan semuanya untuk aplikasi mana pun', () {
+      expect(builtInNotificationPatterns.map((p) => p.id).toSet(), hasLength(builtInNotificationPatterns.length));
+      expect(builtInNotificationPatterns.every((p) => p.packageName == anyPackage && !p.verified), isTrue);
+    });
+
     test('pola bawaan tidak menangkap saldo bila nominal transaksi tidak tertulis', () async {
       final result = await compose(
         'Pembayaran QRIS berhasil. Saldo Rp1.000.000',

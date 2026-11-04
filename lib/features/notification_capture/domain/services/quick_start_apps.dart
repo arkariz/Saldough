@@ -1,14 +1,14 @@
 import 'package:saldough/features/notification_capture/domain/entities/notification_source.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_gateway.dart';
-import 'package:saldough/features/notification_capture/domain/services/built_in_notification_patterns.dart';
 
-/// Aplikasi terpasang yang punya pola bawaan, urut nama, untuk daftar pendek
-/// Mulai cepat (FEATURE_DISCOVERY §5.1). Pola bawaan berlaku per aplikasi
-/// tanpa pola buatan pengguna, jadi aplikasi ini tidak butuh pembuat pola.
-List<InstalledApp> quickStartApps(Iterable<InstalledApp> installed) =>
+/// Aplikasi terpasang untuk daftar Mulai cepat (FEATURE_DISCOVERY §5.1),
+/// urut nama. Tanpa daftar bank tertanam (ADR-044 §3.4): pengguna memilih
+/// sendiri aplikasi yang notifikasinya mau dibaca, dibantu pencarian. Aplikasi
+/// ini sendiri disisihkan.
+List<InstalledApp> quickStartApps(Iterable<InstalledApp> installed, {String? ownPackage}) =>
     [
       for (final app in installed)
-        if (builtInNotificationApps.containsKey(app.packageName)) app,
+        if (app.packageName != ownPackage) app,
     ]..sort((a, b) {
       final byLabel = a.label.toLowerCase().compareTo(b.label.toLowerCase());
       return byLabel != 0 ? byLabel : a.packageName.compareTo(b.packageName);

@@ -1,33 +1,18 @@
 import 'package:saldough/features/notification_capture/domain/entities/notification_pattern.dart';
 
-/// Aplikasi bank/e-wallet yang punya pola bawaan: nama paket → nama
-/// tampilan. **Nama paket belum dicek di perangkat** -- cocokkan lewat layar
-/// sampel debug (ADR-032 §3.6) sebelum dianggap pasti.
-const builtInNotificationApps = <String, String>{
-  'id.co.bri.brimo': 'BRImo',
-  'com.jago.digitalBanking': 'Jago',
-  'com.bca': 'BCA mobile',
-  'id.bmri.livin': "Livin' by Mandiri",
-  'id.bni.wondr': 'wondr by BNI',
-  'com.gojek.app': 'Gojek',
-  'com.gojek.gopay': 'GoPay',
-  'ovo.id': 'OVO',
-  'id.dana': 'DANA',
-  'com.shopee.id': 'Shopee',
-  'id.co.bankbkemobile.digitalbank': 'SeaBank',
-  'com.bcadigital.blu': 'blu',
-};
+/// Nama paket pengganti "aplikasi mana pun": pola bawaan berlaku untuk setiap
+/// aplikasi yang dipilih pengguna (ADR-044 §3.4), bukan untuk daftar bank
+/// tertanam.
+const anyPackage = '*';
 
 /// Pola bawaan (ADR-032 §3.3), dicoba sesudah pola pengguna.
 ///
-/// **Belum diverifikasi sampel asli** (`verified: false`): templat di bawah
-/// hanya berjangkar pada kata arah yang lazim di notifikasi bank Indonesia,
-/// bukan format persis tiap aplikasi. Karena itu drafnya tidak pernah dicatat
-/// otomatis (ADR-032 §3.4) sampai pola diganti dengan templat dari sampel
-/// asli dan ditandai `verified: true` beserta ujinya.
-final List<NotificationPattern> builtInNotificationPatterns = [
-  for (final packageName in builtInNotificationApps.keys) ..._cuePatterns(packageName),
-];
+/// Berjangkar pada kata arah yang lazim di notifikasi transaksi, bukan pada
+/// format satu aplikasi tertentu, jadi berlaku untuk aplikasi apa pun
+/// (`packageName` = [anyPackage]). Belum diverifikasi (`verified: false`):
+/// drafnya tidak pernah dicatat otomatis (ADR-032 §3.4) sampai pengguna
+/// mengonfirmasi bentuknya di perangkat.
+final List<NotificationPattern> builtInNotificationPatterns = _cuePatterns();
 
 /// Kata arah → jenis. Urutan penting: frasa yang lebih khusus lebih dulu.
 const _cues = <(String, String, NotificationPatternKind)>[
@@ -40,13 +25,18 @@ const _cues = <(String, String, NotificationPatternKind)>[
   ('payment', 'pembayaran', NotificationPatternKind.expense),
   ('purchase', 'pembelian', NotificationPatternKind.expense),
   ('debit', 'debit', NotificationPatternKind.expense),
+  // Padanan bahasa Inggris.
+  ('money-received', 'received', NotificationPatternKind.income),
+  ('paid', 'paid', NotificationPatternKind.expense),
+  ('payment-en', 'payment', NotificationPatternKind.expense),
+  ('purchase-en', 'purchase', NotificationPatternKind.expense),
 ];
 
-List<NotificationPattern> _cuePatterns(String packageName) => [
+List<NotificationPattern> _cuePatterns() => [
   for (final (id, cue, kind) in _cues)
     NotificationPattern(
-      id: 'builtin.$packageName.$id',
-      packageName: packageName,
+      id: 'builtin.any.$id',
+      packageName: anyPackage,
       label: cue,
       template: '{*}$cue{*}{amount}{*}',
       kind: kind,

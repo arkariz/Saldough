@@ -1104,9 +1104,10 @@
     "quickStart": {
       "title": "Pilih aplikasi bank atau dompet digitalmu",
       "body": "Notifikasi dari aplikasi yang kamu pilih dibaca di perangkat dan jadi draf catatan. Kamu tinjau dulu.",
-      "other": "Aplikasi lain",
       "turnOn": "Nyalakan",
-      "noBuiltIn": "Tidak ada aplikasi bank atau dompet digital yang dikenal di perangkat ini. Pilih aplikasimu sendiri."
+      "pickHint": "Pilih minimal satu aplikasi.",
+      "pickedCount": "${n} aplikasi dipilih.",
+      "freeLimit": "Paket Gratis: satu aplikasi. Lebih dari itu dengan Plus."
     }
   },
   "notificationCapture": {
@@ -1129,7 +1130,6 @@
     "sourcePaused": "Dijeda",
     "pickAppTitle": "Pilih aplikasi",
     "searchApps": "Cari aplikasi",
-    "builtInPatternsBadge": "Pola bawaan",
     "appsLoadFailed": "Daftar aplikasi gagal dibaca.",
     "appsEmpty": "Tidak ada aplikasi yang cocok.",
     "sourceEnabled": "Dengarkan aplikasi ini",

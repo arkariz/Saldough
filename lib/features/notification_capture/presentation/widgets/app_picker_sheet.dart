@@ -7,7 +7,6 @@ import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_gateway.dart';
-import 'package:saldough/features/notification_capture/domain/services/built_in_notification_patterns.dart';
 
 /// Lembar pemilih aplikasi sumber (ADR-032 §3.2): aplikasi peluncur
 /// terpasang, bisa dicari; aplikasi yang punya pola bawaan diberi lencana
@@ -68,18 +67,13 @@ class _AppPickerState extends State<_AppPicker> {
   }
 
   Widget _list(BuildContext context, List<InstalledApp> apps, TextTheme textTheme, AppColors colors) {
-    final filtered =
-        [
-          for (final app in apps)
-            if (_query.isEmpty ||
-                app.label.toLowerCase().contains(_query) ||
-                app.packageName.toLowerCase().contains(_query))
-              app,
-        ]..sort((a, b) {
-          final aKnown = builtInNotificationApps.containsKey(a.packageName) ? 0 : 1;
-          final bKnown = builtInNotificationApps.containsKey(b.packageName) ? 0 : 1;
-          return aKnown != bKnown ? aKnown - bKnown : a.label.toLowerCase().compareTo(b.label.toLowerCase());
-        });
+    final filtered = [
+      for (final app in apps)
+        if (_query.isEmpty ||
+            app.label.toLowerCase().contains(_query) ||
+            app.packageName.toLowerCase().contains(_query))
+          app,
+    ]..sort((a, b) => a.label.toLowerCase().compareTo(b.label.toLowerCase()));
     if (filtered.isEmpty) return Center(child: Text(t.notificationCapture.appsEmpty));
     return ListView.builder(
       itemCount: filtered.length,
@@ -91,9 +85,7 @@ class _AppPickerState extends State<_AppPicker> {
               ? const AppIconTile(IconKey.walletEwallet)
               : Image.memory(Uint8List.fromList(icon), width: AppSize.tile, height: AppSize.tile),
           title: app.label,
-          subtitle: builtInNotificationApps.containsKey(app.packageName)
-              ? '${t.notificationCapture.builtInPatternsBadge} · ${app.packageName}'
-              : app.packageName,
+          subtitle: app.packageName,
           onTap: () => Navigator.of(context).pop(app),
         );
       },

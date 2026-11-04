@@ -6277,10 +6277,23 @@ S sehari, M beberapa hari, L lebih dari seminggu.
       depan. Uji regresi ditambah; ulangi di perangkat bila muncul lagi.
       Verifikasi: 4 uji widget kotak masuk, 3 uji use case (Tautkan, sudah
       tertaut, satu-ke-satu), 2 uji status/kandidat kemunculan.
-- [ ] **T-26.5** (M) Kata arah generik lintas aplikasi; hapus
+- [x] **T-26.5** (M) Kata arah generik lintas aplikasi; hapus
       `builtInNotificationApps` dan `_cuePatterns` (§3.4); uji sintetis variasi
       format nominal, bahasa id/en, dan kata arah (tanpa nama bank).
-      Verifikasi: aplikasi apa pun yang dipilih terbaca; pola pengguna lama tetap terbaca.
+      Selesai 4 Nov 2026: daftar 12 paket bank dihapus; pola bawaan kini
+      `packageName = anyPackage ('*')` (id `builtin.any.*`, ditambah padanan
+      Inggris: received, paid, payment, purchase) dan tetap `verified: false`;
+      penyusun draf mencoba pola milik paket itu **dan** `anyPackage`. Pemilih
+      aplikasi tidak lagi mengurutkan "yang dikenal" dulu, tanpa lencana "Pola
+      bawaan" (kunci i18n dihapus). ⚠ Id pola bawaan berubah, jadi preferensi
+      "matikan pola bawaan" yang lama tidak terbawa (jarang, dan bawaan hanya
+      cadangan yang selalu ditinjau).
+      Dikerjakan bersama sebagian T-26.6: Mulai cepat menampilkan semua aplikasi
+      terpasang (kecuali aplikasi ini) dengan pencarian, tanpa centang bawaan;
+      tombol Nyalakan yang mati diberi alasan ("Pilih minimal satu aplikasi"),
+      catatan batas Gratis, dan Coba lagi bila daftar gagal dimuat.
+      Verifikasi: uji penyusun draf dengan paket yang tidak dikenal, 160 uji
+      notifikasi lulus.
 
 **Tahap 1a: MVP dalam aplikasi**
 
@@ -6288,6 +6301,10 @@ S sehari, M beberapa hari, L lebih dari seminggu.
       dengan pencarian, dompet per aplikasi, galat penyimpanan terlihat, banner
       izin di kotak masuk saat akses dicabut, petunjuk setelah dialog izin.
       Menutup temuan review UX 1–5 (4 Nov 2026).
+      Sudah (lewat T-26.5): daftar semua aplikasi + pencarian, tanpa centang
+      bawaan, alasan tombol mati, catatan batas Gratis, Coba lagi. Sisa: dompet
+      per aplikasi, galat penyimpanan, banner izin di kotak masuk, petunjuk
+      setelah dialog izin.
 - [ ] **T-26.7** (L) Kartu tiga jenis dan konfirmasi satu ketuk (Plus) dengan
       "Catat semua" (§3.6); "Cek" membuka CATAT langsung bila satu tangkapan
       menunggu (Gratis); judul slide Beranda sesuai tujuan; satu pintu ke

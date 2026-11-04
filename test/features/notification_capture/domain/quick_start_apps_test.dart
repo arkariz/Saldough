@@ -9,12 +9,16 @@ void main() {
   const calculator = InstalledApp(packageName: 'com.android.calculator2', label: 'Kalkulator');
 
   group('quickStartApps', () {
-    test('hanya aplikasi dengan pola bawaan, urut nama', () {
-      expect(quickStartApps([gopay, calculator, bri]), [bri, gopay]);
+    test('semua aplikasi terpasang, urut nama, tanpa daftar bank tertanam', () {
+      expect(quickStartApps([gopay, calculator, bri]), [bri, gopay, calculator]);
     });
 
-    test('tanpa aplikasi bawaan terpasang, daftar kosong', () {
-      expect(quickStartApps([calculator]), isEmpty);
+    test('aplikasi ini sendiri tidak ditawarkan', () {
+      const own = InstalledApp(packageName: 'com.arkarizdev.tanukonomy', label: 'Tanukonomy');
+      expect(quickStartApps([gopay, own], ownPackage: own.packageName), [gopay]);
+    });
+
+    test('tanpa aplikasi terpasang, daftar kosong', () {
       expect(quickStartApps(const []), isEmpty);
     });
   });

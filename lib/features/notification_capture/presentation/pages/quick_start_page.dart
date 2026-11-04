@@ -6,15 +6,18 @@ import 'package:failures/failures.dart';
 import 'package:flutter/material.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/plan/active_plan.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_gateway.dart';
 import 'package:saldough/features/notification_capture/domain/services/quick_start_apps.dart';
 import 'package:saldough/features/notification_capture/presentation/bloc/notification_settings_bloc.dart';
-import 'package:saldough/features/notification_capture/presentation/pages/notification_source_page.dart';
 import 'package:saldough/features/notification_capture/presentation/widgets/access_disclosure.dart';
 import 'package:saldough/features/notification_capture/presentation/widgets/plus_gate.dart';
 import 'package:state_management/state_management.dart';
+
+/// Paket aplikasi ini; tidak ditawarkan sebagai sumber notifikasi.
+const _ownPackage = 'com.arkarizdev.tanukonomy';
 
 /// Mulai cepat Catat dari notifikasi (FEATURE_DISCOVERY §5.1): daftar pendek
 /// aplikasi terpasang yang punya pola bawaan (tercentang), satu langkah izin
@@ -32,13 +35,11 @@ class QuickStartPage extends StatefulWidget {
 }
 
 class _QuickStartPageState extends State<QuickStartPage> with WidgetsBindingObserver {
-  late final Future<Either<Failure, List<InstalledApp>>> _apps = context
-      .read<NotificationSettingsBloc>()
-      .loadInstalledApps();
+  late Future<Either<Failure, List<InstalledApp>>> _apps = context.read<NotificationSettingsBloc>().loadInstalledApps();
   Set<String>? _selected;
   bool _saved = false;
   bool _busy = false;
-  bool _autoPicked = false;
+  String _query = '';
 
   @override
   void initState() {
@@ -97,16 +98,6 @@ class _QuickStartPageState extends State<QuickStartPage> with WidgetsBindingObse
     AppAnalytics.log(DiscoveryEvents.featureEnabled(feature: 'notification', via: 'quick_start'));
   }
 
-  Future<void> _other() => pickAndOpenNotificationSource(context, bloc: context.read<NotificationSettingsBloc>());
-
-  void _autoOpenOther() {
-    if (_autoPicked) return;
-    _autoPicked = true;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) unawaited(_other());
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -123,11 +114,10 @@ class _QuickStartPageState extends State<QuickStartPage> with WidgetsBindingObse
             builder: (context, snapshot) {
               final result = snapshot.data;
               if (result == null) return const AppSkeletonPage();
-              final candidates = quickStartApps(result.getOrElse((_) => const []));
-              _selected ??= {for (final app in candidates) app.packageName};
-              if (candidates.isEmpty) _autoOpenOther();
+              final candidates = quickStartApps(result.getOrElse((_) => const []), ownPackage: _ownPackage);
+              _selected ??= <String>{};
               return BlocBuilder<NotificationSettingsBloc, NotificationSettingsState>(
-                builder: (context, state) => _content(context, state, candidates),
+                builder: (context, state) => _content(context, state, candidates, failed: result.isLeft()),
               );
             },
           ),
@@ -136,13 +126,26 @@ class _QuickStartPageState extends State<QuickStartPage> with WidgetsBindingObse
     );
   }
 
-  Widget _content(BuildContext context, NotificationSettingsState state, List<InstalledApp> candidates) {
+  Widget _content(
+    BuildContext context,
+    NotificationSettingsState state,
+    List<InstalledApp> candidates, {
+    required bool failed,
+  }) {
     final texts = t.discovery.quickStart;
     final textTheme = Theme.of(context).textTheme;
+    final colors = context.appColors;
     final selected = _selected ?? const <String>{};
     final hasSource = state.settings.sources.any((source) => source.enabled);
     final canTurnOn = selected.isNotEmpty || hasSource;
     final needsAccess = _saved && !state.accessGranted;
+    final shown = [
+      for (final app in candidates)
+        if (_query.isEmpty ||
+            app.label.toLowerCase().contains(_query) ||
+            app.packageName.toLowerCase().contains(_query))
+          app,
+    ];
     return Column(
       children: [
         Expanded(
@@ -161,16 +164,52 @@ class _QuickStartPageState extends State<QuickStartPage> with WidgetsBindingObse
               const SizedBox(height: AppSpacing.space3),
               Text(texts.title, style: textTheme.headlineSmall),
               const SizedBox(height: AppSpacing.space2),
-              Text(candidates.isEmpty ? texts.noBuiltIn : texts.body, style: textTheme.bodyMedium),
+              Text(texts.body, style: textTheme.bodyMedium),
               const SizedBox(height: AppSpacing.space4),
-              if (candidates.isNotEmpty)
+              TextField(
+                key: const ValueKey('quick-start-search'),
+                decoration: InputDecoration(
+                  hintText: t.notificationCapture.searchApps,
+                  prefixIcon: const AppIcon(IconKey.search),
+                ),
+                onChanged: (value) => setState(() => _query = value.trim().toLowerCase()),
+              ),
+              const SizedBox(height: AppSpacing.space2),
+              // Tombol Nyalakan mati selama belum ada pilihan: katakan kenapa.
+              Text(
+                key: const ValueKey('quick-start-hint'),
+                canTurnOn ? texts.pickedCount(n: selected.length) : texts.pickHint,
+                style: textTheme.bodySmall?.copyWith(color: colors.ink2),
+              ),
+              if (!ActivePlan.isPlus) Text(texts.freeLimit, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
+              const SizedBox(height: AppSpacing.space3),
+              if (failed)
+                Column(
+                  children: [
+                    Text(t.notificationCapture.appsLoadFailed, textAlign: TextAlign.center),
+                    AppButton.text(
+                      key: const ValueKey('quick-start-retry'),
+                      label: t.common.retry,
+                      onPressed: () => setState(() {
+                        _apps = context.read<NotificationSettingsBloc>().loadInstalledApps();
+                      }),
+                    ),
+                  ],
+                )
+              else if (shown.isEmpty)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: AppSpacing.space6),
+                  child: Text(t.notificationCapture.appsEmpty, textAlign: TextAlign.center),
+                )
+              else
                 AppListCard(
                   children: [
-                    for (final app in candidates)
+                    for (final app in shown)
                       AppListRow(
                         key: ValueKey('quick-start-${app.packageName}'),
                         leading: _icon(app),
                         title: app.label,
+                        subtitle: app.packageName,
                         trailing: Checkbox(
                           value: selected.contains(app.packageName),
                           onChanged: (value) => _toggle(app.packageName, on: value ?? false),
@@ -179,13 +218,6 @@ class _QuickStartPageState extends State<QuickStartPage> with WidgetsBindingObse
                       ),
                   ],
                 ),
-              const SizedBox(height: AppSpacing.space3),
-              AppButton.secondary(
-                key: const ValueKey('quick-start-other'),
-                label: texts.other,
-                expand: true,
-                onPressed: () => unawaited(_other()),
-              ),
             ],
           ),
         ),

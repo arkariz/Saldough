@@ -1104,9 +1104,10 @@
     "quickStart": {
       "title": "Pick your bank or e-wallet apps",
       "body": "Notifications from the apps you pick are read on this device and become draft transactions. You review them first.",
-      "other": "Other apps",
       "turnOn": "Turn on",
-      "noBuiltIn": "No known bank or e-wallet apps on this device. Pick your own app."
+      "pickHint": "Pick at least one app.",
+      "pickedCount": "${n} apps selected.",
+      "freeLimit": "Free plan: one app. More with Plus."
     }
   },
   "notificationCapture": {
@@ -1129,7 +1130,6 @@
     "sourcePaused": "Paused",
     "pickAppTitle": "Pick an app",
     "searchApps": "Search apps",
-    "builtInPatternsBadge": "Built-in patterns",
     "appsLoadFailed": "Couldn't read the app list.",
     "appsEmpty": "No matching apps.",
     "sourceEnabled": "Read this app's notifications",

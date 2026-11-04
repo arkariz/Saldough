@@ -1,6 +1,7 @@
 import 'package:saldough/features/notification_capture/domain/entities/captured_notification.dart';
 import 'package:saldough/features/notification_capture/domain/entities/notification_pattern.dart';
 import 'package:saldough/features/notification_capture/domain/entities/notification_source.dart';
+import 'package:saldough/features/notification_capture/domain/services/built_in_notification_patterns.dart';
 import 'package:saldough/features/notification_capture/domain/services/notification_template.dart';
 import 'package:saldough/features/notification_capture/domain/services/notification_text.dart';
 import 'package:saldough/shared/capture/capture.dart';
@@ -71,7 +72,9 @@ final class NotificationDraftComposer {
     final masked = language == null
         ? evidence.text
         : NotificationText.maskNonTransactionNumbers(evidence.text, language.notification);
-    final own = patterns.where((p) => p.packageName == notification.packageName).toList();
+    final own = patterns
+        .where((p) => p.packageName == notification.packageName || p.packageName == anyPackage)
+        .toList();
 
     Future<NotificationDraft?> tryPatterns(Iterable<NotificationPattern> candidates) async {
       for (final pattern in candidates) {

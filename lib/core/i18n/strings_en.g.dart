@@ -1173,7 +1173,6 @@ class _Translations$notificationCapture$en extends Translations$notificationCapt
 	@override String get sourcePaused => 'Paused';
 	@override String get pickAppTitle => 'Pick an app';
 	@override String get searchApps => 'Search apps';
-	@override String get builtInPatternsBadge => 'Built-in patterns';
 	@override String get appsLoadFailed => 'Couldn\'t read the app list.';
 	@override String get appsEmpty => 'No matching apps.';
 	@override String get sourceEnabled => 'Read this app\'s notifications';
@@ -1963,9 +1962,10 @@ class _Translations$discovery$quickStart$en extends Translations$discovery$quick
 	// Translations
 	@override String get title => 'Pick your bank or e-wallet apps';
 	@override String get body => 'Notifications from the apps you pick are read on this device and become draft transactions. You review them first.';
-	@override String get other => 'Other apps';
 	@override String get turnOn => 'Turn on';
-	@override String get noBuiltIn => 'No known bank or e-wallet apps on this device. Pick your own app.';
+	@override String get pickHint => 'Pick at least one app.';
+	@override String pickedCount({required Object n}) => '${n} apps selected.';
+	@override String get freeLimit => 'Free plan: one app. More with Plus.';
 }
 
 // Path: notificationCapture.reviewReason
@@ -3537,12 +3537,13 @@ extension on TranslationsEn {
 			'discovery.allowAccess' => 'Allow',
 			'discovery.quickStart.title' => 'Pick your bank or e-wallet apps',
 			'discovery.quickStart.body' => 'Notifications from the apps you pick are read on this device and become draft transactions. You review them first.',
-			'discovery.quickStart.other' => 'Other apps',
 			'discovery.quickStart.turnOn' => 'Turn on',
-			'discovery.quickStart.noBuiltIn' => 'No known bank or e-wallet apps on this device. Pick your own app.',
-			'notificationCapture.accountEntryTitle' => 'Record from notifications',
+			'discovery.quickStart.pickHint' => 'Pick at least one app.',
+			'discovery.quickStart.pickedCount' => ({required Object n}) => '${n} apps selected.',
+			'discovery.quickStart.freeLimit' => 'Free plan: one app. More with Plus.',
 			_ => null,
 		} ?? switch (path) {
+			'notificationCapture.accountEntryTitle' => 'Record from notifications',
 			'notificationCapture.accountEntryBody' => 'Record automatically from bank and e-wallet notifications.',
 			'notificationCapture.settingsTitle' => 'Record from notifications',
 			'notificationCapture.enableLabel' => 'Turn on',
@@ -3561,7 +3562,6 @@ extension on TranslationsEn {
 			'notificationCapture.sourcePaused' => 'Paused',
 			'notificationCapture.pickAppTitle' => 'Pick an app',
 			'notificationCapture.searchApps' => 'Search apps',
-			'notificationCapture.builtInPatternsBadge' => 'Built-in patterns',
 			'notificationCapture.appsLoadFailed' => 'Couldn\'t read the app list.',
 			'notificationCapture.appsEmpty' => 'No matching apps.',
 			'notificationCapture.sourceEnabled' => 'Read this app\'s notifications',

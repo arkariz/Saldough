@@ -430,7 +430,7 @@ class _SourcePageState extends State<_SourcePage> {
     ];
     final builtIns = [
       for (final p in builtInNotificationPatterns)
-        if (p.packageName == _source.packageName) p,
+        if (p.packageName == _source.packageName || p.packageName == anyPackage) p,
     ];
     return [
       const SizedBox(height: AppSpacing.space4),

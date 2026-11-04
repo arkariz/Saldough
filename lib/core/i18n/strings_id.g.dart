@@ -2887,9 +2887,6 @@ class Translations$notificationCapture$id {
 	/// id: 'Cari aplikasi'
 	String get searchApps => 'Cari aplikasi';
 
-	/// id: 'Pola bawaan'
-	String get builtInPatternsBadge => 'Pola bawaan';
-
 	/// id: 'Daftar aplikasi gagal dibaca.'
 	String get appsLoadFailed => 'Daftar aplikasi gagal dibaca.';
 
@@ -4805,14 +4802,17 @@ class Translations$discovery$quickStart$id {
 	/// id: 'Notifikasi dari aplikasi yang kamu pilih dibaca di perangkat dan jadi draf catatan. Kamu tinjau dulu.'
 	String get body => 'Notifikasi dari aplikasi yang kamu pilih dibaca di perangkat dan jadi draf catatan. Kamu tinjau dulu.';
 
-	/// id: 'Aplikasi lain'
-	String get other => 'Aplikasi lain';
-
 	/// id: 'Nyalakan'
 	String get turnOn => 'Nyalakan';
 
-	/// id: 'Tidak ada aplikasi bank atau dompet digital yang dikenal di perangkat ini. Pilih aplikasimu sendiri.'
-	String get noBuiltIn => 'Tidak ada aplikasi bank atau dompet digital yang dikenal di perangkat ini. Pilih aplikasimu sendiri.';
+	/// id: 'Pilih minimal satu aplikasi.'
+	String get pickHint => 'Pilih minimal satu aplikasi.';
+
+	/// id: '${n} aplikasi dipilih.'
+	String pickedCount({required Object n}) => '${n} aplikasi dipilih.';
+
+	/// id: 'Paket Gratis: satu aplikasi. Lebih dari itu dengan Plus.'
+	String get freeLimit => 'Paket Gratis: satu aplikasi. Lebih dari itu dengan Plus.';
 }
 
 // Path: notificationCapture.reviewReason
@@ -6784,12 +6784,13 @@ extension on Translations {
 			'discovery.allowAccess' => 'Izinkan',
 			'discovery.quickStart.title' => 'Pilih aplikasi bank atau dompet digitalmu',
 			'discovery.quickStart.body' => 'Notifikasi dari aplikasi yang kamu pilih dibaca di perangkat dan jadi draf catatan. Kamu tinjau dulu.',
-			'discovery.quickStart.other' => 'Aplikasi lain',
 			'discovery.quickStart.turnOn' => 'Nyalakan',
-			'discovery.quickStart.noBuiltIn' => 'Tidak ada aplikasi bank atau dompet digital yang dikenal di perangkat ini. Pilih aplikasimu sendiri.',
-			'notificationCapture.accountEntryTitle' => 'Catat dari notifikasi',
+			'discovery.quickStart.pickHint' => 'Pilih minimal satu aplikasi.',
+			'discovery.quickStart.pickedCount' => ({required Object n}) => '${n} aplikasi dipilih.',
+			'discovery.quickStart.freeLimit' => 'Paket Gratis: satu aplikasi. Lebih dari itu dengan Plus.',
 			_ => null,
 		} ?? switch (path) {
+			'notificationCapture.accountEntryTitle' => 'Catat dari notifikasi',
 			'notificationCapture.accountEntryBody' => 'Catat otomatis dari notifikasi bank dan e-wallet.',
 			'notificationCapture.settingsTitle' => 'Catat dari notifikasi',
 			'notificationCapture.enableLabel' => 'Aktifkan',
@@ -6808,7 +6809,6 @@ extension on Translations {
 			'notificationCapture.sourcePaused' => 'Dijeda',
 			'notificationCapture.pickAppTitle' => 'Pilih aplikasi',
 			'notificationCapture.searchApps' => 'Cari aplikasi',
-			'notificationCapture.builtInPatternsBadge' => 'Pola bawaan',
 			'notificationCapture.appsLoadFailed' => 'Daftar aplikasi gagal dibaca.',
 			'notificationCapture.appsEmpty' => 'Tidak ada aplikasi yang cocok.',
 			'notificationCapture.sourceEnabled' => 'Dengarkan aplikasi ini',

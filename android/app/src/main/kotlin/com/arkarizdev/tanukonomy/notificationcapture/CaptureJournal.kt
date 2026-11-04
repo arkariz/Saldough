@@ -130,6 +130,20 @@ object CaptureJournal {
         }
     }
 
+    /**
+     * `true` bila salah satu entri [ids] cocok dengan kemunculan rutin (muatan
+     * memuat `match`): keputusannya mengubah pengingat rutin (T-26.12).
+     */
+    @Synchronized
+    fun touchesPlan(context: Context, ids: Collection<String>): Boolean {
+        val array = read(context)
+        for (i in 0 until array.length()) {
+            val item = array.getJSONObject(i)
+            if (item.optString("id") in ids && item.optString("payload").contains("\"match\"")) return true
+        }
+        return false
+    }
+
     /** Membuang entri yang sudah diterapkan. */
     @Synchronized
     fun ack(context: Context, ids: Collection<String>) {

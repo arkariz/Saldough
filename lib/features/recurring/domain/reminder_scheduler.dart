@@ -26,4 +26,12 @@ abstract interface class ReminderScheduler {
   /// Mengganti seluruh pengingat terjadwal dengan [reminders]. Daftar
   /// kosong membatalkan semuanya.
   Future<void> replaceAll(List<PlannedReminder> reminders);
+
+  /// Menjadwalkan [reminders] tanpa menyentuh yang lain; id yang sudah ada
+  /// diganti (id stabil dari isinya). Dipakai mesin tanpa layar (T-26.12).
+  Future<void> schedule(List<PlannedReminder> reminders);
+
+  /// Membatalkan jadwal untuk [ids] saja. Notifikasi yang sedang tampil
+  /// dengan id itu ikut hilang.
+  Future<void> cancel(Iterable<int> ids);
 }

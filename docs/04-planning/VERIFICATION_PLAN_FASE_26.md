@@ -179,7 +179,9 @@ Hasil tambahan T-26.11 (4 Nov 2026, emulator yang sama, build debug, tanpa berka
 | H17 | Gratis + `autoNotify` | Mesin tidak menyala, tidak ada notifikasi |
 | H18 | Gratis + pengingat dinyalakan sendiri | Mesin menyala (`plus=false`), notifikasi informasi tanpa tombol |
 
-Belum diuji di perangkat: pengingat generik saat mesin tanpa layar gagal.
+| H19 | Catat pada notifikasi bertombol yang cocok dengan rutin (entri jurnal bermuatan `match`) | Receiver menyalakan mesin tanpa layar; Dart membaca keputusan dan `match`, lalu menjalankan penyesuaian pengingat (log "pengingat rutin disesuaikan"). Efek pada jadwal sungguhan belum terlihat (tanpa rutin dan pengingat mati di data uji) |
+
+Belum diuji di perangkat: pengingat generik saat mesin tanpa layar gagal; **pengingat rutin sungguhan batal setelah Catat lewat tombol** (perlu rutin dengan pengingat menyala dan notifikasi yang cocok dengannya; periksa juga bahwa `cancel` plugin berfungsi dari mesin tanpa layar).
 
 Belum dicoba (wajib sebelum ADR-044 Accepted): sedikitnya dua perangkat nyata dari vendor lain (satu yang agresif mematikan layanan di latar), Android versi lebih rendah, layar kunci dengan kunci sungguhan (`setAuthenticationRequired`), proses dimatikan sungguhan di tengah penerapan jurnal (hanya diuji lewat entri ulang), mode hemat daya, dan build rilis dengan R8.
 

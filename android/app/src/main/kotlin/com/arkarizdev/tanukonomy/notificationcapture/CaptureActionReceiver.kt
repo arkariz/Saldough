@@ -20,6 +20,7 @@ class CaptureActionReceiver : BroadcastReceiver() {
                 Log.i(CaptureWorker.TAG, "Catat semua: ${ids.size} keputusan ditulis ke jurnal")
                 ids.forEach { CaptureActionable.cancel(context, it) }
                 if (ids.isNotEmpty()) CaptureActionable.recordedMany(context, ids)
+                resyncIfPlanned(context, ids)
                 return
             }
             CaptureActionable.ACTION_UNDO_ALL -> {
@@ -27,6 +28,7 @@ class CaptureActionReceiver : BroadcastReceiver() {
                 CaptureJournal.undecideAll(context, ids)
                 Log.i(CaptureWorker.TAG, "Batalkan semua: ${ids.size} keputusan dibatalkan")
                 CaptureActionable.undoneMany(context)
+                resyncIfPlanned(context, ids)
                 return
             }
         }
@@ -43,10 +45,16 @@ class CaptureActionReceiver : BroadcastReceiver() {
             return
         }
         Log.i(CaptureWorker.TAG, "keputusan ${decision ?: "batal"} untuk $id ditulis ke jurnal")
+        if (decision != "dismiss") resyncIfPlanned(context, listOf(id))
         when (decision) {
             "record" -> CaptureActionable.recorded(context, id)
             "dismiss" -> CaptureActionable.cancel(context, id)
             else -> CaptureActionable.undone(context, id)
         }
+    }
+
+    /** Keputusan atas kemunculan rutin mengubah pengingatnya: mesin tanpa layar menyesuaikannya (T-26.12). */
+    private fun resyncIfPlanned(context: Context, ids: Collection<String>) {
+        if (CaptureJournal.touchesPlan(context, ids)) CaptureWorker.requestReminderResync(context)
     }
 }

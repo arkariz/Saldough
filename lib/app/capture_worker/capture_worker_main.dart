@@ -31,6 +31,9 @@ import 'package:saldough/features/notification_capture/domain/services/capture_c
 import 'package:saldough/features/notification_capture/domain/services/capture_inbox_codec.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_resolver.dart';
 import 'package:saldough/features/notification_capture/domain/services/notification_draft_composer.dart';
+import 'package:saldough/features/recurring/data/local_notification_reminder_scheduler.dart';
+import 'package:saldough/features/recurring/data/reminder_settings_repository_impl.dart';
+import 'package:saldough/features/recurring/domain/resync_reminders_for_capture.dart';
 import 'package:saldough/shared/capture/capture.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
@@ -51,10 +54,13 @@ Future<void> captureWorkerMain() async {
   try {
     final pending = await _channel.invokeListMethod<Map<Object?, Object?>>('pending') ?? const [];
     await log('dart hidup, ${pending.length} tangkapan menunggu');
-    if (pending.isNotEmpty) {
+    final resync = await _channel.invokeMethod<bool>('resyncPending') ?? false;
+    if (pending.isNotEmpty || resync) {
       final storage = await HiveKeyValueStorage.initialize(boxName: 'saldough_kv');
       try {
-        await _drain(storage, pending, handled, log);
+        await _prepareLocale(storage);
+        if (pending.isNotEmpty) await _drain(storage, pending, handled, log);
+        if (resync) await _resyncReminders(storage, log);
         final hold = await _channel.invokeMethod<int>('hold') ?? 0;
         if (hold > 0) {
           await log('menahan Hive terbuka $hold ms');
@@ -73,14 +79,9 @@ Future<void> captureWorkerMain() async {
   }
 }
 
-Future<void> _drain(
-  HiveKeyValueStorage storage,
-  List<Map<Object?, Object?>> pending,
-  List<String> handled,
-  Future<void> Function(String) log,
-) async {
-  // Bahasa dan mata uang pilihan pengguna, seperti bootstrap aplikasi: teks
-  // notifikasi dan nominalnya harus sama dengan yang dilihat di aplikasi.
+/// Bahasa dan mata uang pilihan pengguna, seperti bootstrap aplikasi: teks
+/// notifikasi dan nominalnya harus sama dengan yang dilihat di aplikasi.
+Future<void> _prepareLocale(HiveKeyValueStorage storage) async {
   final savedLanguage = (await LanguagePreferenceRepositoryImpl(storage: storage).load()).getOrElse((_) => null);
   if (savedLanguage != null) {
     await LocaleSettings.setLocale(savedLanguage);
@@ -91,7 +92,41 @@ Future<void> _drain(
   ActiveCurrency.notifier.value = (await CurrencyPreferenceRepositoryImpl(storage: storage).load()).getOrElse(
     (_) => AppCurrency.idr,
   );
+}
 
+/// Menyesuaikan pengingat rutin dengan keputusan Catat di jurnal (T-26.12):
+/// kemunculan yang sudah dicatat lewat tombol tidak lagi diingatkan; Batalkan
+/// memulihkannya. Hanya jadwal, tidak menulis Hive.
+Future<void> _resyncReminders(HiveKeyValueStorage storage, Future<void> Function(String) log) async {
+  final entries = await _channel.invokeListMethod<Map<Object?, Object?>>('journalEntries') ?? const [];
+  final recorded = <({String ruleId, DateTime date})>[];
+  for (final entry in entries) {
+    if (entry['decision'] != 'record') continue;
+    try {
+      final payload = jsonDecode(entry['payload']! as String) as Map<String, Object?>;
+      final match = payload['match'];
+      if (match is! Map) continue;
+      final date = DateTime.tryParse('${match['date']}');
+      if (date != null) recorded.add((ruleId: '${match['ruleId']}', date: date));
+    } on Object {
+      continue;
+    }
+  }
+  final changed = await ResyncRemindersForCapture(
+    scheduler: LocalNotificationReminderScheduler(),
+    settings: ReminderSettingsRepositoryImpl(storage: storage),
+    rules: RecurringRuleRepositoryImpl(storage: storage),
+    transactions: TransactionRepositoryImpl(storage: storage),
+  )(recorded);
+  await log('pengingat rutin disesuaikan: ${recorded.length} kemunculan tercatat di jurnal, diubah=$changed');
+}
+
+Future<void> _drain(
+  HiveKeyValueStorage storage,
+  List<Map<Object?, Object?>> pending,
+  List<String> handled,
+  Future<void> Function(String) log,
+) async {
   final store = NotificationCaptureStoreImpl(storage: storage);
   final settings = (await store.loadSettings()).getOrElse((_) => const NotificationCaptureSettings());
   final wallets = await loadActiveWallets(WalletRepositoryImpl(storage: storage));

@@ -6500,8 +6500,24 @@ S sehari, M beberapa hari, L lebih dari seminggu.
       Pengingat generik tetap muncul bila mesin tanpa layar gagal atau berhenti
       sebelum menangani semuanya (`fallbackForUnhandled`; belum diuji di
       perangkat).
-- [ ] **T-26.12** (M) Pengingat rutin dan anti-duplikat mesin tanpa layar
-      membaca jurnal; pengingat dibatalkan untuk kemunculan yang sudah dicatat.
+- [x] **T-26.12** (M) Pengingat rutin mengikuti jurnal (4 Nov 2026). Pengingat
+      rutin dijadwalkan notifikasi lokal dan berbunyi walau aplikasi tertutup,
+      jadi kemunculan yang sudah dicatat lewat tombol Catat (belum diterapkan ke
+      buku besar) tetap akan diingatkan. Sekarang setiap Catat, Batalkan, dan
+      Catat semua atas tangkapan yang cocok dengan rutin (muatan jurnal memuat
+      `match`) meminta mesin tanpa layar menyesuaikan jadwal
+      (`ResyncRemindersForCapture`): pengingat H−n dan siapkan dana kemunculan
+      itu dibatalkan, ringkasan hari jatuh tempo dijadwalkan ulang tanpa
+      kemunculan itu, dan Batalkan memulihkannya. Hanya jadwal; tidak menulis Hive,
+      dan pengingat siapkan dana tidak dibentuk ulang (butuh perkiraan Rencana;
+      aplikasi menyusunnya lagi saat dibuka). Port `ReminderScheduler` bertambah
+      `schedule` dan `cancel`; `planReminders` menerima `recordedExternally`.
+      Anti-duplikat tetap dijaga penentu bersama (`CaptureResolver`) yang sudah
+      membaca buku besar dan jurnal (`journalIds`) di T-26.10. Uji: 4 uji di
+      `reminder_plan_test.dart`. Emulator: Catat memicu mesin, Dart membaca
+      `match` dari jurnal dan menjalankan penyesuaian (alur terbukti); efek
+      penjadwalan sungguhan belum diuji di perangkat karena butuh rutin dengan
+      pengingat menyala.
 - [ ] **T-26.13** (M) Pembaruan pengungkapan, `PLAY_DATA_SAFETY.md`, dan tinjauan
       deklarasi layanan di `AndroidManifest` sebelum produksi; build internal
       test.

@@ -42,8 +42,17 @@ object CaptureWorker {
     private var watchdog: Runnable? = null
     private var rounds = 0
 
+    /** Pengingat rutin perlu disesuaikan dengan jurnal (T-26.12); dibaca dan dihapus Dart lewat `resyncPending`. */
+    @Volatile private var resyncRequested = false
+
     /** Id yang sudah ditangani mesin di proses ini (diposting, dilewati, atau tak terbaca). */
     private val handled = mutableSetOf<String>()
+
+    /** Minta mesin menyesuaikan pengingat rutin dengan jurnal; menyalakan mesin bila belum jalan. */
+    fun requestReminderResync(context: Context) {
+        resyncRequested = true
+        run(context)
+    }
 
     /** `true` bila pekerjaan diterima (sudah berjalan atau baru dimulai). */
     fun run(context: Context): Boolean {
@@ -77,6 +86,13 @@ object CaptureWorker {
                         CaptureQueue.pendingMaps(app).filter { it["id"] !in handled },
                     )
                     // Id yang sudah punya entri jurnal (diposting mesin sebelumnya).
+                    // Entri jurnal lengkap (keputusan dan muatan), untuk menyesuaikan pengingat rutin.
+                    "journalEntries" -> result.success(CaptureJournal.entries(app))
+                    "resyncPending" -> {
+                        val pending = resyncRequested
+                        resyncRequested = false
+                        result.success(pending)
+                    }
                     "journalIds" -> result.success(CaptureJournal.entries(app).map { it["id"] })
                     "plan" -> result.success(mapOf("isPlus" to CapturePlan.isPlus(app)))
                     // Uji tumpang tindih (hanya build debug): tahan Hive terbuka sekian ms (berkas `capture_worker_hold`).
@@ -135,7 +151,7 @@ object CaptureWorker {
             Log.i(TAG, "mesin tanpa layar dimatikan ($reason) +${elapsed()}ms")
             val app = pendingContext
             val more = restartIfPending && rounds < MAX_ROUNDS && app != null &&
-                CaptureQueue.pending(app).any { it.id !in handled }
+                (resyncRequested || CaptureQueue.pending(app).any { it.id !in handled })
             if (more && app != null) {
                 Log.i(TAG, "ada tangkapan baru yang belum ditangani; menyalakan lagi")
                 start(app)

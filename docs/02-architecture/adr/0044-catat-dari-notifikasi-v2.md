@@ -100,7 +100,9 @@ untuk dua isolate. Maka:
 5. Saat aplikasi dibuka, jurnal diterapkan **sebelum Beranda tampil** lewat
    `RecordTransaction` dan `CaptureFinalizer`. Id transaksi diturunkan dari id
    tangkapan (idempoten). Yang gagal masuk kotak masuk dengan alasan.
-6. Anti-duplikat mesin tanpa layar dan pengingat rutin membaca jurnal.
+6. Anti-duplikat mesin tanpa layar membaca jurnal. Pengingat rutin dijadwalkan
+   ulang oleh mesin tanpa layar setiap keputusan atas tangkapan yang cocok
+   dengan rutin (batal untuk yang tercatat, pulih bila dibatalkan; T-26.12).
 
 Keamanan: `setAuthenticationRequired(true)` pada tombol Catat (API 31+).
 Nominal di notifikasi **tidak** mengikuti `AmountVisibility` (keputusan pemilik
@@ -187,6 +189,9 @@ deklarasi layanan pendengar di `AndroidManifest`.
 - **KT-N3** Penulisan langsung dari mesin tanpa layar sesudah spike.
 
 ## 7. Revisi
+
+- **Revisi 5 (4 Nov 2026, T-26.12):** pengingat rutin mengikuti jurnal lewat
+  penyesuaian jadwal oleh mesin tanpa layar (§3.5 butir 6).
 
 - **Revisi 4 (4 Nov 2026, T-26.11):** kunci produksi dibuka (tanpa berkas
   penanda atau syarat build debug); tiga keadaan pengiriman, Gratis ikut mesin

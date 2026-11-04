@@ -70,12 +70,16 @@ const reminderHour = 9;
 /// tercatat atau dilewati, dan waktu yang sudah lewat tidak dijadwalkan.
 /// [transactions] memuat bulan berjalan dan bulan depan. [funding]
 /// menambah satu pengingat siapkan dana H−1 per kemunculan autodebet yang
-/// diperkirakan kurang (ADR-036 §3.6).
+/// diperkirakan kurang (ADR-036 §3.6). [recordedExternally] memuat
+/// [reminderPayload] kemunculan yang sudah diputuskan Catat lewat notifikasi
+/// bertindak tetapi belum diterapkan ke buku besar (jurnal, T-26.12): dianggap
+/// tercatat.
 List<PlannedReminder> planReminders(
   Iterable<RecurringRule> rules, {
   required DateTime now,
   required Iterable<Transaction> transactions,
   Iterable<FundingWarning> funding = const [],
+  Set<String> recordedExternally = const {},
 }) {
   final today = DateTime(now.year, now.month, now.day);
   final until = DateTime(today.year, today.month, today.day + reminderWindowDays + 1);
@@ -86,6 +90,7 @@ List<PlannedReminder> planReminders(
     final occurrences = occurrenceStatusesOf(rule, from: today, until: until, today: today, transactions: transactions);
     for (final o in occurrences) {
       if (o.status == OccurrenceStatus.recorded || o.status == OccurrenceStatus.skipped) continue;
+      if (recordedExternally.contains(reminderPayload(rule.id, o.date))) continue;
       (byDay[o.date] ??= []).add((rule: rule, date: o.date));
       final manual = rule.kind != RecurringKind.income && rule.effectivePaymentMode == RecurringPaymentMode.manual;
       if (manual && rule.remindDaysBefore > 0) {

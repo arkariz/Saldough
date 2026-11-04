@@ -4,6 +4,7 @@ import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
 import 'package:flutter/services.dart';
 import 'package:saldough/core/foundation/repository_guard.dart';
+import 'package:saldough/features/notification_capture/domain/entities/capture_journal_record.dart';
 import 'package:saldough/features/notification_capture/domain/entities/captured_notification.dart';
 import 'package:saldough/features/notification_capture/domain/entities/notification_source.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_gateway.dart';
@@ -132,6 +133,51 @@ final class MethodChannelNotificationCaptureGateway with RepositoryGuard impleme
   }
 
   @override
+  Future<List<CaptureJournalRecord>> journal() async {
+    try {
+      final raw = await _methods.invokeListMethod<Map<Object?, Object?>>('journal') ?? const [];
+      return [
+        for (final item in raw)
+          CaptureJournalRecord(
+            id: item['id']! as String,
+            decision: item['decision'] as String?,
+            resolvedAt: DateTime.fromMillisecondsSinceEpoch((item['resolvedAt'] as num?)?.toInt() ?? 0),
+            payload: item['payload'] as String? ?? '',
+          ),
+      ];
+    } on PlatformException {
+      return const [];
+    }
+  }
+
+  @override
+  Future<void> acknowledgeJournal(List<String> ids) async {
+    try {
+      await _methods.invokeMethod<void>('journalAck', {'ids': ids});
+    } on PlatformException {
+      // Tanpa jurnal native tidak ada yang perlu dibuang.
+    }
+  }
+
+  @override
+  Future<void> cancelActionable() async {
+    try {
+      await _methods.invokeMethod<void>('cancelActionable');
+    } on PlatformException {
+      // Notifikasi basi paling lama tampil sampai ditutup pengguna.
+    }
+  }
+
+  @override
+  Future<void> syncPlan({required bool isPlus, DateTime? until}) async {
+    try {
+      await _methods.invokeMethod<void>('setPlan', {'isPlus': isPlus, 'untilMs': until?.millisecondsSinceEpoch});
+    } on PlatformException {
+      // Tanpa salinan, mesin tanpa layar menganggap Gratis (tanpa tombol Catat).
+    }
+  }
+
+  @override
   Future<void> clearSamples({String? packageName}) async {
     try {
       await _methods.invokeMethod<void>('clearSamples', {'packageName': packageName});
@@ -217,4 +263,16 @@ final class UnsupportedNotificationCaptureGateway implements NotificationCapture
 
   @override
   Future<void> clearSamples({String? packageName}) async {}
+
+  @override
+  Future<List<CaptureJournalRecord>> journal() async => const [];
+
+  @override
+  Future<void> acknowledgeJournal(List<String> ids) async {}
+
+  @override
+  Future<void> cancelActionable() async {}
+
+  @override
+  Future<void> syncPlan({required bool isPlus, DateTime? until}) async {}
 }

@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
+import 'package:saldough/features/notification_capture/domain/entities/capture_journal_record.dart';
 import 'package:saldough/features/notification_capture/domain/entities/captured_notification.dart';
 import 'package:saldough/features/notification_capture/domain/entities/notification_source.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_gateway.dart';
@@ -118,6 +119,33 @@ final class FakeNotificationCaptureGateway implements NotificationCaptureGateway
 
   @override
   Future<List<CapturedNotification>> samples(String packageName) async => sampleStore[packageName] ?? const [];
+
+  /// Jurnal notifikasi bertindak.
+  List<CaptureJournalRecord> journalRecords = [];
+
+  /// Id yang dibuang lewat [acknowledgeJournal].
+  final ackedJournal = <String>[];
+
+  /// Berapa kali [cancelActionable] dipanggil.
+  int cancelledActionable = 0;
+
+  /// Argumen [syncPlan] terakhir.
+  (bool, DateTime?)? syncedPlan;
+
+  @override
+  Future<List<CaptureJournalRecord>> journal() async => [...journalRecords];
+
+  @override
+  Future<void> acknowledgeJournal(List<String> ids) async {
+    ackedJournal.addAll(ids);
+    journalRecords.removeWhere((r) => ids.contains(r.id));
+  }
+
+  @override
+  Future<void> cancelActionable() async => cancelledActionable++;
+
+  @override
+  Future<void> syncPlan({required bool isPlus, DateTime? until}) async => syncedPlan = (isPlus, until);
 
   @override
   Future<void> clearSamples({String? packageName}) async {

@@ -131,6 +131,20 @@ class NotificationCapturePlugin(private val activity: Activity) : MethodChannel.
                 result.success(null)
             }
             "debugSamples" -> result.success(CaptureQueue.debugSamples(context).map { it.toMap() })
+            // Jurnal notifikasi bertindak dan status Plus untuk mesin tanpa layar (ADR-044 §3.5, T-26.10).
+            "journal" -> result.success(CaptureJournal.entries(context))
+            "journalAck" -> {
+                CaptureJournal.ack(context, call.argument<List<String>>("ids").orEmpty())
+                result.success(null)
+            }
+            "cancelActionable" -> {
+                CaptureActionable.cancelAll(context)
+                result.success(null)
+            }
+            "setPlan" -> {
+                CapturePlan.set(context, call.argument<Boolean>("isPlus") == true, call.argument<Number>("untilMs")?.toLong())
+                result.success(null)
+            }
             else -> result.notImplemented()
         }
     }

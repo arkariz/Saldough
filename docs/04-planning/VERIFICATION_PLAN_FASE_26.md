@@ -159,7 +159,16 @@ Temuan yang mengubah rancangan:
 4. **Antrean harus dikuras** (H7). Dart mengambil tangkapan lewat `pending()` yang sudah ada, bukan satu pekerjaan per mesin.
 5. Mulai dingin ±0,6 dtk dan +69 MB sementara cukup untuk perangkat ini; pada perangkat dengan memori kecil atau vendor yang agresif mematikan proses angkanya bisa buruk (belum diukur).
 
-Belum dicoba (wajib sebelum ADR-044 Accepted): sedikitnya dua perangkat nyata dari vendor lain (satu yang agresif mematikan layanan di latar), Android versi lebih rendah, layar kunci dengan kunci sungguhan (`setAuthenticationRequired`), proses dimatikan di tengah jalan, mode hemat daya, build rilis dengan R8, dan penulisan jurnal ke aplikasi saat dibuka (T-26.10).
+Hasil tambahan T-26.10 (4 Nov 2026, emulator yang sama, build debug):
+
+| # | Yang dicoba | Hasil |
+|---|---|---|
+| H9 | Ketuk **Catat** pada notifikasi bertombol, lalu buka aplikasi | **Berhasil.** Jurnal memuat keputusan dan draf (Rp31.000, BRI, Makan & Minum, "WARUNG ABC"); saat aplikasi dibuka, transaksi `cap_<id>` tersimpan di Hive, saldo dompet turun tepat Rp31.000, jurnal kosong, antrean native di-ack, notifikasi bertindak hilang |
+| H10 | Entri jurnal yang sama masuk lagi (meniru proses mati sebelum ack) lalu buka aplikasi | **Aman.** Tetap satu transaksi, saldo tidak berubah, jurnal dikosongkan |
+| H11 | Status Plus | Mesin tanpa layar membaca salinan native: Plus → tombol Catat; tanpa salinan = Gratis (tanpa tombol) |
+| H12 | Notifikasi bertindak saat izin POST_NOTIFICATIONS belum diberikan | Tidak ada notifikasi dan **tidak ada entri jurnal** (jurnal baru ditulis bila notifikasi benar-benar dipasang); tangkapan tetap diproses biasa saat aplikasi dibuka |
+
+Belum dicoba (wajib sebelum ADR-044 Accepted): sedikitnya dua perangkat nyata dari vendor lain (satu yang agresif mematikan layanan di latar), Android versi lebih rendah, layar kunci dengan kunci sungguhan (`setAuthenticationRequired`), proses dimatikan sungguhan di tengah penerapan jurnal (hanya diuji lewat entri ulang), mode hemat daya, dan build rilis dengan R8.
 
 ## Ukuran keberhasilan
 

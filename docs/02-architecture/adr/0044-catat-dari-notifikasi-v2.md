@@ -184,6 +184,12 @@ deklarasi layanan pendengar di `AndroidManifest`.
 ## 7. Revisi
 
 - **Revisi 0 (4 Nov 2026):** rancangan awal bersama pemilik.
+- **Revisi 3 (4 Nov 2026, T-26.10):** jurnal native, penerapan di
+  `bootstrapApp()` sebelum layar pertama, id transaksi `cap_<idTangkapan>`
+  (idempoten), salinan status Plus, dan penguras antrean selesai dan terbukti di
+  emulator (§3.5). Penerapan memakai urutan idempoten (catat → kotak masuk →
+  terproses → ack antrean → ack jurnal), jadi proses yang dimatikan di tengah
+  jalan aman diulang. Status tetap Proposed (perangkat nyata, vendor lain).
 - **Revisi 2 (4 Nov 2026, hasil spike T-26.9):** §3.5 terbukti berjalan di satu
   emulator (Android 17, arm64): layanan menyalakan `FlutterEngine` dengan
   entrypoint Dart, mesin membaca Hive dan menjalankan `CaptureResolver` yang

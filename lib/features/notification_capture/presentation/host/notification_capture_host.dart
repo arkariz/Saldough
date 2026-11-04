@@ -4,8 +4,10 @@ import 'dart:typed_data';
 import 'package:di/di.dart';
 import 'package:flutter/material.dart';
 import 'package:navigation/navigation.dart';
+import 'package:saldough/core/foundation/entitlement/entitlement.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/plan/active_plan.dart';
 import 'package:saldough/core/presentation/widgets/app_action_snack_bar.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/notification_capture/domain/entities/capture_inbox_entry.dart';
@@ -67,13 +69,28 @@ class _NotificationCaptureHostState extends State<NotificationCaptureHost> with 
     _subscriptions
       ..add(gateway.captured.listen((_) => unawaited(_run())))
       ..add(gateway.reminderTaps.listen((id) => unawaited(_openCapture(id))));
+    // Mesin tanpa layar membaca status Plus dari salinan native (ADR-044 §3.5).
+    ActivePlan.notifier.addListener(_syncPlan);
     WidgetsBinding.instance.addPostFrameCallback((_) => unawaited(_start()));
+  }
+
+  void _syncPlan() {
+    final gateway = _gateway;
+    if (gateway == null) return;
+    final until = switch (ActivePlan.state) {
+      PlusPlan(:final until) => until,
+      // Hari terakhir inklusif: berlaku sampai awal hari berikutnya.
+      TrialPlan(:final endsOn) => DateTime(endsOn.year, endsOn.month, endsOn.day + 1),
+      _ => null,
+    };
+    unawaited(gateway.syncPlan(isPlus: ActivePlan.isPlus, until: until));
   }
 
   Future<void> _start() async {
     final settings = (await _store.loadSettings()).getOrElse((_) => const NotificationCaptureSettings());
     // Teks pengingat native mengikuti bahasa aplikasi yang mungkin berganti.
     await syncNotificationCapture(_gateway!, settings);
+    _syncPlan();
     await _run();
     final tap = await _gateway!.takeLaunchReminderTap();
     if (tap != null) await _openCapture(tap);
@@ -166,6 +183,7 @@ class _NotificationCaptureHostState extends State<NotificationCaptureHost> with 
 
   @override
   void dispose() {
+    ActivePlan.notifier.removeListener(_syncPlan);
     WidgetsBinding.instance.removeObserver(this);
     for (final s in _subscriptions) {
       unawaited(s.cancel());

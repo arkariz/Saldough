@@ -74,7 +74,7 @@ class TransactionNotificationListener : NotificationListenerService() {
             // SPIKE T-26.9: mesin Dart tanpa layar bila diaktifkan (build debug).
             val spiked = applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0 &&
                 CaptureWorker.enabled(this) &&
-                CaptureWorker.run(this, item, source.label)
+                CaptureWorker.run(this)
             if (!spiked && config.remindWhenClosed) {
                 CaptureReminders.showGeneric(this, config, item, source.label, icon)
             }

@@ -12,14 +12,19 @@ import io.flutter.plugin.common.MethodChannel
 import java.io.File
 
 /**
- * SPIKE T-26.9 (ADR-044 §3.5): menyalakan mesin Dart tanpa layar dari layanan
- * pendengar saat mesin aplikasi tidak hidup, supaya penentu Dart yang sama
- * menyelesaikan tangkapan dan notifikasi bertombol bisa dipasang tanpa membuka
- * aplikasi. Mesin tanpa layar hanya membaca Hive; keputusan pengguna masuk ke
- * jurnal native ([CaptureJournal]).
+ * Mesin Dart tanpa layar untuk Catat dari notifikasi (ADR-044 §3.5, spike
+ * T-26.9, T-26.10). Dinyalakan layanan pendengar saat mesin aplikasi tidak
+ * hidup: Dart membaca antrean ([pending]), membaca Hive (hanya baca), memakai
+ * penentu yang sama dengan aplikasi, lalu memasang notifikasi dengan tombol
+ * Catat/Abaikan. Keputusan ditulis ke [CaptureJournal]; aplikasi yang
+ * menerapkannya ke Hive saat dibuka.
  *
- * Bukan implementasi akhir. Hanya jalan di build debug yang berkas
- * `files/capture_worker_spike` ada, jadi tidak mengubah perilaku normal.
+ * Satu mesin menguras seluruh antrean: Dart melaporkan id yang sudah
+ * ditangani lewat `done`; bila ada tangkapan baru yang belum ditangani
+ * (datang saat mesin berjalan), mesin dinyalakan lagi.
+ *
+ * Hanya jalan di build yang bisa di-debug dan berkas `files/capture_worker_spike`
+ * ada, sampai pengujian perangkat nyata selesai (ADR-044 revisi 2).
  */
 object CaptureWorker {
     const val TAG = "CaptureSpike"
@@ -27,48 +32,55 @@ object CaptureWorker {
     private const val LIBRARY = "package:saldough/app/capture_worker/capture_worker_main.dart"
     private const val ENTRYPOINT = "captureWorkerMain"
     private const val WATCHDOG_MS = 30_000L
+    private const val MAX_ROUNDS = 5
 
     private val main = Handler(Looper.getMainLooper())
     @Volatile private var running = false
     private var engine: FlutterEngine? = null
     private var startedAt = 0L
     private var watchdog: Runnable? = null
+    private var rounds = 0
+
+    /** Id yang sudah ditangani mesin di proses ini (diposting, dilewati, atau tak terbaca). */
+    private val handled = mutableSetOf<String>()
 
     fun enabled(context: Context): Boolean = File(context.filesDir, "capture_worker_spike").exists()
 
     /** `true` bila pekerjaan diterima (sudah berjalan atau baru dimulai). */
-    fun run(context: Context, item: CapturedItem, appLabel: String): Boolean {
+    fun run(context: Context): Boolean {
         if (running) {
-            Log.i(TAG, "mesin tanpa layar sedang berjalan; ${item.id} menunggu di antrean")
+            Log.i(TAG, "mesin tanpa layar sedang berjalan; tangkapan baru ikut dikuras")
             return true
         }
         running = true
+        rounds = 0
         val app = context.applicationContext
-        main.post { start(app, item, appLabel) }
+        pendingContext = app
+        main.post { start(app) }
         return true
     }
 
-    private fun start(app: Context, item: CapturedItem, appLabel: String) {
+    private fun start(app: Context) {
         startedAt = SystemClock.elapsedRealtime()
-        Log.i(TAG, "mulai mesin tanpa layar untuk ${item.id}")
+        rounds++
+        Log.i(TAG, "mulai mesin tanpa layar (putaran $rounds)")
         try {
             val engine = FlutterEngine(app)
             this.engine = engine
             Log.i(TAG, "FlutterEngine dibuat +${elapsed()}ms")
             MethodChannel(engine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call, result ->
                 when (call.method) {
-                    "job" -> result.success(
-                        mapOf(
-                            "captureId" to item.id,
-                            "packageName" to item.packageName,
-                            "appLabel" to appLabel,
-                            "title" to item.title,
-                            "body" to item.body,
-                            "postedAt" to item.postedAt,
-                            // Uji tumpang tindih: tahan Hive terbuka sekian ms (berkas `capture_worker_hold`).
-                            "holdMs" to (File(app.filesDir, "capture_worker_hold").takeIf { it.exists() }
-                                ?.readText()?.trim()?.toIntOrNull() ?: 0),
-                        ),
+                    // Antrean yang belum ditangani; tangkapan sudah disaring layanan pendengar.
+                    "pending" -> result.success(
+                        CaptureQueue.pending(app).filter { it.id !in handled }.map { it.toMap() },
+                    )
+                    // Id yang sudah punya entri jurnal (diposting mesin sebelumnya).
+                    "journalIds" -> result.success(CaptureJournal.entries(app).map { it["id"] })
+                    "plan" -> result.success(mapOf("isPlus" to CapturePlan.isPlus(app)))
+                    // Uji tumpang tindih: tahan Hive terbuka sekian ms (berkas `capture_worker_hold`).
+                    "hold" -> result.success(
+                        File(app.filesDir, "capture_worker_hold").takeIf { it.exists() }
+                            ?.readText()?.trim()?.toIntOrNull() ?: 0,
                     )
                     "log" -> {
                         Log.i(TAG, "dart: ${call.arguments} (total +${elapsed()}ms)")
@@ -81,13 +93,16 @@ object CaptureWorker {
                             args["captureId"] as String,
                             args["title"] as String,
                             args["body"] as String,
+                            args["payload"] as String?,
                         )
-                        Log.i(TAG, "notifikasi bertombol dipasang +${elapsed()}ms")
+                        Log.i(TAG, "notifikasi dipasang +${elapsed()}ms")
                         result.success(null)
                     }
                     "done" -> {
+                        @Suppress("UNCHECKED_CAST")
+                        handled.addAll((call.arguments as? List<String>).orEmpty())
                         result.success(null)
-                        shutdown("selesai")
+                        shutdown("selesai", restartIfPending = true)
                     }
                     else -> result.notImplemented()
                 }
@@ -95,25 +110,35 @@ object CaptureWorker {
             val bundle = FlutterInjector.instance().flutterLoader().findAppBundlePath()
             engine.dartExecutor.executeDartEntrypoint(DartExecutor.DartEntrypoint(bundle, LIBRARY, ENTRYPOINT))
             // Satu watchdog per jalan; dibatalkan di shutdown supaya tidak mematikan mesin berikutnya.
-            val guard = Runnable { if (running) shutdown("watchdog ${WATCHDOG_MS}ms") }
+            val guard = Runnable { if (running) shutdown("watchdog ${WATCHDOG_MS}ms", restartIfPending = false) }
             watchdog = guard
             main.postDelayed(guard, WATCHDOG_MS)
         } catch (e: Throwable) {
             Log.e(TAG, "mesin tanpa layar gagal dinyalakan", e)
-            shutdown("galat")
+            shutdown("galat", restartIfPending = false)
         }
     }
 
-    private fun shutdown(reason: String) {
+    private fun shutdown(reason: String, restartIfPending: Boolean) {
         main.post {
             watchdog?.let { main.removeCallbacks(it) }
             watchdog = null
             engine?.destroy()
             engine = null
-            running = false
             Log.i(TAG, "mesin tanpa layar dimatikan ($reason) +${elapsed()}ms")
+            val app = pendingContext
+            val more = restartIfPending && rounds < MAX_ROUNDS && app != null &&
+                CaptureQueue.pending(app).any { it.id !in handled }
+            if (more && app != null) {
+                Log.i(TAG, "ada tangkapan baru yang belum ditangani; menyalakan lagi")
+                start(app)
+            } else {
+                running = false
+            }
         }
     }
+
+    @Volatile private var pendingContext: Context? = null
 
     private fun elapsed() = SystemClock.elapsedRealtime() - startedAt
 }

@@ -1,8 +1,10 @@
-// SPIKE T-26.9 (ADR-044 §3.5) -- mesin Dart tanpa layar untuk Catat dari
-// notifikasi. Dinyalakan layanan pendengar saat mesin aplikasi tidak hidup.
-// Hanya MEMBACA Hive; hasilnya dikirim ke native (notifikasi bertombol, jurnal).
-// Bukan implementasi akhir: T-26.10/T-26.11 menggantikannya.
+// Mesin Dart tanpa layar untuk Catat dari notifikasi (ADR-044 §3.5, spike
+// T-26.9, T-26.10). Dinyalakan layanan pendengar saat mesin aplikasi tidak
+// hidup. Hanya MEMBACA Hive; hasilnya (notifikasi bertombol dan muatan jurnal)
+// dikirim ke native, dan aplikasi yang menerapkannya ke Hive saat dibuka
+// (`ApplyCaptureJournal`).
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
@@ -13,10 +15,18 @@ import 'package:flutter/widgets.dart';
 // ignore: depend_on_referenced_packages
 import 'package:hive_ce/hive.dart';
 import 'package:hive_storage/hive_storage.dart';
+import 'package:saldough/core/foundation/entitlement/entitlement.dart';
+import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/notification_capture/data/notification_capture_store_impl.dart';
 import 'package:saldough/features/notification_capture/data/notification_rule_interpreter.dart';
+import 'package:saldough/features/notification_capture/domain/entities/capture_inbox_entry.dart';
 import 'package:saldough/features/notification_capture/domain/entities/captured_notification.dart';
+import 'package:saldough/features/notification_capture/domain/entities/notification_capture_settings.dart';
 import 'package:saldough/features/notification_capture/domain/entities/notification_source.dart';
+import 'package:saldough/features/notification_capture/domain/services/active_capture_inputs.dart';
+import 'package:saldough/features/notification_capture/domain/services/capture_card_class.dart';
+import 'package:saldough/features/notification_capture/domain/services/capture_inbox_codec.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_resolver.dart';
 import 'package:saldough/features/notification_capture/domain/services/notification_draft_composer.dart';
 import 'package:saldough/shared/capture/capture.dart';
@@ -28,99 +38,162 @@ import 'package:saldough/shared/wallet/wallet.dart';
 const _channel = MethodChannel('tanukonomy/capture_worker');
 
 /// Titik masuk mesin tanpa layar. Dipanggil native lewat
-/// `DartEntrypoint(libraryUri, "captureWorkerMain")`.
+/// `DartEntrypoint(libraryUri, "captureWorkerMain")`; perpustakaan ini harus
+/// terjangkau dari `main.dart` supaya ikut dalam kernel/AOT.
 @pragma('vm:entry-point')
 Future<void> captureWorkerMain() async {
   WidgetsFlutterBinding.ensureInitialized();
   final clock = Stopwatch()..start();
   Future<void> log(String message) => _channel.invokeMethod<void>('log', '+${clock.elapsedMilliseconds}ms $message');
+  final handled = <String>[];
   try {
-    final job = await _channel.invokeMapMethod<String, Object?>('job') ?? const {};
-    await log('dart hidup, pekerjaan ${job['captureId']}');
-
-    // 1. Hive: buka hanya untuk membaca, lalu tutup supaya UI bisa membukanya.
-    final storage = await HiveKeyValueStorage.initialize(boxName: 'saldough_kv');
-    await log('hive terbuka');
-    final wallets = (await WalletRepositoryImpl(storage: storage).listWallets()).getOrElse((_) => const []);
-    final categories = (await CategoryRepositoryImpl(storage: storage).listCategories()).getOrElse((_) => const []);
-    final rules = (await RecurringRuleRepositoryImpl(storage: storage).listRules()).getOrElse((_) => const []);
-    final inbox = (await NotificationCaptureStoreImpl(storage: storage).loadInbox()).getOrElse((_) => const []);
-    await log(
-      'dibaca: ${wallets.length} dompet, ${categories.length} kategori, ${rules.length} rutin, ${inbox.length} kartu',
-    );
-
-    // 2. Penentu bersama yang sama dengan aplikasi (ADR-044 §3.1).
-    final ledger = TransactionRepositoryImpl(storage: storage);
-    final posted = DateTime.fromMillisecondsSinceEpoch(
-      (job['postedAt'] as int?) ?? DateTime.now().millisecondsSinceEpoch,
-    );
-    NotificationRuleInterpreter ruleInterpreter(CaptureLanguage language) =>
-        NotificationRuleInterpreter(language: language, categories: () => ActiveCategories.notifier.value);
-    final composer = NotificationDraftComposer(
-      composer: CaptureDraftComposer(ruleInterpreterFor: ruleInterpreter, cloudInterpreter: _NoCloud()),
-      ruleInterpreterFor: ruleInterpreter,
-    );
-    final resolver = CaptureResolver(
-      composer: composer,
-      ledgerAround: (date) async => [
-        for (final offset in const [-1, 0, 1])
-          ...(await ledger.listTransactionsInMonth(
-            DateTime(date.year, date.month + offset),
-          )).getOrElse((_) => const []),
-      ],
-    );
-    final source = NotificationSource(
-      packageName: job['packageName']! as String,
-      appLabel: (job['appLabel'] as String?) ?? 'Aplikasi',
-      keywords: const ['berhasil', 'masuk', 'transaksi'],
-      walletId: wallets.firstOrNull?.id,
-    );
-    final resolved = await resolver.resolve(
-      CapturedNotification(
-        id: job['captureId']! as String,
-        packageName: source.packageName,
-        title: (job['title'] as String?) ?? '',
-        body: (job['body'] as String?) ?? '',
-        postedAt: posted,
-      ),
-      source: source,
-      patterns: const [],
-      wallets: wallets,
-      categories: categories,
-      currencyCode: 'IDR',
-      languageCode: 'id',
-      rules: rules,
-    );
-    await log(
-      'diselesaikan: kelas ${resolved.cardClass.name}, nominal ${resolved.draft.amountSen}, dompet ${resolved.draft.walletId}',
-    );
-
-    // Uji tumpang tindih: tahan Hive terbuka agar UI bisa dibuka bersamaan.
-    final hold = (job['holdMs'] as int?) ?? 0;
-    if (hold > 0) {
-      await log('menahan Hive terbuka $hold ms');
-      await Future<void>.delayed(Duration(milliseconds: hold));
+    final pending = await _channel.invokeListMethod<Map<Object?, Object?>>('pending') ?? const [];
+    await log('dart hidup, ${pending.length} tangkapan menunggu');
+    if (pending.isNotEmpty) {
+      final storage = await HiveKeyValueStorage.initialize(boxName: 'saldough_kv');
+      try {
+        await _drain(storage, pending, handled, log);
+        final hold = await _channel.invokeMethod<int>('hold') ?? 0;
+        if (hold > 0) {
+          await log('menahan Hive terbuka $hold ms');
+          await Future<void>.delayed(Duration(milliseconds: hold));
+        }
+      } finally {
+        // Lepas Hive sebelum mesin dimatikan; aplikasi akan membukanya lagi.
+        await Hive.close();
+        await log('hive ditutup');
+      }
     }
-
-    // 3. Lepas Hive sebelum mesin dimatikan; UI akan membukanya lagi.
-    await Hive.close();
-    await log('hive ditutup');
-
-    await _channel.invokeMethod<void>('postActionable', {
-      'captureId': job['captureId'],
-      'title': resolved.draft.amountSen == null
-          ? 'Nominal belum terbaca'
-          : 'Rp${resolved.draft.amountSen! ~/ 100} · ${resolved.draft.note.isEmpty ? source.appLabel : resolved.draft.note}',
-      'body': 'Spike: kelas ${resolved.cardClass.name}, ${wallets.length} dompet terbaca dari Hive',
-    });
   } on Object catch (e, st) {
     await log('GAGAL $e\n$st');
   } finally {
-    await _channel.invokeMethod<void>('done');
+    await _channel.invokeMethod<void>('done', handled);
   }
 }
 
-/// Tanpa Gemini di mesin tanpa layar (spike): aturan saja.
+Future<void> _drain(
+  HiveKeyValueStorage storage,
+  List<Map<Object?, Object?>> pending,
+  List<String> handled,
+  Future<void> Function(String) log,
+) async {
+  final store = NotificationCaptureStoreImpl(storage: storage);
+  final settings = (await store.loadSettings()).getOrElse((_) => const NotificationCaptureSettings());
+  final wallets = await loadActiveWallets(WalletRepositoryImpl(storage: storage));
+  final categories = (await CategoryRepositoryImpl(storage: storage).listCategories()).getOrElse((_) => const []);
+  final rules = (await RecurringRuleRepositoryImpl(storage: storage).listRules()).getOrElse((_) => const []);
+  final patterns = await loadActivePatterns(store, settings);
+  final processed = (await store.loadProcessedIds()).getOrElse((_) => {});
+  final journaled = {...?(await _channel.invokeListMethod<String>('journalIds'))};
+  final plan = await _channel.invokeMapMethod<String, Object?>('plan');
+  final isPlus = plan?['isPlus'] == true;
+  await log(
+    'dibaca: ${wallets.length} dompet, ${categories.length} kategori, ${rules.length} rutin, '
+    '${settings.sources.length} sumber, plus=$isPlus',
+  );
+
+  final ledger = TransactionRepositoryImpl(storage: storage);
+  NotificationRuleInterpreter ruleInterpreter(CaptureLanguage language) =>
+      NotificationRuleInterpreter(language: language, categories: () => ActiveCategories.notifier.value);
+  final resolver = CaptureResolver(
+    composer: NotificationDraftComposer(
+      composer: CaptureDraftComposer(ruleInterpreterFor: ruleInterpreter, cloudInterpreter: _NoCloud()),
+      ruleInterpreterFor: ruleInterpreter,
+    ),
+    ledgerAround: (date) async => [
+      for (final offset in const [-1, 0, 1])
+        ...(await ledger.listTransactionsInMonth(DateTime(date.year, date.month + offset))).getOrElse((_) => const []),
+    ],
+  );
+  // Gratis: hanya sumber pertama di daftar yang diproses (sama dengan aplikasi).
+  final allowed = isPlus
+      ? null
+      : {for (final s in settings.sources.take(EntitlementLimits.defaults.freeNotificationSources)) s.packageName};
+
+  for (final item in pending) {
+    final id = item['id']! as String;
+    handled.add(id);
+    // Sudah diproses aplikasi, atau sudah punya notifikasi dari putaran sebelumnya.
+    if (processed.containsKey(id) || journaled.contains(id)) continue;
+    final packageName = item['packageName']! as String;
+    if (allowed != null && !allowed.contains(packageName)) continue;
+    final source = settings.activeSource(packageName) ?? _debugSource(packageName, wallets);
+    if (source == null) continue;
+
+    try {
+      final notification = CapturedNotification(
+        id: id,
+        packageName: packageName,
+        title: (item['title'] as String?) ?? '',
+        body: (item['body'] as String?) ?? '',
+        postedAt: DateTime.fromMillisecondsSinceEpoch((item['postedAt'] as num?)?.toInt() ?? 0),
+      );
+      final resolved = await resolver.resolve(
+        notification,
+        source: source,
+        patterns: patterns,
+        wallets: wallets,
+        categories: categories,
+        currencyCode: 'IDR',
+        languageCode: 'id',
+        rules: rules,
+      );
+      final amount = resolved.draft.amountSen;
+      await log(
+        'diselesaikan $id: kelas ${resolved.cardClass.name}, nominal $amount, dompet ${resolved.draft.walletId}',
+      );
+
+      // Tombol Catat hanya untuk Plus dan draf lengkap tanpa tebakan; selain itu
+      // notifikasi membuka CATAT terisi (pengingat biasa).
+      final withActions = isPlus && resolved.cardClass != CaptureCardClass.needsInput;
+      final entry = CaptureInboxEntry(
+        id: id,
+        packageName: packageName,
+        appLabel: source.appLabel,
+        text: notification.text,
+        capturedAt: notification.postedAt,
+        draft: resolved.draft,
+        possibleDuplicate: resolved.existing != null,
+        patternId: resolved.composed?.pattern?.id,
+      );
+      final match = resolved.plan.match;
+      final texts = t.notificationCapture;
+      await _channel.invokeMethod<void>('postActionable', {
+        'captureId': id,
+        'title': texts.reminderReviewTitle(
+          amount: amount == null ? texts.amountUnknown : AppMoneyFormatter.format(amount),
+          app: source.appLabel,
+        ),
+        'body': resolved.draft.note.trim().isEmpty ? texts.reminderReviewBody : resolved.draft.note,
+        'payload': withActions
+            ? jsonEncode({
+                'entry': captureInboxEntryToJson(entry),
+                'match': ?(match == null
+                    ? null
+                    : {'ruleId': match.rule.id, 'date': match.date.toIso8601String(), 'exact': match.exact}),
+              })
+            : null,
+      });
+    } on Object catch (e, st) {
+      // Satu tangkapan rusak tidak menghentikan yang lain; aplikasi memprosesnya dari antrean.
+      await log('GAGAL $id: $e\n$st');
+    }
+  }
+}
+
+/// Sumber uji untuk build non-produk bila setelan Dart belum memuat sumbernya
+/// (uji perangkat tanpa menyelesaikan Mulai cepat). Build produk tidak pernah memakainya.
+NotificationSource? _debugSource(String packageName, List<Wallet> wallets) {
+  if (const bool.fromEnvironment('dart.vm.product')) return null;
+  return NotificationSource(
+    packageName: packageName,
+    appLabel: 'Aplikasi Uji',
+    keywords: const ['berhasil', 'masuk', 'transaksi'],
+    walletId: wallets.firstOrNull?.id,
+  );
+}
+
+/// Tanpa Gemini di mesin tanpa layar: aturan saja.
 final class _NoCloud implements TransactionInterpreter {
   @override
   Future<Either<Failure, InterpretedTransaction>> interpret(

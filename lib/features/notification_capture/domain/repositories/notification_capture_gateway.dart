@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
+import 'package:saldough/features/notification_capture/domain/entities/capture_journal_record.dart';
 import 'package:saldough/features/notification_capture/domain/entities/captured_notification.dart';
 import 'package:saldough/features/notification_capture/domain/entities/notification_source.dart';
 
@@ -108,4 +109,18 @@ abstract interface class NotificationCaptureGateway {
 
   /// Menghapus contoh [packageName], atau semuanya bila `null`.
   Future<void> clearSamples({String? packageName});
+
+  /// Entri jurnal notifikasi bertindak yang menunggu diterapkan (ADR-044 §3.5).
+  Future<List<CaptureJournalRecord>> journal();
+
+  /// Membuang entri jurnal [ids] yang sudah diterapkan.
+  Future<void> acknowledgeJournal(List<String> ids);
+
+  /// Membersihkan notifikasi bertindak yang masih tampil: aplikasi dibuka dan
+  /// tangkapannya kini kartu di kotak masuk.
+  Future<void> cancelActionable();
+
+  /// Menyalin status Plus ke native untuk mesin tanpa layar. [until]: batas
+  /// akhir bila diketahui; tanpa batas, salinan basi setelah 14 hari.
+  Future<void> syncPlan({required bool isPlus, DateTime? until});
 }

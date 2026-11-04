@@ -10,17 +10,31 @@ import android.os.Build
 import com.arkarizdev.tanukonomy.R
 
 /**
- * SPIKE T-26.9: notifikasi Tanukonomy dengan tombol Catat dan Abaikan yang
- * ditangani [CaptureActionReceiver] tanpa membuka aplikasi.
+ * Notifikasi Tanukonomy untuk tangkapan yang diselesaikan mesin tanpa layar
+ * (ADR-044 §3.5). Bagi pengguna Plus dengan draf lengkap ada tombol Catat dan
+ * Abaikan yang ditangani [CaptureActionReceiver] tanpa membuka aplikasi; yang
+ * lain membuka CATAT terisi seperti pengingat biasa ([CaptureReminders]).
  */
 object CaptureActionable {
     private const val CHANNEL_ID = "notification_capture"
+    /** Tag khusus supaya notifikasi bertindak bisa dibersihkan tanpa menyentuh pengingat. */
+    const val TAG = "capture_action"
     const val ACTION_RECORD = "com.arkarizdev.tanukonomy.capture.RECORD"
     const val ACTION_DISMISS = "com.arkarizdev.tanukonomy.capture.DISMISS"
+    const val ACTION_UNDO = "com.arkarizdev.tanukonomy.capture.UNDO"
     const val EXTRA_ID = "capture_id"
+    private const val RESULT_TIMEOUT_MS = 30_000L
 
-    fun post(context: Context, captureId: String, title: String, body: String) {
+    private fun manager(context: Context) = context.getSystemService(NotificationManager::class.java)
+
+    fun post(context: Context, captureId: String, title: String, body: String, payload: String?) {
         if (!CaptureReminders.canPost(context)) return
+        if (payload == null) {
+            // Tanpa tombol: ketukan membuka CATAT terisi lewat jalur yang sudah ada.
+            CaptureReminders.show(context, captureId, title, body)
+            return
+        }
+        CaptureJournal.put(context, captureId, payload)
         CaptureReminders.ensureChannel(context, "")
         val notification = Notification.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.mipmap.ic_launcher)
@@ -31,7 +45,7 @@ object CaptureActionable {
             .addAction(action(context, captureId, ACTION_RECORD, "Catat"))
             .addAction(action(context, captureId, ACTION_DISMISS, "Abaikan"))
             .build()
-        context.getSystemService(NotificationManager::class.java).notify(CHANNEL_ID, captureId.hashCode(), notification)
+        manager(context).notify(TAG, captureId.hashCode(), notification)
     }
 
     private fun action(context: Context, captureId: String, name: String, label: String): Notification.Action {
@@ -52,14 +66,36 @@ object CaptureActionable {
             .build()
     }
 
-    /** Ganti notifikasi dengan hasil keputusan (tanpa tombol). */
-    fun result(context: Context, captureId: String, text: String) {
+    /** Hasil Catat: sudah masuk jurnal; Batalkan masih bisa sebelum aplikasi menerapkannya. */
+    fun recorded(context: Context, captureId: String) {
         val notification = Notification.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.mipmap.ic_launcher)
-            .setContentTitle(text)
+            .setContentTitle("Tercatat")
+            .setContentText("Masuk ke catatanmu saat aplikasi dibuka.")
             .setAutoCancel(true)
-            .setTimeoutAfter(15_000)
+            .setTimeoutAfter(RESULT_TIMEOUT_MS)
+            .addAction(action(context, captureId, ACTION_UNDO, "Batalkan"))
             .build()
-        context.getSystemService(NotificationManager::class.java).notify(CHANNEL_ID, captureId.hashCode(), notification)
+        manager(context).notify(TAG, captureId.hashCode(), notification)
+    }
+
+    /** Hasil Batalkan: tangkapannya tetap menunggu di kotak masuk. */
+    fun undone(context: Context, captureId: String) {
+        val notification = Notification.Builder(context, CHANNEL_ID)
+            .setSmallIcon(R.mipmap.ic_launcher)
+            .setContentTitle("Dibatalkan")
+            .setContentText("Menunggu di kotak masuk.")
+            .setAutoCancel(true)
+            .setTimeoutAfter(RESULT_TIMEOUT_MS / 3)
+            .build()
+        manager(context).notify(TAG, captureId.hashCode(), notification)
+    }
+
+    fun cancel(context: Context, captureId: String) = manager(context).cancel(TAG, captureId.hashCode())
+
+    /** Membersihkan semua notifikasi bertindak (aplikasi dibuka: tangkapan kini kartu di kotak masuk). */
+    fun cancelAll(context: Context) {
+        val manager = manager(context)
+        manager.activeNotifications.filter { it.tag == TAG }.forEach { manager.cancel(it.tag, it.id) }
     }
 }

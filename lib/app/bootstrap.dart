@@ -19,6 +19,7 @@ import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/language/language.dart';
 import 'package:saldough/core/presentation/plan/active_plan.dart';
 import 'package:saldough/features/data_portability/data/platform_file_transfer.dart';
+import 'package:saldough/features/notification_capture/domain/usecases/apply_capture_journal.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/transaction/source_icons.dart';
 
@@ -111,6 +112,23 @@ Future<void> bootstrapApp() async {
   }
   // Mengisi `ActiveCategories` (lewat repository) untuk judul transaksi.
   await categoryRepository.listCategories();
+
+  // ADR-044 §3.5: keputusan Catat/Abaikan dari notifikasi bertindak (diambil
+  // saat aplikasi tertutup) diterapkan ke Hive sebelum layar pertama, supaya
+  // saldo yang pertama terlihat sudah benar. Gagal tidak menghalangi aplikasi
+  // terbuka (NFR-REL-001): entrinya tetap di jurnal dan dicoba lagi.
+  if (rootGetIt.isRegistered<ApplyCaptureJournal>()) {
+    try {
+      await rootGetIt<ApplyCaptureJournal>()();
+    } on Object catch (e, st) {
+      developer.log(
+        'Jurnal notifikasi gagal diterapkan, dicoba lagi nanti',
+        error: e,
+        stackTrace: st,
+        name: 'ApplyCaptureJournal',
+      );
+    }
+  }
 
   // Pengendali efek tidak boleh didaftarkan dua kali.
   if (!isReboot) registerEffectHandlers();

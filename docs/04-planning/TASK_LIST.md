@@ -6427,10 +6427,55 @@ S sehari, M beberapa hari, L lebih dari seminggu.
       Temuan untuk T-26.10–T-26.12: entrypoint diimpor dari `main.dart`;
       watchdog per-jalan; kuras antrean; konfigurasi native ditulis ulang dari
       Dart tiap aplikasi dibuka.
-- [ ] **T-26.10** (L) `CaptureJournal` native, penerapan jurnal saat aplikasi
+- [x] **T-26.10** (L) `CaptureJournal` native, penerapan jurnal saat aplikasi
       dibuka sebelum Beranda tampil, id transaksi dari id tangkapan (idempoten),
       penyimpanan status Plus untuk mesin tanpa layar.
       Verifikasi: matikan paksa di tengah penerapan; tidak ada transaksi ganda.
+      Selesai 4 Nov 2026:
+      - **Jurnal native** (`CaptureJournal.kt`, SharedPreferences, `commit()`):
+        satu entri per id tangkapan berisi muatan JSON (kartu yang diselesaikan
+        + kemunculan rutin yang cocok, bentuk yang sama dengan kotak masuk lewat
+        `capture_inbox_codec.dart`), keputusan `record`/`dismiss`/tanpa, retensi
+        7 hari. `CaptureActionReceiver` menulis keputusan; Batalkan (di notifikasi
+        hasil) menghapus keputusan sehingga tangkapan jadi kartu biasa; tombol
+        basi (entri sudah diterapkan) tidak melakukan apa pun.
+      - **`ApplyCaptureJournal`** (domain murni) dipanggil `bootstrapApp()`
+        sebelum layar pertama: transaksi dari draf dengan id `cap_<idTangkapan>`
+        (dilewati bila sudah ada), tertaut ke kemunculan rutin dan pos lewat
+        `CaptureFinalizer`, lalu urutan idempoten: buang dari kotak masuk →
+        tandai terproses → ack antrean native → ack jurnal. Dompet yang sudah tak
+        ada atau simpan gagal: jadi kartu "dompet tidak dikenali", bukan hilang.
+        Muatan rusak tertinggal di jurnal (tak melempar, tak menghalangi yang
+        lain). Tanpa keputusan: entri dibuang, tangkapan diproses biasa dari
+        antrean. Notifikasi bertindak yang basi dibersihkan (`cancelActionable`).
+      - **Status Plus** disalin Dart ke native (`CapturePlan`, `setPlan`) tiap
+        hak berubah (host); tidak diketahui atau basi 14 hari tanpa batas =
+        Gratis. Mesin tanpa layar hanya memasang tombol Catat untuk Plus dengan
+        draf lengkap; selain itu notifikasi membuka CATAT terisi.
+      - **Antrean dikuras** (temuan spike): mesin mengambil seluruh antrean
+        lewat kanal `pending`, melewati yang sudah terproses atau sudah
+        berjurnal, dan dinyalakan lagi bila ada tangkapan baru yang belum
+        ditangani (maks 5 putaran). Setiap tangkapan dibungkus try/catch.
+      - Mesin tanpa layar kini memakai setelan sumber Dart yang sebenarnya
+        (`settings.activeSource`, aturan Gratis sumber pertama, pola aktif);
+        sumber uji hanya untuk build non-produk.
+      Verifikasi: 12 uji `ApplyCaptureJournal` (Catat, dua kali, id sudah ada,
+      rutin dan pos, rutin dihapus, dompet hilang, urut waktu, Abaikan, tanpa
+      keputusan, muatan rusak, satu rusak tak menghalangi, platform tanpa
+      dukungan) dan 3 uji sinkron Plus di host; suite 2.617 lulus.
+      **Di emulator** (Android 17, build debug): notifikasi dari sumber
+      terdaftar → mesin tanpa layar → notifikasi bertombol → ketuk Catat →
+      jurnal berisi keputusan dan muatan → aplikasi dibuka → transaksi
+      `cap_<id>` Rp31.000 (kategori, dompet, tanggal tangkapan benar) ada di
+      Hive, saldo dompet turun tepat Rp31.000, jurnal kosong, antrean di-ack,
+      notifikasi bertindak hilang. Entri yang sama dimasukkan lagi ke jurnal
+      lalu aplikasi dibuka: tetap satu transaksi, saldo tidak berubah.
+      ⚠ Belum: penerapan saat proses dimatikan sungguhan di tengah jalan (hanya diuji lewat
+      entri ulang dan transaksi yang sudah ada), perangkat nyata dan vendor lain,
+      dan **mesin tanpa layar masih dikunci build debug + berkas penanda**, jadi
+      belum jalan di build jalur internal. Penguncian produksi (fitur menyala,
+      Plus, izin) dan teks notifikasi lewat i18n, AmountVisibility, serta versi
+      publik layar kunci adalah T-26.11.
 - [ ] **T-26.11** (M) Notifikasi bertindak: Catat/Abaikan/Batalkan,
       `setAuthenticationRequired`, `AmountVisibility`, versi publik layar kunci,
       penggabungan banyak tangkapan.

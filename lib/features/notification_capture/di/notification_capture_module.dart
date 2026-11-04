@@ -14,6 +14,7 @@ import 'package:saldough/features/notification_capture/domain/repositories/notif
 import 'package:saldough/features/notification_capture/domain/services/capture_finalizer.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_inbox_changes.dart';
 import 'package:saldough/features/notification_capture/domain/services/notification_draft_composer.dart';
+import 'package:saldough/features/notification_capture/domain/usecases/apply_capture_journal.dart';
 import 'package:saldough/features/notification_capture/domain/usecases/capture_inbox_actions.dart';
 import 'package:saldough/features/notification_capture/domain/usecases/process_captured_notifications.dart';
 import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
@@ -88,6 +89,20 @@ abstract final class NotificationCaptureModule {
           // Gerbang Plus (ADR-041 §3.8): Gratis hanya sumber pertama dan tinjau semua.
           isPlus: () => ActivePlan.isPlus,
           freeSources: () => ActivePlan.limits.value.freeNotificationSources,
+        ),
+      )
+      // Menerapkan jurnal notifikasi bertindak saat aplikasi dibuka (ADR-044 §3.5).
+      ..registerLazySingleton<ApplyCaptureJournal>(
+        () => ApplyCaptureJournal(
+          gateway: c<NotificationCaptureGateway>(),
+          store: c<NotificationCaptureStore>(),
+          recordTransaction: recordTransaction(),
+          transactionRepository: c<TransactionRepository>(),
+          walletRepository: c<WalletRepository>(),
+          recurringRules: c.isRegistered<RecurringRuleRepository>() ? c<RecurringRuleRepository>() : null,
+          finalizer: CaptureFinalizer(budgetItems: c.isRegistered<BudgetItemCatalog>() ? c<BudgetItemCatalog>() : null),
+          changes: c<CaptureInboxChanges>(),
+          recurringChanges: c.isRegistered<RecurringChanges>() ? c<RecurringChanges>() : null,
         ),
       )
       ..registerLazySingleton<CaptureInboxActions>(

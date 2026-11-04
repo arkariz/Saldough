@@ -7,6 +7,7 @@ import 'package:saldough/features/notification_capture/domain/entities/notificat
 import 'package:saldough/features/notification_capture/domain/entities/notification_pattern.dart';
 import 'package:saldough/features/notification_capture/domain/entities/notification_source.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_store.dart';
+import 'package:saldough/features/notification_capture/domain/services/capture_inbox_codec.dart';
 import 'package:saldough/shared/capture/capture.dart';
 
 const _settingsKey = StorageKey(namespace: 'settings', name: 'notification_capture');
@@ -64,12 +65,14 @@ final class NotificationCaptureStoreImpl with RepositoryGuard implements Notific
 
   @override
   Future<Either<Failure, List<CaptureInboxEntry>>> loadInbox() => guard(
-    () async => [for (final j in await _list(_inboxKey).read() ?? const <Map<String, dynamic>>[]) _inboxFromJson(j)],
+    () async => [
+      for (final j in await _list(_inboxKey).read() ?? const <Map<String, dynamic>>[]) captureInboxEntryFromJson(j),
+    ],
   );
 
   @override
   Future<Either<Failure, Unit>> saveInbox(List<CaptureInboxEntry> entries) =>
-      guardVoid(() => _list(_inboxKey).write([for (final e in entries) _inboxToJson(e)]));
+      guardVoid(() => _list(_inboxKey).write([for (final e in entries) captureInboxEntryToJson(e)]));
 
   @override
   Future<Either<Failure, List<AutoRecordedEntry>>> loadAutoRecorded() => guard(
@@ -168,65 +171,6 @@ NotificationPattern _patternFromJson(Map<String, dynamic> j) => NotificationPatt
   kind: _enum(NotificationPatternKind.values, j['kind'], NotificationPatternKind.expense),
   categoryId: j['categoryId'] as String?,
   transferWalletId: j['transferWalletId'] as String?,
-);
-
-Map<String, dynamic> _draftToJson(RecordDraft d) => {
-  'kind': d.kind.name,
-  'amountSen': d.amountSen,
-  'walletId': d.walletId,
-  'toWalletId': d.toWalletId,
-  'categoryId': d.categoryId,
-  'note': d.note,
-  'date': d.date?.toIso8601String(),
-  'issues': [for (final i in d.issues) i.name],
-  'sourceText': d.sourceText,
-  'sourceIconId': ?d.sourceIconId,
-};
-
-RecordDraft _draftFromJson(Map<dynamic, dynamic> j) => RecordDraft(
-  kind: _enum(DraftKind.values, j['kind'], DraftKind.expense),
-  amountSen: j['amountSen'] as int?,
-  walletId: j['walletId'] as String?,
-  toWalletId: j['toWalletId'] as String?,
-  categoryId: j['categoryId'] as String?,
-  note: j['note'] as String? ?? '',
-  date: switch (j['date']) {
-    final String s => DateTime.parse(s),
-    _ => null,
-  },
-  issues: {
-    for (final name in j['issues'] as List? ?? const [])
-      for (final issue in DraftIssue.values)
-        if (issue.name == name) issue,
-  },
-  sourceText: j['sourceText'] as String?,
-  sourceIconId: j['sourceIconId'] as String?,
-);
-
-Map<String, dynamic> _inboxToJson(CaptureInboxEntry e) => {
-  'id': e.id,
-  'packageName': e.packageName,
-  'appLabel': e.appLabel,
-  'text': e.text,
-  'capturedAt': e.capturedAt.toIso8601String(),
-  'draft': _draftToJson(e.draft),
-  'possibleDuplicate': e.possibleDuplicate,
-  'iconId': ?e.iconId,
-  'patternId': ?e.patternId,
-  'reviewReason': ?e.reviewReason?.name,
-};
-
-CaptureInboxEntry _inboxFromJson(Map<String, dynamic> j) => CaptureInboxEntry(
-  id: j['id'] as String,
-  packageName: j['packageName'] as String,
-  appLabel: j['appLabel'] as String? ?? '',
-  text: j['text'] as String? ?? '',
-  capturedAt: DateTime.parse(j['capturedAt'] as String),
-  draft: _draftFromJson(j['draft'] as Map),
-  possibleDuplicate: j['possibleDuplicate'] as bool? ?? false,
-  iconId: j['iconId'] as String?,
-  patternId: j['patternId'] as String?,
-  reviewReason: CaptureReviewReason.values.where((r) => r.name == j['reviewReason']).firstOrNull,
 );
 
 Map<String, dynamic> _autoToJson(AutoRecordedEntry e) => {

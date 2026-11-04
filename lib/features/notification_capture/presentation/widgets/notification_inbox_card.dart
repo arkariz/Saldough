@@ -19,6 +19,7 @@ import 'package:saldough/features/notification_capture/domain/repositories/notif
 import 'package:saldough/features/notification_capture/domain/services/capture_inbox_changes.dart';
 import 'package:saldough/features/notification_capture/presentation/navigation/notification_capture_route_keys.dart';
 import 'package:saldough/features/notification_capture/presentation/widgets/access_disclosure.dart';
+import 'package:saldough/features/notification_capture/presentation/widgets/open_capture_record.dart';
 import 'package:saldough/shared/capture/capture.dart';
 import 'package:saldough/shared/transaction/transaction_presentation.dart';
 
@@ -136,7 +137,13 @@ class _NotificationInboxCardState extends State<NotificationInboxCard> with Widg
     unawaited(_push(NotificationCaptureRouteKeys.settings, const EmptyInput()));
   }
 
-  void _openInbox() => unawaited(_push(NotificationCaptureRouteKeys.inbox, const EmptyInput()));
+  // Satu tangkapan menunggu: langsung ke CATAT terisi (ADR-044 §3.8).
+  void _openInbox() => unawaited(_check());
+
+  Future<void> _check() async {
+    await openCaptureInbox(context, widget.container);
+    await _load();
+  }
 
   void _openQuickStart() {
     _tapped('quick_start');
@@ -165,8 +172,10 @@ class _NotificationInboxCardState extends State<NotificationInboxCard> with Widg
       FeatureState.unset => (texts.notification.button, t.notificationCapture.accountEntryBody),
       FeatureState.off => (texts.notification.button, texts.status.off),
       FeatureState.permissionNeeded => (texts.notification.manage, texts.status.permissionNeeded),
+      // Judul sesuai tujuan ketukan: kotak masuk bila ada yang menunggu, selain
+      // itu setelan (ADR-044, temuan review UX).
       _ => (
-        texts.notification.inboxTitle,
+        hasPending ? texts.notification.inboxTitle : texts.notification.manage,
         hasPending
             ? t.notificationCapture.banner(n: _pending.length)
             : texts.notification.activeApps(n: status.activeCount),

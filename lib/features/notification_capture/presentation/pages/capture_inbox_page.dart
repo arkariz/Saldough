@@ -5,16 +5,18 @@ import 'package:navigation/navigation.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/plan/active_plan.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/features/notification_capture/domain/entities/capture_inbox_entry.dart';
+import 'package:saldough/features/notification_capture/domain/services/capture_card_class.dart';
 import 'package:saldough/features/notification_capture/presentation/bloc/capture_inbox_bloc.dart';
 import 'package:saldough/features/notification_capture/presentation/bloc/notification_settings_bloc.dart';
 import 'package:saldough/features/notification_capture/presentation/navigation/notification_capture_route_keys.dart';
 import 'package:saldough/features/notification_capture/presentation/pages/notification_pattern_page.dart';
 import 'package:saldough/features/notification_capture/presentation/widgets/access_disclosure.dart';
-import 'package:saldough/features/record/presentation/navigation/record_route_keys.dart';
+import 'package:saldough/features/notification_capture/presentation/widgets/open_capture_record.dart';
 import 'package:saldough/features/transaction/presentation/navigation/transaction_route_keys.dart';
 import 'package:saldough/shared/capture/capture.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
@@ -38,21 +40,7 @@ class CaptureInboxPage extends StatelessWidget {
   /// transaksinya tertaut ke kemunculan itu (ADR-035 §3.4).
   Future<void> _record(BuildContext context, CaptureInboxEntry entry, OccurrenceMatch? match) async {
     final bloc = context.read<CaptureInboxBloc>();
-    final draft = entry.draft;
-    final saved = await context.pushRoute<RecordSheetInput, bool>(
-      RecordRouteKeys.sheet,
-      match == null
-          ? RecordSheetInput(draft: draft)
-          : RecordSheetInput(
-              draft: draft.copyWith(
-                categoryId: draft.categoryId == null ? () => match.rule.categoryId : null,
-                note: draft.note.trim().isEmpty ? match.rule.note : null,
-              ),
-              occurrenceRule: match.rule,
-              occurrenceDate: match.date,
-            ),
-    );
-    if (saved ?? false) bloc.add(CaptureInboxRecorded(entry.id));
+    if (await openCaptureRecord(context, entry, match)) bloc.add(CaptureInboxRecorded(entry.id));
   }
 
   Future<void> _makePattern(BuildContext context, CaptureInboxEntry entry) async {
@@ -155,13 +143,6 @@ class _InboxBodyState extends State<_InboxBody> with WidgetsBindingObserver {
     return Scaffold(
       appBar: AppBar(
         title: Text(texts.inboxTitle),
-        actions: [
-          AppIconButton(
-            icon: IconKey.filter,
-            label: texts.settingsTitle,
-            onPressed: () => context.pushRoute(NotificationCaptureRouteKeys.settings, const EmptyInput()),
-          ),
-        ],
       ),
       body: SafeArea(
         child: BlocBuilder<CaptureInboxBloc, CaptureInboxState>(
@@ -169,6 +150,17 @@ class _InboxBodyState extends State<_InboxBody> with WidgetsBindingObserver {
             if (state.isLoading) return const AppSkeletonPage();
             final inbox = context.read<CaptureInboxBloc>();
             final tab = _tabFor(state);
+            // Kartu yang boleh dicatat satu ketuk (ADR-044 §3.6): dikenali atau
+            // cocok rencana, bukan duplikat; Gratis hanya rutin tetap yang persis.
+            final eligible = [
+              for (final e in state.pending)
+                if (oneTapAllowed(
+                  cardClass: cardClassOf(e, match: state.matches[e.id], existing: state.duplicates[e.id]),
+                  match: state.matches[e.id],
+                  isPlus: ActivePlan.isPlus,
+                ))
+                  e,
+            ];
             return ListView(
               padding: const EdgeInsets.fromLTRB(AppSpacing.space4, 0, AppSpacing.space4, AppSpacing.space8),
               children: [
@@ -199,18 +191,34 @@ class _InboxBodyState extends State<_InboxBody> with WidgetsBindingObserver {
                 if (tab == _InboxTab.pending) ...[
                   if (state.pending.isEmpty)
                     _InboxEmpty(text: texts.inboxEmpty)
-                  else
-                    for (final entry in state.pending)
-                      _PendingCard(
-                        entry: entry,
-                        match: state.matches[entry.id],
-                        existing: state.duplicates[entry.id],
-                        onRecord: () => page._record(context, entry, state.matches[entry.id]),
-                        onDismiss: () => inbox.add(CaptureInboxDismissed(entry.id)),
-                        onMakePattern: () => page._makePattern(context, entry),
-                        onLink: (existing, match) =>
-                            inbox.add(CaptureInboxLinkedToExisting(id: entry.id, existing: existing, match: match)),
+                  else ...[
+                    // Catat semua yang cocok: Plus, bila ada dua kartu atau lebih yang boleh satu ketuk.
+                    if (ActivePlan.isPlus && eligible.length > 1)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: AppSpacing.space3),
+                        child: AppButton.secondary(
+                          key: const ValueKey('inbox-confirm-all'),
+                          label: texts.confirmAllAction(n: eligible.length),
+                          expand: true,
+                          onPressed: () => inbox.add(
+                            CaptureInboxConfirmed([for (final e in eligible) (e, state.matches[e.id])]),
+                          ),
+                        ),
                       ),
+                  ],
+                  for (final entry in state.pending)
+                    _PendingCard(
+                      entry: entry,
+                      match: state.matches[entry.id],
+                      existing: state.duplicates[entry.id],
+                      oneTap: eligible.contains(entry),
+                      onConfirm: () => inbox.add(CaptureInboxConfirmed([(entry, state.matches[entry.id])])),
+                      onRecord: () => page._record(context, entry, state.matches[entry.id]),
+                      onDismiss: () => inbox.add(CaptureInboxDismissed(entry.id)),
+                      onMakePattern: () => page._makePattern(context, entry),
+                      onLink: (existing, match) =>
+                          inbox.add(CaptureInboxLinkedToExisting(id: entry.id, existing: existing, match: match)),
+                    ),
                   const SizedBox(height: AppSpacing.space1),
                   Text(
                     texts.inboxRetention,
@@ -338,6 +346,8 @@ class _PendingCard extends StatelessWidget {
     required this.entry,
     required this.match,
     required this.existing,
+    required this.oneTap,
+    required this.onConfirm,
     required this.onRecord,
     required this.onDismiss,
     required this.onMakePattern,
@@ -350,6 +360,12 @@ class _PendingCard extends StatelessWidget {
   /// Transaksi di buku besar yang tampak sama dengan kartu ini (ADR-044 §3.3).
   final Transaction? existing;
   final void Function(Transaction existing, OccurrenceMatch match) onLink;
+
+  /// Boleh dicatat satu ketuk (ADR-044 §3.6).
+  final bool oneTap;
+
+  /// Catat satu ketuk tanpa formulir.
+  final VoidCallback onConfirm;
   final VoidCallback onRecord;
   final VoidCallback onDismiss;
   final VoidCallback onMakePattern;
@@ -388,7 +404,7 @@ class _PendingCard extends StatelessWidget {
                 ),
               ],
             ),
-            if (entry.possibleDuplicate || existing != null || match != null || entry.reviewReason != null) ...[
+            if (entry.possibleDuplicate || existing != null || match != null || _reasonShown != null) ...[
               const SizedBox(height: AppSpacing.space2),
               Wrap(
                 spacing: AppSpacing.space2,
@@ -397,7 +413,7 @@ class _PendingCard extends StatelessWidget {
                   if (entry.possibleDuplicate || existing != null)
                     AppBadge(texts.possibleDuplicate, tone: AppTone.warning),
                   // Kenapa perlu dicek (QA PR #43 F16).
-                  if (entry.reviewReason case final reason?)
+                  if (_reasonShown case final reason?)
                     AppBadge(
                       key: const ValueKey('inbox-review-reason'),
                       _reasonLabel(reason),
@@ -444,6 +460,14 @@ class _PendingCard extends StatelessWidget {
                 runSpacing: AppSpacing.space1,
                 children: [
                   AppButton.text(small: true, label: texts.dismissAction, onPressed: onDismiss),
+                  // Satu ketuk: Ubah dulu membuka CATAT, Catat langsung mencatat.
+                  if (oneTap)
+                    AppButton.text(
+                      key: ValueKey('inbox-edit-first-${entry.id}'),
+                      small: true,
+                      label: texts.editFirstAction,
+                      onPressed: onRecord,
+                    ),
                   // Nominal tak terbaca: ajari pola di sebelah tombol catat.
                   if (amount == null)
                     AppButton.secondary(
@@ -461,7 +485,12 @@ class _PendingCard extends StatelessWidget {
                         onMakePattern();
                       },
                     ),
-                  AppButton(small: true, label: texts.recordAction, onPressed: onRecord),
+                  AppButton(
+                    key: ValueKey('inbox-confirm-${entry.id}'),
+                    small: true,
+                    label: texts.recordAction,
+                    onPressed: oneTap ? onConfirm : onRecord,
+                  ),
                 ],
               ),
           ],
@@ -469,6 +498,11 @@ class _PendingCard extends StatelessWidget {
       ),
     );
   }
+
+  /// Alasan perlu dicek yang layak ditampilkan: "Catat otomatis mati" adalah
+  /// setelan, bukan alasan tangkapan ini, jadi tidak ditempel di tiap kartu.
+  CaptureReviewReason? get _reasonShown =>
+      entry.reviewReason == CaptureReviewReason.autoRecordOff ? null : entry.reviewReason;
 
   /// Catatan yang sama sudah ada (ADR-044 §3.3): menautkannya ke rutin yang
   /// cocok bila belum tertaut, menutup kartu, atau tetap mencatat bila

@@ -2,14 +2,12 @@ import 'dart:async';
 
 import 'package:di/di.dart';
 import 'package:flutter/material.dart';
-import 'package:navigation/navigation.dart';
-import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_store.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_inbox_changes.dart';
-import 'package:saldough/features/notification_capture/presentation/navigation/notification_capture_route_keys.dart';
+import 'package:saldough/features/notification_capture/presentation/widgets/open_capture_record.dart';
 
 /// Kartu Beranda "transaksi dari notifikasi perlu ditinjau" (ADR-032 §3.7).
 /// Disisipkan shell ke slot Beranda; kosong bila tidak ada yang menunggu
@@ -57,7 +55,7 @@ class _CaptureInboxBannerState extends State<CaptureInboxBanner> {
   Widget build(BuildContext context) {
     if (_pending == 0) return const SizedBox.shrink();
     final texts = t.notificationCapture;
-    void open() => unawaited(context.pushRoute(NotificationCaptureRouteKeys.inbox, const EmptyInput()));
+    void open() => unawaited(openCaptureInbox(context, widget.container));
     // Banner perhatian design system: satu kalimat + satu tindakan, nada
     // warning, di bawah angka utama Beranda (prototipe `Main.dc.html`).
     return Padding(

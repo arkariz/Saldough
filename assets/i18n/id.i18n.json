@@ -1226,6 +1226,10 @@
     "closeDuplicateAction": "Sudah, tutup",
     "recordAnywayAction": "Tetap catat",
     "linkToRuleAction": "Tautkan ke ${name}",
+    "oneTapRecorded": "Tercatat ${amount} · ${app}",
+    "oneTapRecordedMany": "${n} transaksi tercatat",
+    "editFirstAction": "Ubah dulu",
+    "confirmAllAction": "Catat semua yang cocok (${n})",
     "linkedExisting": "Ditautkan ke ${name}.",
     "banner": {
       "other": "${n} transaksi dari notifikasi menunggu dicek"

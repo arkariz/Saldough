@@ -1,9 +1,11 @@
 import 'dart:async';
 
+import 'package:dependencies/dependencies.dart' hide State;
 import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/app_action_snack_bar.dart';
 import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/notification_capture/domain/entities/capture_inbox_entry.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_store.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_inbox_changes.dart';
@@ -112,6 +114,17 @@ final class CaptureInboxUndone extends CaptureInboxEvent {
   final AutoRecordedEntry entry;
 }
 
+/// Kartu dicatat satu ketuk tanpa formulir (ADR-044 §3.6): satu kartu, atau
+/// "Catat semua yang cocok". Tiap pasangan: kartu dan kemunculan rutin yang
+/// cocok (bila ada).
+final class CaptureInboxConfirmed extends CaptureInboxEvent {
+  /// Membuat [CaptureInboxConfirmed].
+  const CaptureInboxConfirmed(this.items);
+
+  /// Kartu beserta kemunculan rutinnya.
+  final List<(CaptureInboxEntry, OccurrenceMatch?)> items;
+}
+
 /// Kartu yang menunggu ditautkan ke transaksi yang sudah dicatat manual
 /// ([existing]) sekaligus ke kemunculan rutin [match] (ADR-044 §3.3).
 final class CaptureInboxLinkedToExisting extends CaptureInboxEvent {
@@ -154,6 +167,7 @@ final class CaptureInboxBloc extends Bloc<CaptureInboxEvent, CaptureInboxState> 
     on<CaptureInboxUndone>(_onUndone);
     on<CaptureInboxUnlinked>(_onUnlinked);
     on<CaptureInboxLinkedToExisting>(_onLinkedToExisting);
+    on<CaptureInboxConfirmed>(_onConfirmed);
     _changes = changes.stream.listen((_) => add(const CaptureInboxRefreshed()));
     // Transaksi manual yang cocok dengan kartu yang menunggu (ADR-044 §3.3).
     _ledger = ledgerChanges?.changes.listen((_) => add(const CaptureInboxRefreshed()));
@@ -230,6 +244,47 @@ final class CaptureInboxBloc extends Bloc<CaptureInboxEvent, CaptureInboxState> 
           ? ShowSnackBarEffect(message: t.notificationCapture.undone, severity: .success)
           : ShowSnackBarEffect(message: t.common.genericErrorMessage, severity: .error),
     );
+  }
+
+  Future<void> _onConfirmed(CaptureInboxConfirmed event, Emitter<CaptureInboxState> emit) async {
+    final done = <(CaptureInboxEntry, Transaction)>[];
+    for (final (entry, match) in event.items) {
+      if (await _actions.confirm(entry, match: match) case Right(:final value)) done.add((entry, value));
+    }
+    await _reload(emit, effect: done.isEmpty ? _confirmFailed() : _confirmedWithUndo(done));
+  }
+
+  UiEffect _confirmFailed() => ShowSnackBarEffect(message: t.common.genericErrorMessage, severity: .error);
+
+  UiEffect _confirmedWithUndo(List<(CaptureInboxEntry, Transaction)> done) => CallbackEffect(
+    callback: (context) {
+      final colors = context.appColors;
+      final message = done.length == 1
+          ? t.notificationCapture.oneTapRecorded(
+              amount: AppMoneyFormatter.format(done.single.$2.amount),
+              app: done.single.$1.appLabel,
+            )
+          : t.notificationCapture.oneTapRecordedMany(n: done.length);
+      ScaffoldMessenger.of(context).showSnackBar(
+        actionSnackBar(
+          context,
+          content: Text(message, style: TextStyle(color: colors.bg)),
+          backgroundColor: colors.ink,
+          action: SnackBarAction(
+            key: const ValueKey('inbox-confirm-undo'),
+            label: t.notificationCapture.undoAction,
+            textColor: colors.brand,
+            onPressed: () => unawaited(_undoConfirmed(done)),
+          ),
+        ),
+      );
+    },
+  );
+
+  Future<void> _undoConfirmed(List<(CaptureInboxEntry, Transaction)> done) async {
+    for (final (entry, transaction) in done) {
+      await _actions.undoConfirm(entry, transaction);
+    }
   }
 
   Future<void> _onLinkedToExisting(CaptureInboxLinkedToExisting event, Emitter<CaptureInboxState> emit) async {

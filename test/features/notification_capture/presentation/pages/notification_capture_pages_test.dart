@@ -657,6 +657,115 @@ void main() {
       expect(find.text('Transaksi Rp50.000 berhasil'), findsOneWidget);
     });
 
+    group('satu ketuk (ADR-044 §3.6)', () {
+      CaptureInboxEntry known(
+        String id, {
+        int amount = 5000000,
+        String? category = 'builtin.food',
+        Duration ago = Duration.zero,
+        CaptureReviewReason reason = CaptureReviewReason.autoRecordOff,
+      }) => CaptureInboxEntry(
+        id: id,
+        packageName: 'id.co.bri.brimo',
+        appLabel: 'BRImo',
+        text: 'Pembayaran ke KOPI $id berhasil',
+        capturedAt: at.subtract(ago),
+        draft: RecordDraft(
+          kind: DraftKind.expense,
+          amountSen: amount,
+          walletId: 'bri',
+          categoryId: category,
+          note: 'KOPI $id',
+          date: at.subtract(ago),
+        ),
+        reviewReason: reason,
+      );
+
+      Future<List<Transaction>> recorded() async =>
+          (await ledger.listTransactionsInMonth(at)).getOrElse((_) => throw StateError(''));
+
+      testWidgets('Plus, kartu dikenali: Catat langsung mencatat tanpa formulir; Ubah dulu tetap ada', (tester) async {
+        await store.saveInbox([known('a')]);
+        await open(tester, NotificationCaptureRouteKeys.inbox);
+        expect(find.byKey(const ValueKey('inbox-edit-first-a')), findsOneWidget);
+
+        await tester.tap(find.byKey(const ValueKey('inbox-confirm-a')));
+        await tester.pumpAndSettle();
+
+        final tx = (await recorded()).single;
+        expect(tx.amount, 5000000);
+        expect(tx.note, 'KOPI a');
+        expect((await store.loadInbox()).getOrElse((_) => throw StateError('')), isEmpty);
+        expect(find.text(t.notificationCapture.inboxEmpty), findsOneWidget);
+        expect(find.text(t.notificationCapture.oneTapRecorded(amount: 'Rp50.000', app: 'BRImo')), findsOneWidget);
+      });
+
+      testWidgets('Batalkan sesudah satu ketuk: transaksi dihapus dan kartu kembali', (tester) async {
+        await store.saveInbox([known('a')]);
+        await open(tester, NotificationCaptureRouteKeys.inbox);
+        await tester.tap(find.byKey(const ValueKey('inbox-confirm-a')));
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.byKey(const ValueKey('inbox-confirm-undo')));
+        await tester.pumpAndSettle();
+
+        expect(await recorded(), isEmpty);
+        expect((await store.loadInbox()).getOrElse((_) => throw StateError('')).single.id, 'a');
+        expect(find.text('Pembayaran ke KOPI a berhasil'), findsOneWidget);
+      });
+
+      testWidgets('kartu perlu diisi (tanpa kategori): tidak ada Ubah dulu, Catat membuka CATAT', (tester) async {
+        await store.saveInbox([known('a', category: null)]);
+        await open(tester, NotificationCaptureRouteKeys.inbox);
+
+        expect(find.byKey(const ValueKey('inbox-edit-first-a')), findsNothing);
+        expect(find.byKey(const ValueKey('inbox-confirm-all')), findsNothing);
+      });
+
+      testWidgets('Gratis, kartu dikenali: satu ketuk tidak ditawarkan', (tester) async {
+        ActivePlan.notifier.value = const FreePlan();
+        await store.saveInbox([known('a')]);
+        await open(tester, NotificationCaptureRouteKeys.inbox);
+
+        expect(find.byKey(const ValueKey('inbox-edit-first-a')), findsNothing);
+      });
+
+      testWidgets('Plus, dua kartu atau lebih: Catat semua yang cocok mencatat semuanya', (tester) async {
+        await store.saveInbox([
+          known('a'),
+          known('b', amount: 1200000, ago: const Duration(minutes: 5)),
+          known('c', category: null),
+        ]);
+        await open(tester, NotificationCaptureRouteKeys.inbox);
+        expect(find.text(t.notificationCapture.confirmAllAction(n: 2)), findsOneWidget);
+
+        await tester.tap(find.byKey(const ValueKey('inbox-confirm-all')));
+        await tester.pumpAndSettle();
+
+        expect((await recorded()).map((tx) => tx.amount).toSet(), {5000000, 1200000});
+        // Yang perlu diisi tetap menunggu.
+        expect((await store.loadInbox()).getOrElse((_) => throw StateError('')).map((e) => e.id), ['c']);
+        expect(find.text(t.notificationCapture.oneTapRecordedMany(n: 2)), findsOneWidget);
+      });
+
+      testWidgets('Catat semua tidak muncul untuk satu kartu, atau untuk Gratis', (tester) async {
+        await store.saveInbox([known('a')]);
+        await open(tester, NotificationCaptureRouteKeys.inbox);
+        expect(find.byKey(const ValueKey('inbox-confirm-all')), findsNothing);
+      });
+
+      testWidgets('alasan "Catat otomatis mati" tidak ditempel di kartu; alasan sungguhan tetap', (tester) async {
+        await store.saveInbox([
+          known('a'),
+          known('b', category: null, reason: CaptureReviewReason.categoryUnclear),
+        ]);
+        await open(tester, NotificationCaptureRouteKeys.inbox);
+
+        expect(find.text(t.notificationCapture.reviewReason.autoRecordOff), findsNothing);
+        expect(find.text(t.notificationCapture.reviewReason.categoryUnclear), findsOneWidget);
+      });
+    });
+
     group('izin dicabut (ADR-044, temuan review UX)', () {
       testWidgets('fitur menyala tetapi izin tidak ada: banner dengan Izinkan, bukan kotak masuk yang tampak kosong', (
         tester,

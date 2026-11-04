@@ -6319,7 +6319,7 @@ S sehari, M beberapa hari, L lebih dari seminggu.
       Verifikasi: 169 uji notifikasi lulus (satu dompet otomatis, beberapa
       dompet ditanya, gagal menyimpan, banner ada/tidak ada, petunjuk izin);
       galeri debug dijalankan di 360dp teks 1× dan 2× tanpa overflow.
-- [ ] **T-26.7** (L) Kartu tiga jenis dan konfirmasi satu ketuk (Plus) dengan
+- [x] **T-26.7** (L) Kartu tiga jenis dan konfirmasi satu ketuk (Plus) dengan
       "Catat semua" (§3.6); "Cek" membuka CATAT langsung bila satu tangkapan
       menunggu (Gratis); judul slide Beranda sesuai tujuan; satu pintu ke
       Setelan di kotak masuk; alasan "Catat otomatis mati" tidak tampil di tiap
@@ -6328,9 +6328,33 @@ S sehari, M beberapa hari, L lebih dari seminggu.
       CATAT terisi, dan "Ingat" dasar Gratis; satu ketuk, tombol di notifikasi,
       Catat semua, dan otomatis Plus.
       ⚠ Periksa ADR-041 §3.8 dan satu ketuk di segmen Rutin supaya tindakan yang
-      sama tidak punya dua gerbang. Perbarui aturan 8 di `.claude/CLAUDE.md` dan `AGENT_CONTEXT.md`
-      saat ADR-044 Accepted.
-      Verifikasi: uji widget per kelas dan per paket (Gratis/Plus).
+      sama tidak punya dua gerbang. Perbarui aturan 8 di `.claude/CLAUDE.md` dan
+      `AGENT_CONTEXT.md` saat ADR-044 Accepted.
+      Selesai 4 Nov 2026:
+      - **Kelas kartu** `cardClassOf` (`planned`, `recognized`, `needsInput`) dari
+        data kartu; penentu bersama (T-26.2) nanti menghasilkan kelas yang sama.
+        Duplikat dan draf bermasalah selalu `needsInput`.
+      - **Satu ketuk** `CaptureInboxActions.confirm` (draf → transaksi, lewat
+        `CaptureFinalizer` dan `RecordTransaction`, tanpa formulir) dan
+        `undoConfirm`; snackbar "Tercatat Rp… · app" dengan Batalkan. Tombol
+        Catat langsung mencatat, **Ubah dulu** membuka CATAT. **Catat semua yang
+        cocok (n)** untuk Plus bila ada dua kartu atau lebih yang boleh satu ketuk.
+      - **Gerbang** `oneTapAllowed`: ⚠ keputusan implementasi yang menyimpang
+        sedikit dari garis "satu ketuk = Plus": kartu cocok rencana dari rutin
+        **bernominal tetap yang persis tetap Gratis**, karena aksi yang sama sudah
+        satu ketuk tanpa cabang hak di segmen Rutin (ADR-041 §3.8). Kartu dikenali
+        dan rutin kira-kira: Plus. Satu fungsi, mudah diubah bila pemilik memilih lain.
+      - **"Cek"** dari Beranda dan Riwayat: bila hanya satu tangkapan, langsung
+        ke CATAT terisi (`openCaptureInbox`), selain itu kotak masuk.
+      - Judul slide Beranda: "Catat dari notifikasi" bila tak ada yang menunggu
+        (membuka setelan), "Kotak masuk notifikasi" bila ada. Ikon filter ganda di
+        app bar kotak masuk dihapus (tersisa tautan Kelola aplikasi & pola).
+        Lencana "Catat otomatis mati" tidak ditempel di kartu.
+      - Tidak ada tombol Plus bertanda di kartu Gratis (tidak ada pemicu paywall
+        yang cocok; tawaran Plus ada di E3).
+      Verifikasi: 192 uji notifikasi lulus (kelas kartu, matriks gerbang,
+      confirm/undo dengan rutin dan pos, satu ketuk, Catat semua, Gratis, Cek
+      satu tangkapan); galeri debug di 360dp teks 1× dan 2× tanpa overflow.
 - [ ] **T-26.8** (S) `VERIFICATION_PLAN_FASE_26.md` dan ukuran keberhasilan
       (median ketuk, kartu dikoreksi, duplikat lolos) dari data jalur internal.
 

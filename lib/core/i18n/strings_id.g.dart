@@ -3141,6 +3141,18 @@ class Translations$notificationCapture$id {
 	/// id: 'Tautkan ke ${name}'
 	String linkToRuleAction({required Object name}) => 'Tautkan ke ${name}';
 
+	/// id: 'Tercatat ${amount} · ${app}'
+	String oneTapRecorded({required Object amount, required Object app}) => 'Tercatat ${amount} · ${app}';
+
+	/// id: '${n} transaksi tercatat'
+	String oneTapRecordedMany({required Object n}) => '${n} transaksi tercatat';
+
+	/// id: 'Ubah dulu'
+	String get editFirstAction => 'Ubah dulu';
+
+	/// id: 'Catat semua yang cocok (${n})'
+	String confirmAllAction({required Object n}) => 'Catat semua yang cocok (${n})';
+
 	/// id: 'Ditautkan ke ${name}.'
 	String linkedExisting({required Object name}) => 'Ditautkan ke ${name}.';
 
@@ -6906,6 +6918,10 @@ extension on Translations {
 			'notificationCapture.closeDuplicateAction' => 'Sudah, tutup',
 			'notificationCapture.recordAnywayAction' => 'Tetap catat',
 			'notificationCapture.linkToRuleAction' => ({required Object name}) => 'Tautkan ke ${name}',
+			'notificationCapture.oneTapRecorded' => ({required Object amount, required Object app}) => 'Tercatat ${amount} · ${app}',
+			'notificationCapture.oneTapRecordedMany' => ({required Object n}) => '${n} transaksi tercatat',
+			'notificationCapture.editFirstAction' => 'Ubah dulu',
+			'notificationCapture.confirmAllAction' => ({required Object n}) => 'Catat semua yang cocok (${n})',
 			'notificationCapture.linkedExisting' => ({required Object name}) => 'Ditautkan ke ${name}.',
 			'notificationCapture.banner' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n, other: '${n} transaksi dari notifikasi menunggu dicek', ), 
 			'notificationCapture.bannerAction' => 'Cek',
@@ -7301,12 +7317,12 @@ extension on Translations {
 			'premium.account.subTrial' => ({required Object date}) => 'Sampai ${date}. Tanpa kartu.',
 			'premium.account.subActive' => ({required Object date}) => 'Aktif sampai ${date}',
 			'premium.account.subActiveOpen' => 'Aktif',
+			_ => null,
+		} ?? switch (path) {
 			'premium.account.subGrace' => ({required Object date}) => 'Pembayaran belum berhasil. Plus tetap aktif sampai ${date}.',
 			'premium.account.subOnHold' => 'Langganan ditahan karena pembayaran belum berhasil. Perbaiki di Play Store.',
 			'premium.account.subTester' => ({required Object date}) => 'Dari program penguji sampai ${date}',
 			'premium.account.subTesterOpen' => 'Dari program penguji',
-			_ => null,
-		} ?? switch (path) {
 			'premium.account.badgeTrial' => 'Uji coba',
 			'premium.account.badgeCheck' => 'Cek',
 			'premium.account.manage' => 'Kelola di Play Store',

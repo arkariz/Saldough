@@ -1226,6 +1226,10 @@
     "closeDuplicateAction": "Already recorded, close",
     "recordAnywayAction": "Record anyway",
     "linkToRuleAction": "Link to ${name}",
+    "oneTapRecorded": "Recorded ${amount} · ${app}",
+    "oneTapRecordedMany": "${n} transactions recorded",
+    "editFirstAction": "Edit first",
+    "confirmAllAction": "Record all matches (${n})",
     "linkedExisting": "Linked to ${name}.",
     "banner": {
       "one": "${n} transaction from notifications to check",

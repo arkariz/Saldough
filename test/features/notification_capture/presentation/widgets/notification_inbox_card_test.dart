@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
 import 'package:navigation/navigation.dart';
+import 'package:saldough/app/di/root_module.dart';
 import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/discovery/discovery.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
@@ -17,6 +18,8 @@ import 'package:saldough/features/notification_capture/domain/entities/capture_i
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_store.dart';
 import 'package:saldough/features/notification_capture/presentation/pages/notification_pattern_page.dart';
 import 'package:saldough/features/notification_capture/presentation/widgets/notification_inbox_card.dart';
+import 'package:saldough/features/record/presentation/navigation/record_route_keys.dart';
+import 'package:saldough/features/record/presentation/navigation/record_route_module.dart';
 import 'package:saldough/shared/capture/capture.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
@@ -199,7 +202,9 @@ void main() {
     statuses.status[DiscoveredFeature.notification] = const FeatureStatus(FeatureState.active, activeCount: 2);
     await pumpCard(tester);
 
-    expect(find.text(t.discovery.notification.inboxTitle), findsOneWidget);
+    // Judul sesuai tujuan ketukan: setelan, bukan "Kotak masuk" (ADR-044).
+    expect(find.text(t.discovery.notification.manage), findsOneWidget);
+    expect(find.text(t.discovery.notification.inboxTitle), findsNothing);
     expect(find.text(t.discovery.notification.activeApps(n: 2)), findsOneWidget);
     expect(action, findsNothing);
     expect(find.byKey(const ValueKey('inbox-card-head')), findsOneWidget);
@@ -233,15 +238,37 @@ void main() {
     expect(find.byType(NotificationPatternPage), findsOneWidget);
   });
 
-  testWidgets('Cek membuka kotak masuk', (tester) async {
+  testWidgets('Cek dengan dua tangkapan atau lebih membuka kotak masuk', (tester) async {
     statuses.status[DiscoveredFeature.notification] = const FeatureStatus(FeatureState.active, activeCount: 1);
-    await store.saveInbox([entry('a')]);
+    await store.saveInbox([entry('a'), entry('b')]);
     await pumpCard(tester);
 
     await tester.tap(action);
     await tester.pumpAndSettle();
 
     expect(find.text(t.notificationCapture.inboxTitle), findsWidgets);
+  });
+
+  testWidgets('Cek dengan satu tangkapan langsung ke CATAT, melewati kotak masuk (ADR-044 §3.8)', (tester) async {
+    // CATAT sungguhan butuh banyak dependensi: diganti rute tiruan.
+    container
+      ..unregister<RouteRegistry>()
+      ..registerSingleton<RouteRegistry>(
+        RouteRegistry.fromModules([
+          for (final m in RootModule.featureModules)
+            if (m is! RecordRouteModule) m,
+          const _RecordStubModule(),
+        ]),
+      );
+    statuses.status[DiscoveredFeature.notification] = const FeatureStatus(FeatureState.active, activeCount: 1);
+    await store.saveInbox([entry('a', note: 'nota')]);
+    await pumpCard(tester);
+
+    await tester.tap(action);
+    await tester.pumpAndSettle();
+
+    expect(find.text(t.notificationCapture.inboxTitle), findsNothing);
+    expect(find.text('CATAT-STUB nota'), findsOneWidget);
   });
 
   testWidgets('setelan berubah: kartu ikut berubah tanpa dimuat ulang', (tester) async {
@@ -253,7 +280,7 @@ void main() {
     statuses.notify();
     await tester.pumpAndSettle();
 
-    expect(find.text(t.discovery.notification.inboxTitle), findsOneWidget);
+    expect(find.text(t.discovery.notification.manage), findsOneWidget);
   });
 
   group('analitik (FEATURE_DISCOVERY §9)', () {
@@ -318,4 +345,17 @@ void main() {
       }
     });
   });
+}
+
+/// Rute CATAT tiruan: menampilkan id catatan dari masukan.
+final class _RecordStubModule extends FeatureRouteModule {
+  const _RecordStubModule();
+
+  @override
+  List<RouteNode> get routes => [
+    RouteNode.typed<RecordSheetInput>(
+      key: RecordRouteKeys.sheet,
+      builder: (_, input) => Scaffold(body: Text('CATAT-STUB ${input.draft?.note}')),
+    ),
+  ];
 }

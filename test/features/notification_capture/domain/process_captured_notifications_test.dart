@@ -16,6 +16,7 @@ import 'package:saldough/features/notification_capture/domain/services/capture_f
 import 'package:saldough/features/notification_capture/domain/usecases/capture_inbox_actions.dart';
 import 'package:saldough/features/notification_capture/domain/usecases/process_captured_notifications.dart';
 import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
+import 'package:saldough/shared/capture/capture.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
@@ -537,6 +538,81 @@ void main() {
           expect((await store.loadInbox()).getOrElse((_) => []), isEmpty);
         },
       );
+
+      CaptureInboxActions actionsWith(RecurringRuleRepository? rules, BudgetItemCatalog? catalog) =>
+          CaptureInboxActions(
+            store: store,
+            recordTransaction: recordTransaction,
+            transactionRepository: ledger,
+            composer: notificationComposer(),
+            walletRepository: wallets,
+            categories: () => notificationCategories,
+            currencyCode: () => 'IDR',
+            languageCode: () => 'id',
+            recurringRules: rules,
+            finalizer: CaptureFinalizer(budgetItems: catalog),
+            newId: () => 'tx${nextId++}',
+          );
+
+      test(
+        'satu ketuk: kartu cocok rutin dicatat tertaut rutin dan pos, kartu hilang; urungkan mengembalikan',
+        () async {
+          final rules = RecurringRuleRepositoryImpl(storage: storage);
+          await rules.saveRule(kopi().copyWith(budgetItemKey: 'tpl-kopi'));
+          await enable(AutoRecordLevel.reviewAll);
+          gateway.queue = [notif('a', payment)];
+          await processor()();
+          final entry = (await store.loadInbox()).getOrElse((_) => []).single;
+          final actions = actionsWith(rules, _FakeCatalog([kopiPos]));
+          final match = (await actions.matchesFor([entry]))[entry.id]!;
+
+          final result = await actions.confirm(entry, match: match);
+
+          final tx = (await ledgerNow()).single as ExpenseTransaction;
+          expect(result.isRight(), isTrue);
+          expect(tx.amount, entry.draft.amountSen);
+          expect(tx.recurrence?.ruleId, 'kopi');
+          expect(tx.recurrence?.linkedBy, RecurrenceLinkedBy.user);
+          expect(tx.budgetItemId, 'pos-kopi');
+          expect((await store.loadInbox()).getOrElse((_) => []), isEmpty);
+
+          await actions.undoConfirm(entry, tx);
+          expect(await ledgerNow(), isEmpty);
+          expect((await store.loadInbox()).getOrElse((_) => []).single.id, entry.id);
+        },
+      );
+
+      test('satu ketuk tanpa rutin: dicatat dari draf, tanpa tautan', () async {
+        await enable(AutoRecordLevel.reviewAll);
+        gateway.queue = [notif('a', payment)];
+        await processor()();
+        final entry = (await store.loadInbox()).getOrElse((_) => []).single;
+
+        final result = await actionsWith(null, null).confirm(entry);
+
+        final tx = (await ledgerNow()).single;
+        expect(result.isRight(), isTrue);
+        expect(tx.recurrence, isNull);
+        expect((await store.loadInbox()).getOrElse((_) => []), isEmpty);
+      });
+
+      test('satu ketuk pada draf belum lengkap: gagal tanpa menyentuh buku besar maupun kartu', () async {
+        final incomplete = CaptureInboxEntry(
+          id: 'x',
+          packageName: 'id.contoh',
+          appLabel: 'Contoh',
+          text: 'teks',
+          capturedAt: now,
+          draft: const RecordDraft(kind: DraftKind.expense),
+        );
+        await store.saveInbox([incomplete]);
+
+        final result = await actionsWith(null, null).confirm(incomplete);
+
+        expect(result.isLeft(), isTrue);
+        expect(await ledgerNow(), isEmpty);
+        expect((await store.loadInbox()).getOrElse((_) => []), hasLength(1));
+      });
 
       test('Tautkan pada catatan yang sudah tertaut tidak mengubahnya, hanya menutup kartu', () async {
         final rules = RecurringRuleRepositoryImpl(storage: storage);

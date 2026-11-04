@@ -10,11 +10,15 @@ import 'package:saldough/features/notification_capture/domain/services/auto_reco
 import 'package:saldough/features/notification_capture/domain/services/capture_finalizer.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_inbox_changes.dart';
 import 'package:saldough/features/notification_capture/domain/services/notification_draft_composer.dart';
+import 'package:saldough/features/notification_capture/domain/services/transaction_from_draft.dart';
 import 'package:saldough/shared/capture/capture.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
+
+/// Kode galat: draf belum lengkap untuk dicatat satu ketuk.
+const incompleteDraftCode = FailureCode('NOTIFICATION_CAPTURE_INCOMPLETE_DRAFT');
 
 /// Aksi pengguna di kotak masuk (ADR-032 §3.6).
 final class CaptureInboxActions {
@@ -33,7 +37,8 @@ final class CaptureInboxActions {
     this.matchLog,
     this.recurringChanges,
     this.finalizer = const CaptureFinalizer(),
-  });
+    String Function()? newId,
+  }) : _newId = newId ?? _timestampId;
 
   /// Sinyal perubahan kotak masuk, atau `null`.
   final CaptureInboxChanges? changes;
@@ -46,6 +51,10 @@ final class CaptureInboxActions {
 
   /// Penutup bersama: tautan rutin dan pos anggaran (ADR-044 §3.2).
   final CaptureFinalizer finalizer;
+
+  final String Function() _newId;
+
+  static String _timestampId() => DateTime.now().microsecondsSinceEpoch.toString();
 
   /// Sinyal rutin berubah.
   final RecurringChanges? recurringChanges;
@@ -238,6 +247,36 @@ final class CaptureInboxActions {
       result[entry.id] = match;
     }
     return result;
+  }
+
+  /// Mencatat kartu [entry] satu ketuk (ADR-044 §3.6): transaksi dari draf yang
+  /// lengkap, ditautkan ke [match] (dan pos periodenya) bila ada, lewat
+  /// `RecordTransaction`, tanpa formulir. Kartu dihapus dari kotak masuk.
+  /// Pemanggil menjaga syaratnya (`cardClassOf`, `oneTapAllowed`); draf yang
+  /// belum lengkap gagal tanpa menyentuh data.
+  Future<Either<Failure, Transaction>> confirm(CaptureInboxEntry entry, {OccurrenceMatch? match}) async {
+    final built = transactionFromDraft(entry.draft, id: _newId(), fallbackDate: entry.capturedAt);
+    if (built == null) {
+      return left(const ValidationFailure(code: incompleteDraftCode, message: 'draf belum lengkap'));
+    }
+    final transaction = await finalizer.finalize(built, match: match, linkedBy: RecurrenceLinkedBy.user);
+    final saved = await recordTransaction(transaction, source: this);
+    if (saved case Left(:final value)) return left(value);
+    if (match != null) {
+      AppAnalytics.log(RecurringEvents.occurrenceLinked);
+      recurringChanges?.notifyChanged();
+    }
+    await remove(entry.id);
+    return right(transaction);
+  }
+
+  /// Membatalkan [confirm]: transaksi dihapus (saldo kembali) dan kartu
+  /// dikembalikan ke kotak masuk.
+  Future<Either<Failure, Unit>> undoConfirm(CaptureInboxEntry entry, Transaction transaction) async {
+    final deleted = await recordTransaction.delete(transaction);
+    if (deleted.isLeft()) return deleted;
+    recurringChanges?.notifyChanged();
+    return restore(entry);
   }
 
   /// Menautkan transaksi yang sudah ada ([existing], yang dicatat manual) ke

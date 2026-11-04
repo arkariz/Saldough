@@ -1258,6 +1258,10 @@ class _Translations$notificationCapture$en extends Translations$notificationCapt
 	@override String get closeDuplicateAction => 'Already recorded, close';
 	@override String get recordAnywayAction => 'Record anyway';
 	@override String linkToRuleAction({required Object name}) => 'Link to ${name}';
+	@override String oneTapRecorded({required Object amount, required Object app}) => 'Recorded ${amount} · ${app}';
+	@override String oneTapRecordedMany({required Object n}) => '${n} transactions recorded';
+	@override String get editFirstAction => 'Edit first';
+	@override String confirmAllAction({required Object n}) => 'Record all matches (${n})';
 	@override String linkedExisting({required Object name}) => 'Linked to ${name}.';
 	@override String banner({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
 		one: '${n} transaction from notifications to check',
@@ -3657,6 +3661,10 @@ extension on TranslationsEn {
 			'notificationCapture.closeDuplicateAction' => 'Already recorded, close',
 			'notificationCapture.recordAnywayAction' => 'Record anyway',
 			'notificationCapture.linkToRuleAction' => ({required Object name}) => 'Link to ${name}',
+			'notificationCapture.oneTapRecorded' => ({required Object amount, required Object app}) => 'Recorded ${amount} · ${app}',
+			'notificationCapture.oneTapRecordedMany' => ({required Object n}) => '${n} transactions recorded',
+			'notificationCapture.editFirstAction' => 'Edit first',
+			'notificationCapture.confirmAllAction' => ({required Object n}) => 'Record all matches (${n})',
 			'notificationCapture.linkedExisting' => ({required Object name}) => 'Linked to ${name}.',
 			'notificationCapture.banner' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '${n} transaction from notifications to check', other: '${n} transactions from notifications to check', ), 
 			'notificationCapture.bannerAction' => 'Check',
@@ -4052,12 +4060,12 @@ extension on TranslationsEn {
 			'premium.account.subTrial' => ({required Object date}) => 'Until ${date}. No card needed.',
 			'premium.account.subActive' => ({required Object date}) => 'Active until ${date}',
 			'premium.account.subActiveOpen' => 'Active',
+			_ => null,
+		} ?? switch (path) {
 			'premium.account.subGrace' => ({required Object date}) => 'Payment did not go through. Plus stays on until ${date}.',
 			'premium.account.subOnHold' => 'Subscription on hold because payment did not go through. Fix it in the Play Store.',
 			'premium.account.subTester' => ({required Object date}) => 'From the tester program until ${date}',
 			'premium.account.subTesterOpen' => 'From the tester program',
-			_ => null,
-		} ?? switch (path) {
 			'premium.account.badgeTrial' => 'Trial',
 			'premium.account.badgeCheck' => 'Check',
 			'premium.account.manage' => 'Manage in the Play Store',

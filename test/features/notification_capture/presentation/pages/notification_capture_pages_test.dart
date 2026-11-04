@@ -530,6 +530,87 @@ void main() {
       expect(find.text('Transaksi Rp50.000 berhasil'), findsOneWidget);
     });
 
+    group('duplikat dua arah (ADR-044 §3.3)', () {
+      CaptureInboxEntry card({String id = 'a'}) => CaptureInboxEntry(
+        id: id,
+        packageName: 'id.co.bri.brimo',
+        appLabel: 'BRImo',
+        text: 'Pembayaran Rp50.000 ke KOPI berhasil',
+        capturedAt: at,
+        draft: RecordDraft(kind: DraftKind.expense, amountSen: 5000000, walletId: 'bri', date: at),
+        reviewReason: CaptureReviewReason.autoRecordOff,
+      );
+
+      testWidgets('tanpa catatan yang sama: aksi biasa, tanpa keterangan duplikat', (tester) async {
+        await store.saveInbox([card()]);
+        await open(tester, NotificationCaptureRouteKeys.inbox);
+
+        expect(find.byKey(const ValueKey('inbox-duplicate-of')), findsNothing);
+        expect(find.text(t.notificationCapture.recordAction), findsOneWidget);
+        expect(find.text(t.notificationCapture.closeDuplicateAction), findsNothing);
+      });
+
+      testWidgets('catatan manual yang sama sudah ada: kartu menawarkan Sudah, tutup dan Tetap catat', (tester) async {
+        await ledger.saveTransaction(
+          ExpenseTransaction(id: 'manual', date: at, amount: 5000000, note: 'Kopi pagi', walletId: 'bri'),
+        );
+        await store.saveInbox([card()]);
+        await open(tester, NotificationCaptureRouteKeys.inbox);
+
+        expect(find.text(t.notificationCapture.possibleDuplicate), findsOneWidget);
+        expect(find.text(t.notificationCapture.duplicateOf(label: 'Kopi pagi')), findsOneWidget);
+        expect(find.byKey(const ValueKey('inbox-record-anyway')), findsOneWidget);
+        expect(find.byKey(const ValueKey('inbox-close-duplicate')), findsOneWidget);
+        // Tanpa rutin yang cocok, tidak ada Tautkan.
+        expect(find.byKey(const ValueKey('inbox-link-existing')), findsNothing);
+
+        await tester.tap(find.byKey(const ValueKey('inbox-close-duplicate')));
+        await tester.pumpAndSettle();
+        expect((await store.loadInbox()).getOrElse((_) => throw StateError('')), isEmpty);
+        // Transaksi yang sudah ada tidak disentuh.
+        expect((await ledger.listTransactionsInMonth(at)).getOrElse((_) => []), hasLength(1));
+      });
+
+      testWidgets('dicatat manual sesudah kartu tampil: kartu berubah, tidak hilang sendiri', (tester) async {
+        await store.saveInbox([card()]);
+        await open(tester, NotificationCaptureRouteKeys.inbox);
+        expect(find.byKey(const ValueKey('inbox-duplicate-of')), findsNothing);
+
+        await ledger.saveTransaction(
+          ExpenseTransaction(id: 'manual', date: at, amount: 5000000, note: 'Kopi', walletId: 'bri'),
+        );
+        container<LedgerChanges>().notifyChanged();
+        await tester.pumpAndSettle();
+
+        expect(find.byKey(const ValueKey('inbox-duplicate-of')), findsOneWidget);
+        // Kartu tetap ada: dua pembelian yang sama bisa sungguhan.
+        expect(find.text('Pembayaran Rp50.000 ke KOPI berhasil'), findsOneWidget);
+        expect(find.byKey(const ValueKey('inbox-record-anyway')), findsOneWidget);
+      });
+
+      testWidgets('satu catatan hanya dicocokkan ke satu kartu (yang tertua)', (tester) async {
+        await ledger.saveTransaction(
+          ExpenseTransaction(id: 'manual', date: at, amount: 5000000, note: 'Kopi', walletId: 'bri'),
+        );
+        final older = card(id: 'old');
+        final newer = CaptureInboxEntry(
+          id: 'new',
+          packageName: older.packageName,
+          appLabel: older.appLabel,
+          text: 'Pembayaran Rp50.000 ke KOPI berhasil (kedua)',
+          capturedAt: at.add(const Duration(minutes: 30)),
+          draft: older.draft,
+          reviewReason: CaptureReviewReason.autoRecordOff,
+        );
+        await store.saveInbox([newer, older]);
+        await open(tester, NotificationCaptureRouteKeys.inbox);
+
+        expect(find.byKey(const ValueKey('inbox-duplicate-of')), findsOneWidget);
+        expect(find.byKey(const ValueKey('inbox-record-anyway')), findsOneWidget);
+        expect(find.text(t.notificationCapture.recordAction), findsOneWidget);
+      });
+    });
+
     testWidgets('tanpa yang menunggu, kotak masuk terbuka di segmen Otomatis (QA PR #43 F17)', (tester) async {
       await store.saveAutoRecorded([
         AutoRecordedEntry(

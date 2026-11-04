@@ -101,10 +101,15 @@ dipilih untuk pedagang itu.
 
 **Anti-duplikat dua arah** (urutan duplikat-dulu dipertahankan, keputusan F23-2):
 - Saat kartu ditampilkan, tangkapan dicek ulang terhadap buku besar.
-- Saat CATAT manual cocok dengan kartu yang menunggu, kartu ditutup sendiri
-  (lewat `LedgerChanges`).
-- Bila ternyata sudah tercatat, aksinya **Tautkan** atau **Tetap catat**, bukan
-  sekadar lencana.
+- Saat CATAT manual cocok dengan kartu yang menunggu (lewat `LedgerChanges`),
+  kartu **berubah**, tidak ditutup sendiri: dua pembelian yang sama di hari yang
+  sama bisa sungguhan, dan menutup diam-diam bisa membuang transaksi yang nyata
+  (keputusan implementasi 4 Nov 2026, menggantikan rancangan "ditutup otomatis").
+  Satu catatan hanya dicocokkan ke satu kartu (yang tertua).
+- Kartu duplikat menampilkan "Sama dengan catatan …" dengan aksi **Sudah, tutup**
+  (utama), **Tetap catat** (membuka CATAT), dan **Tautkan ke {rutin}** bila
+  catatan itu belum tertaut dan ada kemunculan rutin yang cocok: catatan manual
+  ditautkan ke kemunculan dan pos periodenya (saldo tidak berubah).
 - Jenis harus sama antara pola dan rutin (keputusan F23-6).
 - Status kemunculan "tercatat" harus andal (B-83b).
 

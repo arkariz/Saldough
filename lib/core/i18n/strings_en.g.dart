@@ -1255,6 +1255,11 @@ class _Translations$notificationCapture$en extends Translations$notificationCapt
 	@override String get undoConfirm => 'The transaction is deleted and the wallet balance goes back to what it was.';
 	@override String get undone => 'Automatic transaction undone.';
 	@override String get dismissed => 'Notification dismissed.';
+	@override String duplicateOf({required Object label}) => 'Same as the entry ${label}';
+	@override String get closeDuplicateAction => 'Already recorded, close';
+	@override String get recordAnywayAction => 'Record anyway';
+	@override String linkToRuleAction({required Object name}) => 'Link to ${name}';
+	@override String linkedExisting({required Object name}) => 'Linked to ${name}.';
 	@override String banner({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
 		one: '${n} transaction from notifications to check',
 		other: '${n} transactions from notifications to check',
@@ -3646,6 +3651,11 @@ extension on TranslationsEn {
 			'notificationCapture.undoConfirm' => 'The transaction is deleted and the wallet balance goes back to what it was.',
 			'notificationCapture.undone' => 'Automatic transaction undone.',
 			'notificationCapture.dismissed' => 'Notification dismissed.',
+			'notificationCapture.duplicateOf' => ({required Object label}) => 'Same as the entry ${label}',
+			'notificationCapture.closeDuplicateAction' => 'Already recorded, close',
+			'notificationCapture.recordAnywayAction' => 'Record anyway',
+			'notificationCapture.linkToRuleAction' => ({required Object name}) => 'Link to ${name}',
+			'notificationCapture.linkedExisting' => ({required Object name}) => 'Linked to ${name}.',
 			'notificationCapture.banner' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '${n} transaction from notifications to check', other: '${n} transactions from notifications to check', ), 
 			'notificationCapture.bannerAction' => 'Check',
 			'notificationCapture.autoRecordedSnack' => ({required Object amount, required Object app}) => 'Recorded automatically: ${amount} · ${app}',
@@ -4045,13 +4055,13 @@ extension on TranslationsEn {
 			'premium.account.subTester' => ({required Object date}) => 'From the tester program until ${date}',
 			'premium.account.subTesterOpen' => 'From the tester program',
 			'premium.account.badgeTrial' => 'Trial',
+			_ => null,
+		} ?? switch (path) {
 			'premium.account.badgeCheck' => 'Check',
 			'premium.account.manage' => 'Manage in the Play Store',
 			'premium.account.restore' => 'Restore purchases',
 			'premium.account.restoreDone' => 'Done. A subscription on this Google Play account will turn on again if there is one.',
 			'premium.features.title' => 'What Plus does',
-			_ => null,
-		} ?? switch (path) {
 			'premium.features.seeAll' => 'See all Plus features',
 			'premium.features.intro' => 'Tanuki does the work, so you spend less time recording and more time knowing where your money stands.',
 			'premium.features.cta' => 'See plans',

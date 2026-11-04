@@ -17,6 +17,7 @@ import 'package:saldough/features/record/presentation/navigation/record_route_ke
 import 'package:saldough/features/transaction/presentation/navigation/transaction_route_keys.dart';
 import 'package:saldough/shared/capture/capture.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
+import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/transaction/transaction_presentation.dart';
 import 'package:state_management/state_management.dart';
 
@@ -186,9 +187,12 @@ class _InboxBodyState extends State<_InboxBody> {
                       _PendingCard(
                         entry: entry,
                         match: state.matches[entry.id],
+                        existing: state.duplicates[entry.id],
                         onRecord: () => page._record(context, entry, state.matches[entry.id]),
                         onDismiss: () => inbox.add(CaptureInboxDismissed(entry.id)),
                         onMakePattern: () => page._makePattern(context, entry),
+                        onLink: (existing, match) =>
+                            inbox.add(CaptureInboxLinkedToExisting(id: entry.id, existing: existing, match: match)),
                       ),
                   const SizedBox(height: AppSpacing.space1),
                   Text(
@@ -273,13 +277,19 @@ class _PendingCard extends StatelessWidget {
   const _PendingCard({
     required this.entry,
     required this.match,
+    required this.existing,
     required this.onRecord,
     required this.onDismiss,
     required this.onMakePattern,
+    required this.onLink,
   });
 
   final CaptureInboxEntry entry;
   final OccurrenceMatch? match;
+
+  /// Transaksi di buku besar yang tampak sama dengan kartu ini (ADR-044 §3.3).
+  final Transaction? existing;
+  final void Function(Transaction existing, OccurrenceMatch match) onLink;
   final VoidCallback onRecord;
   final VoidCallback onDismiss;
   final VoidCallback onMakePattern;
@@ -318,13 +328,14 @@ class _PendingCard extends StatelessWidget {
                 ),
               ],
             ),
-            if (entry.possibleDuplicate || match != null || entry.reviewReason != null) ...[
+            if (entry.possibleDuplicate || existing != null || match != null || entry.reviewReason != null) ...[
               const SizedBox(height: AppSpacing.space2),
               Wrap(
                 spacing: AppSpacing.space2,
                 runSpacing: AppSpacing.space1,
                 children: [
-                  if (entry.possibleDuplicate) AppBadge(texts.possibleDuplicate, tone: AppTone.warning),
+                  if (entry.possibleDuplicate || existing != null)
+                    AppBadge(texts.possibleDuplicate, tone: AppTone.warning),
                   // Kenapa perlu dicek (QA PR #43 F16).
                   if (entry.reviewReason case final reason?)
                     AppBadge(
@@ -353,36 +364,97 @@ class _PendingCard extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               style: textTheme.bodySmall?.copyWith(color: colors.ink2),
             ),
+            if (existing case final tx?) ...[
+              const SizedBox(height: AppSpacing.space1),
+              Text(
+                key: const ValueKey('inbox-duplicate-of'),
+                texts.duplicateOf(label: _existingLabel(tx)),
+                style: textTheme.bodySmall?.copyWith(color: colors.warning),
+              ),
+            ],
             const SizedBox(height: AppSpacing.space3),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                AppButton.text(small: true, label: texts.dismissAction, onPressed: onDismiss),
-                const SizedBox(width: AppSpacing.space2),
-                // Nominal tak terbaca: ajari pola di sebelah tombol catat.
-                if (amount == null) ...[
-                  AppButton.secondary(
-                    key: ValueKey('inbox-teach-${entry.id}'),
-                    small: true,
-                    label: t.discovery.notification.teachPattern,
-                    onPressed: () {
-                      AppAnalytics.log(
-                        DiscoveryEvents.notificationRowTapped(state: 'active', surface: 'inbox', action: 'teach_pattern'),
-                      );
-                      onMakePattern();
-                    },
-                  ),
+            if (existing != null)
+              _duplicateActions(existing!)
+            else
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  AppButton.text(small: true, label: texts.dismissAction, onPressed: onDismiss),
                   const SizedBox(width: AppSpacing.space2),
+                  // Nominal tak terbaca: ajari pola di sebelah tombol catat.
+                  if (amount == null) ...[
+                    AppButton.secondary(
+                      key: ValueKey('inbox-teach-${entry.id}'),
+                      small: true,
+                      label: t.discovery.notification.teachPattern,
+                      onPressed: () {
+                        AppAnalytics.log(
+                          DiscoveryEvents.notificationRowTapped(
+                            state: 'active',
+                            surface: 'inbox',
+                            action: 'teach_pattern',
+                          ),
+                        );
+                        onMakePattern();
+                      },
+                    ),
+                    const SizedBox(width: AppSpacing.space2),
+                  ],
+                  AppButton(small: true, label: texts.recordAction, onPressed: onRecord),
                 ],
-                AppButton(small: true, label: texts.recordAction, onPressed: onRecord),
-              ],
-            ),
+              ),
           ],
         ),
       ),
     );
   }
+
+  /// Catatan yang sama sudah ada (ADR-044 §3.3): menautkannya ke rutin yang
+  /// cocok bila belum tertaut, menutup kartu, atau tetap mencatat bila
+  /// ternyata pembelian kedua. Kartu tidak pernah ditutup otomatis.
+  Widget _duplicateActions(Transaction tx) {
+    final texts = t.notificationCapture;
+    final rule = match;
+    final canLink = tx.recurrence == null && rule != null;
+    return Wrap(
+      alignment: WrapAlignment.end,
+      spacing: AppSpacing.space2,
+      runSpacing: AppSpacing.space1,
+      children: [
+        AppButton.text(
+          key: const ValueKey('inbox-record-anyway'),
+          small: true,
+          label: texts.recordAnywayAction,
+          onPressed: onRecord,
+        ),
+        if (canLink)
+          AppButton.secondary(
+            key: const ValueKey('inbox-close-duplicate'),
+            small: true,
+            label: texts.closeDuplicateAction,
+            onPressed: onDismiss,
+          )
+        else
+          AppButton(
+            key: const ValueKey('inbox-close-duplicate'),
+            small: true,
+            label: texts.closeDuplicateAction,
+            onPressed: onDismiss,
+          ),
+        if (canLink)
+          AppButton(
+            key: const ValueKey('inbox-link-existing'),
+            small: true,
+            label: texts.linkToRuleAction(name: rule.rule.note),
+            onPressed: () => onLink(tx, rule),
+          ),
+      ],
+    );
+  }
 }
+
+String _existingLabel(Transaction tx) =>
+    tx.note.trim().isEmpty ? CycleMonthFormatter.formatDateShort(tx.date) : tx.note.trim();
 
 String _reasonLabel(CaptureReviewReason reason) {
   final texts = t.notificationCapture.reviewReason;

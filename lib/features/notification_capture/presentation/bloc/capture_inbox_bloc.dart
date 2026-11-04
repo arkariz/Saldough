@@ -21,6 +21,7 @@ final class CaptureInboxState extends UiState<CaptureInboxState> {
     this.auto = const [],
     this.matches = const {},
     this.linked = const [],
+    this.duplicates = const {},
     super.effect,
   });
 
@@ -39,6 +40,10 @@ final class CaptureInboxState extends UiState<CaptureInboxState> {
   /// Tautan otomatis ke rutin (7 hari), terbaru dulu.
   final List<RecurrenceMatchEntry> linked;
 
+  /// Transaksi yang tampak sama dengan kartu yang menunggu, per id item
+  /// (ADR-044 §3.3); dihitung ulang tiap muat.
+  final Map<String, Transaction> duplicates;
+
   @override
   CaptureInboxState copyWith({
     bool? isLoading,
@@ -46,6 +51,7 @@ final class CaptureInboxState extends UiState<CaptureInboxState> {
     List<AutoRecordedEntry>? auto,
     Map<String, OccurrenceMatch>? matches,
     List<RecurrenceMatchEntry>? linked,
+    Map<String, Transaction>? duplicates,
     UiEffect? effect,
   }) => CaptureInboxState(
     isLoading: isLoading ?? this.isLoading,
@@ -53,11 +59,12 @@ final class CaptureInboxState extends UiState<CaptureInboxState> {
     auto: auto ?? this.auto,
     matches: matches ?? this.matches,
     linked: linked ?? this.linked,
+    duplicates: duplicates ?? this.duplicates,
     effect: effect,
   );
 
   @override
-  List<Object?> get props => [isLoading, pending, auto, matches, linked];
+  List<Object?> get props => [isLoading, pending, auto, matches, linked, duplicates];
 }
 
 /// Event [CaptureInboxBloc].
@@ -105,6 +112,22 @@ final class CaptureInboxUndone extends CaptureInboxEvent {
   final AutoRecordedEntry entry;
 }
 
+/// Kartu yang menunggu ditautkan ke transaksi yang sudah dicatat manual
+/// ([existing]) sekaligus ke kemunculan rutin [match] (ADR-044 §3.3).
+final class CaptureInboxLinkedToExisting extends CaptureInboxEvent {
+  /// Membuat [CaptureInboxLinkedToExisting].
+  const CaptureInboxLinkedToExisting({required this.id, required this.existing, required this.match});
+
+  /// Id kartu.
+  final String id;
+
+  /// Transaksi yang sudah ada.
+  final Transaction existing;
+
+  /// Kemunculan rutin yang cocok.
+  final OccurrenceMatch match;
+}
+
 /// Lepaskan tautan otomatis ke rutin.
 final class CaptureInboxUnlinked extends CaptureInboxEvent {
   /// Membuat [CaptureInboxUnlinked].
@@ -122,6 +145,7 @@ final class CaptureInboxBloc extends Bloc<CaptureInboxEvent, CaptureInboxState> 
     required this._actions,
     required this._transactionRepository,
     required CaptureInboxChanges changes,
+    LedgerChanges? ledgerChanges,
   }) : super(const CaptureInboxState()) {
     on<CaptureInboxStarted>((_, emit) => _reload(emit));
     on<CaptureInboxRefreshed>((_, emit) => _reload(emit));
@@ -129,21 +153,34 @@ final class CaptureInboxBloc extends Bloc<CaptureInboxEvent, CaptureInboxState> 
     on<CaptureInboxRecorded>(_onRecorded);
     on<CaptureInboxUndone>(_onUndone);
     on<CaptureInboxUnlinked>(_onUnlinked);
+    on<CaptureInboxLinkedToExisting>(_onLinkedToExisting);
     _changes = changes.stream.listen((_) => add(const CaptureInboxRefreshed()));
+    // Transaksi manual yang cocok dengan kartu yang menunggu (ADR-044 §3.3).
+    _ledger = ledgerChanges?.changes.listen((_) => add(const CaptureInboxRefreshed()));
   }
 
   final NotificationCaptureStore _store;
   final CaptureInboxActions _actions;
   final TransactionRepository _transactionRepository;
   late final StreamSubscription<void> _changes;
+  StreamSubscription<void>? _ledger;
 
   Future<void> _reload(Emitter<CaptureInboxState> emit, {UiEffect? effect}) async {
     final pending = (await _store.loadInbox()).getOrElse((_) => const []);
     final auto = (await _store.loadAutoRecorded()).getOrElse((_) => const []);
     final matches = await _actions.matchesFor(pending);
+    final duplicates = await _actions.duplicatesFor(pending);
     final linked = (await _actions.matchLog?.list(DateTime.now()))?.getOrElse((_) => const []) ?? const [];
     emit(
-      state.copyWith(isLoading: false, pending: pending, auto: auto, matches: matches, linked: linked, effect: effect),
+      state.copyWith(
+        isLoading: false,
+        pending: pending,
+        auto: auto,
+        matches: matches,
+        linked: linked,
+        duplicates: duplicates,
+        effect: effect,
+      ),
     );
   }
 
@@ -195,6 +232,19 @@ final class CaptureInboxBloc extends Bloc<CaptureInboxEvent, CaptureInboxState> 
     );
   }
 
+  Future<void> _onLinkedToExisting(CaptureInboxLinkedToExisting event, Emitter<CaptureInboxState> emit) async {
+    final result = await _actions.linkExisting(event.id, event.existing, event.match);
+    await _reload(
+      emit,
+      effect: result.isRight()
+          ? ShowSnackBarEffect(
+              message: t.notificationCapture.linkedExisting(name: event.match.rule.note),
+              severity: .success,
+            )
+          : ShowSnackBarEffect(message: t.common.genericErrorMessage, severity: .error),
+    );
+  }
+
   Future<void> _onUnlinked(CaptureInboxUnlinked event, Emitter<CaptureInboxState> emit) async {
     final result = await _actions.unlink(event.entry);
     await _reload(
@@ -221,6 +271,7 @@ final class CaptureInboxBloc extends Bloc<CaptureInboxEvent, CaptureInboxState> 
   @override
   Future<void> close() async {
     await _changes.cancel();
+    await _ledger?.cancel();
     return super.close();
   }
 }

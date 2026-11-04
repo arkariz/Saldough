@@ -124,8 +124,7 @@ final class MethodChannelNotificationCaptureGateway with RepositoryGuard impleme
   Future<List<CapturedNotification>> samples(String packageName) async {
     try {
       final raw =
-          await _methods.invokeListMethod<Map<Object?, Object?>>('samples', {'packageName': packageName}) ??
-          const [];
+          await _methods.invokeListMethod<Map<Object?, Object?>>('samples', {'packageName': packageName}) ?? const [];
       return [for (final item in raw) _toCaptured(item)];
     } on PlatformException {
       return const [];

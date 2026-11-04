@@ -38,6 +38,9 @@ final class NotificationCaptureScope extends IsolatedScope {
     if (parent.isRegistered<RecurringChanges>()) {
       c.registerSingleton<RecurringChanges>(parent<RecurringChanges>());
     }
+    if (parent.isRegistered<LedgerChanges>()) {
+      c.registerSingleton<LedgerChanges>(parent<LedgerChanges>());
+    }
   }
 
   @override
@@ -60,6 +63,7 @@ final class NotificationCaptureScope extends IsolatedScope {
           actions: c<CaptureInboxActions>(),
           transactionRepository: c<TransactionRepository>(),
           changes: c<CaptureInboxChanges>(),
+          ledgerChanges: c.isRegistered<LedgerChanges>() ? c<LedgerChanges>() : null,
         ),
         dispose: (bloc) => bloc.close(),
       );

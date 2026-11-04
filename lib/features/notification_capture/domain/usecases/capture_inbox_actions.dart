@@ -6,6 +6,7 @@ import 'package:saldough/features/notification_capture/domain/entities/captured_
 import 'package:saldough/features/notification_capture/domain/entities/notification_capture_settings.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_store.dart';
 import 'package:saldough/features/notification_capture/domain/services/active_capture_inputs.dart';
+import 'package:saldough/features/notification_capture/domain/services/auto_record_policy.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_finalizer.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_inbox_changes.dart';
 import 'package:saldough/features/notification_capture/domain/services/notification_draft_composer.dart';
@@ -31,6 +32,7 @@ final class CaptureInboxActions {
     this.recurringRules,
     this.matchLog,
     this.recurringChanges,
+    this.finalizer = const CaptureFinalizer(),
   });
 
   /// Sinyal perubahan kotak masuk, atau `null`.
@@ -41,6 +43,9 @@ final class CaptureInboxActions {
 
   /// Log tautan otomatis (Lepaskan).
   final RecurrenceMatchLogRepository? matchLog;
+
+  /// Penutup bersama: tautan rutin dan pos anggaran (ADR-044 §3.2).
+  final CaptureFinalizer finalizer;
 
   /// Sinyal rutin berubah.
   final RecurringChanges? recurringChanges;
@@ -205,6 +210,49 @@ final class CaptureInboxActions {
     recurringChanges?.notifyChanged();
     changes?.notify();
     return removed;
+  }
+
+  /// Transaksi di buku besar yang tampak sama dengan tiap kartu yang menunggu,
+  /// per id item (ADR-044 §3.3). Dihitung ulang saat kartu tampil, jadi
+  /// transaksi yang dicatat manual sesudah tangkapan masuk tetap terdeteksi.
+  /// Satu transaksi hanya dicocokkan ke satu kartu (yang tertua lebih dulu):
+  /// dua kopi yang sama di hari yang sama bukan satu catatan. Kartu tidak
+  /// pernah ditutup otomatis, karena dua pembelian yang sama bisa sungguhan.
+  Future<Map<String, Transaction>> duplicatesFor(List<CaptureInboxEntry> entries) async {
+    if (entries.isEmpty) return const {};
+    final months = <DateTime, List<Transaction>>{};
+    Future<List<Transaction>> monthOf(DateTime date) async =>
+        months[DateTime(date.year, date.month)] ??= (await transactionRepository.listTransactionsInMonth(
+          date,
+        )).getOrElse((_) => const []);
+    final result = <String, Transaction>{};
+    final used = <String>{};
+    final oldestFirst = [...entries]..sort((a, b) => a.capturedAt.compareTo(b.capturedAt));
+    for (final entry in oldestFirst) {
+      final draft = entry.draft;
+      if (draft.amountSen == null || draft.walletId == null) continue;
+      final date = draft.date ?? entry.capturedAt;
+      final match = AutoRecordPolicy.findInLedger(draft, date, await monthOf(date), exclude: used);
+      if (match == null) continue;
+      used.add(match.id);
+      result[entry.id] = match;
+    }
+    return result;
+  }
+
+  /// Menautkan transaksi yang sudah ada ([existing], yang dicatat manual) ke
+  /// kemunculan [match] dan pos periodenya, lalu menutup kartu [entryId].
+  /// Saldo tidak berubah. Tidak melakukan apa pun bila [existing] sudah
+  /// tertaut ke rutin.
+  Future<Either<Failure, Unit>> linkExisting(String entryId, Transaction existing, OccurrenceMatch match) async {
+    if (existing.recurrence == null) {
+      final linked = await finalizer.finalize(existing, match: match, linkedBy: RecurrenceLinkedBy.user);
+      final saved = await recordTransaction(linked, previousTransaction: existing);
+      if (saved.isLeft()) return saved;
+      AppAnalytics.log(RecurringEvents.occurrenceLinked);
+      recurringChanges?.notifyChanged();
+    }
+    return remove(entryId);
   }
 
   /// Menafsirkan ulang item [id] sesudah pola baru disimpan; drafnya

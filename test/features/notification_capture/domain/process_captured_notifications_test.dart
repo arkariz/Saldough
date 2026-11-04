@@ -490,6 +490,121 @@ void main() {
         expect(((await ledgerNow()).single as ExpenseTransaction).budgetItemId, isNull);
       });
 
+      test(
+        'Tautkan: catatan manual yang sama ditautkan ke kemunculan dan pos, kartu tertutup (ADR-044 §3.3)',
+        () async {
+          final rules = RecurringRuleRepositoryImpl(storage: storage);
+          final log = RecurrenceMatchLogRepositoryImpl(storage: storage, clock: () => now);
+          await rules.saveRule(kopi().copyWith(budgetItemKey: 'tpl-kopi'));
+          await enable(AutoRecordLevel.reviewAll);
+          gateway.queue = [notif('a', payment)];
+          await withCatalog(rules, log, _FakeCatalog([kopiPos]))();
+          final entry = (await store.loadInbox()).getOrElse((_) => []).single;
+
+          // Dicatat manual sesudah tangkapan masuk, tanpa tautan.
+          final manual = ExpenseTransaction(
+            id: 'manual',
+            date: entry.draft.date ?? entry.capturedAt,
+            amount: entry.draft.amountSen!,
+            note: 'Kopi',
+            walletId: 'bri',
+          );
+          await ledger.saveTransaction(manual);
+
+          final actions = CaptureInboxActions(
+            store: store,
+            recordTransaction: recordTransaction,
+            transactionRepository: ledger,
+            composer: notificationComposer(),
+            walletRepository: wallets,
+            categories: () => notificationCategories,
+            currencyCode: () => 'IDR',
+            languageCode: () => 'id',
+            recurringRules: rules,
+            matchLog: log,
+            finalizer: CaptureFinalizer(budgetItems: _FakeCatalog([kopiPos])),
+          );
+          final duplicates = await actions.duplicatesFor([entry]);
+          expect(duplicates[entry.id]?.id, 'manual');
+          final match = (await actions.matchesFor([entry]))[entry.id]!;
+
+          expect((await actions.linkExisting(entry.id, duplicates[entry.id]!, match)).isRight(), isTrue);
+
+          final tx = (await ledgerNow()).single as ExpenseTransaction;
+          expect(tx.id, 'manual');
+          expect(tx.recurrence, RecurrenceLink(ruleId: 'kopi', occurrenceDate: match.date));
+          expect(tx.budgetItemId, 'pos-kopi');
+          expect((await store.loadInbox()).getOrElse((_) => []), isEmpty);
+        },
+      );
+
+      test('Tautkan pada catatan yang sudah tertaut tidak mengubahnya, hanya menutup kartu', () async {
+        final rules = RecurringRuleRepositoryImpl(storage: storage);
+        await rules.saveRule(kopi());
+        await enable(AutoRecordLevel.reviewAll);
+        gateway.queue = [notif('a', payment)];
+        await processor()();
+        final entry = (await store.loadInbox()).getOrElse((_) => []).single;
+        final linked = ExpenseTransaction(
+          id: 'manual',
+          date: entry.capturedAt,
+          amount: entry.draft.amountSen!,
+          note: 'Kopi',
+          walletId: 'bri',
+          recurrence: RecurrenceLink(ruleId: 'kopi', occurrenceDate: DateTime(2026, 9, 29)),
+        );
+        await ledger.saveTransaction(linked);
+        final actions = CaptureInboxActions(
+          store: store,
+          recordTransaction: recordTransaction,
+          transactionRepository: ledger,
+          composer: notificationComposer(),
+          walletRepository: wallets,
+          categories: () => notificationCategories,
+          currencyCode: () => 'IDR',
+          languageCode: () => 'id',
+          recurringRules: rules,
+        );
+        final match = OccurrenceMatch(rule: kopi(), date: DateTime(2026, 9, 29), exact: true);
+
+        await actions.linkExisting(entry.id, linked, match);
+
+        expect((await ledgerNow()).single, linked);
+        expect((await store.loadInbox()).getOrElse((_) => []), isEmpty);
+      });
+
+      test('dua kartu serupa, satu catatan: hanya kartu tertua yang cocok (satu ke satu)', () async {
+        await enable(AutoRecordLevel.reviewAll);
+        gateway.queue = [notif('a', payment), notif('b', payment, at: now.add(const Duration(minutes: 5)))];
+        await processor()();
+        final inbox = (await store.loadInbox()).getOrElse((_) => []);
+        expect(inbox, hasLength(2));
+        final first = inbox.reduce((a, b) => a.capturedAt.isBefore(b.capturedAt) ? a : b);
+        await ledger.saveTransaction(
+          ExpenseTransaction(
+            id: 'manual',
+            date: first.draft.date ?? first.capturedAt,
+            amount: first.draft.amountSen!,
+            note: 'Kopi',
+            walletId: 'bri',
+          ),
+        );
+        final actions = CaptureInboxActions(
+          store: store,
+          recordTransaction: recordTransaction,
+          transactionRepository: ledger,
+          composer: notificationComposer(),
+          walletRepository: wallets,
+          categories: () => notificationCategories,
+          currencyCode: () => 'IDR',
+          languageCode: () => 'id',
+        );
+
+        final duplicates = await actions.duplicatesFor(inbox);
+
+        expect(duplicates.keys, [first.id]);
+      });
+
       test('Lepaskan melepas tautan rutin sekaligus pos yang datang dari tautan itu', () async {
         final rules = RecurringRuleRepositoryImpl(storage: storage);
         final log = RecurrenceMatchLogRepositoryImpl(storage: storage, clock: () => now);

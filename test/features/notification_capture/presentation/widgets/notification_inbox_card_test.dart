@@ -85,7 +85,11 @@ void main() {
         container: container,
         child: MaterialApp(
           theme: PixelTheme.light,
-          home: Scaffold(body: ListView(children: [NotificationInboxCard(container: container, board: board)])),
+          home: Scaffold(
+            body: ListView(
+              children: [NotificationInboxCard(container: container, board: board)],
+            ),
+          ),
         ),
       ),
     );
@@ -189,7 +193,9 @@ void main() {
     expect(find.text(t.notificationCapture.settingsTitle), findsWidgets);
   });
 
-  testWidgets('aktif tanpa yang menunggu: jumlah aplikasi, kepala kartu membuka setelan; tanpa Cek; latar tenang', (tester) async {
+  testWidgets('aktif tanpa yang menunggu: jumlah aplikasi, kepala kartu membuka setelan; tanpa Cek; latar tenang', (
+    tester,
+  ) async {
     statuses.status[DiscoveredFeature.notification] = const FeatureStatus(FeatureState.active, activeCount: 2);
     await pumpCard(tester);
 

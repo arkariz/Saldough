@@ -59,12 +59,24 @@ final class AutoRecordPolicy {
 
   /// `true` bila [draft] mungkin sudah tercatat: transaksi berjenis, dompet,
   /// dan nominal sama di hari yang sama di [ledger].
-  static bool matchesLedger(RecordDraft draft, DateTime date, List<Transaction> ledger) {
+  static bool matchesLedger(RecordDraft draft, DateTime date, List<Transaction> ledger) =>
+      findInLedger(draft, date, ledger) != null;
+
+  /// Transaksi pertama di [ledger] yang tampak sama dengan [draft] (lihat
+  /// [matchesLedger]), atau `null`. Id di [exclude] dilewati supaya satu
+  /// transaksi hanya dicocokkan ke satu kartu (dua kopi yang sama di hari yang
+  /// sama bukan satu catatan).
+  static Transaction? findInLedger(
+    RecordDraft draft,
+    DateTime date,
+    Iterable<Transaction> ledger, {
+    Set<String> exclude = const {},
+  }) {
     final amount = draft.amountSen;
-    if (amount == null) return false;
+    if (amount == null) return null;
     bool sameDay(DateTime d) => d.year == date.year && d.month == date.month && d.day == date.day;
-    return ledger.any((t) {
-      if (t.amount != amount || !sameDay(t.date)) return false;
+    return ledger.where((t) {
+      if (exclude.contains(t.id) || t.amount != amount || !sameDay(t.date)) return false;
       return switch ((draft.kind, t)) {
         (DraftKind.expense, ExpenseTransaction(:final walletId)) => walletId == draft.walletId,
         (DraftKind.income, IncomeTransaction(:final walletId)) => walletId == draft.walletId,
@@ -72,6 +84,6 @@ final class AutoRecordPolicy {
           fromWalletId == draft.walletId && toWalletId == draft.toWalletId,
         _ => false,
       };
-    });
+    }).firstOrNull;
   }
 }

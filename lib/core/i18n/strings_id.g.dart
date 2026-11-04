@@ -3132,6 +3132,21 @@ class Translations$notificationCapture$id {
 	/// id: 'Notifikasi diabaikan.'
 	String get dismissed => 'Notifikasi diabaikan.';
 
+	/// id: 'Sama dengan catatan ${label}'
+	String duplicateOf({required Object label}) => 'Sama dengan catatan ${label}';
+
+	/// id: 'Sudah, tutup'
+	String get closeDuplicateAction => 'Sudah, tutup';
+
+	/// id: 'Tetap catat'
+	String get recordAnywayAction => 'Tetap catat';
+
+	/// id: 'Tautkan ke ${name}'
+	String linkToRuleAction({required Object name}) => 'Tautkan ke ${name}';
+
+	/// id: 'Ditautkan ke ${name}.'
+	String linkedExisting({required Object name}) => 'Ditautkan ke ${name}.';
+
 	/// id: '(other) {${n} transaksi dari notifikasi menunggu dicek}'
 	String banner({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n,
 		other: '${n} transaksi dari notifikasi menunggu dicek',
@@ -6883,6 +6898,11 @@ extension on Translations {
 			'notificationCapture.undoConfirm' => 'Transaksinya dihapus dan saldo dompet kembali seperti sebelumnya.',
 			'notificationCapture.undone' => 'Transaksi otomatis dibatalkan.',
 			'notificationCapture.dismissed' => 'Notifikasi diabaikan.',
+			'notificationCapture.duplicateOf' => ({required Object label}) => 'Sama dengan catatan ${label}',
+			'notificationCapture.closeDuplicateAction' => 'Sudah, tutup',
+			'notificationCapture.recordAnywayAction' => 'Tetap catat',
+			'notificationCapture.linkToRuleAction' => ({required Object name}) => 'Tautkan ke ${name}',
+			'notificationCapture.linkedExisting' => ({required Object name}) => 'Ditautkan ke ${name}.',
 			'notificationCapture.banner' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n, other: '${n} transaksi dari notifikasi menunggu dicek', ), 
 			'notificationCapture.bannerAction' => 'Cek',
 			'notificationCapture.autoRecordedSnack' => ({required Object amount, required Object app}) => 'Tercatat otomatis: ${amount} · ${app}',
@@ -7282,13 +7302,13 @@ extension on Translations {
 			'premium.account.subTester' => ({required Object date}) => 'Dari program penguji sampai ${date}',
 			'premium.account.subTesterOpen' => 'Dari program penguji',
 			'premium.account.badgeTrial' => 'Uji coba',
+			_ => null,
+		} ?? switch (path) {
 			'premium.account.badgeCheck' => 'Cek',
 			'premium.account.manage' => 'Kelola di Play Store',
 			'premium.account.restore' => 'Pulihkan pembelian',
 			'premium.account.restoreDone' => 'Selesai. Langganan di akun Google Play ini akan aktif kembali bila ada.',
 			'premium.features.title' => 'Yang dikerjakan Plus',
-			_ => null,
-		} ?? switch (path) {
 			'premium.features.seeAll' => 'Lihat semua fitur Plus',
 			'premium.features.intro' => 'Tanuki yang bekerja, jadi kamu tidak perlu banyak mengetik dan lebih tahu posisi uangmu.',
 			'premium.features.cta' => 'Lihat paket',

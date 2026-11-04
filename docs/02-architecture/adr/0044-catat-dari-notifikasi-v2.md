@@ -53,9 +53,13 @@ Status kemunculan dan progres anggaran **diturunkan** dari tautan dan
 
 ### 3.3 Anti-duplikat dua arah
 
-Pemeriksaan `matchesLedger` dijalankan ulang saat kartu ditampilkan, dan kartu
-yang menunggu ditutup otomatis saat transaksi manual yang cocok disimpan (lewat
-`LedgerChanges`). Aksi pada duplikat: **Tautkan** atau **Tetap catat**. Urutan
+Pemeriksaan ledger (`AutoRecordPolicy.findInLedger`) dijalankan ulang saat
+kartu ditampilkan dan saat `LedgerChanges` memberi tahu ada transaksi baru.
+Kartu yang cocok **berubah** (tidak ditutup otomatis, karena dua pembelian yang
+sama di hari yang sama bisa sungguhan) dan satu transaksi hanya dicocokkan ke
+satu kartu. Aksi pada duplikat: **Sudah, tutup**, **Tetap catat**, atau
+**Tautkan** ke kemunculan rutin yang cocok (`CaptureInboxActions.linkExisting`,
+lewat `CaptureFinalizer`). Urutan
 duplikat-dulu (F23-2) dan jenis harus sama (F23-6) dipertahankan. Status
 kemunculan "tercatat" diperbaiki bila tampil "Later" (B-83b).
 

@@ -108,7 +108,14 @@ class _SourcePageState extends State<_SourcePage> {
     final free = wallets.where((w) => !_source.allWalletIds.contains(w.id)).firstOrNull ?? wallets.firstOrNull;
     if (free == null) return;
     _ruleKeys.add(UniqueKey());
-    setState(() => _source = _source.copyWith(walletRules: [..._source.walletRules, WalletRule(walletId: free.id)]));
+    setState(
+      () => _source = _source.copyWith(
+        walletRules: [
+          ..._source.walletRules,
+          WalletRule(walletId: free.id),
+        ],
+      ),
+    );
   }
 
   void _removeRule(int index) {
@@ -154,7 +161,12 @@ class _SourcePageState extends State<_SourcePage> {
       appBar: AppBar(title: Text(_source.appLabel)),
       bottomNavigationBar: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space2, AppSpacing.space4, AppSpacing.space4),
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.space4,
+            AppSpacing.space2,
+            AppSpacing.space4,
+            AppSpacing.space4,
+          ),
           child: AppButton(label: texts.save, onPressed: _save),
         ),
       ),
@@ -240,8 +252,14 @@ class _SourcePageState extends State<_SourcePage> {
           title: Text(texts.samplesDisclosureTitle),
           content: Text(texts.samplesDisclosureBody),
           actions: [
-            TextButton(onPressed: () => Navigator.of(dialogContext).pop(false), child: Text(texts.samplesDisclosureCancel)),
-            TextButton(onPressed: () => Navigator.of(dialogContext).pop(true), child: Text(texts.samplesDisclosureAgree)),
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(false),
+              child: Text(texts.samplesDisclosureCancel),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(true),
+              child: Text(texts.samplesDisclosureAgree),
+            ),
           ],
         ),
       );
@@ -451,10 +469,14 @@ class _SourcePageState extends State<_SourcePage> {
       if (missingDefaults)
         Align(
           alignment: Alignment.centerLeft,
-          child: AppButton.text(small: true, label: texts.addDefaultKeywords, onPressed: () => setState(
+          child: AppButton.text(
+            small: true,
+            label: texts.addDefaultKeywords,
+            onPressed: () => setState(
               () =>
                   _source = _source.copyWith(keywords: {..._source.keywords, ...defaultNotificationKeywords}.toList()),
-            )),
+            ),
+          ),
         ),
       const SizedBox(height: AppSpacing.space6),
       AppSectionLabel(texts.patternsTitle),
@@ -559,7 +581,12 @@ class _PatternRow extends StatelessWidget {
         label: pattern.label,
         onTap: onTap,
         child: AppCard(
-          padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space2, AppSpacing.space1, AppSpacing.space2),
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.space4,
+            AppSpacing.space2,
+            AppSpacing.space1,
+            AppSpacing.space2,
+          ),
           child: Row(
             children: [
               Expanded(
@@ -692,37 +719,37 @@ class _FilterPhraseSheetState extends State<_FilterPhraseSheet> {
         if (w.text.length >= 3 && !RegExp(r'\d').hasMatch(w.text)) w.text.replaceAll(RegExp(r'[,.;:!?]+$'), ''),
     }.where((w) => w.length >= 3);
     return Padding(
-        padding: EdgeInsets.fromLTRB(
-          AppSpacing.space4,
-          AppSpacing.space4,
-          AppSpacing.space4,
-          AppSpacing.space4 + MediaQuery.viewInsetsOf(context).bottom,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(texts.samplesFilterTitle, style: textTheme.titleMedium),
-            const SizedBox(height: AppSpacing.space1),
-            Text(texts.samplesFilterHint, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
-            const SizedBox(height: AppSpacing.space3),
-            Wrap(
-              spacing: AppSpacing.space1,
-              runSpacing: AppSpacing.space1,
-              children: [
-                for (final word in words) ActionChip(label: Text(word), onPressed: () => _append(word)),
-              ],
-            ),
-            const SizedBox(height: AppSpacing.space3),
-            TextField(
-              key: const ValueKey('samples-phrase'),
-              controller: _phrase,
-              decoration: InputDecoration(hintText: texts.keywordField),
-            ),
-            const SizedBox(height: AppSpacing.space3),
-            AppButton(label: texts.addKeyword, onPressed: () => Navigator.of(context).pop(_phrase.text)),
-          ],
-        ),
+      padding: EdgeInsets.fromLTRB(
+        AppSpacing.space4,
+        AppSpacing.space4,
+        AppSpacing.space4,
+        AppSpacing.space4 + MediaQuery.viewInsetsOf(context).bottom,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(texts.samplesFilterTitle, style: textTheme.titleMedium),
+          const SizedBox(height: AppSpacing.space1),
+          Text(texts.samplesFilterHint, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
+          const SizedBox(height: AppSpacing.space3),
+          Wrap(
+            spacing: AppSpacing.space1,
+            runSpacing: AppSpacing.space1,
+            children: [
+              for (final word in words) ActionChip(label: Text(word), onPressed: () => _append(word)),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.space3),
+          TextField(
+            key: const ValueKey('samples-phrase'),
+            controller: _phrase,
+            decoration: InputDecoration(hintText: texts.keywordField),
+          ),
+          const SizedBox(height: AppSpacing.space3),
+          AppButton(label: texts.addKeyword, onPressed: () => Navigator.of(context).pop(_phrase.text)),
+        ],
+      ),
     );
   }
 }

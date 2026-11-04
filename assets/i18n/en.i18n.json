@@ -1221,6 +1221,11 @@
     "undoConfirm": "The transaction is deleted and the wallet balance goes back to what it was.",
     "undone": "Automatic transaction undone.",
     "dismissed": "Notification dismissed.",
+    "duplicateOf": "Same as the entry ${label}",
+    "closeDuplicateAction": "Already recorded, close",
+    "recordAnywayAction": "Record anyway",
+    "linkToRuleAction": "Link to ${name}",
+    "linkedExisting": "Linked to ${name}.",
     "banner": {
       "one": "${n} transaction from notifications to check",
       "other": "${n} transactions from notifications to check"

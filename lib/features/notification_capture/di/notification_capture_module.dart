@@ -104,6 +104,7 @@ abstract final class NotificationCaptureModule {
           recurringRules: c.isRegistered<RecurringRuleRepository>() ? c<RecurringRuleRepository>() : null,
           matchLog: c.isRegistered<RecurrenceMatchLogRepository>() ? c<RecurrenceMatchLogRepository>() : null,
           recurringChanges: c.isRegistered<RecurringChanges>() ? c<RecurringChanges>() : null,
+          finalizer: CaptureFinalizer(budgetItems: c.isRegistered<BudgetItemCatalog>() ? c<BudgetItemCatalog>() : null),
         ),
       );
   }

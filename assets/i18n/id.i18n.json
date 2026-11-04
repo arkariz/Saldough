@@ -1221,6 +1221,11 @@
     "undoConfirm": "Transaksinya dihapus dan saldo dompet kembali seperti sebelumnya.",
     "undone": "Transaksi otomatis dibatalkan.",
     "dismissed": "Notifikasi diabaikan.",
+    "duplicateOf": "Sama dengan catatan ${label}",
+    "closeDuplicateAction": "Sudah, tutup",
+    "recordAnywayAction": "Tetap catat",
+    "linkToRuleAction": "Tautkan ke ${name}",
+    "linkedExisting": "Ditautkan ke ${name}.",
     "banner": {
       "other": "${n} transaksi dari notifikasi menunggu dicek"
     },

@@ -193,7 +193,12 @@ class _NotificationPatternPageState extends State<NotificationPatternPage> {
       appBar: AppBar(title: Text(texts.patternTitle)),
       bottomNavigationBar: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space2, AppSpacing.space4, AppSpacing.space4),
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.space4,
+            AppSpacing.space2,
+            AppSpacing.space4,
+            AppSpacing.space4,
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -308,7 +313,11 @@ class _NotificationPatternPageState extends State<NotificationPatternPage> {
             if (!_showTemplate)
               Align(
                 alignment: Alignment.centerLeft,
-                child: AppButton.text(small: true, label: texts.patternTemplateToggle, onPressed: () => setState(() => _showTemplate = true)),
+                child: AppButton.text(
+                  small: true,
+                  label: texts.patternTemplateToggle,
+                  onPressed: () => setState(() => _showTemplate = true),
+                ),
               )
             else ...[
               const SizedBox(height: AppSpacing.space4),

@@ -38,7 +38,10 @@ class NotificationSwitchCard extends StatelessWidget {
       children: [
         AppSwitchRow(title: label, subtitle: hint, value: value, onChanged: onChanged),
         if (footer case final footer?)
-          Padding(padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4), child: footer),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4),
+            child: footer,
+          ),
       ],
     ),
   );

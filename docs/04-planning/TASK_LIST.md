@@ -6261,10 +6261,22 @@ S sehari, M beberapa hari, L lebih dari seminggu.
       Verifikasi: 5 uji baru di `process_captured_notifications_test.dart`
       (rutin tertaut pos terbebankan, tanpa katalog, rutin tanpa pos, pos
       periode lain tidak dipakai, Lepaskan melepas pos).
-- [ ] **T-26.4** (M) Anti-duplikat dua arah dan status "tercatat" andal (§3.3,
+- [x] **T-26.4** (M) Anti-duplikat dua arah dan status "tercatat" andal (§3.3,
       termasuk B-83b): cek ulang saat kartu tampil, tutup otomatis lewat
       `LedgerChanges`, aksi Tautkan/Tetap catat.
-      Verifikasi: CATAT manual setelah tangkapan menutup kartunya; tanpa duplikat.
+      Selesai 4 Nov 2026. Selisih dari rancangan: kartu **tidak ditutup otomatis**
+      saat catatan manual yang cocok muncul, karena dua pembelian yang sama di
+      hari yang sama bisa sungguhan; kartu berubah dan menawarkan Sudah, tutup /
+      Tetap catat / Tautkan ke {rutin}. `CaptureInboxActions.duplicatesFor`
+      (satu catatan hanya ke satu kartu, tertua dulu) dan `linkExisting`;
+      `CaptureInboxBloc` mendengar `LedgerChanges`; `AutoRecordPolicy.findInLedger`.
+      B-83b (F23-4, kemunculan tercatat tampil "Later"): tidak direproduksi dari
+      kode. Status "tercatat" dibaca dari tautan pada transaksi yang ikut dimuat,
+      jadi satu-satunya jalur yang ditemukan: transaksi tertaut di luar jendela
+      `monthsBack` (daftar Rutin 3 bulan, rincian 12) saat dicatat sangat jauh di
+      depan. Uji regresi ditambah; ulangi di perangkat bila muncul lagi.
+      Verifikasi: 4 uji widget kotak masuk, 3 uji use case (Tautkan, sudah
+      tertaut, satu-ke-satu), 2 uji status/kandidat kemunculan.
 - [ ] **T-26.5** (M) Kata arah generik lintas aplikasi; hapus
       `builtInNotificationApps` dan `_cuePatterns` (§3.4); uji sintetis variasi
       format nominal, bahasa id/en, dan kata arah (tanpa nama bank).

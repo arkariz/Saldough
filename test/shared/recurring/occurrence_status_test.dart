@@ -79,6 +79,42 @@ void main() {
     expect(first.transaction, tx);
   });
 
+  test('dicatat lebih awal (B-83b): tercatat bila transaksinya ikut dimuat, apa pun bulan transaksinya', () {
+    // Nov 2026 dicatat pada 28 Okt: tanggal transaksi di bulan sebelumnya.
+    final early = ExpenseTransaction(
+      id: 'awal',
+      date: DateTime(2026, 10, 28, 9),
+      amount: 6500000,
+      note: 'Netflix',
+      walletId: 'bca',
+      recurrence: RecurrenceLink(ruleId: 'netflix', occurrenceDate: DateTime(2026, 11)),
+    );
+    expect(statuses(netflix(), [early])[DateTime(2026, 11)], OccurrenceStatus.recorded);
+    // Syarat yang dijaga pemanggil: transaksi di luar jendela muat tidak terlihat.
+    expect(statuses(netflix(), const [])[DateTime(2026, 11)], OccurrenceStatus.upcoming);
+  });
+
+  test('kemunculan yang sudah tercatat tidak ditawarkan lagi sebagai kandidat kecocokan', () {
+    final early = ExpenseTransaction(
+      id: 'awal',
+      date: DateTime(2026, 10, 30),
+      amount: 6500000,
+      note: 'Netflix',
+      walletId: 'bca',
+      recurrence: RecurrenceLink(ruleId: 'netflix', occurrenceDate: DateTime(2026, 11)),
+    );
+    List<OccurrenceMatch> candidates(List<Transaction> ledger) => occurrenceCandidates(
+      kind: RecurringKind.expense,
+      walletId: 'bca',
+      amount: 6500000,
+      date: DateTime(2026, 11),
+      rules: [netflix()],
+      transactions: ledger,
+    );
+    expect(candidates([early]), isEmpty);
+    expect(candidates(const []).single.date, DateTime(2026, 11));
+  });
+
   group('belum terlihat H+2 (E3, T-17.1)', () {
     final debit = netflix().copyWith(paymentMode: RecurringPaymentMode.autoDebit);
     Occurrence october(RecurringRule rule, DateTime today) => occurrenceStatusesOf(

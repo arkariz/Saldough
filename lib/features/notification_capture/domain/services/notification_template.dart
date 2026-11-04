@@ -146,11 +146,10 @@ abstract final class NotificationTemplate {
         if (e.value == TemplateWordRole.amount) e.key,
     ];
     if (amountIndexes.length != 1) return null;
-    List<int> indexesOf(TemplateWordRole role) =>
-        [
-          for (final e in roles.entries)
-            if (e.value == role) e.key,
-        ]..sort();
+    List<int> indexesOf(TemplateWordRole role) => [
+      for (final e in roles.entries)
+        if (e.value == role) e.key,
+    ]..sort();
     // Catatan, dompet asal, dan dompet tujuan boleh beberapa kata, tetapi
     // harus berurutan.
     final spans = {

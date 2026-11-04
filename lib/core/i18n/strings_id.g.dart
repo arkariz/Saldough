@@ -4573,33 +4573,6 @@ class Translations$home$preview$id {
 
 	/// id: '+50 XP'
 	String get missionReward => '+50 XP';
-
-	/// id: 'Tagihan Rutin'
-	String get billTitle => 'Tagihan Rutin';
-
-	/// id: '3 HARI LAGI'
-	String get billBadge => '3 HARI LAGI';
-
-	/// id: 'Spotify Family & Wi-Fi'
-	String get billName => 'Spotify Family & Wi-Fi';
-
-	/// id: 'Rp354.990'
-	String get billAmount => 'Rp354.990';
-
-	/// id: 'Jatuh tempo 25 Mei'
-	String get billDue => 'Jatuh tempo 25 Mei';
-
-	/// id: 'Koban & Hadiah'
-	String get rewardTitle => 'Koban & Hadiah';
-
-	/// id: 'REWARD AKTIF'
-	String get rewardBadge => 'REWARD AKTIF';
-
-	/// id: '1.485 Koban'
-	String get rewardAmount => '1.485 Koban';
-
-	/// id: 'Siap ditukar di katalog hadiah'
-	String get rewardNote => 'Siap ditukar di katalog hadiah';
 }
 
 // Path: account.errors
@@ -6533,15 +6506,6 @@ extension on Translations {
 			'home.preview.moodBadge' => '84% SEHAT',
 			'home.preview.missionClaimed' => 'TERKLAIM',
 			'home.preview.missionReward' => '+50 XP',
-			'home.preview.billTitle' => 'Tagihan Rutin',
-			'home.preview.billBadge' => '3 HARI LAGI',
-			'home.preview.billName' => 'Spotify Family & Wi-Fi',
-			'home.preview.billAmount' => 'Rp354.990',
-			'home.preview.billDue' => 'Jatuh tempo 25 Mei',
-			'home.preview.rewardTitle' => 'Koban & Hadiah',
-			'home.preview.rewardBadge' => 'REWARD AKTIF',
-			'home.preview.rewardAmount' => '1.485 Koban',
-			'home.preview.rewardNote' => 'Siap ditukar di katalog hadiah',
 			'onboarding.skipAction' => 'Lewati',
 			'onboarding.nextAction' => 'Lanjut',
 			'onboarding.closeAction' => 'Tutup',
@@ -6824,8 +6788,6 @@ extension on Translations {
 			'discovery.quickStart.walletHint' => 'Pilih dompet untuk tiap aplikasi.',
 			'discovery.quickStart.pickHint' => 'Pilih minimal satu aplikasi.',
 			'discovery.quickStart.pickedCount' => ({required Object n}) => '${n} aplikasi dipilih.',
-			_ => null,
-		} ?? switch (path) {
 			'discovery.quickStart.freeLimit' => 'Paket Gratis: satu aplikasi. Lebih dari itu dengan Plus.',
 			'notificationCapture.accountEntryTitle' => 'Catat dari notifikasi',
 			'notificationCapture.accountEntryBody' => 'Catat otomatis dari notifikasi bank dan e-wallet.',
@@ -6835,6 +6797,8 @@ extension on Translations {
 			'notificationCapture.accessMissingBody' => 'Tanpa izin ini, Tanukonomy tidak bisa melihat notifikasi bank.',
 			'notificationCapture.accessAction' => 'Beri izin',
 			'notificationCapture.accessGranted' => 'Izin notifikasi aktif',
+			_ => null,
+		} ?? switch (path) {
 			'notificationCapture.disclosureTitle' => 'Sebelum memberi izin',
 			'notificationCapture.disclosureBody' => 'Tanukonomy akan bisa membaca notifikasi di ponselmu.\n\n• Hanya dari aplikasi yang kamu pilih dan cocok dengan filternya.\n• Notifikasi OTP tidak pernah disimpan.\n• Teks yang sulit dibaca bisa dikirim ke Gemini (Google).\n• Teks notifikasi disimpan di ponselmu paling lama 7 hari.\n• Notifikasi baru bisa diproses di latar saat Tanukonomy tertutup, supaya tombol Catat di notifikasi bisa dipakai.\n\nSesudah Lanjut, Android membuka daftar akses notifikasi. Pilih Tanukonomy lalu nyalakan.',
 			'notificationCapture.disclosureAccept' => 'Lanjut',
@@ -7338,8 +7302,6 @@ extension on Translations {
 			'premium.signInBody' => 'Fitur ini bagian dari Plus. Masuk dengan akunmu untuk memakainya. Mencatat tetap gratis dan tanpa akun.',
 			'premium.signInAction' => 'Masuk',
 			'premium.plusOnlyTitle' => 'Fitur ini bagian dari Plus',
-			_ => null,
-		} ?? switch (path) {
 			'premium.plusOnlyBody' => 'Berlangganan Plus belum tersedia. Mencatat tetap gratis.',
 			'premium.account.section' => 'Plus',
 			'premium.account.rowTitle' => 'Tanukonomy Plus',
@@ -7349,6 +7311,8 @@ extension on Translations {
 			'premium.account.subActiveOpen' => 'Aktif',
 			'premium.account.subGrace' => ({required Object date}) => 'Pembayaran belum berhasil. Plus tetap aktif sampai ${date}.',
 			'premium.account.subOnHold' => 'Langganan ditahan karena pembayaran belum berhasil. Perbaiki di Play Store.',
+			_ => null,
+		} ?? switch (path) {
 			'premium.account.subTester' => ({required Object date}) => 'Dari program penguji sampai ${date}',
 			'premium.account.subTesterOpen' => 'Dari program penguji',
 			'premium.account.badgeTrial' => 'Uji coba',

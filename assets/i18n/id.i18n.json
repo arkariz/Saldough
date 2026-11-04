@@ -776,16 +776,7 @@
       "moodTitle": "Mood: Santai & Makmur",
       "moodBadge": "84% SEHAT",
       "missionClaimed": "TERKLAIM",
-      "missionReward": "+50 XP",
-      "billTitle": "Tagihan Rutin",
-      "billBadge": "3 HARI LAGI",
-      "billName": "Spotify Family & Wi-Fi",
-      "billAmount": "Rp354.990",
-      "billDue": "Jatuh tempo 25 Mei",
-      "rewardTitle": "Koban & Hadiah",
-      "rewardBadge": "REWARD AKTIF",
-      "rewardAmount": "1.485 Koban",
-      "rewardNote": "Siap ditukar di katalog hadiah"
+      "missionReward": "+50 XP"
     }
   },
   "onboarding": {

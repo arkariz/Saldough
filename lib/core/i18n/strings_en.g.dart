@@ -1826,15 +1826,6 @@ class _Translations$home$preview$en extends Translations$home$preview$id {
 	@override String get moodBadge => '84% HEALTHY';
 	@override String get missionClaimed => 'CLAIMED';
 	@override String get missionReward => '+50 XP';
-	@override String get billTitle => 'Recurring Bills';
-	@override String get billBadge => '3 DAYS LEFT';
-	@override String get billName => 'Spotify Family & Wi-Fi';
-	@override String get billAmount => 'USD 354.99';
-	@override String get billDue => 'Due May 25';
-	@override String get rewardTitle => 'Koban & Rewards';
-	@override String get rewardBadge => 'ACTIVE REWARD';
-	@override String get rewardAmount => '1,485 Koban';
-	@override String get rewardNote => 'Ready to redeem in the rewards catalog';
 }
 
 // Path: account.errors
@@ -3262,15 +3253,6 @@ extension on TranslationsEn {
 			'home.preview.moodBadge' => '84% HEALTHY',
 			'home.preview.missionClaimed' => 'CLAIMED',
 			'home.preview.missionReward' => '+50 XP',
-			'home.preview.billTitle' => 'Recurring Bills',
-			'home.preview.billBadge' => '3 DAYS LEFT',
-			'home.preview.billName' => 'Spotify Family & Wi-Fi',
-			'home.preview.billAmount' => 'USD 354.99',
-			'home.preview.billDue' => 'Due May 25',
-			'home.preview.rewardTitle' => 'Koban & Rewards',
-			'home.preview.rewardBadge' => 'ACTIVE REWARD',
-			'home.preview.rewardAmount' => '1,485 Koban',
-			'home.preview.rewardNote' => 'Ready to redeem in the rewards catalog',
 			'onboarding.skipAction' => 'Skip',
 			'onboarding.nextAction' => 'Next',
 			'onboarding.closeAction' => 'Close',
@@ -3553,8 +3535,6 @@ extension on TranslationsEn {
 			'discovery.quickStart.walletHint' => 'Pick a wallet for each app.',
 			'discovery.quickStart.pickHint' => 'Pick at least one app.',
 			'discovery.quickStart.pickedCount' => ({required Object n}) => '${n} apps selected.',
-			_ => null,
-		} ?? switch (path) {
 			'discovery.quickStart.freeLimit' => 'Free plan: one app. More with Plus.',
 			'notificationCapture.accountEntryTitle' => 'Record from notifications',
 			'notificationCapture.accountEntryBody' => 'Record automatically from bank and e-wallet notifications.',
@@ -3564,6 +3544,8 @@ extension on TranslationsEn {
 			'notificationCapture.accessMissingBody' => 'Without it, Tanukonomy can\'t see your bank notifications.',
 			'notificationCapture.accessAction' => 'Allow access',
 			'notificationCapture.accessGranted' => 'Notification permission is on',
+			_ => null,
+		} ?? switch (path) {
 			'notificationCapture.disclosureTitle' => 'Before you grant permission',
 			'notificationCapture.disclosureBody' => 'Tanukonomy will be able to read notifications on your phone.\n\n• Only from apps you pick that match their filter.\n• OTP notifications are never stored.\n• Text that is hard to read may be sent to Gemini (Google).\n• Notification text stays on your phone for at most 7 days.\n• New notifications may be processed in the background while Tanukonomy is closed, so the Record button on the notification works.\n\nAfter Continue, Android opens its notification access list. Pick Tanukonomy and turn it on.',
 			'notificationCapture.disclosureAccept' => 'Continue',
@@ -4067,8 +4049,6 @@ extension on TranslationsEn {
 			'premium.signInBody' => 'This feature is part of Plus. Sign in with your account to use it. Recording stays free and works without an account.',
 			'premium.signInAction' => 'Sign in',
 			'premium.plusOnlyTitle' => 'This feature is part of Plus',
-			_ => null,
-		} ?? switch (path) {
 			'premium.plusOnlyBody' => 'Plus subscriptions aren\'t available yet. Recording stays free.',
 			'premium.account.section' => 'Plus',
 			'premium.account.rowTitle' => 'Tanukonomy Plus',
@@ -4078,6 +4058,8 @@ extension on TranslationsEn {
 			'premium.account.subActiveOpen' => 'Active',
 			'premium.account.subGrace' => ({required Object date}) => 'Payment did not go through. Plus stays on until ${date}.',
 			'premium.account.subOnHold' => 'Subscription on hold because payment did not go through. Fix it in the Play Store.',
+			_ => null,
+		} ?? switch (path) {
 			'premium.account.subTester' => ({required Object date}) => 'From the tester program until ${date}',
 			'premium.account.subTesterOpen' => 'From the tester program',
 			'premium.account.badgeTrial' => 'Trial',

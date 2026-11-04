@@ -776,16 +776,7 @@
       "moodTitle": "Mood: Calm & Prosperous",
       "moodBadge": "84% HEALTHY",
       "missionClaimed": "CLAIMED",
-      "missionReward": "+50 XP",
-      "billTitle": "Recurring Bills",
-      "billBadge": "3 DAYS LEFT",
-      "billName": "Spotify Family & Wi-Fi",
-      "billAmount": "USD 354.99",
-      "billDue": "Due May 25",
-      "rewardTitle": "Koban & Rewards",
-      "rewardBadge": "ACTIVE REWARD",
-      "rewardAmount": "1,485 Koban",
-      "rewardNote": "Ready to redeem in the rewards catalog"
+      "missionReward": "+50 XP"
     }
   },
   "onboarding": {

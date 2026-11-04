@@ -103,14 +103,13 @@ class HomeMoodPill extends StatelessWidget {
 
 /// Satu carousel di bawah aksi cepat (ADR-043 §3.6): slide status dari
 /// [board] (rutin menunggu, tangkapan notifikasi, pengingat, perkiraan; yang
-/// perlu dicek tampil dulu), lalu slide wawasan: anggaran nyata (bila ada)
-/// dan slide rutin dan hadiah tiruan ([kHomePlaceholderPreview]). Slide
+/// perlu dicek tampil dulu), lalu slide wawasan: anggaran nyata (bila ada).
+/// Tanpa satu pun slide, bagian ini tidak menampilkan apa-apa. Slide
 /// status hanya membuka layar tujuannya; mencatat tidak pernah terjadi di
 /// sini (aturan 8). Tinggi mengikuti slide aktif.
 ///
 /// Target tur `homeStatus` hanya terdaftar bila ada slide status nyata, dan
-/// `homeBudget` hanya bila anggaran nyata ada (slide tiruan tidak boleh
-/// disorot). Keduanya membungkus carousel yang sama.
+/// `homeBudget` hanya bila anggaran nyata ada. Keduanya membungkus carousel yang sama.
 class HomeCarouselSection extends StatelessWidget {
   /// Membuat [HomeCarouselSection].
   const HomeCarouselSection({required this.board, required this.budget, required this.onOpenBudget, super.key});
@@ -135,7 +134,6 @@ class HomeCarouselSection extends StatelessWidget {
           board: board,
           extras: [
             if (overview != null) HomeBudgetCard(overview: overview, onOpen: onOpenBudget),
-            if (kHomePlaceholderPreview) ...[const _BillSlide(), const _RewardSlide()],
           ],
           previousLabel: t.home.statusCarouselPrevious,
           nextLabel: t.home.statusCarouselNext,
@@ -152,99 +150,6 @@ class HomeCarouselSection extends StatelessWidget {
           child: SpotlightTarget(spotlightKey: SpotlightKey.homeStatus, child: carousel),
         );
       },
-    );
-  }
-}
-
-class _BillSlide extends StatelessWidget {
-  const _BillSlide();
-
-  @override
-  Widget build(BuildContext context) {
-    final ds = context.ds;
-    final c = ds.colors;
-    return DsCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _SlideHeader(
-            leading: SvgPicture.asset(ClayIcons.receipt, width: kSlideIconSize, height: kSlideIconSize),
-            title: t.home.preview.billTitle,
-            badge: DsPulse(
-              child: DsBadge(label: t.home.preview.billBadge, tone: DsBadgeTone.danger),
-            ),
-          ),
-          const SizedBox(height: 10),
-          Text(t.home.preview.billName, style: ds.typography.bodyMd),
-          const SizedBox(height: 2),
-          Text(t.home.preview.billDue, style: ds.typography.bodySm.copyWith(color: c.textMuted)),
-          const SizedBox(height: 8),
-          Text(t.home.preview.billAmount, style: ds.typography.amount),
-        ],
-      ),
-    );
-  }
-}
-
-class _RewardSlide extends StatelessWidget {
-  const _RewardSlide();
-
-  @override
-  Widget build(BuildContext context) {
-    final ds = context.ds;
-    final c = ds.colors;
-    return DsCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _SlideHeader(
-            leading: DsIdleMotion(
-              kind: DsIdleKind.float,
-              child: SvgPicture.asset(ClayIcons.tierCoin, width: kSlideIconSize, height: kSlideIconSize),
-            ),
-            title: t.home.preview.rewardTitle,
-            badge: DsPulse(
-              kind: DsPulseKind.gold,
-              child: DsBadge(label: t.home.preview.rewardBadge, tone: DsBadgeTone.warning),
-            ),
-          ),
-          const SizedBox(height: 10),
-          Text(t.home.preview.rewardAmount, style: ds.typography.amount),
-          const SizedBox(height: 2),
-          Text(t.home.preview.rewardNote, style: ds.typography.bodySm.copyWith(color: c.textMuted)),
-        ],
-      ),
-    );
-  }
-}
-
-/// Kepala slide: ikon + judul, badge di kanan. Pada skala teks besar badge
-/// turun ke baris sendiri (`Wrap`) alih-alih memeras judul per kata.
-class _SlideHeader extends StatelessWidget {
-  const _SlideHeader({required this.leading, required this.title, required this.badge});
-
-  final Widget leading;
-  final String title;
-  final Widget badge;
-
-  @override
-  Widget build(BuildContext context) {
-    return Wrap(
-      alignment: WrapAlignment.spaceBetween,
-      crossAxisAlignment: WrapCrossAlignment.center,
-      spacing: 6,
-      runSpacing: 4,
-      children: [
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            leading,
-            const SizedBox(width: 8),
-            Flexible(child: Text(title, style: context.ds.typography.titleMd.copyWith(fontSize: 15))),
-          ],
-        ),
-        badge,
-      ],
     );
   }
 }

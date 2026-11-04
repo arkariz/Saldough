@@ -84,14 +84,11 @@ void main() {
   group('HomeCarouselSection', () {
     const budget = BudgetOverview(activeCount: 1, plannedAmount: 15000000, spent: 3000000);
 
-    testWidgets('satu carousel: anggaran nyata + dua slide tiruan, dapat digeser dengan titik', (tester) async {
+    testWidgets('hanya anggaran nyata: satu kartu tanpa carousel', (tester) async {
       await tester.pumpWidget(_host(HomeCarouselSection(board: null, budget: budget, onOpenBudget: () {})));
       await tester.pump();
-      expect(find.byType(DsCarousel), findsOneWidget);
+      expect(find.byType(DsCarousel), findsNothing);
       expect(find.byType(HomeBudgetCard).hitTestable(), findsOneWidget);
-      await tester.tap(find.bySemanticsLabel(t.home.statusCarouselDot(number: 2)));
-      await tester.pumpAndSettle();
-      expect(find.text(t.home.preview.billTitle).hitTestable(), findsOneWidget);
     });
 
     testWidgets('slide status tampil lebih dulu, semua slide selebar dan setinggi sama', (tester) async {
@@ -120,10 +117,10 @@ void main() {
       expect(page.width, tester.getSize(find.byType(PageView)).width - 16, reason: 'selebar konten');
     });
 
-    testWidgets('tanpa anggaran tetap ada slide tiruan', (tester) async {
+    testWidgets('tanpa anggaran dan tanpa slide status: tidak ada apa-apa (tanpa slide tiruan)', (tester) async {
       await tester.pumpWidget(_host(HomeCarouselSection(board: null, budget: null, onOpenBudget: () {})));
       await tester.pump();
-      expect(find.byType(DsCarousel), findsOneWidget);
+      expect(find.byType(DsCarousel), findsNothing);
       expect(find.byType(HomeBudgetCard), findsNothing);
     });
 
@@ -135,12 +132,22 @@ void main() {
         tester.view.reset();
         tester.platformDispatcher.clearTextScaleFactorTestValue();
       });
-      await tester.pumpWidget(_host(HomeCarouselSection(board: null, budget: budget, onOpenBudget: () {})));
+      final board = DsStatusBoard();
+      addTearDown(board.dispose);
+      board.report(
+        'a',
+        const DsStatusSlideData(
+          id: 'a',
+          icon: Icons.event_note,
+          title: 'Judul a',
+          subtitle: 'Keterangan a',
+          attention: true,
+        ),
+      );
+      await tester.pumpWidget(_host(HomeCarouselSection(board: board, budget: budget, onOpenBudget: () {})));
       await tester.pumpAndSettle();
-      for (var i = 2; i <= 3; i++) {
-        await tester.tap(find.bySemanticsLabel(t.home.statusCarouselDot(number: i)));
-        await tester.pumpAndSettle();
-      }
+      await tester.tap(find.bySemanticsLabel(t.home.statusCarouselDot(number: 2)));
+      await tester.pumpAndSettle();
       expect(tester.takeException(), isNull);
     });
 

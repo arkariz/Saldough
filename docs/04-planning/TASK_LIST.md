@@ -90,7 +90,8 @@ Terakhir diperbarui: 29 Oktober 2026 (penyelarasan dokumen dengan `main` di `0.1
 | 23 — Catat notifikasi multi-dompet, contoh, dan rutin lebih awal ([ADR-042](../02-architecture/adr/0042-notifikasi-multi-dompet-sampel-dan-rutin.md)) | 4 | 4 | **Selesai 23 Okt 2026, di `main`** (commit `c83f360`), dirilis di `0.10.0+16`. QA emulator ([VERIFICATION_PLAN_FASE_23.md](VERIFICATION_PLAN_FASE_23.md)): kompilasi Kotlin lulus, 26 baris lulus, tanpa Gagal S1/S2, 5 temuan S3; sisanya di B-83 |
 | 24 — Fondasi Plus ([ADR-041](../02-architecture/adr/0041-monetisasi-hak-plus-dan-uji-coba.md), [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md)) | 22 | 21 | Dijadwalkan 23 Okt 2026 (dari B-41); T-24.1 (ADR-041 revisi 2), T-24.2 (fondasi murni), T-24.3 (`AppUser.createdAt`), T-24.4 (penyimpanan hak), T-24.5 (batas dari Remote Config), T-24.6 (`Entitlements` lokal), T-24.7 (pengganti paket uji), T-24.8 (paywall sementara), T-24.9 (gerbang R3), T-24.10 (gerbang notifikasi), T-24.11 (kuota tafsir), T-24.12 (gerbang Analisis), T-24.13 (gerbang template dan proyek), dan T-24.14 (adaptor RevenueCat, uji palsu), dan T-24.15 (kebijakan offering, beli/pulihkan), dan T-24.16 (analitik dan dokumen rilis) selesai; T-24.17a (paywall berparameter, PlanCard, keadaan) T-24.17b (PlusLocked, lencana Plus), dan T-24.17c (status Plus di Akun, halaman fitur), T-24.17d (hadiah uji coba), dan T-24.17e (layar turun, kartu Plus, momen) selesai, jadi T-24.17 selesai; berikutnya T-24.18 (rupa sudah ada, PR #65) dan T-24.18. Uji nyata T-24.14 menunggu akun dan kunci RevenueCat; rilis build bergerbang menunggu penguji bisa masuk akun |
 | 25 — Design system baru dan preset tema ([ADR-043](../02-architecture/adr/0043-design-system-v2-dan-preset-tema.md), Proposed) | 6 | 4 | Berjalan sejak 29 Okt 2026 -- T-25.1 fondasi selesai (spek Tanukonomy Matcha); KT-DS1–KT-DS4 diputuskan; T-25.2 widget komponen dan T-25.5 animasi selesai (animasi belum dinilai di perangkat); T-25.3 terpasang, Beranda dirombak (irisan T-25.4); layar lain menyusul |
-| Antrean (`B-n`, belum dijadwalkan) | 67 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
+| 26 — Catat dari notifikasi v2 ([ADR-044](../02-architecture/adr/0044-catat-dari-notifikasi-v2.md), Proposed; [NOTIFICATION_CAPTURE_V2.md](../01-product/features/NOTIFICATION_CAPTURE_V2.md)) | 13 | 0 | Direncanakan 4 Nov 2026 bersama pemilik; tanpa saklar build, jalur internal test; tahap 0 → 1a → 1b, spike T-26.9 menentukan Accepted |
+| Antrean (`B-n`, belum dijadwalkan) | 72 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
 
 ## Keputusan terbuka
 
@@ -103,6 +104,12 @@ diputuskan, dan catat keputusannya di tugas atau ADR yang mengerjakannya.
   [ADR-024](../02-architecture/adr/0024-kepemilikan-data-lokal-dan-akun.md)
   §3.3 poin 4. (Ganti akun sudah diputuskan: data diganti dengan peringatan,
   tanpa penggabungan.)
+
+- **KT-N2** (ditunda pemilik 4 Nov 2026) Ambang kartu yang dikoreksi (usulan
+  <20%) dan pagar nominal besar untuk otomatis (usulan >10× median). Dijawab
+  sebelum T-26.8 dan sebelum B-87 (E3) dikerjakan.
+- **KT-N3** Mesin tanpa layar menulis langsung ke buku besar atau cukup lewat
+  jurnal: diputuskan setelah spike T-26.9.
 
 - **KT-W1** Arti mengubah saldo dompet. Sejak `0.11.0+17` (commit
   `dd18320`, 27 Okt 2026, dikerjakan tanpa tugas T-n.n), kolom di Ubah
@@ -6210,6 +6217,83 @@ memilih mode (dan preset bila ≥ 2), dan design system lama dihapus.
       `.claude/CLAUDE.md`; ADR-043 jadi Accepted dan ADR-034 Superseded.
 
 
+## Fase 26: Catat dari notifikasi v2
+
+Permintaan pemilik 4 Nov 2026.
+[ADR-044](../02-architecture/adr/0044-catat-dari-notifikasi-v2.md) (Proposed) dan
+[NOTIFICATION_CAPTURE_V2.md](../01-product/features/NOTIFICATION_CAPTURE_V2.md).
+Branch sendiri dari `main`; **tanpa saklar build** (keputusan pemilik), dirilis
+lewat jalur internal test sampai gerbang tiap tahap terpenuhi. Ukuran usaha:
+S sehari, M beberapa hari, L lebih dari seminggu.
+
+**Tahap 0: fondasi**
+
+- [ ] **T-26.1** (S) Bawa tindak lanjut QA Fase 23 ke branch kerja:
+      cherry-pick `e15abd6e` (F23-1, F23-5, F23-6, keputusan F23-2, ADR-042
+      revisi 2). `57269a79` (saklar T-23.6) **tidak** dibawa.
+      Verifikasi: `flutter analyze` dan uji notifikasi lulus.
+- [ ] **T-26.2** (L) `CaptureResolver` dan kelas kartu (`planned`, `recognized`,
+      `needsInput`) di domain murni (ADR-044 §3.1): aturan aplikasi → rencana
+      (rutin, pos) → ingatan pedagang → aturan umum; pemutus seri lewat nama
+      rutin di teks; jendela termasuk bayar lebih awal.
+      Verifikasi: uji sintetis per urutan dan per kelas; ambigu tidak ditebak.
+- [ ] **T-26.3** (M) `CaptureFinalizer` (§3.2): tautan rutin dan `budgetItemId`
+      lewat `budgetItemForOccurrence` di semua jalur (otomatis, kartu, jurnal),
+      lalu sinyal. Menutup celah `transactionFromDraft`.
+      Verifikasi: transaksi otomatis dari rutin bertaut pos membebani pos yang
+      benar; progres anggaran naik.
+- [ ] **T-26.4** (M) Anti-duplikat dua arah dan status "tercatat" andal (§3.3,
+      termasuk B-83b): cek ulang saat kartu tampil, tutup otomatis lewat
+      `LedgerChanges`, aksi Tautkan/Tetap catat.
+      Verifikasi: CATAT manual setelah tangkapan menutup kartunya; tanpa duplikat.
+- [ ] **T-26.5** (M) Kata arah generik lintas aplikasi; hapus
+      `builtInNotificationApps` dan `_cuePatterns` (§3.4); uji sintetis variasi
+      format nominal, bahasa id/en, dan kata arah (tanpa nama bank).
+      Verifikasi: aplikasi apa pun yang dipilih terbaca; pola pengguna lama tetap terbaca.
+
+**Tahap 1a: MVP dalam aplikasi**
+
+- [ ] **T-26.6** (M) Mulai cepat tanpa daftar putih: semua aplikasi terpasang
+      dengan pencarian, dompet per aplikasi, galat penyimpanan terlihat, banner
+      izin di kotak masuk saat akses dicabut, petunjuk setelah dialog izin.
+      Menutup temuan review UX 1–5 (4 Nov 2026).
+- [ ] **T-26.7** (L) Kartu tiga jenis dan konfirmasi satu ketuk (Plus) dengan
+      "Catat semua" (§3.6); "Cek" membuka CATAT langsung bila satu tangkapan
+      menunggu (Gratis); judul slide Beranda sesuai tujuan; satu pintu ke
+      Setelan di kotak masuk; alasan "Catat otomatis mati" tidak tampil di tiap
+      kartu. Garis Gratis/Plus disetujui pemilik 4 Nov 2026
+      (NOTIFICATION_CAPTURE_V2.md §10): pengenalan rutin/pos, anti-duplikat,
+      CATAT terisi, dan "Ingat" dasar Gratis; satu ketuk, tombol di notifikasi,
+      Catat semua, dan otomatis Plus.
+      ⚠ Periksa ADR-041 §3.8 dan satu ketuk di segmen Rutin supaya tindakan yang
+      sama tidak punya dua gerbang. Perbarui aturan 8 di `.claude/CLAUDE.md` dan `AGENT_CONTEXT.md`
+      saat ADR-044 Accepted.
+      Verifikasi: uji widget per kelas dan per paket (Gratis/Plus).
+- [ ] **T-26.8** (S) `VERIFICATION_PLAN_FASE_26.md` dan ukuran keberhasilan
+      (median ketuk, kartu dikoreksi, duplikat lolos) dari data jalur internal.
+
+**Tahap 1b: MVP notifikasi bertindak**
+
+- [ ] **T-26.9** (L, spike dulu) Bukti konsep: layanan pendengar menyalakan
+      mesin Dart tanpa layar (`captureWorkerMain`), membaca Hive hanya baca, dan
+      memasang notifikasi dengan tombol, diuji di ≥3 perangkat/vendor termasuk
+      satu yang agresif mematikan layanan. Hasil menentukan jurnal saja atau
+      penulisan langsung (KT-N3) dan menjadikan ADR-044 Accepted.
+- [ ] **T-26.10** (L) `CaptureJournal` native, penerapan jurnal saat aplikasi
+      dibuka sebelum Beranda tampil, id transaksi dari id tangkapan (idempoten),
+      penyimpanan status Plus untuk mesin tanpa layar.
+      Verifikasi: matikan paksa di tengah penerapan; tidak ada transaksi ganda.
+- [ ] **T-26.11** (M) Notifikasi bertindak: Catat/Abaikan/Batalkan,
+      `setAuthenticationRequired`, `AmountVisibility`, versi publik layar kunci,
+      penggabungan banyak tangkapan.
+- [ ] **T-26.12** (M) Pengingat rutin dan anti-duplikat mesin tanpa layar
+      membaca jurnal; pengingat dibatalkan untuk kemunculan yang sudah dicatat.
+- [ ] **T-26.13** (M) Pembaruan pengungkapan, `PLAY_DATA_SAFETY.md`, dan tinjauan
+      deklarasi layanan di `AndroidManifest` sebelum produksi; build internal
+      test.
+
+Enhancement (E1–E5) ada di Antrean B-85–B-89, dibuka sesudah gerbang tahap 1.
+
 ## Antrean (belum dijadwalkan)
 
 Hal yang sudah diketahui perlu dikerjakan tapi belum masuk fase. Cara
@@ -6283,6 +6367,11 @@ menambah dan memindahkannya ada di
 | B-82 | **Buku Stempel** (gratis; edisi musiman khusus Plus): stempel piksel untuk tonggak (periode lengkap, saldo cocok, rutin tak terlewat, target tercapai) dan edisi Ramadan, 17 Agustus, Tahun Baru; tanpa streak, poin, atau peringkat (KT-R13). | pemilik menyerahkan aset, lalu agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §16, [laporan bisnis](https://claude.ai/artifact/SKsV87e4f7hX8h58Qvv7G5) Gamifikasi |
 | B-83 | Tindak lanjut QA Fase 23 sebelum rilis publik: putuskan F23-2 (badge "Mungkin sudah tercatat" untuk pola terikat tanpa kemunculan terbuka) dan F23-6 (saring pemilih Ikat ke rutin menurut jenis pola); perbaiki F23-5 (sakelar contoh notifikasi tetap tampil mati sampai halaman dibuka ulang) dan F23-1 (alasan kotak masuk transfer); perbarui Keamanan Data Play dan kebijakan privasi situs untuk contoh notifikasi; uji layar Aturan dompet, Ikat ke rutin, dan Contoh notifikasi; ulangi F23-4 dan baris "tidak diuji" di perangkat dengan notifikasi Jago asli. | pemilik (keputusan, Play Console, perangkat) + agen | [VERIFICATION_PLAN_FASE_23.md](VERIFICATION_PLAN_FASE_23.md), ADR-042 |
 | B-84 | **Arsip proyek freelance**: status aktif/arsip di `FreelanceProject` supaya batas Gratis bisa menghitung proyek aktif saja (sekarang menghitung semua proyek, ADR-041 §3.13 butir 2). Butuh ADR domain kecil dan rupa. | agen | ADR-041 §3.13, T-24.13 |
+| B-85 | **E1 "Ingat" dan bentuk dipelajari**: aturan lahir dari kartu, tanya "Ini transaksi? Ya/Bukan", banyak dompet per aplikasi tanpa formulir. Sesudah gerbang tahap 1. | agen | [NOTIFICATION_CAPTURE_V2.md](../01-product/features/NOTIFICATION_CAPTURE_V2.md) §7–§8, ADR-044 §3.4 |
+| B-86 | **E2 saran pos anggaran** untuk pengeluaran bebas (nama pos di teks atau ingatan pedagang), hanya saran. | agen | NOTIFICATION_CAPTURE_V2.md §5 |
+| B-87 | **E3 catat otomatis per bentuk**: tawaran setelah konfirmasi pertama tanpa ubahan, pagar nominal besar, tanda "baru". Plus. | agen | NOTIFICATION_CAPTURE_V2.md §8, ADR-044 §3.7 |
+| B-88 | **E4 Lanjutan**: daftar aturan, "Ajari pola" yang disederhanakan, filter, contoh; migrasi `walletRules`/pola/ikatan menjadi aturan. | agen | ADR-044 §3.7 |
+| B-89 | **E5 permukaan lain**: Quick Settings tile "Catat n transaksi" (S–M), widget layar utama bila data pemakaian mendukung (L). | agen | NOTIFICATION_CAPTURE_V2.md §11 |
 | B-39 | **Pengumuman pembaruan R2**: pembaruan wajib/versi minimum untuk perbaikan kritis (KT-U1), pembaruan untuk iOS (App Store) sesudah iOS dirilis, dan pilihan jalur uji untuk penguji. | agen + pemilik | [APP_UPDATE.md](../01-product/features/APP_UPDATE.md) §14 |
 | B-35 | Uji di perangkat yang belum dilakukan QA PR #43: lebar 360dp (butuh izin mengubah setelan ponsel), Freelance, perekaman suara sungguhan, dan jalur Gemini secara terpisah. | pemilik | QA PR #43 (di luar PR) |
 | B-14 | **Catat lewat Suara**: STT sistem (`speech_to_text`) + parser aturan + Gemma lokal mulai dari model termurah, 270M → 1B → Gemma 4 E2B (unduhan opt-in dari Hugging Face) → form CATAT terisi draf; adaptor Firebase AI sebagai jalur pivot. ADR-027. Riset & rencana di [VOICE_INPUT_RESEARCH.md](../01-product/features/VOICE_INPUT_RESEARCH.md). | dijadwalkan: T-11.2–T-11.9 | riset 30 Sep 2026 |

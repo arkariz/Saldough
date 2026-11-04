@@ -376,13 +376,16 @@ class _PendingCard extends StatelessWidget {
             if (existing != null)
               _duplicateActions(existing!)
             else
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+              // Wrap, bukan Row: tiga tombol (Abaikan, Ajari pola, Catat) tidak
+              // muat sebaris di 360dp.
+              Wrap(
+                alignment: WrapAlignment.end,
+                spacing: AppSpacing.space2,
+                runSpacing: AppSpacing.space1,
                 children: [
                   AppButton.text(small: true, label: texts.dismissAction, onPressed: onDismiss),
-                  const SizedBox(width: AppSpacing.space2),
                   // Nominal tak terbaca: ajari pola di sebelah tombol catat.
-                  if (amount == null) ...[
+                  if (amount == null)
                     AppButton.secondary(
                       key: ValueKey('inbox-teach-${entry.id}'),
                       small: true,
@@ -398,8 +401,6 @@ class _PendingCard extends StatelessWidget {
                         onMakePattern();
                       },
                     ),
-                    const SizedBox(width: AppSpacing.space2),
-                  ],
                   AppButton(small: true, label: texts.recordAction, onPressed: onRecord),
                 ],
               ),

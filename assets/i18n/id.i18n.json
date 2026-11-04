@@ -1211,6 +1211,8 @@
     "undoConfirmTitle": "Batalkan transaksi?",
     "undoConfirm": "Transaksinya dihapus dan saldo dompet kembali seperti sebelumnya.",
     "undone": "Transaksi otomatis dibatalkan.",
+    "notTransactionAction": "Bukan transaksi",
+    "notTransactionDone": "Yang seperti ini tidak akan muncul lagi.",
     "dismissed": "Notifikasi diabaikan.",
     "duplicateOf": "Sama dengan catatan ${label}",
     "closeDuplicateAction": "Sudah, tutup",

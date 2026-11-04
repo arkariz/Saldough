@@ -10,6 +10,7 @@ import 'package:saldough/features/notification_capture/domain/services/auto_reco
 import 'package:saldough/features/notification_capture/domain/services/capture_finalizer.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_inbox_changes.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_resolver.dart';
+import 'package:saldough/features/notification_capture/domain/services/negative_shapes.dart';
 import 'package:saldough/features/notification_capture/domain/services/notification_draft_composer.dart';
 import 'package:saldough/features/notification_capture/domain/services/store_backed_merchant_memory.dart';
 import 'package:saldough/features/notification_capture/domain/services/transaction_from_draft.dart';
@@ -35,6 +36,7 @@ final class CaptureInboxActions {
     required this.currencyCode,
     required this.languageCode,
     this.merchantMemory,
+    this.negativeShapes,
     this.changes,
     this.recurringRules,
     this.matchLog,
@@ -48,6 +50,9 @@ final class CaptureInboxActions {
 
   /// Ingatan pedagang (E1); `null` = tidak belajar.
   final StoreBackedMerchantMemory? merchantMemory;
+
+  /// Bentuk yang bukan transaksi (E1); `null` = tidak belajar.
+  final StoreBackedNegativeShapes? negativeShapes;
 
   /// Rutin untuk label "Cocok dengan rutin" (ADR-035 §3.4); `null` = tanpa.
   final RecurringRuleRepository? recurringRules;
@@ -99,6 +104,20 @@ final class CaptureInboxActions {
     ]);
     changes?.notify();
     return saved;
+  }
+
+  /// "Bukan transaksi": menutup kartu dan mempelajari bentuk teksnya supaya yang
+  /// seperti ini tidak muncul lagi (E1). Mengembalikan fungsi Batalkan (kartu
+  /// kembali dan bentuknya dilupakan), atau `null` bila tidak ada yang bisa
+  /// dipelajari dari teks itu (kartu tetap tertutup tanpa belajar).
+  Future<Future<void> Function()?> markNotTransaction(CaptureInboxEntry entry) async {
+    await remove(entry.id);
+    final forget = await negativeShapes?.add(packageName: entry.packageName, text: entry.text);
+    if (forget == null) return null;
+    return () async {
+      await forget();
+      await restore(entry);
+    };
   }
 
   /// Mengembalikan item [entry] yang baru diabaikan ke kotak masuk

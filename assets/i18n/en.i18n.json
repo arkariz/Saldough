@@ -1211,6 +1211,8 @@
     "undoConfirmTitle": "Undo this transaction?",
     "undoConfirm": "The transaction is deleted and the wallet balance goes back to what it was.",
     "undone": "Automatic transaction undone.",
+    "notTransactionAction": "Not a transaction",
+    "notTransactionDone": "Ones like this won't show up again.",
     "dismissed": "Notification dismissed.",
     "duplicateOf": "Same as the entry ${label}",
     "closeDuplicateAction": "Already recorded, close",

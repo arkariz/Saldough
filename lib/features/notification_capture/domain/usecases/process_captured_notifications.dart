@@ -12,6 +12,7 @@ import 'package:saldough/features/notification_capture/domain/services/auto_reco
 import 'package:saldough/features/notification_capture/domain/services/capture_finalizer.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_inbox_changes.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_resolver.dart';
+import 'package:saldough/features/notification_capture/domain/services/negative_shapes.dart';
 import 'package:saldough/features/notification_capture/domain/services/notification_draft_composer.dart';
 import 'package:saldough/features/notification_capture/domain/services/notification_text.dart';
 import 'package:saldough/features/notification_capture/domain/services/transaction_from_draft.dart';
@@ -65,6 +66,7 @@ final class ProcessCapturedNotifications {
     this.recurringChanges,
     this.finalizer = const CaptureFinalizer(),
     this.memory,
+    this.negativeShapes,
     this.isPlus,
     this.freeSources,
     DateTime Function()? clock,
@@ -119,6 +121,9 @@ final class ProcessCapturedNotifications {
 
   /// Ingatan pedagang untuk kategori (E1, B-85); `null` = dilewati.
   final MerchantMemory? memory;
+
+  /// Bentuk yang bukan transaksi (E1): cocok = dilewati diam-diam.
+  final StoreBackedNegativeShapes? negativeShapes;
 
   /// Paket Plus; `null` = tanpa batas (uji). Di Gratis hanya [freeSources]
   /// sumber pertama di daftar yang diproses dan tingkat otomatis dianggap
@@ -181,6 +186,7 @@ final class ProcessCapturedNotifications {
       return const CaptureProcessResult();
     }
 
+    await negativeShapes?.refresh();
     final wallets = await loadActiveWallets(walletRepository);
     final patterns = await loadActivePatterns(store, settings);
     final plus = isPlus?.call() ?? true;
@@ -210,7 +216,10 @@ final class ProcessCapturedNotifications {
           ? null
           : settings.activeSource(notification.packageName);
       final text = notification.text;
-      if (source == null || NotificationText.looksLikeOtp(text) || !source.matchesKeywords(text)) {
+      if (source == null ||
+          NotificationText.looksLikeOtp(text) ||
+          !source.matchesKeywords(text) ||
+          (negativeShapes?.matches(notification.packageName, text) ?? false)) {
         if (!await _save(processed, inbox, auto)) break;
         handled.add(notification.id);
         continue;

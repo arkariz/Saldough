@@ -102,6 +102,15 @@ final class CaptureInboxDismissed extends CaptureInboxEvent {
   final String id;
 }
 
+/// "Bukan transaksi": tutup kartu dan pelajari bentuknya (E1).
+final class CaptureInboxMarkedNotTransaction extends CaptureInboxEvent {
+  /// Membuat [CaptureInboxMarkedNotTransaction].
+  const CaptureInboxMarkedNotTransaction(this.id);
+
+  /// Id tangkapan.
+  final String id;
+}
+
 /// Tangkapan sudah dicatat lewat CATAT.
 final class CaptureInboxRecorded extends CaptureInboxEvent {
   /// Membuat [CaptureInboxRecorded].
@@ -169,6 +178,7 @@ final class CaptureInboxBloc extends Bloc<CaptureInboxEvent, CaptureInboxState> 
     on<CaptureInboxStarted>(_onStarted);
     on<CaptureInboxRefreshed>((_, emit) => _reload(emit));
     on<CaptureInboxDismissed>(_onDismissed);
+    on<CaptureInboxMarkedNotTransaction>(_onMarkedNotTransaction);
     on<CaptureInboxRecorded>(_onRecorded);
     on<CaptureInboxUndone>(_onUndone);
     on<CaptureInboxUnlinked>(_onUnlinked);
@@ -238,6 +248,41 @@ final class CaptureInboxBloc extends Bloc<CaptureInboxEvent, CaptureInboxState> 
     await _reload(
       emit,
       effect: entry == null ? ShowSnackBarEffect(message: t.notificationCapture.dismissed) : _dismissedWithUndo(entry),
+    );
+  }
+
+  Future<void> _onMarkedNotTransaction(
+    CaptureInboxMarkedNotTransaction event,
+    Emitter<CaptureInboxState> emit,
+  ) async {
+    final entry = state.pending.where((e) => e.id == event.id).firstOrNull;
+    if (entry == null) return;
+    AppAnalytics.log(
+      CaptureEvents.cardAction(action: 'not_transaction', cardClass: captureClassName(state.cardClassFor(entry))),
+    );
+    final undo = await _actions.markNotTransaction(entry);
+    await _reload(
+      emit,
+      effect: undo == null
+          ? _dismissedWithUndo(entry)
+          : CallbackEffect(
+              callback: (context) {
+                final colors = context.appColors;
+                ScaffoldMessenger.of(context).showSnackBar(
+                  actionSnackBar(
+                    context,
+                    content: Text(t.notificationCapture.notTransactionDone, style: TextStyle(color: colors.bg)),
+                    backgroundColor: colors.ink,
+                    action: SnackBarAction(
+                      key: const ValueKey('inbox-not-transaction-undo'),
+                      label: t.transaction.undoDeleteAction,
+                      textColor: colors.brand,
+                      onPressed: () => unawaited(undo()),
+                    ),
+                  ),
+                );
+              },
+            ),
     );
   }
 

@@ -190,6 +190,10 @@ deklarasi layanan pendengar di `AndroidManifest`.
 
 ## 7. Revisi
 
+- **Revisi 7 (4 Nov 2026, T-26.15):** bentuk negatif ("Bukan transaksi") dipelajari
+  dari kartu dan menyaring notifikasi berikutnya (§3.4); bentuk positif tetap
+  lewat Ajari pola.
+
 - **Revisi 6 (4 Nov 2026, T-26.14):** ingatan pedagang (`MerchantMemory`) kini
   punya implementasi: kategori yang dikonfirmasi lewat CATAT dari kartu diingat
   per (aplikasi, catatan) dan dipakai penentu bersama (§3.1).

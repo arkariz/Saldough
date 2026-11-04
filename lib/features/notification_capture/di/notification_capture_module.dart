@@ -8,6 +8,7 @@ import 'package:saldough/core/language/language.dart';
 import 'package:saldough/core/presentation/plan/active_plan.dart';
 import 'package:saldough/features/notification_capture/data/merchant_memory_store_impl.dart';
 import 'package:saldough/features/notification_capture/data/method_channel_notification_capture_gateway.dart';
+import 'package:saldough/features/notification_capture/data/negative_shape_store_impl.dart';
 import 'package:saldough/features/notification_capture/data/notification_capture_store_impl.dart';
 import 'package:saldough/features/notification_capture/data/notification_rule_interpreter.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/merchant_memory_store.dart';
@@ -15,6 +16,7 @@ import 'package:saldough/features/notification_capture/domain/repositories/notif
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_store.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_finalizer.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_inbox_changes.dart';
+import 'package:saldough/features/notification_capture/domain/services/negative_shapes.dart';
 import 'package:saldough/features/notification_capture/domain/services/notification_draft_composer.dart';
 import 'package:saldough/features/notification_capture/domain/services/store_backed_merchant_memory.dart';
 import 'package:saldough/features/notification_capture/domain/usecases/apply_capture_journal.dart';
@@ -60,6 +62,8 @@ abstract final class NotificationCaptureModule {
       )
       ..registerLazySingleton<CaptureInboxChanges>(CaptureInboxChanges.new)
       ..registerLazySingleton<MerchantMemoryStore>(() => MerchantMemoryStoreImpl(storage: c<KeyValueStorage>()))
+      ..registerLazySingleton<NegativeShapeStore>(() => NegativeShapeStoreImpl(storage: c<KeyValueStorage>()))
+      ..registerLazySingleton<StoreBackedNegativeShapes>(() => StoreBackedNegativeShapes(c<NegativeShapeStore>()))
       ..registerLazySingleton<StoreBackedMerchantMemory>(() => StoreBackedMerchantMemory(c<MerchantMemoryStore>()))
       // Aturan notifikasi → Gemini bila ragu, sama dengan suara (ADR-032 §3.3).
       ..registerLazySingleton<NotificationDraftComposer>(
@@ -80,6 +84,7 @@ abstract final class NotificationCaptureModule {
           store: c<NotificationCaptureStore>(),
           composer: c<NotificationDraftComposer>(),
           memory: c<StoreBackedMerchantMemory>(),
+          negativeShapes: c<StoreBackedNegativeShapes>(),
           recordTransaction: recordTransaction(),
           walletRepository: c<WalletRepository>(),
           transactionRepository: c<TransactionRepository>(),
@@ -115,6 +120,7 @@ abstract final class NotificationCaptureModule {
         () => CaptureInboxActions(
           store: c<NotificationCaptureStore>(),
           merchantMemory: c<StoreBackedMerchantMemory>(),
+          negativeShapes: c<StoreBackedNegativeShapes>(),
           recordTransaction: recordTransaction(),
           transactionRepository: c<TransactionRepository>(),
           composer: c<NotificationDraftComposer>(),

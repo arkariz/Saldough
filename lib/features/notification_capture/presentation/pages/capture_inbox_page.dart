@@ -11,6 +11,7 @@ import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/features/notification_capture/domain/entities/capture_inbox_entry.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_card_class.dart';
+import 'package:saldough/features/notification_capture/domain/services/negative_shapes.dart';
 import 'package:saldough/features/notification_capture/presentation/bloc/capture_inbox_bloc.dart';
 import 'package:saldough/features/notification_capture/presentation/bloc/notification_settings_bloc.dart';
 import 'package:saldough/features/notification_capture/presentation/navigation/notification_capture_route_keys.dart';
@@ -253,6 +254,7 @@ class _InboxBodyState extends State<_InboxBody> with WidgetsBindingObserver {
                         cardClass: captureClassName(state.cardClassFor(entry)),
                       ),
                       onDismiss: () => inbox.add(CaptureInboxDismissed(entry.id)),
+                      onNotTransaction: () => inbox.add(CaptureInboxMarkedNotTransaction(entry.id)),
                       onMakePattern: () => page._makePattern(context, entry),
                       onLink: (existing, match) =>
                           inbox.add(CaptureInboxLinkedToExisting(id: entry.id, existing: existing, match: match)),
@@ -388,6 +390,7 @@ class _PendingCard extends StatelessWidget {
     required this.onConfirm,
     required this.onRecord,
     required this.onDismiss,
+    required this.onNotTransaction,
     required this.onMakePattern,
     required this.onLink,
   });
@@ -406,6 +409,9 @@ class _PendingCard extends StatelessWidget {
   final VoidCallback onConfirm;
   final VoidCallback onRecord;
   final VoidCallback onDismiss;
+
+  /// "Bukan transaksi": tutup dan pelajari bentuknya (E1).
+  final VoidCallback onNotTransaction;
   final VoidCallback onMakePattern;
 
   @override
@@ -498,6 +504,16 @@ class _PendingCard extends StatelessWidget {
                 runSpacing: AppSpacing.space1,
                 children: [
                   AppButton.text(small: true, label: texts.dismissAction, onPressed: onDismiss),
+                  // Promosi dan pengumuman: pelajari supaya tidak muncul lagi. Hanya
+                  // untuk kartu yang perlu diisi dan punya nominal terbaca (bentuknya
+                  // bisa dipelajari dengan aman).
+                  if (!oneTap && negativeTemplateFor(entry.text) != null)
+                    AppButton.text(
+                      key: ValueKey('inbox-not-transaction-${entry.id}'),
+                      small: true,
+                      label: texts.notTransactionAction,
+                      onPressed: onNotTransaction,
+                    ),
                   // Satu ketuk: Ubah dulu membuka CATAT, Catat langsung mencatat.
                   if (oneTap)
                     AppButton.text(

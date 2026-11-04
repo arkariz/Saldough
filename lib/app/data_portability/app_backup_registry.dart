@@ -4,6 +4,7 @@ import 'package:saldough/features/budget/data/models/budget_template_model.dart'
 import 'package:saldough/features/data_portability/domain/backup_registry.dart';
 import 'package:saldough/features/freelance/data/models/freelance_models.dart';
 import 'package:saldough/features/notification_capture/data/merchant_memory_store_impl.dart';
+import 'package:saldough/features/notification_capture/data/negative_shape_store_impl.dart';
 import 'package:saldough/features/notification_capture/data/notification_capture_store_impl.dart';
 
 /// Daftar kunci penyimpanan dan statusnya terhadap cadangan (ADR-040 §3.3).
@@ -48,6 +49,7 @@ final appBackupRegistry = BackupRegistry(
     const BackupKeySpec('settings_notification_capture', supportedSchema: NotificationCaptureStoreImpl.schemaVersion),
     const BackupKeySpec('capture_notification_patterns', supportedSchema: NotificationCaptureStoreImpl.schemaVersion),
     // Ingatan pedagang (ADR-044, E1): kategori yang dikonfirmasi pengguna; tanpa teks notifikasi.
+    const BackupKeySpec('capture_negative_shapes', supportedSchema: NegativeShapeStoreImpl.schemaVersion),
     const BackupKeySpec('capture_merchant_memory', supportedSchema: MerchantMemoryStoreImpl.schemaVersion),
   ],
   excluded: const {

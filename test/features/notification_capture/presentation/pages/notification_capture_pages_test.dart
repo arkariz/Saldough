@@ -25,6 +25,7 @@ import 'package:saldough/features/notification_capture/domain/entities/notificat
 import 'package:saldough/features/notification_capture/domain/entities/notification_source.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_gateway.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_store.dart';
+import 'package:saldough/features/notification_capture/domain/services/negative_shapes.dart';
 import 'package:saldough/features/notification_capture/presentation/navigation/notification_capture_route_keys.dart';
 import 'package:saldough/features/notification_capture/presentation/pages/notification_pattern_page.dart';
 import 'package:saldough/features/premium/domain/plus_purchasing.dart';
@@ -743,6 +744,35 @@ void main() {
       await tester.pumpAndSettle();
       expect((await store.loadInbox()).getOrElse((_) => throw StateError('')).single.id, 'a');
       expect(find.text('Transaksi Rp50.000 berhasil'), findsOneWidget);
+    });
+
+    testWidgets('Bukan transaksi: kartu perlu diisi ditutup, bentuknya dipelajari, Urungkan memulihkan', (
+      tester,
+    ) async {
+      await store.saveInbox([
+        CaptureInboxEntry(
+          id: 'a',
+          packageName: 'id.co.bri.brimo',
+          appLabel: 'BRImo',
+          text: 'Diskon Rp50.000 untuk kamu',
+          capturedAt: at,
+          draft: const RecordDraft(kind: DraftKind.expense, amountSen: 5000000, issues: {DraftIssue.kindUnclear}),
+          reviewReason: CaptureReviewReason.kindUnclear,
+        ),
+      ]);
+      await open(tester, NotificationCaptureRouteKeys.inbox);
+
+      await tester.tap(find.byKey(const ValueKey('inbox-not-transaction-a')));
+      await tester.pumpAndSettle();
+      expect((await store.loadInbox()).getOrElse((_) => throw StateError('')), isEmpty);
+      expect(find.text(t.notificationCapture.notTransactionDone), findsOneWidget);
+      final shapes = container<NegativeShapeStore>();
+      expect((await shapes.load()).getOrElse((_) => const []).single.template, 'Diskon {amount} untuk kamu');
+
+      await tester.tap(find.byKey(const ValueKey('inbox-not-transaction-undo')));
+      await tester.pumpAndSettle();
+      expect((await store.loadInbox()).getOrElse((_) => throw StateError('')).single.id, 'a');
+      expect((await shapes.load()).getOrElse((_) => const []), isEmpty);
     });
 
     group('satu ketuk (ADR-044 §3.6)', () {

@@ -20,6 +20,7 @@ import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/language/language.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/notification_capture/data/merchant_memory_store_impl.dart';
+import 'package:saldough/features/notification_capture/data/negative_shape_store_impl.dart';
 import 'package:saldough/features/notification_capture/data/notification_capture_store_impl.dart';
 import 'package:saldough/features/notification_capture/data/notification_rule_interpreter.dart';
 import 'package:saldough/features/notification_capture/domain/entities/capture_inbox_entry.dart';
@@ -30,6 +31,7 @@ import 'package:saldough/features/notification_capture/domain/services/active_ca
 import 'package:saldough/features/notification_capture/domain/services/capture_card_class.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_inbox_codec.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_resolver.dart';
+import 'package:saldough/features/notification_capture/domain/services/negative_shapes.dart';
 import 'package:saldough/features/notification_capture/domain/services/notification_draft_composer.dart';
 import 'package:saldough/features/notification_capture/domain/services/store_backed_merchant_memory.dart';
 import 'package:saldough/features/recurring/data/local_notification_reminder_scheduler.dart';
@@ -146,6 +148,8 @@ Future<void> _drain(
   final ledger = TransactionRepositoryImpl(storage: storage);
   NotificationRuleInterpreter ruleInterpreter(CaptureLanguage language) =>
       NotificationRuleInterpreter(language: language, categories: () => ActiveCategories.notifier.value);
+  final negatives = StoreBackedNegativeShapes(NegativeShapeStoreImpl(storage: storage));
+  await negatives.refresh();
   final resolver = CaptureResolver(
     memory: StoreBackedMerchantMemory(MerchantMemoryStoreImpl(storage: storage)),
     composer: NotificationDraftComposer(
@@ -181,6 +185,8 @@ Future<void> _drain(
         body: (item['body'] as String?) ?? '',
         postedAt: DateTime.fromMillisecondsSinceEpoch((item['postedAt'] as num?)?.toInt() ?? 0),
       );
+      // Bentuk yang sudah dipelajari bukan transaksi: tanpa notifikasi (aplikasi menyaringnya juga).
+      if (negatives.matches(packageName, notification.text)) continue;
       final resolved = await resolver.resolve(
         notification,
         source: source,

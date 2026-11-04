@@ -3123,6 +3123,12 @@ class Translations$notificationCapture$id {
 	/// id: 'Transaksi otomatis dibatalkan.'
 	String get undone => 'Transaksi otomatis dibatalkan.';
 
+	/// id: 'Bukan transaksi'
+	String get notTransactionAction => 'Bukan transaksi';
+
+	/// id: 'Yang seperti ini tidak akan muncul lagi.'
+	String get notTransactionDone => 'Yang seperti ini tidak akan muncul lagi.';
+
 	/// id: 'Notifikasi diabaikan.'
 	String get dismissed => 'Notifikasi diabaikan.';
 
@@ -6900,6 +6906,8 @@ extension on Translations {
 			'notificationCapture.undoConfirmTitle' => 'Batalkan transaksi?',
 			'notificationCapture.undoConfirm' => 'Transaksinya dihapus dan saldo dompet kembali seperti sebelumnya.',
 			'notificationCapture.undone' => 'Transaksi otomatis dibatalkan.',
+			'notificationCapture.notTransactionAction' => 'Bukan transaksi',
+			'notificationCapture.notTransactionDone' => 'Yang seperti ini tidak akan muncul lagi.',
 			'notificationCapture.dismissed' => 'Notifikasi diabaikan.',
 			'notificationCapture.duplicateOf' => ({required Object label}) => 'Sama dengan catatan ${label}',
 			'notificationCapture.closeDuplicateAction' => 'Sudah, tutup',
@@ -7312,10 +7320,10 @@ extension on Translations {
 			'premium.account.subFree' => 'Gratis. Lihat apa yang bisa dikerjakan Tanuki.',
 			'premium.account.subTrial' => ({required Object date}) => 'Sampai ${date}. Tanpa kartu.',
 			'premium.account.subActive' => ({required Object date}) => 'Aktif sampai ${date}',
-			'premium.account.subActiveOpen' => 'Aktif',
-			'premium.account.subGrace' => ({required Object date}) => 'Pembayaran belum berhasil. Plus tetap aktif sampai ${date}.',
 			_ => null,
 		} ?? switch (path) {
+			'premium.account.subActiveOpen' => 'Aktif',
+			'premium.account.subGrace' => ({required Object date}) => 'Pembayaran belum berhasil. Plus tetap aktif sampai ${date}.',
 			'premium.account.subOnHold' => 'Langganan ditahan karena pembayaran belum berhasil. Perbaiki di Play Store.',
 			'premium.account.subTester' => ({required Object date}) => 'Dari program penguji sampai ${date}',
 			'premium.account.subTesterOpen' => 'Dari program penguji',

@@ -1252,6 +1252,8 @@ class _Translations$notificationCapture$en extends Translations$notificationCapt
 	@override String get undoConfirmTitle => 'Undo this transaction?';
 	@override String get undoConfirm => 'The transaction is deleted and the wallet balance goes back to what it was.';
 	@override String get undone => 'Automatic transaction undone.';
+	@override String get notTransactionAction => 'Not a transaction';
+	@override String get notTransactionDone => 'Ones like this won\'t show up again.';
 	@override String get dismissed => 'Notification dismissed.';
 	@override String duplicateOf({required Object label}) => 'Same as the entry ${label}';
 	@override String get closeDuplicateAction => 'Already recorded, close';
@@ -3645,6 +3647,8 @@ extension on TranslationsEn {
 			'notificationCapture.undoConfirmTitle' => 'Undo this transaction?',
 			'notificationCapture.undoConfirm' => 'The transaction is deleted and the wallet balance goes back to what it was.',
 			'notificationCapture.undone' => 'Automatic transaction undone.',
+			'notificationCapture.notTransactionAction' => 'Not a transaction',
+			'notificationCapture.notTransactionDone' => 'Ones like this won\'t show up again.',
 			'notificationCapture.dismissed' => 'Notification dismissed.',
 			'notificationCapture.duplicateOf' => ({required Object label}) => 'Same as the entry ${label}',
 			'notificationCapture.closeDuplicateAction' => 'Already recorded, close',
@@ -4057,10 +4061,10 @@ extension on TranslationsEn {
 			'premium.account.subFree' => 'Free. See what Tanuki can do for you.',
 			'premium.account.subTrial' => ({required Object date}) => 'Until ${date}. No card needed.',
 			'premium.account.subActive' => ({required Object date}) => 'Active until ${date}',
-			'premium.account.subActiveOpen' => 'Active',
-			'premium.account.subGrace' => ({required Object date}) => 'Payment did not go through. Plus stays on until ${date}.',
 			_ => null,
 		} ?? switch (path) {
+			'premium.account.subActiveOpen' => 'Active',
+			'premium.account.subGrace' => ({required Object date}) => 'Payment did not go through. Plus stays on until ${date}.',
 			'premium.account.subOnHold' => 'Subscription on hold because payment did not go through. Fix it in the Play Store.',
 			'premium.account.subTester' => ({required Object date}) => 'From the tester program until ${date}',
 			'premium.account.subTesterOpen' => 'From the tester program',

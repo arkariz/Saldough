@@ -6544,6 +6544,20 @@ S sehari, M beberapa hari, L lebih dari seminggu.
       belajar, tanpa snackbar. Uji: `merchant_memory_test` (7). Sisa B-85: tanya
       "Ini transaksi? Ya/Bukan" dan bentuk dipelajari, serta banyak dompet per
       aplikasi tanpa formulir.
+- [x] **T-26.15** (M) E1b "Bukan transaksi": bentuk negatif (4 Nov 2026, irisan
+      kedua B-85). Kartu yang perlu diisi dan punya nominal terbaca mendapat
+      tombol teks **Bukan transaksi** di samping Abaikan (tidak ada tombol baru
+      di kartu satu ketuk atau duplikat). Menekannya menutup kartu dan
+      mempelajari bentuk teksnya (`negative_shapes.dart`: nominal pertama jadi
+      `{amount}`, angka lain `{*}`, sisanya literal; mesin
+      `NotificationTemplate`), disimpan per aplikasi di perangkat
+      (`capture_negative_shapes`, ikut cadangan, maks 200). Notifikasi dengan
+      bentuk itu berikutnya dilewati diam-diam di aplikasi dan di mesin tanpa
+      layar. Snackbar "Yang seperti ini tidak akan muncul lagi" dengan
+      **Urungkan** (kartu kembali, bentuk dilupakan). Teks tanpa nominal
+      hanya ditutup, tanpa belajar. Gratis. Uji: `negative_shapes_test` (7) dan
+      satu uji halaman. Sisa B-85: bentuk positif dipelajari ("Ya") dan banyak
+      dompet per aplikasi tanpa formulir.
 
 Enhancement (E1–E5) ada di Antrean B-85–B-89, dibuka sesudah gerbang tahap 1.
 

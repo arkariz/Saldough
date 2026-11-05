@@ -5,14 +5,28 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Saldough",
+            "name": "Saldough (debug · Plus)",
             "request": "launch",
-            "type": "dart"
+            "type": "dart",
+            "args": ["--dart-define=PLAN_OVERRIDE=plus"]
+        },
+        {
+            "name": "Saldough (debug · Gratis)",
+            "request": "launch",
+            "type": "dart",
+            "args": ["--dart-define=PLAN_OVERRIDE=free"]
+        },
+        {
+            "name": "Saldough (debug · Trial)",
+            "request": "launch",
+            "type": "dart",
+            "args": ["--dart-define=PLAN_OVERRIDE=trial"]
         },
         {
             "name": "Saldough (Plus sandbox)",
             "request": "launch",
             "type": "dart",
+            "flutterMode": "release",
             "toolArgs": ["--dart-define-from-file=dart_defines.local.json"]
         },
         {

@@ -12,6 +12,7 @@ import 'package:saldough/features/notification_capture/domain/repositories/notif
 import 'package:saldough/features/notification_capture/domain/services/capture_card_class.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_inbox_changes.dart';
 import 'package:saldough/features/notification_capture/domain/usecases/capture_inbox_actions.dart';
+import 'package:saldough/features/notification_capture/presentation/widgets/auto_offer.dart';
 import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/shared/capture/capture.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
@@ -376,12 +377,22 @@ final class CaptureInboxBloc extends Bloc<CaptureInboxEvent, CaptureInboxState> 
         );
       }
     }
-    await _reload(emit, effect: done.isEmpty ? _confirmFailed() : _confirmedWithUndo(done));
+    // Tawaran catat otomatis (E3) hanya untuk satu kartu: jenis, dompet, dan nominal
+    // pasti tidak berubah dari draf.
+    final offer = done.length == 1
+        ? await _actions.autoOfferFor(
+            done.single.$1,
+            savedKind: done.single.$1.draft.kind,
+            savedAmountSen: done.single.$2.amount,
+            savedWalletId: done.single.$1.draft.walletId,
+          )
+        : null;
+    await _reload(emit, effect: done.isEmpty ? _confirmFailed() : _confirmedWithUndo(done, offer: offer));
   }
 
   UiEffect _confirmFailed() => ShowSnackBarEffect(message: t.common.genericErrorMessage, severity: .error);
 
-  UiEffect _confirmedWithUndo(List<(CaptureInboxEntry, Transaction)> done) => CallbackEffect(
+  UiEffect _confirmedWithUndo(List<(CaptureInboxEntry, Transaction)> done, {String? offer}) => CallbackEffect(
     callback: (context) {
       final colors = context.appColors;
       final message = done.length == 1
@@ -390,7 +401,7 @@ final class CaptureInboxBloc extends Bloc<CaptureInboxEvent, CaptureInboxState> 
               app: done.single.$1.appLabel,
             )
           : t.notificationCapture.oneTapRecordedMany(n: done.length);
-      ScaffoldMessenger.of(context).showSnackBar(
+      final controller = ScaffoldMessenger.of(context).showSnackBar(
         actionSnackBar(
           context,
           content: Text(message, style: TextStyle(color: colors.bg)),
@@ -403,6 +414,19 @@ final class CaptureInboxBloc extends Bloc<CaptureInboxEvent, CaptureInboxState> 
           ),
         ),
       );
+      // Tawaran menyusul sesudah snackbar hasil ditutup, kecuali dibatalkan.
+      if (offer != null) {
+        unawaited(
+          controller.closed.then((reason) {
+            if (reason == SnackBarClosedReason.action || !context.mounted) return;
+            showAutoOffer(
+              context,
+              template: offer,
+              approve: () => _actions.approveShape(done.single.$1, amountSen: done.single.$2.amount),
+            );
+          }),
+        );
+      }
     },
   );
 

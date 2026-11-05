@@ -25,6 +25,7 @@ import 'package:saldough/features/notification_capture/domain/entities/notificat
 import 'package:saldough/features/notification_capture/domain/entities/notification_source.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_gateway.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_store.dart';
+import 'package:saldough/features/notification_capture/domain/services/approved_shapes.dart';
 import 'package:saldough/features/notification_capture/domain/services/negative_shapes.dart';
 import 'package:saldough/features/notification_capture/presentation/navigation/notification_capture_route_keys.dart';
 import 'package:saldough/features/notification_capture/presentation/pages/notification_pattern_page.dart';
@@ -816,6 +817,69 @@ void main() {
         expect((await store.loadInbox()).getOrElse((_) => throw StateError('')), isEmpty);
         expect(find.text(t.notificationCapture.inboxEmpty), findsOneWidget);
         expect(find.text(t.notificationCapture.oneTapRecorded(amount: 'Rp50.000', app: 'BRImo')), findsOneWidget);
+      });
+
+      testWidgets('Catat satu ketuk menawarkan catat otomatis sesudah hasil; Ya menyetujui bentuknya', (tester) async {
+        final entry = CaptureInboxEntry(
+          id: 'a',
+          packageName: 'id.co.bri.brimo',
+          appLabel: 'BRImo',
+          text: 'Pembayaran Rp50.000 ke KOPI a berhasil',
+          capturedAt: at,
+          draft: RecordDraft(
+            kind: DraftKind.expense,
+            amountSen: 5000000,
+            walletId: 'bri',
+            categoryId: 'builtin.food',
+            note: 'KOPI a',
+            date: at,
+          ),
+        );
+        await store.saveInbox([entry]);
+        await open(tester, NotificationCaptureRouteKeys.inbox);
+
+        await tester.tap(find.byKey(const ValueKey('inbox-confirm-a')));
+        await tester.pumpAndSettle();
+        expect(find.text(t.notificationCapture.oneTapRecorded(amount: 'Rp50.000', app: 'BRImo')), findsOneWidget);
+
+        // Snackbar hasil ditutup (waktu), lalu tawaran muncul.
+        await tester.pump(const Duration(seconds: 7));
+        await tester.pumpAndSettle();
+        expect(find.text(t.notificationCapture.autoOfferYes), findsOneWidget);
+
+        await tester.tap(find.text(t.notificationCapture.autoOfferYes));
+        await tester.pumpAndSettle();
+        final shapes = (await container<ApprovedShapeStore>().load()).getOrElse((_) => const []);
+        expect(shapes.single.template, 'Pembayaran {amount} ke {note} berhasil');
+        expect(shapes.single.amounts, [5000000]);
+      });
+
+      testWidgets('Batalkan pada hasil satu ketuk: tawaran tidak muncul', (tester) async {
+        final entry = CaptureInboxEntry(
+          id: 'a',
+          packageName: 'id.co.bri.brimo',
+          appLabel: 'BRImo',
+          text: 'Pembayaran Rp50.000 ke KOPI a berhasil',
+          capturedAt: at,
+          draft: RecordDraft(
+            kind: DraftKind.expense,
+            amountSen: 5000000,
+            walletId: 'bri',
+            categoryId: 'builtin.food',
+            note: 'KOPI a',
+            date: at,
+          ),
+        );
+        await store.saveInbox([entry]);
+        await open(tester, NotificationCaptureRouteKeys.inbox);
+
+        await tester.tap(find.byKey(const ValueKey('inbox-confirm-a')));
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(const ValueKey('inbox-confirm-undo')));
+        await tester.pump(const Duration(seconds: 7));
+        await tester.pumpAndSettle();
+
+        expect(find.text(t.notificationCapture.autoOfferYes), findsNothing);
       });
 
       group('peristiwa analitik (ukuran keberhasilan, NOTIFICATION_CAPTURE_V2 §12)', () {

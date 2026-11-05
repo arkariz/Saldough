@@ -6631,6 +6631,15 @@ S sehari, M beberapa hari, L lebih dari seminggu.
       Uji: 5 uji baru; Kotlin dikompilasi (`assembleDebug`), **belum dicoba di
       perangkat**.
 
+- [x] **T-26.22** (S) E3: tawaran juga sesudah Catat satu ketuk di kartu (5 Nov 2026).
+      Sebelumnya tawaran "Catat otomatis yang seperti ini?" hanya muncul sesudah
+      Simpan di CATAT, padahal yang paling cocok memakainya adalah yang sering
+      satu ketuk. Kini satu ketuk pada **satu** kartu juga menawarkan (jenis,
+      dompet, dan nominal pasti tidak berubah), menyusul setelah snackbar hasil
+      ditutup dan tidak muncul bila hasil dibatalkan. Tidak untuk Catat semua
+      dan tidak untuk tombol Catat di notifikasi (aplikasi tertutup). Logika
+      tawaran dipakai bersama lewat `showAutoOffer`. Uji: 2 uji halaman.
+
 Enhancement (E1–E5) ada di Antrean B-85–B-89, dibuka sesudah gerbang tahap 1.
 
 ## Antrean (belum dijadwalkan)

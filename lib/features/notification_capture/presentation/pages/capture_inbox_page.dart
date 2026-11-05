@@ -17,8 +17,8 @@ import 'package:saldough/features/notification_capture/presentation/bloc/notific
 import 'package:saldough/features/notification_capture/presentation/navigation/notification_capture_route_keys.dart';
 import 'package:saldough/features/notification_capture/presentation/pages/notification_pattern_page.dart';
 import 'package:saldough/features/notification_capture/presentation/widgets/access_disclosure.dart';
+import 'package:saldough/features/notification_capture/presentation/widgets/auto_offer.dart';
 import 'package:saldough/features/notification_capture/presentation/widgets/open_capture_record.dart';
-import 'package:saldough/features/notification_capture/presentation/widgets/plus_gate.dart';
 import 'package:saldough/features/record/presentation/navigation/record_route_keys.dart';
 import 'package:saldough/features/transaction/presentation/navigation/transaction_route_keys.dart';
 import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
@@ -128,44 +128,12 @@ class CaptureInboxPage extends StatelessWidget {
       );
     }
     if (offerTemplate != null && context.mounted) {
-      messenger.showSnackBar(
-        actionSnackBar(
-          context,
-          content: Text(texts.autoOfferSnack(shape: _shapePreview(offerTemplate))),
-          action: SnackBarAction(
-            label: texts.autoOfferYes,
-            onPressed: () => unawaited(_approveShape(context, entry, amountSaved)),
-          ),
-        ),
+      showAutoOffer(
+        context,
+        template: offerTemplate,
+        approve: () => bloc.approveShape(entry, amountSen: amountSaved),
       );
     }
-  }
-
-  /// "Ya" pada tawaran: Plus menyetujui bentuknya, Gratis membuka pratinjau Plus.
-  Future<void> _approveShape(BuildContext context, CaptureInboxEntry entry, int? amountSen) async {
-    if (!ActivePlan.isPlus) {
-      await openNotificationPaywall(context);
-      return;
-    }
-    final undo = await context.read<CaptureInboxBloc>().approveShape(entry, amountSen: amountSen);
-    if (undo == null || !context.mounted) return;
-    final texts = t.notificationCapture;
-    ScaffoldMessenger.of(context).showSnackBar(
-      actionSnackBar(
-        context,
-        content: Text(texts.autoApprovedSnack),
-        action: SnackBarAction(label: texts.rememberedUndo, onPressed: () => unawaited(undo())),
-      ),
-    );
-  }
-
-  /// Templat bentuk dalam bahasa pengguna: penanda diganti kata biasa.
-  String _shapePreview(String template) {
-    final texts = t.notificationCapture;
-    return template
-        .replaceAll('{amount}', texts.shapeTokenAmount)
-        .replaceAll('{note}', texts.shapeTokenNote)
-        .replaceAll('{*}', texts.shapeTokenAny);
   }
 
   Future<void> _makePattern(BuildContext context, CaptureInboxEntry entry) async {

@@ -190,6 +190,11 @@ deklarasi layanan pendengar di `AndroidManifest`.
 
 ## 7. Revisi
 
+- **Revisi 9 (5 Nov 2026):** bentuk positif "Ya" (§3.4) ditunda. Kartu hanya ada bila
+  teksnya sudah lolos filter frasa, jadi mempelajarinya dari kartu tidak menambah
+  jangkauan; menangkap yang terlewat butuh daftar "Tidak dikenali" yang menyimpan
+  teks tersaring (perubahan privasi), dibuka bila data nyata membenarkan.
+
 - **Revisi 8 (5 Nov 2026, T-26.17):** dompet diingat dari pengenal rekening
   bertopeng di teks (tepat satu), menjadi `WalletRule` tanpa formulir.
 

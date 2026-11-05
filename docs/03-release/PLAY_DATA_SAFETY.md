@@ -231,6 +231,21 @@ diuji tanpa akun.
   deklarasi layanan pendengar notifikasi di Play Console (bila diminta saat
   unggah) memakai alasan yang sama dengan ADR-032: fitur inti pencatatan,
   hanya dari aplikasi yang dipilih pengguna.
+  **Tambahan lokal E1–E3 (T-26.14–T-26.22, dicatat 5 Nov 2026):** tetap tanpa
+  jenis data baru dan tanpa data yang keluar dari perangkat. Tersimpan di
+  perangkat dan **ikut berkas cadangan `.tkbak`**: (e) **ingatan pedagang**
+  (`capture_merchant_memory`: pasangan aplikasi + catatan pedagang → kategori,
+  dan nama pos anggaran; maksimum 500); (f) **bentuk "Bukan transaksi"**
+  (`capture_negative_shapes`: templat teks dengan nominal diganti penanda,
+  maksimum 200); (g) **bentuk yang disetujui dicatat otomatis**
+  (`capture_approved_shapes`: templat dan 20 nominal terakhir, maksimum 100);
+  (h) **aturan dompet yang dipelajari** dari pengenal rekening bertopeng
+  (`****1234`) ke dalam setelan sumber. Pola buatan pengguna (`capture_
+  notification_patterns`) sudah dicabut dan dibuang saat aplikasi dibuka; kunci
+  itu tetap dikenal hanya supaya cadangan lama bisa dipulihkan. Mesin tanpa layar
+  kini juga menuliskan keputusan Catat sendiri ke jurnal untuk bentuk yang
+  disetujui (buku besar tetap diisi saat aplikasi dibuka). Kebijakan privasi
+  situs perlu menyebut ini (T-26.27).
 - **Pengingat rutin** (ADR-035 §3.8, T-15.8) — notifikasi lokal lewat
   `flutter_local_notifications`; jadwal disusun di perangkat dari rutin
   pengguna dan tidak ada data yang keluar dari perangkat, jadi **tidak**

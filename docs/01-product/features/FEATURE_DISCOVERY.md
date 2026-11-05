@@ -144,7 +144,11 @@ berubah selain baris informasi 4.3 dan ringkasan satu baris dua pilihan tadi
   | Belum pernah disetel (tidak ada aplikasi sumber) | **Nyalakan catat dari notifikasi** | Mulai cepat (§5.1) |
   | Sudah disetel, efektif | **Catat dari notifikasi**, status "{n} aplikasi aktif" | Layar setelan: aplikasi sumber, pola, dan sakelar |
   | Izin/akses hilang, atau sakelar mati | **Nyalakan** atau **Izinkan** | Setelan (sakelar) atau setelan sistem (izin) |
-- **P-8 (baru)** Pintu lain yang selalu ada, agar pengguna menemukannya dari
+- **P-8 (baru)** [**Direvisi 5 Nov 2026:** kartu Kotak masuk di Beranda (P-7), tautan
+  "Kelola aplikasi & pola" (kini "Kelola aplikasi"), dan tombol **Ajari pola** (b)
+  dicabut; pintu permanen Beranda sekarang tile **Notifikasi** di aksi cepat,
+  berlencana jumlah yang menunggu. Teks di bawah adalah rancangan asli.]
+  Pintu lain yang selalu ada, agar pengguna menemukannya dari
   tempat ia sedang bekerja: (a) kotak masuk tangkapan memuat tautan
   **Kelola aplikasi & pola** di kepalanya, juga saat kosong; (b) bila ada
   tangkapan yang tidak dikenali/tidak terbaca, barisnya menawarkan
@@ -217,11 +221,8 @@ dengan persetujuan PO mengikuti glosarium `writing.md`.
 | `onboarding.reminder.title` | Ingatkan kamu sebelum jatuh tempo? |
 | `onboarding.reminder.body` | Kamu dapat pengingat sebelum rutin jatuh tempo, sesuai setelan tiap rutin. |
 | `onboarding.turnOn` / `onboarding.notNow` | Nyalakan / Tidak sekarang |
-| `discovery.notification.button` | Nyalakan catat dari notifikasi |
-| `discovery.notification.manage` | Catat dari notifikasi |
 | `discovery.notification.activeApps` | {n} aplikasi aktif |
-| `discovery.notification.manageSources` | Kelola aplikasi & pola |
-| `discovery.notification.teachPattern` | Ajari pola |
+| `discovery.notification.manageSources` | Kelola aplikasi |
 | `discovery.quickStart.title` / `body` | Pilih aplikasi bank atau dompet digitalmu / Notifikasi dari aplikasi yang kamu pilih dibaca di perangkat dan jadi draf catatan. Kamu tinjau dulu. |
 | `discovery.quickStart.other` | Aplikasi lain |
 | `discovery.reminder.button` | Nyalakan pengingat rutin |

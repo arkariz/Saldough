@@ -1,6 +1,6 @@
 # Rencana Verifikasi — Fase 26 (Catat dari notifikasi v2)
 
-**Dibuat:** 4 November 2026 · **Revisi 0** · **Branch:** `claude/rombak-design-system-theming-5747b4` (sementara; Fase 26 dikerjakan di sini sebelum dipindah ke branch sendiri)
+**Dibuat:** 4 November 2026 · **Revisi 1 (5 Nov 2026: bagian I ditambah; E4 dan G2 menyesuaikan pencabutan pola, T-26.23)** · **Branch:** `claude/rombak-design-system-theming-5747b4` (sementara; Fase 26 dikerjakan di sini sebelum dipindah ke branch sendiri)
 **Rujukan:** [ADR-044](../02-architecture/adr/0044-catat-dari-notifikasi-v2.md),
 [NOTIFICATION_CAPTURE_V2.md](../01-product/features/NOTIFICATION_CAPTURE_V2.md) (§4 kartu, §5 duplikat, §10 gerbang, §12 ukuran),
 [VERIFICATION_PLAN_FASE_23.md](VERIFICATION_PLAN_FASE_23.md) (pola dan prasyarat uji notifikasi), TASK_LIST Fase 26.
@@ -13,6 +13,7 @@ Android saja (Catat dari notifikasi tidak ada di iOS). Jalur rilis: **internal t
 | Tahap 0 | T-26.1–T-26.5 (fondasi: tindak lanjut QA Fase 23, penentu bersama, penutup bersama, duplikat dua arah, pola lintas aplikasi) | Bagian A–D di bawah |
 | MVP 1a | T-26.6, T-26.7 (Mulai cepat, kartu tiga jenis, satu ketuk, Catat semua, Cek langsung) | Bagian A–G di bawah |
 | MVP 1b | T-26.9–T-26.13 (notifikasi bertindak, mesin tanpa layar, jurnal) | Spike T-26.9 dijalankan di satu emulator (bagian H); perangkat dan vendor lain, T-26.10–T-26.13 **belum** |
+| Enhancement | T-26.14–T-26.25 (ingatan pedagang, Bukan transaksi, dompet dari pengenal, saran pos, catat otomatis per bentuk, pola dicabut, snackbar dan banner) | Bagian I di bawah; yang sudah dikonfirmasi pemilik di perangkatnya ditandai, sisanya **belum** |
 
 Bagian 1b tidak boleh dianggap lulus sebelum diuji; rilis internal MVP 1a boleh berjalan tanpa 1b.
 
@@ -21,7 +22,7 @@ Bagian 1b tidak boleh dianggap lulus sebelum diuji; rilis internal MVP 1a boleh 
 | Pemeriksaan | Hasil (4 Nov 2026) |
 |---|---|
 | `flutter analyze` (area yang diubah) | Bersih |
-| `flutter test` (seluruh proyek) | 2.602 lulus; 2 gagal di `import_boundaries_test` hanya karena galeri debug sementara di working tree (hilang bersama berkas debug) |
+| `flutter test` (seluruh proyek) | **5 Nov 2026: 2.659 dijalankan, 2 gagal di `import_boundaries_test` hanya karena galeri debug lokal; analyze bersih.** Catatan 4 Nov: 2.602 lulus; 2 gagal di `import_boundaries_test` hanya karena galeri debug sementara di working tree (hilang bersama berkas debug) |
 | Uji baru Fase 26 | `capture_resolver_test` (urutan, kelas, ambigu, pemutus nama, pola terikat, duplikat, kartu tersimpan), `capture_card_class_test` (kelas dan gerbang), `process_captured_notifications_test` (pos dari rutin, Tautkan, satu ketuk, satu-ke-satu), `notification_capture_pages_test` (Mulai cepat, duplikat, satu ketuk, Catat semua, banner izin, peristiwa analitik), `capture_events_test` |
 | Uji layar yang belum ada | Tombol **Tautkan** di layar (alurnya diuji di tingkat use case), Mulai cepat gagal memuat daftar |
 
@@ -116,7 +117,7 @@ Bagian 1b tidak boleh dianggap lulus sebelum diuji; rilis internal MVP 1a boleh 
 | E1 | Cabut akses notifikasi di setelan Android, buka kotak masuk | Banner "Butuh izin membaca notifikasi" dengan Beri izin; bukan sekadar "Tidak ada yang perlu dicek" | |
 | E2 | Beri izin lagi, kembali ke aplikasi | Banner hilang tanpa membuka ulang layar | |
 | E3 | Matikan fitur di setelan | Tanpa banner izin | |
-| E4 | Setelan › aplikasi › Filter dan pola | Pola bawaan berlaku untuk aplikasi mana pun (tidak per paket); bisa dimatikan | |
+| E4 | Setelan › aplikasi › Filter | **Berubah 5 Nov 2026 (T-26.23):** tidak ada lagi bagian pola; hanya kata kunci filter, aturan dompet, dan contoh (Jadikan filter) | |
 
 ### F. Gerbang Gratis dan Plus (ADR-044 §3.8)
 
@@ -133,7 +134,7 @@ Bagian 1b tidak boleh dianggap lulus sebelum diuji; rilis internal MVP 1a boleh 
 | # | Langkah | Harapan | Hasil |
 |---|---|---|---|
 | G1 | Layar 360dp dan teks 2× untuk Mulai cepat dan kotak masuk | Tanpa overflow; tombol terjangkau (kartu tiga tombol membungkus) | |
-| G2 | Sumber, pola, rutin, dan kotak masuk dari build sebelumnya (`adb install -r`) | Terbaca tanpa migrasi; id pola bawaan baru (`builtin.any.*`) | |
+| G2 | Sumber, rutin, dan kotak masuk dari build sebelumnya (`adb install -r`) | Terbaca tanpa migrasi. **Berubah 5 Nov 2026:** pola buatan pengguna dibuang saat dibuka; rutin lama yang memuat ikatan ke pola tetap terbaca (ikatan diabaikan); cadangan lama yang memuat kunci pola tetap bisa dipulihkan | |
 | G3 | Cadangkan dan pulihkan | Tidak terpengaruh | |
 | G4 | Mode gelap dan bahasa Inggris untuk semua teks baru | Teks `en` lengkap, kontras cukup | |
 
@@ -184,6 +185,28 @@ Hasil tambahan T-26.11 (4 Nov 2026, emulator yang sama, build debug, tanpa berka
 Belum diuji di perangkat: pengingat generik saat mesin tanpa layar gagal; **pengingat rutin sungguhan batal setelah Catat lewat tombol** (perlu rutin dengan pengingat menyala dan notifikasi yang cocok dengannya; periksa juga bahwa `cancel` plugin berfungsi dari mesin tanpa layar).
 
 Belum dicoba (wajib sebelum ADR-044 Accepted): sedikitnya dua perangkat nyata dari vendor lain (satu yang agresif mematikan layanan di latar), Android versi lebih rendah, layar kunci dengan kunci sungguhan (`setAuthenticationRequired`), proses dimatikan sungguhan di tengah penerapan jurnal (hanya diuji lewat entri ulang), mode hemat daya, dan build rilis dengan R8 (4 Nov 2026: `flutter build apk --release` berhasil dikompilasi dengan R8, tetapi belum dijalankan di perangkat; memasangnya di emulator butuh mencopot build debug).
+
+### I. Enhancement Fase 26 (T-26.14–T-26.25, ditambah 5 Nov 2026)
+
+Prasyarat: akun Plus (`--dart-define=PLAN_OVERRIDE=plus`), sumber uji adb terdaftar, dua dompet. Perintah adb ada di
+`DEBUG-SEMENTARA-fase26.sh` (jangan jalankan `siap` bila ada data nyata) atau `adb shell cmd notification post`.
+"Pemilik" = dikonfirmasi pemilik di perangkatnya di sesi kerja 5 Nov 2026; tanpa tanda = belum diuji di perangkat.
+
+| # | Langkah | Harapan | Hasil |
+|---|---|---|---|
+| I1 | Catat kartu lewat CATAT dengan kategori baru, lalu kirim notifikasi dari pedagang yang sama | Satu snackbar "Diingat" dengan **Batalkan ingatan**; kartu berikutnya mendapat kategori dan tombol satu ketuk | Ingatan lulus (pemilik, saat masih snackbar terpisah); ringkasan satu snackbar belum |
+| I2 | Kartu perlu diisi dengan nominal terbaca: **Bukan transaksi** | Kartu tertutup; teks bentuk sama tidak muncul lagi; Urungkan mengembalikan | Lulus (pemilik) |
+| I3 | Catat satu ketuk dari tombol notifikasi | Ikon aplikasi sumber menempel di transaksi | Lulus (pemilik) |
+| I4 | Dompet dipilih beda dari draf pada teks yang memuat pengenal rekening bertopeng (`****5678`) | Baris "Rekening ****5678 → dompet" di ringkasan "Diingat"; teks berikutnya dengan pengenal sama langsung ke dompet itu | Belum |
+| I5 | Pengeluaran dengan nama pos di teks, lalu pos dipilih beda untuk pedagang yang sama | Lencana **Saran pos** dan CATAT terisi pos; ingatan nama pos dipakai pada periode baru | Lulus (pemilik) |
+| I6 | Catat tanpa mengubah apa pun (CATAT atau satu ketuk) | Banner "Catat otomatis dari {app}?" di atas daftar; tetap ada sesudah snackbar hilang; **Ya, otomatis** menyetujui, **Nanti** menutup; Gratis: Ya membuka paywall | Belum (banner); tawaran versi snackbar lulus (pemilik) |
+| I7 | Bentuk disetujui, aplikasi **terbuka**: kirim dua notifikasi lain | Tercatat otomatis; di tab Otomatis dua entri bertanda **Baru** | Lulus (pemilik) |
+| I8 | Setelah tiga contoh: nominal >10× median | Ke kotak masuk dengan alasan "Nominal tak biasa"; tidak dicatat otomatis | Belum |
+| I9 | Bentuk disetujui, aplikasi **tertutup** (matikan dari recents): kirim notifikasi lain | Notifikasi langsung "Tercatat" dengan Batalkan tanpa ketukan; buka aplikasi: transaksi ada di Riwayat dan tab Otomatis (Baru) | Belum |
+| I10 | Dua nominal sama dalam 10 menit dari bentuk disetujui | Hanya yang pertama tercatat sendiri; yang kedua menunggu di kotak masuk | Belum |
+| I11 | Beranda: aksi cepat | Notifikasi (lencana jumlah), Laporan, Misi; tanpa tile Catat Transfer; tanpa kartu Kotak masuk di carousel; tur menyorot tile Notifikasi sekali | Belum |
+| I12 | Beberapa aksi beruntun (Catat satu ketuk lalu Abaikan lalu CATAT) | Maksimal satu snackbar tampil; yang baru menggantikan, tidak mengantre; tampilan v2 (titik bernada, sudut 16) di terang dan gelap | Belum |
+| I13 | Restore `.tkbak` dari build lama yang memuat kunci pola | Berhasil dipulihkan; pola dibuang saat aplikasi dibuka | Belum |
 
 ## Ukuran keberhasilan
 

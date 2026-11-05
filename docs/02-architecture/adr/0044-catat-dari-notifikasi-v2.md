@@ -75,6 +75,8 @@ kemunculan "tercatat" diperbaiki bila tampil "Later" (B-83b).
   **bentuk** yang dipelajari; ia menggantikan daftar kata filter.
 - "Terverifikasi" berasal dari konfirmasi pengguna di perangkat, bukan korpus.
   Pola pengguna lama tetap terbaca (tanpa migrasi; lihat §3.7).
+  **Direvisi 5 Nov 2026 (Revisi 11):** pola pengguna dicabut dan dibuang saat
+  aplikasi dibuka; "Ya" untuk bentuk positif ditunda (Revisi 9).
 
 ### 3.5 Notifikasi bertindak dan pemrosesan tanpa layar
 
@@ -128,7 +130,8 @@ aturan 8 di `.claude/CLAUDE.md` dan `.claude/AGENT_CONTEXT.md`.
 ### 3.7 Aturan dan catat otomatis per bentuk
 
 `AppRule` (kondisi → efek) menyatukan `walletRules`, kategori per pola, dan
-`notificationBinding`. Dokumen lama dibaca tanpa migrasi tulis; konversi saat
+`notificationBinding` (**Revisi 11:** kategori per pola dan `notificationBinding`
+sudah dicabut; yang tersisa untuk dipersatukan hanya `walletRules`, B-88). Dokumen lama dibaca tanpa migrasi tulis; konversi saat
 pertama disimpan (E4). Aturan lahir dari kartu ("Ingat untuk yang seperti ini?")
 dengan Batalkan. Catat otomatis menjadi `autoApproved` **per bentuk**,
 ditawarkan setelah konfirmasi pertama yang diterima tanpa ubahan jenis/dompet/
@@ -185,8 +188,10 @@ deklarasi layanan pendengar di `AndroidManifest`.
 
 ## 6. Pertanyaan terbuka
 
-- **KT-N2** (ditunda pemilik 4 Nov 2026) Ambang kartu dikoreksi dan pagar nominal.
-- **KT-N3** Penulisan langsung dari mesin tanpa layar sesudah spike.
+- **KT-N2** Sisa: ambang kartu dikoreksi (ditunda pemilik 4 Nov 2026). Pagar nominal
+  dijawab 5 Nov 2026 (10× median).
+- **KT-N3** **Diputuskan:** jurnal saja. Mesin tanpa layar tidak pernah menulis Hive;
+  aplikasi satu-satunya penulis (T-26.10, dipertahankan oleh T-26.21).
 
 ## 7. Revisi
 

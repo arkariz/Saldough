@@ -114,7 +114,8 @@ preset tampil bila ada dua preset atau lebih (sekarang `matcha` dan `pink`).
 ### 3.6 Carousel status Beranda (30 Okt 2026)
 
 Tiga banner Beranda (`NotificationInboxCard`, `RecurringPendingCard`,
-`ReminderNudgeCard`) punya **mode ringkas**: dengan parameter `board`
+`ReminderNudgeCard`; **`NotificationInboxCard` dicabut 5 Nov 2026**, T-26.24: pintunya tile
+Notifikasi di aksi cepat) punya **mode ringkas**: dengan parameter `board`
 (`DsStatusBoard`), widget tidak menggambar apa pun dan hanya melapor satu
 `DsStatusSlideData` lewat `DsStatusReport`. Beranda merender slide itu
 sebagai slide di **satu carousel** (`DsStatusCarousel`) di bawah aksi cepat

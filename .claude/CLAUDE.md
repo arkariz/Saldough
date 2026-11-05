@@ -1,8 +1,8 @@
 # CLAUDE.md — Konteks proyek Saldough
 
-**Terakhir diperbarui:** 29 Oktober 2026
-**Ringkas per 29 Okt 2026:** versi di `main` `0.11.0+17` (tag terakhir `0.10.0+16`; `0.11.0+17` belum ditandai), masih closed testing. Fase 22 dan 23 sudah di `main`; Fase 21 menunggu rupa dan verifikasi perangkat. Syarat rilis publik ada di ROADMAP "Now". Keputusan terbuka terbaru: KT-W1 (arti mengubah saldo dompet). Rincian per fase di bawah dan di TASK_LIST.
-**Fase saat ini:** MVP selesai (Fase 0–7), Fase 9 (onboarding, tur spotlight, lapis info) selesai 28 Sep 2026; Fase 8 (tindak lanjut pasca-MVP, persiapan rilis) berjalan; Fase 11 (Catat Cerdas) berjalan; Fase 12 (rapikan batas arsitektur, ADR-030) selesai 1 Okt 2026; Fase 13 (pecah fitur `record`, ADR-033) selesai 1 Okt 2026; Fase 14 (bahasa visual baru, ADR-034) kodenya selesai 9 Okt 2026 (sisa review desain/QA, render situs B-4, verifikasi perangkat); Fase 15 (Rencana dan rutin, ADR-035) berjalan sejak 2 Okt 2026; Fase 16 (Rencana R2, ADR-036) kodenya selesai 4 Okt 2026 (sisa poles T-16.16); Fase 17 (Rencana R3, ADR-037 Accepted) berjalan sejak 4 Okt 2026. Fase 18 (periode keuangan, ADR-038 Accepted) selesai 15 Okt 2026 (rilis `0.7.0+13`, verifikasi perangkat T-18.9 lulus); Fase 19 (Analisis R1, selesai 18 Okt 2026) kodenya selesai 17 Okt 2026 per irisan vertikal yang diverifikasi pemilik (rupa sudah ada, salinan di `docs/03-design`); verifikasi emulator T-19.7 selesai 18 Okt 2026 (tidak ada Gagal S1/S2; tersisa B-40) dan **sudah di `main`** lewat PR #51 (rebase, 18 Okt 2026); sisa Fase 19 hanya B-40 dan R2 (B-38). Fase 20 (pengumuman pembaruan, ADR-039 Accepted) selesai 15 Okt 2026 (kode di `main`, verifikasi perangkat T-20.8 lulus). Fase 21 (penemuan fitur: onboarding dua langkah wajib, pintu permanen Catat dari notifikasi + Mulai cepat) kode T-21.1–T-21.7 selesai, T-21.9 sebagian; menunggu rupa T-21.0 dan verifikasi perangkat T-21.8. Fase 22 (ekspor dan cadangan manual, ADR-040 Accepted) selesai 23 Okt 2026 (kode di `main`, QA emulator tanpa temuan S1/S2; sisa iOS dan Excel/Sheets di B-67). Fase 23 (catat notifikasi multi-dompet, contoh notifikasi, ikat rutin ke pola, catat rutin lebih awal; ADR-042) selesai 23 Okt 2026 (di `main`, rilis `0.10.0+16`, QA emulator tanpa Gagal S1/S2; tindak lanjut di B-83). Versi `0.11.0+17` (tag terbaru `0.10.0+16`), belum dirilis publik.
+**Terakhir diperbarui:** 5 November 2026
+**Ringkas per 5 Nov 2026:** versi di `main` `0.12.2+21` (tag terakhir `0.10.0+16`; build sesudahnya belum ditandai), masih closed testing. Fase 22 dan 23 sudah di `main`. Fase 24 (Fondasi Plus) kodenya selesai, sisa T-24.18 (verifikasi perangkat). Fase 25 (design system v2) berjalan: sebagian besar fitur sudah memakai v2, sisanya `freelance` dan layar Catat dari notifikasi. Fase 26 (Catat dari notifikasi v2): 25 tugas kode selesai di branch `claude/rombak-design-system-theming-5747b4` (125 komit di depan `main`, belum jadi PR); **ADR-044 masih Proposed** sampai uji perangkat nyata (T-26.26). Syarat rilis publik ada di ROADMAP "Now". Keputusan terbuka terbaru: KT-W1 (arti mengubah saldo dompet). Rincian per fase di bawah dan di TASK_LIST.
+**Fase saat ini:** MVP selesai (Fase 0–7), Fase 9 (onboarding, tur spotlight, lapis info) selesai 28 Sep 2026; Fase 8 (tindak lanjut pasca-MVP, persiapan rilis) berjalan; Fase 11 (Catat Cerdas) berjalan; Fase 12 (rapikan batas arsitektur, ADR-030) selesai 1 Okt 2026; Fase 13 (pecah fitur `record`, ADR-033) selesai 1 Okt 2026; Fase 14 (bahasa visual baru, ADR-034) kodenya selesai 9 Okt 2026 (sisa review desain/QA, render situs B-4, verifikasi perangkat); Fase 15 (Rencana dan rutin, ADR-035) berjalan sejak 2 Okt 2026; Fase 16 (Rencana R2, ADR-036) kodenya selesai 4 Okt 2026 (sisa poles T-16.16); Fase 17 (Rencana R3, ADR-037 Accepted) berjalan sejak 4 Okt 2026. Fase 18 (periode keuangan, ADR-038 Accepted) selesai 15 Okt 2026 (rilis `0.7.0+13`, verifikasi perangkat T-18.9 lulus); Fase 19 (Analisis R1, selesai 18 Okt 2026) kodenya selesai 17 Okt 2026 per irisan vertikal yang diverifikasi pemilik (rupa sudah ada, salinan di `docs/03-design`); verifikasi emulator T-19.7 selesai 18 Okt 2026 (tidak ada Gagal S1/S2; tersisa B-40) dan **sudah di `main`** lewat PR #51 (rebase, 18 Okt 2026); sisa Fase 19 hanya B-40 dan R2 (B-38). Fase 20 (pengumuman pembaruan, ADR-039 Accepted) selesai 15 Okt 2026 (kode di `main`, verifikasi perangkat T-20.8 lulus). Fase 21 (penemuan fitur: onboarding dua langkah wajib, pintu permanen Catat dari notifikasi + Mulai cepat) kode T-21.1–T-21.7 selesai, T-21.9 sebagian; menunggu rupa T-21.0 dan verifikasi perangkat T-21.8. Fase 22 (ekspor dan cadangan manual, ADR-040 Accepted) selesai 23 Okt 2026 (kode di `main`, QA emulator tanpa temuan S1/S2; sisa iOS dan Excel/Sheets di B-67). Fase 23 (catat notifikasi multi-dompet, contoh notifikasi, ikat rutin ke pola, catat rutin lebih awal; ADR-042) selesai 23 Okt 2026 (di `main`, rilis `0.10.0+16`, QA emulator tanpa Gagal S1/S2; tindak lanjut di B-83). Fase 26 (Catat dari notifikasi v2, ADR-044 Proposed): E1 (ingatan pedagang, Bukan transaksi, dompet dari pengenal rekening), E2 (saran pos), dan E3 (catat otomatis per bentuk, termasuk lewat mesin tanpa layar) selesai 5 Nov 2026 di branch kerja; pola buatan pengguna dicabut (T-26.23). Gerbang Accepted (uji ≥3 perangkat) belum terpenuhi. Versi `0.12.2+21` (tag terbaru `0.10.0+16`), belum dirilis publik.
 
 ## Apa ini
 
@@ -153,7 +153,12 @@ Baseline 10 Okt 2026 (sesudah T-8.18, kalkulator Catat): 52.772 baris, 144
 berkas uji, 1.254 uji lulus, `flutter analyze` tanpa isu sama sekali.
 Baseline 29 Okt 2026 (`0.11.0+17`): 71.320 baris, 223 berkas uji, 2.076 uji
 lulus, `flutter analyze` 1 info (`avoid_redundant_argument_values` di uji
-ADR-042, F23-3). Flutter dijalankan lewat `.fvm/flutter_sdk/bin/flutter`;
+ADR-042, F23-3). Baseline 5 Nov 2026 (`0.12.2+21` + branch Fase 26): 94.064
+baris (tanpa `.g.dart`), 282 berkas uji, 2.659 uji dijalankan; dua uji
+arsitektur gagal **hanya** karena berkas debug lokal yang tidak dikomit
+(galeri debug), `flutter analyze` tanpa error dan peringatan. Plus tanpa login
+untuk uji: `--dart-define=PLAN_OVERRIDE=plus` atau menu pengembang (ADR-041
+§3.10), hanya build non-rilis. Flutter dijalankan lewat `.fvm/flutter_sdk/bin/flutter`;
 `flutter` tidak ada di PATH shell agen.
 Kode 1.0 bisa dipulihkan dari riwayat git (commit `13c7939` sebelum pivot).
 
@@ -249,8 +254,10 @@ yang sedang dipasang bertahap. Kode di `lib/core/design_system/` (token,
 22+ widget, animasi, ikon clay, preset warna `matcha` dan `pink`), dokumen di
 `docs/03-design/design-system-v2/`. Tema aktif dibangun `AppThemeBridge`
 (jembatan sementara: tema lama + ekstensi Ds), dipilih pengguna di Akun ›
-Tampilan (`settings_appearance`). **Beranda sudah memakai v2; layar lain
-belum** (T-25.4). Widget baru memakai `context.ds`, bukan `context.appColors`;
+Tampilan (`settings_appearance`). **Hampir semua fitur sudah memakai
+`core/design_system`; yang belum atau masih campuran: `freelance` (sama sekali
+belum), layar Catat dari notifikasi (kotak masuk, setelan, halaman sumber), dan
+satu-dua berkas lama di Analisis, Anggaran, dan Rencana** (T-25.4, B-90). Widget baru memakai `context.ds`, bukan `context.appColors`;
 jangan mencampur keduanya di satu widget. Data tiruan Beranda ada di
 `home_placeholder.dart` (saklar `kHomePlaceholderPreview`). Skill
 `tanukonomy-ui` dan paragraf di bawah masih menggambarkan ADR-034 untuk layar

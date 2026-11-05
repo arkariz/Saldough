@@ -5,7 +5,11 @@
 - **Decision ID:** ADR-042
 - **Tanggal:** 2026-10-23
 - **Fase roadmap:** Fase 23 (lihat TASK_LIST)
-- **Status:** Accepted (pemilik menjawab §6 dan meminta implementasi, 23 Okt 2026)
+- **Status:** Accepted (pemilik menjawab §6 dan meminta implementasi, 23 Okt 2026).
+  **Sebagian digantikan 5 Nov 2026 oleh ADR-044 Revisi 11:** transfer
+  `{from}`/`{to}` (§3.1, bagian templat) dan ikatan rutin ke pola (§3.4) dicabut
+  bersama pola buatan pengguna; aturan dompet (§3.1) dan contoh notifikasi (§3.2)
+  tetap berlaku
 - **Cakupan:** `features/notification_capture`, `shared/recurring`,
   `features/recurring`, Kotlin `notificationcapture/`
 - **Bergantung pada:** ADR-032, ADR-035, ADR-036, ADR-037, ADR-038

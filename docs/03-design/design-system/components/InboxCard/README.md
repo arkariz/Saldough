@@ -1,5 +1,8 @@
 # InboxCard
 
+> **Dicabut 5 Nov 2026 (T-26.24):** kartu ini tidak ada lagi di Beranda. Pintu permanen Catat dari
+> notifikasi kini tile **Notifikasi** di aksi cepat (design system v2). Dokumen ini arsip ADR-034.
+
 Satu widget "Kotak masuk notifikasi" di Beranda untuk Android (Fase 21; v3, 20 Okt 2026: menggabungkan kartu Catat dari notifikasi ke dalamnya). Tidak pernah hilang; isinya berubah menurut keadaan (P-7, P-8). Di iOS banner lama tetap.
 
 **Anatomi** (`tk-card tk-inbox`)

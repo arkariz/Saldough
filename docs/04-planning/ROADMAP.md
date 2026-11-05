@@ -61,6 +61,9 @@ berarti membangun ringkasan untuk data yang belum ada.
 | 21 | Penemuan fitur | Catat dari notifikasi, pengingat rutin, dan awal bulan keuangan dijadikan langkah wajib onboarding dan tombol permanen (kode T-21.1–T-21.7 selesai, Mulai cepat sebagian; menunggu rupa T-21.0 dan verifikasi perangkat T-21.8) |
 | 22 | Ekspor dan cadangan manual | Ekspor transaksi ke xlsx/CSV, cadangkan dan pulihkan manual ke berkas, gratis tanpa akun (dari B-42, selesai 23 Okt 2026) |
 | 23 | Catat notifikasi multi-dompet, contoh, dan rutin lebih awal | Satu sumber notifikasi bisa ke banyak dompet, contoh notifikasi jadi pola, rutin diikat ke pola, Catat sekarang untuk rutin yang belum jatuh tempo (selesai 23 Okt 2026, rilis `0.10.0+16`) |
+| 24 | Fondasi Plus | Hak Plus, uji coba, RevenueCat, paywall, dan gerbang fitur ([ADR-041](../02-architecture/adr/0041-monetisasi-hak-plus-dan-uji-coba.md)); kode selesai, sisa verifikasi perangkat T-24.18 |
+| 25 | Design system baru dan preset tema | Design system v2 dan preset warna matcha/pink ([ADR-043](../02-architecture/adr/0043-design-system-v2-dan-preset-tema.md), Proposed); sebagian besar fitur sudah dipindah, sisa `freelance` dan layar Catat dari notifikasi |
+| 26 | Catat dari notifikasi v2 | Kartu tiga jenis, satu ketuk, notifikasi bertombol lewat mesin tanpa layar, ingatan pedagang, saran pos, dan catat otomatis per bentuk ([ADR-044](../02-architecture/adr/0044-catat-dari-notifikasi-v2.md), Proposed); kode selesai 5 Nov 2026, menunggu uji perangkat nyata |
 
 Fase 0 sampai 6 membentuk MVP. Fase 7 dikerjakan setelahnya. Fase 8 dan 9
 lahir dari pemakaian nyata dan persiapan rilis, bukan dari rencana awal.
@@ -99,6 +102,7 @@ baru:
 | B-83 | Tindak lanjut QA Fase 23: keputusan F23-2 dan F23-6, perbaikan F23-5, pengungkapan contoh notifikasi di Keamanan Data dan situs, uji perangkat dengan notifikasi bank asli | pemilik + agen |
 | KT-W1 | Putuskan arti mengubah saldo dompet (sejak `0.11.0+17` saldo awal digeser diam-diam, saldo periode lampau ikut bergeser) lalu tulis ADR-nya | pemilik, lalu agen |
 | Fase 24 (B-41) | **Fondasi Plus** dijadwalkan 23 Okt 2026 ([ADR-041](../02-architecture/adr/0041-monetisasi-hak-plus-dan-uji-coba.md)): hak, uji coba, gerbang fitur lama, RevenueCat. Pra-peluncuran: masuk akun = Plus | agen, pemilik (RevenueCat, Play Console) |
+| Fase 26 (T-26.26, T-26.27) | **Gerbang Catat dari notifikasi v2**: uji di dua atau tiga perangkat nyata dari vendor berbeda (satu yang agresif mematikan layanan), build rilis R8 dijalankan, dan kebijakan privasi situs memuat pemrosesan latar serta penyimpanan lokal baru; ADR-044 baru Accepted sesudahnya. Kode T-26.1–T-26.25 sudah selesai di branch kerja (belum jadi PR) | pemilik + agen |
 | B-43 | Kunci aplikasi sidik jari/PIN (gratis); prasyarat Plus. Pasangannya, ekspor dan cadangan/pulihkan manual (Fase 22, dari B-42), **selesai 23 Okt 2026**; sisa uji perangkatnya di B-67 | agen, pemilik (B-67) |
 
 **Satu fitur yang ikut di Now:** **B-26**, kartu lembut "Ada yang belum dicatat

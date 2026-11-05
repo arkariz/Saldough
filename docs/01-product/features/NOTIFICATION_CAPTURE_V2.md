@@ -143,7 +143,9 @@ Cara belajar:
 - **Bukan** membuat bentuk negatif, jadi promosi ("Diskon Rp50.000") tidak
   muncul lagi.
 - Sebelum disimpan, kartu menampilkan "Seperti: …".
-- "Ajari pola" menjadi permukaan **pengelolaan dan koreksi** di Lanjutan:
+- [**Dicabut 5 Nov 2026**, ADR-044 Revisi 11: "Ajari pola", pola bawaan, dan ikatan
+  rutin ke pola tidak ada lagi; sisa rancangan di bawah tidak dibangun.]
+  "Ajari pola" menjadi permukaan **pengelolaan dan koreksi** di Lanjutan:
   daftar bentuk (contoh, jenis, dompet, kategori) yang bisa dimatikan atau
   dihapus. Jalur manual (tandai nominal) hanya muncul di kartu yang gagal dibaca.
 - "Terverifikasi" berasal dari **konfirmasi di perangkat**, bukan dari korpus
@@ -253,7 +255,7 @@ ada ketidakpastian). Tahap bisa dirilis sendiri; tiap tahap punya gerbang keluar
 | **E1 "Ingat" dan bentuk dipelajari** | Aturan dari kartu; tanya "Ini transaksi?"; banyak dompet tanpa formulir | M–L | Kartu yang dikoreksi <20% (usulan) |
 | **E2 Anggaran** | Saran pos tanpa rutin | M | — |
 | **E3 Otomatis per bentuk** | Tawaran setelah konfirmasi pertama; pagar nominal | M | Pembatalan otomatis rendah |
-| **E4 Lanjutan** | Daftar aturan, Ajari pola yang disederhanakan, filter, contoh; migrasi `walletRules`/pola/ikatan | M–L | Data lama utuh |
+| **E4 Lanjutan** | Daftar aturan, filter, contoh (Ajari pola dicabut); migrasi `walletRules`/pola/ikatan | M–L | Data lama utuh |
 | **E5 Permukaan lain** | Quick Settings tile "Catat n transaksi" (S–M); widget layar utama bila data menunjukkan perlu (L) | S–L | Dari data pemakaian |
 
 Alternatif yang ditimbang untuk "tanpa membuka aplikasi" dan tidak dipilih
@@ -289,8 +291,6 @@ Definisi, sumber data (`CaptureEvents`), dan status ambang tiap ukuran ada di
 
 ## 14. Keputusan terbuka
 
-- **KT-N2** (ditunda pemilik 4 Nov 2026) Ambang kartu yang dikoreksi (usulan
-  <20%) dan pagar nominal besar (usulan >10× median). Dijawab sebelum T-26.8
-  (ukuran keberhasilan) dan sebelum E3 dikerjakan.
-- **KT-N3** Penulisan langsung ke buku besar dari mesin tanpa layar (sesudah
-  spike) dibanding jurnal saja.
+- **KT-N2** Sisa: ambang kartu yang dikoreksi (usulan <20%), ditunda pemilik
+  4 Nov 2026. Pagar nominal besar dijawab 5 Nov 2026: 10× median.
+- **KT-N3** **Diputuskan:** jurnal saja; aplikasi satu-satunya penulis Hive.

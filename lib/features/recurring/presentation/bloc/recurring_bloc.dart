@@ -451,7 +451,7 @@ final class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
     callback: (context) {
       final ds = context.ds;
       final messenger = ScaffoldMessenger.of(context);
-      messenger.showSnackBar(
+      messenger.showAppSnackBar(
         actionSnackBar(
           context,
           content: Text(message),
@@ -460,7 +460,7 @@ final class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
             onPressed: () async {
               final result = await undo();
               if (result case Left(value: final failure)) {
-                messenger.showSnackBar(
+                messenger.showAppSnackBar(
                   feedbackSnackBar(
                     ds,
                     ShowSnackBarEffect(message: failure.userMessage ?? t.common.genericErrorMessage, severity: .error),

@@ -778,7 +778,9 @@ void main() {
         expect(find.text(t.notificationCapture.oneTapRecorded(amount: 'Rp50.000', app: 'BRImo')), findsOneWidget);
       });
 
-      testWidgets('Catat satu ketuk menawarkan catat otomatis sesudah hasil; Ya menyetujui bentuknya', (tester) async {
+      testWidgets('Catat satu ketuk menawarkan catat otomatis lewat banner yang menetap; Ya menyetujui bentuknya', (
+        tester,
+      ) async {
         final entry = CaptureInboxEntry(
           id: 'a',
           packageName: 'id.co.bri.brimo',
@@ -801,13 +803,17 @@ void main() {
         await tester.pumpAndSettle();
         expect(find.text(t.notificationCapture.oneTapRecorded(amount: 'Rp50.000', app: 'BRImo')), findsOneWidget);
 
-        // Snackbar hasil ditutup (waktu), lalu tawaran muncul.
-        await tester.pump(const Duration(seconds: 7));
+        // Tawaran berupa banner di kotak masuk: langsung ada, dan tidak hilang sendiri
+        // walau snackbar hasil sudah lewat.
+        expect(find.byKey(const ValueKey('inbox-auto-offer')), findsOneWidget);
+        await tester.pump(const Duration(seconds: 20));
         await tester.pumpAndSettle();
-        expect(find.text(t.notificationCapture.autoOfferYes), findsOneWidget);
+        expect(find.byKey(const ValueKey('inbox-auto-offer')), findsOneWidget);
+        expect(find.text(t.notificationCapture.autoOfferTitle(app: 'BRImo')), findsOneWidget);
 
-        await tester.tap(find.text(t.notificationCapture.autoOfferYes));
+        await tester.tap(find.byKey(const ValueKey('inbox-auto-offer-yes')));
         await tester.pumpAndSettle();
+        expect(find.byKey(const ValueKey('inbox-auto-offer')), findsNothing, reason: 'tertutup sesudah disetujui');
         final shapes = (await container<ApprovedShapeStore>().load()).getOrElse((_) => const []);
         expect(shapes.single.template, 'Pembayaran {amount} ke {note} berhasil');
         expect(shapes.single.amounts, [5000000]);
@@ -839,6 +845,33 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.text(t.notificationCapture.autoOfferYes), findsNothing);
+      });
+
+      testWidgets('Nanti menutup tawaran tanpa menyetujui apa pun', (tester) async {
+        final entry = CaptureInboxEntry(
+          id: 'a',
+          packageName: 'id.co.bri.brimo',
+          appLabel: 'BRImo',
+          text: 'Pembayaran Rp50.000 ke KOPI a berhasil',
+          capturedAt: at,
+          draft: RecordDraft(
+            kind: DraftKind.expense,
+            amountSen: 5000000,
+            walletId: 'bri',
+            categoryId: 'builtin.food',
+            note: 'KOPI a',
+            date: at,
+          ),
+        );
+        await store.saveInbox([entry]);
+        await open(tester, NotificationCaptureRouteKeys.inbox);
+        await tester.tap(find.byKey(const ValueKey('inbox-confirm-a')));
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(const ValueKey('inbox-auto-offer-later')));
+        await tester.pumpAndSettle();
+
+        expect(find.byKey(const ValueKey('inbox-auto-offer')), findsNothing);
+        expect((await container<ApprovedShapeStore>().load()).getOrElse((_) => const []), isEmpty);
       });
 
       group('peristiwa analitik (ukuran keberhasilan, NOTIFICATION_CAPTURE_V2 §12)', () {

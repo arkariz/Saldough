@@ -381,7 +381,7 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
         final day? => t.plan.financialMonthOnDay(day: day),
         null => t.plan.financialMonthOnLastDay,
       };
-      final offer = ScaffoldMessenger.of(context).showSnackBar(
+      final offer = ScaffoldMessenger.of(context).showAppSnackBar(
         actionSnackBar(
           context,
           content: Text(t.plan.financialMonthOfferScheduled(start: day)),
@@ -417,7 +417,7 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
     return CallbackEffect(
       callback: (context) {
         final messenger = ScaffoldMessenger.of(context);
-        messenger.showSnackBar(
+        messenger.showAppSnackBar(
           actionSnackBar(
             context,
             content: Text(message),
@@ -429,7 +429,7 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
                   changes.notifyChanged();
                   AppAnalytics.log(PlanEvents.recurringBudgetLinked('suggestion'));
                 }
-                messenger.showSnackBar(
+                messenger.showAppSnackBar(
                   SnackBar(
                     content: Text(
                       result.isRight()

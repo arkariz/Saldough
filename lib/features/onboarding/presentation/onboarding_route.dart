@@ -12,6 +12,7 @@ import 'package:saldough/core/foundation/navigation/app_route_registry.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/language/language.dart';
+import 'package:saldough/core/presentation/widgets/app_action_snack_bar.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/data_portability/presentation/navigation/data_portability_route_keys.dart';
 import 'package:saldough/features/onboarding/presentation/pages/onboarding_page.dart';
@@ -107,7 +108,7 @@ class _OnboardingLoaderState extends State<_OnboardingLoader> {
               );
               if (saved.isLeft()) {
                 if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(t.common.genericErrorMessage)));
+                  ScaffoldMessenger.of(context).showAppSnackBar(SnackBar(content: Text(t.common.genericErrorMessage)));
                 }
                 return false;
               }
@@ -140,7 +141,7 @@ class _OnboardingLoaderState extends State<_OnboardingLoader> {
       onLanguageSelected: (locale) async {
         final changed = await container<ChangeAppLanguage>()(locale);
         if (changed.isLeft() && context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(t.common.genericErrorMessage)));
+          ScaffoldMessenger.of(context).showAppSnackBar(SnackBar(content: Text(t.common.genericErrorMessage)));
         }
       },
       onFinished: (outcome, currency) async {
@@ -155,7 +156,7 @@ class _OnboardingLoaderState extends State<_OnboardingLoader> {
         // lagi, bukan diam-diam jatuh ke IDR saat dibuka ulang.
         if ((await container<CurrencyPreferenceRepository>().save(chosen)).isLeft()) {
           if (context.mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(t.common.genericErrorMessage)));
+            ScaffoldMessenger.of(context).showAppSnackBar(SnackBar(content: Text(t.common.genericErrorMessage)));
           }
           return;
         }

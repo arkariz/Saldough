@@ -384,7 +384,7 @@ class _DebugSamples extends StatelessWidget {
                 if (context.mounted) {
                   ScaffoldMessenger.of(
                     context,
-                  ).showSnackBar(SnackBar(content: Text(texts.copied)));
+                  ).showAppSnackBar(SnackBar(content: Text(texts.copied)));
                 }
               },
               child: AppCard(

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/widgets/app_action_snack_bar.dart';
 import 'package:saldough/features/budget/domain/entities/budget_template.dart';
 import 'package:saldough/features/budget/domain/repositories/budget_repository.dart';
 import 'package:saldough/features/budget/domain/repositories/budget_template_repository.dart';
@@ -106,7 +107,7 @@ class _FinancialMonthPageState extends State<FinancialMonthPage> {
 
   void _showError() {
     if (!mounted) return;
-    ScaffoldMessenger.maybeOf(context)?.showSnackBar(SnackBar(content: Text(t.common.genericErrorMessage)));
+    ScaffoldMessenger.maybeOf(context)?.showAppSnackBar(SnackBar(content: Text(t.common.genericErrorMessage)));
   }
 
   @override

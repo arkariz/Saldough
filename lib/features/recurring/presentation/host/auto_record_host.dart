@@ -130,7 +130,7 @@ class _AutoRecordHostState extends State<AutoRecordHost> {
     final message = recorded.length == 1
         ? t.recurring.autoRecordedOne(name: recorded.single.$1.ruleName)
         : t.recurring.autoRecordedMany(n: recorded.length);
-    messenger.showSnackBar(
+    messenger.showAppSnackBar(
       actionSnackBar(
         context,
         content: Text(message),

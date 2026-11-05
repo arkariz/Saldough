@@ -56,7 +56,7 @@ class _RecurringReminderSettingsPageState extends State<RecurringReminderSetting
   Future<void> _toggle(bool value) async {
     final messenger = ScaffoldMessenger.of(context);
     if (value && !await _scheduler.requestPermission()) {
-      messenger.showSnackBar(SnackBar(content: Text(t.recurring.remindersDenied)));
+      messenger.showAppSnackBar(SnackBar(content: Text(t.recurring.remindersDenied)));
       return;
     }
     await _settings.setEnabled(enabled: value);

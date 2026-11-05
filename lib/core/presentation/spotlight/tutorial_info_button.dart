@@ -41,7 +41,7 @@ class TutorialInfoButton extends StatelessWidget {
         );
         if (!confirmed) return;
         await controller.resetAll();
-        messenger?.showSnackBar(SnackBar(content: Text(t.info.resetDoneMessage)));
+        messenger?.showAppSnackBar(SnackBar(content: Text(t.info.resetDoneMessage)));
     }
   }
 

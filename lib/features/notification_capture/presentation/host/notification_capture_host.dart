@@ -114,7 +114,7 @@ class _NotificationCaptureHostState extends State<NotificationCaptureHost> with 
               app: result.recorded.single.appLabel,
             )
           : texts.autoRecordedSnackMany(n: result.recorded.length);
-      ScaffoldMessenger.of(context).showSnackBar(
+      ScaffoldMessenger.of(context).showAppSnackBar(
         actionSnackBar(
           context,
           content: Text(message),

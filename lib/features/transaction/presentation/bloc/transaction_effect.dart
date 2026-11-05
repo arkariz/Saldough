@@ -26,7 +26,7 @@ extension on TransactionBloc {
       final ds = context.ds;
       final messenger = ScaffoldMessenger.of(context);
       final restore = _recordTransaction;
-      messenger.showSnackBar(
+      messenger.showAppSnackBar(
         actionSnackBar(
           context,
           content: Text(t.transaction.deletedMessage),
@@ -34,7 +34,7 @@ extension on TransactionBloc {
             label: t.transaction.undoDeleteAction,
             onPressed: () async {
               final result = await restore(transaction);
-              messenger.showSnackBar(
+              messenger.showAppSnackBar(
                 feedbackSnackBar(ds, switch (result) {
                   Left(value: final failure) => ShowSnackBarEffect(
                     message: failure.userMessage ?? t.common.genericErrorMessage,

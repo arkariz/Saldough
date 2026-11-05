@@ -87,7 +87,7 @@ class AccountPlusSection extends StatelessWidget {
   Future<void> _restore(BuildContext context) async {
     final messenger = ScaffoldMessenger.of(context);
     await purchasing.restore();
-    messenger.showSnackBar(SnackBar(content: Text(t.premium.account.restoreDone)));
+    messenger.showAppSnackBar(SnackBar(content: Text(t.premium.account.restoreDone)));
   }
 
   /// `(keterangan, lencana, lencana peringatan, tampilkan "Kelola", buka daftar fitur)`.

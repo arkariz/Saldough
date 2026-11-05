@@ -1221,7 +1221,12 @@ class _Translations$notificationCapture$en extends Translations$notificationCapt
 	@override String get inboxAutoEmpty => 'Nothing recorded automatically yet.';
 	@override String get inboxRetention => 'This list is kept for 7 days.';
 	@override String get amountUnknown => 'Amount not read yet';
-	@override String rememberedBudgetSnack({required Object app, required Object name}) => 'Remembered: ${app} · ${name} chosen for this merchant';
+	@override String get rememberedTitle => 'Remembered';
+	@override String rememberedCategoryLine({required Object note, required Object app, required Object category}) => '${note} at ${app} → ${category}';
+	@override String rememberedBudgetLine({required Object name}) => 'Item ${name} for this merchant';
+	@override String rememberedWalletLine({required Object hint, required Object wallet}) => 'Account ${hint} → ${wallet}';
+	@override String get rememberedUndoAll => 'Undo what was remembered';
+	@override String get autoOfferLater => 'Not now';
 	@override String get autoNewBadge => 'New';
 	@override String autoOfferTitle({required Object app}) => 'Record ${app} automatically?';
 	@override String get autoOfferBody => 'Notifications like this will be recorded right away, without a check.';
@@ -1256,8 +1261,6 @@ class _Translations$notificationCapture$en extends Translations$notificationCapt
 	);
 	@override String get bannerAction => 'Check';
 	@override String autoRecordedSnack({required Object amount, required Object app}) => 'Recorded automatically: ${amount} · ${app}';
-	@override String rememberedSnack({required Object note, required Object app, required Object category}) => 'Remembered: "${note}" from ${app} goes to ${category}';
-	@override String rememberedWalletSnack({required Object hint, required Object app, required Object wallet}) => 'Remembered: account ${hint} in ${app} goes to ${wallet}';
 	@override String get rememberedUndo => 'Undo';
 	@override String autoRecordedSnackMany({required Object n}) => '${n} transactions recorded automatically from notifications';
 	@override String get reminderChannel => 'Record from notifications';
@@ -3575,7 +3578,12 @@ extension on TranslationsEn {
 			'notificationCapture.inboxAutoEmpty' => 'Nothing recorded automatically yet.',
 			'notificationCapture.inboxRetention' => 'This list is kept for 7 days.',
 			'notificationCapture.amountUnknown' => 'Amount not read yet',
-			'notificationCapture.rememberedBudgetSnack' => ({required Object app, required Object name}) => 'Remembered: ${app} · ${name} chosen for this merchant',
+			'notificationCapture.rememberedTitle' => 'Remembered',
+			'notificationCapture.rememberedCategoryLine' => ({required Object note, required Object app, required Object category}) => '${note} at ${app} → ${category}',
+			'notificationCapture.rememberedBudgetLine' => ({required Object name}) => 'Item ${name} for this merchant',
+			'notificationCapture.rememberedWalletLine' => ({required Object hint, required Object wallet}) => 'Account ${hint} → ${wallet}',
+			'notificationCapture.rememberedUndoAll' => 'Undo what was remembered',
+			'notificationCapture.autoOfferLater' => 'Not now',
 			'notificationCapture.autoNewBadge' => 'New',
 			'notificationCapture.autoOfferTitle' => ({required Object app}) => 'Record ${app} automatically?',
 			'notificationCapture.autoOfferBody' => 'Notifications like this will be recorded right away, without a check.',
@@ -3614,8 +3622,6 @@ extension on TranslationsEn {
 			'notificationCapture.banner' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '${n} transaction from notifications to check', other: '${n} transactions from notifications to check', ), 
 			'notificationCapture.bannerAction' => 'Check',
 			'notificationCapture.autoRecordedSnack' => ({required Object amount, required Object app}) => 'Recorded automatically: ${amount} · ${app}',
-			'notificationCapture.rememberedSnack' => ({required Object note, required Object app, required Object category}) => 'Remembered: "${note}" from ${app} goes to ${category}',
-			'notificationCapture.rememberedWalletSnack' => ({required Object hint, required Object app, required Object wallet}) => 'Remembered: account ${hint} in ${app} goes to ${wallet}',
 			'notificationCapture.rememberedUndo' => 'Undo',
 			'notificationCapture.autoRecordedSnackMany' => ({required Object n}) => '${n} transactions recorded automatically from notifications',
 			'notificationCapture.reminderChannel' => 'Record from notifications',
@@ -4030,11 +4036,11 @@ extension on TranslationsEn {
 			'premium.features.plans.title' => 'Plans ahead',
 			'premium.features.plans.text' => 'Try what if, set Goals with an expected date, and see 12 months ahead.',
 			'premium.features.reports.title' => 'Reports',
+			_ => null,
+		} ?? switch (path) {
 			'premium.features.reports.text' => 'Monthly reports with the story behind the numbers, a yearly tax summary, and Freelance Pro invoices.',
 			'premium.features.keeps.title' => 'Keeps safe',
 			'premium.features.keeps.text' => 'An automatic daily backup to your own Google Drive.',
-			_ => null,
-		} ?? switch (path) {
 			'premium.gift.brand' => 'Tanukonomy',
 			'premium.gift.askTitle' => 'When is payday, usually?',
 			'premium.gift.askBody' => 'Your Plus trial ends with your first financial period, so this date sets how long it lasts.',

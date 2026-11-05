@@ -97,7 +97,7 @@ class _QuickStartPageState extends State<QuickStartPage> with WidgetsBindingObse
       setState(() => _busy = false);
       if (result == QuickStartResult.failed) {
         // Gagal menyimpan harus terlihat, bukan tombol yang diam saja.
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(t.common.genericErrorMessage)));
+        ScaffoldMessenger.of(context).showAppSnackBar(SnackBar(content: Text(t.common.genericErrorMessage)));
         return;
       }
       _saved = true;

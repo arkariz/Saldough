@@ -3031,8 +3031,23 @@ class Translations$notificationCapture$id {
 	/// id: 'Nominal belum terbaca'
 	String get amountUnknown => 'Nominal belum terbaca';
 
-	/// id: 'Diingat: $app · $name dipilih untuk pedagang ini'
-	String rememberedBudgetSnack({required Object app, required Object name}) => 'Diingat: ${app} · ${name} dipilih untuk pedagang ini';
+	/// id: 'Diingat'
+	String get rememberedTitle => 'Diingat';
+
+	/// id: '${note} di ${app} → ${category}'
+	String rememberedCategoryLine({required Object note, required Object app, required Object category}) => '${note} di ${app} → ${category}';
+
+	/// id: 'Pos ${name} untuk pedagang ini'
+	String rememberedBudgetLine({required Object name}) => 'Pos ${name} untuk pedagang ini';
+
+	/// id: 'Rekening ${hint} → ${wallet}'
+	String rememberedWalletLine({required Object hint, required Object wallet}) => 'Rekening ${hint} → ${wallet}';
+
+	/// id: 'Batalkan ingatan'
+	String get rememberedUndoAll => 'Batalkan ingatan';
+
+	/// id: 'Nanti'
+	String get autoOfferLater => 'Nanti';
 
 	/// id: 'Baru'
 	String get autoNewBadge => 'Baru';
@@ -3127,12 +3142,6 @@ class Translations$notificationCapture$id {
 
 	/// id: 'Tercatat otomatis: ${amount} · ${app}'
 	String autoRecordedSnack({required Object amount, required Object app}) => 'Tercatat otomatis: ${amount} · ${app}';
-
-	/// id: 'Diingat: "${note}" dari ${app} masuk ${category}'
-	String rememberedSnack({required Object note, required Object app, required Object category}) => 'Diingat: "${note}" dari ${app} masuk ${category}';
-
-	/// id: 'Diingat: rekening ${hint} di ${app} masuk ${wallet}'
-	String rememberedWalletSnack({required Object hint, required Object app, required Object wallet}) => 'Diingat: rekening ${hint} di ${app} masuk ${wallet}';
 
 	/// id: 'Batalkan'
 	String get rememberedUndo => 'Batalkan';
@@ -6778,7 +6787,12 @@ extension on Translations {
 			'notificationCapture.inboxAutoEmpty' => 'Belum ada yang tercatat otomatis.',
 			'notificationCapture.inboxRetention' => 'Daftar ini disimpan 7 hari.',
 			'notificationCapture.amountUnknown' => 'Nominal belum terbaca',
-			'notificationCapture.rememberedBudgetSnack' => ({required Object app, required Object name}) => 'Diingat: ${app} · ${name} dipilih untuk pedagang ini',
+			'notificationCapture.rememberedTitle' => 'Diingat',
+			'notificationCapture.rememberedCategoryLine' => ({required Object note, required Object app, required Object category}) => '${note} di ${app} → ${category}',
+			'notificationCapture.rememberedBudgetLine' => ({required Object name}) => 'Pos ${name} untuk pedagang ini',
+			'notificationCapture.rememberedWalletLine' => ({required Object hint, required Object wallet}) => 'Rekening ${hint} → ${wallet}',
+			'notificationCapture.rememberedUndoAll' => 'Batalkan ingatan',
+			'notificationCapture.autoOfferLater' => 'Nanti',
 			'notificationCapture.autoNewBadge' => 'Baru',
 			'notificationCapture.autoOfferTitle' => ({required Object app}) => 'Catat otomatis dari ${app}?',
 			'notificationCapture.autoOfferBody' => 'Notifikasi seperti ini akan langsung dicatat tanpa kamu cek.',
@@ -6817,8 +6831,6 @@ extension on Translations {
 			'notificationCapture.banner' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n, other: '${n} transaksi dari notifikasi menunggu dicek', ), 
 			'notificationCapture.bannerAction' => 'Cek',
 			'notificationCapture.autoRecordedSnack' => ({required Object amount, required Object app}) => 'Tercatat otomatis: ${amount} · ${app}',
-			'notificationCapture.rememberedSnack' => ({required Object note, required Object app, required Object category}) => 'Diingat: "${note}" dari ${app} masuk ${category}',
-			'notificationCapture.rememberedWalletSnack' => ({required Object hint, required Object app, required Object wallet}) => 'Diingat: rekening ${hint} di ${app} masuk ${wallet}',
 			'notificationCapture.rememberedUndo' => 'Batalkan',
 			'notificationCapture.autoRecordedSnackMany' => ({required Object n}) => '${n} transaksi tercatat otomatis dari notifikasi',
 			'notificationCapture.reminderChannel' => 'Catat dari notifikasi',
@@ -7233,11 +7245,11 @@ extension on Translations {
 			'premium.features.plans.title' => 'Merencanakan',
 			'premium.features.plans.text' => 'Coba bagaimana kalau, buat Target dengan perkiraan tanggal tercapai, dan lihat 12 bulan ke depan.',
 			'premium.features.reports.title' => 'Melapor',
+			_ => null,
+		} ?? switch (path) {
 			'premium.features.reports.text' => 'Rapor bulanan yang bercerita, Rekap SPT tahunan, dan invoice Freelance Pro.',
 			'premium.features.keeps.title' => 'Menyimpan',
 			'premium.features.keeps.text' => 'Cadangan otomatis tiap hari ke Google Drive milikmu.',
-			_ => null,
-		} ?? switch (path) {
 			'premium.gift.brand' => 'Tanukonomy',
 			'premium.gift.askTitle' => 'Biasanya gajian tanggal berapa?',
 			'premium.gift.askBody' => 'Uji coba Plus berakhir bersama periode keuangan pertamamu, jadi tanggal ini menentukan lamanya.',

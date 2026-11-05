@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:navigation/navigation.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
@@ -60,7 +61,7 @@ class CaptureInboxPage extends StatelessWidget {
     if (!saved) return;
     AppAnalytics.log(CaptureEvents.recordSaved(via: via, cardClass: cardClass));
     bloc.add(CaptureInboxRecorded(entry.id));
-    // Belajar (E1): kategori dan dompet baru atau yang diubah diingat, dengan Batalkan.
+    // Belajar (E1/E2): kategori, dompet, dan pos yang baru atau diubah diingat.
     final undoCategory = await bloc.rememberCategory(
       entry,
       categoryId: savedInfo?.categoryId,
@@ -72,33 +73,8 @@ class CaptureInboxPage extends StatelessWidget {
       budgetItemId: savedInfo?.budgetItemId,
       suggestedItemId: budgetItemId,
     );
-    if (!context.mounted) return;
-    final texts = t.notificationCapture;
-    final messenger = ScaffoldMessenger.of(context);
-    if (undoCategory != null) {
-      final categoryName =
-          ActiveCategories.notifier.value.where((c) => c.id == savedInfo?.categoryId).firstOrNull?.name ?? '';
-      messenger.showSnackBar(
-        actionSnackBar(
-          context,
-          content: Text(
-            texts.rememberedSnack(note: (savedInfo?.note ?? '').trim(), app: entry.appLabel, category: categoryName),
-          ),
-          action: SnackBarAction(label: texts.rememberedUndo, onPressed: () => unawaited(undoCategory())),
-        ),
-      );
-    }
-    if (learnedBudget != null) {
-      messenger.showSnackBar(
-        actionSnackBar(
-          context,
-          content: Text(texts.rememberedBudgetSnack(name: learnedBudget.name, app: entry.appLabel)),
-          action: SnackBarAction(label: texts.rememberedUndo, onPressed: () => unawaited(learnedBudget.undo())),
-        ),
-      );
-    }
     // Tawaran catat otomatis per bentuk (E3): hanya bila tidak ada jenis, dompet,
-    // atau nominal yang diubah.
+    // atau nominal yang diubah. Tampil sebagai banner, bukan snackbar.
     final savedKind = switch (savedInfo?.choice) {
       RecordChoice.expense => DraftKind.expense,
       RecordChoice.income => DraftKind.income,
@@ -110,25 +86,48 @@ class CaptureInboxPage extends StatelessWidget {
       savedAmountSen: savedInfo?.amountSen,
       savedWalletId: savedInfo?.walletId,
     );
-    final amountSaved = savedInfo?.amountSen;
+    if (offerTemplate != null) {
+      bloc.add(CaptureInboxOfferRaised(AutoOfferPrompt(entry: entry, amountSen: savedInfo?.amountSen)));
+    }
     if (!context.mounted) return;
-    if (learnedWallet != null) {
-      final walletName = settings.state.wallets.where((w) => w.id == savedInfo?.walletId).firstOrNull?.name ?? '';
-      messenger.showSnackBar(
-        actionSnackBar(
-          context,
-          content: Text(texts.rememberedWalletSnack(hint: learnedWallet.hint, app: entry.appLabel, wallet: walletName)),
-          action: SnackBarAction(label: texts.rememberedUndo, onPressed: () => unawaited(learnedWallet.undo())),
+
+    // Satu aksi, satu snackbar: semua yang diingat dalam satu ringkasan, satu Batalkan.
+    final texts = t.notificationCapture;
+    final lines = <String>[];
+    final undos = <Future<void> Function()>[];
+    if (undoCategory != null) {
+      final categoryName =
+          ActiveCategories.notifier.value.where((c) => c.id == savedInfo?.categoryId).firstOrNull?.name ?? '';
+      lines.add(
+        texts.rememberedCategoryLine(
+          note: (savedInfo?.note ?? '').trim(),
+          app: entry.appLabel,
+          category: categoryName,
         ),
       );
+      undos.add(undoCategory);
     }
-    if (offerTemplate != null && context.mounted) {
-      showAutoOffer(
+    if (learnedBudget != null) {
+      lines.add(texts.rememberedBudgetLine(name: learnedBudget.name));
+      undos.add(learnedBudget.undo);
+    }
+    if (learnedWallet != null) {
+      final walletName = settings.state.wallets.where((w) => w.id == savedInfo?.walletId).firstOrNull?.name ?? '';
+      lines.add(texts.rememberedWalletLine(hint: learnedWallet.hint, wallet: walletName));
+      undos.add(learnedWallet.undo);
+    }
+    if (lines.isEmpty) return;
+    ScaffoldMessenger.of(context).showAppSnackBar(
+      actionSnackBar(
         context,
-        appLabel: entry.appLabel,
-        approve: () => bloc.approveShape(entry, amountSen: amountSaved),
-      );
-    }
+        content: DsSnackMessage(title: texts.rememberedTitle, message: lines.join('\n')),
+        action: SnackBarAction(
+          key: const ValueKey('inbox-remembered-undo'),
+          label: texts.rememberedUndoAll,
+          onPressed: () => unawaited(Future.wait([for (final undo in undos) undo()])),
+        ),
+      ),
+    );
   }
 
   Future<void> _review(BuildContext context, AutoRecordedEntry entry) async {
@@ -248,6 +247,13 @@ class _InboxBodyState extends State<_InboxBody> with WidgetsBindingObserver {
                   ),
                 ),
                 const SizedBox(height: AppSpacing.space2),
+                // Tawaran catat otomatis: tetap sampai dijawab, di tab mana pun.
+                if (state.offer case final offer?)
+                  AutoOfferBanner(
+                    prompt: offer,
+                    onYes: () => unawaited(answerAutoOfferYes(context, inbox, offer)),
+                    onLater: () => inbox.add(const CaptureInboxOfferDismissed()),
+                  ),
                 if (tab == _InboxTab.pending) ...[
                   if (state.pending.isEmpty)
                     _InboxEmpty(text: texts.inboxEmpty)

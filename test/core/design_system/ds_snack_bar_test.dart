@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/design_system/legacy/app_theme_bridge.dart';
 import 'package:saldough/core/design_system/presets/ds_theme_presets.dart';
+import 'package:saldough/core/presentation/widgets/app_action_snack_bar.dart';
 
 /// Snackbar v2: tema, titik bernada, judul + isi, dan aksi.
 void main() {
@@ -101,5 +102,36 @@ void main() {
       brightness: Brightness.dark,
     );
     expect(find.text('gelap'), findsOneWidget);
+  });
+
+  testWidgets('satu slot: snackbar baru menggantikan yang tampil dan membuang antreannya', (tester) async {
+    late ScaffoldMessengerState messenger;
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppThemeBridge.build(DsThemePresets.fallback, Brightness.light),
+        home: Scaffold(
+          body: Builder(
+            builder: (context) {
+              messenger = ScaffoldMessenger.of(context);
+              return const SizedBox.shrink();
+            },
+          ),
+        ),
+      ),
+    );
+    messenger
+      ..showAppSnackBar(const SnackBar(content: Text('satu')))
+      ..showAppSnackBar(const SnackBar(content: Text('dua')))
+      ..showAppSnackBar(const SnackBar(content: Text('tiga')));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 400));
+
+    expect(find.text('tiga'), findsOneWidget);
+    expect(find.text('satu'), findsNothing);
+    expect(find.text('dua'), findsNothing);
+    // Tidak ada yang menunggu di belakang: sesudah ditutup, tidak ada yang muncul.
+    messenger.hideCurrentSnackBar();
+    await tester.pumpAndSettle();
+    expect(find.byType(SnackBar), findsNothing);
   });
 }

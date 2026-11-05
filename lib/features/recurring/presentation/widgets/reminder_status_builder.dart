@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:saldough/core/discovery/discovery.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/widgets/app_action_snack_bar.dart';
 import 'package:saldough/features/recurring/domain/enable_reminders.dart';
 import 'package:saldough/features/recurring/domain/reminder_scheduler.dart';
 import 'package:saldough/features/recurring/domain/reminder_settings.dart';
@@ -115,7 +116,7 @@ class _ReminderStatusBuilderState extends State<ReminderStatusBuilder> with Widg
       );
     }
     if (c.isRegistered<FeatureStatusChanges>()) c<FeatureStatusChanges>().notify();
-    if (!granted) messenger?.showSnackBar(SnackBar(content: Text(t.recurring.remindersDenied)));
+    if (!granted) messenger?.showAppSnackBar(SnackBar(content: Text(t.recurring.remindersDenied)));
     await _load();
   }
 

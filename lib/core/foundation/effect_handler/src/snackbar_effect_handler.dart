@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:saldough/core/design_system/design_system.dart';
+import 'package:saldough/core/presentation/widgets/app_action_snack_bar.dart';
 import 'package:state_management/state_management.dart';
 
 /// Mendaftarkan penangan [ShowSnackBarEffect].
@@ -15,7 +16,7 @@ import 'package:state_management/state_management.dart';
 /// menyambungkan tombol aksi di sini.
 void registerSnackBarEffectHandler(EffectRegistry registry) {
   registry.register<ShowSnackBarEffect>((context, effect) {
-    ScaffoldMessenger.of(context).showSnackBar(feedbackSnackBar(context.ds, effect));
+    ScaffoldMessenger.of(context).showAppSnackBar(feedbackSnackBar(context.ds, effect));
   });
 }
 

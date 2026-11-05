@@ -21,3 +21,16 @@ SnackBar actionSnackBar(
   action: action,
   persist: MediaQuery.maybeAccessibleNavigationOf(context) ?? false,
 );
+
+/// Satu slot snackbar: yang baru **menggantikan** yang sedang tampil dan
+/// mengosongkan antreannya, tidak mengantre di belakangnya. Antrean membuat
+/// snackbar yang kamu tunggu muncul terlambat, dan pesan basi muncul untuk aksi
+/// yang sudah lewat. Pakai ini, bukan `showSnackBar`, di mana pun.
+extension AppSnackBars on ScaffoldMessengerState {
+  /// Menampilkan [bar] sekarang juga; mengembalikan pengendalinya.
+  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showAppSnackBar(SnackBar bar) {
+    removeCurrentSnackBar();
+    clearSnackBars();
+    return showSnackBar(bar);
+  }
+}

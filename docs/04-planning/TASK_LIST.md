@@ -6679,6 +6679,20 @@ S sehari, M beberapa hari, L lebih dari seminggu.
       Transfer dicabut**: tombol Catat di tengah bilah bawah satu-satunya pintu
       CATAT. Uji: `ds_snack_bar_test` (7), uji Beranda dan tur disesuaikan.
 
+- [x] **T-26.25** (M) Snackbar satu slot dan tawaran jadi banner (5 Nov 2026,
+      keluhan pemilik: snackbar mengantre dan bingung untuk aksi apa).
+      (1) `showAppSnackBar` (ekstensi `ScaffoldMessengerState`): yang baru
+      **menggantikan** yang tampil dan membuang antreannya; seluruh 19 berkas
+      pemanggil `showSnackBar` dipindah. (2) Satu aksi, satu snackbar: sesudah
+      CATAT, kategori/pos/dompet yang diingat jadi **satu** ringkasan ("Diingat"
+      + baris-barisnya) dengan satu **Batalkan ingatan**. (3) Tawaran "Catat
+      otomatis dari {app}?" pindah ke **banner di kotak masuk** (`AutoOfferBanner`,
+      state `CaptureInboxState.offer`): menetap sampai dijawab (**Ya, otomatis**
+      atau **Nanti**), tidak mengantre, dan hilang bila hasil satu ketuk
+      dibatalkan. (4) Durasi ber-aksi 7 → 6 detik. Tanpa prioritas galat: yang
+      terakhir menang. Uji: tiga uji halaman diperbarui/ditambah dan satu uji
+      satu-slot.
+
 Enhancement (E1–E5) ada di Antrean B-85–B-89, dibuka sesudah gerbang tahap 1.
 
 ## Antrean (belum dijadwalkan)

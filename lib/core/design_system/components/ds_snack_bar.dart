@@ -17,7 +17,7 @@ enum DsSnackTone {
 }
 
 /// Lama snackbar ber-aksi tampil sebelum hilang sendiri.
-const dsSnackBarActionDuration = Duration(seconds: 7);
+const dsSnackBarActionDuration = Duration(seconds: 6);
 
 /// Isi snackbar: titik bernada di kiri, lalu [child]. Titik membedakan pesan
 /// dari sistem dengan teks lain di layar; maknanya tetap dibawa teks.

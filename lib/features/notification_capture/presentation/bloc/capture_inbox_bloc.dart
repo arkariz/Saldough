@@ -11,12 +11,31 @@ import 'package:saldough/features/notification_capture/domain/repositories/notif
 import 'package:saldough/features/notification_capture/domain/services/capture_card_class.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_inbox_changes.dart';
 import 'package:saldough/features/notification_capture/domain/usecases/capture_inbox_actions.dart';
-import 'package:saldough/features/notification_capture/presentation/widgets/auto_offer.dart';
 import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/shared/capture/capture.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:state_management/state_management.dart';
+
+/// Tawaran "Catat otomatis dari {aplikasi}?" (E3) yang menunggu jawaban di
+/// kotak masuk. Banner, bukan snackbar: keputusan tidak boleh hilang sendiri
+/// atau mengantre di belakang pesan lain.
+final class AutoOfferPrompt extends Equatable {
+  /// Membuat [AutoOfferPrompt].
+  const AutoOfferPrompt({required this.entry, required this.amountSen});
+
+  /// Kartu yang baru dicatat; bentuk teksnya yang akan disetujui.
+  final CaptureInboxEntry entry;
+
+  /// Nominal yang dicatat (contoh pertama pagar nominal).
+  final int? amountSen;
+
+  /// Nama aplikasi sumber.
+  String get appLabel => entry.appLabel;
+
+  @override
+  List<Object?> get props => [entry.id, amountSen];
+}
 
 /// State kotak masuk Catat dari notifikasi.
 final class CaptureInboxState extends UiState<CaptureInboxState> {
@@ -29,6 +48,7 @@ final class CaptureInboxState extends UiState<CaptureInboxState> {
     this.budgetSuggestions = const {},
     this.linked = const [],
     this.duplicates = const {},
+    this.offer,
     super.effect,
   });
 
@@ -54,6 +74,9 @@ final class CaptureInboxState extends UiState<CaptureInboxState> {
   /// (ADR-044 §3.3); dihitung ulang tiap muat.
   final Map<String, Transaction> duplicates;
 
+  /// Tawaran catat otomatis yang menunggu jawaban, atau `null`.
+  final AutoOfferPrompt? offer;
+
   @override
   CaptureInboxState copyWith({
     bool? isLoading,
@@ -63,6 +86,8 @@ final class CaptureInboxState extends UiState<CaptureInboxState> {
     Map<String, BudgetItemOption>? budgetSuggestions,
     List<RecurrenceMatchEntry>? linked,
     Map<String, Transaction>? duplicates,
+    AutoOfferPrompt? offer,
+    bool clearOffer = false,
     UiEffect? effect,
   }) => CaptureInboxState(
     isLoading: isLoading ?? this.isLoading,
@@ -72,6 +97,7 @@ final class CaptureInboxState extends UiState<CaptureInboxState> {
     budgetSuggestions: budgetSuggestions ?? this.budgetSuggestions,
     linked: linked ?? this.linked,
     duplicates: duplicates ?? this.duplicates,
+    offer: clearOffer ? null : (offer ?? this.offer),
     effect: effect,
   );
 
@@ -80,7 +106,7 @@ final class CaptureInboxState extends UiState<CaptureInboxState> {
       cardClassOf(entry, match: matches[entry.id], existing: duplicates[entry.id]);
 
   @override
-  List<Object?> get props => [isLoading, pending, auto, matches, budgetSuggestions, linked, duplicates];
+  List<Object?> get props => [isLoading, pending, auto, matches, budgetSuggestions, linked, duplicates, offer];
 }
 
 /// Event [CaptureInboxBloc].
@@ -117,6 +143,21 @@ final class CaptureInboxMarkedNotTransaction extends CaptureInboxEvent {
 
   /// Id tangkapan.
   final String id;
+}
+
+/// Tawaran catat otomatis dimunculkan (sesudah CATAT disimpan).
+final class CaptureInboxOfferRaised extends CaptureInboxEvent {
+  /// Membuat [CaptureInboxOfferRaised].
+  const CaptureInboxOfferRaised(this.prompt);
+
+  /// Tawarannya.
+  final AutoOfferPrompt prompt;
+}
+
+/// Tawaran catat otomatis ditutup ("Nanti", sudah disetujui, atau dibatalkan).
+final class CaptureInboxOfferDismissed extends CaptureInboxEvent {
+  /// Membuat [CaptureInboxOfferDismissed].
+  const CaptureInboxOfferDismissed();
 }
 
 /// Tangkapan sudah dicatat lewat CATAT.
@@ -192,6 +233,8 @@ final class CaptureInboxBloc extends Bloc<CaptureInboxEvent, CaptureInboxState> 
     on<CaptureInboxUnlinked>(_onUnlinked);
     on<CaptureInboxLinkedToExisting>(_onLinkedToExisting);
     on<CaptureInboxConfirmed>(_onConfirmed);
+    on<CaptureInboxOfferRaised>((e, emit) => emit(state.copyWith(offer: e.prompt)));
+    on<CaptureInboxOfferDismissed>((_, emit) => emit(state.copyWith(clearOffer: true)));
     _changes = changes.stream.listen((_) => add(const CaptureInboxRefreshed()));
     // Transaksi manual yang cocok dengan kartu yang menunggu (ADR-044 §3.3).
     _ledger = ledgerChanges?.changes.listen((_) => add(const CaptureInboxRefreshed()));
@@ -236,11 +279,18 @@ final class CaptureInboxBloc extends Bloc<CaptureInboxEvent, CaptureInboxState> 
     savedWalletId: savedWalletId,
   );
 
+  /// Menyetujui tawaran [prompt] dan menutupnya; fungsi Batalkan atau `null`.
+  Future<Future<void> Function()?> approveOffer(AutoOfferPrompt prompt) async {
+    final undo = await _actions.approveShape(prompt.entry, amountSen: prompt.amountSen);
+    add(const CaptureInboxOfferDismissed());
+    return undo;
+  }
+
   /// Menyetujui bentuk [entry] dicatat otomatis (E3); fungsi Batalkan atau `null`.
   Future<Future<void> Function()?> approveShape(CaptureInboxEntry entry, {required int? amountSen}) =>
       _actions.approveShape(entry, amountSen: amountSen);
 
-  Future<void> _reload(Emitter<CaptureInboxState> emit, {UiEffect? effect}) async {
+  Future<void> _reload(Emitter<CaptureInboxState> emit, {UiEffect? effect, AutoOfferPrompt? offer}) async {
     final pending = (await _store.loadInbox()).getOrElse((_) => const []);
     final auto = (await _store.loadAutoRecorded()).getOrElse((_) => const []);
     final matches = await _actions.matchesFor(pending);
@@ -256,6 +306,7 @@ final class CaptureInboxBloc extends Bloc<CaptureInboxEvent, CaptureInboxState> 
         budgetSuggestions: suggestions,
         linked: linked,
         duplicates: duplicates,
+        offer: offer,
         effect: effect,
       ),
     );
@@ -307,7 +358,7 @@ final class CaptureInboxBloc extends Bloc<CaptureInboxEvent, CaptureInboxState> 
           ? _dismissedWithUndo(entry)
           : CallbackEffect(
               callback: (context) {
-                ScaffoldMessenger.of(context).showSnackBar(
+                ScaffoldMessenger.of(context).showAppSnackBar(
                   actionSnackBar(
                     context,
                     content: Text(t.notificationCapture.notTransactionDone),
@@ -330,7 +381,7 @@ final class CaptureInboxBloc extends Bloc<CaptureInboxEvent, CaptureInboxState> 
   UiEffect _dismissedWithUndo(CaptureInboxEntry entry) => CallbackEffect(
     callback: (context) {
       final restore = _actions.restore;
-      ScaffoldMessenger.of(context).showSnackBar(
+      ScaffoldMessenger.of(context).showAppSnackBar(
         actionSnackBar(
           context,
           content: Text(t.notificationCapture.dismissed),
@@ -372,7 +423,7 @@ final class CaptureInboxBloc extends Bloc<CaptureInboxEvent, CaptureInboxState> 
     }
     // Tawaran catat otomatis (E3) hanya untuk satu kartu: jenis, dompet, dan nominal
     // pasti tidak berubah dari draf.
-    final offer = done.length == 1
+    final offerTemplate = done.length == 1
         ? await _actions.autoOfferFor(
             done.single.$1,
             savedKind: done.single.$1.draft.kind,
@@ -380,12 +431,16 @@ final class CaptureInboxBloc extends Bloc<CaptureInboxEvent, CaptureInboxState> 
             savedWalletId: done.single.$1.draft.walletId,
           )
         : null;
-    await _reload(emit, effect: done.isEmpty ? _confirmFailed() : _confirmedWithUndo(done, offer: offer));
+    await _reload(
+      emit,
+      effect: done.isEmpty ? _confirmFailed() : _confirmedWithUndo(done),
+      offer: offerTemplate == null ? null : AutoOfferPrompt(entry: done.single.$1, amountSen: done.single.$2.amount),
+    );
   }
 
   UiEffect _confirmFailed() => ShowSnackBarEffect(message: t.common.genericErrorMessage, severity: .error);
 
-  UiEffect _confirmedWithUndo(List<(CaptureInboxEntry, Transaction)> done, {String? offer}) => CallbackEffect(
+  UiEffect _confirmedWithUndo(List<(CaptureInboxEntry, Transaction)> done) => CallbackEffect(
     callback: (context) {
       final message = done.length == 1
           ? t.notificationCapture.oneTapRecorded(
@@ -393,7 +448,7 @@ final class CaptureInboxBloc extends Bloc<CaptureInboxEvent, CaptureInboxState> 
               app: done.single.$1.appLabel,
             )
           : t.notificationCapture.oneTapRecordedMany(n: done.length);
-      final controller = ScaffoldMessenger.of(context).showSnackBar(
+      ScaffoldMessenger.of(context).showAppSnackBar(
         actionSnackBar(
           context,
           content: Text(message),
@@ -404,19 +459,6 @@ final class CaptureInboxBloc extends Bloc<CaptureInboxEvent, CaptureInboxState> 
           ),
         ),
       );
-      // Tawaran menyusul sesudah snackbar hasil ditutup, kecuali dibatalkan.
-      if (offer != null) {
-        unawaited(
-          controller.closed.then((reason) {
-            if (reason == SnackBarClosedReason.action || !context.mounted) return;
-            showAutoOffer(
-              context,
-              appLabel: done.single.$1.appLabel,
-              approve: () => _actions.approveShape(done.single.$1, amountSen: done.single.$2.amount),
-            );
-          }),
-        );
-      }
     },
   );
 
@@ -424,6 +466,8 @@ final class CaptureInboxBloc extends Bloc<CaptureInboxEvent, CaptureInboxState> 
     for (final (entry, transaction) in done) {
       await _actions.undoConfirm(entry, transaction);
     }
+    // Transaksinya dibatalkan: tawaran untuk bentuknya tak lagi berlaku.
+    add(const CaptureInboxOfferDismissed());
   }
 
   Future<void> _onLinkedToExisting(CaptureInboxLinkedToExisting event, Emitter<CaptureInboxState> emit) async {

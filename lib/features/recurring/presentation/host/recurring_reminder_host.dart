@@ -144,7 +144,7 @@ class _RecurringReminderHostState extends State<RecurringReminderHost> with Widg
     if (!mounted) return;
     final messenger = ScaffoldMessenger.of(context);
     final record = _record;
-    messenger.showSnackBar(
+    messenger.showAppSnackBar(
       switch (result) {
         Left() => SnackBar(content: Text(t.recurring.alreadyRecordedMessage(name: rule.note))),
         Right() => actionSnackBar(

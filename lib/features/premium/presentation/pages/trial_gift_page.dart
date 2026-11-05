@@ -64,7 +64,7 @@ class _TrialGiftPageState extends State<TrialGiftPage> {
     if (!mounted) return;
     if (endsOn == null) {
       setState(() => _saving = false);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(t.common.genericErrorMessage)));
+      ScaffoldMessenger.of(context).showAppSnackBar(SnackBar(content: Text(t.common.genericErrorMessage)));
       return;
     }
     setState(() {

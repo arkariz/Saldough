@@ -5,12 +5,9 @@ import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/notification_capture/domain/entities/captured_notification.dart';
-import 'package:saldough/features/notification_capture/domain/entities/notification_pattern.dart';
 import 'package:saldough/features/notification_capture/domain/entities/notification_source.dart';
-import 'package:saldough/features/notification_capture/domain/services/built_in_notification_patterns.dart';
 import 'package:saldough/features/notification_capture/domain/services/notification_template.dart';
 import 'package:saldough/features/notification_capture/presentation/bloc/notification_settings_bloc.dart';
-import 'package:saldough/features/notification_capture/presentation/pages/notification_pattern_page.dart';
 import 'package:saldough/features/notification_capture/presentation/widgets/app_picker_sheet.dart';
 import 'package:saldough/features/notification_capture/presentation/widgets/notification_widgets.dart';
 import 'package:saldough/features/notification_capture/presentation/widgets/plus_gate.dart';
@@ -19,7 +16,7 @@ import 'package:saldough/shared/wallet/wallet_presentation.dart';
 import 'package:state_management/state_management.dart';
 
 /// Membuka halaman satu sumber notifikasi (ADR-032 §3.9): didengarkan,
-/// dompet, lalu filter dan pola yang terlipat. Sumber baru baru tersimpan saat Simpan ditekan.
+/// dompet, lalu filter yang terlipat. Sumber baru baru tersimpan saat Simpan ditekan.
 Future<void> openNotificationSourcePage(
   BuildContext context, {
   required NotificationSettingsBloc bloc,
@@ -138,17 +135,6 @@ class _SourcePageState extends State<_SourcePage> {
     if (!confirmed || !mounted) return;
     bloc.add(NotificationSourceRemoved(_source.packageName));
     Navigator.of(context).pop();
-  }
-
-  Future<void> _editPattern(NotificationPattern? pattern) async {
-    final bloc = context.read<NotificationSettingsBloc>();
-    final saved = await openNotificationPatternPage(
-      context,
-      packageName: _source.packageName,
-      wallets: bloc.state.wallets,
-      initial: pattern,
-    );
-    if (saved != null) bloc.add(NotificationPatternSaved(saved));
   }
 
   @override
@@ -279,17 +265,6 @@ class _SourcePageState extends State<_SourcePage> {
     setState(() => _source = _source.copyWith(keywords: [..._source.keywords, phrase.trim()]));
   }
 
-  Future<void> _patternFromSample(CapturedNotification sample) async {
-    final bloc = context.read<NotificationSettingsBloc>();
-    final saved = await openNotificationPatternPage(
-      context,
-      packageName: _source.packageName,
-      wallets: bloc.state.wallets,
-      sample: sample.text,
-    );
-    if (saved != null) bloc.add(NotificationPatternSaved(saved));
-  }
-
   /// Contoh notifikasi aplikasi ini (ADR-042 §3.2): bahan untuk filter cepat
   /// dan pola. Bawaan mati; menyalakannya meminta persetujuan.
   List<Widget> _samplesSection(BuildContext context, NotificationSettingsState state) {
@@ -332,11 +307,6 @@ class _SourcePageState extends State<_SourcePage> {
                         label: texts.samplesFilter,
                         onPressed: () => unawaited(_pickFilterPhrase(sample)),
                       ),
-                      AppButton.text(
-                        small: true,
-                        label: texts.samplesPattern,
-                        onPressed: () => unawaited(_patternFromSample(sample)),
-                      ),
                     ],
                   ),
                 ],
@@ -347,91 +317,11 @@ class _SourcePageState extends State<_SourcePage> {
     ];
   }
 
-  /// Ikat pola ke rutin (ADR-042 §3.4): notifikasi yang cocok dengan pola
-  /// terikat dicatat sebagai kemunculan rutin itu, tanpa menebak.
-  List<Widget> _bindingSection(
-    BuildContext context,
-    NotificationSettingsState state,
-    List<NotificationPattern> patterns,
-  ) {
-    final rules = [
-      for (final r in state.recurringRules)
-        if (!r.isPaused) r,
-    ];
-    if (patterns.isEmpty || state.recurringRules.isEmpty) return const [];
-    final texts = t.notificationCapture;
-    final textTheme = Theme.of(context).textTheme;
-    final colors = context.appColors;
-    return [
-      const SizedBox(height: AppSpacing.space6),
-      AppSectionLabel(texts.bindingTitle),
-      const SizedBox(height: AppSpacing.space1),
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space1),
-        child: Text(texts.bindingHint, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
-      ),
-      for (final pattern in patterns)
-        Padding(
-          padding: const EdgeInsets.only(top: AppSpacing.space2),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(pattern.label, style: textTheme.titleSmall),
-              Builder(
-                builder: (context) {
-                  final bound = state.recurringRules
-                      .where(
-                        (r) =>
-                            r.notificationBinding?.packageName == _source.packageName &&
-                            r.notificationBinding?.patternId == pattern.id,
-                      )
-                      .firstOrNull;
-                  return AppMenuSelectButton<String>(
-                    key: ValueKey('binding-${pattern.id}'),
-                    icon: IconKey.calendar,
-                    label: bound?.note ?? texts.bindingNone,
-                    isPlaceholder: bound == null,
-                    wrapLabel: true,
-                    allLabel: texts.bindingNone,
-                    allIcon: IconKey.close,
-                    // Hanya rutin berjenis sama; ikatan lama lintas jenis tetap
-                    // tampil supaya bisa dilepas.
-                    options: [
-                      for (final r in rules)
-                        if (r.kind == pattern.kind.recurringKind || r.id == bound?.id)
-                          (value: r.id, label: r.note, icon: IconKey.calendar),
-                    ],
-                    onSelected: (id) => context.read<NotificationSettingsBloc>().add(
-                      NotificationPatternBound(
-                        packageName: _source.packageName,
-                        patternId: pattern.id,
-                        patternLabel: pattern.label,
-                        patternKind: pattern.kind,
-                        ruleId: id,
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ],
-          ),
-        ),
-    ];
-  }
-
   List<Widget> _advancedSection(BuildContext context, NotificationSettingsState state) {
     final texts = t.notificationCapture;
     final textTheme = Theme.of(context).textTheme;
     final colors = context.appColors;
     final missingDefaults = defaultNotificationKeywords.any((k) => !_source.keywords.contains(k));
-    final userPatterns = [
-      for (final p in state.userPatterns)
-        if (p.packageName == _source.packageName) p,
-    ];
-    final builtIns = [
-      for (final p in builtInNotificationPatterns)
-        if (p.packageName == _source.packageName || p.packageName == anyPackage) p,
-    ];
     return [
       const SizedBox(height: AppSpacing.space4),
       AppSectionLabel(texts.keywordsLabel),
@@ -478,52 +368,12 @@ class _SourcePageState extends State<_SourcePage> {
             ),
           ),
         ),
-      const SizedBox(height: AppSpacing.space6),
-      AppSectionLabel(texts.patternsTitle),
-      const SizedBox(height: AppSpacing.space1),
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space1),
-        child: Text(
-          userPatterns.isEmpty && builtIns.isEmpty ? texts.patternsEmpty : texts.patternsHint,
-          style: textTheme.bodySmall?.copyWith(color: colors.ink2),
-        ),
-      ),
-      const SizedBox(height: AppSpacing.space2),
-      for (final pattern in userPatterns)
-        _PatternRow(
-          pattern: pattern,
-          subtitle: pattern.template,
-          onTap: () => _editPattern(pattern),
-          trailing: IconButton(
-            tooltip: texts.deletePattern,
-            icon: const AppIcon(IconKey.delete),
-            onPressed: () => context.read<NotificationSettingsBloc>().add(NotificationPatternDeleted(pattern.id)),
-          ),
-        ),
-      for (final pattern in builtIns)
-        _PatternRow(
-          pattern: pattern,
-          subtitle: pattern.verified ? texts.builtInVerified : texts.builtInUnverified,
-          onTap: () => _editPattern(pattern.duplicateAs('user.${DateTime.now().microsecondsSinceEpoch}')),
-          trailing: Switch(
-            value: !state.settings.disabledBuiltInPatternIds.contains(pattern.id),
-            onChanged: (enabled) => context.read<NotificationSettingsBloc>().add(
-              BuiltInPatternToggled(patternId: pattern.id, enabled: enabled),
-            ),
-          ),
-        ),
-      AppButton.secondary(label: texts.newPattern, onPressed: () => _editPattern(null)),
       ..._samplesSection(context, state),
-      ..._bindingSection(context, state, [
-        ...userPatterns,
-        for (final p in builtIns)
-          if (p.verified && !state.settings.disabledBuiltInPatternIds.contains(p.id)) p,
-      ]),
     ];
   }
 }
 
-/// Kepala bagian lipat "Filter dan pola".
+/// Kepala bagian lipat "Filter".
 class _AdvancedToggle extends StatelessWidget {
   const _AdvancedToggle({required this.expanded, required this.onTap, this.warning});
 
@@ -558,54 +408,6 @@ class _AdvancedToggle extends StatelessWidget {
             ),
             AppIcon(expanded ? IconKey.expandLess : IconKey.expandMore, color: colors.ink2),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class _PatternRow extends StatelessWidget {
-  const _PatternRow({required this.pattern, required this.subtitle, required this.onTap, required this.trailing});
-
-  final NotificationPattern pattern;
-  final String subtitle;
-  final VoidCallback onTap;
-  final Widget trailing;
-
-  @override
-  Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.space2),
-      child: AppTappable(
-        label: pattern.label,
-        onTap: onTap,
-        child: AppCard(
-          padding: const EdgeInsets.fromLTRB(
-            AppSpacing.space4,
-            AppSpacing.space2,
-            AppSpacing.space1,
-            AppSpacing.space2,
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('${pattern.label} · ${patternKindLabel(pattern.kind)}', style: textTheme.titleSmall),
-                    Text(
-                      subtitle,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: textTheme.bodySmall?.copyWith(color: context.appColors.ink2),
-                    ),
-                  ],
-                ),
-              ),
-              trailing,
-            ],
-          ),
         ),
       ),
     );

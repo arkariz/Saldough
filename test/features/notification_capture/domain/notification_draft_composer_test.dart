@@ -2,9 +2,7 @@ import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saldough/features/notification_capture/domain/entities/captured_notification.dart';
-import 'package:saldough/features/notification_capture/domain/entities/notification_pattern.dart';
 import 'package:saldough/features/notification_capture/domain/entities/notification_source.dart';
-import 'package:saldough/features/notification_capture/domain/services/built_in_notification_patterns.dart';
 import 'package:saldough/features/notification_capture/domain/services/notification_draft_composer.dart';
 import 'package:saldough/shared/capture/capture.dart';
 
@@ -20,12 +18,10 @@ void main() {
     String body, {
     String title = '',
     NotificationSource source = brimoSource,
-    List<NotificationPattern> patterns = const [],
     TransactionInterpreter? cloud,
   }) => notificationComposer(cloud: cloud).compose(
     CapturedNotification(id: '1', packageName: source.packageName, title: title, body: body, postedAt: postedAt),
     source: source,
-    patterns: patterns,
     wallets: notificationWallets,
     categories: notificationCategories,
     currencyCode: 'IDR',
@@ -43,7 +39,6 @@ void main() {
       expect(draft.note, 'KOPI KENANGAN');
       expect(draft.date, postedAt);
       expect(draft.isConfident, isTrue);
-      expect(result.autoEligible, isTrue);
     });
 
     test('judul notifikasi tidak ikut ke catatan', () async {
@@ -87,107 +82,15 @@ void main() {
       expect(draft.toWalletId, isNull);
     });
 
+    test('saldo bukan nominal transaksi: tanpa nominal transaksi, nominal kosong', () async {
+      final result = await compose('Pembayaran QRIS berhasil. Saldo Rp1.000.000');
+      expect(result.draft.amountSen, isNull);
+    });
+
     test('sumber tanpa dompet → dompet kosong', () async {
       const noWallet = NotificationSource(packageName: 'x', appLabel: 'X');
       final draft = (await compose('Pembayaran Rp25.000 berhasil', source: noWallet)).draft;
       expect(draft.walletId, isNull);
-    });
-  });
-
-  group('pola', () {
-    const userPattern = NotificationPattern(
-      id: 'u1',
-      packageName: 'id.co.bri.brimo',
-      label: 'QRIS',
-      template: 'QRIS {amount} di {note} sukses',
-      kind: NotificationPatternKind.expense,
-    );
-
-    test('pola pengguna menentukan jenis, nominal, catatan', () async {
-      final result = await compose('QRIS Rp18.500 di WARUNG BU TINI sukses', patterns: [userPattern]);
-      expect(result.pattern, userPattern);
-      expect(result.draft.kind, DraftKind.expense);
-      expect(result.draft.amountSen, 1850000);
-      expect(result.draft.note, 'WARUNG BU TINI');
-      expect(result.draft.walletId, 'bri');
-      expect(result.autoEligible, isTrue);
-    });
-
-    test('pola paket lain diabaikan', () async {
-      const other = NotificationPattern(
-        id: 'u2',
-        packageName: 'ovo.id',
-        label: 'x',
-        template: 'QRIS {amount} di {note} sukses',
-        kind: NotificationPatternKind.income,
-      );
-      final result = await compose('QRIS Rp18.500 di WARUNG sukses', patterns: [other]);
-      expect(result.pattern, isNull);
-    });
-
-    test('aturan yang yakin mendahului pola bawaan belum terverifikasi', () async {
-      final result = await compose('Dana masuk Rp75.000 dari ANI', patterns: builtInNotificationPatterns);
-      expect(result.pattern, isNull);
-      expect(result.autoEligible, isTrue);
-    });
-
-    test('pola bawaan belum terverifikasi dipakai bila aturan ragu, tidak layak otomatis', () async {
-      final result = await compose(
-        'Dana masuk Rp75.000 dari ANI, pembayaran tagihan',
-        patterns: builtInNotificationPatterns,
-      );
-      expect(result.pattern?.builtIn, isTrue);
-      expect(result.draft.kind, DraftKind.income);
-      expect(result.draft.amountSen, 7500000);
-      expect(result.autoEligible, isFalse);
-    });
-
-    test('pola bawaan berlaku untuk aplikasi mana pun, bukan daftar bank tertanam (ADR-044 §3.4)', () async {
-      const asing = NotificationSource(
-        packageName: 'com.contoh.aplikasi.baru',
-        appLabel: 'Aplikasi Baru',
-        keywords: ['dana'],
-        walletId: 'bri',
-      );
-      final result = await compose(
-        'Dana masuk Rp75.000 dari ANI, pembayaran tagihan',
-        source: asing,
-        patterns: builtInNotificationPatterns,
-      );
-      expect(result.pattern?.builtIn, isTrue);
-      expect(result.pattern?.packageName, anyPackage);
-      expect(result.draft.kind, DraftKind.income);
-      expect(result.draft.amountSen, 7500000);
-      expect(result.autoEligible, isFalse);
-    });
-
-    test('pola bawaan: id unik dan semuanya untuk aplikasi mana pun', () {
-      expect(builtInNotificationPatterns.map((p) => p.id).toSet(), hasLength(builtInNotificationPatterns.length));
-      expect(builtInNotificationPatterns.every((p) => p.packageName == anyPackage && !p.verified), isTrue);
-    });
-
-    test('pola bawaan tidak menangkap saldo bila nominal transaksi tidak tertulis', () async {
-      final result = await compose(
-        'Pembayaran QRIS berhasil. Saldo Rp1.000.000',
-        patterns: builtInNotificationPatterns,
-      );
-      expect(result.draft.amountSen, isNull);
-    });
-
-    test('pola transfer keluar dengan dompet lawan tetap', () async {
-      const topUp = NotificationPattern(
-        id: 'u3',
-        packageName: 'id.co.bri.brimo',
-        label: 'Top up',
-        template: 'Top up {*} {amount} berhasil',
-        kind: NotificationPatternKind.transferOut,
-        transferWalletId: 'gopay',
-      );
-      final draft = (await compose('Top up GOPAY Rp100.000 berhasil', patterns: [topUp])).draft;
-      expect(draft.kind, DraftKind.transfer);
-      expect(draft.walletId, 'bri');
-      expect(draft.toWalletId, 'gopay');
-      expect(draft.isConfident, isTrue);
     });
   });
 
@@ -202,7 +105,6 @@ void main() {
           postedAt: postedAt,
         ),
         source: brimoSource,
-        patterns: const [],
         wallets: notificationWallets,
         categories: notificationCategories,
         currencyCode: 'IDR',

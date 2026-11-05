@@ -15,7 +15,6 @@ import 'package:saldough/features/notification_capture/domain/services/negative_
 import 'package:saldough/features/notification_capture/presentation/bloc/capture_inbox_bloc.dart';
 import 'package:saldough/features/notification_capture/presentation/bloc/notification_settings_bloc.dart';
 import 'package:saldough/features/notification_capture/presentation/navigation/notification_capture_route_keys.dart';
-import 'package:saldough/features/notification_capture/presentation/pages/notification_pattern_page.dart';
 import 'package:saldough/features/notification_capture/presentation/widgets/access_disclosure.dart';
 import 'package:saldough/features/notification_capture/presentation/widgets/auto_offer.dart';
 import 'package:saldough/features/notification_capture/presentation/widgets/open_capture_record.dart';
@@ -34,11 +33,7 @@ import 'package:state_management/state_management.dart';
 /// dan transaksi yang tercatat otomatis (Tinjau/Batalkan).
 class CaptureInboxPage extends StatelessWidget {
   /// Membuat [CaptureInboxPage].
-  const CaptureInboxPage({this.teachEntryId, super.key});
-
-  /// Tangkapan yang pembuat polanya langsung dibuka begitu daftar termuat
-  /// (Ajari pola dari kartu Beranda, FEATURE_DISCOVERY P-8); `null` = tidak.
-  final String? teachEntryId;
+  const CaptureInboxPage({super.key});
 
   /// Catat lewat CATAT. Bila draf cocok dengan satu kemunculan rutin,
   /// CATAT terisi kategori dan catatan dari rutin (yang kosong saja) dan
@@ -136,21 +131,6 @@ class CaptureInboxPage extends StatelessWidget {
     }
   }
 
-  Future<void> _makePattern(BuildContext context, CaptureInboxEntry entry) async {
-    final inbox = context.read<CaptureInboxBloc>();
-    final settings = context.read<NotificationSettingsBloc>();
-    final pattern = await openNotificationPatternPage(
-      context,
-      packageName: entry.packageName,
-      wallets: settings.state.wallets,
-      sample: entry.text,
-    );
-    if (pattern == null) return;
-    settings.add(NotificationPatternSaved(pattern));
-    await settings.stream.firstWhere((s) => s.userPatterns.contains(pattern));
-    await inbox.reinterpret(entry.id);
-  }
-
   Future<void> _review(BuildContext context, AutoRecordedEntry entry) async {
     final transaction = await context.read<CaptureInboxBloc>().findTransaction(entry);
     if (transaction == null || !context.mounted) return;
@@ -210,18 +190,6 @@ class _InboxBodyState extends State<_InboxBody> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    if (widget.page.teachEntryId case final id?) {
-      WidgetsBinding.instance.addPostFrameCallback((_) => unawaited(_teach(id)));
-    }
-  }
-
-  /// Membuka pembuat pola untuk [entryId] begitu daftar termuat.
-  Future<void> _teach(String entryId) async {
-    final inbox = context.read<CaptureInboxBloc>();
-    final loaded = inbox.state.isLoading ? await inbox.stream.firstWhere((s) => !s.isLoading) : inbox.state;
-    if (!mounted) return;
-    final entry = loaded.pending.where((e) => e.id == entryId).firstOrNull;
-    if (entry != null) await widget.page._makePattern(context, entry);
   }
 
   _InboxTab _tabFor(CaptureInboxState state) =>
@@ -316,7 +284,6 @@ class _InboxBodyState extends State<_InboxBody> with WidgetsBindingObserver {
                       ),
                       onDismiss: () => inbox.add(CaptureInboxDismissed(entry.id)),
                       onNotTransaction: () => inbox.add(CaptureInboxMarkedNotTransaction(entry.id)),
-                      onMakePattern: () => page._makePattern(context, entry),
                       onLink: (existing, match) =>
                           inbox.add(CaptureInboxLinkedToExisting(id: entry.id, existing: existing, match: match)),
                     ),
@@ -453,7 +420,6 @@ class _PendingCard extends StatelessWidget {
     required this.onRecord,
     required this.onDismiss,
     required this.onNotTransaction,
-    required this.onMakePattern,
     required this.onLink,
   });
 
@@ -477,7 +443,6 @@ class _PendingCard extends StatelessWidget {
 
   /// "Bukan transaksi": tutup dan pelajari bentuknya (E1).
   final VoidCallback onNotTransaction;
-  final VoidCallback onMakePattern;
 
   @override
   Widget build(BuildContext context) {
@@ -505,11 +470,6 @@ class _PendingCard extends StatelessWidget {
                     '${entry.appLabel} · ${CycleMonthFormatter.formatDateShort(entry.capturedAt)}',
                     style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
                   ),
-                ),
-                PopupMenuButton<void>(
-                  tooltip: texts.moreActions,
-                  icon: AppIcon(IconKey.moreVert, color: colors.ink2),
-                  itemBuilder: (_) => [PopupMenuItem<void>(onTap: onMakePattern, child: Text(texts.makePatternAction))],
                 ),
               ],
             ),
@@ -597,23 +557,6 @@ class _PendingCard extends StatelessWidget {
                       label: texts.editFirstAction,
                       onPressed: onRecord,
                     ),
-                  // Nominal tak terbaca: ajari pola di sebelah tombol catat.
-                  if (amount == null)
-                    AppButton.secondary(
-                      key: ValueKey('inbox-teach-${entry.id}'),
-                      small: true,
-                      label: t.discovery.notification.teachPattern,
-                      onPressed: () {
-                        AppAnalytics.log(
-                          DiscoveryEvents.notificationRowTapped(
-                            state: 'active',
-                            surface: 'inbox',
-                            action: 'teach_pattern',
-                          ),
-                        );
-                        onMakePattern();
-                      },
-                    ),
                   AppButton(
                     key: ValueKey('inbox-confirm-${entry.id}'),
                     small: true,
@@ -684,14 +627,12 @@ String _reasonLabel(CaptureReviewReason reason) {
   final texts = t.notificationCapture.reviewReason;
   return switch (reason) {
     CaptureReviewReason.autoRecordOff => texts.autoRecordOff,
-    CaptureReviewReason.newPattern => texts.newPattern,
     CaptureReviewReason.amountUnclear => texts.amountUnclear,
     CaptureReviewReason.otherCurrency => texts.otherCurrency,
     CaptureReviewReason.kindUnclear => texts.kindUnclear,
     CaptureReviewReason.walletUnknown => texts.walletUnknown,
     CaptureReviewReason.categoryUnclear => texts.categoryUnclear,
     CaptureReviewReason.dateUnclear => texts.dateUnclear,
-    CaptureReviewReason.recurringUnclear => texts.recurringUnclear,
     CaptureReviewReason.amountUnusual => texts.amountUnusual,
   };
 }

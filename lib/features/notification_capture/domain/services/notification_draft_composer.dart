@@ -1,50 +1,35 @@
 import 'package:saldough/features/notification_capture/domain/entities/captured_notification.dart';
-import 'package:saldough/features/notification_capture/domain/entities/notification_pattern.dart';
 import 'package:saldough/features/notification_capture/domain/entities/notification_source.dart';
-import 'package:saldough/features/notification_capture/domain/services/built_in_notification_patterns.dart';
-import 'package:saldough/features/notification_capture/domain/services/notification_template.dart';
 import 'package:saldough/features/notification_capture/domain/services/notification_text.dart';
 import 'package:saldough/shared/capture/capture.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
-/// Draf dari satu notifikasi, beserta boleh-tidaknya dicatat otomatis.
+/// Draf dari satu notifikasi.
 final class NotificationDraft {
   /// Membuat [NotificationDraft].
-  const NotificationDraft({required this.draft, required this.autoEligible, this.pattern});
+  const NotificationDraft({required this.draft});
 
   /// Draf hasil tafsir.
   final RecordDraft draft;
-
-  /// `false` bila drafnya dari pola yang belum terverifikasi: selalu
-  /// ditinjau, apa pun tingkat otomatisnya. Promosi tidak perlu disaring di
-  /// sini -- filter sumber sudah whitelist frasa transaksi (ADR-032 §3.1).
-  final bool autoEligible;
-
-  /// Pola yang cocok, atau `null` bila dari aturan/cloud.
-  final NotificationPattern? pattern;
 }
 
-/// Menyusun draf dari notifikasi (ADR-032 §3.3): pola pengguna, lalu pola
-/// bawaan; tanpa pola yang cocok, [CaptureDraftComposer] (aturan notifikasi →
-/// Gemini bila ragu). Sesudahnya dompet sumber mengisi dompet draf.
+/// Menyusun draf dari notifikasi (ADR-044 §3.4): [CaptureDraftComposer]
+/// (aturan notifikasi → Gemini bila ragu), lalu dompet sumber mengisi dompet
+/// draf. Tanpa pola buatan pengguna; bentuk dipelajari hanya menyaring
+/// (ADR-044 Revisi 11).
 final class NotificationDraftComposer {
   /// Membuat [NotificationDraftComposer]. [composer] memakai interpreter
-  /// aturan notifikasi; [ruleInterpreterFor] yang sama dipakai untuk catatan
-  /// dan kategori draf dari pola.
-  const NotificationDraftComposer({required this.composer, required this.ruleInterpreterFor});
+  /// aturan notifikasi.
+  const NotificationDraftComposer({required this.composer});
 
   /// Penyusun aturan → cloud.
   final CaptureDraftComposer composer;
-
-  /// Interpreter aturan notifikasi per paket bahasa.
-  final TransactionInterpreter Function(CaptureLanguage language) ruleInterpreterFor;
 
   /// Draf untuk [notification] dari [source].
   Future<NotificationDraft> compose(
     CapturedNotification notification, {
     required NotificationSource source,
-    required List<NotificationPattern> patterns,
     required List<Wallet> wallets,
     required List<Category> categories,
     required String currencyCode,
@@ -72,47 +57,7 @@ final class NotificationDraftComposer {
     final masked = language == null
         ? evidence.text
         : NotificationText.maskNonTransactionNumbers(evidence.text, language.notification);
-    final own = patterns
-        .where((p) => p.packageName == notification.packageName || p.packageName == anyPackage)
-        .toList();
-
-    Future<NotificationDraft?> tryPatterns(Iterable<NotificationPattern> candidates) async {
-      for (final pattern in candidates) {
-        final match = NotificationTemplate.match(pattern.template, masked);
-        if (match == null) continue;
-        final draft = await _fromPattern(
-          pattern,
-          match,
-          source,
-          evidence,
-          language,
-          wallets: wallets,
-          otherWallets: otherWallets,
-          categories: categories,
-          currencyCode: currencyCode,
-        );
-        if (draft.amountSen == null) continue;
-        return NotificationDraft(
-          draft: _tidy(
-            pattern.kind == NotificationPatternKind.transferBetween
-                ? draft
-                : _withSourceWallet(draft, resolved.walletId, ambiguous: resolved.ambiguous),
-            source,
-            notification.title,
-            language,
-          ),
-          autoEligible: pattern.verified,
-          pattern: pattern,
-        );
-      }
-      return null;
-    }
-
-    // 1. Pola pengguna dan pola bawaan yang sudah dicocokkan dengan sampel asli.
-    final trusted = await tryPatterns(own.where((p) => p.verified));
-    if (trusted != null) return trusted;
-
-    // 2. Aturan notifikasi → Gemini bila ragu.
+    // Aturan notifikasi → Gemini bila ragu.
     final composed = _tidy(
       _withSourceWallet(
         await composer.compose(
@@ -130,11 +75,7 @@ final class NotificationDraftComposer {
       notification.title,
       language,
     );
-    if (composed.isConfident) return NotificationDraft(draft: composed, autoEligible: true);
-
-    // 3. Pola bawaan yang belum terverifikasi, hanya bila aturan belum yakin;
-    // drafnya selalu ditinjau.
-    return await tryPatterns(own.where((p) => !p.verified)) ?? NotificationDraft(draft: composed, autoEligible: true);
+    return NotificationDraft(draft: composed);
   }
 
   /// Catatan tanpa awalan yang bukan isi transaksi: judul notifikasi (sering
@@ -174,111 +115,6 @@ final class NotificationDraftComposer {
       issues: draft.issues,
       sourceText: draft.sourceText,
     );
-  }
-
-  Future<RecordDraft> _fromPattern(
-    NotificationPattern pattern,
-    NotificationTemplateMatch match,
-    NotificationSource source,
-    CaptureEvidence evidence,
-    CaptureLanguage? language, {
-    required List<Wallet> wallets,
-    required List<Wallet> otherWallets,
-    required List<Category> categories,
-    required String currencyCode,
-  }) async {
-    final kind = switch (pattern.kind) {
-      NotificationPatternKind.expense => DraftKind.expense,
-      NotificationPatternKind.income => DraftKind.income,
-      NotificationPatternKind.transferOut ||
-      NotificationPatternKind.transferIn ||
-      NotificationPatternKind.transferBetween => DraftKind.transfer,
-    };
-    // Catatan dan kategori dari aturan bila pola tidak menentukannya.
-    InterpretedTransaction? rules;
-    if (language != null && (match.note == null || pattern.categoryId == null)) {
-      final context = InterpretationContext(
-        walletNames: [for (final w in otherWallets) w.name],
-        expenseCategoryNames: [
-          for (final c in categories)
-            if (c.kind == CategoryKind.expense && !c.isArchived) c.name,
-        ],
-        incomeCategoryNames: [
-          for (final c in categories)
-            if (c.kind == CategoryKind.income && !c.isArchived) c.name,
-        ],
-        today: evidence.capturedAt,
-        currencyCode: currencyCode,
-      );
-      try {
-        rules = (await ruleInterpreterFor(language).interpret(evidence, context)).fold((_) => null, (r) => r);
-      } on Object {
-        rules = null;
-      }
-    }
-    final category = _category(categories, pattern.categoryId, kind);
-    final resolver = CaptureDraftResolver(
-      wallets: wallets,
-      categories: categories,
-      currencyCode: currencyCode,
-      language: language,
-    );
-    var draft = resolver.resolve(
-      evidence,
-      InterpretedTransaction(
-        kind: kind,
-        amountText: match.amountText,
-        note: match.note ?? rules?.note,
-        categoryName: kind == DraftKind.transfer
-            ? null
-            : (category?.name ?? (rules?.kind == kind ? rules?.categoryName : null)),
-        dateText: rules?.dateText,
-        date: rules?.date,
-      ),
-    );
-    if (pattern.kind == NotificationPatternKind.transferBetween) {
-      // Kedua sisi dari teks lewat aturan dompet (ADR-042 §3.1); sisi yang
-      // tidak terpetakan dibiarkan kosong, bukan ditebak.
-      final from = _knownWallet(wallets, source.walletForFragment(match.fromText ?? ''));
-      final to = _knownWallet(wallets, source.walletForFragment(match.toText ?? ''));
-      final same = from != null && from == to;
-      final issues = {...draft.issues}..removeAll({DraftIssue.transferSourceMissing, DraftIssue.transferTargetMissing});
-      return draft.copyWith(
-        walletId: () => same ? null : from,
-        toWalletId: () => same ? null : to,
-        // Sisi yang tidak terpetakan adalah masalah dompet (aturan dompet
-        // sumber), bukan jenis yang tidak jelas: alasannya dompet tidak dikenali.
-        issues: {...issues, if (same || from == null || to == null) DraftIssue.walletUnknown},
-      );
-    }
-    if (kind == DraftKind.transfer) {
-      final other = pattern.transferWalletId;
-      final known = other != null && wallets.any((w) => w.id == other);
-      final issues = {...draft.issues}..removeAll({DraftIssue.transferSourceMissing, DraftIssue.transferTargetMissing});
-      draft = pattern.kind == NotificationPatternKind.transferOut
-          ? draft.copyWith(
-              walletId: () => null,
-              toWalletId: () => known ? other : null,
-              issues: {...issues, DraftIssue.transferSourceMissing, if (!known) DraftIssue.transferTargetMissing},
-            )
-          : draft.copyWith(
-              walletId: () => known ? other : null,
-              toWalletId: () => null,
-              issues: {...issues, if (!known) DraftIssue.transferSourceMissing, DraftIssue.transferTargetMissing},
-            );
-    }
-    return draft;
-  }
-
-  String? _knownWallet(List<Wallet> wallets, String? id) => id != null && wallets.any((w) => w.id == id) ? id : null;
-
-  Category? _category(List<Category> categories, String? id, DraftKind kind) {
-    if (id == null || kind == DraftKind.transfer) return null;
-    final wanted = kind == DraftKind.income ? CategoryKind.income : CategoryKind.expense;
-    for (final c in categories) {
-      if (c.id == id && !c.isArchived && c.kind == wanted) return c;
-    }
-    return null;
   }
 
   /// Dompet sumber mengisi dompet draf: pemasukan/pengeluaran memakai dompet

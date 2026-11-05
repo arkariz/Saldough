@@ -2908,23 +2908,11 @@ class Translations$notificationCapture$id {
 	/// id: 'Tambah'
 	String get addKeyword => 'Tambah';
 
-	/// id: 'Pola'
-	String get patternsTitle => 'Pola';
-
-	/// id: 'Ajari Tanukonomy membaca format notifikasi aplikasi ini.'
-	String get patternsHint => 'Ajari Tanukonomy membaca format notifikasi aplikasi ini.';
-
-	/// id: 'Belum ada pola. Tanukonomy tetap membaca dengan aturan umum.'
-	String get patternsEmpty => 'Belum ada pola. Tanukonomy tetap membaca dengan aturan umum.';
-
 	/// id: 'Bawaan · hasilnya selalu kamu cek'
 	String get builtInUnverified => 'Bawaan · hasilnya selalu kamu cek';
 
 	/// id: 'Bawaan'
 	String get builtInVerified => 'Bawaan';
-
-	/// id: 'Buat pola dari contoh'
-	String get newPattern => 'Buat pola dari contoh';
 
 	/// id: 'Hapus aplikasi ini'
 	String get removeSource => 'Hapus aplikasi ini';
@@ -2934,18 +2922,6 @@ class Translations$notificationCapture$id {
 
 	/// id: 'Simpan'
 	String get save => 'Simpan';
-
-	/// id: 'Ajari pola'
-	String get patternTitle => 'Ajari pola';
-
-	/// id: '1. Contoh notifikasi'
-	String get patternSampleLabel => '1. Contoh notifikasi';
-
-	/// id: 'Tempel teks notifikasi di sini'
-	String get patternSampleHint => 'Tempel teks notifikasi di sini';
-
-	/// id: 'Ketuk lagi kata yang sudah ditandai untuk menghapus tandanya.'
-	String get patternInstructions => 'Ketuk lagi kata yang sudah ditandai untuk menghapus tandanya.';
 
 	/// id: 'Nominal'
 	String get roleAmount => 'Nominal';
@@ -2968,9 +2944,6 @@ class Translations$notificationCapture$id {
 	/// id: 'Transfer antar dompet'
 	String get kindTransferBetween => 'Transfer antar dompet';
 
-	/// id: 'Dompet asal dan tujuan dibaca dari teks lewat aturan dompet di halaman aplikasi.'
-	String get patternBetweenHint => 'Dompet asal dan tujuan dibaca dari teks lewat aturan dompet di halaman aplikasi.';
-
 	/// id: 'Dompet lain di aplikasi ini'
 	String get walletRulesTitle => 'Dompet lain di aplikasi ini';
 
@@ -2989,20 +2962,11 @@ class Translations$notificationCapture$id {
 	/// id: 'Isi minimal satu kata pengenal'
 	String get walletRuleNeedsKeywords => 'Isi minimal satu kata pengenal';
 
-	/// id: 'Ikat ke rutin'
-	String get bindingTitle => 'Ikat ke rutin';
-
-	/// id: 'Notifikasi yang cocok dengan pola terikat dicatat sebagai kemunculan rutin itu. Bila nominal atau jadwalnya tidak pas, masuk kotak masuk, tidak ditebak.'
-	String get bindingHint => 'Notifikasi yang cocok dengan pola terikat dicatat sebagai kemunculan rutin itu. Bila nominal atau jadwalnya tidak pas, masuk kotak masuk, tidak ditebak.';
-
-	/// id: 'Tidak terikat'
-	String get bindingNone => 'Tidak terikat';
-
 	/// id: 'Simpan contoh notifikasi'
 	String get samplesToggle => 'Simpan contoh notifikasi';
 
-	/// id: 'Untuk membuat filter dan pola dari notifikasi aplikasi ini. Disimpan di perangkat 7 hari, tidak dikirim ke mana pun.'
-	String get samplesHint => 'Untuk membuat filter dan pola dari notifikasi aplikasi ini. Disimpan di perangkat 7 hari, tidak dikirim ke mana pun.';
+	/// id: 'Untuk membuat filter dari notifikasi aplikasi ini. Disimpan di perangkat 7 hari, tidak dikirim ke mana pun.'
+	String get samplesHint => 'Untuk membuat filter dari notifikasi aplikasi ini. Disimpan di perangkat 7 hari, tidak dikirim ke mana pun.';
 
 	/// id: 'Notifikasi terbaru'
 	String get samplesTitle => 'Notifikasi terbaru';
@@ -3013,9 +2977,6 @@ class Translations$notificationCapture$id {
 	/// id: 'Jadikan filter'
 	String get samplesFilter => 'Jadikan filter';
 
-	/// id: 'Buat pola'
-	String get samplesPattern => 'Buat pola';
-
 	/// id: 'Pilih frasa filter'
 	String get samplesFilterTitle => 'Pilih frasa filter';
 
@@ -3025,8 +2986,8 @@ class Translations$notificationCapture$id {
 	/// id: 'Simpan contoh notifikasi?'
 	String get samplesDisclosureTitle => 'Simpan contoh notifikasi?';
 
-	/// id: 'Tanukonomy akan menyimpan teks notifikasi dari aplikasi yang kamu pilih, termasuk yang bukan transaksi, selama 7 hari di perangkat ini. Dipakai hanya untuk membuat filter dan pola. Kode OTP tidak pernah disimpan, dan teks ini tidak dikirim ke server. Kamu bisa mematikannya kapan saja; semua contoh langsung terhapus.'
-	String get samplesDisclosureBody => 'Tanukonomy akan menyimpan teks notifikasi dari aplikasi yang kamu pilih, termasuk yang bukan transaksi, selama 7 hari di perangkat ini. Dipakai hanya untuk membuat filter dan pola. Kode OTP tidak pernah disimpan, dan teks ini tidak dikirim ke server. Kamu bisa mematikannya kapan saja; semua contoh langsung terhapus.';
+	/// id: 'Tanukonomy akan menyimpan teks notifikasi dari aplikasi yang kamu pilih, termasuk yang bukan transaksi, selama 7 hari di perangkat ini. Dipakai hanya untuk membuat filter. Kode OTP tidak pernah disimpan, dan teks ini tidak dikirim ke server. Kamu bisa mematikannya kapan saja; semua contoh langsung terhapus.'
+	String get samplesDisclosureBody => 'Tanukonomy akan menyimpan teks notifikasi dari aplikasi yang kamu pilih, termasuk yang bukan transaksi, selama 7 hari di perangkat ini. Dipakai hanya untuk membuat filter. Kode OTP tidak pernah disimpan, dan teks ini tidak dikirim ke server. Kamu bisa mematikannya kapan saja; semua contoh langsung terhapus.';
 
 	/// id: 'Batal'
 	String get samplesDisclosureCancel => 'Batal';
@@ -3036,9 +2997,6 @@ class Translations$notificationCapture$id {
 
 	/// id: 'Abaikan'
 	String get roleIgnore => 'Abaikan';
-
-	/// id: '3. Jenis transaksi'
-	String get patternKindLabel => '3. Jenis transaksi';
 
 	/// id: 'Keluar'
 	String get kindExpense => 'Keluar';
@@ -3051,27 +3009,6 @@ class Translations$notificationCapture$id {
 
 	/// id: 'Transfer masuk'
 	String get kindTransferIn => 'Transfer masuk';
-
-	/// id: 'Kategori'
-	String get patternCategory => 'Kategori';
-
-	/// id: 'Tanpa kategori'
-	String get patternNoCategory => 'Tanpa kategori';
-
-	/// id: 'Dompet lawan'
-	String get patternTransferWallet => 'Dompet lawan';
-
-	/// id: 'Nama pola (opsional)'
-	String get patternLabelField => 'Nama pola (opsional)';
-
-	/// id: 'Terbaca: $amount'
-	String patternPreview({required Object amount}) => 'Terbaca: ${amount}';
-
-	/// id: 'Tandai satu nominal. Kata Catatan harus berurutan.'
-	String get patternInvalid => 'Tandai satu nominal. Kata Catatan harus berurutan.';
-
-	/// id: 'Hapus pola'
-	String get deletePattern => 'Hapus pola';
 
 	/// id: 'Kotak masuk notifikasi'
 	String get inboxTitle => 'Kotak masuk notifikasi';
@@ -3131,9 +3068,6 @@ class Translations$notificationCapture$id {
 
 	/// id: 'Abaikan'
 	String get dismissAction => 'Abaikan';
-
-	/// id: 'Buat pola dari teks ini'
-	String get makePatternAction => 'Buat pola dari teks ini';
 
 	/// id: 'Lihat'
 	String get reviewAction => 'Lihat';
@@ -3314,38 +3248,17 @@ class Translations$notificationCapture$id {
 	/// id: 'Transaksi dari aplikasi ini dicatat di dompet ini.'
 	String get walletHelp => 'Transaksi dari aplikasi ini dicatat di dompet ini.';
 
-	/// id: 'Filter dan pola'
-	String get advancedTitle => 'Filter dan pola';
+	/// id: 'Filter'
+	String get advancedTitle => 'Filter';
 
 	/// id: 'Opsional'
 	String get advancedHint => 'Opsional';
-
-	/// id: '2. Tandai bagian pentingnya'
-	String get patternMarkLabel => '2. Tandai bagian pentingnya';
-
-	/// id: '"${word}" bukan nominal. Nominal memakai Rp atau titik ribuan.'
-	String patternNotAmount({required Object word}) => '"${word}" bukan nominal. Nominal memakai Rp atau titik ribuan.';
 
 	/// id: 'Transfer'
 	String get kindTransfer => 'Transfer';
 
 	/// id: 'Arah transfer'
 	String get transferDirectionLabel => 'Arah transfer';
-
-	/// id: 'Belum ditentukan'
-	String get patternTransferWalletNone => 'Belum ditentukan';
-
-	/// id: 'Lihat templat (untuk yang paham)'
-	String get patternTemplateToggle => 'Lihat templat (untuk yang paham)';
-
-	/// id: 'Ajari Tanukonomy cara membaca notifikasi ini, supaya lain kali nominal dan catatannya terisi sendiri. Yang wajib hanya menandai kata nominal.'
-	String get patternIntro => 'Ajari Tanukonomy cara membaca notifikasi ini, supaya lain kali nominal dan catatannya terisi sendiri. Yang wajib hanya menandai kata nominal.';
-
-	/// id: 'Ketuk kata yang berisi nominal, misalnya Rp50.000.'
-	String get patternHintAmount => 'Ketuk kata yang berisi nominal, misalnya Rp50.000.';
-
-	/// id: 'Nominal sudah ditandai. Kalau mau, ketuk kata yang jadi catatan (nama toko atau keterangan). Boleh dilewati.'
-	String get patternHintNote => 'Nominal sudah ditandai. Kalau mau, ketuk kata yang jadi catatan (nama toko atau keterangan). Boleh dilewati.';
 
 	/// id: 'Nominal: jumlah uangnya.'
 	String get roleAmountHelp => 'Nominal: jumlah uangnya.';
@@ -3355,12 +3268,6 @@ class Translations$notificationCapture$id {
 
 	/// id: 'Abaikan: kata yang berubah tiap notifikasi, mis. nomor referensi.'
 	String get roleIgnoreHelp => 'Abaikan: kata yang berubah tiap notifikasi, mis. nomor referensi.';
-
-	/// id: 'Tandai satu kata nominal dulu supaya bisa disimpan.'
-	String get patternNeedAmount => 'Tandai satu kata nominal dulu supaya bisa disimpan.';
-
-	/// id: 'Templat'
-	String get patternTemplateLabel => 'Templat';
 
 	/// id: 'Lainnya'
 	String get moreActions => 'Lainnya';
@@ -4808,11 +4715,8 @@ class Translations$discovery$notification$id {
 	/// id: '$n aplikasi aktif'
 	String activeApps({required Object n}) => '${n} aplikasi aktif';
 
-	/// id: 'Kelola aplikasi & pola'
-	String get manageSources => 'Kelola aplikasi & pola';
-
-	/// id: 'Ajari pola'
-	String get teachPattern => 'Ajari pola';
+	/// id: 'Kelola aplikasi'
+	String get manageSources => 'Kelola aplikasi';
 }
 
 // Path: discovery.reminder
@@ -4874,9 +4778,6 @@ class Translations$notificationCapture$reviewReason$id {
 	/// id: 'Catat otomatis mati'
 	String get autoRecordOff => 'Catat otomatis mati';
 
-	/// id: 'Pola baru, cek dulu'
-	String get newPattern => 'Pola baru, cek dulu';
-
 	/// id: 'Nominal belum pasti'
 	String get amountUnclear => 'Nominal belum pasti';
 
@@ -4894,9 +4795,6 @@ class Translations$notificationCapture$reviewReason$id {
 
 	/// id: 'Tanggal belum pasti'
 	String get dateUnclear => 'Tanggal belum pasti';
-
-	/// id: 'Rutin belum pasti'
-	String get recurringUnclear => 'Rutin belum pasti';
 
 	/// id: 'Nominal tak biasa, cek dulu'
 	String get amountUnusual => 'Nominal tak biasa, cek dulu';
@@ -6817,8 +6715,7 @@ extension on Translations {
 			'discovery.notification.inboxTitle' => 'Kotak masuk notifikasi',
 			'discovery.notification.check' => 'Cek',
 			'discovery.notification.activeApps' => ({required Object n}) => '${n} aplikasi aktif',
-			'discovery.notification.manageSources' => 'Kelola aplikasi & pola',
-			'discovery.notification.teachPattern' => 'Ajari pola',
+			'discovery.notification.manageSources' => 'Kelola aplikasi',
 			'discovery.reminder.button' => 'Nyalakan pengingat tagihan rutin',
 			'discovery.reminder.body' => 'Diingatkan sebelum tagihan jatuh tempo.',
 			'discovery.reminder.rowNote' => 'Pengingat belum menyala untuk semua transaksi berulang.',
@@ -6839,9 +6736,9 @@ extension on Translations {
 			'notificationCapture.accessAction' => 'Beri izin',
 			'notificationCapture.accessGranted' => 'Izin notifikasi aktif',
 			'notificationCapture.disclosureTitle' => 'Sebelum memberi izin',
+			'notificationCapture.disclosureBody' => 'Tanukonomy akan bisa membaca notifikasi di ponselmu.\n\n• Hanya dari aplikasi yang kamu pilih dan cocok dengan filternya.\n• Notifikasi OTP tidak pernah disimpan.\n• Teks yang sulit dibaca bisa dikirim ke Gemini (Google).\n• Teks notifikasi disimpan di ponselmu paling lama 7 hari.\n• Notifikasi baru bisa diproses di latar saat Tanukonomy tertutup, supaya tombol Catat di notifikasi bisa dipakai.\n\nSesudah Lanjut, Android membuka daftar akses notifikasi. Pilih Tanukonomy lalu nyalakan.',
 			_ => null,
 		} ?? switch (path) {
-			'notificationCapture.disclosureBody' => 'Tanukonomy akan bisa membaca notifikasi di ponselmu.\n\n• Hanya dari aplikasi yang kamu pilih dan cocok dengan filternya.\n• Notifikasi OTP tidak pernah disimpan.\n• Teks yang sulit dibaca bisa dikirim ke Gemini (Google).\n• Teks notifikasi disimpan di ponselmu paling lama 7 hari.\n• Notifikasi baru bisa diproses di latar saat Tanukonomy tertutup, supaya tombol Catat di notifikasi bisa dipakai.\n\nSesudah Lanjut, Android membuka daftar akses notifikasi. Pilih Tanukonomy lalu nyalakan.',
 			'notificationCapture.disclosureAccept' => 'Lanjut',
 			'notificationCapture.reminderPermissionDenied' => 'Izin notifikasi ditolak. Nyalakan di setelan Android untuk menerima pengingat.',
 			'notificationCapture.sourcesTitle' => 'Aplikasi',
@@ -6859,19 +6756,11 @@ extension on Translations {
 			'notificationCapture.keywordsHint' => 'Hanya notifikasi yang memuat salah satu frasa ini yang dibaca.',
 			'notificationCapture.keywordField' => 'Tambah frasa',
 			'notificationCapture.addKeyword' => 'Tambah',
-			'notificationCapture.patternsTitle' => 'Pola',
-			'notificationCapture.patternsHint' => 'Ajari Tanukonomy membaca format notifikasi aplikasi ini.',
-			'notificationCapture.patternsEmpty' => 'Belum ada pola. Tanukonomy tetap membaca dengan aturan umum.',
 			'notificationCapture.builtInUnverified' => 'Bawaan · hasilnya selalu kamu cek',
 			'notificationCapture.builtInVerified' => 'Bawaan',
-			'notificationCapture.newPattern' => 'Buat pola dari contoh',
 			'notificationCapture.removeSource' => 'Hapus aplikasi ini',
 			'notificationCapture.removeSourceConfirm' => ({required Object app}) => 'Berhenti membaca notifikasi ${app}?',
 			'notificationCapture.save' => 'Simpan',
-			'notificationCapture.patternTitle' => 'Ajari pola',
-			'notificationCapture.patternSampleLabel' => '1. Contoh notifikasi',
-			'notificationCapture.patternSampleHint' => 'Tempel teks notifikasi di sini',
-			'notificationCapture.patternInstructions' => 'Ketuk lagi kata yang sudah ditandai untuk menghapus tandanya.',
 			'notificationCapture.roleAmount' => 'Nominal',
 			'notificationCapture.roleNote' => 'Catatan',
 			'notificationCapture.roleFrom' => 'Dari',
@@ -6879,41 +6768,28 @@ extension on Translations {
 			'notificationCapture.roleFromHelp' => 'Dari: nama dompet asal transfer. Dicocokkan dengan aturan dompet aplikasi ini.',
 			'notificationCapture.roleToHelp' => 'Ke: nama dompet tujuan transfer. Dicocokkan dengan aturan dompet aplikasi ini.',
 			'notificationCapture.kindTransferBetween' => 'Transfer antar dompet',
-			'notificationCapture.patternBetweenHint' => 'Dompet asal dan tujuan dibaca dari teks lewat aturan dompet di halaman aplikasi.',
 			'notificationCapture.walletRulesTitle' => 'Dompet lain di aplikasi ini',
 			'notificationCapture.walletRulesHint' => 'Untuk aplikasi yang punya beberapa dompet di dalamnya. Bila notifikasi memuat kata pengenalnya, dompet itu yang dipakai; bila tidak, dompet utama di atas.',
 			'notificationCapture.walletRuleKeywordsField' => 'Kata pengenal, pisahkan dengan koma',
 			'notificationCapture.walletRuleAdd' => 'Tambah dompet',
 			'notificationCapture.walletRuleRemove' => 'Hapus',
 			'notificationCapture.walletRuleNeedsKeywords' => 'Isi minimal satu kata pengenal',
-			'notificationCapture.bindingTitle' => 'Ikat ke rutin',
-			'notificationCapture.bindingHint' => 'Notifikasi yang cocok dengan pola terikat dicatat sebagai kemunculan rutin itu. Bila nominal atau jadwalnya tidak pas, masuk kotak masuk, tidak ditebak.',
-			'notificationCapture.bindingNone' => 'Tidak terikat',
 			'notificationCapture.samplesToggle' => 'Simpan contoh notifikasi',
-			'notificationCapture.samplesHint' => 'Untuk membuat filter dan pola dari notifikasi aplikasi ini. Disimpan di perangkat 7 hari, tidak dikirim ke mana pun.',
+			'notificationCapture.samplesHint' => 'Untuk membuat filter dari notifikasi aplikasi ini. Disimpan di perangkat 7 hari, tidak dikirim ke mana pun.',
 			'notificationCapture.samplesTitle' => 'Notifikasi terbaru',
 			'notificationCapture.samplesEmpty' => 'Belum ada contoh. Notifikasi dari aplikasi ini yang datang mulai sekarang akan muncul di sini.',
 			'notificationCapture.samplesFilter' => 'Jadikan filter',
-			'notificationCapture.samplesPattern' => 'Buat pola',
 			'notificationCapture.samplesFilterTitle' => 'Pilih frasa filter',
 			'notificationCapture.samplesFilterHint' => 'Ketuk kata untuk menyusun frasa, atau ketik sendiri. Pilih frasa yang hanya muncul di notifikasi transaksi.',
 			'notificationCapture.samplesDisclosureTitle' => 'Simpan contoh notifikasi?',
-			'notificationCapture.samplesDisclosureBody' => 'Tanukonomy akan menyimpan teks notifikasi dari aplikasi yang kamu pilih, termasuk yang bukan transaksi, selama 7 hari di perangkat ini. Dipakai hanya untuk membuat filter dan pola. Kode OTP tidak pernah disimpan, dan teks ini tidak dikirim ke server. Kamu bisa mematikannya kapan saja; semua contoh langsung terhapus.',
+			'notificationCapture.samplesDisclosureBody' => 'Tanukonomy akan menyimpan teks notifikasi dari aplikasi yang kamu pilih, termasuk yang bukan transaksi, selama 7 hari di perangkat ini. Dipakai hanya untuk membuat filter. Kode OTP tidak pernah disimpan, dan teks ini tidak dikirim ke server. Kamu bisa mematikannya kapan saja; semua contoh langsung terhapus.',
 			'notificationCapture.samplesDisclosureCancel' => 'Batal',
 			'notificationCapture.samplesDisclosureAgree' => 'Nyalakan',
 			'notificationCapture.roleIgnore' => 'Abaikan',
-			'notificationCapture.patternKindLabel' => '3. Jenis transaksi',
 			'notificationCapture.kindExpense' => 'Keluar',
 			'notificationCapture.kindIncome' => 'Masuk',
 			'notificationCapture.kindTransferOut' => 'Transfer keluar',
 			'notificationCapture.kindTransferIn' => 'Transfer masuk',
-			'notificationCapture.patternCategory' => 'Kategori',
-			'notificationCapture.patternNoCategory' => 'Tanpa kategori',
-			'notificationCapture.patternTransferWallet' => 'Dompet lawan',
-			'notificationCapture.patternLabelField' => 'Nama pola (opsional)',
-			'notificationCapture.patternPreview' => ({required Object amount}) => 'Terbaca: ${amount}',
-			'notificationCapture.patternInvalid' => 'Tandai satu nominal. Kata Catatan harus berurutan.',
-			'notificationCapture.deletePattern' => 'Hapus pola',
 			'notificationCapture.inboxTitle' => 'Kotak masuk notifikasi',
 			'notificationCapture.inboxPendingTitle' => 'Perlu dicek',
 			'notificationCapture.inboxAutoTitle' => 'Otomatis',
@@ -6932,18 +6808,15 @@ extension on Translations {
 			'notificationCapture.budgetSuggestion' => ({required Object name, required Object budget}) => 'Saran pos: ${name} · ${budget}',
 			'notificationCapture.possibleDuplicate' => 'Mungkin sudah tercatat',
 			'notificationCapture.reviewReason.autoRecordOff' => 'Catat otomatis mati',
-			'notificationCapture.reviewReason.newPattern' => 'Pola baru, cek dulu',
 			'notificationCapture.reviewReason.amountUnclear' => 'Nominal belum pasti',
 			'notificationCapture.reviewReason.otherCurrency' => 'Mata uang lain',
 			'notificationCapture.reviewReason.kindUnclear' => 'Jenis belum pasti',
 			'notificationCapture.reviewReason.walletUnknown' => 'Dompet tidak dikenali',
 			'notificationCapture.reviewReason.categoryUnclear' => 'Kategori belum jelas',
 			'notificationCapture.reviewReason.dateUnclear' => 'Tanggal belum pasti',
-			'notificationCapture.reviewReason.recurringUnclear' => 'Rutin belum pasti',
 			'notificationCapture.reviewReason.amountUnusual' => 'Nominal tak biasa, cek dulu',
 			'notificationCapture.recordAction' => 'Catat',
 			'notificationCapture.dismissAction' => 'Abaikan',
-			'notificationCapture.makePatternAction' => 'Buat pola dari teks ini',
 			'notificationCapture.reviewAction' => 'Lihat',
 			'notificationCapture.undoAction' => 'Batalkan',
 			'notificationCapture.undoConfirmTitle' => 'Batalkan transaksi?',
@@ -7003,22 +6876,13 @@ extension on Translations {
 			'notificationCapture.reminderHint' => 'Muncul notifikasi setiap ada transaksi terdeteksi.',
 			'notificationCapture.sourceWallet' => ({required Object name}) => 'Dompet ${name}',
 			'notificationCapture.walletHelp' => 'Transaksi dari aplikasi ini dicatat di dompet ini.',
-			'notificationCapture.advancedTitle' => 'Filter dan pola',
+			'notificationCapture.advancedTitle' => 'Filter',
 			'notificationCapture.advancedHint' => 'Opsional',
-			'notificationCapture.patternMarkLabel' => '2. Tandai bagian pentingnya',
-			'notificationCapture.patternNotAmount' => ({required Object word}) => '"${word}" bukan nominal. Nominal memakai Rp atau titik ribuan.',
 			'notificationCapture.kindTransfer' => 'Transfer',
 			'notificationCapture.transferDirectionLabel' => 'Arah transfer',
-			'notificationCapture.patternTransferWalletNone' => 'Belum ditentukan',
-			'notificationCapture.patternTemplateToggle' => 'Lihat templat (untuk yang paham)',
-			'notificationCapture.patternIntro' => 'Ajari Tanukonomy cara membaca notifikasi ini, supaya lain kali nominal dan catatannya terisi sendiri. Yang wajib hanya menandai kata nominal.',
-			'notificationCapture.patternHintAmount' => 'Ketuk kata yang berisi nominal, misalnya Rp50.000.',
-			'notificationCapture.patternHintNote' => 'Nominal sudah ditandai. Kalau mau, ketuk kata yang jadi catatan (nama toko atau keterangan). Boleh dilewati.',
 			'notificationCapture.roleAmountHelp' => 'Nominal: jumlah uangnya.',
 			'notificationCapture.roleNoteHelp' => 'Catatan: nama toko atau keterangan yang ikut dicatat.',
 			'notificationCapture.roleIgnoreHelp' => 'Abaikan: kata yang berubah tiap notifikasi, mis. nomor referensi.',
-			'notificationCapture.patternNeedAmount' => 'Tandai satu kata nominal dulu supaya bisa disimpan.',
-			'notificationCapture.patternTemplateLabel' => 'Templat',
 			'notificationCapture.moreActions' => 'Lainnya',
 			'recurring.starters.salary' => 'Gaji',
 			'recurring.starters.rent' => 'Kos/Sewa',
@@ -7353,8 +7217,6 @@ extension on Translations {
 			'premium.title' => 'Tanukonomy Plus',
 			'premium.backToLatest' => 'Kembali ke periode terbaru',
 			'premium.seePlus' => 'Lihat Plus',
-			_ => null,
-		} ?? switch (path) {
 			'premium.plusBadge' => 'Plus',
 			'premium.signInTitle' => 'Masuk untuk membuka fitur Plus',
 			'premium.signInBody' => 'Fitur ini bagian dari Plus. Masuk dengan akunmu untuk memakainya. Mencatat tetap gratis dan tanpa akun.',
@@ -7389,6 +7251,8 @@ extension on Translations {
 			'premium.features.answers.title' => 'Menjawab pertanyaan',
 			'premium.features.answers.text' => 'Tanya soal uangmu dalam bahasa sehari-hari, diketik atau lewat suara.',
 			'premium.features.plans.title' => 'Merencanakan',
+			_ => null,
+		} ?? switch (path) {
 			'premium.features.plans.text' => 'Coba bagaimana kalau, buat Target dengan perkiraan tanggal tercapai, dan lihat 12 bulan ke depan.',
 			'premium.features.reports.title' => 'Melapor',
 			'premium.features.reports.text' => 'Rapor bulanan yang bercerita, Rekap SPT tahunan, dan invoice Freelance Pro.',

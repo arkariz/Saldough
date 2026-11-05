@@ -473,11 +473,6 @@ final class CaptureInboxBloc extends Bloc<CaptureInboxEvent, CaptureInboxState> 
     return month.where((t) => t.id == entry.transactionId).firstOrNull;
   }
 
-  /// Menafsirkan ulang item [id] sesudah pola baru disimpan.
-  Future<void> reinterpret(String id) async {
-    await _actions.reinterpret(id);
-  }
-
   @override
   Future<void> close() async {
     await _changes.cancel();

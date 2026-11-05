@@ -74,22 +74,20 @@ void main() {
   test('alasan ditinjau (QA PR #43 F16)', () {
     const level2 = AutoRecordPolicy(AutoRecordLevel.whenComplete);
     expect(
-      const AutoRecordPolicy(AutoRecordLevel.reviewAll).reviewReason(complete, autoEligible: true),
+      const AutoRecordPolicy(AutoRecordLevel.reviewAll).reviewReason(complete),
       CaptureReviewReason.autoRecordOff,
     );
-    expect(level2.reviewReason(unsure, autoEligible: true), CaptureReviewReason.kindUnclear);
-    expect(level2.reviewReason(noWallet, autoEligible: true), CaptureReviewReason.walletUnknown);
-    expect(level2.reviewReason(noCategory, autoEligible: true), CaptureReviewReason.categoryUnclear);
-    expect(level2.reviewReason(complete, autoEligible: false), CaptureReviewReason.newPattern);
-    expect(level2.reviewReason(complete, autoEligible: true), isNull);
+    expect(level2.reviewReason(unsure), CaptureReviewReason.kindUnclear);
+    expect(level2.reviewReason(noWallet), CaptureReviewReason.walletUnknown);
+    expect(level2.reviewReason(noCategory), CaptureReviewReason.categoryUnclear);
+    expect(level2.reviewReason(complete), isNull);
     expect(
-      level2.reviewReason(const RecordDraft(kind: DraftKind.expense, walletId: 'bri'), autoEligible: true),
+      level2.reviewReason(const RecordDraft(kind: DraftKind.expense, walletId: 'bri')),
       CaptureReviewReason.amountUnclear,
     );
     expect(
       level2.reviewReason(
         const RecordDraft(kind: DraftKind.transfer, amountSen: 100, walletId: 'bri'),
-        autoEligible: true,
       ),
       CaptureReviewReason.kindUnclear,
     );

@@ -8,9 +8,6 @@ enum CaptureReviewReason {
   /// Catat otomatis dimatikan pengguna.
   autoRecordOff,
 
-  /// Dari pola bawaan yang belum terverifikasi: selalu ditinjau.
-  newPattern,
-
   /// Nominal tidak ditemukan, ganda, atau bisa dibaca dua cara.
   amountUnclear,
 
@@ -29,10 +26,6 @@ enum CaptureReviewReason {
   /// Tanggal tidak bisa dipakai.
   dateUnclear,
 
-  /// Pola ini terikat ke sebuah rutin, tetapi kemunculannya tidak jelas
-  /// (nominal beda, tidak ada atau lebih dari satu kemunculan terbuka).
-  recurringUnclear,
-
   /// Nominal jauh di atas kebiasaan bentuk yang disetujui otomatis (E3).
   amountUnusual,
 }
@@ -50,7 +43,6 @@ final class CaptureInboxEntry extends Equatable {
     required this.draft,
     this.possibleDuplicate = false,
     this.iconId,
-    this.patternId,
     this.reviewReason,
   });
 
@@ -78,10 +70,6 @@ final class CaptureInboxEntry extends Equatable {
   /// Id ikon notifikasi di penyimpanan ikon sumber (ADR-032 §3.10).
   final String? iconId;
 
-  /// Pola yang menafsirkan tangkapan ini (ADR-042 §3.4), atau `null` bila
-  /// dari aturan/Gemini. Dipakai mencari rutin yang terikat ke pola itu.
-  final String? patternId;
-
   /// Kenapa tidak dicatat otomatis; `null` untuk item lama atau kembar.
   final CaptureReviewReason? reviewReason;
 
@@ -95,7 +83,6 @@ final class CaptureInboxEntry extends Equatable {
     draft,
     possibleDuplicate,
     iconId,
-    patternId,
     reviewReason,
   ];
 }

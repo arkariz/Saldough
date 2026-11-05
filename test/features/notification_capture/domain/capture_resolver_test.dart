@@ -1,7 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saldough/features/notification_capture/domain/entities/capture_inbox_entry.dart';
 import 'package:saldough/features/notification_capture/domain/entities/captured_notification.dart';
-import 'package:saldough/features/notification_capture/domain/entities/notification_pattern.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_card_class.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_resolver.dart';
 import 'package:saldough/shared/capture/capture.dart';
@@ -49,7 +48,6 @@ void main() {
   Future<ResolvedCapture> resolve(
     String body, {
     List<RecurringRule> rules = const [],
-    List<NotificationPattern> patterns = const [],
     MerchantMemory? memory,
   }) =>
       CaptureResolver(
@@ -59,7 +57,6 @@ void main() {
       ).resolve(
         notif(body),
         source: brimoSource,
-        patterns: patterns,
         wallets: notificationWallets,
         categories: notificationCategories,
         currencyCode: 'IDR',
@@ -183,53 +180,6 @@ void main() {
 
       expect(result.plan.match?.exact, isFalse);
       expect(result.cardClass, CaptureCardClass.planned);
-    });
-  });
-
-  group('pola terikat ke rutin', () {
-    const verified = NotificationPattern(
-      id: 'u1',
-      packageName: 'id.co.bri.brimo',
-      label: 'Layanan',
-      template: 'Pembayaran {amount} ke {note} berhasil',
-      kind: NotificationPatternKind.expense,
-    );
-
-    RecurringRule bound(int amount) => rule('spotify', 'Spotify', amount: amount).withNotificationBinding(
-      const NotificationBinding(packageName: 'id.co.bri.brimo', patternId: 'u1', patternLabel: 'Layanan'),
-    );
-
-    test('nominal persis: rencana ditentukan pola', () async {
-      final result = await resolve(unknownMerchant, rules: [bound(5400000)], patterns: [verified]);
-
-      expect(result.plan.bound, isTrue);
-      expect(result.plan.boundUnclear, isFalse);
-      expect(result.plan.match?.rule.id, 'spotify');
-      expect(result.notes, contains(ResolveNote.planBound));
-    });
-
-    test('nominal beda: terikat tetapi tidak jelas, ditinjau dan tidak ditebak', () async {
-      final result = await resolve(unknownMerchant, rules: [bound(9900000)], patterns: [verified]);
-
-      expect(result.plan.bound, isTrue);
-      expect(result.plan.boundUnclear, isTrue);
-      expect(result.plan.match, isNull);
-      expect(result.notes, contains(ResolveNote.planBoundUnclear));
-      expect(result.cardClass, CaptureCardClass.needsInput);
-    });
-
-    test('pola yang belum terverifikasi tidak pernah mengikat', () async {
-      const guess = NotificationPattern(
-        id: 'u1',
-        packageName: 'id.co.bri.brimo',
-        label: 'Layanan',
-        template: 'Pembayaran {amount} ke {note} berhasil',
-        kind: NotificationPatternKind.expense,
-        verified: false,
-      );
-      final result = await resolve(unknownMerchant, rules: [bound(9900000)], patterns: [guess]);
-
-      expect(result.plan.bound, isFalse);
     });
   });
 

@@ -190,6 +190,15 @@ deklarasi layanan pendengar di `AndroidManifest`.
 
 ## 7. Revisi
 
+- **Revisi 11 (5 Nov 2026, T-26.23):** pola buatan pengguna ("Ajari pola"), pola
+  bawaan, ikatan rutin ke pola (ADR-042 §3.4), dan transfer `{from}`/`{to}`
+  dicabut penuh atas keputusan pemilik ("benar-benar v2"). Penentu v2 hanya
+  memakai aturan notifikasi → Gemini, aturan dompet, rencana (rutin), ingatan
+  pedagang, dan bentuk (negatif untuk menyaring, disetujui untuk catat otomatis).
+  ADR-042 §3.1 (aturan dompet), §3.2 (contoh) tetap; §3.1 bagian `{from}`/`{to}` dan
+  §3.4 (ikatan) tidak berlaku lagi. Data lama dibuang tanpa migrasi; kunci cadangan
+  lama tetap dikenal agar `.tkbak` lama bisa dipulihkan.
+
 - **Revisi 10 (5 Nov 2026, T-26.20):** catat otomatis per bentuk (§3.7) dibangun.
   KT-N2 dijawab: pagar nominal 10× median (min. 3 contoh, 20 terakhir). Bentuk
   disetujui lewat tawaran sesudah Simpan; templatnya menjadikan pedagang `{note}`.

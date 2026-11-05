@@ -35,7 +35,6 @@ final class NotificationCaptureSettings extends Equatable {
     this.delivery = NotificationDelivery.automatic,
     this.autoRecordLevel = AutoRecordLevel.reviewAll,
     this.sources = const [],
-    this.disabledBuiltInPatternIds = const {},
     this.saveSamples = false,
   });
 
@@ -50,9 +49,6 @@ final class NotificationCaptureSettings extends Equatable {
 
   /// Aplikasi yang didengarkan.
   final List<NotificationSource> sources;
-
-  /// Pola bawaan yang dinonaktifkan pengguna.
-  final Set<String> disabledBuiltInPatternIds;
 
   /// Simpan contoh notifikasi sumber terdaftar untuk membuat pola dan filter
   /// (ADR-042 §3.2). Bawaan mati; dinyalakan pengguna setelah membaca
@@ -81,17 +77,15 @@ final class NotificationCaptureSettings extends Equatable {
     NotificationDelivery? delivery,
     AutoRecordLevel? autoRecordLevel,
     List<NotificationSource>? sources,
-    Set<String>? disabledBuiltInPatternIds,
     bool? saveSamples,
   }) => NotificationCaptureSettings(
     enabled: enabled ?? this.enabled,
     delivery: delivery ?? this.delivery,
     autoRecordLevel: autoRecordLevel ?? this.autoRecordLevel,
     sources: sources ?? this.sources,
-    disabledBuiltInPatternIds: disabledBuiltInPatternIds ?? this.disabledBuiltInPatternIds,
     saveSamples: saveSamples ?? this.saveSamples,
   );
 
   @override
-  List<Object?> get props => [enabled, delivery, autoRecordLevel, sources, disabledBuiltInPatternIds, saveSamples];
+  List<Object?> get props => [enabled, delivery, autoRecordLevel, sources, saveSamples];
 }

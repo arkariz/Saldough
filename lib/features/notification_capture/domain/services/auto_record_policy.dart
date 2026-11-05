@@ -25,9 +25,8 @@ final class AutoRecordPolicy {
   }
 
   /// Alasan [draft] ditinjau alih-alih dicatat otomatis (QA PR #43 F16), atau
-  /// `null` bila [allows] dan pola layak. [autoEligible] `false` = dari pola
-  /// yang belum terverifikasi.
-  CaptureReviewReason? reviewReason(RecordDraft draft, {required bool autoEligible}) {
+  /// `null` bila [allows].
+  CaptureReviewReason? reviewReason(RecordDraft draft) {
     if (level == AutoRecordLevel.reviewAll) return CaptureReviewReason.autoRecordOff;
     final issues = draft.issues;
     if (draft.amountSen == null ||
@@ -52,7 +51,6 @@ final class AutoRecordPolicy {
     if (issues.contains(DraftIssue.dateUnclear)) return CaptureReviewReason.dateUnclear;
     if (draft.walletId == null) return CaptureReviewReason.walletUnknown;
     if (draft.kind == DraftKind.transfer && draft.toWalletId == null) return CaptureReviewReason.kindUnclear;
-    if (!autoEligible) return CaptureReviewReason.newPattern;
     if (!allows(draft)) return CaptureReviewReason.categoryUnclear;
     return null;
   }

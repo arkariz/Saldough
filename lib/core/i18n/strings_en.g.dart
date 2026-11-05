@@ -1180,19 +1180,11 @@ class _Translations$notificationCapture$en extends Translations$notificationCapt
 	@override String get keywordsHint => 'Only notifications containing one of these phrases are read.';
 	@override String get keywordField => 'Add a phrase';
 	@override String get addKeyword => 'Add';
-	@override String get patternsTitle => 'Patterns';
-	@override String get patternsHint => 'Teach Tanukonomy how to read this app\'s notification format.';
-	@override String get patternsEmpty => 'No patterns yet. Tanukonomy still reads with general rules.';
 	@override String get builtInUnverified => 'Built-in · you review the results';
 	@override String get builtInVerified => 'Built-in';
-	@override String get newPattern => 'Make a pattern from an example';
 	@override String get removeSource => 'Remove this app';
 	@override String removeSourceConfirm({required Object app}) => 'Stop reading notifications from ${app}?';
 	@override String get save => 'Save';
-	@override String get patternTitle => 'Teach a pattern';
-	@override String get patternSampleLabel => '1. Example notification';
-	@override String get patternSampleHint => 'Paste the notification text here';
-	@override String get patternInstructions => 'Tap a marked word again to clear its mark.';
 	@override String get roleAmount => 'Amount';
 	@override String get roleNote => 'Note';
 	@override String get roleFrom => 'From';
@@ -1200,41 +1192,28 @@ class _Translations$notificationCapture$en extends Translations$notificationCapt
 	@override String get roleFromHelp => 'From: the source wallet name of a transfer, Matched against this app\'s wallet rules.';
 	@override String get roleToHelp => 'To: the destination wallet name of a transfer. Matched against this app\'s wallet rules.';
 	@override String get kindTransferBetween => 'Transfer between wallets';
-	@override String get patternBetweenHint => 'Source and destination wallets are read from the text through the wallet rules on the app page.';
 	@override String get walletRulesTitle => 'Other wallets in this app';
 	@override String get walletRulesHint => 'For apps with several wallets. If the notification contains the keyword, that wallet is used; otherwise the main wallet above.';
 	@override String get walletRuleKeywordsField => 'Keywords, separated by commas';
 	@override String get walletRuleAdd => 'Add wallet';
 	@override String get walletRuleRemove => 'Remove';
 	@override String get walletRuleNeedsKeywords => 'Enter at least one keyword';
-	@override String get bindingTitle => 'Bind to a recurring item';
-	@override String get bindingHint => 'Notifications that match a bound pattern are recorded as that recurring item. If the amount or schedule does not fit, they go to the inbox instead of being guessed.';
-	@override String get bindingNone => 'Not bound';
 	@override String get samplesToggle => 'Save notification samples';
-	@override String get samplesHint => 'To build filters and patterns from this app\'s notifications. Kept on this device for 7 days, never sent anywhere.';
+	@override String get samplesHint => 'To build filters from this app\'s notifications. Kept on this device for 7 days, never sent anywhere.';
 	@override String get samplesTitle => 'Recent notifications';
 	@override String get samplesEmpty => 'No samples yet. Notifications from this app that arrive from now on will show up here.';
 	@override String get samplesFilter => 'Use as filter';
-	@override String get samplesPattern => 'Create pattern';
 	@override String get samplesFilterTitle => 'Pick a filter phrase';
 	@override String get samplesFilterHint => 'Tap words to build a phrase, or type your own. Choose a phrase that only appears in transaction notifications.';
 	@override String get samplesDisclosureTitle => 'Save notification samples?';
-	@override String get samplesDisclosureBody => 'Tanukonomy will keep the text of notifications from the apps you chose, including non-transaction ones, for 7 days on this device. It is used only to build filters and patterns. OTP codes are never saved, and this text is not sent to any server. You can turn it off at any time; all samples are deleted right away.';
+	@override String get samplesDisclosureBody => 'Tanukonomy will keep the text of notifications from the apps you chose, including non-transaction ones, for 7 days on this device. It is used only to build filters. OTP codes are never saved, and this text is not sent to any server. You can turn it off at any time; all samples are deleted right away.';
 	@override String get samplesDisclosureCancel => 'Cancel';
 	@override String get samplesDisclosureAgree => 'Turn on';
 	@override String get roleIgnore => 'Ignore';
-	@override String get patternKindLabel => '3. Transaction type';
 	@override String get kindExpense => 'Out';
 	@override String get kindIncome => 'In';
 	@override String get kindTransferOut => 'Transfer out';
 	@override String get kindTransferIn => 'Transfer in';
-	@override String get patternCategory => 'Category';
-	@override String get patternNoCategory => 'No category';
-	@override String get patternTransferWallet => 'Other wallet';
-	@override String get patternLabelField => 'Pattern name (optional)';
-	@override String patternPreview({required Object amount}) => 'Reads as: ${amount}';
-	@override String get patternInvalid => 'Mark one amount. Note words must be next to each other.';
-	@override String get deletePattern => 'Delete pattern';
 	@override String get inboxTitle => 'Notification inbox';
 	@override String get inboxPendingTitle => 'To check';
 	@override String get inboxAutoTitle => 'Automatic';
@@ -1255,7 +1234,6 @@ class _Translations$notificationCapture$en extends Translations$notificationCapt
 	@override late final _Translations$notificationCapture$reviewReason$en reviewReason = _Translations$notificationCapture$reviewReason$en._(_root);
 	@override String get recordAction => 'Record';
 	@override String get dismissAction => 'Dismiss';
-	@override String get makePatternAction => 'Make a pattern from this text';
 	@override String get reviewAction => 'View';
 	@override String get undoAction => 'Undo';
 	@override String get undoConfirmTitle => 'Undo this transaction?';
@@ -1318,22 +1296,13 @@ class _Translations$notificationCapture$en extends Translations$notificationCapt
 	@override String get reminderHint => 'Get a notification each time a transaction is detected.';
 	@override String sourceWallet({required Object name}) => '${name} wallet';
 	@override String get walletHelp => 'Transactions from this app are recorded in this wallet.';
-	@override String get advancedTitle => 'Filter and patterns';
+	@override String get advancedTitle => 'Filter';
 	@override String get advancedHint => 'Optional';
-	@override String get patternMarkLabel => '2. Mark the important parts';
-	@override String patternNotAmount({required Object word}) => '"${word}" is not an amount. Amounts use Rp or thousands separators.';
 	@override String get kindTransfer => 'Transfer';
 	@override String get transferDirectionLabel => 'Transfer direction';
-	@override String get patternTransferWalletNone => 'Not set';
-	@override String get patternTemplateToggle => 'Show template (advanced)';
-	@override String get patternIntro => 'Teach Tanukonomy how to read this notification so the amount and note fill in on their own next time. Only the amount word is required.';
-	@override String get patternHintAmount => 'Tap the word that holds the amount, for example Rp50,000.';
-	@override String get patternHintNote => 'Amount marked. If you like, tap the words that become the note (shop name or description). You can skip this.';
 	@override String get roleAmountHelp => 'Amount: how much money.';
 	@override String get roleNoteHelp => 'Note: the shop name or description that gets recorded.';
 	@override String get roleIgnoreHelp => 'Ignore: words that change every time, like a reference number.';
-	@override String get patternNeedAmount => 'Mark one amount word first so you can save.';
-	@override String get patternTemplateLabel => 'Template';
 	@override String get moreActions => 'More';
 }
 
@@ -1952,8 +1921,7 @@ class _Translations$discovery$notification$en extends Translations$discovery$not
 	@override String get inboxTitle => 'Notification inbox';
 	@override String get check => 'Check';
 	@override String activeApps({required Object n}) => 'Active apps: ${n}';
-	@override String get manageSources => 'Manage apps & patterns';
-	@override String get teachPattern => 'Teach pattern';
+	@override String get manageSources => 'Manage apps';
 }
 
 // Path: discovery.reminder
@@ -1992,14 +1960,12 @@ class _Translations$notificationCapture$reviewReason$en extends Translations$not
 
 	// Translations
 	@override String get autoRecordOff => 'Auto-record is off';
-	@override String get newPattern => 'New pattern, check it';
 	@override String get amountUnclear => 'Amount unclear';
 	@override String get otherCurrency => 'Other currency';
 	@override String get kindUnclear => 'Type unclear';
 	@override String get walletUnknown => 'Wallet not recognized';
 	@override String get categoryUnclear => 'Category unclear';
 	@override String get dateUnclear => 'Date unclear';
-	@override String get recurringUnclear => 'Recurring unclear';
 	@override String get amountUnusual => 'Unusual amount, check first';
 }
 
@@ -3536,8 +3502,7 @@ extension on TranslationsEn {
 			'discovery.notification.inboxTitle' => 'Notification inbox',
 			'discovery.notification.check' => 'Check',
 			'discovery.notification.activeApps' => ({required Object n}) => 'Active apps: ${n}',
-			'discovery.notification.manageSources' => 'Manage apps & patterns',
-			'discovery.notification.teachPattern' => 'Teach pattern',
+			'discovery.notification.manageSources' => 'Manage apps',
 			'discovery.reminder.button' => 'Turn on recurring reminders',
 			'discovery.reminder.body' => 'Get reminded before bills are due.',
 			'discovery.reminder.rowNote' => 'Reminders aren\'t on for every recurring item yet.',
@@ -3558,9 +3523,9 @@ extension on TranslationsEn {
 			'notificationCapture.accessAction' => 'Allow access',
 			'notificationCapture.accessGranted' => 'Notification permission is on',
 			'notificationCapture.disclosureTitle' => 'Before you grant permission',
+			'notificationCapture.disclosureBody' => 'Tanukonomy will be able to read notifications on your phone.\n\n• Only from apps you pick that match their filter.\n• OTP notifications are never stored.\n• Text that is hard to read may be sent to Gemini (Google).\n• Notification text stays on your phone for at most 7 days.\n• New notifications may be processed in the background while Tanukonomy is closed, so the Record button on the notification works.\n\nAfter Continue, Android opens its notification access list. Pick Tanukonomy and turn it on.',
 			_ => null,
 		} ?? switch (path) {
-			'notificationCapture.disclosureBody' => 'Tanukonomy will be able to read notifications on your phone.\n\n• Only from apps you pick that match their filter.\n• OTP notifications are never stored.\n• Text that is hard to read may be sent to Gemini (Google).\n• Notification text stays on your phone for at most 7 days.\n• New notifications may be processed in the background while Tanukonomy is closed, so the Record button on the notification works.\n\nAfter Continue, Android opens its notification access list. Pick Tanukonomy and turn it on.',
 			'notificationCapture.disclosureAccept' => 'Continue',
 			'notificationCapture.reminderPermissionDenied' => 'Notification permission was denied. Turn it on in Android settings to get reminders.',
 			'notificationCapture.sourcesTitle' => 'Apps',
@@ -3578,19 +3543,11 @@ extension on TranslationsEn {
 			'notificationCapture.keywordsHint' => 'Only notifications containing one of these phrases are read.',
 			'notificationCapture.keywordField' => 'Add a phrase',
 			'notificationCapture.addKeyword' => 'Add',
-			'notificationCapture.patternsTitle' => 'Patterns',
-			'notificationCapture.patternsHint' => 'Teach Tanukonomy how to read this app\'s notification format.',
-			'notificationCapture.patternsEmpty' => 'No patterns yet. Tanukonomy still reads with general rules.',
 			'notificationCapture.builtInUnverified' => 'Built-in · you review the results',
 			'notificationCapture.builtInVerified' => 'Built-in',
-			'notificationCapture.newPattern' => 'Make a pattern from an example',
 			'notificationCapture.removeSource' => 'Remove this app',
 			'notificationCapture.removeSourceConfirm' => ({required Object app}) => 'Stop reading notifications from ${app}?',
 			'notificationCapture.save' => 'Save',
-			'notificationCapture.patternTitle' => 'Teach a pattern',
-			'notificationCapture.patternSampleLabel' => '1. Example notification',
-			'notificationCapture.patternSampleHint' => 'Paste the notification text here',
-			'notificationCapture.patternInstructions' => 'Tap a marked word again to clear its mark.',
 			'notificationCapture.roleAmount' => 'Amount',
 			'notificationCapture.roleNote' => 'Note',
 			'notificationCapture.roleFrom' => 'From',
@@ -3598,41 +3555,28 @@ extension on TranslationsEn {
 			'notificationCapture.roleFromHelp' => 'From: the source wallet name of a transfer, Matched against this app\'s wallet rules.',
 			'notificationCapture.roleToHelp' => 'To: the destination wallet name of a transfer. Matched against this app\'s wallet rules.',
 			'notificationCapture.kindTransferBetween' => 'Transfer between wallets',
-			'notificationCapture.patternBetweenHint' => 'Source and destination wallets are read from the text through the wallet rules on the app page.',
 			'notificationCapture.walletRulesTitle' => 'Other wallets in this app',
 			'notificationCapture.walletRulesHint' => 'For apps with several wallets. If the notification contains the keyword, that wallet is used; otherwise the main wallet above.',
 			'notificationCapture.walletRuleKeywordsField' => 'Keywords, separated by commas',
 			'notificationCapture.walletRuleAdd' => 'Add wallet',
 			'notificationCapture.walletRuleRemove' => 'Remove',
 			'notificationCapture.walletRuleNeedsKeywords' => 'Enter at least one keyword',
-			'notificationCapture.bindingTitle' => 'Bind to a recurring item',
-			'notificationCapture.bindingHint' => 'Notifications that match a bound pattern are recorded as that recurring item. If the amount or schedule does not fit, they go to the inbox instead of being guessed.',
-			'notificationCapture.bindingNone' => 'Not bound',
 			'notificationCapture.samplesToggle' => 'Save notification samples',
-			'notificationCapture.samplesHint' => 'To build filters and patterns from this app\'s notifications. Kept on this device for 7 days, never sent anywhere.',
+			'notificationCapture.samplesHint' => 'To build filters from this app\'s notifications. Kept on this device for 7 days, never sent anywhere.',
 			'notificationCapture.samplesTitle' => 'Recent notifications',
 			'notificationCapture.samplesEmpty' => 'No samples yet. Notifications from this app that arrive from now on will show up here.',
 			'notificationCapture.samplesFilter' => 'Use as filter',
-			'notificationCapture.samplesPattern' => 'Create pattern',
 			'notificationCapture.samplesFilterTitle' => 'Pick a filter phrase',
 			'notificationCapture.samplesFilterHint' => 'Tap words to build a phrase, or type your own. Choose a phrase that only appears in transaction notifications.',
 			'notificationCapture.samplesDisclosureTitle' => 'Save notification samples?',
-			'notificationCapture.samplesDisclosureBody' => 'Tanukonomy will keep the text of notifications from the apps you chose, including non-transaction ones, for 7 days on this device. It is used only to build filters and patterns. OTP codes are never saved, and this text is not sent to any server. You can turn it off at any time; all samples are deleted right away.',
+			'notificationCapture.samplesDisclosureBody' => 'Tanukonomy will keep the text of notifications from the apps you chose, including non-transaction ones, for 7 days on this device. It is used only to build filters. OTP codes are never saved, and this text is not sent to any server. You can turn it off at any time; all samples are deleted right away.',
 			'notificationCapture.samplesDisclosureCancel' => 'Cancel',
 			'notificationCapture.samplesDisclosureAgree' => 'Turn on',
 			'notificationCapture.roleIgnore' => 'Ignore',
-			'notificationCapture.patternKindLabel' => '3. Transaction type',
 			'notificationCapture.kindExpense' => 'Out',
 			'notificationCapture.kindIncome' => 'In',
 			'notificationCapture.kindTransferOut' => 'Transfer out',
 			'notificationCapture.kindTransferIn' => 'Transfer in',
-			'notificationCapture.patternCategory' => 'Category',
-			'notificationCapture.patternNoCategory' => 'No category',
-			'notificationCapture.patternTransferWallet' => 'Other wallet',
-			'notificationCapture.patternLabelField' => 'Pattern name (optional)',
-			'notificationCapture.patternPreview' => ({required Object amount}) => 'Reads as: ${amount}',
-			'notificationCapture.patternInvalid' => 'Mark one amount. Note words must be next to each other.',
-			'notificationCapture.deletePattern' => 'Delete pattern',
 			'notificationCapture.inboxTitle' => 'Notification inbox',
 			'notificationCapture.inboxPendingTitle' => 'To check',
 			'notificationCapture.inboxAutoTitle' => 'Automatic',
@@ -3651,18 +3595,15 @@ extension on TranslationsEn {
 			'notificationCapture.budgetSuggestion' => ({required Object name, required Object budget}) => 'Suggested item: ${name} · ${budget}',
 			'notificationCapture.possibleDuplicate' => 'May already be recorded',
 			'notificationCapture.reviewReason.autoRecordOff' => 'Auto-record is off',
-			'notificationCapture.reviewReason.newPattern' => 'New pattern, check it',
 			'notificationCapture.reviewReason.amountUnclear' => 'Amount unclear',
 			'notificationCapture.reviewReason.otherCurrency' => 'Other currency',
 			'notificationCapture.reviewReason.kindUnclear' => 'Type unclear',
 			'notificationCapture.reviewReason.walletUnknown' => 'Wallet not recognized',
 			'notificationCapture.reviewReason.categoryUnclear' => 'Category unclear',
 			'notificationCapture.reviewReason.dateUnclear' => 'Date unclear',
-			'notificationCapture.reviewReason.recurringUnclear' => 'Recurring unclear',
 			'notificationCapture.reviewReason.amountUnusual' => 'Unusual amount, check first',
 			'notificationCapture.recordAction' => 'Record',
 			'notificationCapture.dismissAction' => 'Dismiss',
-			'notificationCapture.makePatternAction' => 'Make a pattern from this text',
 			'notificationCapture.reviewAction' => 'View',
 			'notificationCapture.undoAction' => 'Undo',
 			'notificationCapture.undoConfirmTitle' => 'Undo this transaction?',
@@ -3722,22 +3663,13 @@ extension on TranslationsEn {
 			'notificationCapture.reminderHint' => 'Get a notification each time a transaction is detected.',
 			'notificationCapture.sourceWallet' => ({required Object name}) => '${name} wallet',
 			'notificationCapture.walletHelp' => 'Transactions from this app are recorded in this wallet.',
-			'notificationCapture.advancedTitle' => 'Filter and patterns',
+			'notificationCapture.advancedTitle' => 'Filter',
 			'notificationCapture.advancedHint' => 'Optional',
-			'notificationCapture.patternMarkLabel' => '2. Mark the important parts',
-			'notificationCapture.patternNotAmount' => ({required Object word}) => '"${word}" is not an amount. Amounts use Rp or thousands separators.',
 			'notificationCapture.kindTransfer' => 'Transfer',
 			'notificationCapture.transferDirectionLabel' => 'Transfer direction',
-			'notificationCapture.patternTransferWalletNone' => 'Not set',
-			'notificationCapture.patternTemplateToggle' => 'Show template (advanced)',
-			'notificationCapture.patternIntro' => 'Teach Tanukonomy how to read this notification so the amount and note fill in on their own next time. Only the amount word is required.',
-			'notificationCapture.patternHintAmount' => 'Tap the word that holds the amount, for example Rp50,000.',
-			'notificationCapture.patternHintNote' => 'Amount marked. If you like, tap the words that become the note (shop name or description). You can skip this.',
 			'notificationCapture.roleAmountHelp' => 'Amount: how much money.',
 			'notificationCapture.roleNoteHelp' => 'Note: the shop name or description that gets recorded.',
 			'notificationCapture.roleIgnoreHelp' => 'Ignore: words that change every time, like a reference number.',
-			'notificationCapture.patternNeedAmount' => 'Mark one amount word first so you can save.',
-			'notificationCapture.patternTemplateLabel' => 'Template',
 			'notificationCapture.moreActions' => 'More',
 			'recurring.starters.salary' => 'Salary',
 			'recurring.starters.rent' => 'Rent',
@@ -4072,8 +4004,6 @@ extension on TranslationsEn {
 			'premium.title' => 'Tanukonomy Plus',
 			'premium.backToLatest' => 'Back to the latest period',
 			'premium.seePlus' => 'See Plus',
-			_ => null,
-		} ?? switch (path) {
 			'premium.plusBadge' => 'Plus',
 			'premium.signInTitle' => 'Sign in to unlock Plus features',
 			'premium.signInBody' => 'This feature is part of Plus. Sign in with your account to use it. Recording stays free and works without an account.',
@@ -4108,6 +4038,8 @@ extension on TranslationsEn {
 			'premium.features.answers.title' => 'Answers questions',
 			'premium.features.answers.text' => 'Ask about your money in everyday words, typed or spoken.',
 			'premium.features.plans.title' => 'Plans ahead',
+			_ => null,
+		} ?? switch (path) {
 			'premium.features.plans.text' => 'Try what if, set Goals with an expected date, and see 12 months ahead.',
 			'premium.features.reports.title' => 'Reports',
 			'premium.features.reports.text' => 'Monthly reports with the story behind the numbers, a yearly tax summary, and Freelance Pro invoices.',

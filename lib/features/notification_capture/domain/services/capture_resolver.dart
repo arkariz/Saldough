@@ -1,6 +1,5 @@
 import 'package:saldough/features/notification_capture/domain/entities/capture_inbox_entry.dart';
 import 'package:saldough/features/notification_capture/domain/entities/captured_notification.dart';
-import 'package:saldough/features/notification_capture/domain/entities/notification_pattern.dart';
 import 'package:saldough/features/notification_capture/domain/entities/notification_source.dart';
 import 'package:saldough/features/notification_capture/domain/services/auto_record_policy.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_card_class.dart';
@@ -26,12 +25,6 @@ abstract interface class MerchantMemory {
 /// Jejak keputusan penentu, urut sesuai langkahnya. Untuk uji dan, nanti,
 /// penjelasan di kartu ("kenapa ini dikenali").
 enum ResolveNote {
-  /// Rutin ditentukan oleh pola yang terikat (ADR-042 §3.4).
-  planBound,
-
-  /// Pola terikat tetapi kemunculannya tidak jelas: ditinjau, tidak ditebak.
-  planBoundUnclear,
-
   /// Tepat satu kemunculan rutin yang cocok.
   planUnique,
 
@@ -59,8 +52,6 @@ final class PlanResolution {
   /// Membuat [PlanResolution].
   const PlanResolution({
     this.match,
-    this.bound = false,
-    this.boundUnclear = false,
     this.tieBroken = false,
     this.ambiguous = false,
   });
@@ -71,13 +62,6 @@ final class PlanResolution {
   /// Kemunculan rutin yang cocok, atau `null` (tidak ada, atau ambigu).
   final OccurrenceMatch? match;
 
-  /// Rutinnya ditentukan pola yang terikat.
-  final bool bound;
-
-  /// Pola terikat tetapi kemunculan tidak jelas atau nominal tidak persis:
-  /// tangkapan ditinjau, tidak dicatat tanpa tautan.
-  final bool boundUnclear;
-
   /// [match] dipilih karena namanya muncul di teks; hanya saran, tidak pernah
   /// ditautkan otomatis.
   final bool tieBroken;
@@ -86,16 +70,12 @@ final class PlanResolution {
   final bool ambiguous;
 }
 
-/// Mencocokkan draf dengan kemunculan rutin (ADR-035 §3.4, ADR-042 §3.4).
+/// Mencocokkan draf dengan kemunculan rutin (ADR-035 §3.4).
 ///
-/// 1. Pola yang terikat ke rutin menentukan rutinnya sendiri
-///    (`matchBoundOccurrence`, ±7 hari, tepat satu kemunculan terbuka).
-/// 2. Selain itu `occurrenceCandidates` (jenis, dompet, nominal persis atau
-///    ±10%, ±3 hari, belum tercatat atau dilewati): satu kandidat dipakai.
-/// 3. Beberapa kandidat: yang namanya muncul di [text] memutus bila hanya satu;
+/// 1. `occurrenceCandidates` (jenis, dompet, nominal persis atau ±10%, ±3 hari,
+///    belum tercatat atau dilewati): satu kandidat dipakai.
+/// 2. Beberapa kandidat: yang namanya muncul di [text] memutus bila hanya satu;
 ///    selain itu ambigu dan tidak ditebak.
-///
-/// [patternId] hanya diberikan untuk pola yang layak mengikat (terverifikasi).
 PlanResolution resolvePlan({
   required RecordDraft draft,
   required DateTime date,
@@ -103,7 +83,6 @@ PlanResolution resolvePlan({
   required String text,
   required List<RecurringRule> rules,
   required Iterable<Transaction> ledger,
-  String? patternId,
 }) {
   final amount = draft.amountSen;
   final walletId = draft.walletId;
@@ -113,25 +92,6 @@ PlanResolution resolvePlan({
     DraftKind.expense => RecurringKind.expense,
     DraftKind.transfer => RecurringKind.transfer,
   };
-  final bound = patternId == null
-      ? null
-      : rules
-            .where(
-              (r) => r.notificationBinding?.packageName == packageName && r.notificationBinding?.patternId == patternId,
-            )
-            .firstOrNull;
-  if (bound != null) {
-    final match = matchBoundOccurrence(
-      bound,
-      kind: kind,
-      walletId: walletId,
-      toWalletId: draft.toWalletId,
-      amount: amount,
-      date: date,
-      transactions: ledger,
-    );
-    return PlanResolution(match: match, bound: true, boundUnclear: !(match != null && match.exact));
-  }
   final candidates = occurrenceCandidates(
     kind: kind,
     walletId: walletId,
@@ -188,7 +148,7 @@ final class ResolvedCapture {
     required this.notes,
   });
 
-  /// Hasil penyusun draf (aturan aplikasi, pola, aturan umum); `null` untuk kartu tersimpan.
+  /// Hasil penyusun draf (aturan dompet aplikasi, aturan umum); `null` untuk kartu tersimpan.
   final NotificationDraft? composed;
 
   /// Draf sebelum rencana dan ingatan: dasar pencatatan otomatis yang tidak
@@ -235,7 +195,6 @@ final class CaptureResolver {
   Future<ResolvedCapture> resolve(
     CapturedNotification notification, {
     required NotificationSource source,
-    required List<NotificationPattern> patterns,
     required List<Wallet> wallets,
     required List<Category> categories,
     required String currencyCode,
@@ -245,7 +204,6 @@ final class CaptureResolver {
     final composed = await composer.compose(
       notification,
       source: source,
-      patterns: patterns,
       wallets: wallets,
       categories: categories,
       currencyCode: currencyCode,
@@ -257,7 +215,6 @@ final class CaptureResolver {
       postedAt: notification.postedAt,
       packageName: notification.packageName,
       text: notification.text,
-      patternId: composed.pattern?.verified ?? false ? composed.pattern?.id : null,
       rules: rules,
     );
   }
@@ -270,7 +227,6 @@ final class CaptureResolver {
     postedAt: entry.capturedAt,
     packageName: entry.packageName,
     text: entry.text,
-    patternId: entry.patternId,
     rules: rules,
   );
 
@@ -280,7 +236,6 @@ final class CaptureResolver {
     required DateTime postedAt,
     required String packageName,
     required String text,
-    required String? patternId,
     required List<RecurringRule> rules,
   }) async {
     await memory?.refresh();
@@ -293,13 +248,10 @@ final class CaptureResolver {
       text: text,
       rules: rules,
       ledger: ledger,
-      patternId: patternId,
     );
     final notes = <ResolveNote>[
-      if (plan.bound && plan.boundUnclear) ResolveNote.planBoundUnclear,
-      if (plan.bound && !plan.boundUnclear) ResolveNote.planBound,
-      if (!plan.bound && plan.match != null && plan.tieBroken) ResolveNote.planTieBreak,
-      if (!plan.bound && plan.match != null && !plan.tieBroken) ResolveNote.planUnique,
+      if (plan.match != null && plan.tieBroken) ResolveNote.planTieBreak,
+      if (plan.match != null && !plan.tieBroken) ResolveNote.planUnique,
       if (plan.ambiguous) ResolveNote.planAmbiguous,
     ];
 
@@ -331,7 +283,7 @@ final class CaptureResolver {
         draft,
         match: plan.match,
         duplicate: existing != null,
-        planUnclear: plan.boundUnclear || plan.ambiguous,
+        planUnclear: plan.ambiguous,
       ),
       notes: notes,
     );

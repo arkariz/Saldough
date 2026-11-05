@@ -1,3 +1,4 @@
+import 'package:api_storage/api_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
 import 'package:saldough/features/notification_capture/data/notification_capture_store_impl.dart';
@@ -41,7 +42,7 @@ void main() {
     expect(loaded.sources.single.walletRules, isEmpty);
   });
 
-  test('rutin: ikatan notifikasi bolak-balik; tanpa kunci = tidak terikat', () {
+  test('rutin lama yang masih memuat ikatan ke pola tetap terbaca; ikatannya diabaikan dan tidak ditulis lagi', () {
     final rule = RecurringRule(
       id: 'r',
       kind: RecurringKind.expense,
@@ -49,11 +50,36 @@ void main() {
       walletId: 'w',
       note: 'n',
       schedule: RecurringSchedule(frequency: RecurringFrequency.monthly, anchorDate: DateTime(2026, 9, 29)),
-      notificationBinding: const NotificationBinding(packageName: 'p', patternId: 'x', patternLabel: 'L'),
     );
-    final json = RecurringRuleModel.toJson(rule);
-    expect(RecurringRuleModel.fromJson(json).notificationBinding, rule.notificationBinding);
-    json.remove('notificationBinding');
-    expect(RecurringRuleModel.fromJson(json).notificationBinding, isNull);
+    final json = RecurringRuleModel.toJson(rule)
+      ..['notificationBinding'] = {'packageName': 'p', 'patternId': 'x', 'patternLabel': 'L'};
+    final read = RecurringRuleModel.fromJson(json);
+    expect(read, rule);
+    expect(RecurringRuleModel.toJson(read).containsKey('notificationBinding'), isFalse);
   });
+
+  test(
+    'pola buatan pengguna dari versi lama dibuang saat dibuka (ADR-044 Revisi 11); kosong = tidak melakukan apa pun',
+    () async {
+      final storage = InMemoryKeyValueStorage();
+      const key = StorageKey(namespace: 'capture', name: 'notification_patterns');
+      final value = StoredValue<Map<String, dynamic>>.json(
+        key: key,
+        fromJson: (json) => json,
+        toJson: (json) => json,
+        storage: storage,
+      );
+      await purgeLegacyCapturePatterns(storage);
+      expect(await value.read(), isNull, reason: 'tidak ada yang ditulis bila belum ada pola');
+
+      await value.write({
+        'schemaVersion': 1,
+        'items': [
+          {'id': 'u', 'packageName': 'p', 'template': '{amount}', 'kind': 'expense'},
+        ],
+      });
+      await purgeLegacyCapturePatterns(storage);
+      expect((await value.read())!['items'], isEmpty);
+    },
+  );
 }

@@ -52,5 +52,4 @@ TransactionInterpreter notificationRules(CaptureLanguage language) =>
 /// Penyusun notifikasi tanpa cloud, atau dengan [cloud].
 NotificationDraftComposer notificationComposer({TransactionInterpreter? cloud}) => NotificationDraftComposer(
   composer: CaptureDraftComposer(ruleInterpreterFor: notificationRules, cloudInterpreter: cloud),
-  ruleInterpreterFor: notificationRules,
 );

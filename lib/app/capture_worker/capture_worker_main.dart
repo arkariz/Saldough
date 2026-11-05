@@ -137,7 +137,6 @@ Future<void> _drain(
   final wallets = await loadActiveWallets(WalletRepositoryImpl(storage: storage));
   final categories = (await CategoryRepositoryImpl(storage: storage).listCategories()).getOrElse((_) => const []);
   final rules = (await RecurringRuleRepositoryImpl(storage: storage).listRules()).getOrElse((_) => const []);
-  final patterns = await loadActivePatterns(store, settings);
   final processed = (await store.loadProcessedIds()).getOrElse((_) => {});
   final journaled = {...?(await _channel.invokeListMethod<String>('journalIds'))};
   final plan = await _channel.invokeMapMethod<String, Object?>('plan');
@@ -161,7 +160,6 @@ Future<void> _drain(
     memory: StoreBackedMerchantMemory(MerchantMemoryStoreImpl(storage: storage)),
     composer: NotificationDraftComposer(
       composer: CaptureDraftComposer(ruleInterpreterFor: ruleInterpreter, cloudInterpreter: _NoCloud()),
-      ruleInterpreterFor: ruleInterpreter,
     ),
     ledgerAround: (date) async => [
       for (final offset in const [-1, 0, 1])
@@ -197,7 +195,6 @@ Future<void> _drain(
       final resolved = await resolver.resolve(
         notification,
         source: source,
-        patterns: patterns,
         wallets: wallets,
         categories: categories,
         currencyCode: ActiveCurrency.value.code,
@@ -231,7 +228,6 @@ Future<void> _drain(
         capturedAt: notification.postedAt,
         draft: resolved.draft,
         possibleDuplicate: resolved.existing != null,
-        patternId: resolved.composed?.pattern?.id,
       );
       final match = resolved.plan.match;
       final texts = t.notificationCapture;

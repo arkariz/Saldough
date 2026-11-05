@@ -294,7 +294,6 @@ final class ApplyCaptureJournal {
           draft: entry.draft,
           possibleDuplicate: entry.possibleDuplicate,
           iconId: entry.iconId,
-          patternId: entry.patternId,
           reviewReason: reason,
         ),
         ...inbox,

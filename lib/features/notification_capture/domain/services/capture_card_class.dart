@@ -37,8 +37,7 @@ CaptureCardClass cardClassOf(CaptureInboxEntry entry, {OccurrenceMatch? match, T
 
 /// Kelas untuk [draft] yang belum jadi kartu (dipakai penentu). [duplicate]:
 /// catatan yang sama sudah ada atau tangkapan serupa baru saja masuk.
-/// [planUnclear]: pola terikat ke rutin tetapi kemunculannya tidak jelas, atau
-/// beberapa kemunculan cocok; tidak ditebak, jadi perlu diputuskan pengguna.
+/// [planUnclear]: beberapa kemunculan rutin cocok; tidak ditebak, jadi perlu diputuskan pengguna.
 CaptureCardClass cardClassOfDraft(
   RecordDraft draft, {
   OccurrenceMatch? match,

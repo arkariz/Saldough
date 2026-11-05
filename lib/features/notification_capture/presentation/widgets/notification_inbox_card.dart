@@ -276,13 +276,7 @@ class _NotificationInboxCardState extends State<NotificationInboxCard> with Widg
           if (hasPending) ...[
             for (final entry in _pending.take(_previewCount)) ...[
               const SizedBox(height: AppSpacing.space2),
-              _PreviewRow(
-                entry: entry,
-                onTeach: () {
-                  _tapped('teach_pattern');
-                  unawaited(_push(NotificationCaptureRouteKeys.teachPattern, TeachPatternInput(entryId: entry.id)));
-                },
-              ),
+              _PreviewRow(entry: entry),
             ],
           ],
           if (active && hasPending) ...[
@@ -298,13 +292,11 @@ class _NotificationInboxCardState extends State<NotificationInboxCard> with Widg
   }
 }
 
-/// Satu tangkapan di pratinjau: hanya baca. Tangkapan yang nominalnya tak
-/// terbaca membawa **Ajari pola** menggantikan nominal.
+/// Satu tangkapan di pratinjau: hanya baca.
 class _PreviewRow extends StatelessWidget {
-  const _PreviewRow({required this.entry, required this.onTeach});
+  const _PreviewRow({required this.entry});
 
   final CaptureInboxEntry entry;
-  final VoidCallback onTeach;
 
   @override
   Widget build(BuildContext context) {
@@ -352,14 +344,7 @@ class _PreviewRow extends StatelessWidget {
               ),
             ),
             const SizedBox(width: AppSpacing.space2),
-            if (amount == null)
-              AppButton.secondary(
-                key: ValueKey('inbox-teach-${entry.id}'),
-                small: true,
-                label: t.discovery.notification.teachPattern,
-                onPressed: onTeach,
-              )
-            else
+            if (amount != null)
               AppMoneyText(
                 amount,
                 kind: switch (draft.kind) {

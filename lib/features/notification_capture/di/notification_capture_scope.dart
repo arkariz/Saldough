@@ -52,8 +52,6 @@ final class NotificationCaptureScope extends IsolatedScope {
           store: c<NotificationCaptureStore>(),
           walletRepository: c<WalletRepository>(),
           statusChanges: c.isRegistered<FeatureStatusChanges>() ? c<FeatureStatusChanges>() : null,
-          recurringRules: c.isRegistered<RecurringRuleRepository>() ? c<RecurringRuleRepository>() : null,
-          recurringChanges: c.isRegistered<RecurringChanges>() ? c<RecurringChanges>() : null,
         ),
         dispose: (bloc) => bloc.close(),
       )

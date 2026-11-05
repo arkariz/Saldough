@@ -132,7 +132,7 @@ bool mayAutoRecordFromWorker({
   required bool duplicate,
 }) {
   if (shape == null || duplicate) return false;
-  if (plan.boundUnclear || plan.ambiguous) return false;
+  if (plan.ambiguous) return false;
   final match = plan.match;
   if (match != null && (!match.exact || plan.tieBroken)) return false;
   if (!const AutoRecordPolicy(AutoRecordLevel.whenAmountAndWallet).allows(draft)) return false;

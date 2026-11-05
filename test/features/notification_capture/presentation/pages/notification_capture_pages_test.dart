@@ -21,14 +21,12 @@ import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/notification_capture/di/notification_capture_module.dart';
 import 'package:saldough/features/notification_capture/domain/entities/capture_inbox_entry.dart';
 import 'package:saldough/features/notification_capture/domain/entities/notification_capture_settings.dart';
-import 'package:saldough/features/notification_capture/domain/entities/notification_pattern.dart';
 import 'package:saldough/features/notification_capture/domain/entities/notification_source.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_gateway.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_store.dart';
 import 'package:saldough/features/notification_capture/domain/services/approved_shapes.dart';
 import 'package:saldough/features/notification_capture/domain/services/negative_shapes.dart';
 import 'package:saldough/features/notification_capture/presentation/navigation/notification_capture_route_keys.dart';
-import 'package:saldough/features/notification_capture/presentation/pages/notification_pattern_page.dart';
 import 'package:saldough/features/premium/domain/plus_purchasing.dart';
 import 'package:saldough/shared/auth/auth.dart';
 import 'package:saldough/shared/capture/capture.dart';
@@ -661,7 +659,7 @@ void main() {
       draft: const RecordDraft(kind: DraftKind.income),
     );
 
-    testWidgets('tautan Kelola aplikasi & pola ada juga saat kosong dan membuka setelan', (tester) async {
+    testWidgets('tautan Kelola aplikasi ada juga saat kosong dan membuka setelan', (tester) async {
       await open(tester, NotificationCaptureRouteKeys.inbox);
 
       await tester.tap(find.byKey(const ValueKey('inbox-manage-sources')));
@@ -670,51 +668,12 @@ void main() {
       expect(find.text(t.notificationCapture.settingsTitle), findsWidgets);
     });
 
-    testWidgets('nominal tak terbaca: Ajari pola membuka pembuat pola; yang terbaca tanpa tombol itu', (tester) async {
-      await store.saveInbox([
-        unreadable(),
-        CaptureInboxEntry(
-          id: 'ok',
-          packageName: 'id.co.bri.brimo',
-          appLabel: 'BRImo',
-          text: 'Bayar',
-          capturedAt: at,
-          draft: const RecordDraft(kind: DraftKind.expense, amountSen: 10000),
-        ),
-      ]);
+    testWidgets('nominal tak terbaca: tanpa tombol Ajari pola (dicabut di v2); Catat tetap ada', (tester) async {
+      await store.saveInbox([unreadable()]);
       await open(tester, NotificationCaptureRouteKeys.inbox);
 
-      expect(find.byKey(const ValueKey('inbox-teach-u')), findsOneWidget);
-      expect(find.byKey(const ValueKey('inbox-teach-ok')), findsNothing);
-
-      await tester.tap(find.byKey(const ValueKey('inbox-teach-u')));
-      await tester.pumpAndSettle();
-      expect(find.byType(NotificationPatternPage), findsOneWidget);
-    });
-
-    testWidgets('rute teachPattern langsung membuka pembuat pola untuk tangkapan itu', (tester) async {
-      await store.saveInbox([unreadable()]);
-      await tester.pumpWidget(
-        ScopeProvider(
-          container: container,
-          child: MaterialApp(
-            theme: PixelTheme.light,
-            home: Builder(
-              builder: (context) => TextButton(
-                onPressed: () => context.pushRoute(
-                  NotificationCaptureRouteKeys.teachPattern,
-                  const TeachPatternInput(entryId: 'u'),
-                ),
-                child: const Text('buka'),
-              ),
-            ),
-          ),
-        ),
-      );
-      await tester.tap(find.text('buka'));
-      await tester.pumpAndSettle();
-
-      expect(find.byType(NotificationPatternPage), findsOneWidget);
+      expect(find.byKey(const ValueKey('inbox-teach-u')), findsNothing);
+      expect(find.byKey(const ValueKey('inbox-confirm-u')), findsOneWidget);
     });
 
     testWidgets('Abaikan menghapus tangkapan beserta teksnya', (tester) async {
@@ -1214,142 +1173,6 @@ void main() {
     });
   });
 
-  testWidgets('pembuat pola: tandai nominal dan catatan → templat yang cocok dengan contohnya', (tester) async {
-    NotificationPattern? result;
-    await tester.pumpWidget(
-      MaterialApp(
-        theme: PixelTheme.light,
-        home: Builder(
-          builder: (context) => TextButton(
-            onPressed: () async => result = await openNotificationPatternPage(
-              context,
-              packageName: 'id.co.bri.brimo',
-              wallets: const [],
-              sample: 'QRIS Rp18.500 di WARUNG BU TINI sukses',
-            ),
-            child: const Text('buka'),
-          ),
-        ),
-      ),
-    );
-    await tester.tap(find.text('buka'));
-    await tester.pumpAndSettle();
-
-    // Penanda awal Nominal: kata bukan nominal ditolak dengan pesan.
-    await tester.tap(find.text('WARUNG'));
-    await tester.pump();
-    expect(find.text(t.notificationCapture.patternNotAmount(word: 'WARUNG')), findsOneWidget);
-
-    await tester.tap(find.text('Rp18.500'));
-    await tester.pump();
-    // Sesudah nominal, penanda pindah sendiri ke Catatan.
-    for (final word in ['WARUNG', 'BU', 'TINI']) {
-      await tester.tap(find.text(word));
-      await tester.pump();
-    }
-    expect(find.byKey(const ValueKey('pattern-preview')), findsOneWidget);
-    expect(find.textContaining('WARUNG BU TINI'), findsWidgets);
-    await tester.tap(find.text(t.notificationCapture.save));
-    await tester.pumpAndSettle();
-
-    expect(result?.template, 'QRIS {amount} di {note} sukses');
-    expect(result?.kind, NotificationPatternKind.expense);
-  });
-
-  group('pembuat pola: petunjuk langkah demi langkah', () {
-    Future<void> openBuilder(WidgetTester tester) async {
-      await tester.pumpWidget(
-        MaterialApp(
-          theme: PixelTheme.light,
-          home: Builder(
-            builder: (context) => TextButton(
-              onPressed: () => openNotificationPatternPage(
-                context,
-                packageName: 'id.co.bri.brimo',
-                wallets: const [],
-                sample: 'QRIS Rp18.500 di WARUNG BU TINI sukses',
-              ),
-              child: const Text('buka'),
-            ),
-          ),
-        ),
-      );
-      await tester.tap(find.text('buka'));
-      await tester.pumpAndSettle();
-    }
-
-    final save = find.widgetWithText(AppButton, t.notificationCapture.save);
-
-    testWidgets('judul, pengantar satu kalimat, dan langkah bernomor', (tester) async {
-      await openBuilder(tester);
-
-      expect(find.text(t.notificationCapture.patternTitle), findsOneWidget);
-      expect(find.byKey(const ValueKey('pattern-intro')), findsOneWidget);
-      expect(find.text(t.notificationCapture.patternIntro), findsOneWidget);
-      expect(find.text(t.notificationCapture.patternSampleLabel), findsOneWidget);
-      expect(find.text(t.notificationCapture.patternMarkLabel), findsOneWidget);
-      await tester.scrollUntilVisible(
-        find.text(t.notificationCapture.patternKindLabel),
-        200,
-        scrollable: find.byType(Scrollable).first,
-      );
-      expect(find.text(t.notificationCapture.patternKindLabel), findsOneWidget);
-    });
-
-    testWidgets('petunjuk mengikuti kemajuan: nominal dulu, lalu catatan yang boleh dilewati', (tester) async {
-      await openBuilder(tester);
-      expect(find.text(t.notificationCapture.patternHintAmount), findsOneWidget);
-      expect(find.text(t.notificationCapture.patternHintNote), findsNothing);
-
-      await tester.tap(find.text('Rp18.500'));
-      await tester.pump();
-
-      expect(find.text(t.notificationCapture.patternHintAmount), findsNothing);
-      expect(find.text(t.notificationCapture.patternHintNote), findsOneWidget);
-    });
-
-    testWidgets('arti penanda terpilih ditulis di bawah pilihannya', (tester) async {
-      await openBuilder(tester);
-      expect(find.text(t.notificationCapture.roleAmountHelp), findsOneWidget);
-
-      await tester.tap(find.text(t.notificationCapture.roleNote));
-      await tester.pump();
-      expect(find.text(t.notificationCapture.roleNoteHelp), findsOneWidget);
-
-      await tester.tap(find.text(t.notificationCapture.roleIgnore));
-      await tester.pump();
-      expect(find.text(t.notificationCapture.roleIgnoreHelp), findsOneWidget);
-    });
-
-    testWidgets('Simpan nonaktif disertai alasannya sampai nominal ditandai', (tester) async {
-      await openBuilder(tester);
-      expect(find.byKey(const ValueKey('pattern-need-amount')), findsOneWidget);
-      expect(tester.widget<AppButton>(save).onPressed, isNull);
-
-      await tester.tap(find.text('Rp18.500'));
-      await tester.pump();
-
-      expect(find.byKey(const ValueKey('pattern-need-amount')), findsNothing);
-      expect(tester.widget<AppButton>(save).onPressed, isNotNull);
-    });
-
-    testWidgets('templat mentah tidak disebut Pola dan tersembunyi di balik tautan', (tester) async {
-      await openBuilder(tester);
-      expect(find.byKey(const ValueKey('pattern-template')), findsNothing);
-
-      await tester.scrollUntilVisible(
-        find.text(t.notificationCapture.patternTemplateToggle),
-        200,
-        scrollable: find.byType(Scrollable).first,
-      );
-      await tester.tap(find.text(t.notificationCapture.patternTemplateToggle));
-      await tester.pumpAndSettle();
-
-      expect(find.byKey(const ValueKey('pattern-template')), findsOneWidget);
-      expect(find.text(t.notificationCapture.patternTemplateLabel), findsOneWidget);
-    });
-  });
-
   group('Gratis (ADR-041 §3.8)', () {
     setUp(() => ActivePlan.notifier.value = const FreePlan());
 
@@ -1395,24 +1218,6 @@ void main() {
       final saved = (await store.loadSettings()).getOrElse((_) => throw StateError(''));
       expect(saved.sources.map((e) => e.packageName), ['id.co.bri.brimo']);
     });
-
-    testWidgets('Ajari pola membuka paywall, bukan pembuat pola', (tester) async {
-      await store.saveInbox([
-        CaptureInboxEntry(
-          id: 'u',
-          packageName: 'id.co.bri.brimo',
-          appLabel: 'BRImo',
-          text: 'Transfer masuk dari ANDI',
-          capturedAt: DateTime(2026, 10, 1, 14),
-          draft: const RecordDraft(kind: DraftKind.income),
-        ),
-      ]);
-      await open(tester, NotificationCaptureRouteKeys.inbox);
-      await tester.tap(find.byKey(const ValueKey('inbox-teach-u')));
-      await tester.pumpAndSettle();
-      expect(find.byType(NotificationPatternPage), findsNothing);
-      expect(find.text(t.premium.signInTitle), findsOneWidget);
-    });
   });
 }
 
@@ -1428,12 +1233,6 @@ final class _SettingsFailingStore implements NotificationCaptureStore {
 
   @override
   Future<Either<Failure, NotificationCaptureSettings>> loadSettings() => _inner.loadSettings();
-
-  @override
-  Future<Either<Failure, List<NotificationPattern>>> loadPatterns() => _inner.loadPatterns();
-
-  @override
-  Future<Either<Failure, Unit>> savePatterns(List<NotificationPattern> patterns) => _inner.savePatterns(patterns);
 
   @override
   Future<Either<Failure, List<CaptureInboxEntry>>> loadInbox() => _inner.loadInbox();

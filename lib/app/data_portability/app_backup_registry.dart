@@ -48,6 +48,8 @@ final appBackupRegistry = BackupRegistry(
     const BackupKeySpec('settings_currency', supportedSchema: CurrencyPreferenceRepositoryImpl.schemaVersion),
     const BackupKeySpec('settings_recurring_reminders', supportedSchema: 1),
     const BackupKeySpec('settings_notification_capture', supportedSchema: NotificationCaptureStoreImpl.schemaVersion),
+    // Pola buatan pengguna sudah dicabut (ADR-044 Revisi 11); kuncinya tetap dikenal supaya cadangan lama
+    // bisa dipulihkan, dan isinya dibuang saat aplikasi dibuka.
     const BackupKeySpec('capture_notification_patterns', supportedSchema: NotificationCaptureStoreImpl.schemaVersion),
     // Ingatan pedagang (ADR-044, E1): kategori yang dikonfirmasi pengguna; tanpa teks notifikasi.
     // Bentuk yang disetujui untuk dicatat otomatis (ADR-044 §3.7, E3): templat dan nominal, tanpa teks asli.

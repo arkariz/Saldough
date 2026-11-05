@@ -16,7 +16,6 @@ import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/notification_capture/di/notification_capture_module.dart';
 import 'package:saldough/features/notification_capture/domain/entities/capture_inbox_entry.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_store.dart';
-import 'package:saldough/features/notification_capture/presentation/pages/notification_pattern_page.dart';
 import 'package:saldough/features/notification_capture/presentation/widgets/notification_inbox_card.dart';
 import 'package:saldough/features/record/presentation/navigation/record_route_keys.dart';
 import 'package:saldough/features/record/presentation/navigation/record_route_module.dart';
@@ -139,7 +138,6 @@ void main() {
       expect(slide.attention, isTrue);
       expect(slide.subtitle, t.notificationCapture.banner(n: 2));
       expect(slide.actionLabel, t.discovery.notification.check);
-      expect(find.text(t.discovery.notification.teachPattern), findsNothing);
     });
   });
 
@@ -216,7 +214,7 @@ void main() {
     expect(find.text(t.notificationCapture.settingsTitle), findsWidgets);
   });
 
-  testWidgets('aktif dengan tangkapan: Cek, pratinjau paling banyak dua, nominal tak terbaca ada Ajari pola', (
+  testWidgets('aktif dengan tangkapan: Cek, pratinjau paling banyak dua, nominal tak terbaca tanpa tombol', (
     tester,
   ) async {
     statuses.status[DiscoveredFeature.notification] = const FeatureStatus(FeatureState.active, activeCount: 2);
@@ -228,14 +226,10 @@ void main() {
     expect(find.byKey(const ValueKey('inbox-preview-a')), findsOneWidget);
     expect(find.byKey(const ValueKey('inbox-preview-b')), findsOneWidget);
     expect(find.byKey(const ValueKey('inbox-preview-c')), findsNothing);
-    expect(find.text(t.discovery.notification.teachPattern), findsOneWidget);
+    expect(find.byKey(const ValueKey('inbox-teach-b')), findsNothing);
     // Pratinjau hanya membaca: tidak ada tombol Simpan / Catat di Beranda.
     expect(find.text(t.notificationCapture.recordAction), findsNothing);
     expect(find.text(t.discovery.notification.activeApps(n: 2)), findsOneWidget);
-
-    await tester.tap(find.byKey(const ValueKey('inbox-teach-b')));
-    await tester.pumpAndSettle();
-    expect(find.byType(NotificationPatternPage), findsOneWidget);
   });
 
   testWidgets('Cek dengan dua tangkapan atau lebih membuka kotak masuk', (tester) async {
@@ -316,25 +310,22 @@ void main() {
       );
     });
 
-    testWidgets('aktif: Kelola dan Ajari pola tercatat; Cek tidak', (tester) async {
+    testWidgets('aktif tanpa tangkapan: ketuk kepala mencatat Kelola', (tester) async {
       statuses.status[DiscoveredFeature.notification] = const FeatureStatus(FeatureState.active, activeCount: 2);
-      await store.saveInbox([entry('b', amount: null)]);
       await pumpCard(tester);
 
-      await tester.tap(find.byKey(const ValueKey('inbox-teach-b')));
+      await tester.tap(find.byKey(const ValueKey('inbox-card-head')));
       await tester.pumpAndSettle();
-      // Kotak masuk yang terbuka juga mencatat capture_inbox_opened: dipisah dari penemuan.
       expect(
         events.where((e) => e.name == 'notification_row_tapped').single,
-        DiscoveryEvents.notificationRowTapped(state: 'active', surface: 'home', action: 'teach_pattern'),
+        DiscoveryEvents.notificationRowTapped(state: 'active', surface: 'home', action: 'manage'),
       );
     });
 
     testWidgets('parameter tanpa nama aplikasi atau isi notifikasi', (tester) async {
       statuses.status[DiscoveredFeature.notification] = const FeatureStatus(FeatureState.active, activeCount: 2);
-      await store.saveInbox([entry('b', amount: null)]);
       await pumpCard(tester);
-      await tester.tap(find.byKey(const ValueKey('inbox-teach-b')));
+      await tester.tap(find.byKey(const ValueKey('inbox-card-head')));
       await tester.pumpAndSettle();
 
       for (final event in events) {

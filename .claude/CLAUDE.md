@@ -202,15 +202,17 @@ mengimpor isi `record`: draf dibuka lewat `RecordRouteKeys.sheet`.
 **Catat dari notifikasi (ADR-032, 1 Okt 2026, berjalan T-11.17–11.21; revisi §10 T-13.1):**
 Android saja. Layanan native hanya menampung notifikasi dari aplikasi yang
 dipilih pengguna yang lolos filter whitelist-nya (bawaan: frasa pasti transaksi; bukan OTP); Dart memprosesnya saat aplikasi
-hidup/dibuka: pola → aturan → Gemini, lalu tingkat otomatis menentukan
+hidup/dibuka: aturan → Gemini, lalu tingkat otomatis menentukan
 dicatat langsung (`RecordTransaction`) atau masuk kotak masuk. Teks notifikasi
 paling lama 7 hari di perangkat. Native hanya membuang posting ulang (bukan
 isi kembar), antrean hanya di-ack bila simpanan Dart berhasil, dan Gemini
 menerima teks yang saldonya/rekeningnya disamarkan.
 Fase 23 (ADR-042): satu sumber bisa ke banyak dompet (`walletRules`, ambigu
-ke kotak masuk, tidak ditebak), transfer antarkantong lewat penanda
-`{from}`/`{to}`, contoh notifikasi opsional (bawaan mati, 7 hari, tanpa OTP),
-dan rutin bisa diikat ke pola (`RecurringRule.notificationBinding`).
+ke kotak masuk, tidak ditebak) dan contoh notifikasi opsional (bawaan mati, 7
+hari, tanpa OTP). **Pola buatan pengguna ("Ajari pola"), pola bawaan, ikatan
+rutin ke pola, dan transfer `{from}`/`{to}` dicabut 5 Nov 2026 (ADR-044 Revisi
+11)**; yang tersisa: aturan dompet, ingatan pedagang, bentuk "Bukan
+transaksi", bentuk yang disetujui otomatis, dan saran pos.
 
 **Bahasa visual baru (ADR-034, kode Fase 14 selesai 9 Okt 2026):**
 "buku catatan dengan aksen piksel" menggantikan ADR-015/016/020. Satu huruf

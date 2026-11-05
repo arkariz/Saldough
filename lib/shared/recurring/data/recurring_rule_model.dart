@@ -50,15 +50,6 @@ abstract final class RecurringRuleModel {
         final String date => DateTime.parse(date),
         _ => null,
       },
-      // Ditambahkan ADR-042; dokumen lama tanpa kunci ini = tidak terikat.
-      notificationBinding: switch (json['notificationBinding']) {
-        final Map<dynamic, dynamic> b => NotificationBinding(
-          packageName: b['packageName'] as String,
-          patternId: b['patternId'] as String,
-          patternLabel: b['patternLabel'] as String? ?? '',
-        ),
-        _ => null,
-      },
     );
   }
 
@@ -96,10 +87,6 @@ abstract final class RecurringRuleModel {
     },
     'idleDismissedAt': switch (rule.idleDismissedAt) {
       final date? => _day(date),
-      null => null,
-    },
-    'notificationBinding': switch (rule.notificationBinding) {
-      final b? => {'packageName': b.packageName, 'patternId': b.patternId, 'patternLabel': b.patternLabel},
       null => null,
     },
   };

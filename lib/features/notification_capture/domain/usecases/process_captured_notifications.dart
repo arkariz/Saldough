@@ -194,7 +194,6 @@ final class ProcessCapturedNotifications {
     await negativeShapes?.refresh();
     await approvedShapes?.refresh();
     final wallets = await loadActiveWallets(walletRepository);
-    final patterns = await loadActivePatterns(store, settings);
     final plus = isPlus?.call() ?? true;
     final policy = AutoRecordPolicy(plus ? settings.autoRecordLevel : AutoRecordLevel.reviewAll);
     const approvedPolicy = AutoRecordPolicy(AutoRecordLevel.whenAmountAndWallet);
@@ -237,14 +236,12 @@ final class ProcessCapturedNotifications {
       final resolved = await resolver.resolve(
         notification,
         source: source,
-        patterns: patterns,
         wallets: wallets,
         categories: categories(),
         currencyCode: currencyCode(),
         languageCode: languageCode(),
         rules: rules,
       );
-      final composed = resolved.composed!;
       // Ikon disimpan sekali per isi; id-nya ikut draf, item kotak masuk,
       // dan transaksi (ADR-032 §3.10).
       final iconId = await _saveIcon(notification.icon);
@@ -253,11 +250,7 @@ final class ProcessCapturedNotifications {
       final date = draft.date ?? notification.postedAt;
       final duplicate = resolved.existing != null || _nearbyCapture(draft, notification, inbox: inbox, auto: auto);
 
-      // Pola yang terikat ke rutin (ADR-042 §3.4) menentukan rutinnya sendiri;
-      // bila kemunculannya tidak jelas, tangkapan ditinjau -- tidak dicatat
-      // tanpa tautan dan tidak ditautkan ke rutin lain.
       final plan = resolved.plan;
-      final boundUnclear = plan.boundUnclear;
       // Tertaut otomatis hanya bila cocok persis, tunggal (bukan hasil pemutus
       // nama), dan tidak ada transaksi lain yang sudah memenuhi kemunculannya
       // (KT-R11). Hanya saat itu rencana ikut melengkapi draf yang dicatat.
@@ -274,8 +267,8 @@ final class ProcessCapturedNotifications {
       final approved = plus ? approvedShapes?.find(notification.packageName, text) : null;
       final approvedOk = approved != null && approvedPolicy.allows(recordDraft);
       final unusual = approvedOk && isUnusualShapeAmount(approved, recordDraft.amountSen ?? 0);
-      final autoAllowed = !unusual && ((composed.autoEligible && policy.allows(recordDraft)) || approvedOk);
-      if (autoAllowed && !duplicate && !boundUnclear) {
+      final autoAllowed = !unusual && (policy.allows(recordDraft) || approvedOk);
+      if (autoAllowed && !duplicate) {
         final (entry, linked) = await _record(
           recordDraft,
           notification,
@@ -305,14 +298,7 @@ final class ProcessCapturedNotifications {
         draft: draft,
         possibleDuplicate: duplicate,
         iconId: iconId,
-        patternId: composed.pattern?.id,
-        reviewReason: duplicate
-            ? null
-            : (unusual
-                  ? CaptureReviewReason.amountUnusual
-                  : boundUnclear && composed.autoEligible && policy.allows(draft)
-                  ? CaptureReviewReason.recurringUnclear
-                  : policy.reviewReason(draft, autoEligible: composed.autoEligible)),
+        reviewReason: duplicate ? null : (unusual ? CaptureReviewReason.amountUnusual : policy.reviewReason(draft)),
       );
       inbox.insert(0, entry);
       if (!await _save(processed, inbox, auto)) break;

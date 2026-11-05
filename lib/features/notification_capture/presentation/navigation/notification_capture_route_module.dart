@@ -44,7 +44,7 @@ final class NotificationCaptureRouteModule extends FeatureRouteModule {
       key: NotificationCaptureRouteKeys.inbox,
       defaultInput: () => const EmptyInput(),
       builder: (context, _) => _NotificationCapturePage(
-        // Bloc setelan ikut dipasang: "Buat pola" menyimpan pola lewat bloc itu.
+        // Bloc setelan ikut dipasang: kotak masuk membaca dompet aktif darinya.
         builder: (scope) => MultiBlocProvider(
           providers: [
             BlocProvider.value(value: scope.container<CaptureInboxBloc>()..add(const CaptureInboxStarted())),
@@ -53,22 +53,6 @@ final class NotificationCaptureRouteModule extends FeatureRouteModule {
             ),
           ],
           child: const EffectListener<CaptureInboxBloc, CaptureInboxState>(child: CaptureInboxPage()),
-        ),
-      ),
-    ),
-    RouteNode.typed<TeachPatternInput>(
-      key: NotificationCaptureRouteKeys.teachPattern,
-      builder: (context, input) => _NotificationCapturePage(
-        builder: (scope) => MultiBlocProvider(
-          providers: [
-            BlocProvider.value(value: scope.container<CaptureInboxBloc>()..add(const CaptureInboxStarted())),
-            BlocProvider.value(
-              value: scope.container<NotificationSettingsBloc>()..add(const NotificationSettingsStarted()),
-            ),
-          ],
-          child: EffectListener<CaptureInboxBloc, CaptureInboxState>(
-            child: CaptureInboxPage(teachEntryId: input.entryId),
-          ),
         ),
       ),
     ),

@@ -92,8 +92,7 @@ void main() {
       );
     });
 
-    test('rutin meragukan (terikat tak jelas atau ambigu): tidak', () {
-      expect(may(s: shape, plan: const PlanResolution(boundUnclear: true)), isFalse);
+    test('rutin meragukan (beberapa kemunculan cocok, tak terputus): tidak', () {
       expect(may(s: shape, plan: const PlanResolution(ambiguous: true)), isFalse);
     });
   });

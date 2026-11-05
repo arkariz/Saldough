@@ -6640,6 +6640,27 @@ S sehari, M beberapa hari, L lebih dari seminggu.
       dan tidak untuk tombol Catat di notifikasi (aplikasi tertutup). Logika
       tawaran dipakai bersama lewat `showAutoOffer`. Uji: 2 uji halaman.
 
+- [x] **T-26.23** (L) Cabut "Ajari pola" dan seluruh mesin pola (5 Nov 2026,
+      keputusan pemilik: Catat dari notifikasi benar-benar v2). Dihapus:
+      layar pembuat pola, menu "Buat pola dari teks ini", tombol Ajari pola di
+      kartu Kotak masuk dan kartu Beranda (beserta rute `teachPattern`),
+      daftar pola dan ikatan rutin di halaman sumber, `NotificationPattern`,
+      pola bawaan (kata arah), `loadPatterns`/`savePatterns`,
+      `disabledBuiltInPatternIds`, `RecurringRule.notificationBinding` dan
+      `matchBoundOccurrence`, `PlanResolution.bound*`, alasan `newPattern` dan
+      `recurringUnclear`, `NotificationDraft.autoEligible/pattern`, dan 34
+      string i18n. Penyusun draf kini hanya aturan notifikasi → Gemini. **Data
+      lama:** dokumen pola penguji dibuang saat aplikasi dibuka
+      (`purgeLegacyCapturePatterns`); kunci `capture_notification_patterns`
+      tetap dikenal registri cadangan supaya `.tkbak` lama masih bisa
+      dipulihkan; ikatan di dokumen rutin lama diabaikan dan tidak ditulis
+      lagi. **Hilang sampai ada penggantinya:** transfer antarkantong lewat
+      `{from}`/`{to}` dan kategori tetap per pola (kategori kini dari rutin,
+      ingatan pedagang, atau alias). Mesin templat `{from}`/`{to}` dibiarkan
+      (tanpa pemakai) untuk dipangkas bersama B-88. Uji: ~150 galat kompilasi
+      uji diperbaiki; uji pola/ikatan dihapus; ditambah uji pembuangan sisa
+      pola dan rutin lama yang masih memuat ikatan.
+
 Enhancement (E1–E5) ada di Antrean B-85–B-89, dibuka sesudah gerbang tahap 1.
 
 ## Antrean (belum dijadwalkan)
@@ -6718,7 +6739,7 @@ menambah dan memindahkannya ada di
 | B-85 | **E1 "Ingat" dan bentuk dipelajari** (**selesai 5 Nov 2026**: ingatan pedagang T-26.14, Bukan transaksi T-26.15, banyak dompet T-26.17). Bentuk positif "Ya" sengaja tidak dibangun: kartu sudah lolos filter frasa, jadi "Ya" di kartu tidak mengubah apa pun; yang terlewat ditangani Ajari pola dan kata kunci sumber. Membuka kembali hanya bila data nyata menunjukkan banyak notifikasi terlewat, lewat daftar "Tidak dikenali" (menyimpan teks yang kini dibuang, perlu ubah pengungkapan privasi dan Data Safety). Sesudah gerbang tahap 1. | agen | [NOTIFICATION_CAPTURE_V2.md](../01-product/features/NOTIFICATION_CAPTURE_V2.md) §7–§8, ADR-044 §3.4 |
 | B-86 | **E2 saran pos anggaran** untuk pengeluaran bebas (**selesai 5 Nov 2026**: nama pos di teks T-26.18, ingatan pedagang T-26.19), hanya saran. | agen | NOTIFICATION_CAPTURE_V2.md §5 |
 | B-87 | **E3 catat otomatis per bentuk** (**selesai 5 Nov 2026**, T-26.20–T-26.22; sisa "sakelar global ke Lanjutan" dilebur ke B-88 karena halaman setelan belum punya bagian Lanjutan): tawaran setelah konfirmasi pertama tanpa ubahan, pagar nominal besar, tanda "baru". Plus. | agen | NOTIFICATION_CAPTURE_V2.md §8, ADR-044 §3.7 |
-| B-88 | **E4 Lanjutan** (termasuk memindah sakelar global "Catat otomatis" ke sana): daftar aturan, "Ajari pola" yang disederhanakan, filter, contoh; migrasi `walletRules`/pola/ikatan menjadi aturan. | agen | ADR-044 §3.7 |
+| B-88 | **E4 Lanjutan** (termasuk memindah sakelar global "Catat otomatis" ke sana): daftar aturan, filter, contoh; migrasi `walletRules` menjadi aturan. "Ajari pola", pola bawaan, dan ikatan rutin ke pola sudah dicabut (T-26.23), jadi tidak perlu dimigrasi. | agen | ADR-044 §3.7 |
 | B-89 | **E5 permukaan lain**: Quick Settings tile "Catat n transaksi" (S–M), widget layar utama bila data pemakaian mendukung (L). | agen | NOTIFICATION_CAPTURE_V2.md §11 |
 | B-39 | **Pengumuman pembaruan R2**: pembaruan wajib/versi minimum untuk perbaikan kritis (KT-U1), pembaruan untuk iOS (App Store) sesudah iOS dirilis, dan pilihan jalur uji untuk penguji. | agen + pemilik | [APP_UPDATE.md](../01-product/features/APP_UPDATE.md) §14 |
 | B-35 | Uji di perangkat yang belum dilakukan QA PR #43: lebar 360dp (butuh izin mengubah setelan ponsel), Freelance, perekaman suara sungguhan, dan jalur Gemini secara terpisah. | pemilik | QA PR #43 (di luar PR) |

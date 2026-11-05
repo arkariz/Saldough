@@ -1,6 +1,5 @@
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
-import 'package:saldough/features/notification_capture/domain/entities/notification_pattern.dart';
 import 'package:saldough/features/notification_capture/domain/services/notification_template.dart';
 
 /// Bentuk notifikasi yang BUKAN transaksi (ADR-044 §3.4, E1/B-85): dipelajari

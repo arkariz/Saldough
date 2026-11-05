@@ -1,5 +1,3 @@
-import 'package:saldough/features/notification_capture/domain/entities/notification_pattern.dart';
-
 /// Hasil pencocokan satu templat: kutipan dari teks notifikasi.
 final class NotificationTemplateMatch {
   /// Membuat [NotificationTemplateMatch].
@@ -14,7 +12,7 @@ final class NotificationTemplateMatch {
   /// Frasa nominal persis seperti di teks.
   final String amountText;
 
-  /// Potongan catatan, atau `null` bila templat tanpa [NotificationPattern.noteToken].
+  /// Potongan catatan, atau `null` bila templat tanpa [NotificationTemplate.noteToken].
   final String? note;
 }
 
@@ -64,6 +62,21 @@ final class TemplateWord {
 abstract final class NotificationTemplate {
   NotificationTemplate._();
 
+  /// Penanda nominal.
+  static const amountToken = '{amount}';
+
+  /// Penanda catatan (merchant atau lawan transaksi).
+  static const noteToken = '{note}';
+
+  /// Penanda dompet asal transfer (ADR-042 §3.1).
+  static const fromToken = '{from}';
+
+  /// Penanda dompet tujuan transfer (ADR-042 §3.1).
+  static const toToken = '{to}';
+
+  /// Penanda bagian yang berubah-ubah (tanggal, jam, no. referensi, saldo).
+  static const anyToken = '{*}';
+
   /// Pola regex nominal di templat.
   static const amountPattern = r'(?:(?:rp|idr)\.?\s?\d(?:[\d.,]*\d)?|\d{1,3}(?:[.,]\d{3})+(?:[.,]\d{1,2})?)';
 
@@ -73,10 +86,10 @@ abstract final class NotificationTemplate {
   /// `true` bila [template] sah: tepat satu nominal, paling banyak satu
   /// catatan, dan ada teks tetap selain penanda.
   static bool isValid(String template) {
-    final amounts = NotificationPattern.amountToken.allMatchesIn(template);
-    final notes = NotificationPattern.noteToken.allMatchesIn(template);
-    final froms = NotificationPattern.fromToken.allMatchesIn(template);
-    final tos = NotificationPattern.toToken.allMatchesIn(template);
+    final amounts = NotificationTemplate.amountToken.allMatchesIn(template);
+    final notes = NotificationTemplate.noteToken.allMatchesIn(template);
+    final froms = NotificationTemplate.fromToken.allMatchesIn(template);
+    final tos = NotificationTemplate.toToken.allMatchesIn(template);
     final literal = template.replaceAll(_tokens, '').trim();
     // {from} dan {to} selalu berpasangan: transfer antar dompet butuh dua sisi.
     return amounts == 1 && notes <= 1 && froms <= 1 && tos <= 1 && froms == tos && literal.isNotEmpty;
@@ -95,16 +108,16 @@ abstract final class NotificationTemplate {
     for (final token in _tokens.allMatches(template)) {
       buffer.write(_literal(template.substring(cursor, token.start)));
       switch (token.group(0)) {
-        case NotificationPattern.amountToken:
+        case NotificationTemplate.amountToken:
           amountGroup = ++group;
           buffer.write('($amountPattern)');
-        case NotificationPattern.noteToken:
+        case NotificationTemplate.noteToken:
           noteGroup = ++group;
           buffer.write('(.+?)');
-        case NotificationPattern.fromToken:
+        case NotificationTemplate.fromToken:
           fromGroup = ++group;
           buffer.write('(.+?)');
-        case NotificationPattern.toToken:
+        case NotificationTemplate.toToken:
           toGroup = ++group;
           buffer.write('(.+?)');
         default:
@@ -135,7 +148,7 @@ abstract final class NotificationTemplate {
   static bool isAmountWord(String word) => _amountIn(word) != null;
 
   /// Templat dari [text] dengan peran tiap kata [roles] (indeks [words]).
-  /// Kata berangka yang tidak ditandai menjadi [NotificationPattern.anyToken]
+  /// Kata berangka yang tidak ditandai menjadi [NotificationTemplate.anyToken]
   /// supaya nomor referensi, jam, dan saldo yang berubah tetap cocok.
   /// `null` bila tidak ada tepat satu kata nominal, atau catatannya tidak
   /// berurutan.
@@ -172,7 +185,7 @@ abstract final class NotificationTemplate {
         case TemplateWordRole.amount:
           final span = _amountIn(word.text);
           if (span == null) return null;
-          replacements.add((word.start + span.$1, word.start + span.$2, NotificationPattern.amountToken));
+          replacements.add((word.start + span.$1, word.start + span.$2, NotificationTemplate.amountToken));
         case TemplateWordRole.note || TemplateWordRole.from || TemplateWordRole.to:
           final indexes = spans[role]!;
           if (i != indexes.first) continue;
@@ -180,16 +193,16 @@ abstract final class NotificationTemplate {
           final spanText = text.substring(word.start, last.end);
           final trimmed = spanText.replaceAll(RegExp(r'[,.;:!?]+$'), '');
           final token = switch (role) {
-            TemplateWordRole.from => NotificationPattern.fromToken,
-            TemplateWordRole.to => NotificationPattern.toToken,
-            _ => NotificationPattern.noteToken,
+            TemplateWordRole.from => NotificationTemplate.fromToken,
+            TemplateWordRole.to => NotificationTemplate.toToken,
+            _ => NotificationTemplate.noteToken,
           };
           replacements.add((word.start, word.start + trimmed.length, token));
         case TemplateWordRole.ignore:
-          replacements.add((word.start, word.end, NotificationPattern.anyToken));
+          replacements.add((word.start, word.end, NotificationTemplate.anyToken));
         case TemplateWordRole.literal:
           if (RegExp(r'\d').hasMatch(word.text)) {
-            replacements.add((word.start, word.end, NotificationPattern.anyToken));
+            replacements.add((word.start, word.end, NotificationTemplate.anyToken));
           }
       }
     }
@@ -206,7 +219,7 @@ abstract final class NotificationTemplate {
         .toString()
         .trim()
         .replaceAll(RegExp(r'\s+'), ' ')
-        .replaceAll(RegExp(r'\{\*\}(?:\s*\{\*\})+'), NotificationPattern.anyToken);
+        .replaceAll(RegExp(r'\{\*\}(?:\s*\{\*\})+'), NotificationTemplate.anyToken);
     return isValid(collapsed) ? collapsed : null;
   }
 

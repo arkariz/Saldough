@@ -65,7 +65,7 @@ final class NotificationSourceSaved extends NotificationSettingsEvent {
   final NotificationSource source;
 }
 
-/// Sumber dihapus (pola pengguna untuk paketnya ikut dihapus).
+/// Sumber dihapus.
 final class NotificationSourceRemoved extends NotificationSettingsEvent {
   /// Membuat [NotificationSourceRemoved].
   const NotificationSourceRemoved(this.packageName);
@@ -74,68 +74,10 @@ final class NotificationSourceRemoved extends NotificationSettingsEvent {
   final String packageName;
 }
 
-/// Pola bawaan diaktifkan/dinonaktifkan.
-final class BuiltInPatternToggled extends NotificationSettingsEvent {
-  /// Membuat [BuiltInPatternToggled].
-  const BuiltInPatternToggled({required this.patternId, required this.enabled});
-
-  /// Id pola bawaan.
-  final String patternId;
-
-  /// Aktif.
-  final bool enabled;
-}
-
-/// Pola pengguna disimpan.
-final class NotificationPatternSaved extends NotificationSettingsEvent {
-  /// Membuat [NotificationPatternSaved].
-  const NotificationPatternSaved(this.pattern);
-
-  /// Pola.
-  final NotificationPattern pattern;
-}
-
-/// Pola pengguna dihapus.
-final class NotificationPatternDeleted extends NotificationSettingsEvent {
-  /// Membuat [NotificationPatternDeleted].
-  const NotificationPatternDeleted(this.patternId);
-
-  /// Id pola.
-  final String patternId;
-}
-
-/// Muat ulang sampel debug.
+/// Sampel debug diminta ulang (ADR-032 §3.6).
 final class DebugSamplesRequested extends NotificationSettingsEvent {
   /// Membuat [DebugSamplesRequested].
   const DebugSamplesRequested();
-}
-
-/// Pola diikat ke rutin [ruleId] (ADR-042 §3.4); [ruleId] `null` melepas
-/// ikatan pola ini.
-final class NotificationPatternBound extends NotificationSettingsEvent {
-  /// Membuat [NotificationPatternBound].
-  const NotificationPatternBound({
-    required this.packageName,
-    required this.patternId,
-    required this.patternLabel,
-    required this.patternKind,
-    required this.ruleId,
-  });
-
-  /// Paket aplikasi pola.
-  final String packageName;
-
-  /// Id pola (bawaan atau pengguna).
-  final String patternId;
-
-  /// Nama pola, disimpan di ikatan untuk ditampilkan.
-  final String patternLabel;
-
-  /// Jenis pola; rutin tujuan harus berjenis sepadan (ADR-042 §3.4).
-  final NotificationPatternKind patternKind;
-
-  /// Rutin tujuan, atau `null`.
-  final String? ruleId;
 }
 
 /// Penyimpanan contoh notifikasi dinyalakan atau dimatikan (ADR-042 §3.2).

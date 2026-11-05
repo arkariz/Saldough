@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:developer' as developer;
 
+import 'package:api_storage/api_storage.dart';
+
 import 'package:dependencies/dependencies.dart';
 import 'package:di/di.dart';
 import 'package:flutter/widgets.dart';
@@ -19,6 +21,7 @@ import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/language/language.dart';
 import 'package:saldough/core/presentation/plan/active_plan.dart';
 import 'package:saldough/features/data_portability/data/platform_file_transfer.dart';
+import 'package:saldough/features/notification_capture/data/notification_capture_store_impl.dart';
 import 'package:saldough/features/notification_capture/domain/usecases/apply_capture_journal.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/transaction/source_icons.dart';
@@ -128,6 +131,14 @@ Future<void> bootstrapApp() async {
         name: 'ApplyCaptureJournal',
       );
     }
+  }
+
+  // ADR-044 Revisi 11: pola buatan pengguna sudah dicabut; sisa dari versi lama
+  // (atau cadangan lama yang baru dipulihkan) dibuang. Gagal tidak menghalangi.
+  try {
+    await purgeLegacyCapturePatterns(rootGetIt<KeyValueStorage>());
+  } on Object catch (e, st) {
+    developer.log('Sisa pola notifikasi gagal dibuang', error: e, stackTrace: st, name: 'purgeLegacyCapturePatterns');
   }
 
   // Pengendali efek tidak boleh didaftarkan dua kali.

@@ -79,7 +79,6 @@ abstract final class NotificationCaptureModule {
                 ? QuotaGatedInterpreter(inner: FirebaseAiTransactionInterpreter(), entitlements: c<Entitlements>())
                 : FirebaseAiTransactionInterpreter(),
           ),
-          ruleInterpreterFor: rules,
         ),
       )
       ..registerLazySingleton<ProcessCapturedNotifications>(

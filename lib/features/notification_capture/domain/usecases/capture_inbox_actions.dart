@@ -2,12 +2,10 @@ import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/features/notification_capture/domain/entities/capture_inbox_entry.dart';
-import 'package:saldough/features/notification_capture/domain/entities/captured_notification.dart';
 import 'package:saldough/features/notification_capture/domain/entities/notification_capture_settings.dart';
 import 'package:saldough/features/notification_capture/domain/entities/notification_source.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_store.dart';
 import 'package:saldough/features/notification_capture/domain/services/account_hint.dart';
-import 'package:saldough/features/notification_capture/domain/services/active_capture_inputs.dart';
 import 'package:saldough/features/notification_capture/domain/services/approved_shapes.dart';
 import 'package:saldough/features/notification_capture/domain/services/auto_record_policy.dart';
 import 'package:saldough/features/notification_capture/domain/services/budget_item_suggestion.dart';
@@ -169,7 +167,6 @@ final class CaptureInboxActions {
       enabled: before.enabled,
       delivery: before.delivery,
       autoRecordLevel: before.autoRecordLevel,
-      disabledBuiltInPatternIds: before.disabledBuiltInPatternIds,
       saveSamples: before.saveSamples,
       sources: [
         for (final s in before.sources)
@@ -345,8 +342,8 @@ final class CaptureInboxActions {
       final draft = entry.draft;
       if (draft.amountSen == null || draft.walletId == null) continue;
       final date = draft.date ?? entry.capturedAt;
-      // Penentu bersama: pola terikat menentukan rutinnya sendiri, selain itu
-      // kandidat tunggal (atau yang namanya muncul di teks); ambigu tanpa saran.
+      // Penentu bersama: kandidat tunggal (atau yang namanya muncul di teks);
+      // ambigu tanpa saran.
       final plan = resolvePlan(
         draft: draft,
         date: date,
@@ -354,7 +351,6 @@ final class CaptureInboxActions {
         text: entry.text,
         rules: rules,
         ledger: await around(date),
-        patternId: entry.patternId,
       );
       if (plan.match case final match?) result[entry.id] = match;
     }
@@ -461,49 +457,5 @@ final class CaptureInboxActions {
       recurringChanges?.notifyChanged();
     }
     return remove(entryId);
-  }
-
-  /// Menafsirkan ulang item [id] sesudah pola baru disimpan; drafnya
-  /// diganti, tidak dicatat otomatis (pengguna sedang meninjaunya).
-  Future<CaptureInboxEntry?> reinterpret(String id) async {
-    final settings = (await store.loadSettings()).getOrElse((_) => const NotificationCaptureSettings());
-    final inbox = [...(await store.loadInbox()).getOrElse((_) => const [])];
-    final index = inbox.indexWhere((e) => e.id == id);
-    if (index < 0) return null;
-    final entry = inbox[index];
-    final source = settings.activeSource(entry.packageName);
-    if (source == null) return entry;
-    final wallets = await loadActiveWallets(walletRepository);
-    final patterns = await loadActivePatterns(store, settings);
-    final composed = await composer.compose(
-      CapturedNotification(
-        id: entry.id,
-        packageName: entry.packageName,
-        title: '',
-        body: entry.text,
-        postedAt: entry.capturedAt,
-      ),
-      source: source,
-      patterns: patterns,
-      wallets: wallets,
-      categories: categories(),
-      currencyCode: currencyCode(),
-      languageCode: languageCode(),
-    );
-    final updated = CaptureInboxEntry(
-      id: entry.id,
-      packageName: entry.packageName,
-      appLabel: entry.appLabel,
-      text: entry.text,
-      capturedAt: entry.capturedAt,
-      draft: composed.draft.copyWith(sourceIconId: () => entry.iconId),
-      possibleDuplicate: entry.possibleDuplicate,
-      iconId: entry.iconId,
-      reviewReason: entry.reviewReason,
-    );
-    inbox[index] = updated;
-    await store.saveInbox(inbox);
-    changes?.notify();
-    return updated;
   }
 }

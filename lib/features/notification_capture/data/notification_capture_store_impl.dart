@@ -4,14 +4,16 @@ import 'package:failures/failures.dart';
 import 'package:saldough/core/foundation/repository_guard.dart';
 import 'package:saldough/features/notification_capture/domain/entities/capture_inbox_entry.dart';
 import 'package:saldough/features/notification_capture/domain/entities/notification_capture_settings.dart';
-import 'package:saldough/features/notification_capture/domain/entities/notification_pattern.dart';
 import 'package:saldough/features/notification_capture/domain/entities/notification_source.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_store.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_inbox_codec.dart';
 import 'package:saldough/shared/capture/capture.dart';
 
 const _settingsKey = StorageKey(namespace: 'settings', name: 'notification_capture');
-const _patternsKey = StorageKey(namespace: 'capture', name: 'notification_patterns');
+
+/// Pola buatan pengguna sudah dicabut (ADR-044 Revisi 11). Kuncinya tetap dikenal
+/// supaya cadangan lama masih bisa dipulihkan; isinya dibuang saat dibuka.
+const _legacyPatternsKey = StorageKey(namespace: 'capture', name: 'notification_patterns');
 const _inboxKey = StorageKey(namespace: 'capture', name: 'inbox');
 const _autoKey = StorageKey(namespace: 'capture', name: 'auto_recorded');
 const _processedKey = StorageKey(namespace: 'capture', name: 'processed_ids');
@@ -51,17 +53,6 @@ final class NotificationCaptureStoreImpl with RepositoryGuard implements Notific
   @override
   Future<Either<Failure, Unit>> saveSettings(NotificationCaptureSettings settings) =>
       guardVoid(() => _settings.write(_settingsToJson(settings)));
-
-  @override
-  Future<Either<Failure, List<NotificationPattern>>> loadPatterns() => guard(
-    () async => [
-      for (final j in await _list(_patternsKey).read() ?? const <Map<String, dynamic>>[]) _patternFromJson(j),
-    ],
-  );
-
-  @override
-  Future<Either<Failure, Unit>> savePatterns(List<NotificationPattern> patterns) =>
-      guardVoid(() => _list(_patternsKey).write([for (final p in patterns) _patternToJson(p)]));
 
   @override
   Future<Either<Failure, List<CaptureInboxEntry>>> loadInbox() => guard(
@@ -109,7 +100,6 @@ Map<String, dynamic> _settingsToJson(NotificationCaptureSettings s) => {
   'enabled': s.enabled,
   'delivery': s.delivery.name,
   'autoRecordLevel': s.autoRecordLevel.name,
-  'disabledBuiltInPatternIds': s.disabledBuiltInPatternIds.toList(),
   'saveSamples': s.saveSamples,
   'sources': [
     for (final source in s.sources)
@@ -130,7 +120,6 @@ NotificationCaptureSettings _settingsFromJson(Map<String, dynamic> j) => Notific
   enabled: j['enabled'] as bool? ?? false,
   delivery: _enum(NotificationDelivery.values, j['delivery'], NotificationDelivery.automatic),
   autoRecordLevel: _enum(AutoRecordLevel.values, j['autoRecordLevel'], AutoRecordLevel.reviewAll),
-  disabledBuiltInPatternIds: {for (final id in j['disabledBuiltInPatternIds'] as List? ?? const []) id as String},
   saveSamples: j['saveSamples'] as bool? ?? false,
   sources: [
     for (final raw in j['sources'] as List? ?? const [])
@@ -151,26 +140,6 @@ NotificationCaptureSettings _settingsFromJson(Map<String, dynamic> j) => Notific
           enabled: s['enabled'] as bool? ?? true,
         ),
   ],
-);
-
-Map<String, dynamic> _patternToJson(NotificationPattern p) => {
-  'id': p.id,
-  'packageName': p.packageName,
-  'label': p.label,
-  'template': p.template,
-  'kind': p.kind.name,
-  'categoryId': p.categoryId,
-  'transferWalletId': p.transferWalletId,
-};
-
-NotificationPattern _patternFromJson(Map<String, dynamic> j) => NotificationPattern(
-  id: j['id'] as String,
-  packageName: j['packageName'] as String,
-  label: j['label'] as String? ?? '',
-  template: j['template'] as String,
-  kind: _enum(NotificationPatternKind.values, j['kind'], NotificationPatternKind.expense),
-  categoryId: j['categoryId'] as String?,
-  transferWalletId: j['transferWalletId'] as String?,
 );
 
 Map<String, dynamic> _autoToJson(AutoRecordedEntry e) => {
@@ -205,3 +174,16 @@ AutoRecordedEntry _autoFromJson(Map<String, dynamic> j) => AutoRecordedEntry(
   },
   isNew: j['isNew'] as bool? ?? false,
 );
+
+/// Membuang pola buatan pengguna yang tersisa dari versi lama (atau dari
+/// cadangan lama yang dipulihkan). Tidak melakukan apa pun bila sudah kosong.
+Future<void> purgeLegacyCapturePatterns(KeyValueStorage storage) async {
+  final value = StoredValue<List<Map<String, dynamic>>>.json(
+    key: _legacyPatternsKey,
+    fromJson: (json) => [for (final item in json['items'] as List? ?? const []) Map<String, dynamic>.from(item as Map)],
+    toJson: (items) => {'schemaVersion': NotificationCaptureStoreImpl.schemaVersion, 'items': items},
+    storage: storage,
+  );
+  final existing = await value.read();
+  if (existing != null && existing.isNotEmpty) await value.write(const []);
+}

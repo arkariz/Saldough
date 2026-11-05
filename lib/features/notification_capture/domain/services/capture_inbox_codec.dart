@@ -57,7 +57,6 @@ Map<String, dynamic> captureInboxEntryToJson(CaptureInboxEntry e) => {
   'draft': captureDraftToJson(e.draft),
   'possibleDuplicate': e.possibleDuplicate,
   'iconId': ?e.iconId,
-  'patternId': ?e.patternId,
   'reviewReason': ?e.reviewReason?.name,
 };
 
@@ -71,6 +70,5 @@ CaptureInboxEntry captureInboxEntryFromJson(Map<String, dynamic> j) => CaptureIn
   draft: captureDraftFromJson(j['draft'] as Map),
   possibleDuplicate: j['possibleDuplicate'] as bool? ?? false,
   iconId: j['iconId'] as String?,
-  patternId: j['patternId'] as String?,
   reviewReason: CaptureReviewReason.values.where((r) => r.name == j['reviewReason']).firstOrNull,
 );

@@ -6616,9 +6616,20 @@ S sehari, M beberapa hari, L lebih dari seminggu.
       tingkat global menyala. Dua catatan otomatis pertama bertanda **Baru** di
       tab Otomatis. `onSaved` kini membawa `RecordSavedInfo` (jenis, nominal,
       kategori, catatan, dompet, pos). Uji: `approved_shapes_test` (12).
-      Belum: sakelar global turun ke Lanjutan (tetap di setelan sekarang),
-      catat otomatis hanya saat aplikasi dibuka (mesin tanpa layar tidak
-      mencatat otomatis).
+      Belum: sakelar global turun ke Lanjutan (tetap di setelan sekarang).
+
+- [x] **T-26.21** (M) E3 lanjutan: mesin tanpa layar mencatat sendiri (5 Nov 2026).
+      Saat aplikasi tertutup, notifikasi dari bentuk yang disetujui (Plus) tidak
+      lagi menunggu ketukan: mesin tanpa layar menuliskan keputusan Catat ke
+      jurnal native (`postRecorded`), notifikasi langsung "Tercatat" dengan
+      Batalkan, dan transaksi masuk buku besar saat aplikasi dibuka (satu
+      penulis tetap). Syarat sama dengan pemroses (`mayAutoRecordFromWorker`:
+      nominal dan dompet terisi, bukan duplikat, rutin tidak meragukan, di bawah
+      pagar 10× median) ditambah cek kembar 10 menit terhadap kotak masuk, log
+      otomatis, jurnal, dan putaran itu. `ApplyCaptureJournal` mencatat entri
+      ke tab Otomatis (bertanda Baru) dan menambah statistik bentuk sekali.
+      Uji: 5 uji baru; Kotlin dikompilasi (`assembleDebug`), **belum dicoba di
+      perangkat**.
 
 Enhancement (E1–E5) ada di Antrean B-85–B-89, dibuka sesudah gerbang tahap 1.
 

@@ -6,6 +6,7 @@ import 'package:saldough/features/notification_capture/domain/entities/capture_i
 import 'package:saldough/features/notification_capture/domain/entities/captured_notification.dart';
 import 'package:saldough/features/notification_capture/domain/entities/notification_capture_settings.dart';
 import 'package:saldough/features/notification_capture/domain/services/approved_shapes.dart';
+import 'package:saldough/features/notification_capture/domain/services/capture_resolver.dart';
 import 'package:saldough/features/notification_capture/domain/usecases/capture_inbox_actions.dart';
 import 'package:saldough/features/notification_capture/domain/usecases/process_captured_notifications.dart';
 import 'package:saldough/shared/capture/capture.dart';
@@ -40,6 +41,60 @@ void main() {
       final s = shape([2500000, 2500000, 3000000]);
       expect(isUnusualShapeAmount(s, 25000000), isFalse, reason: 'tepat 10x tidak lewat pagar');
       expect(isUnusualShapeAmount(s, 25000001), isTrue);
+    });
+  });
+
+  group('mesin tanpa layar mencatat sendiri (mayAutoRecordFromWorker)', () {
+    final shape = ApprovedShape(
+      packageName: pkg,
+      template: 't',
+      approvedAt: DateTime(2026, 11),
+      amounts: const [2500000, 2500000, 3000000],
+    );
+    const draft = RecordDraft(kind: DraftKind.expense, amountSen: 2500000, walletId: 'bri', note: 'KOPI');
+    bool may({
+      ApprovedShape? s,
+      RecordDraft d = draft,
+      PlanResolution plan = PlanResolution.none,
+      bool duplicate = false,
+    }) => mayAutoRecordFromWorker(shape: s, draft: d, plan: plan, duplicate: duplicate);
+
+    test('bentuk disetujui, draf lengkap, tanpa kembar: boleh', () {
+      expect(may(s: shape), isTrue);
+    });
+
+    test('tanpa persetujuan, kembar, atau nominal/dompet kosong: tidak', () {
+      expect(may(), isFalse);
+      expect(may(s: shape, duplicate: true), isFalse);
+      expect(
+        may(
+          s: shape,
+          d: const RecordDraft(kind: DraftKind.expense, walletId: 'bri'),
+        ),
+        isFalse,
+      );
+      expect(
+        may(
+          s: shape,
+          d: const RecordDraft(kind: DraftKind.expense, amountSen: 100),
+        ),
+        isFalse,
+      );
+    });
+
+    test('nominal jauh di atas kebiasaan: tidak', () {
+      expect(
+        may(
+          s: shape,
+          d: const RecordDraft(kind: DraftKind.expense, amountSen: 90000000, walletId: 'bri'),
+        ),
+        isFalse,
+      );
+    });
+
+    test('rutin meragukan (terikat tak jelas atau ambigu): tidak', () {
+      expect(may(s: shape, plan: const PlanResolution(boundUnclear: true)), isFalse);
+      expect(may(s: shape, plan: const PlanResolution(ambiguous: true)), isFalse);
     });
   });
 

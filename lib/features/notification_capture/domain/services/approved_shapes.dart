@@ -1,6 +1,10 @@
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
+import 'package:saldough/features/notification_capture/domain/entities/notification_capture_settings.dart';
+import 'package:saldough/features/notification_capture/domain/services/auto_record_policy.dart';
+import 'package:saldough/features/notification_capture/domain/services/capture_resolver.dart';
 import 'package:saldough/features/notification_capture/domain/services/notification_template.dart';
+import 'package:saldough/shared/capture/capture.dart';
 
 /// Bentuk notifikasi yang disetujui pengguna untuk dicatat otomatis
 /// (ADR-044 §3.7, E3/B-87).
@@ -114,6 +118,25 @@ int medianOf(List<int> values) {
 bool isUnusualShapeAmount(ApprovedShape shape, int amountSen) {
   if (shape.amounts.length < approvedShapeMinSamples) return false;
   return amountSen > medianOf(shape.amounts) * approvedShapeAmountFence;
+}
+
+/// Boleh-tidaknya mesin tanpa layar menuliskan keputusan Catat sendiri untuk
+/// notifikasi dari bentuk yang disetujui (E3): syaratnya sama dengan pemroses
+/// di aplikasi (nominal dan dompet terisi, bukan dugaan ganda, rutin tidak
+/// meragukan, nominal tidak jauh di atas kebiasaan). Rutin hanya boleh bila cocok
+/// persis dan bukan hasil pemutus nama.
+bool mayAutoRecordFromWorker({
+  required ApprovedShape? shape,
+  required RecordDraft draft,
+  required PlanResolution plan,
+  required bool duplicate,
+}) {
+  if (shape == null || duplicate) return false;
+  if (plan.boundUnclear || plan.ambiguous) return false;
+  final match = plan.match;
+  if (match != null && (!match.exact || plan.tieBroken)) return false;
+  if (!const AutoRecordPolicy(AutoRecordLevel.whenAmountAndWallet).allows(draft)) return false;
+  return !isUnusualShapeAmount(shape, draft.amountSen ?? 0);
 }
 
 /// [ApprovedShape] di atas [ApprovedShapeStore]: dimuat ulang tiap [refresh].

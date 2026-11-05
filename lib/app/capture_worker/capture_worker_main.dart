@@ -19,6 +19,7 @@ import 'package:saldough/core/foundation/entitlement/entitlement.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/language/language.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
+import 'package:saldough/features/notification_capture/data/approved_shape_store_impl.dart';
 import 'package:saldough/features/notification_capture/data/merchant_memory_store_impl.dart';
 import 'package:saldough/features/notification_capture/data/negative_shape_store_impl.dart';
 import 'package:saldough/features/notification_capture/data/notification_capture_store_impl.dart';
@@ -28,6 +29,7 @@ import 'package:saldough/features/notification_capture/domain/entities/captured_
 import 'package:saldough/features/notification_capture/domain/entities/notification_capture_settings.dart';
 import 'package:saldough/features/notification_capture/domain/entities/notification_source.dart';
 import 'package:saldough/features/notification_capture/domain/services/active_capture_inputs.dart';
+import 'package:saldough/features/notification_capture/domain/services/approved_shapes.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_card_class.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_inbox_codec.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_resolver.dart';
@@ -150,6 +152,11 @@ Future<void> _drain(
       NotificationRuleInterpreter(language: language, categories: () => ActiveCategories.notifier.value);
   final negatives = StoreBackedNegativeShapes(NegativeShapeStoreImpl(storage: storage));
   await negatives.refresh();
+  final approvedShapes = StoreBackedApprovedShapes(ApprovedShapeStoreImpl(storage: storage));
+  await approvedShapes.refresh();
+  // Untuk memeriksa catatan kembar (bank dan e-wallet untuk satu top up) di antara
+  // kartu, log otomatis, jurnal, dan keputusan putaran ini.
+  final recent = await _recentCaptures(store, log);
   final resolver = CaptureResolver(
     memory: StoreBackedMerchantMemory(MerchantMemoryStoreImpl(storage: storage)),
     composer: NotificationDraftComposer(
@@ -204,7 +211,18 @@ Future<void> _drain(
 
       // Tombol Catat hanya untuk Plus dan draf lengkap tanpa tebakan; selain itu
       // notifikasi membuka CATAT terisi (pengingat biasa).
-      final withActions = isPlus && resolved.cardClass != CaptureCardClass.needsInput;
+      // Bentuk yang disetujui (E3, Plus): keputusan Catat ditulis ke jurnal tanpa ketukan.
+      final approved = isPlus ? approvedShapes.find(packageName, notification.text) : null;
+      final autoRecord =
+          amount != null &&
+          mayAutoRecordFromWorker(
+            shape: approved,
+            draft: resolved.draft,
+            plan: resolved.plan,
+            duplicate: resolved.existing != null || recent.any((r) => r.isNear(amount, notification.postedAt)),
+          );
+      if (autoRecord) recent.add(_Recent(amount, notification.postedAt));
+      final withActions = isPlus && (autoRecord || resolved.cardClass != CaptureCardClass.needsInput);
       final entry = CaptureInboxEntry(
         id: id,
         packageName: packageName,
@@ -225,9 +243,11 @@ Future<void> _drain(
         ),
         'body': resolved.draft.note.trim().isEmpty ? texts.reminderReviewBody : resolved.draft.note,
         'icon': item['icon'],
+        'autoRecord': autoRecord,
         'payload': withActions
             ? jsonEncode({
                 'entry': captureInboxEntryToJson(entry),
+                if (autoRecord) 'autoShape': true,
                 'match': ?(match == null
                     ? null
                     : {'ruleId': match.rule.id, 'date': match.date.toIso8601String(), 'exact': match.exact}),
@@ -239,6 +259,43 @@ Future<void> _drain(
       await log('GAGAL $id: $e\n$st');
     }
   }
+}
+
+/// Satu tangkapan terkini: nominal dan waktu, untuk mendeteksi catatan kembar.
+final class _Recent {
+  _Recent(this.amountSen, this.at);
+
+  final int amountSen;
+  final DateTime at;
+
+  bool isNear(int amount, DateTime when) =>
+      amount == amountSen && when.difference(at).abs() <= const Duration(minutes: 10);
+}
+
+/// Nominal dan waktu dari kotak masuk, log otomatis, dan jurnal (keputusan Catat
+/// yang belum diterapkan).
+Future<List<_Recent>> _recentCaptures(NotificationCaptureStoreImpl store, Future<void> Function(String) log) async {
+  final recent = <_Recent>[];
+  for (final e in (await store.loadInbox()).getOrElse((_) => const [])) {
+    final amount = e.draft.amountSen;
+    if (amount != null) recent.add(_Recent(amount, e.capturedAt));
+  }
+  for (final e in (await store.loadAutoRecorded()).getOrElse((_) => const [])) {
+    recent.add(_Recent(e.amountSen, e.capturedAt ?? e.transactionDate));
+  }
+  try {
+    final journal = await _channel.invokeListMethod<Map<Object?, Object?>>('journalEntries') ?? const [];
+    for (final entry in journal) {
+      if (entry['decision'] != 'record') continue;
+      final payload = jsonDecode(entry['payload']! as String) as Map<String, Object?>;
+      final e = captureInboxEntryFromJson(payload['entry']! as Map<String, dynamic>);
+      final amount = e.draft.amountSen;
+      if (amount != null) recent.add(_Recent(amount, e.capturedAt));
+    }
+  } on Object catch (e) {
+    await log('jurnal tidak terbaca untuk cek kembar: $e');
+  }
+  return recent;
 }
 
 /// Sumber uji untuk build non-produk bila setelan Dart belum memuat sumbernya

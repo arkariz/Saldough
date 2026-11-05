@@ -5,6 +5,7 @@ import 'package:saldough/features/notification_capture/domain/entities/capture_i
 import 'package:saldough/features/notification_capture/domain/entities/capture_journal_record.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_gateway.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_store.dart';
+import 'package:saldough/features/notification_capture/domain/services/approved_shapes.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_finalizer.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_inbox_changes.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_inbox_codec.dart';
@@ -67,6 +68,7 @@ final class ApplyCaptureJournal {
     required this.transactionRepository,
     required this.walletRepository,
     this.sourceIcons,
+    this.approvedShapes,
     this.recurringRules,
     this.finalizer = const CaptureFinalizer(),
     this.changes,
@@ -79,6 +81,10 @@ final class ApplyCaptureJournal {
 
   /// Penyimpanan ikon aplikasi sumber; `null` = transaksi tanpa ikon.
   final SourceIconRepository? sourceIcons;
+
+  /// Bentuk yang disetujui (E3): catatan yang ditandai `autoShape` oleh mesin tanpa
+  /// layar menambah statistik bentuk dan bertanda baru; `null` = tanpa.
+  final StoreBackedApprovedShapes? approvedShapes;
 
   /// Penyimpanan kotak masuk dan id terproses.
   final NotificationCaptureStore store;
@@ -179,6 +185,7 @@ final class ApplyCaptureJournal {
       final iconId = (await sourceIcons?.save(icons[entry.id]!))?.fold((_) => null, (id) => id);
       if (iconId != null) draft = draft.copyWith(sourceIconId: () => iconId);
     }
+    final autoShape = payload['autoShape'] == true;
     final date = draft.date ?? entry.capturedAt;
     final txId = captureTransactionId(entry.id);
 
@@ -204,7 +211,7 @@ final class ApplyCaptureJournal {
       linked = match != null;
       tx = transaction;
     }
-    if (tx != null) await _logAuto(entry, draft, tx);
+    if (tx != null) await _logAuto(entry, draft, tx, autoShape: autoShape, countShape: !exists);
     await _finish(entry.id);
     return (movedToInbox: false, linked: linked);
   }
@@ -214,9 +221,24 @@ final class ApplyCaptureJournal {
   /// tanpa ini transaksinya ada tetapi tab Otomatis kosong dan tidak bisa
   /// dibatalkan dari sana. Idempoten per id tangkapan; gagal menulis log tidak
   /// membatalkan transaksi.
-  Future<void> _logAuto(CaptureInboxEntry entry, RecordDraft draft, Transaction tx) async {
+  Future<void> _logAuto(
+    CaptureInboxEntry entry,
+    RecordDraft draft,
+    Transaction tx, {
+    required bool autoShape,
+    required bool countShape,
+  }) async {
     final auto = (await store.loadAutoRecorded()).getOrElse((_) => const []);
     if (auto.any((e) => e.captureId == entry.id)) return;
+    var isNew = false;
+    if (autoShape) {
+      await approvedShapes?.refresh();
+      final shape = approvedShapes?.find(entry.packageName, entry.text);
+      if (shape != null) {
+        isNew = shape.autoCount < approvedShapeNewCount;
+        if (countShape) await approvedShapes?.recordAuto(shape, tx.amount);
+      }
+    }
     await store.saveAutoRecorded([
       AutoRecordedEntry(
         captureId: entry.id,
@@ -230,6 +252,7 @@ final class ApplyCaptureJournal {
         categoryId: tx.categoryId,
         iconId: draft.sourceIconId ?? entry.iconId,
         capturedAt: entry.capturedAt,
+        isNew: isNew,
       ),
       ...auto,
     ]);

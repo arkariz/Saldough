@@ -5,11 +5,13 @@ import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
+import 'package:saldough/features/notification_capture/data/approved_shape_store_impl.dart';
 import 'package:saldough/features/notification_capture/data/method_channel_notification_capture_gateway.dart';
 import 'package:saldough/features/notification_capture/data/notification_capture_store_impl.dart';
 import 'package:saldough/features/notification_capture/domain/entities/capture_inbox_entry.dart';
 import 'package:saldough/features/notification_capture/domain/entities/capture_journal_record.dart';
 import 'package:saldough/features/notification_capture/domain/entities/captured_notification.dart';
+import 'package:saldough/features/notification_capture/domain/services/approved_shapes.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_finalizer.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_inbox_codec.dart';
 import 'package:saldough/features/notification_capture/domain/usecases/apply_capture_journal.dart';
@@ -42,7 +44,8 @@ void main() {
   final capturedAt = DateTime(2026, 11, 4, 10);
   final now = DateTime(2026, 11, 4, 12);
 
-  ApplyCaptureJournal apply({BudgetItemCatalog? catalog}) => ApplyCaptureJournal(
+  ApplyCaptureJournal apply({BudgetItemCatalog? catalog, StoreBackedApprovedShapes? shapes}) => ApplyCaptureJournal(
+    approvedShapes: shapes,
     sourceIcons: SourceIconRepositoryImpl(storage: storage),
     gateway: gateway,
     store: store,
@@ -80,12 +83,14 @@ void main() {
     String? decision = 'record',
     OccurrenceMatch? match,
     DateTime? resolvedAt,
+    bool autoShape = false,
   }) => CaptureJournalRecord(
     id: e.id,
     decision: decision,
     resolvedAt: resolvedAt ?? capturedAt,
     payload: jsonEncode({
       'entry': captureInboxEntryToJson(e),
+      if (autoShape) 'autoShape': true,
       'match': ?(match == null
           ? null
           : {'ruleId': match.rule.id, 'date': match.date.toIso8601String(), 'exact': match.exact}),
@@ -155,6 +160,27 @@ void main() {
       expect(gateway.acked, contains('n1'));
       expect(gateway.ackedJournal, ['n1']);
       expect(gateway.cancelledActionable, 1);
+    });
+
+    test('ditandai autoShape oleh mesin tanpa layar: bertanda baru dan statistik bentuk bertambah sekali', () async {
+      final shapes = StoreBackedApprovedShapes(ApprovedShapeStoreImpl(storage: storage));
+      final e = entry('n1');
+      await shapes.approve(
+        packageName: e.packageName,
+        text: e.text,
+        note: 'KOPI',
+        amountSen: 2500000,
+      );
+      gateway.journalRecords = [record(e, autoShape: true)];
+      await apply(shapes: shapes)();
+      // Diterapkan ulang (jurnal belum di-ack): tidak dihitung dua kali.
+      gateway.journalRecords = [record(e, autoShape: true)];
+      await apply(shapes: shapes)();
+
+      final auto = (await store.loadAutoRecorded()).getOrElse((_) => []);
+      expect(auto.single.isNew, isTrue);
+      await shapes.refresh();
+      expect(shapes.find(e.packageName, e.text)!.autoCount, 1);
     });
 
     test('masuk log Tercatat otomatis (tab Otomatis), satu entri meski diterapkan dua kali', () async {

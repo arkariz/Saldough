@@ -69,6 +69,18 @@ object CaptureActionable {
         updateSummary(context)
     }
 
+    /**
+     * Bentuk yang disetujui pengguna (E3): keputusan Catat ditulis ke jurnal tanpa menunggu
+     * ketukan, lalu notifikasi langsung berupa hasil dengan Batalkan. Aplikasi menerapkannya
+     * ke Hive saat dibuka, sama dengan Catat lewat tombol.
+     */
+    fun postRecorded(context: Context, captureId: String, title: String, body: String, payload: String, icon: ByteArray?) {
+        post(context, captureId, title, body, payload, icon)
+        if (!CaptureJournal.decide(context, captureId, "record")) return
+        recorded(context, captureId)
+        if (CaptureJournal.touchesPlan(context, listOf(captureId))) CaptureWorker.requestReminderResync(context)
+    }
+
     private fun action(context: Context, captureId: String, name: String, label: String, ids: List<String>? = null): Notification.Action {
         val intent = Intent(context, CaptureActionReceiver::class.java)
             .setAction(name)

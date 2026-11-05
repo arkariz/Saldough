@@ -112,14 +112,26 @@ object CaptureWorker {
                     }
                     "postActionable" -> {
                         val args = call.arguments as Map<*, *>
-                        CaptureActionable.post(
-                            app,
-                            args["captureId"] as String,
-                            args["title"] as String,
-                            args["body"] as String,
-                            args["payload"] as String?,
-                            args["icon"] as ByteArray?,
-                        )
+                        val payload = args["payload"] as String?
+                        if (args["autoRecord"] == true && payload != null) {
+                            CaptureActionable.postRecorded(
+                                app,
+                                args["captureId"] as String,
+                                args["title"] as String,
+                                args["body"] as String,
+                                payload,
+                                args["icon"] as ByteArray?,
+                            )
+                        } else {
+                            CaptureActionable.post(
+                                app,
+                                args["captureId"] as String,
+                                args["title"] as String,
+                                args["body"] as String,
+                                payload,
+                                args["icon"] as ByteArray?,
+                            )
+                        }
                         Log.i(TAG, "notifikasi dipasang +${elapsed()}ms")
                         result.success(null)
                     }

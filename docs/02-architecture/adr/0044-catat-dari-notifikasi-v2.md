@@ -193,7 +193,8 @@ deklarasi layanan pendengar di `AndroidManifest`.
 - **Revisi 10 (5 Nov 2026, T-26.20):** catat otomatis per bentuk (§3.7) dibangun.
   KT-N2 dijawab: pagar nominal 10× median (min. 3 contoh, 20 terakhir). Bentuk
   disetujui lewat tawaran sesudah Simpan; templatnya menjadikan pedagang `{note}`.
-  Berlaku di pemroses saat aplikasi dibuka; mesin tanpa layar tidak mencatat otomatis.
+  Berlaku di pemroses saat aplikasi dibuka; T-26.21 menambah jalur mesin tanpa
+  layar (keputusan Catat ke jurnal, buku besar tetap diisi saat aplikasi dibuka).
 
 - **Revisi 9 (5 Nov 2026):** bentuk positif "Ya" (§3.4) ditunda. Kartu hanya ada bila
   teksnya sudah lolos filter frasa, jadi mempelajarinya dari kartu tidak menambah

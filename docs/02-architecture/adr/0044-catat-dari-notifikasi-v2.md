@@ -190,6 +190,9 @@ deklarasi layanan pendengar di `AndroidManifest`.
 
 ## 7. Revisi
 
+- **Revisi 8 (5 Nov 2026, T-26.17):** dompet diingat dari pengenal rekening
+  bertopeng di teks (tepat satu), menjadi `WalletRule` tanpa formulir.
+
 - **Revisi 7 (4 Nov 2026, T-26.15):** bentuk negatif ("Bukan transaksi") dipelajari
   dari kartu dan menyaring notifikasi berikutnya (§3.4); bentuk positif tetap
   lewat Ajari pola.

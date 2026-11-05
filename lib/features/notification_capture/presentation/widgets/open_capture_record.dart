@@ -18,7 +18,7 @@ import 'package:saldough/shared/recurring/recurring.dart';
 RecordSheetInput recordSheetInputFor(
   CaptureInboxEntry entry,
   OccurrenceMatch? match, {
-  void Function(String? categoryId, String note)? onSaved,
+  void Function(String? categoryId, String note, String? walletId)? onSaved,
 }) {
   if (match == null) return RecordSheetInput(draft: entry.draft, onSaved: onSaved);
   return RecordSheetInput(
@@ -36,7 +36,7 @@ Future<bool> openCaptureRecord(
   BuildContext context,
   CaptureInboxEntry entry,
   OccurrenceMatch? match, {
-  void Function(String? categoryId, String note)? onSaved,
+  void Function(String? categoryId, String note, String? walletId)? onSaved,
 }) async =>
     await context.pushRoute<RecordSheetInput, bool>(
       RecordRouteKeys.sheet,
@@ -60,19 +60,22 @@ Future<void> openCaptureInbox(BuildContext context, GetIt container) async {
   final match = (await actions.matchesFor([entry]))[entry.id];
   if (!context.mounted) return;
   String? savedCategory;
+  String? savedWallet;
   var savedNote = '';
   final saved = await openCaptureRecord(
     context,
     entry,
     match,
-    onSaved: (categoryId, note) {
+    onSaved: (categoryId, note, walletId) {
       savedCategory = categoryId;
       savedNote = note;
+      savedWallet = walletId;
     },
   );
   if (saved) {
     await actions.remove(entry.id);
     // Tanpa Batalkan di jalur ini (tidak ada snackbar): kategori baru tetap diingat.
     await actions.rememberCategory(entry, categoryId: savedCategory, note: savedNote);
+    await actions.rememberWallet(entry, walletId: savedWallet);
   }
 }

@@ -4,7 +4,9 @@ import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/features/notification_capture/domain/entities/capture_inbox_entry.dart';
 import 'package:saldough/features/notification_capture/domain/entities/captured_notification.dart';
 import 'package:saldough/features/notification_capture/domain/entities/notification_capture_settings.dart';
+import 'package:saldough/features/notification_capture/domain/entities/notification_source.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_store.dart';
+import 'package:saldough/features/notification_capture/domain/services/account_hint.dart';
 import 'package:saldough/features/notification_capture/domain/services/active_capture_inputs.dart';
 import 'package:saldough/features/notification_capture/domain/services/auto_record_policy.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_finalizer.dart';
@@ -118,6 +120,53 @@ final class CaptureInboxActions {
       await forget();
       await restore(entry);
     };
+  }
+
+  /// Belajar dompet dari kartu yang dicatat lewat CATAT (E1, banyak dompet tanpa
+  /// formulir): bila dompet akhir [walletId] berbeda dari draf kartu dan teksnya
+  /// memuat tepat satu pengenal rekening ([accountHintOf]), pengenal itu menjadi
+  /// aturan dompet sumber ini. Mengembalikan fungsi Batalkan dan nama pengenal,
+  /// atau `null` bila tidak ada yang dipelajari (transfer, dompet sama, tanpa
+  /// pengenal, atau sumber tidak ditemukan).
+  Future<({String hint, Future<void> Function() undo})?> rememberWallet(
+    CaptureInboxEntry entry, {
+    required String? walletId,
+  }) async {
+    if (walletId == null || entry.draft.kind == DraftKind.transfer || walletId == entry.draft.walletId) return null;
+    final hint = accountHintOf(entry.text);
+    if (hint == null) return null;
+    final before = (await store.loadSettings()).fold((_) => null, (value) => value);
+    final source = before?.sources.where((s) => s.packageName == entry.packageName).firstOrNull;
+    if (before == null || source == null) return null;
+    // Pengenal ini hanya milik satu dompet: dicabut dari aturan lain, lalu ditambahkan.
+    final rules = <WalletRule>[];
+    var added = false;
+    for (final rule in source.walletRules) {
+      final keywords = [
+        for (final k in rule.keywords)
+          if (k.trim().toLowerCase() != hint) k,
+      ];
+      if (rule.walletId == walletId) {
+        rules.add(rule.copyWith(keywords: [...keywords, hint]));
+        added = true;
+      } else if (keywords.isNotEmpty) {
+        rules.add(rule.copyWith(keywords: keywords));
+      }
+    }
+    if (!added) rules.add(WalletRule(walletId: walletId, keywords: [hint]));
+    final after = NotificationCaptureSettings(
+      enabled: before.enabled,
+      delivery: before.delivery,
+      autoRecordLevel: before.autoRecordLevel,
+      disabledBuiltInPatternIds: before.disabledBuiltInPatternIds,
+      saveSamples: before.saveSamples,
+      sources: [
+        for (final s in before.sources)
+          if (s.packageName == entry.packageName) s.copyWith(walletRules: rules) else s,
+      ],
+    );
+    if ((await store.saveSettings(after)).isLeft()) return null;
+    return (hint: hint, undo: () async => store.saveSettings(before));
   }
 
   /// Mengembalikan item [entry] yang baru diabaikan ke kotak masuk

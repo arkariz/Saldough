@@ -202,6 +202,12 @@ final class CaptureInboxBloc extends Bloc<CaptureInboxEvent, CaptureInboxState> 
     required String note,
   }) => _actions.rememberCategory(entry, categoryId: categoryId, note: note);
 
+  /// Belajar dompet dari kartu yang dicatat (E1); `null` bila tidak ada yang dipelajari.
+  Future<({String hint, Future<void> Function() undo})?> rememberWallet(
+    CaptureInboxEntry entry, {
+    required String? walletId,
+  }) => _actions.rememberWallet(entry, walletId: walletId);
+
   Future<void> _reload(Emitter<CaptureInboxState> emit, {UiEffect? effect}) async {
     final pending = (await _store.loadInbox()).getOrElse((_) => const []);
     final auto = (await _store.loadAutoRecorded()).getOrElse((_) => const []);

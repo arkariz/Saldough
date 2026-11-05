@@ -3173,6 +3173,9 @@ class Translations$notificationCapture$id {
 	/// id: 'Diingat: "${note}" dari ${app} masuk ${category}'
 	String rememberedSnack({required Object note, required Object app, required Object category}) => 'Diingat: "${note}" dari ${app} masuk ${category}';
 
+	/// id: 'Diingat: rekening ${hint} di ${app} masuk ${wallet}'
+	String rememberedWalletSnack({required Object hint, required Object app, required Object wallet}) => 'Diingat: rekening ${hint} di ${app} masuk ${wallet}';
+
 	/// id: 'Batalkan'
 	String get rememberedUndo => 'Batalkan';
 
@@ -6922,6 +6925,7 @@ extension on Translations {
 			'notificationCapture.bannerAction' => 'Cek',
 			'notificationCapture.autoRecordedSnack' => ({required Object amount, required Object app}) => 'Tercatat otomatis: ${amount} · ${app}',
 			'notificationCapture.rememberedSnack' => ({required Object note, required Object app, required Object category}) => 'Diingat: "${note}" dari ${app} masuk ${category}',
+			'notificationCapture.rememberedWalletSnack' => ({required Object hint, required Object app, required Object wallet}) => 'Diingat: rekening ${hint} di ${app} masuk ${wallet}',
 			'notificationCapture.rememberedUndo' => 'Batalkan',
 			'notificationCapture.autoRecordedSnackMany' => ({required Object n}) => '${n} transaksi tercatat otomatis dari notifikasi',
 			'notificationCapture.reminderChannel' => 'Catat dari notifikasi',
@@ -7319,9 +7323,9 @@ extension on Translations {
 			'premium.account.rowTitle' => 'Tanukonomy Plus',
 			'premium.account.subFree' => 'Gratis. Lihat apa yang bisa dikerjakan Tanuki.',
 			'premium.account.subTrial' => ({required Object date}) => 'Sampai ${date}. Tanpa kartu.',
-			'premium.account.subActive' => ({required Object date}) => 'Aktif sampai ${date}',
 			_ => null,
 		} ?? switch (path) {
+			'premium.account.subActive' => ({required Object date}) => 'Aktif sampai ${date}',
 			'premium.account.subActiveOpen' => 'Aktif',
 			'premium.account.subGrace' => ({required Object date}) => 'Pembayaran belum berhasil. Plus tetap aktif sampai ${date}.',
 			'premium.account.subOnHold' => 'Langganan ditahan karena pembayaran belum berhasil. Perbaiki di Play Store.',

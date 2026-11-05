@@ -1271,6 +1271,7 @@ class _Translations$notificationCapture$en extends Translations$notificationCapt
 	@override String get bannerAction => 'Check';
 	@override String autoRecordedSnack({required Object amount, required Object app}) => 'Recorded automatically: ${amount} · ${app}';
 	@override String rememberedSnack({required Object note, required Object app, required Object category}) => 'Remembered: "${note}" from ${app} goes to ${category}';
+	@override String rememberedWalletSnack({required Object hint, required Object app, required Object wallet}) => 'Remembered: account ${hint} in ${app} goes to ${wallet}';
 	@override String get rememberedUndo => 'Undo';
 	@override String autoRecordedSnackMany({required Object n}) => '${n} transactions recorded automatically from notifications';
 	@override String get reminderChannel => 'Record from notifications';
@@ -3663,6 +3664,7 @@ extension on TranslationsEn {
 			'notificationCapture.bannerAction' => 'Check',
 			'notificationCapture.autoRecordedSnack' => ({required Object amount, required Object app}) => 'Recorded automatically: ${amount} · ${app}',
 			'notificationCapture.rememberedSnack' => ({required Object note, required Object app, required Object category}) => 'Remembered: "${note}" from ${app} goes to ${category}',
+			'notificationCapture.rememberedWalletSnack' => ({required Object hint, required Object app, required Object wallet}) => 'Remembered: account ${hint} in ${app} goes to ${wallet}',
 			'notificationCapture.rememberedUndo' => 'Undo',
 			'notificationCapture.autoRecordedSnackMany' => ({required Object n}) => '${n} transactions recorded automatically from notifications',
 			'notificationCapture.reminderChannel' => 'Record from notifications',
@@ -4060,9 +4062,9 @@ extension on TranslationsEn {
 			'premium.account.rowTitle' => 'Tanukonomy Plus',
 			'premium.account.subFree' => 'Free. See what Tanuki can do for you.',
 			'premium.account.subTrial' => ({required Object date}) => 'Until ${date}. No card needed.',
-			'premium.account.subActive' => ({required Object date}) => 'Active until ${date}',
 			_ => null,
 		} ?? switch (path) {
+			'premium.account.subActive' => ({required Object date}) => 'Active until ${date}',
 			'premium.account.subActiveOpen' => 'Active',
 			'premium.account.subGrace' => ({required Object date}) => 'Payment did not go through. Plus stays on until ${date}.',
 			'premium.account.subOnHold' => 'Subscription on hold because payment did not go through. Fix it in the Play Store.',

@@ -1230,6 +1230,7 @@
     "bannerAction": "Check",
     "autoRecordedSnack": "Recorded automatically: ${amount} · ${app}",
     "rememberedSnack": "Remembered: \"${note}\" from ${app} goes to ${category}",
+    "rememberedWalletSnack": "Remembered: account ${hint} in ${app} goes to ${wallet}",
     "rememberedUndo": "Undo",
     "autoRecordedSnackMany": "${n} transactions recorded automatically from notifications",
     "reminderChannel": "Record from notifications",

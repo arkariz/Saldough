@@ -6568,6 +6568,20 @@ S sehari, M beberapa hari, L lebih dari seminggu.
       pasti transaksi ("pembayaran berhasil", dst.), jadi teks promo tanpa frasa itu
       tidak pernah masuk kotak masuk (panduan uji sebelumnya keliru).
 
+- [x] **T-26.17** (M) E1c banyak dompet tanpa formulir (5 Nov 2026, irisan ketiga
+      B-85). Mencatat kartu lewat CATAT dengan dompet yang berbeda dari draf
+      kartu, dan teksnya memuat **tepat satu** pengenal rekening bertopeng
+      (`****1234`, `xxxx5678`, `•••1234`; `account_hint.dart`), menjadikan
+      pengenal itu aturan dompet (`WalletRule`) sumber tersebut. Teks serupa
+      berikutnya langsung ke dompet itu; yang tanpa pengenal tetap ke dompet
+      bawaan. Snackbar "Diingat: rekening ... masuk ..." dengan **Batalkan**
+      (mengembalikan setelan sebelumnya). Pengenal hanya milik satu dompet
+      (dipindah bila dikoreksi lagi). Tidak belajar bila dompet sama, tanpa
+      pengenal, lebih dari satu pengenal (mis. transfer antar rekening), atau
+      jenis transfer: tidak menebak. `RecordSheetInput.onSaved` kini juga
+      membawa dompet akhir. Uji: `wallet_learning_test` (7). Sisa B-85: bentuk
+      positif dipelajari ("Ya").
+
 Enhancement (E1–E5) ada di Antrean B-85–B-89, dibuka sesudah gerbang tahap 1.
 
 ## Antrean (belum dijadwalkan)
@@ -6643,7 +6657,7 @@ menambah dan memindahkannya ada di
 | B-82 | **Buku Stempel** (gratis; edisi musiman khusus Plus): stempel piksel untuk tonggak (periode lengkap, saldo cocok, rutin tak terlewat, target tercapai) dan edisi Ramadan, 17 Agustus, Tahun Baru; tanpa streak, poin, atau peringkat (KT-R13). | pemilik menyerahkan aset, lalu agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §16, [laporan bisnis](https://claude.ai/artifact/SKsV87e4f7hX8h58Qvv7G5) Gamifikasi |
 | B-83 | **Sisa pengamatan QA Fase 22–23**: (a) halaman "Data dipulihkan" tetap meminta izin notifikasi walau sudah aktif; (b) F23-4: daftar rutin sempat menampilkan kemunculan yang sudah tercatat sebagai "Later" (ulangi di perangkat nyata); (c) uji layar otomatis untuk Aturan dompet, Ikat ke rutin, dan Contoh notifikasi. | agen | [VERIFICATION_PLAN_FASE_23.md](VERIFICATION_PLAN_FASE_23.md) |
 | B-84 | **Arsip proyek freelance**: status aktif/arsip di `FreelanceProject` supaya batas Gratis bisa menghitung proyek aktif saja (sekarang menghitung semua proyek, ADR-041 §3.13 butir 2). Butuh ADR domain kecil dan rupa. | agen | ADR-041 §3.13, T-24.13 |
-| B-85 | **E1 "Ingat" dan bentuk dipelajari** (ingatan pedagang selesai di T-26.14; sisa: Ya/Bukan, bentuk dipelajari, banyak dompet): aturan lahir dari kartu, tanya "Ini transaksi? Ya/Bukan", banyak dompet per aplikasi tanpa formulir. Sesudah gerbang tahap 1. | agen | [NOTIFICATION_CAPTURE_V2.md](../01-product/features/NOTIFICATION_CAPTURE_V2.md) §7–§8, ADR-044 §3.4 |
+| B-85 | **E1 "Ingat" dan bentuk dipelajari** (ingatan pedagang T-26.14, Bukan transaksi T-26.15, banyak dompet T-26.17 selesai; sisa: bentuk positif "Ya"): aturan lahir dari kartu, tanya "Ini transaksi? Ya/Bukan", banyak dompet per aplikasi tanpa formulir. Sesudah gerbang tahap 1. | agen | [NOTIFICATION_CAPTURE_V2.md](../01-product/features/NOTIFICATION_CAPTURE_V2.md) §7–§8, ADR-044 §3.4 |
 | B-86 | **E2 saran pos anggaran** untuk pengeluaran bebas (nama pos di teks atau ingatan pedagang), hanya saran. | agen | NOTIFICATION_CAPTURE_V2.md §5 |
 | B-87 | **E3 catat otomatis per bentuk**: tawaran setelah konfirmasi pertama tanpa ubahan, pagar nominal besar, tanda "baru". Plus. | agen | NOTIFICATION_CAPTURE_V2.md §8, ADR-044 §3.7 |
 | B-88 | **E4 Lanjutan**: daftar aturan, "Ajari pola" yang disederhanakan, filter, contoh; migrasi `walletRules`/pola/ikatan menjadi aturan. | agen | ADR-044 §3.7 |

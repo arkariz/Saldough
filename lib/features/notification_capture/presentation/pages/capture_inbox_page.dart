@@ -48,33 +48,50 @@ class CaptureInboxPage extends StatelessWidget {
     required String cardClass,
   }) async {
     final bloc = context.read<CaptureInboxBloc>();
+    final settings = context.read<NotificationSettingsBloc>();
     AppAnalytics.log(CaptureEvents.cardAction(action: via, cardClass: cardClass));
     String? savedCategory;
+    String? savedWallet;
     var savedNote = '';
     final saved = await openCaptureRecord(
       context,
       entry,
       match,
-      onSaved: (categoryId, note) {
+      onSaved: (categoryId, note, walletId) {
         savedCategory = categoryId;
         savedNote = note;
+        savedWallet = walletId;
       },
     );
     if (!saved) return;
     AppAnalytics.log(CaptureEvents.recordSaved(via: via, cardClass: cardClass));
     bloc.add(CaptureInboxRecorded(entry.id));
-    // Belajar (E1): kategori baru atau yang diubah diingat untuk pedagang ini, dengan Batalkan.
-    final undo = await bloc.rememberCategory(entry, categoryId: savedCategory, note: savedNote);
-    if (undo == null || !context.mounted) return;
-    final categoryName = ActiveCategories.notifier.value.where((c) => c.id == savedCategory).firstOrNull?.name ?? '';
+    // Belajar (E1): kategori dan dompet baru atau yang diubah diingat, dengan Batalkan.
+    final undoCategory = await bloc.rememberCategory(entry, categoryId: savedCategory, note: savedNote);
+    final learnedWallet = await bloc.rememberWallet(entry, walletId: savedWallet);
+    if (!context.mounted) return;
     final texts = t.notificationCapture;
-    ScaffoldMessenger.of(context).showSnackBar(
-      actionSnackBar(
-        context,
-        content: Text(texts.rememberedSnack(note: savedNote.trim(), app: entry.appLabel, category: categoryName)),
-        action: SnackBarAction(label: texts.rememberedUndo, onPressed: () => unawaited(undo())),
-      ),
-    );
+    final messenger = ScaffoldMessenger.of(context);
+    if (undoCategory != null) {
+      final categoryName = ActiveCategories.notifier.value.where((c) => c.id == savedCategory).firstOrNull?.name ?? '';
+      messenger.showSnackBar(
+        actionSnackBar(
+          context,
+          content: Text(texts.rememberedSnack(note: savedNote.trim(), app: entry.appLabel, category: categoryName)),
+          action: SnackBarAction(label: texts.rememberedUndo, onPressed: () => unawaited(undoCategory())),
+        ),
+      );
+    }
+    if (learnedWallet != null) {
+      final walletName = settings.state.wallets.where((w) => w.id == savedWallet).firstOrNull?.name ?? '';
+      messenger.showSnackBar(
+        actionSnackBar(
+          context,
+          content: Text(texts.rememberedWalletSnack(hint: learnedWallet.hint, app: entry.appLabel, wallet: walletName)),
+          action: SnackBarAction(label: texts.rememberedUndo, onPressed: () => unawaited(learnedWallet.undo())),
+        ),
+      );
+    }
   }
 
   Future<void> _makePattern(BuildContext context, CaptureInboxEntry entry) async {

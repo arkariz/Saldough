@@ -3,12 +3,12 @@ import 'dart:async';
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/recurring/presentation/bloc/recurring_state.dart';
@@ -449,22 +449,20 @@ final class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
 
   UiEffect _effectWithUndo(String message, Future<Either<Failure, Unit>> Function() undo) => CallbackEffect(
     callback: (context) {
-      final colors = context.appColors;
+      final ds = context.ds;
       final messenger = ScaffoldMessenger.of(context);
       messenger.showSnackBar(
         actionSnackBar(
           context,
-          content: Text(message, style: TextStyle(color: colors.bg)),
-          backgroundColor: colors.ink,
+          content: Text(message),
           action: SnackBarAction(
             label: t.recurring.undoAction,
-            textColor: colors.brand,
             onPressed: () async {
               final result = await undo();
               if (result case Left(value: final failure)) {
                 messenger.showSnackBar(
                   feedbackSnackBar(
-                    colors,
+                    ds,
                     ShowSnackBarEffect(message: failure.userMessage ?? t.common.genericErrorMessage, severity: .error),
                   ),
                 );

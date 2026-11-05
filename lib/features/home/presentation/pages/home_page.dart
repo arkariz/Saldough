@@ -39,7 +39,6 @@ class HomePage extends StatefulWidget {
     required this.onShowTransactions,
     required this.onShowWallets,
     this.updateHost,
-    this.notice,
     this.pendingRecurring,
     this.featureNudge,
     this.forecast,
@@ -69,10 +68,6 @@ class HomePage extends StatefulWidget {
   /// ada.
   final Widget? updateHost;
 
-  /// Kartu pemberitahuan di bawah total saldo, disisipkan akar komposisi
-  /// (mis. kotak masuk Catat dari notifikasi, ADR-032); `null` = tidak ada.
-  final Widget? notice;
-
   /// Kartu Menunggu dicatat (T-15.6), disisipkan akar komposisi supaya
   /// `home` tidak mengimpor fitur `recurring`; tampil hanya bila ada isinya.
   final Widget? pendingRecurring;
@@ -85,7 +80,7 @@ class HomePage extends StatefulWidget {
   /// Baris perkiraan saldo akhir bulan (T-15.13), disisipkan akar komposisi.
   final Widget? forecast;
 
-  /// Papan status (ADR-043): slot [notice], [pendingRecurring], dan
+  /// Papan status (ADR-043): slot [pendingRecurring] dan
   /// [featureNudge] melapor ke sini (tanpa menggambar kartu) dan Beranda
   /// menampilkannya sebagai carousel "Perlu dicek" di atas kartu saldo.
   /// `null` = tanpa carousel status.
@@ -220,8 +215,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ],
-          // Banner kotak masuk membawa jarak atasnya sendiri (kosong = tidak ada).
-          ?widget.notice,
+          // Kartu rutin menunggu membawa jarak atasnya sendiri (kosong = tidak ada).
           ?widget.pendingRecurring,
           ?widget.featureNudge,
           // Perkiraan saldo akhir periode ada di kartu saldo (footer). Tanpa
@@ -234,7 +228,6 @@ class _HomePageState extends State<HomePage> {
           if (!state.hasNoWallets) ...[
             gap(),
             HomeQuickActions(
-              onRecordTransfer: () => _thenRefresh(widget.onRecord),
               onOpenReport: () => unawaited(
                 context.pushRoute(AnalysisRouteKeys.open, const AnalysisInput(source: AnalysisSource.home)),
               ),
@@ -331,11 +324,10 @@ class _LoadError extends StatelessWidget {
   final VoidCallback onRetry;
 
   @override
-  Widget build(BuildContext context) =>
-      DsErrorState(
-        title: t.home.loadErrorTitle,
-        retryLabel: t.common.retry,
-        onRetry: onRetry,
-        illustration: SvgPicture.asset(ClayIcons.warning, width: 40, height: 40),
-      );
+  Widget build(BuildContext context) => DsErrorState(
+    title: t.home.loadErrorTitle,
+    retryLabel: t.common.retry,
+    onRetry: onRetry,
+    illustration: SvgPicture.asset(ClayIcons.warning, width: 40, height: 40),
+  );
 }

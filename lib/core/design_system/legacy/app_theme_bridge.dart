@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:saldough/core/design_system/color/ds_color_scheme.dart';
+import 'package:saldough/core/design_system/ds_snack_bar_theme.dart';
 import 'package:saldough/core/design_system/presets/ds_theme_preset.dart';
 import 'package:saldough/core/design_system/tokens/ds_elevation.dart';
 import 'package:saldough/core/design_system/typography/ds_typography.dart';
@@ -35,6 +36,7 @@ abstract final class AppThemeBridge {
         DsTypography.from(colors),
         DsElevation.from(colors, brightness),
       ],
+      snackBarTheme: dsSnackBarTheme(colors, DsTypography.from(colors)),
     );
   }
 

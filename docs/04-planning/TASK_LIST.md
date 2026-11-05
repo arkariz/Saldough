@@ -6661,6 +6661,24 @@ S sehari, M beberapa hari, L lebih dari seminggu.
       uji diperbaiki; uji pola/ikatan dihapus; ditambah uji pembuangan sisa
       pola dan rutin lama yang masih memuat ikatan.
 
+- [x] **T-26.24** (M) Poles Beranda dan snackbar (5 Nov 2026, permintaan pemilik).
+      (1) **Snackbar v2**: `dsSnackBar`/`DsSnackContent`/`DsSnackMessage`
+      (`core/design_system/components/ds_snack_bar.dart`) dan tema
+      `dsSnackBarTheme` (sudut 16, mengambang, permukaan terbalik) dipasang di
+      `AppThemeBridge` dan `DsTheme`; titik bernada (sukses, info, peringatan,
+      galat) di kiri membedakan pesan sistem dari teks lain. `actionSnackBar`
+      dan `feedbackSnackBar` memakainya (callers tak lagi memberi warna sendiri;
+      `feedbackSnackBar` menerima token `ds`, bukan palet lama). (2) **Tawaran
+      catat otomatis**: tak lagi menampilkan templat notifikasi ("Seperti: ...",
+      sulit dibedakan dari pesan sistem); kini judul "Catat otomatis dari {app}?"
+      + isi "Notifikasi seperti ini akan langsung dicatat tanpa kamu cek." +
+      **Ya, otomatis**; hasilnya "Siap, {app} dicatat otomatis" + Batalkan.
+      (3) **Kartu Kotak masuk notifikasi dicabut dari Beranda** (carousel
+      status); pintunya tile Notifikasi (lencana jumlah menunggu), yang kini
+      memegang sorotan tur `homeNotification`. (4) **Tile aksi cepat Catat
+      Transfer dicabut**: tombol Catat di tengah bilah bawah satu-satunya pintu
+      CATAT. Uji: `ds_snack_bar_test` (7), uji Beranda dan tur disesuaikan.
+
 Enhancement (E1–E5) ada di Antrean B-85–B-89, dibuka sesudah gerbang tahap 1.
 
 ## Antrean (belum dijadwalkan)

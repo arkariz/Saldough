@@ -2405,8 +2405,8 @@ class Translations$tour$id {
 	/// id: 'Catat dari notifikasi'
 	String get homeNotificationTitle => 'Catat dari notifikasi';
 
-	/// id: 'Pilih aplikasi bank atau dompet digitalmu, lalu notifikasi transaksinya jadi draf catatan. Kartu ini selalu ada di sini.'
-	String get homeNotificationBody => 'Pilih aplikasi bank atau dompet digitalmu, lalu notifikasi transaksinya jadi draf catatan. Kartu ini selalu ada di sini.';
+	/// id: 'Pilih aplikasi bank atau dompet digitalmu, lalu notifikasi transaksinya jadi draf catatan. Pintunya selalu ada di tombol Notifikasi ini.'
+	String get homeNotificationBody => 'Pilih aplikasi bank atau dompet digitalmu, lalu notifikasi transaksinya jadi draf catatan. Pintunya selalu ada di tombol Notifikasi ini.';
 
 	/// id: 'Pengingat tagihan rutin'
 	String get homeReminderTitle => 'Pengingat tagihan rutin';
@@ -3037,23 +3037,20 @@ class Translations$notificationCapture$id {
 	/// id: 'Baru'
 	String get autoNewBadge => 'Baru';
 
-	/// id: 'Catat otomatis yang seperti ini? Seperti: $shape'
-	String autoOfferSnack({required Object shape}) => 'Catat otomatis yang seperti ini? Seperti: ${shape}';
+	/// id: 'Catat otomatis dari $app?'
+	String autoOfferTitle({required Object app}) => 'Catat otomatis dari ${app}?';
 
-	/// id: 'Ya'
-	String get autoOfferYes => 'Ya';
+	/// id: 'Notifikasi seperti ini akan langsung dicatat tanpa kamu cek.'
+	String get autoOfferBody => 'Notifikasi seperti ini akan langsung dicatat tanpa kamu cek.';
 
-	/// id: 'Siap. Yang seperti ini dicatat otomatis, dua yang pertama bertanda Baru.'
-	String get autoApprovedSnack => 'Siap. Yang seperti ini dicatat otomatis, dua yang pertama bertanda Baru.';
+	/// id: 'Ya, otomatis'
+	String get autoOfferYes => 'Ya, otomatis';
 
-	/// id: 'nominal'
-	String get shapeTokenAmount => 'nominal';
+	/// id: 'Siap, $app dicatat otomatis'
+	String autoApprovedTitle({required Object app}) => 'Siap, ${app} dicatat otomatis';
 
-	/// id: 'nama'
-	String get shapeTokenNote => 'nama';
-
-	/// id: '…'
-	String get shapeTokenAny => '…';
+	/// id: 'Dua catatan pertama bertanda Baru supaya mudah kamu cek.'
+	String get autoApprovedBody => 'Dua catatan pertama bertanda Baru supaya mudah kamu cek.';
 
 	/// id: 'Saran pos: $name · $budget'
 	String budgetSuggestion({required Object name, required Object budget}) => 'Saran pos: ${name} · ${budget}';
@@ -4699,18 +4696,6 @@ class Translations$discovery$notification$id {
 	final Translations _root; // ignore: unused_field
 
 	// Translations
-
-	/// id: 'Nyalakan catat dari notifikasi'
-	String get button => 'Nyalakan catat dari notifikasi';
-
-	/// id: 'Catat dari notifikasi'
-	String get manage => 'Catat dari notifikasi';
-
-	/// id: 'Kotak masuk notifikasi'
-	String get inboxTitle => 'Kotak masuk notifikasi';
-
-	/// id: 'Cek'
-	String get check => 'Cek';
 
 	/// id: '$n aplikasi aktif'
 	String activeApps({required Object n}) => '${n} aplikasi aktif';
@@ -6553,7 +6538,7 @@ extension on Translations {
 			'tour.homePendingTitle' => 'Menunggu dicatat',
 			'tour.homePendingBody' => 'Tagihan dan pemasukan berulang yang sudah jatuh tempo. Ketuk sekali untuk mencatat, ubah dulu, atau Lewati.',
 			'tour.homeNotificationTitle' => 'Catat dari notifikasi',
-			'tour.homeNotificationBody' => 'Pilih aplikasi bank atau dompet digitalmu, lalu notifikasi transaksinya jadi draf catatan. Kartu ini selalu ada di sini.',
+			'tour.homeNotificationBody' => 'Pilih aplikasi bank atau dompet digitalmu, lalu notifikasi transaksinya jadi draf catatan. Pintunya selalu ada di tombol Notifikasi ini.',
 			'tour.homeReminderTitle' => 'Pengingat tagihan rutin',
 			'tour.homeReminderBody' => 'Nyalakan supaya kamu diingatkan sebelum tagihan jatuh tempo. Kartu ini hilang begitu pengingat menyala.',
 			'tour.homeStatusTitle' => 'Perlu dicek',
@@ -6710,10 +6695,6 @@ extension on Translations {
 			'discovery.status.off' => 'Mati',
 			'discovery.status.permissionNeeded' => 'Izin belum diberikan',
 			'discovery.turnOn' => 'Nyalakan',
-			'discovery.notification.button' => 'Nyalakan catat dari notifikasi',
-			'discovery.notification.manage' => 'Catat dari notifikasi',
-			'discovery.notification.inboxTitle' => 'Kotak masuk notifikasi',
-			'discovery.notification.check' => 'Cek',
 			'discovery.notification.activeApps' => ({required Object n}) => '${n} aplikasi aktif',
 			'discovery.notification.manageSources' => 'Kelola aplikasi',
 			'discovery.reminder.button' => 'Nyalakan pengingat tagihan rutin',
@@ -6737,12 +6718,12 @@ extension on Translations {
 			'notificationCapture.accessGranted' => 'Izin notifikasi aktif',
 			'notificationCapture.disclosureTitle' => 'Sebelum memberi izin',
 			'notificationCapture.disclosureBody' => 'Tanukonomy akan bisa membaca notifikasi di ponselmu.\n\n• Hanya dari aplikasi yang kamu pilih dan cocok dengan filternya.\n• Notifikasi OTP tidak pernah disimpan.\n• Teks yang sulit dibaca bisa dikirim ke Gemini (Google).\n• Teks notifikasi disimpan di ponselmu paling lama 7 hari.\n• Notifikasi baru bisa diproses di latar saat Tanukonomy tertutup, supaya tombol Catat di notifikasi bisa dipakai.\n\nSesudah Lanjut, Android membuka daftar akses notifikasi. Pilih Tanukonomy lalu nyalakan.',
-			_ => null,
-		} ?? switch (path) {
 			'notificationCapture.disclosureAccept' => 'Lanjut',
 			'notificationCapture.reminderPermissionDenied' => 'Izin notifikasi ditolak. Nyalakan di setelan Android untuk menerima pengingat.',
 			'notificationCapture.sourcesTitle' => 'Aplikasi',
 			'notificationCapture.sourcesEmpty' => 'Pilih aplikasi bank atau e-wallet yang notifikasinya mau dicatat.',
+			_ => null,
+		} ?? switch (path) {
 			'notificationCapture.addSource' => 'Tambah aplikasi',
 			'notificationCapture.sourceNoWallet' => 'Dompet belum dipilih',
 			'notificationCapture.sourcePaused' => 'Dijeda',
@@ -6799,12 +6780,11 @@ extension on Translations {
 			'notificationCapture.amountUnknown' => 'Nominal belum terbaca',
 			'notificationCapture.rememberedBudgetSnack' => ({required Object app, required Object name}) => 'Diingat: ${app} · ${name} dipilih untuk pedagang ini',
 			'notificationCapture.autoNewBadge' => 'Baru',
-			'notificationCapture.autoOfferSnack' => ({required Object shape}) => 'Catat otomatis yang seperti ini? Seperti: ${shape}',
-			'notificationCapture.autoOfferYes' => 'Ya',
-			'notificationCapture.autoApprovedSnack' => 'Siap. Yang seperti ini dicatat otomatis, dua yang pertama bertanda Baru.',
-			'notificationCapture.shapeTokenAmount' => 'nominal',
-			'notificationCapture.shapeTokenNote' => 'nama',
-			'notificationCapture.shapeTokenAny' => '…',
+			'notificationCapture.autoOfferTitle' => ({required Object app}) => 'Catat otomatis dari ${app}?',
+			'notificationCapture.autoOfferBody' => 'Notifikasi seperti ini akan langsung dicatat tanpa kamu cek.',
+			'notificationCapture.autoOfferYes' => 'Ya, otomatis',
+			'notificationCapture.autoApprovedTitle' => ({required Object app}) => 'Siap, ${app} dicatat otomatis',
+			'notificationCapture.autoApprovedBody' => 'Dua catatan pertama bertanda Baru supaya mudah kamu cek.',
 			'notificationCapture.budgetSuggestion' => ({required Object name, required Object budget}) => 'Saran pos: ${name} · ${budget}',
 			'notificationCapture.possibleDuplicate' => 'Mungkin sudah tercatat',
 			'notificationCapture.reviewReason.autoRecordOff' => 'Catat otomatis mati',
@@ -7251,13 +7231,13 @@ extension on Translations {
 			'premium.features.answers.title' => 'Menjawab pertanyaan',
 			'premium.features.answers.text' => 'Tanya soal uangmu dalam bahasa sehari-hari, diketik atau lewat suara.',
 			'premium.features.plans.title' => 'Merencanakan',
-			_ => null,
-		} ?? switch (path) {
 			'premium.features.plans.text' => 'Coba bagaimana kalau, buat Target dengan perkiraan tanggal tercapai, dan lihat 12 bulan ke depan.',
 			'premium.features.reports.title' => 'Melapor',
 			'premium.features.reports.text' => 'Rapor bulanan yang bercerita, Rekap SPT tahunan, dan invoice Freelance Pro.',
 			'premium.features.keeps.title' => 'Menyimpan',
 			'premium.features.keeps.text' => 'Cadangan otomatis tiap hari ke Google Drive milikmu.',
+			_ => null,
+		} ?? switch (path) {
 			'premium.gift.brand' => 'Tanukonomy',
 			'premium.gift.askTitle' => 'Biasanya gajian tanggal berapa?',
 			'premium.gift.askBody' => 'Uji coba Plus berakhir bersama periode keuangan pertamamu, jadi tanggal ini menentukan lamanya.',

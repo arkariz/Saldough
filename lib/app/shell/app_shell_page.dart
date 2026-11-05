@@ -25,7 +25,6 @@ import 'package:saldough/features/home/presentation/pages/home_page.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_gateway.dart';
 import 'package:saldough/features/notification_capture/presentation/host/notification_capture_host.dart';
 import 'package:saldough/features/notification_capture/presentation/widgets/capture_inbox_banner.dart';
-import 'package:saldough/features/notification_capture/presentation/widgets/notification_inbox_card.dart';
 import 'package:saldough/features/notification_capture/presentation/widgets/notification_quick_action.dart';
 import 'package:saldough/features/plan/presentation/funding_loader.dart';
 import 'package:saldough/features/plan/presentation/pages/plan_month_page.dart';
@@ -200,7 +199,6 @@ class _AppShellPageState extends State<AppShellPage> {
         notificationAction: _captureSupported(parentContainer)
             ? NotificationQuickAction(container: parentContainer)
             : null,
-        notice: NotificationInboxCard(container: parentContainer, board: _statusBoard),
         pendingRecurring: RecurringPendingCard(
           board: _statusBoard,
           container: parentContainer,

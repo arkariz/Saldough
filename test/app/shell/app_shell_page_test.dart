@@ -67,7 +67,9 @@ void main() {
       ..registerLazySingleton<BudgetOverviewSource>(stubBudgetOverviewSource)
       ..registerLazySingleton<FreelanceOverviewSource>(stubFreelanceOverviewSource)
       ..registerLazySingleton<BudgetRepository>(() => BudgetRepositoryImpl(storage: InMemoryKeyValueStorage()))
-      ..registerLazySingleton<BudgetTemplateRepository>(() => BudgetTemplateRepositoryImpl(storage: InMemoryKeyValueStorage()))
+      ..registerLazySingleton<BudgetTemplateRepository>(
+        () => BudgetTemplateRepositoryImpl(storage: InMemoryKeyValueStorage()),
+      )
       ..registerLazySingleton<BudgetItemCatalog>(stubBudgetItemCatalog)
       ..registerLazySingleton<CategoryRepository>(() => CategoryRepositoryImpl(storage: InMemoryKeyValueStorage()))
       ..registerLazySingleton<WalletRepository>(() => walletRepository)
@@ -169,7 +171,9 @@ void main() {
       expect(nav.currentIndex, 3);
     });
 
-    testWidgets('Kembali sistem di tab selain Beranda pindah ke Beranda, bukan menutup aplikasi (B-33)', (tester) async {
+    testWidgets('Kembali sistem di tab selain Beranda pindah ke Beranda, bukan menutup aplikasi (B-33)', (
+      tester,
+    ) async {
       await tester.pumpWidget(pumpableShell());
       for (var i = 0; i < 5; i++) {
         await tester.pump();
@@ -210,42 +214,51 @@ void main() {
       await tester.pump(); // + ScopeWidget<BudgetScope> (T-4.5)
       await tester.pump(); // + ScopeWidget<HomeScope> (Fase 6)
 
-      await tester.tap(find.descendant(of: find.byType(DsNavBar), matching: find.text(t.appShell.transactionsTabLabel)));
+      await tester.tap(
+        find.descendant(of: find.byType(DsNavBar), matching: find.text(t.appShell.transactionsTabLabel)),
+      );
       await tester.pumpAndSettle();
 
       expect(find.widgetWithText(AppBar, t.appShell.transactionsTabLabel), findsOneWidget);
     });
 
-    testWidgets('transaksi tersimpan di luar tab Riwayat tampil lewat LedgerChanges, tanpa muat ulang manual (ADR-030)', (
+    testWidgets(
+      'transaksi tersimpan di luar tab Riwayat tampil lewat LedgerChanges, tanpa muat ulang manual (ADR-030)',
+      (
+        tester,
+      ) async {
+        await walletRepository.saveWallet(
+          const Wallet(id: 'bca', name: 'BCA', iconKey: 'walletBank', initialBalance: 0, currentBalance: 0),
+        );
+        await tester.pumpWidget(pumpableShell());
+        for (var i = 0; i < 5; i++) {
+          await tester.pump();
+        }
+        await tester.tap(
+          find.descendant(of: find.byType(DsNavBar), matching: find.text(t.appShell.transactionsTabLabel)),
+        );
+        await tester.pumpAndSettle();
+        final inHistory = find.descendant(of: find.byType(TransactionListPage), matching: find.text('Kopi sore'));
+        expect(inHistory, findsNothing);
+
+        final transactionRepository = container<TransactionRepository>();
+        await RecordTransaction(
+          transactionRepository: transactionRepository,
+          recomputeWalletBalances: RecomputeWalletBalances(
+            walletRepository: walletRepository,
+            transactionRepository: transactionRepository,
+          ),
+          ledgerChanges: container<LedgerChanges>(),
+        )(ExpenseTransaction(id: 'kopi', date: DateTime.now(), amount: 2500000, note: 'Kopi sore', walletId: 'bca'));
+        await tester.pumpAndSettle();
+
+        expect(inHistory, findsOneWidget);
+      },
+    );
+
+    testWidgets('menekan CATAT membuka lembar CATAT dengan tiga jenis (FR-REC-001, UX-1), TIDAK mengganti tab aktif', (
       tester,
     ) async {
-      await walletRepository.saveWallet(
-        const Wallet(id: 'bca', name: 'BCA', iconKey: 'walletBank', initialBalance: 0, currentBalance: 0),
-      );
-      await tester.pumpWidget(pumpableShell());
-      for (var i = 0; i < 5; i++) {
-        await tester.pump();
-      }
-      await tester.tap(find.descendant(of: find.byType(DsNavBar), matching: find.text(t.appShell.transactionsTabLabel)));
-      await tester.pumpAndSettle();
-      final inHistory = find.descendant(of: find.byType(TransactionListPage), matching: find.text('Kopi sore'));
-      expect(inHistory, findsNothing);
-
-      final transactionRepository = container<TransactionRepository>();
-      await RecordTransaction(
-        transactionRepository: transactionRepository,
-        recomputeWalletBalances: RecomputeWalletBalances(
-          walletRepository: walletRepository,
-          transactionRepository: transactionRepository,
-        ),
-        ledgerChanges: container<LedgerChanges>(),
-      )(ExpenseTransaction(id: 'kopi', date: DateTime.now(), amount: 2500000, note: 'Kopi sore', walletId: 'bca'));
-      await tester.pumpAndSettle();
-
-      expect(inHistory, findsOneWidget);
-    });
-
-    testWidgets('menekan CATAT membuka lembar CATAT dengan tiga jenis (FR-REC-001, UX-1), TIDAK mengganti tab aktif', (tester) async {
       await tester.pumpWidget(pumpableShell());
       await tester.pump();
       // Dua `pump()` -- ScopeWidget<TransactionScope> (T-2.5) bersarang setelah
@@ -327,12 +340,17 @@ void main() {
       expect(find.text('${t.recurring.pendingCardTitle} (1)').hitTestable(), findsOneWidget);
       expect(find.text('Netflix').hitTestable(), findsOneWidget);
       expect(
-        find.descendant(of: find.byKey(const ValueKey('status-slide-recurring')), matching: find.text(t.recurring.recordAction)),
+        find.descendant(
+          of: find.byKey(const ValueKey('status-slide-recurring')),
+          matching: find.text(t.recurring.recordAction),
+        ),
         findsNothing,
       );
     });
 
-    testWidgets('Beranda: slide status berurutan, rutin menunggu, pintu notifikasi, pengingat (P-6)', (tester) async {
+    testWidgets('Beranda: slide status berurutan, rutin menunggu lalu pengingat; notifikasi hanya lewat tile (P-6)', (
+      tester,
+    ) async {
       // Keadaan awal menaruh kartu misi di atas carousel; viewport tinggi
       // supaya carousel ikut terbangun.
       tester.view
@@ -371,10 +389,11 @@ void main() {
       }
       await tester.pumpAndSettle();
 
-      // Urutan slide status (P-6): yang perlu dicek (rutin menunggu) dulu,
-      // lalu pintu permanen catat dari notifikasi, pengingat paling akhir.
+      // Urutan slide status (P-6): yang perlu dicek (rutin menunggu) dulu, lalu
+      // pengingat. Catat dari notifikasi tak lagi punya slide: pintunya tile
+      // Notifikasi di aksi cepat (kartu Beranda dicabut 5 Nov 2026).
       final board = tester.widget<DsStatusCarousel>(find.byType(DsStatusCarousel)).board;
-      expect(board.slides.map((slide) => slide.id), ['recurring', 'notification', 'reminder']);
+      expect(board.slides.map((slide) => slide.id), ['recurring', 'reminder']);
       expect(find.byKey(const ValueKey('notification-inbox-card')), findsNothing);
       expect(find.byKey(const ValueKey('reminder-nudge')), findsNothing);
     });
@@ -459,7 +478,9 @@ void main() {
 
         // Transaksi yang baru dicatat langsung tampil di tab Transaksi tanpa
         // memulai ulang aplikasi.
-        await tester.tap(find.descendant(of: find.byType(DsNavBar), matching: find.text(t.appShell.transactionsTabLabel)));
+        await tester.tap(
+          find.descendant(of: find.byType(DsNavBar), matching: find.text(t.appShell.transactionsTabLabel)),
+        );
         await tester.pumpAndSettle();
         expect(find.text('+Rp75.000'), findsWidgets);
       },
@@ -507,7 +528,9 @@ void main() {
         ..registerLazySingleton<BudgetOverviewSource>(stubBudgetOverviewSource)
         ..registerLazySingleton<FreelanceOverviewSource>(stubFreelanceOverviewSource)
         ..registerLazySingleton<BudgetRepository>(() => BudgetRepositoryImpl(storage: InMemoryKeyValueStorage()))
-        ..registerLazySingleton<BudgetTemplateRepository>(() => BudgetTemplateRepositoryImpl(storage: InMemoryKeyValueStorage()))
+        ..registerLazySingleton<BudgetTemplateRepository>(
+          () => BudgetTemplateRepositoryImpl(storage: InMemoryKeyValueStorage()),
+        )
         ..registerLazySingleton<BudgetItemCatalog>(stubBudgetItemCatalog)
         ..registerLazySingleton<CategoryRepository>(() => CategoryRepositoryImpl(storage: InMemoryKeyValueStorage()))
         ..registerLazySingleton<WalletRepository>(failingWalletRepository)
@@ -518,7 +541,7 @@ void main() {
         )
         ..registerLazySingleton<PlanBudgetSource>(EmptyPlanBudgetSource.new)
         ..registerLazySingleton<PlanFreelanceSource>(EmptyPlanFreelanceSource.new)
-      ..registerSingleton<RouteRegistry>(appRouteRegistry())
+        ..registerSingleton<RouteRegistry>(appRouteRegistry())
         ..registerLazySingleton<TransactionRepository>(() => TransactionRepositoryImpl(storage: storage));
 
       await tester.pumpWidget(
@@ -549,7 +572,11 @@ void main() {
       await tester.pumpWidget(
         ScopeProvider(
           container: container,
-          child: MaterialApp(builder: reducedMotion, theme: PixelTheme.light, home: const AppShellPage(startAction: ShellStartAction.createWallet)),
+          child: MaterialApp(
+            builder: reducedMotion,
+            theme: PixelTheme.light,
+            home: const AppShellPage(startAction: ShellStartAction.createWallet),
+          ),
         ),
       );
       await tester.pumpAndSettle();
@@ -596,7 +623,9 @@ void main() {
     Finder step(int current, int total, String title, String body) =>
         find.bySemanticsLabel(t.tour.stepSemantics(current: current, total: total, title: title, body: body));
 
-    testWidgets('pembukaan CATAT pertama menyorot pengalih, nominal, dompet, dan Ulangi; berikutnya tidak', (tester) async {
+    testWidgets('pembukaan CATAT pertama menyorot pengalih, nominal, dompet, dan Ulangi; berikutnya tidak', (
+      tester,
+    ) async {
       await openShellWithTours(tester);
 
       await tester.tap(find.byKey(const ValueKey('nav-catat')));
@@ -671,7 +700,8 @@ void main() {
     // Font asli dimuat supaya lebar label terukur seperti di perangkat (bawaan
     // uji memakai Ahem, yang tiap glifnya selebar ukuran font).
     setUpAll(() async {
-      final loader = FontLoader('PlusJakartaSans')..addFont(rootBundle.load('assets/fonts/PlusJakartaSans-Variable.ttf'));
+      final loader = FontLoader('PlusJakartaSans')
+        ..addFont(rootBundle.load('assets/fonts/PlusJakartaSans-Variable.ttf'));
       await loader.load();
     });
 

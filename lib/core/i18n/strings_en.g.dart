@@ -947,7 +947,7 @@ class _Translations$tour$en extends Translations$tour$id {
 	@override String get homePendingTitle => 'Waiting to record';
 	@override String get homePendingBody => 'Recurring bills and income that are due. Record in one tap, edit first, or Skip.';
 	@override String get homeNotificationTitle => 'Record from notifications';
-	@override String get homeNotificationBody => 'Pick your bank or e-wallet apps and their transaction notifications become draft transactions. This card is always here.';
+	@override String get homeNotificationBody => 'Pick your bank or e-wallet apps and their transaction notifications become draft transactions. The door is always the Notifications button here.';
 	@override String get homeReminderTitle => 'Recurring reminders';
 	@override String get homeReminderBody => 'Turn them on to get reminded before bills are due. This card goes away once reminders are on.';
 	@override String get homeStatusTitle => 'Needs a look';
@@ -1223,12 +1223,11 @@ class _Translations$notificationCapture$en extends Translations$notificationCapt
 	@override String get amountUnknown => 'Amount not read yet';
 	@override String rememberedBudgetSnack({required Object app, required Object name}) => 'Remembered: ${app} · ${name} chosen for this merchant';
 	@override String get autoNewBadge => 'New';
-	@override String autoOfferSnack({required Object shape}) => 'Record automatically from now on? Like: ${shape}';
-	@override String get autoOfferYes => 'Yes';
-	@override String get autoApprovedSnack => 'Done. Ones like this are recorded automatically; the first two are marked New.';
-	@override String get shapeTokenAmount => 'amount';
-	@override String get shapeTokenNote => 'name';
-	@override String get shapeTokenAny => '…';
+	@override String autoOfferTitle({required Object app}) => 'Record ${app} automatically?';
+	@override String get autoOfferBody => 'Notifications like this will be recorded right away, without a check.';
+	@override String get autoOfferYes => 'Yes, automatically';
+	@override String autoApprovedTitle({required Object app}) => 'Done, ${app} is recorded automatically';
+	@override String get autoApprovedBody => 'The first two records are marked New so you can check them.';
 	@override String budgetSuggestion({required Object name, required Object budget}) => 'Suggested item: ${name} · ${budget}';
 	@override String get possibleDuplicate => 'May already be recorded';
 	@override late final _Translations$notificationCapture$reviewReason$en reviewReason = _Translations$notificationCapture$reviewReason$en._(_root);
@@ -1916,10 +1915,6 @@ class _Translations$discovery$notification$en extends Translations$discovery$not
 	final TranslationsEn _root; // ignore: unused_field
 
 	// Translations
-	@override String get button => 'Turn on recording from notifications';
-	@override String get manage => 'Record from notifications';
-	@override String get inboxTitle => 'Notification inbox';
-	@override String get check => 'Check';
 	@override String activeApps({required Object n}) => 'Active apps: ${n}';
 	@override String get manageSources => 'Manage apps';
 }
@@ -3340,7 +3335,7 @@ extension on TranslationsEn {
 			'tour.homePendingTitle' => 'Waiting to record',
 			'tour.homePendingBody' => 'Recurring bills and income that are due. Record in one tap, edit first, or Skip.',
 			'tour.homeNotificationTitle' => 'Record from notifications',
-			'tour.homeNotificationBody' => 'Pick your bank or e-wallet apps and their transaction notifications become draft transactions. This card is always here.',
+			'tour.homeNotificationBody' => 'Pick your bank or e-wallet apps and their transaction notifications become draft transactions. The door is always the Notifications button here.',
 			'tour.homeReminderTitle' => 'Recurring reminders',
 			'tour.homeReminderBody' => 'Turn them on to get reminded before bills are due. This card goes away once reminders are on.',
 			'tour.homeStatusTitle' => 'Needs a look',
@@ -3497,10 +3492,6 @@ extension on TranslationsEn {
 			'discovery.status.off' => 'Off',
 			'discovery.status.permissionNeeded' => 'Permission needed',
 			'discovery.turnOn' => 'Turn on',
-			'discovery.notification.button' => 'Turn on recording from notifications',
-			'discovery.notification.manage' => 'Record from notifications',
-			'discovery.notification.inboxTitle' => 'Notification inbox',
-			'discovery.notification.check' => 'Check',
 			'discovery.notification.activeApps' => ({required Object n}) => 'Active apps: ${n}',
 			'discovery.notification.manageSources' => 'Manage apps',
 			'discovery.reminder.button' => 'Turn on recurring reminders',
@@ -3524,12 +3515,12 @@ extension on TranslationsEn {
 			'notificationCapture.accessGranted' => 'Notification permission is on',
 			'notificationCapture.disclosureTitle' => 'Before you grant permission',
 			'notificationCapture.disclosureBody' => 'Tanukonomy will be able to read notifications on your phone.\n\n• Only from apps you pick that match their filter.\n• OTP notifications are never stored.\n• Text that is hard to read may be sent to Gemini (Google).\n• Notification text stays on your phone for at most 7 days.\n• New notifications may be processed in the background while Tanukonomy is closed, so the Record button on the notification works.\n\nAfter Continue, Android opens its notification access list. Pick Tanukonomy and turn it on.',
-			_ => null,
-		} ?? switch (path) {
 			'notificationCapture.disclosureAccept' => 'Continue',
 			'notificationCapture.reminderPermissionDenied' => 'Notification permission was denied. Turn it on in Android settings to get reminders.',
 			'notificationCapture.sourcesTitle' => 'Apps',
 			'notificationCapture.sourcesEmpty' => 'Pick the bank or e-wallet apps whose notifications you want recorded.',
+			_ => null,
+		} ?? switch (path) {
 			'notificationCapture.addSource' => 'Add app',
 			'notificationCapture.sourceNoWallet' => 'No wallet chosen',
 			'notificationCapture.sourcePaused' => 'Paused',
@@ -3586,12 +3577,11 @@ extension on TranslationsEn {
 			'notificationCapture.amountUnknown' => 'Amount not read yet',
 			'notificationCapture.rememberedBudgetSnack' => ({required Object app, required Object name}) => 'Remembered: ${app} · ${name} chosen for this merchant',
 			'notificationCapture.autoNewBadge' => 'New',
-			'notificationCapture.autoOfferSnack' => ({required Object shape}) => 'Record automatically from now on? Like: ${shape}',
-			'notificationCapture.autoOfferYes' => 'Yes',
-			'notificationCapture.autoApprovedSnack' => 'Done. Ones like this are recorded automatically; the first two are marked New.',
-			'notificationCapture.shapeTokenAmount' => 'amount',
-			'notificationCapture.shapeTokenNote' => 'name',
-			'notificationCapture.shapeTokenAny' => '…',
+			'notificationCapture.autoOfferTitle' => ({required Object app}) => 'Record ${app} automatically?',
+			'notificationCapture.autoOfferBody' => 'Notifications like this will be recorded right away, without a check.',
+			'notificationCapture.autoOfferYes' => 'Yes, automatically',
+			'notificationCapture.autoApprovedTitle' => ({required Object app}) => 'Done, ${app} is recorded automatically',
+			'notificationCapture.autoApprovedBody' => 'The first two records are marked New so you can check them.',
 			'notificationCapture.budgetSuggestion' => ({required Object name, required Object budget}) => 'Suggested item: ${name} · ${budget}',
 			'notificationCapture.possibleDuplicate' => 'May already be recorded',
 			'notificationCapture.reviewReason.autoRecordOff' => 'Auto-record is off',
@@ -4038,13 +4028,13 @@ extension on TranslationsEn {
 			'premium.features.answers.title' => 'Answers questions',
 			'premium.features.answers.text' => 'Ask about your money in everyday words, typed or spoken.',
 			'premium.features.plans.title' => 'Plans ahead',
-			_ => null,
-		} ?? switch (path) {
 			'premium.features.plans.text' => 'Try what if, set Goals with an expected date, and see 12 months ahead.',
 			'premium.features.reports.title' => 'Reports',
 			'premium.features.reports.text' => 'Monthly reports with the story behind the numbers, a yearly tax summary, and Freelance Pro invoices.',
 			'premium.features.keeps.title' => 'Keeps safe',
 			'premium.features.keeps.text' => 'An automatic daily backup to your own Google Drive.',
+			_ => null,
+		} ?? switch (path) {
 			'premium.gift.brand' => 'Tanukonomy',
 			'premium.gift.askTitle' => 'When is payday, usually?',
 			'premium.gift.askBody' => 'Your Plus trial ends with your first financial period, so this date sets how long it lasts.',

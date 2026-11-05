@@ -23,21 +23,19 @@ extension on TransactionBloc {
   /// hasilnya ditampilkan dengan palet yang diambil sekarang.
   UiEffect _effectDeletedWithUndo(Transaction transaction) => CallbackEffect(
     callback: (context) {
-      final colors = context.appColors;
+      final ds = context.ds;
       final messenger = ScaffoldMessenger.of(context);
       final restore = _recordTransaction;
       messenger.showSnackBar(
         actionSnackBar(
           context,
-          content: Text(t.transaction.deletedMessage, style: TextStyle(color: colors.bg)),
-          backgroundColor: colors.ink,
+          content: Text(t.transaction.deletedMessage),
           action: SnackBarAction(
             label: t.transaction.undoDeleteAction,
-            textColor: colors.brand,
             onPressed: () async {
               final result = await restore(transaction);
               messenger.showSnackBar(
-                feedbackSnackBar(colors, switch (result) {
+                feedbackSnackBar(ds, switch (result) {
                   Left(value: final failure) => ShowSnackBarEffect(
                     message: failure.userMessage ?? t.common.genericErrorMessage,
                     severity: .error,

@@ -11,7 +11,7 @@ import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/notification_capture/data/notification_capture_store_impl.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_store.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_inbox_changes.dart';
-import 'package:saldough/features/notification_capture/presentation/widgets/notification_inbox_card.dart';
+import 'package:saldough/features/notification_capture/presentation/widgets/notification_quick_action.dart';
 import 'package:saldough/features/recurring/domain/reminder_scheduler.dart';
 import 'package:saldough/features/recurring/domain/reminder_settings.dart';
 import 'package:saldough/features/recurring/presentation/widgets/reminder_nudge_card.dart';
@@ -64,7 +64,7 @@ void main() {
           home: Scaffold(
             body: ListView(
               children: [
-                NotificationInboxCard(container: container),
+                NotificationQuickAction(container: container),
                 ReminderNudgeCard(container: container, spotlight: true),
               ],
             ),
@@ -81,7 +81,7 @@ void main() {
   Future<bool> seen(SpotlightKey key) async =>
       (await tutorials.load()).getOrElse((_) => throw StateError('')).hasSeen(key);
 
-  testWidgets('kartu Kotak masuk notifikasi disorot sekali saat pertama tampil', (tester) async {
+  testWidgets('tile Notifikasi disorot sekali saat pertama tampil', (tester) async {
     statuses.status[DiscoveredFeature.notification] = const FeatureStatus(FeatureState.unset);
     await pump(tester);
 
@@ -95,6 +95,8 @@ void main() {
   });
 
   testWidgets('kartu pengingat disorot sekali saat pertama tampil', (tester) async {
+    // Tile Notifikasi selalu ada: langkahnya sudah dilihat supaya yang diuji hanya pengingat.
+    await tutorials.markStepsSeen([SpotlightKey.homeNotification]);
     statuses.status[DiscoveredFeature.reminder] = const FeatureStatus(FeatureState.off);
     await pump(tester);
 
@@ -104,13 +106,13 @@ void main() {
     expect(await seen(SpotlightKey.homeReminder), isTrue);
   });
 
-  testWidgets('kartu yang tidak ada tidak disorot: pengingat efektif dan iOS', (tester) async {
+  testWidgets('kartu yang tidak ada tidak disorot: pengingat efektif', (tester) async {
+    await tutorials.markStepsSeen([SpotlightKey.homeNotification]);
     statuses.status[DiscoveredFeature.reminder] = const FeatureStatus(FeatureState.active);
     await pump(tester);
 
     expect(find.text(t.tour.doneAction), findsNothing);
     expect(find.text(t.tour.nextAction), findsNothing);
-    expect(await seen(SpotlightKey.homeNotification), isFalse);
     expect(await seen(SpotlightKey.homeReminder), isFalse);
   });
 
@@ -122,7 +124,7 @@ void main() {
     statuses.status[DiscoveredFeature.reminder] = const FeatureStatus(FeatureState.off);
     await pump(tester);
 
-    expect(find.byKey(const ValueKey('notification-inbox-card')), findsOneWidget);
+    expect(find.byKey(const ValueKey('home-action-notification')), findsOneWidget);
     expect(find.byKey(const ValueKey('reminder-nudge')), findsOneWidget);
     expect(
       find.text(t.tour.nextAction).evaluate().length + find.text(t.tour.doneAction).evaluate().length,

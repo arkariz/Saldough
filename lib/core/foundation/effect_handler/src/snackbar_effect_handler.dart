@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:saldough/core/presentation/widgets/app_icon.dart';
-import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:state_management/state_management.dart';
 
 /// Mendaftarkan penangan [ShowSnackBarEffect].
 ///
-/// Semua tingkat memakai snackbar design system: latar `inverse-surface`,
-/// teks `on-inverse` (ADR-034). Tingkat dibedakan lewat ikon, bukan warna
-/// latar: centang untuk sukses, info untuk peringatan dan galat.
+/// Semua tingkat memakai snackbar design system v2 (`dsSnackBar`): permukaan
+/// terbalik, titik bernada di kiri sebagai penanda pesan dari sistem.
 ///
 /// ⚠ `actionLabel`/`actionIntentId` belum terhubung ke bloc — belum ada
 /// fitur yang butuh aksi pada snackbar, dan paket `state_management` tidak
@@ -17,33 +15,22 @@ import 'package:state_management/state_management.dart';
 /// menyambungkan tombol aksi di sini.
 void registerSnackBarEffectHandler(EffectRegistry registry) {
   registry.register<ShowSnackBarEffect>((context, effect) {
-    ScaffoldMessenger.of(context).showSnackBar(feedbackSnackBar(context.appColors, effect));
+    ScaffoldMessenger.of(context).showSnackBar(feedbackSnackBar(context.ds, effect));
   });
 }
 
-/// Snackbar untuk [effect] dengan palet [colors]. Dipakai juga di luar
-/// penangan efek, mis. hasil "Urungkan" yang diketuk sesudah rute
-/// pemilik blocnya tertutup (ADR-030 §3.3) -- warnanya diambil saat rute
-/// itu masih hidup.
-SnackBar feedbackSnackBar(AppColors colors, ShowSnackBarEffect effect) {
-  final icon = switch (effect.severity) {
-    FeedbackSeverity.success => IconKey.check,
-    FeedbackSeverity.warning || FeedbackSeverity.error => IconKey.info,
-    FeedbackSeverity.info => null,
-  };
-  return SnackBar(
-    content: Row(
-      children: [
-        if (icon != null) ...[
-          AppIcon(icon, size: 20, color: colors.onInverse),
-          const SizedBox(width: AppSpacing.space2),
-        ],
-        Expanded(
-          child: Text(effect.message, style: TextStyle(color: colors.onInverse)),
-        ),
-      ],
-    ),
-    backgroundColor: colors.inverseSurface,
-    duration: effect.autoDismissDuration,
-  );
-}
+/// Snackbar v2 untuk [effect]: titik bernada di kiri (centang untuk sukses,
+/// tanda seru untuk peringatan, silang untuk galat, "i" untuk info). Dipakai
+/// juga di luar penangan efek, mis. hasil "Urungkan" yang diketuk sesudah rute
+/// pemilik blocnya tertutup (ADR-030 §3.3): token [ds] diambil saat rute masih hidup.
+SnackBar feedbackSnackBar(DsTokens ds, ShowSnackBarEffect effect) => dsSnackBar(
+  ds,
+  content: Text(effect.message),
+  tone: switch (effect.severity) {
+    FeedbackSeverity.success => DsSnackTone.success,
+    FeedbackSeverity.warning => DsSnackTone.warning,
+    FeedbackSeverity.error => DsSnackTone.error,
+    FeedbackSeverity.info => DsSnackTone.info,
+  },
+  duration: effect.autoDismissDuration,
+);

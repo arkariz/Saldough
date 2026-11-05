@@ -154,23 +154,20 @@ class HomeCarouselSection extends StatelessWidget {
   }
 }
 
-/// Empat tile aksi cepat bergambar clay: Catat Transfer, Scan Struk (belum
-/// ada, nonaktif berlabel "Segera"), Laporan, dan Misi Hemat (tiruan,
-/// [kHomePlaceholderPreview]). Misi Hemat berlencana "+50 XP"; mengetuknya
+/// Tile aksi cepat bergambar clay: Notifikasi (Android; pintu Catat dari
+/// notifikasi), Laporan, dan Misi Hemat (tiruan, [kHomePlaceholderPreview]).
+/// Tanpa tile Catat: tombol Catat di tengah bilah bawah sudah jadi satu-satunya
+/// pintu CATAT. Misi Hemat berlencana "+50 XP"; mengetuknya
 /// mengklaim: perayaan, lalu [onClaimed] (pil level bergoyang). Status klaim
 /// hanya di layar ini dan tidak disimpan.
 class HomeQuickActions extends StatefulWidget {
   /// Membuat [HomeQuickActions].
   const HomeQuickActions({
-    required this.onRecordTransfer,
     required this.onOpenReport,
     this.notificationAction,
     this.onClaimed,
     super.key,
   });
-
-  /// Membuka alur CATAT (aturan 8).
-  final VoidCallback onRecordTransfer;
 
   /// Membuka Analisis periode berjalan.
   final VoidCallback onOpenReport;
@@ -209,12 +206,6 @@ class _HomeQuickActionsState extends State<HomeQuickActions> {
   @override
   Widget build(BuildContext context) {
     final tiles = <Widget>[
-      DsQuickActionTile(
-        key: const ValueKey('home-action-transfer'),
-        tile: DsIconTile.asset(asset: ClayIcons.transfer),
-        label: t.home.actionTransfer,
-        onPressed: widget.onRecordTransfer,
-      ),
       // Pintu tetap Catat dari notifikasi (disisipkan akar komposisi; hanya Android).
       ?widget.notificationAction,
       DsQuickActionTile(

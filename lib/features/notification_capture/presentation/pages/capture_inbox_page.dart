@@ -125,7 +125,7 @@ class CaptureInboxPage extends StatelessWidget {
     if (offerTemplate != null && context.mounted) {
       showAutoOffer(
         context,
-        template: offerTemplate,
+        appLabel: entry.appLabel,
         approve: () => bloc.approveShape(entry, amountSen: amountSaved),
       );
     }

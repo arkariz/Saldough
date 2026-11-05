@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:saldough/core/design_system/color/ds_color_scheme.dart';
+import 'package:saldough/core/design_system/ds_snack_bar_theme.dart';
 import 'package:saldough/core/design_system/presets/ds_theme_preset.dart';
 import 'package:saldough/core/design_system/presets/ds_theme_presets.dart';
 import 'package:saldough/core/design_system/tokens/ds_elevation.dart';
@@ -215,14 +216,7 @@ abstract final class DsTheme {
           side: BorderSide(color: elevation.overlay.border),
         ),
       ),
-      snackBarTheme: SnackBarThemeData(
-        backgroundColor: colors.inverseSurface,
-        contentTextStyle: typography.bodyMd.copyWith(color: colors.inverseOnSurface),
-        actionTextColor: colors.inversePrimary,
-        behavior: SnackBarBehavior.floating,
-        elevation: 0,
-        shape: DsShapes.tile,
-      ),
+      snackBarTheme: dsSnackBarTheme(colors, typography),
       dividerTheme: DividerThemeData(color: colors.outlineSubtle, thickness: 1, space: 1),
       // Navigasi bawah: kanvas, label piksel, tab aktif hijau.
       navigationBarTheme: NavigationBarThemeData(

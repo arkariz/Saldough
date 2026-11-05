@@ -27,19 +27,17 @@ void main() {
   });
 
   group('HomeQuickActions', () {
-    testWidgets('tanpa tile notifikasi (platform tanpa dukungan): tidak ada slot kosong atau Scan Struk', (
+    testWidgets('tanpa tile notifikasi (platform tanpa dukungan): tidak ada slot kosong, Scan Struk, atau tile Catat', (
       tester,
     ) async {
-      var transfer = 0;
       var report = 0;
-      await tester.pumpWidget(
-        _host(HomeQuickActions(onRecordTransfer: () => transfer++, onOpenReport: () => report++)),
-      );
+      await tester.pumpWidget(_host(HomeQuickActions(onOpenReport: () => report++)));
       expect(find.byKey(const ValueKey('home-action-scan')), findsNothing);
       expect(find.byKey(const ValueKey('home-action-notification')), findsNothing);
-      await tester.tap(find.text(t.home.actionTransfer));
+      // Tombol Catat di tengah bilah bawah satu-satunya pintu CATAT: tanpa tile Catat Transfer.
+      expect(find.byKey(const ValueKey('home-action-transfer')), findsNothing);
       await tester.tap(find.text(t.home.actionReport));
-      expect((transfer, report), (1, 1));
+      expect(report, 1);
       expect(find.text(t.home.actionMission), findsOneWidget);
     });
 
@@ -48,7 +46,6 @@ void main() {
       await tester.pumpWidget(
         _host(
           HomeQuickActions(
-            onRecordTransfer: () {},
             onOpenReport: () {},
             notificationAction: DsQuickActionTile(
               key: const ValueKey('home-action-notification'),
@@ -64,9 +61,8 @@ void main() {
     });
 
     testWidgets('tidak ada kata kirim: aplikasi mencatat, bukan melakukan', (tester) async {
-      await tester.pumpWidget(_host(HomeQuickActions(onRecordTransfer: () {}, onOpenReport: () {})));
+      await tester.pumpWidget(_host(HomeQuickActions(onOpenReport: () {})));
       expect(find.textContaining('Kirim'), findsNothing);
-      expect(t.home.actionTransfer, 'Catat Transfer');
     });
   });
 
@@ -74,7 +70,7 @@ void main() {
     var claims = 0;
     await tester.pumpWidget(
       _host(
-        HomeQuickActions(onRecordTransfer: () {}, onOpenReport: () {}, onClaimed: () => claims++),
+        HomeQuickActions(onOpenReport: () {}, onClaimed: () => claims++),
         reduced: false,
       ),
     );

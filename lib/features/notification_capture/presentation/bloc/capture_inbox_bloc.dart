@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/app_action_snack_bar.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/notification_capture/domain/entities/capture_inbox_entry.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_store.dart';
@@ -308,16 +307,13 @@ final class CaptureInboxBloc extends Bloc<CaptureInboxEvent, CaptureInboxState> 
           ? _dismissedWithUndo(entry)
           : CallbackEffect(
               callback: (context) {
-                final colors = context.appColors;
                 ScaffoldMessenger.of(context).showSnackBar(
                   actionSnackBar(
                     context,
-                    content: Text(t.notificationCapture.notTransactionDone, style: TextStyle(color: colors.bg)),
-                    backgroundColor: colors.ink,
+                    content: Text(t.notificationCapture.notTransactionDone),
                     action: SnackBarAction(
                       key: const ValueKey('inbox-not-transaction-undo'),
                       label: t.transaction.undoDeleteAction,
-                      textColor: colors.brand,
                       onPressed: () => unawaited(undo()),
                     ),
                   ),
@@ -333,17 +329,14 @@ final class CaptureInboxBloc extends Bloc<CaptureInboxEvent, CaptureInboxState> 
   /// langsung; `CaptureInboxChanges` memuat ulang kotak masuk yang tampil.
   UiEffect _dismissedWithUndo(CaptureInboxEntry entry) => CallbackEffect(
     callback: (context) {
-      final colors = context.appColors;
       final restore = _actions.restore;
       ScaffoldMessenger.of(context).showSnackBar(
         actionSnackBar(
           context,
-          content: Text(t.notificationCapture.dismissed, style: TextStyle(color: colors.bg)),
-          backgroundColor: colors.ink,
+          content: Text(t.notificationCapture.dismissed),
           action: SnackBarAction(
             key: const ValueKey('inbox-dismiss-undo'),
             label: t.transaction.undoDeleteAction,
-            textColor: colors.brand,
             onPressed: () => unawaited(restore(entry)),
           ),
         ),
@@ -394,7 +387,6 @@ final class CaptureInboxBloc extends Bloc<CaptureInboxEvent, CaptureInboxState> 
 
   UiEffect _confirmedWithUndo(List<(CaptureInboxEntry, Transaction)> done, {String? offer}) => CallbackEffect(
     callback: (context) {
-      final colors = context.appColors;
       final message = done.length == 1
           ? t.notificationCapture.oneTapRecorded(
               amount: AppMoneyFormatter.format(done.single.$2.amount),
@@ -404,12 +396,10 @@ final class CaptureInboxBloc extends Bloc<CaptureInboxEvent, CaptureInboxState> 
       final controller = ScaffoldMessenger.of(context).showSnackBar(
         actionSnackBar(
           context,
-          content: Text(message, style: TextStyle(color: colors.bg)),
-          backgroundColor: colors.ink,
+          content: Text(message),
           action: SnackBarAction(
             key: const ValueKey('inbox-confirm-undo'),
             label: t.notificationCapture.undoAction,
-            textColor: colors.brand,
             onPressed: () => unawaited(_undoConfirmed(done)),
           ),
         ),
@@ -421,7 +411,7 @@ final class CaptureInboxBloc extends Bloc<CaptureInboxEvent, CaptureInboxState> 
             if (reason == SnackBarClosedReason.action || !context.mounted) return;
             showAutoOffer(
               context,
-              template: offer,
+              appLabel: done.single.$1.appLabel,
               approve: () => _actions.approveShape(done.single.$1, amountSen: done.single.$2.amount),
             );
           }),

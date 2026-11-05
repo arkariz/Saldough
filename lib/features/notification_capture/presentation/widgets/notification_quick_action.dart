@@ -7,7 +7,9 @@ import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/discovery/discovery.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
+import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/notification_capture/domain/entities/capture_inbox_entry.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_store.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_inbox_changes.dart';
@@ -106,6 +108,16 @@ class _NotificationQuickActionState extends State<NotificationQuickAction> with 
       label: t.home.actionNotification,
       onPressed: () => unawaited(_open()),
     );
+    // Disorot sekali saat pertama tampil (T-21.6); tile ini pintu tetap Catat dari
+    // notifikasi sejak kartu Beranda dicabut (5 Nov 2026).
+    return TourTrigger(
+      tour: TourId.home,
+      ready: true,
+      child: SpotlightTarget(spotlightKey: SpotlightKey.homeNotification, child: _withBadge(tile)),
+    );
+  }
+
+  Widget _withBadge(Widget tile) {
     if (_pending == 0) return tile;
     return Semantics(
       label: '${t.home.actionNotification}, ${t.notificationCapture.banner(n: _pending)}',

@@ -8,7 +8,6 @@ import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/app_action_snack_bar.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/features/budget/presentation/navigation/budget_route_keys.dart';
 import 'package:saldough/features/record/domain/record_defaults.dart';
@@ -377,7 +376,6 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
   /// ditawarkan lagi untuk rutin ini.
   UiEffect _effectWithOffer(FinancialMonthStart start) => CallbackEffect(
     callback: (context) {
-      final colors = context.appColors;
       final navigator = Navigator.of(context, rootNavigator: true);
       final day = switch (start.day) {
         final day? => t.plan.financialMonthOnDay(day: day),
@@ -386,11 +384,9 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
       final offer = ScaffoldMessenger.of(context).showSnackBar(
         actionSnackBar(
           context,
-          content: Text(t.plan.financialMonthOfferScheduled(start: day), style: TextStyle(color: colors.bg)),
-          backgroundColor: colors.ink,
+          content: Text(t.plan.financialMonthOfferScheduled(start: day)),
           action: SnackBarAction(
             label: t.plan.financialMonthOfferAction,
-            textColor: colors.brand,
             onPressed: () => unawaited(
               navigator.context.pushRoute(
                 BudgetRouteKeys.financialMonth,
@@ -420,16 +416,13 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
     final changes = _recurringChanges;
     return CallbackEffect(
       callback: (context) {
-        final colors = context.appColors;
         final messenger = ScaffoldMessenger.of(context);
         messenger.showSnackBar(
           actionSnackBar(
             context,
-            content: Text(message, style: TextStyle(color: colors.bg)),
-            backgroundColor: colors.ink,
+            content: Text(message),
             action: SnackBarAction(
               label: t.record.repeat.linkSuggestionAction(item: suggestion.itemName),
-              textColor: colors.brand,
               onPressed: () async {
                 final result = await repository.saveRule(rule.withBudgetItemKey(suggestion.templateItemId));
                 if (result.isRight()) {

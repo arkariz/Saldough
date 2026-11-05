@@ -19,8 +19,11 @@ RecordSheetInput recordSheetInputFor(
   CaptureInboxEntry entry,
   OccurrenceMatch? match, {
   void Function(String? categoryId, String note, String? walletId)? onSaved,
+  String? budgetItemId,
 }) {
-  if (match == null) return RecordSheetInput(draft: entry.draft, onSaved: onSaved);
+  if (match == null) {
+    return RecordSheetInput(draft: entry.draft, onSaved: onSaved, initialBudgetItemId: budgetItemId);
+  }
   return RecordSheetInput(
     onSaved: onSaved,
     draft: enrichFromPlan(entry.draft, match),
@@ -37,10 +40,11 @@ Future<bool> openCaptureRecord(
   CaptureInboxEntry entry,
   OccurrenceMatch? match, {
   void Function(String? categoryId, String note, String? walletId)? onSaved,
+  String? budgetItemId,
 }) async =>
     await context.pushRoute<RecordSheetInput, bool>(
       RecordRouteKeys.sheet,
-      recordSheetInputFor(entry, match, onSaved: onSaved),
+      recordSheetInputFor(entry, match, onSaved: onSaved, budgetItemId: budgetItemId),
     ) ??
     false;
 
@@ -57,7 +61,9 @@ Future<void> openCaptureInbox(BuildContext context, GetIt container) async {
   }
   final entry = inbox.single;
   final actions = container<CaptureInboxActions>();
-  final match = (await actions.matchesFor([entry]))[entry.id];
+  final matches = await actions.matchesFor([entry]);
+  final match = matches[entry.id];
+  final suggestion = (await actions.budgetSuggestionsFor([entry], matches))[entry.id];
   if (!context.mounted) return;
   String? savedCategory;
   String? savedWallet;
@@ -66,6 +72,7 @@ Future<void> openCaptureInbox(BuildContext context, GetIt container) async {
     context,
     entry,
     match,
+    budgetItemId: suggestion?.itemId,
     onSaved: (categoryId, note, walletId) {
       savedCategory = categoryId;
       savedNote = note;

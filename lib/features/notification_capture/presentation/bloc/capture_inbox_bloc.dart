@@ -12,6 +12,7 @@ import 'package:saldough/features/notification_capture/domain/repositories/notif
 import 'package:saldough/features/notification_capture/domain/services/capture_card_class.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_inbox_changes.dart';
 import 'package:saldough/features/notification_capture/domain/usecases/capture_inbox_actions.dart';
+import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:state_management/state_management.dart';
@@ -24,6 +25,7 @@ final class CaptureInboxState extends UiState<CaptureInboxState> {
     this.pending = const [],
     this.auto = const [],
     this.matches = const {},
+    this.budgetSuggestions = const {},
     this.linked = const [],
     this.duplicates = const {},
     super.effect,
@@ -41,6 +43,9 @@ final class CaptureInboxState extends UiState<CaptureInboxState> {
   /// Kemunculan rutin yang cocok dengan item [pending], per id item.
   final Map<String, OccurrenceMatch> matches;
 
+  /// Saran pos anggaran per id kartu (E2).
+  final Map<String, BudgetItemOption> budgetSuggestions;
+
   /// Tautan otomatis ke rutin (7 hari), terbaru dulu.
   final List<RecurrenceMatchEntry> linked;
 
@@ -54,6 +59,7 @@ final class CaptureInboxState extends UiState<CaptureInboxState> {
     List<CaptureInboxEntry>? pending,
     List<AutoRecordedEntry>? auto,
     Map<String, OccurrenceMatch>? matches,
+    Map<String, BudgetItemOption>? budgetSuggestions,
     List<RecurrenceMatchEntry>? linked,
     Map<String, Transaction>? duplicates,
     UiEffect? effect,
@@ -62,6 +68,7 @@ final class CaptureInboxState extends UiState<CaptureInboxState> {
     pending: pending ?? this.pending,
     auto: auto ?? this.auto,
     matches: matches ?? this.matches,
+    budgetSuggestions: budgetSuggestions ?? this.budgetSuggestions,
     linked: linked ?? this.linked,
     duplicates: duplicates ?? this.duplicates,
     effect: effect,
@@ -72,7 +79,7 @@ final class CaptureInboxState extends UiState<CaptureInboxState> {
       cardClassOf(entry, match: matches[entry.id], existing: duplicates[entry.id]);
 
   @override
-  List<Object?> get props => [isLoading, pending, auto, matches, linked, duplicates];
+  List<Object?> get props => [isLoading, pending, auto, matches, budgetSuggestions, linked, duplicates];
 }
 
 /// Event [CaptureInboxBloc].
@@ -212,6 +219,7 @@ final class CaptureInboxBloc extends Bloc<CaptureInboxEvent, CaptureInboxState> 
     final pending = (await _store.loadInbox()).getOrElse((_) => const []);
     final auto = (await _store.loadAutoRecorded()).getOrElse((_) => const []);
     final matches = await _actions.matchesFor(pending);
+    final suggestions = await _actions.budgetSuggestionsFor(pending, matches);
     final duplicates = await _actions.duplicatesFor(pending);
     final linked = (await _actions.matchLog?.list(DateTime.now()))?.getOrElse((_) => const []) ?? const [];
     emit(
@@ -220,6 +228,7 @@ final class CaptureInboxBloc extends Bloc<CaptureInboxEvent, CaptureInboxState> 
         pending: pending,
         auto: auto,
         matches: matches,
+        budgetSuggestions: suggestions,
         linked: linked,
         duplicates: duplicates,
         effect: effect,

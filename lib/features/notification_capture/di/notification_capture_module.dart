@@ -122,6 +122,7 @@ abstract final class NotificationCaptureModule {
           store: c<NotificationCaptureStore>(),
           merchantMemory: c<StoreBackedMerchantMemory>(),
           negativeShapes: c<StoreBackedNegativeShapes>(),
+          budgetItems: c.isRegistered<BudgetItemCatalog>() ? c<BudgetItemCatalog>() : null,
           recordTransaction: recordTransaction(),
           transactionRepository: c<TransactionRepository>(),
           composer: c<NotificationDraftComposer>(),

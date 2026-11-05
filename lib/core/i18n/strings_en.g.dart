@@ -1242,6 +1242,7 @@ class _Translations$notificationCapture$en extends Translations$notificationCapt
 	@override String get inboxAutoEmpty => 'Nothing recorded automatically yet.';
 	@override String get inboxRetention => 'This list is kept for 7 days.';
 	@override String get amountUnknown => 'Amount not read yet';
+	@override String budgetSuggestion({required Object name, required Object budget}) => 'Suggested item: ${name} · ${budget}';
 	@override String get possibleDuplicate => 'May already be recorded';
 	@override late final _Translations$notificationCapture$reviewReason$en reviewReason = _Translations$notificationCapture$reviewReason$en._(_root);
 	@override String get recordAction => 'Record';
@@ -3630,6 +3631,7 @@ extension on TranslationsEn {
 			'notificationCapture.inboxAutoEmpty' => 'Nothing recorded automatically yet.',
 			'notificationCapture.inboxRetention' => 'This list is kept for 7 days.',
 			'notificationCapture.amountUnknown' => 'Amount not read yet',
+			'notificationCapture.budgetSuggestion' => ({required Object name, required Object budget}) => 'Suggested item: ${name} · ${budget}',
 			'notificationCapture.possibleDuplicate' => 'May already be recorded',
 			'notificationCapture.reviewReason.autoRecordOff' => 'Auto-record is off',
 			'notificationCapture.reviewReason.newPattern' => 'New pattern, check it',
@@ -4061,9 +4063,9 @@ extension on TranslationsEn {
 			'premium.account.section' => 'Plus',
 			'premium.account.rowTitle' => 'Tanukonomy Plus',
 			'premium.account.subFree' => 'Free. See what Tanuki can do for you.',
-			'premium.account.subTrial' => ({required Object date}) => 'Until ${date}. No card needed.',
 			_ => null,
 		} ?? switch (path) {
+			'premium.account.subTrial' => ({required Object date}) => 'Until ${date}. No card needed.',
 			'premium.account.subActive' => ({required Object date}) => 'Active until ${date}',
 			'premium.account.subActiveOpen' => 'Active',
 			'premium.account.subGrace' => ({required Object date}) => 'Payment did not go through. Plus stays on until ${date}.',

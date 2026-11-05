@@ -19,6 +19,7 @@ import 'package:saldough/features/notification_capture/presentation/pages/notifi
 import 'package:saldough/features/notification_capture/presentation/widgets/access_disclosure.dart';
 import 'package:saldough/features/notification_capture/presentation/widgets/open_capture_record.dart';
 import 'package:saldough/features/transaction/presentation/navigation/transaction_route_keys.dart';
+import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/shared/capture/capture.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
@@ -46,6 +47,7 @@ class CaptureInboxPage extends StatelessWidget {
     OccurrenceMatch? match, {
     required String via,
     required String cardClass,
+    String? budgetItemId,
   }) async {
     final bloc = context.read<CaptureInboxBloc>();
     final settings = context.read<NotificationSettingsBloc>();
@@ -57,6 +59,7 @@ class CaptureInboxPage extends StatelessWidget {
       context,
       entry,
       match,
+      budgetItemId: budgetItemId,
       onSaved: (categoryId, note, walletId) {
         savedCategory = categoryId;
         savedNote = note;
@@ -260,6 +263,7 @@ class _InboxBodyState extends State<_InboxBody> with WidgetsBindingObserver {
                     _PendingCard(
                       entry: entry,
                       match: state.matches[entry.id],
+                      budgetItem: state.budgetSuggestions[entry.id],
                       existing: state.duplicates[entry.id],
                       oneTap: eligible.contains(entry),
                       onConfirm: () => inbox.add(CaptureInboxConfirmed([(entry, state.matches[entry.id])])),
@@ -267,6 +271,7 @@ class _InboxBodyState extends State<_InboxBody> with WidgetsBindingObserver {
                         context,
                         entry,
                         state.matches[entry.id],
+                        budgetItemId: state.budgetSuggestions[entry.id]?.itemId,
                         via: eligible.contains(entry) ? 'edit_first' : 'record',
                         cardClass: captureClassName(state.cardClassFor(entry)),
                       ),
@@ -402,6 +407,7 @@ class _PendingCard extends StatelessWidget {
   const _PendingCard({
     required this.entry,
     required this.match,
+    required this.budgetItem,
     required this.existing,
     required this.oneTap,
     required this.onConfirm,
@@ -414,6 +420,9 @@ class _PendingCard extends StatelessWidget {
 
   final CaptureInboxEntry entry;
   final OccurrenceMatch? match;
+
+  /// Saran pos anggaran (E2); hanya label dan isian awal CATAT.
+  final BudgetItemOption? budgetItem;
 
   /// Transaksi di buku besar yang tampak sama dengan kartu ini (ADR-044 §3.3).
   final Transaction? existing;
@@ -465,7 +474,11 @@ class _PendingCard extends StatelessWidget {
                 ),
               ],
             ),
-            if (entry.possibleDuplicate || existing != null || match != null || _reasonShown != null) ...[
+            if (entry.possibleDuplicate ||
+                existing != null ||
+                match != null ||
+                budgetItem != null ||
+                _reasonShown != null) ...[
               const SizedBox(height: AppSpacing.space2),
               Wrap(
                 spacing: AppSpacing.space2,
@@ -484,6 +497,12 @@ class _PendingCard extends StatelessWidget {
                     AppBadge(
                       t.recurring.matchLabel(name: m.rule.note, date: CycleMonthFormatter.formatDayMonth(m.date)),
                       tone: AppTone.positive,
+                    ),
+                  if (budgetItem case final item?)
+                    AppBadge(
+                      key: const ValueKey('inbox-budget-suggestion'),
+                      texts.budgetSuggestion(name: item.itemName, budget: item.budgetName),
+                      tone: AppTone.info,
                     ),
                 ],
               ),

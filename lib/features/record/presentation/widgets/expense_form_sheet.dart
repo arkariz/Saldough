@@ -150,6 +150,8 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
     final draft = widget.draft;
     if (tx == null && draft != null) {
       _applyDraft(draft);
+      // Saran pos (E2): hanya isian awal, tetap bisa diganti atau dikosongkan.
+      _budgetItemId ??= widget.initialBudgetItemId;
       return;
     }
     if (tx == null) {
@@ -226,7 +228,6 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
   }
 
   String? get _validBudgetItemId => _budgetChoices.any((o) => o.itemId == _budgetItemId) ? _budgetItemId : null;
-
 
   void _submit() {
     final amount = _amountSen;
@@ -317,26 +318,26 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
               ),
             DsFieldPair(
               children: [
-              RecordDateField(
-                date: _date,
-                kind: TransactionKind.expense,
-                allowFuture: _repeat != null,
-                onChanged: (date) => setState(() => _date = date),
-              ),
-              if (!editing && widget.occurrence == null)
-                SpotlightTarget(
-                  spotlightKey: SpotlightKey.recordRepeat,
-                  child: RecordRepeatField(
-                    value: _repeat,
-                    date: _date,
-                    kind: TransactionKind.expense,
-                    locked: widget.repeatLocked,
-                    onChanged: (repeat) => setState(() {
-                      _repeat = repeat;
-                      if (repeat == null) _date = dateWithoutRepeat(_date);
-                    }),
-                  ),
+                RecordDateField(
+                  date: _date,
+                  kind: TransactionKind.expense,
+                  allowFuture: _repeat != null,
+                  onChanged: (date) => setState(() => _date = date),
                 ),
+                if (!editing && widget.occurrence == null)
+                  SpotlightTarget(
+                    spotlightKey: SpotlightKey.recordRepeat,
+                    child: RecordRepeatField(
+                      value: _repeat,
+                      date: _date,
+                      kind: TransactionKind.expense,
+                      locked: widget.repeatLocked,
+                      onChanged: (repeat) => setState(() {
+                        _repeat = repeat;
+                        if (repeat == null) _date = dateWithoutRepeat(_date);
+                      }),
+                    ),
+                  ),
               ],
             ),
           ],
@@ -345,7 +346,7 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
           RecordWhisperCard(itemName: option.itemName, plannedSen: option.plannedAmount, amountSen: amount),
         if (!(_createsRule && _scheduleOnly))
           if (budgetItemOutsidePeriod(widget.budgetItems, _budgetItemId, _periodDate) case final dropped?)
-          RecordBudgetItemOutOfPeriodNotice(option: dropped),
+            RecordBudgetItemOutOfPeriodNotice(option: dropped),
         if (widget.occurrence case final occurrence?)
           RecordOccurrenceNotice(occurrence: occurrence, amount: _amountSen, date: _date),
         // Jadikan Rutin / ubah rutin tidak mencatat transaksi baru.

@@ -1191,6 +1191,7 @@
     "inboxAutoEmpty": "Nothing recorded automatically yet.",
     "inboxRetention": "This list is kept for 7 days.",
     "amountUnknown": "Amount not read yet",
+    "budgetSuggestion": "Suggested item: $name · $budget",
     "possibleDuplicate": "May already be recorded",
     "reviewReason": {
       "autoRecordOff": "Auto-record is off",

@@ -1191,6 +1191,7 @@
     "inboxAutoEmpty": "Belum ada yang tercatat otomatis.",
     "inboxRetention": "Daftar ini disimpan 7 hari.",
     "amountUnknown": "Nominal belum terbaca",
+    "budgetSuggestion": "Saran pos: $name · $budget",
     "possibleDuplicate": "Mungkin sudah tercatat",
     "reviewReason": {
       "autoRecordOff": "Catat otomatis mati",

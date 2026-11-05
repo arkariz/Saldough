@@ -9,6 +9,7 @@ import 'package:saldough/features/notification_capture/domain/repositories/notif
 import 'package:saldough/features/notification_capture/domain/services/account_hint.dart';
 import 'package:saldough/features/notification_capture/domain/services/active_capture_inputs.dart';
 import 'package:saldough/features/notification_capture/domain/services/auto_record_policy.dart';
+import 'package:saldough/features/notification_capture/domain/services/budget_item_suggestion.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_finalizer.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_inbox_changes.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_resolver.dart';
@@ -16,6 +17,7 @@ import 'package:saldough/features/notification_capture/domain/services/negative_
 import 'package:saldough/features/notification_capture/domain/services/notification_draft_composer.dart';
 import 'package:saldough/features/notification_capture/domain/services/store_backed_merchant_memory.dart';
 import 'package:saldough/features/notification_capture/domain/services/transaction_from_draft.dart';
+import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/shared/capture/capture.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
@@ -39,6 +41,7 @@ final class CaptureInboxActions {
     required this.languageCode,
     this.merchantMemory,
     this.negativeShapes,
+    this.budgetItems,
     this.changes,
     this.recurringRules,
     this.matchLog,
@@ -46,6 +49,9 @@ final class CaptureInboxActions {
     this.finalizer = const CaptureFinalizer(),
     String Function()? newId,
   }) : _newId = newId ?? _timestampId;
+
+  /// Katalog pos anggaran untuk saran pos (E2); `null` = tanpa saran.
+  final BudgetItemCatalog? budgetItems;
 
   /// Sinyal perubahan kotak masuk, atau `null`.
   final CaptureInboxChanges? changes;
@@ -220,6 +226,31 @@ final class CaptureInboxActions {
     if (normalizeMerchant(note).isEmpty || categoryId == entry.draft.categoryId) return null;
     final previous = await memory.remember(packageName: entry.packageName, note: note, categoryId: categoryId);
     return () => memory.restore(packageName: entry.packageName, note: note, previous: previous);
+  }
+
+  /// Saran pos anggaran (E2/B-86) per id kartu, hanya untuk pengeluaran yang
+  /// tidak cocok dengan rutin (pos rutin diisi `CaptureFinalizer`). Tidak
+  /// pernah diisi diam-diam: hanya label di kartu dan isian awal CATAT.
+  Future<Map<String, BudgetItemOption>> budgetSuggestionsFor(
+    List<CaptureInboxEntry> entries,
+    Map<String, OccurrenceMatch> matches,
+  ) async {
+    final catalog = budgetItems;
+    if (catalog == null || entries.isEmpty) return const {};
+    final options = (await catalog.listOptions()).getOrElse((_) => const []);
+    if (options.isEmpty) return const {};
+    final result = <String, BudgetItemOption>{};
+    for (final entry in entries) {
+      if (matches.containsKey(entry.id)) continue;
+      final suggestion = suggestBudgetItem(
+        draft: entry.draft,
+        date: entry.draft.date ?? entry.capturedAt,
+        text: entry.text,
+        options: options,
+      );
+      if (suggestion != null) result[entry.id] = suggestion;
+    }
+    return result;
   }
 
   /// Kemunculan rutin yang cocok dengan draf tiap item [entries] (satu

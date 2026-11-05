@@ -730,9 +730,14 @@ class _AutoRow extends StatelessWidget {
         sourceIconId: entry.iconId,
       ),
       title: entry.note.isEmpty ? entry.appLabel : entry.note,
-      subtitle:
-          '${entry.appLabel} · ${CycleMonthFormatter.formatDateShort(entry.transactionDate)}'
-          '${entry.isNew ? ' · ${texts.autoNewBadge}' : ''}',
+      subtitle: '${entry.appLabel} · ${CycleMonthFormatter.formatDateShort(entry.transactionDate)}',
+      // Lencana di depan subjudul: subjudul satu baris dan elipsis memotong ekornya.
+      subtitleLeading: entry.isNew
+          ? Padding(
+              padding: const EdgeInsets.only(right: AppSpacing.space1),
+              child: AppBadge(key: const ValueKey('auto-new-badge'), texts.autoNewBadge, tone: AppTone.positive),
+            )
+          : null,
       trailing: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.end,

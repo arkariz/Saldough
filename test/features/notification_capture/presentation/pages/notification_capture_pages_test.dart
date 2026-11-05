@@ -1165,6 +1165,25 @@ void main() {
       expect(find.text('INDOMARET'), findsOneWidget);
     });
 
+    testWidgets('catatan otomatis dari bentuk baru bertanda Baru di segmen Otomatis, yang lama tidak', (tester) async {
+      AutoRecordedEntry entry(String id, {required bool isNew}) => AutoRecordedEntry(
+        captureId: id,
+        transactionId: 't$id',
+        transactionDate: at,
+        kind: DraftKind.expense,
+        amountSen: 2500000,
+        appLabel: 'BRImo',
+        recordedAt: at,
+        note: 'KOPI $id',
+        isNew: isNew,
+      );
+      await store.saveAutoRecorded([entry('a', isNew: true), entry('b', isNew: false)]);
+      await open(tester, NotificationCaptureRouteKeys.inbox);
+
+      expect(find.byKey(const ValueKey('auto-new-badge')), findsOneWidget);
+      expect(find.text(t.notificationCapture.autoNewBadge), findsOneWidget);
+    });
+
     testWidgets('Batalkan transaksi otomatis menghapusnya dari buku besar', (tester) async {
       final tx = ExpenseTransaction(id: 't1', date: at, amount: 2500000, note: 'KOPI', walletId: 'bri');
       await ledger.saveTransaction(tx);

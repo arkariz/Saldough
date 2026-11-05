@@ -3,6 +3,7 @@ import 'package:saldough/features/budget/data/models/budget_model.dart';
 import 'package:saldough/features/budget/data/models/budget_template_model.dart';
 import 'package:saldough/features/data_portability/domain/backup_registry.dart';
 import 'package:saldough/features/freelance/data/models/freelance_models.dart';
+import 'package:saldough/features/notification_capture/data/approved_shape_store_impl.dart';
 import 'package:saldough/features/notification_capture/data/merchant_memory_store_impl.dart';
 import 'package:saldough/features/notification_capture/data/negative_shape_store_impl.dart';
 import 'package:saldough/features/notification_capture/data/notification_capture_store_impl.dart';
@@ -49,6 +50,8 @@ final appBackupRegistry = BackupRegistry(
     const BackupKeySpec('settings_notification_capture', supportedSchema: NotificationCaptureStoreImpl.schemaVersion),
     const BackupKeySpec('capture_notification_patterns', supportedSchema: NotificationCaptureStoreImpl.schemaVersion),
     // Ingatan pedagang (ADR-044, E1): kategori yang dikonfirmasi pengguna; tanpa teks notifikasi.
+    // Bentuk yang disetujui untuk dicatat otomatis (ADR-044 §3.7, E3): templat dan nominal, tanpa teks asli.
+    const BackupKeySpec('capture_approved_shapes', supportedSchema: ApprovedShapeStoreImpl.schemaVersion),
     const BackupKeySpec('capture_negative_shapes', supportedSchema: NegativeShapeStoreImpl.schemaVersion),
     const BackupKeySpec('capture_merchant_memory', supportedSchema: MerchantMemoryStoreImpl.schemaVersion),
   ],

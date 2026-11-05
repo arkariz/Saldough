@@ -18,6 +18,8 @@ import 'package:saldough/features/notification_capture/presentation/navigation/n
 import 'package:saldough/features/notification_capture/presentation/pages/notification_pattern_page.dart';
 import 'package:saldough/features/notification_capture/presentation/widgets/access_disclosure.dart';
 import 'package:saldough/features/notification_capture/presentation/widgets/open_capture_record.dart';
+import 'package:saldough/features/notification_capture/presentation/widgets/plus_gate.dart';
+import 'package:saldough/features/record/presentation/navigation/record_route_keys.dart';
 import 'package:saldough/features/transaction/presentation/navigation/transaction_route_keys.dart';
 import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/shared/capture/capture.dart';
@@ -52,42 +54,41 @@ class CaptureInboxPage extends StatelessWidget {
     final bloc = context.read<CaptureInboxBloc>();
     final settings = context.read<NotificationSettingsBloc>();
     AppAnalytics.log(CaptureEvents.cardAction(action: via, cardClass: cardClass));
-    String? savedCategory;
-    String? savedWallet;
-    String? savedBudgetItem;
-    var savedNote = '';
+    RecordSavedInfo? savedInfo;
     final saved = await openCaptureRecord(
       context,
       entry,
       match,
       budgetItemId: budgetItemId,
-      onSaved: (categoryId, note, walletId, chosenBudgetItem) {
-        savedCategory = categoryId;
-        savedNote = note;
-        savedWallet = walletId;
-        savedBudgetItem = chosenBudgetItem;
-      },
+      onSaved: (info) => savedInfo = info,
     );
     if (!saved) return;
     AppAnalytics.log(CaptureEvents.recordSaved(via: via, cardClass: cardClass));
     bloc.add(CaptureInboxRecorded(entry.id));
     // Belajar (E1): kategori dan dompet baru atau yang diubah diingat, dengan Batalkan.
-    final undoCategory = await bloc.rememberCategory(entry, categoryId: savedCategory, note: savedNote);
-    final learnedWallet = await bloc.rememberWallet(entry, walletId: savedWallet);
+    final undoCategory = await bloc.rememberCategory(
+      entry,
+      categoryId: savedInfo?.categoryId,
+      note: savedInfo?.note ?? '',
+    );
+    final learnedWallet = await bloc.rememberWallet(entry, walletId: savedInfo?.walletId);
     final learnedBudget = await bloc.rememberBudgetItem(
       entry,
-      budgetItemId: savedBudgetItem,
+      budgetItemId: savedInfo?.budgetItemId,
       suggestedItemId: budgetItemId,
     );
     if (!context.mounted) return;
     final texts = t.notificationCapture;
     final messenger = ScaffoldMessenger.of(context);
     if (undoCategory != null) {
-      final categoryName = ActiveCategories.notifier.value.where((c) => c.id == savedCategory).firstOrNull?.name ?? '';
+      final categoryName =
+          ActiveCategories.notifier.value.where((c) => c.id == savedInfo?.categoryId).firstOrNull?.name ?? '';
       messenger.showSnackBar(
         actionSnackBar(
           context,
-          content: Text(texts.rememberedSnack(note: savedNote.trim(), app: entry.appLabel, category: categoryName)),
+          content: Text(
+            texts.rememberedSnack(note: (savedInfo?.note ?? '').trim(), app: entry.appLabel, category: categoryName),
+          ),
           action: SnackBarAction(label: texts.rememberedUndo, onPressed: () => unawaited(undoCategory())),
         ),
       );
@@ -101,8 +102,23 @@ class CaptureInboxPage extends StatelessWidget {
         ),
       );
     }
+    // Tawaran catat otomatis per bentuk (E3): hanya bila tidak ada jenis, dompet,
+    // atau nominal yang diubah.
+    final savedKind = switch (savedInfo?.choice) {
+      RecordChoice.expense => DraftKind.expense,
+      RecordChoice.income => DraftKind.income,
+      _ => null,
+    };
+    final offerTemplate = await bloc.autoOfferFor(
+      entry,
+      savedKind: savedKind,
+      savedAmountSen: savedInfo?.amountSen,
+      savedWalletId: savedInfo?.walletId,
+    );
+    final amountSaved = savedInfo?.amountSen;
+    if (!context.mounted) return;
     if (learnedWallet != null) {
-      final walletName = settings.state.wallets.where((w) => w.id == savedWallet).firstOrNull?.name ?? '';
+      final walletName = settings.state.wallets.where((w) => w.id == savedInfo?.walletId).firstOrNull?.name ?? '';
       messenger.showSnackBar(
         actionSnackBar(
           context,
@@ -111,6 +127,45 @@ class CaptureInboxPage extends StatelessWidget {
         ),
       );
     }
+    if (offerTemplate != null && context.mounted) {
+      messenger.showSnackBar(
+        actionSnackBar(
+          context,
+          content: Text(texts.autoOfferSnack(shape: _shapePreview(offerTemplate))),
+          action: SnackBarAction(
+            label: texts.autoOfferYes,
+            onPressed: () => unawaited(_approveShape(context, entry, amountSaved)),
+          ),
+        ),
+      );
+    }
+  }
+
+  /// "Ya" pada tawaran: Plus menyetujui bentuknya, Gratis membuka pratinjau Plus.
+  Future<void> _approveShape(BuildContext context, CaptureInboxEntry entry, int? amountSen) async {
+    if (!ActivePlan.isPlus) {
+      await openNotificationPaywall(context);
+      return;
+    }
+    final undo = await context.read<CaptureInboxBloc>().approveShape(entry, amountSen: amountSen);
+    if (undo == null || !context.mounted) return;
+    final texts = t.notificationCapture;
+    ScaffoldMessenger.of(context).showSnackBar(
+      actionSnackBar(
+        context,
+        content: Text(texts.autoApprovedSnack),
+        action: SnackBarAction(label: texts.rememberedUndo, onPressed: () => unawaited(undo())),
+      ),
+    );
+  }
+
+  /// Templat bentuk dalam bahasa pengguna: penanda diganti kata biasa.
+  String _shapePreview(String template) {
+    final texts = t.notificationCapture;
+    return template
+        .replaceAll('{amount}', texts.shapeTokenAmount)
+        .replaceAll('{note}', texts.shapeTokenNote)
+        .replaceAll('{*}', texts.shapeTokenAny);
   }
 
   Future<void> _makePattern(BuildContext context, CaptureInboxEntry entry) async {
@@ -669,6 +724,7 @@ String _reasonLabel(CaptureReviewReason reason) {
     CaptureReviewReason.categoryUnclear => texts.categoryUnclear,
     CaptureReviewReason.dateUnclear => texts.dateUnclear,
     CaptureReviewReason.recurringUnclear => texts.recurringUnclear,
+    CaptureReviewReason.amountUnusual => texts.amountUnusual,
   };
 }
 
@@ -706,7 +762,9 @@ class _AutoRow extends StatelessWidget {
         sourceIconId: entry.iconId,
       ),
       title: entry.note.isEmpty ? entry.appLabel : entry.note,
-      subtitle: '${entry.appLabel} · ${CycleMonthFormatter.formatDateShort(entry.transactionDate)}',
+      subtitle:
+          '${entry.appLabel} · ${CycleMonthFormatter.formatDateShort(entry.transactionDate)}'
+          '${entry.isNew ? ' · ${texts.autoNewBadge}' : ''}',
       trailing: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.end,

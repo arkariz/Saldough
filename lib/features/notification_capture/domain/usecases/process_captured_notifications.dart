@@ -8,6 +8,7 @@ import 'package:saldough/features/notification_capture/domain/entities/notificat
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_gateway.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_store.dart';
 import 'package:saldough/features/notification_capture/domain/services/active_capture_inputs.dart';
+import 'package:saldough/features/notification_capture/domain/services/approved_shapes.dart';
 import 'package:saldough/features/notification_capture/domain/services/auto_record_policy.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_finalizer.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_inbox_changes.dart';
@@ -67,6 +68,7 @@ final class ProcessCapturedNotifications {
     this.finalizer = const CaptureFinalizer(),
     this.memory,
     this.negativeShapes,
+    this.approvedShapes,
     this.isPlus,
     this.freeSources,
     DateTime Function()? clock,
@@ -124,6 +126,9 @@ final class ProcessCapturedNotifications {
 
   /// Bentuk yang bukan transaksi (E1): cocok = dilewati diam-diam.
   final StoreBackedNegativeShapes? negativeShapes;
+
+  /// Bentuk yang disetujui dicatat otomatis (E3); `null` = hanya tingkat global.
+  final StoreBackedApprovedShapes? approvedShapes;
 
   /// Paket Plus; `null` = tanpa batas (uji). Di Gratis hanya [freeSources]
   /// sumber pertama di daftar yang diproses dan tingkat otomatis dianggap
@@ -187,10 +192,12 @@ final class ProcessCapturedNotifications {
     }
 
     await negativeShapes?.refresh();
+    await approvedShapes?.refresh();
     final wallets = await loadActiveWallets(walletRepository);
     final patterns = await loadActivePatterns(store, settings);
     final plus = isPlus?.call() ?? true;
     final policy = AutoRecordPolicy(plus ? settings.autoRecordLevel : AutoRecordLevel.reviewAll);
+    const approvedPolicy = AutoRecordPolicy(AutoRecordLevel.whenAmountAndWallet);
     final allowedPackages = plus
         ? null
         : {for (final s in settings.sources.take(freeSources?.call() ?? 1)) s.packageName};
@@ -262,16 +269,24 @@ final class ProcessCapturedNotifications {
           matchCandidates(match.rule, match.date, await _ledgerAround(date, ledgers)).isEmpty;
       final recordDraft = autoLink ? draft : plainDraft;
 
-      if (composed.autoEligible && !duplicate && !boundUnclear && policy.allows(recordDraft)) {
+      // Bentuk yang disetujui pengguna (E3, Plus) dicatat otomatis walau tingkat
+      // global mati, selama nominal tidak jauh di atas kebiasaannya (KT-N2).
+      final approved = plus ? approvedShapes?.find(notification.packageName, text) : null;
+      final approvedOk = approved != null && approvedPolicy.allows(recordDraft);
+      final unusual = approvedOk && isUnusualShapeAmount(approved, recordDraft.amountSen ?? 0);
+      final autoAllowed = !unusual && ((composed.autoEligible && policy.allows(recordDraft)) || approvedOk);
+      if (autoAllowed && !duplicate && !boundUnclear) {
         final (entry, linked) = await _record(
           recordDraft,
           notification,
           source.appLabel,
           now,
           match: autoLink ? match : null,
+          shape: approved,
         );
         linkedAny |= linked;
         if (entry != null) {
+          if (approved != null && approvedOk) await approvedShapes?.recordAuto(approved, entry.amountSen);
           auto.insert(0, entry);
           // Sudah di buku besar walau lognya gagal tersimpan.
           recorded.add(entry);
@@ -293,7 +308,9 @@ final class ProcessCapturedNotifications {
         patternId: composed.pattern?.id,
         reviewReason: duplicate
             ? null
-            : (boundUnclear && composed.autoEligible && policy.allows(draft)
+            : (unusual
+                  ? CaptureReviewReason.amountUnusual
+                  : boundUnclear && composed.autoEligible && policy.allows(draft)
                   ? CaptureReviewReason.recurringUnclear
                   : policy.reviewReason(draft, autoEligible: composed.autoEligible)),
       );
@@ -339,6 +356,7 @@ final class ProcessCapturedNotifications {
     String appLabel,
     DateTime now, {
     OccurrenceMatch? match,
+    ApprovedShape? shape,
   }) async {
     var transaction = transactionFromDraft(draft, id: _newId(), fallbackDate: notification.postedAt);
     if (transaction == null) return (null, false);
@@ -360,7 +378,17 @@ final class ProcessCapturedNotifications {
         ),
       );
     }
-    return (_autoEntry(transaction, draft, notification, appLabel, now), match != null);
+    return (
+      _autoEntry(
+        transaction,
+        draft,
+        notification,
+        appLabel,
+        now,
+        isNew: shape != null && shape.autoCount < approvedShapeNewCount,
+      ),
+      match != null,
+    );
   }
 
   AutoRecordedEntry _autoEntry(
@@ -368,8 +396,9 @@ final class ProcessCapturedNotifications {
     RecordDraft draft,
     CapturedNotification notification,
     String appLabel,
-    DateTime now,
-  ) {
+    DateTime now, {
+    bool isNew = false,
+  }) {
     return AutoRecordedEntry(
       captureId: notification.id,
       transactionId: transaction.id,
@@ -382,6 +411,7 @@ final class ProcessCapturedNotifications {
       categoryId: transaction.categoryId,
       iconId: draft.sourceIconId,
       capturedAt: notification.postedAt,
+      isNew: isNew,
     );
   }
 

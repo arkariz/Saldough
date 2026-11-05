@@ -5,6 +5,7 @@ import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/features/freelance/presentation/navigation/freelance_route_keys.dart';
 import 'package:saldough/features/record/domain/record_defaults.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
+import 'package:saldough/features/record/presentation/navigation/record_route_keys.dart';
 import 'package:saldough/features/record/presentation/widgets/expense_form_sheet.dart';
 import 'package:saldough/features/record/presentation/widgets/income_form_sheet.dart';
 import 'package:saldough/features/record/presentation/widgets/record_choice.dart';
@@ -89,7 +90,7 @@ Future<bool> openRecordSheet(
   RecurringRule? editRule,
   RecurringRule? occurrenceRule,
   DateTime? occurrenceDate,
-  void Function(String? categoryId, String note, String? walletId, String? budgetItemId)? onSaved,
+  void Function(RecordSavedInfo info)? onSaved,
 }) async {
   final recordDraft = switch ((makeRecurringFrom, editRule)) {
     (final Transaction source, _) => draftFromTransaction(source),
@@ -238,12 +239,31 @@ Future<bool> openRecordSheet(
     final saved = bloc.state.saveCount > savedBefore;
     if (saved && onSaved != null) {
       switch (result) {
-        case ExpenseRecorded(:final categoryId, :final note, :final walletId, :final budgetItemId):
-          onSaved(categoryId, note, walletId, budgetItemId);
-        case IncomeRecorded(:final categoryId, :final note, :final walletId):
-          onSaved(categoryId, note, walletId, null);
+        case ExpenseRecorded(:final categoryId, :final note, :final walletId, :final budgetItemId, :final amount):
+          onSaved(
+            RecordSavedInfo(
+              choice: RecordChoice.expense,
+              amountSen: amount,
+              categoryId: categoryId,
+              note: note,
+              walletId: walletId,
+              budgetItemId: budgetItemId,
+            ),
+          );
+        case IncomeRecorded(:final categoryId, :final note, :final walletId, :final amount):
+          onSaved(
+            RecordSavedInfo(
+              choice: RecordChoice.income,
+              amountSen: amount,
+              categoryId: categoryId,
+              note: note,
+              walletId: walletId,
+            ),
+          );
+        case TransferRecorded(:final amount):
+          onSaved(RecordSavedInfo(choice: RecordChoice.transfer, amountSen: amount));
         default:
-          onSaved(null, '', null, null);
+          onSaved(const RecordSavedInfo());
       }
     }
     return saved;

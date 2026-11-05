@@ -360,6 +360,9 @@ abstract final class CaptureEvents {
   static AnalyticsEvent cardAction({required String action, required String cardClass}) =>
       AnalyticsEvent('capture_card_action', {'action': action, 'card_class': cardClass});
 
+  /// Pengguna menyetujui satu bentuk untuk dicatat otomatis (E3).
+  static const shapeApproved = AnalyticsEvent('capture_shape_approved');
+
   /// CATAT dari kartu disimpan. [via]: `edit_first` atau `record`.
   static AnalyticsEvent recordSaved({required String via, required String cardClass}) =>
       AnalyticsEvent('capture_record_saved', {'via': via, 'card_class': cardClass});

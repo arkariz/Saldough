@@ -3097,6 +3097,27 @@ class Translations$notificationCapture$id {
 	/// id: 'Diingat: $app · $name dipilih untuk pedagang ini'
 	String rememberedBudgetSnack({required Object app, required Object name}) => 'Diingat: ${app} · ${name} dipilih untuk pedagang ini';
 
+	/// id: 'Baru'
+	String get autoNewBadge => 'Baru';
+
+	/// id: 'Catat otomatis yang seperti ini? Seperti: $shape'
+	String autoOfferSnack({required Object shape}) => 'Catat otomatis yang seperti ini? Seperti: ${shape}';
+
+	/// id: 'Ya'
+	String get autoOfferYes => 'Ya';
+
+	/// id: 'Siap. Yang seperti ini dicatat otomatis, dua yang pertama bertanda Baru.'
+	String get autoApprovedSnack => 'Siap. Yang seperti ini dicatat otomatis, dua yang pertama bertanda Baru.';
+
+	/// id: 'nominal'
+	String get shapeTokenAmount => 'nominal';
+
+	/// id: 'nama'
+	String get shapeTokenNote => 'nama';
+
+	/// id: '…'
+	String get shapeTokenAny => '…';
+
 	/// id: 'Saran pos: $name · $budget'
 	String budgetSuggestion({required Object name, required Object budget}) => 'Saran pos: ${name} · ${budget}';
 
@@ -4876,6 +4897,9 @@ class Translations$notificationCapture$reviewReason$id {
 
 	/// id: 'Rutin belum pasti'
 	String get recurringUnclear => 'Rutin belum pasti';
+
+	/// id: 'Nominal tak biasa, cek dulu'
+	String get amountUnusual => 'Nominal tak biasa, cek dulu';
 }
 
 // Path: recurring.starters
@@ -6898,6 +6922,13 @@ extension on Translations {
 			'notificationCapture.inboxRetention' => 'Daftar ini disimpan 7 hari.',
 			'notificationCapture.amountUnknown' => 'Nominal belum terbaca',
 			'notificationCapture.rememberedBudgetSnack' => ({required Object app, required Object name}) => 'Diingat: ${app} · ${name} dipilih untuk pedagang ini',
+			'notificationCapture.autoNewBadge' => 'Baru',
+			'notificationCapture.autoOfferSnack' => ({required Object shape}) => 'Catat otomatis yang seperti ini? Seperti: ${shape}',
+			'notificationCapture.autoOfferYes' => 'Ya',
+			'notificationCapture.autoApprovedSnack' => 'Siap. Yang seperti ini dicatat otomatis, dua yang pertama bertanda Baru.',
+			'notificationCapture.shapeTokenAmount' => 'nominal',
+			'notificationCapture.shapeTokenNote' => 'nama',
+			'notificationCapture.shapeTokenAny' => '…',
 			'notificationCapture.budgetSuggestion' => ({required Object name, required Object budget}) => 'Saran pos: ${name} · ${budget}',
 			'notificationCapture.possibleDuplicate' => 'Mungkin sudah tercatat',
 			'notificationCapture.reviewReason.autoRecordOff' => 'Catat otomatis mati',
@@ -6909,6 +6940,7 @@ extension on Translations {
 			'notificationCapture.reviewReason.categoryUnclear' => 'Kategori belum jelas',
 			'notificationCapture.reviewReason.dateUnclear' => 'Tanggal belum pasti',
 			'notificationCapture.reviewReason.recurringUnclear' => 'Rutin belum pasti',
+			'notificationCapture.reviewReason.amountUnusual' => 'Nominal tak biasa, cek dulu',
 			'notificationCapture.recordAction' => 'Catat',
 			'notificationCapture.dismissAction' => 'Abaikan',
 			'notificationCapture.makePatternAction' => 'Buat pola dari teks ini',
@@ -7321,6 +7353,8 @@ extension on Translations {
 			'premium.title' => 'Tanukonomy Plus',
 			'premium.backToLatest' => 'Kembali ke periode terbaru',
 			'premium.seePlus' => 'Lihat Plus',
+			_ => null,
+		} ?? switch (path) {
 			'premium.plusBadge' => 'Plus',
 			'premium.signInTitle' => 'Masuk untuk membuka fitur Plus',
 			'premium.signInBody' => 'Fitur ini bagian dari Plus. Masuk dengan akunmu untuk memakainya. Mencatat tetap gratis dan tanpa akun.',
@@ -7329,8 +7363,6 @@ extension on Translations {
 			'premium.plusOnlyBody' => 'Berlangganan Plus belum tersedia. Mencatat tetap gratis.',
 			'premium.account.section' => 'Plus',
 			'premium.account.rowTitle' => 'Tanukonomy Plus',
-			_ => null,
-		} ?? switch (path) {
 			'premium.account.subFree' => 'Gratis. Lihat apa yang bisa dikerjakan Tanuki.',
 			'premium.account.subTrial' => ({required Object date}) => 'Sampai ${date}. Tanpa kartu.',
 			'premium.account.subActive' => ({required Object date}) => 'Aktif sampai ${date}',

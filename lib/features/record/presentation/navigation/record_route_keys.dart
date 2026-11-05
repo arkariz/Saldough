@@ -86,7 +86,39 @@ final class RecordSheetInput extends RouteInput {
   /// Dipanggil sekali sesudah transaksi benar-benar tersimpan, dengan kategori,
   /// catatan, dompet, dan pos akhirnya (kategori `null` bila kosong atau transfer). Dipakai
   /// kotak masuk notifikasi untuk belajar (ingatan pedagang, E1).
-  final void Function(String? categoryId, String note, String? walletId, String? budgetItemId)? onSaved;
+  final void Function(RecordSavedInfo info)? onSaved;
+}
+
+/// Yang tersimpan dari CATAT, untuk pemanggil yang belajar darinya (kotak masuk
+/// notifikasi, E1/E2/E3).
+final class RecordSavedInfo {
+  /// Membuat [RecordSavedInfo].
+  const RecordSavedInfo({
+    this.choice,
+    this.amountSen,
+    this.categoryId,
+    this.note = '',
+    this.walletId,
+    this.budgetItemId,
+  });
+
+  /// Jenis yang tersimpan; `null` untuk jalur lain (mis. kemunculan rutin).
+  final RecordChoice? choice;
+
+  /// Nominal dalam sen.
+  final int? amountSen;
+
+  /// Kategori; `null` bila kosong atau transfer.
+  final String? categoryId;
+
+  /// Catatan akhir.
+  final String note;
+
+  /// Dompet (asal), `null` untuk transfer.
+  final String? walletId;
+
+  /// Pos anggaran yang dipilih.
+  final String? budgetItemId;
 }
 
 /// Input sunting transaksi (FR-TXN-005). Rutenya selesai dengan transaksi

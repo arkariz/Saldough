@@ -8,6 +8,7 @@ import 'package:saldough/features/notification_capture/domain/entities/notificat
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_store.dart';
 import 'package:saldough/features/notification_capture/domain/services/account_hint.dart';
 import 'package:saldough/features/notification_capture/domain/services/active_capture_inputs.dart';
+import 'package:saldough/features/notification_capture/domain/services/approved_shapes.dart';
 import 'package:saldough/features/notification_capture/domain/services/auto_record_policy.dart';
 import 'package:saldough/features/notification_capture/domain/services/budget_item_suggestion.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_finalizer.dart';
@@ -41,6 +42,7 @@ final class CaptureInboxActions {
     required this.languageCode,
     this.merchantMemory,
     this.negativeShapes,
+    this.approvedShapes,
     this.budgetItems,
     this.changes,
     this.recurringRules,
@@ -49,6 +51,9 @@ final class CaptureInboxActions {
     this.finalizer = const CaptureFinalizer(),
     String Function()? newId,
   }) : _newId = newId ?? _timestampId;
+
+  /// Bentuk yang disetujui dicatat otomatis (E3); `null` = tanpa tawaran.
+  final StoreBackedApprovedShapes? approvedShapes;
 
   /// Katalog pos anggaran untuk saran pos (E2); `null` = tanpa saran.
   final BudgetItemCatalog? budgetItems;
@@ -226,6 +231,44 @@ final class CaptureInboxActions {
     if (normalizeMerchant(note).isEmpty || categoryId == entry.draft.categoryId) return null;
     final previous = await memory.remember(packageName: entry.packageName, note: note, categoryId: categoryId);
     return () => memory.restore(packageName: entry.packageName, note: note, previous: previous);
+  }
+
+  /// Tawaran "Catat otomatis yang seperti ini?" (E3) sesudah kartu [entry]
+  /// disimpan lewat CATAT. Syarat: jenis, dompet, dan nominal tidak diubah dari
+  /// draf kartu (kategori boleh), semua sisi terpetakan, bukan transfer, dan
+  /// bentuknya belum disetujui. Mengembalikan templat bentuk (untuk pratinjau
+  /// "Seperti: ..."), atau `null` bila tidak ada tawaran.
+  Future<String?> autoOfferFor(
+    CaptureInboxEntry entry, {
+    required DraftKind? savedKind,
+    required int? savedAmountSen,
+    required String? savedWalletId,
+  }) async {
+    final shapes = approvedShapes;
+    final draft = entry.draft;
+    if (shapes == null || draft.kind == DraftKind.transfer || draft.amountSen == null || draft.walletId == null) {
+      return null;
+    }
+    if (savedKind != draft.kind || savedAmountSen != draft.amountSen || savedWalletId != draft.walletId) return null;
+    await shapes.refresh();
+    if (shapes.isApproved(entry.packageName, entry.text)) return null;
+    return approvedTemplateFor(entry.text, draft.note);
+  }
+
+  /// Menyetujui bentuk kartu [entry] untuk dicatat otomatis (E3); nominal
+  /// [amountSen] jadi contoh pertama pagar nominal. Fungsi Batalkan, atau `null`
+  /// bila bentuknya tidak bisa dibuat.
+  Future<Future<void> Function()?> approveShape(CaptureInboxEntry entry, {required int? amountSen}) async {
+    final shapes = approvedShapes;
+    final amount = amountSen;
+    if (shapes == null || amount == null) return null;
+    AppAnalytics.log(CaptureEvents.shapeApproved);
+    return shapes.approve(
+      packageName: entry.packageName,
+      text: entry.text,
+      note: entry.draft.note,
+      amountSen: amount,
+    );
   }
 
   /// Belajar pos anggaran dari kartu yang dicatat (E2): pos yang dipilih untuk

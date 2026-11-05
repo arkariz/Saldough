@@ -1243,6 +1243,13 @@ class _Translations$notificationCapture$en extends Translations$notificationCapt
 	@override String get inboxRetention => 'This list is kept for 7 days.';
 	@override String get amountUnknown => 'Amount not read yet';
 	@override String rememberedBudgetSnack({required Object app, required Object name}) => 'Remembered: ${app} · ${name} chosen for this merchant';
+	@override String get autoNewBadge => 'New';
+	@override String autoOfferSnack({required Object shape}) => 'Record automatically from now on? Like: ${shape}';
+	@override String get autoOfferYes => 'Yes';
+	@override String get autoApprovedSnack => 'Done. Ones like this are recorded automatically; the first two are marked New.';
+	@override String get shapeTokenAmount => 'amount';
+	@override String get shapeTokenNote => 'name';
+	@override String get shapeTokenAny => '…';
 	@override String budgetSuggestion({required Object name, required Object budget}) => 'Suggested item: ${name} · ${budget}';
 	@override String get possibleDuplicate => 'May already be recorded';
 	@override late final _Translations$notificationCapture$reviewReason$en reviewReason = _Translations$notificationCapture$reviewReason$en._(_root);
@@ -1993,6 +2000,7 @@ class _Translations$notificationCapture$reviewReason$en extends Translations$not
 	@override String get categoryUnclear => 'Category unclear';
 	@override String get dateUnclear => 'Date unclear';
 	@override String get recurringUnclear => 'Recurring unclear';
+	@override String get amountUnusual => 'Unusual amount, check first';
 }
 
 // Path: recurring.starters
@@ -3633,6 +3641,13 @@ extension on TranslationsEn {
 			'notificationCapture.inboxRetention' => 'This list is kept for 7 days.',
 			'notificationCapture.amountUnknown' => 'Amount not read yet',
 			'notificationCapture.rememberedBudgetSnack' => ({required Object app, required Object name}) => 'Remembered: ${app} · ${name} chosen for this merchant',
+			'notificationCapture.autoNewBadge' => 'New',
+			'notificationCapture.autoOfferSnack' => ({required Object shape}) => 'Record automatically from now on? Like: ${shape}',
+			'notificationCapture.autoOfferYes' => 'Yes',
+			'notificationCapture.autoApprovedSnack' => 'Done. Ones like this are recorded automatically; the first two are marked New.',
+			'notificationCapture.shapeTokenAmount' => 'amount',
+			'notificationCapture.shapeTokenNote' => 'name',
+			'notificationCapture.shapeTokenAny' => '…',
 			'notificationCapture.budgetSuggestion' => ({required Object name, required Object budget}) => 'Suggested item: ${name} · ${budget}',
 			'notificationCapture.possibleDuplicate' => 'May already be recorded',
 			'notificationCapture.reviewReason.autoRecordOff' => 'Auto-record is off',
@@ -3644,6 +3659,7 @@ extension on TranslationsEn {
 			'notificationCapture.reviewReason.categoryUnclear' => 'Category unclear',
 			'notificationCapture.reviewReason.dateUnclear' => 'Date unclear',
 			'notificationCapture.reviewReason.recurringUnclear' => 'Recurring unclear',
+			'notificationCapture.reviewReason.amountUnusual' => 'Unusual amount, check first',
 			'notificationCapture.recordAction' => 'Record',
 			'notificationCapture.dismissAction' => 'Dismiss',
 			'notificationCapture.makePatternAction' => 'Make a pattern from this text',
@@ -4056,6 +4072,8 @@ extension on TranslationsEn {
 			'premium.title' => 'Tanukonomy Plus',
 			'premium.backToLatest' => 'Back to the latest period',
 			'premium.seePlus' => 'See Plus',
+			_ => null,
+		} ?? switch (path) {
 			'premium.plusBadge' => 'Plus',
 			'premium.signInTitle' => 'Sign in to unlock Plus features',
 			'premium.signInBody' => 'This feature is part of Plus. Sign in with your account to use it. Recording stays free and works without an account.',
@@ -4064,8 +4082,6 @@ extension on TranslationsEn {
 			'premium.plusOnlyBody' => 'Plus subscriptions aren\'t available yet. Recording stays free.',
 			'premium.account.section' => 'Plus',
 			'premium.account.rowTitle' => 'Tanukonomy Plus',
-			_ => null,
-		} ?? switch (path) {
 			'premium.account.subFree' => 'Free. See what Tanuki can do for you.',
 			'premium.account.subTrial' => ({required Object date}) => 'Until ${date}. No card needed.',
 			'premium.account.subActive' => ({required Object date}) => 'Active until ${date}',

@@ -13,6 +13,7 @@ import 'package:saldough/features/notification_capture/domain/services/capture_c
 import 'package:saldough/features/notification_capture/domain/services/capture_inbox_changes.dart';
 import 'package:saldough/features/notification_capture/domain/usecases/capture_inbox_actions.dart';
 import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
+import 'package:saldough/shared/capture/capture.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:state_management/state_management.dart';
@@ -221,6 +222,23 @@ final class CaptureInboxBloc extends Bloc<CaptureInboxEvent, CaptureInboxState> 
     required String? budgetItemId,
     required String? suggestedItemId,
   }) => _actions.rememberBudgetItem(entry, budgetItemId: budgetItemId, suggestedItemId: suggestedItemId);
+
+  /// Tawaran catat otomatis per bentuk (E3); templat bentuk, atau `null`.
+  Future<String?> autoOfferFor(
+    CaptureInboxEntry entry, {
+    required DraftKind? savedKind,
+    required int? savedAmountSen,
+    required String? savedWalletId,
+  }) => _actions.autoOfferFor(
+    entry,
+    savedKind: savedKind,
+    savedAmountSen: savedAmountSen,
+    savedWalletId: savedWalletId,
+  );
+
+  /// Menyetujui bentuk [entry] dicatat otomatis (E3); fungsi Batalkan atau `null`.
+  Future<Future<void> Function()?> approveShape(CaptureInboxEntry entry, {required int? amountSen}) =>
+      _actions.approveShape(entry, amountSen: amountSen);
 
   Future<void> _reload(Emitter<CaptureInboxState> emit, {UiEffect? effect}) async {
     final pending = (await _store.loadInbox()).getOrElse((_) => const []);

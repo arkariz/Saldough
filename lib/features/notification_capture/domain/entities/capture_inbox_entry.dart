@@ -32,6 +32,9 @@ enum CaptureReviewReason {
   /// Pola ini terikat ke sebuah rutin, tetapi kemunculannya tidak jelas
   /// (nominal beda, tidak ada atau lebih dari satu kemunculan terbuka).
   recurringUnclear,
+
+  /// Nominal jauh di atas kebiasaan bentuk yang disetujui otomatis (E3).
+  amountUnusual,
 }
 
 /// Tangkapan yang menunggu ditinjau di kotak masuk (ADR-032 §3.6). Teksnya
@@ -112,6 +115,7 @@ final class AutoRecordedEntry extends Equatable {
     this.categoryId,
     this.iconId,
     this.capturedAt,
+    this.isNew = false,
   });
 
   /// Identitas tangkapan asalnya.
@@ -148,6 +152,9 @@ final class AutoRecordedEntry extends Equatable {
   /// ADR-032 §10.
   final DateTime? capturedAt;
 
+  /// Satu dari dua catatan otomatis pertama dari bentuk yang baru disetujui (E3).
+  final bool isNew;
+
   @override
   List<Object?> get props => [
     captureId,
@@ -161,6 +168,7 @@ final class AutoRecordedEntry extends Equatable {
     categoryId,
     iconId,
     capturedAt,
+    isNew,
   ];
 }
 

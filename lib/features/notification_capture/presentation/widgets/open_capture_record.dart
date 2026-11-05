@@ -18,7 +18,7 @@ import 'package:saldough/shared/recurring/recurring.dart';
 RecordSheetInput recordSheetInputFor(
   CaptureInboxEntry entry,
   OccurrenceMatch? match, {
-  void Function(String? categoryId, String note, String? walletId, String? budgetItemId)? onSaved,
+  void Function(RecordSavedInfo info)? onSaved,
   String? budgetItemId,
 }) {
   if (match == null) {
@@ -39,7 +39,7 @@ Future<bool> openCaptureRecord(
   BuildContext context,
   CaptureInboxEntry entry,
   OccurrenceMatch? match, {
-  void Function(String? categoryId, String note, String? walletId, String? budgetItemId)? onSaved,
+  void Function(RecordSavedInfo info)? onSaved,
   String? budgetItemId,
 }) async =>
     await context.pushRoute<RecordSheetInput, bool>(
@@ -65,27 +65,23 @@ Future<void> openCaptureInbox(BuildContext context, GetIt container) async {
   final match = matches[entry.id];
   final suggestion = (await actions.budgetSuggestionsFor([entry], matches))[entry.id];
   if (!context.mounted) return;
-  String? savedCategory;
-  String? savedWallet;
-  String? savedBudgetItem;
-  var savedNote = '';
+  RecordSavedInfo? savedInfo;
   final saved = await openCaptureRecord(
     context,
     entry,
     match,
     budgetItemId: suggestion?.itemId,
-    onSaved: (categoryId, note, walletId, budgetItemId) {
-      savedCategory = categoryId;
-      savedNote = note;
-      savedWallet = walletId;
-      savedBudgetItem = budgetItemId;
-    },
+    onSaved: (info) => savedInfo = info,
   );
   if (saved) {
     await actions.remove(entry.id);
     // Tanpa Batalkan di jalur ini (tidak ada snackbar): kategori baru tetap diingat.
-    await actions.rememberCategory(entry, categoryId: savedCategory, note: savedNote);
-    await actions.rememberWallet(entry, walletId: savedWallet);
-    await actions.rememberBudgetItem(entry, budgetItemId: savedBudgetItem, suggestedItemId: suggestion?.itemId);
+    await actions.rememberCategory(entry, categoryId: savedInfo?.categoryId, note: savedInfo?.note ?? '');
+    await actions.rememberWallet(entry, walletId: savedInfo?.walletId);
+    await actions.rememberBudgetItem(
+      entry,
+      budgetItemId: savedInfo?.budgetItemId,
+      suggestedItemId: suggestion?.itemId,
+    );
   }
 }

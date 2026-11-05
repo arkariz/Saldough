@@ -6,6 +6,7 @@ import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/foundation/entitlement/entitlement.dart';
 import 'package:saldough/core/language/language.dart';
 import 'package:saldough/core/presentation/plan/active_plan.dart';
+import 'package:saldough/features/notification_capture/data/approved_shape_store_impl.dart';
 import 'package:saldough/features/notification_capture/data/merchant_memory_store_impl.dart';
 import 'package:saldough/features/notification_capture/data/method_channel_notification_capture_gateway.dart';
 import 'package:saldough/features/notification_capture/data/negative_shape_store_impl.dart';
@@ -14,6 +15,7 @@ import 'package:saldough/features/notification_capture/data/notification_rule_in
 import 'package:saldough/features/notification_capture/domain/repositories/merchant_memory_store.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_gateway.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_store.dart';
+import 'package:saldough/features/notification_capture/domain/services/approved_shapes.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_finalizer.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_inbox_changes.dart';
 import 'package:saldough/features/notification_capture/domain/services/negative_shapes.dart';
@@ -62,6 +64,8 @@ abstract final class NotificationCaptureModule {
       )
       ..registerLazySingleton<CaptureInboxChanges>(CaptureInboxChanges.new)
       ..registerLazySingleton<MerchantMemoryStore>(() => MerchantMemoryStoreImpl(storage: c<KeyValueStorage>()))
+      ..registerLazySingleton<ApprovedShapeStore>(() => ApprovedShapeStoreImpl(storage: c<KeyValueStorage>()))
+      ..registerLazySingleton<StoreBackedApprovedShapes>(() => StoreBackedApprovedShapes(c<ApprovedShapeStore>()))
       ..registerLazySingleton<NegativeShapeStore>(() => NegativeShapeStoreImpl(storage: c<KeyValueStorage>()))
       ..registerLazySingleton<StoreBackedNegativeShapes>(() => StoreBackedNegativeShapes(c<NegativeShapeStore>()))
       ..registerLazySingleton<StoreBackedMerchantMemory>(() => StoreBackedMerchantMemory(c<MerchantMemoryStore>()))
@@ -85,6 +89,7 @@ abstract final class NotificationCaptureModule {
           composer: c<NotificationDraftComposer>(),
           memory: c<StoreBackedMerchantMemory>(),
           negativeShapes: c<StoreBackedNegativeShapes>(),
+          approvedShapes: c<StoreBackedApprovedShapes>(),
           recordTransaction: recordTransaction(),
           walletRepository: c<WalletRepository>(),
           transactionRepository: c<TransactionRepository>(),
@@ -122,6 +127,7 @@ abstract final class NotificationCaptureModule {
           store: c<NotificationCaptureStore>(),
           merchantMemory: c<StoreBackedMerchantMemory>(),
           negativeShapes: c<StoreBackedNegativeShapes>(),
+          approvedShapes: c<StoreBackedApprovedShapes>(),
           budgetItems: c.isRegistered<BudgetItemCatalog>() ? c<BudgetItemCatalog>() : null,
           recordTransaction: recordTransaction(),
           transactionRepository: c<TransactionRepository>(),

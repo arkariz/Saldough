@@ -185,6 +185,7 @@ Map<String, dynamic> _autoToJson(AutoRecordedEntry e) => {
   'categoryId': ?e.categoryId,
   'iconId': ?e.iconId,
   'capturedAt': ?e.capturedAt?.toIso8601String(),
+  if (e.isNew) 'isNew': true,
 };
 
 AutoRecordedEntry _autoFromJson(Map<String, dynamic> j) => AutoRecordedEntry(
@@ -202,4 +203,5 @@ AutoRecordedEntry _autoFromJson(Map<String, dynamic> j) => AutoRecordedEntry(
     final String at => DateTime.parse(at),
     _ => null,
   },
+  isNew: j['isNew'] as bool? ?? false,
 );

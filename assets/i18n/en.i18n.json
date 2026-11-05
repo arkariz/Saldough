@@ -1192,6 +1192,13 @@
     "inboxRetention": "This list is kept for 7 days.",
     "amountUnknown": "Amount not read yet",
     "rememberedBudgetSnack": "Remembered: $app · $name chosen for this merchant",
+    "autoNewBadge": "New",
+    "autoOfferSnack": "Record automatically from now on? Like: $shape",
+    "autoOfferYes": "Yes",
+    "autoApprovedSnack": "Done. Ones like this are recorded automatically; the first two are marked New.",
+    "shapeTokenAmount": "amount",
+    "shapeTokenNote": "name",
+    "shapeTokenAny": "…",
     "budgetSuggestion": "Suggested item: $name · $budget",
     "possibleDuplicate": "May already be recorded",
     "reviewReason": {
@@ -1203,7 +1210,8 @@
       "walletUnknown": "Wallet not recognized",
       "categoryUnclear": "Category unclear",
       "dateUnclear": "Date unclear",
-      "recurringUnclear": "Recurring unclear"
+      "recurringUnclear": "Recurring unclear",
+      "amountUnusual": "Unusual amount, check first"
     },
     "recordAction": "Record",
     "dismissAction": "Dismiss",

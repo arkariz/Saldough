@@ -84,9 +84,9 @@ final class RecordSheetInput extends RouteInput {
   final DateTime? occurrenceDate;
 
   /// Dipanggil sekali sesudah transaksi benar-benar tersimpan, dengan kategori,
-  /// catatan, dan dompet akhirnya (kategori `null` bila kosong atau transfer). Dipakai
+  /// catatan, dompet, dan pos akhirnya (kategori `null` bila kosong atau transfer). Dipakai
   /// kotak masuk notifikasi untuk belajar (ingatan pedagang, E1).
-  final void Function(String? categoryId, String note, String? walletId)? onSaved;
+  final void Function(String? categoryId, String note, String? walletId, String? budgetItemId)? onSaved;
 }
 
 /// Input sunting transaksi (FR-TXN-005). Rutenya selesai dengan transaksi

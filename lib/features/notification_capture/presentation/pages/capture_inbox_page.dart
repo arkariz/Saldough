@@ -54,16 +54,18 @@ class CaptureInboxPage extends StatelessWidget {
     AppAnalytics.log(CaptureEvents.cardAction(action: via, cardClass: cardClass));
     String? savedCategory;
     String? savedWallet;
+    String? savedBudgetItem;
     var savedNote = '';
     final saved = await openCaptureRecord(
       context,
       entry,
       match,
       budgetItemId: budgetItemId,
-      onSaved: (categoryId, note, walletId) {
+      onSaved: (categoryId, note, walletId, chosenBudgetItem) {
         savedCategory = categoryId;
         savedNote = note;
         savedWallet = walletId;
+        savedBudgetItem = chosenBudgetItem;
       },
     );
     if (!saved) return;
@@ -72,6 +74,11 @@ class CaptureInboxPage extends StatelessWidget {
     // Belajar (E1): kategori dan dompet baru atau yang diubah diingat, dengan Batalkan.
     final undoCategory = await bloc.rememberCategory(entry, categoryId: savedCategory, note: savedNote);
     final learnedWallet = await bloc.rememberWallet(entry, walletId: savedWallet);
+    final learnedBudget = await bloc.rememberBudgetItem(
+      entry,
+      budgetItemId: savedBudgetItem,
+      suggestedItemId: budgetItemId,
+    );
     if (!context.mounted) return;
     final texts = t.notificationCapture;
     final messenger = ScaffoldMessenger.of(context);
@@ -82,6 +89,15 @@ class CaptureInboxPage extends StatelessWidget {
           context,
           content: Text(texts.rememberedSnack(note: savedNote.trim(), app: entry.appLabel, category: categoryName)),
           action: SnackBarAction(label: texts.rememberedUndo, onPressed: () => unawaited(undoCategory())),
+        ),
+      );
+    }
+    if (learnedBudget != null) {
+      messenger.showSnackBar(
+        actionSnackBar(
+          context,
+          content: Text(texts.rememberedBudgetSnack(name: learnedBudget.name, app: entry.appLabel)),
+          action: SnackBarAction(label: texts.rememberedUndo, onPressed: () => unawaited(learnedBudget.undo())),
         ),
       );
     }

@@ -228,6 +228,33 @@ final class CaptureInboxActions {
     return () => memory.restore(packageName: entry.packageName, note: note, previous: previous);
   }
 
+  /// Belajar pos anggaran dari kartu yang dicatat (E2): pos yang dipilih untuk
+  /// catatan kartu itu diingat (nama, bukan id) bila berbeda dari yang disarankan.
+  /// Mengembalikan fungsi Batalkan, atau `null` bila tidak ada yang dipelajari.
+  Future<({String name, Future<void> Function() undo})?> rememberBudgetItem(
+    CaptureInboxEntry entry, {
+    required String? budgetItemId,
+    required String? suggestedItemId,
+  }) async {
+    final memory = merchantMemory;
+    final catalog = budgetItems;
+    final note = entry.draft.note;
+    if (memory == null || catalog == null || budgetItemId == null || budgetItemId == suggestedItemId) return null;
+    if (entry.draft.kind != DraftKind.expense || normalizeMerchant(note).isEmpty) return null;
+    final options = (await catalog.listOptions()).getOrElse((_) => const []);
+    final chosen = options.where((o) => o.itemId == budgetItemId && !o.isTransfer).firstOrNull;
+    if (chosen == null) return null;
+    final previous = await memory.rememberBudget(
+      packageName: entry.packageName,
+      note: note,
+      budgetName: chosen.itemName,
+    );
+    return (
+      name: chosen.itemName,
+      undo: () => memory.restoreBudget(packageName: entry.packageName, note: note, previous: previous),
+    );
+  }
+
   /// Saran pos anggaran (E2/B-86) per id kartu, hanya untuk pengeluaran yang
   /// tidak cocok dengan rutin (pos rutin diisi `CaptureFinalizer`). Tidak
   /// pernah diisi diam-diam: hanya label di kartu dan isian awal CATAT.
@@ -239,6 +266,7 @@ final class CaptureInboxActions {
     if (catalog == null || entries.isEmpty) return const {};
     final options = (await catalog.listOptions()).getOrElse((_) => const []);
     if (options.isEmpty) return const {};
+    await merchantMemory?.refresh();
     final result = <String, BudgetItemOption>{};
     for (final entry in entries) {
       if (matches.containsKey(entry.id)) continue;
@@ -247,6 +275,7 @@ final class CaptureInboxActions {
         date: entry.draft.date ?? entry.capturedAt,
         text: entry.text,
         options: options,
+        rememberedName: merchantMemory?.budgetNameFor(packageName: entry.packageName, note: entry.draft.note),
       );
       if (suggestion != null) result[entry.id] = suggestion;
     }

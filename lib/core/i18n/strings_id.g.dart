@@ -3094,6 +3094,9 @@ class Translations$notificationCapture$id {
 	/// id: 'Nominal belum terbaca'
 	String get amountUnknown => 'Nominal belum terbaca';
 
+	/// id: 'Diingat: $app · $name dipilih untuk pedagang ini'
+	String rememberedBudgetSnack({required Object app, required Object name}) => 'Diingat: ${app} · ${name} dipilih untuk pedagang ini';
+
 	/// id: 'Saran pos: $name · $budget'
 	String budgetSuggestion({required Object name, required Object budget}) => 'Saran pos: ${name} · ${budget}';
 
@@ -6894,6 +6897,7 @@ extension on Translations {
 			'notificationCapture.inboxAutoEmpty' => 'Belum ada yang tercatat otomatis.',
 			'notificationCapture.inboxRetention' => 'Daftar ini disimpan 7 hari.',
 			'notificationCapture.amountUnknown' => 'Nominal belum terbaca',
+			'notificationCapture.rememberedBudgetSnack' => ({required Object app, required Object name}) => 'Diingat: ${app} · ${name} dipilih untuk pedagang ini',
 			'notificationCapture.budgetSuggestion' => ({required Object name, required Object budget}) => 'Saran pos: ${name} · ${budget}',
 			'notificationCapture.possibleDuplicate' => 'Mungkin sudah tercatat',
 			'notificationCapture.reviewReason.autoRecordOff' => 'Catat otomatis mati',
@@ -7325,9 +7329,9 @@ extension on Translations {
 			'premium.plusOnlyBody' => 'Berlangganan Plus belum tersedia. Mencatat tetap gratis.',
 			'premium.account.section' => 'Plus',
 			'premium.account.rowTitle' => 'Tanukonomy Plus',
-			'premium.account.subFree' => 'Gratis. Lihat apa yang bisa dikerjakan Tanuki.',
 			_ => null,
 		} ?? switch (path) {
+			'premium.account.subFree' => 'Gratis. Lihat apa yang bisa dikerjakan Tanuki.',
 			'premium.account.subTrial' => ({required Object date}) => 'Sampai ${date}. Tanpa kartu.',
 			'premium.account.subActive' => ({required Object date}) => 'Aktif sampai ${date}',
 			'premium.account.subActiveOpen' => 'Aktif',

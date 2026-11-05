@@ -6590,8 +6590,15 @@ S sehari, M beberapa hari, L lebih dari seminggu.
       Ambigu = tanpa saran. Hanya saran: CATAT dibuka dengan pos itu sebagai
       isian awal (bisa diganti atau dikosongkan); satu ketuk, otomatis, dan
       jurnal tidak pernah mengisi pos. Uji: `budget_item_suggestion_test` (6).
-      Sisa B-86: pos yang pernah dipilih untuk pedagang itu (butuh kolom baru di
-      ingatan pedagang, jadi skema cadangan).
+- [x] **T-26.19** (S) E2 ingatan pos per pedagang (B-86 selesai, 5 Nov 2026).
+      Memilih pos di CATAT dari kartu yang beda dari saran menyimpan **nama**
+      pos (bukan id: pos baru lahir tiap periode) untuk pasangan (aplikasi,
+      catatan) di `MerchantMemoryStore` yang sama, kunci berawalan `pos|` (tanpa
+      skema atau kunci simpanan baru, jadi cadangan tidak berubah). Kartu
+      berikutnya dari pedagang itu disarankan pos bernama sama bila tepat satu
+      pos memenuhi syarat; nama di teks tetap menang. Snackbar "Diingat" dengan
+      **Batalkan**. Tetap hanya saran. `onSaved` kini membawa `budgetItemId`.
+      Uji: 5 uji baru di `budget_item_suggestion_test`.
 
 Enhancement (E1–E5) ada di Antrean B-85–B-89, dibuka sesudah gerbang tahap 1.
 
@@ -6669,7 +6676,7 @@ menambah dan memindahkannya ada di
 | B-83 | **Sisa pengamatan QA Fase 22–23**: (a) halaman "Data dipulihkan" tetap meminta izin notifikasi walau sudah aktif; (b) F23-4: daftar rutin sempat menampilkan kemunculan yang sudah tercatat sebagai "Later" (ulangi di perangkat nyata); (c) uji layar otomatis untuk Aturan dompet, Ikat ke rutin, dan Contoh notifikasi. | agen | [VERIFICATION_PLAN_FASE_23.md](VERIFICATION_PLAN_FASE_23.md) |
 | B-84 | **Arsip proyek freelance**: status aktif/arsip di `FreelanceProject` supaya batas Gratis bisa menghitung proyek aktif saja (sekarang menghitung semua proyek, ADR-041 §3.13 butir 2). Butuh ADR domain kecil dan rupa. | agen | ADR-041 §3.13, T-24.13 |
 | B-85 | **E1 "Ingat" dan bentuk dipelajari** (**selesai 5 Nov 2026**: ingatan pedagang T-26.14, Bukan transaksi T-26.15, banyak dompet T-26.17). Bentuk positif "Ya" sengaja tidak dibangun: kartu sudah lolos filter frasa, jadi "Ya" di kartu tidak mengubah apa pun; yang terlewat ditangani Ajari pola dan kata kunci sumber. Membuka kembali hanya bila data nyata menunjukkan banyak notifikasi terlewat, lewat daftar "Tidak dikenali" (menyimpan teks yang kini dibuang, perlu ubah pengungkapan privasi dan Data Safety). Sesudah gerbang tahap 1. | agen | [NOTIFICATION_CAPTURE_V2.md](../01-product/features/NOTIFICATION_CAPTURE_V2.md) §7–§8, ADR-044 §3.4 |
-| B-86 | **E2 saran pos anggaran** untuk pengeluaran bebas (nama pos di teks selesai T-26.18; sisa: ingatan pedagang), hanya saran. | agen | NOTIFICATION_CAPTURE_V2.md §5 |
+| B-86 | **E2 saran pos anggaran** untuk pengeluaran bebas (**selesai 5 Nov 2026**: nama pos di teks T-26.18, ingatan pedagang T-26.19), hanya saran. | agen | NOTIFICATION_CAPTURE_V2.md §5 |
 | B-87 | **E3 catat otomatis per bentuk**: tawaran setelah konfirmasi pertama tanpa ubahan, pagar nominal besar, tanda "baru". Plus. | agen | NOTIFICATION_CAPTURE_V2.md §8, ADR-044 §3.7 |
 | B-88 | **E4 Lanjutan**: daftar aturan, "Ajari pola" yang disederhanakan, filter, contoh; migrasi `walletRules`/pola/ikatan menjadi aturan. | agen | ADR-044 §3.7 |
 | B-89 | **E5 permukaan lain**: Quick Settings tile "Catat n transaksi" (S–M), widget layar utama bila data pemakaian mendukung (L). | agen | NOTIFICATION_CAPTURE_V2.md §11 |

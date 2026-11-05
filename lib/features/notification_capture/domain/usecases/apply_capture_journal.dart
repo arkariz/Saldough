@@ -10,6 +10,7 @@ import 'package:saldough/features/notification_capture/domain/services/capture_i
 import 'package:saldough/features/notification_capture/domain/services/capture_inbox_codec.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_resolver.dart';
 import 'package:saldough/features/notification_capture/domain/services/transaction_from_draft.dart';
+import 'package:saldough/shared/capture/capture.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
@@ -184,6 +185,7 @@ final class ApplyCaptureJournal {
     final ledger = (await transactionRepository.listTransactionsInMonth(date)).getOrElse((_) => const []);
     final exists = ledger.any((t) => t.id == txId);
     var linked = false;
+    var tx = ledger.where((t) => t.id == txId).firstOrNull;
     if (!exists) {
       final walletsOk =
           draft.walletId != null &&
@@ -200,9 +202,37 @@ final class ApplyCaptureJournal {
         return (movedToInbox: true, linked: false);
       }
       linked = match != null;
+      tx = transaction;
     }
+    if (tx != null) await _logAuto(entry, draft, tx);
     await _finish(entry.id);
     return (movedToInbox: false, linked: linked);
+  }
+
+  /// Catat satu ketuk dari notifikasi dan mode otomatis masuk log "Tercatat
+  /// otomatis" di kotak masuk (ADR-032 §3.6), seperti jalur proses biasa --
+  /// tanpa ini transaksinya ada tetapi tab Otomatis kosong dan tidak bisa
+  /// dibatalkan dari sana. Idempoten per id tangkapan; gagal menulis log tidak
+  /// membatalkan transaksi.
+  Future<void> _logAuto(CaptureInboxEntry entry, RecordDraft draft, Transaction tx) async {
+    final auto = (await store.loadAutoRecorded()).getOrElse((_) => const []);
+    if (auto.any((e) => e.captureId == entry.id)) return;
+    await store.saveAutoRecorded([
+      AutoRecordedEntry(
+        captureId: entry.id,
+        transactionId: tx.id,
+        transactionDate: tx.date,
+        kind: draft.kind,
+        amountSen: tx.amount,
+        appLabel: entry.appLabel,
+        recordedAt: _clock(),
+        note: tx.note,
+        categoryId: tx.categoryId,
+        iconId: draft.sourceIconId ?? entry.iconId,
+        capturedAt: entry.capturedAt,
+      ),
+      ...auto,
+    ]);
   }
 
   OccurrenceMatch? _match(Object? raw, List<RecurringRule> rules) {

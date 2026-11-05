@@ -157,6 +157,21 @@ void main() {
       expect(gateway.cancelledActionable, 1);
     });
 
+    test('masuk log Tercatat otomatis (tab Otomatis), satu entri meski diterapkan dua kali', () async {
+      final e = entry('n1');
+      gateway.journalRecords = [record(e)];
+      await apply()();
+      gateway.journalRecords = [record(e)];
+      await apply()();
+
+      final auto = (await store.loadAutoRecorded()).getOrElse((_) => []);
+      expect(auto, hasLength(1));
+      expect(auto.single.captureId, 'n1');
+      expect(auto.single.transactionId, captureTransactionId('n1'));
+      expect(auto.single.amountSen, 2500000);
+      expect(auto.single.appLabel, e.appLabel);
+    });
+
     test('diterapkan dua kali (proses dimatikan sebelum ack jurnal): tetap satu transaksi', () async {
       final e = entry('n1');
       gateway.journalRecords = [record(e)];

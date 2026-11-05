@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
@@ -8,6 +9,7 @@ import 'package:saldough/features/notification_capture/data/method_channel_notif
 import 'package:saldough/features/notification_capture/data/notification_capture_store_impl.dart';
 import 'package:saldough/features/notification_capture/domain/entities/capture_inbox_entry.dart';
 import 'package:saldough/features/notification_capture/domain/entities/capture_journal_record.dart';
+import 'package:saldough/features/notification_capture/domain/entities/captured_notification.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_finalizer.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_inbox_codec.dart';
 import 'package:saldough/features/notification_capture/domain/usecases/apply_capture_journal.dart';
@@ -41,6 +43,7 @@ void main() {
   final now = DateTime(2026, 11, 4, 12);
 
   ApplyCaptureJournal apply({BudgetItemCatalog? catalog}) => ApplyCaptureJournal(
+    sourceIcons: SourceIconRepositoryImpl(storage: storage),
     gateway: gateway,
     store: store,
     recordTransaction: recordTransaction,
@@ -110,6 +113,30 @@ void main() {
   });
 
   group('Catat', () {
+    test('ikon aplikasi sumber dari antrean native menempel di transaksi', () async {
+      final e = entry('n1');
+      await store.saveInbox([e]);
+      gateway
+        ..queue = [
+          CapturedNotification(
+            id: 'n1',
+            packageName: 'id.co.bri.brimo',
+            title: '',
+            body: 'x',
+            postedAt: capturedAt,
+            icon: Uint8List.fromList([1, 2, 3, 4]),
+          ),
+        ]
+        ..journalRecords = [record(e)];
+
+      await apply()();
+
+      final tx = (await ledgerNow()).single;
+      expect(tx.sourceIconId, isNotNull);
+      final icon = (await SourceIconRepositoryImpl(storage: storage).read(tx.sourceIconId!)).getOrElse((_) => null);
+      expect(icon, isNotNull);
+    });
+
     test('transaksi dari draf dengan id dari id tangkapan; kartu, antrean, dan jurnal dibereskan', () async {
       final e = entry('n1');
       await store.saveInbox([e]);

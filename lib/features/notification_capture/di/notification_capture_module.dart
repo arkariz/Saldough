@@ -110,6 +110,7 @@ abstract final class NotificationCaptureModule {
           recordTransaction: recordTransaction(),
           transactionRepository: c<TransactionRepository>(),
           walletRepository: c<WalletRepository>(),
+          sourceIcons: c.isRegistered<SourceIconRepository>() ? c<SourceIconRepository>() : null,
           recurringRules: c.isRegistered<RecurringRuleRepository>() ? c<RecurringRuleRepository>() : null,
           finalizer: CaptureFinalizer(budgetItems: c.isRegistered<BudgetItemCatalog>() ? c<BudgetItemCatalog>() : null),
           changes: c<CaptureInboxChanges>(),

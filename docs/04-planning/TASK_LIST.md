@@ -6559,6 +6559,15 @@ S sehari, M beberapa hari, L lebih dari seminggu.
       satu uji halaman. Sisa B-85: bentuk positif dipelajari ("Ya") dan banyak
       dompet per aplikasi tanpa formulir.
 
+- [x] **T-26.16** (S) Perbaikan temuan uji pemilik (5 Nov 2026): Catat dari tombol
+      notifikasi tidak menempelkan ikon aplikasi sumber karena mesin tanpa layar
+      tidak menulis Hive. `ApplyCaptureJournal` kini mengambil ikon dari antrean
+      native (yang belum di-ack) dan menyimpannya lewat `SourceIconRepository`
+      sebelum membuat transaksi. Uji: satu uji di `apply_capture_journal_test`.
+      Catatan uji "Bukan transaksi": penyaring kata kunci sumber mensyaratkan frasa
+      pasti transaksi ("pembayaran berhasil", dst.), jadi teks promo tanpa frasa itu
+      tidak pernah masuk kotak masuk (panduan uji sebelumnya keliru).
+
 Enhancement (E1–E5) ada di Antrean B-85–B-89, dibuka sesudah gerbang tahap 1.
 
 ## Antrean (belum dijadwalkan)

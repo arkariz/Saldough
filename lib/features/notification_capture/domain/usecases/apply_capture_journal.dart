@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:saldough/features/notification_capture/domain/entities/capture_inbox_entry.dart';
 import 'package:saldough/features/notification_capture/domain/entities/capture_journal_record.dart';
@@ -64,6 +65,7 @@ final class ApplyCaptureJournal {
     required this.recordTransaction,
     required this.transactionRepository,
     required this.walletRepository,
+    this.sourceIcons,
     this.recurringRules,
     this.finalizer = const CaptureFinalizer(),
     this.changes,
@@ -73,6 +75,9 @@ final class ApplyCaptureJournal {
 
   /// Gerbang native (jurnal, antrean).
   final NotificationCaptureGateway gateway;
+
+  /// Penyimpanan ikon aplikasi sumber; `null` = transaksi tanpa ikon.
+  final SourceIconRepository? sourceIcons;
 
   /// Penyimpanan kotak masuk dan id terproses.
   final NotificationCaptureStore store;
@@ -119,12 +124,14 @@ final class ApplyCaptureJournal {
     var dropped = 0;
     var linked = false;
     final done = <String>[];
+    // Ikon aplikasi sumber ada di antrean native (mesin tanpa layar tidak menulis Hive).
+    final icons = records.any((r) => r.decision == 'record') ? await _queuedIcons() : const <String, Uint8List>{};
 
     for (final record in records) {
       try {
         switch (record.decision) {
           case 'record':
-            final outcome = await _applyRecord(record, rules, activeWallets);
+            final outcome = await _applyRecord(record, rules, activeWallets, icons);
             if (outcome == null) continue;
             outcome.movedToInbox ? moved++ : recorded++;
             linked |= outcome.linked;
@@ -149,15 +156,28 @@ final class ApplyCaptureJournal {
     return JournalApplyResult(recorded: recorded, dismissed: dismissed, movedToInbox: moved, dropped: dropped);
   }
 
+  Future<Map<String, Uint8List>> _queuedIcons() async {
+    final pending = (await gateway.pending()).getOrElse((_) => const []);
+    return {
+      for (final n in pending)
+        if (n.icon != null) n.id: n.icon!,
+    };
+  }
+
   Future<({bool movedToInbox, bool linked})?> _applyRecord(
     CaptureJournalRecord record,
     List<RecurringRule> rules,
     Set<String> activeWallets,
+    Map<String, Uint8List> icons,
   ) async {
     final payload = jsonDecode(record.payload) as Map<String, dynamic>;
     final entry = captureInboxEntryFromJson(payload['entry'] as Map<String, dynamic>);
     final match = _match(payload['match'], rules);
-    final draft = enrichFromPlan(entry.draft, match);
+    var draft = enrichFromPlan(entry.draft, match);
+    if (draft.sourceIconId == null && icons[entry.id] != null) {
+      final iconId = (await sourceIcons?.save(icons[entry.id]!))?.fold((_) => null, (id) => id);
+      if (iconId != null) draft = draft.copyWith(sourceIconId: () => iconId);
+    }
     final date = draft.date ?? entry.capturedAt;
     final txId = captureTransactionId(entry.id);
 

@@ -131,7 +131,7 @@ Beri tanda di kolom hasil: ✅ lulus, ❌ gagal (tulis temuannya di bawah tabel)
 
 | # | Skenario | Langkah | Hasil yang diharapkan | Hasil |
 |---|---|---|---|---|
-| U1 | Tanpa akun | Buka Akun › Plus tanpa masuk | Gratis; paywall mengajak **Masuk untuk mencoba Plus**; uji coba tidak mulai | ➖ (sebagian terlihat di §0) |
+| U1 | Tanpa akun | Buka Akun › Plus tanpa masuk | Gratis; paywall mengajak **Masuk untuk mencoba Plus**; uji coba tidak mulai | ✅ 6 Nov 2026, build rilis `1.0.0+22` dari Play di emulator: Akun › Plus "Gratis", paywall "Masuk untuk mencoba Plus", harga toko tampil (Pendiri tahunan Rp129.000, bulanan Rp25.000), tombol beli tampil karena `plus_launch_at` sudah dikondisikan untuk 1.0.0 |
 | U2 | Masuk akun: uji coba mulai | Masuk (Google atau email), buka Akun › Plus | Plus berstatus uji coba; berakhir di akhir periode keuangan, paling cepat 14 hari (`trialEndsOn`); sumber *trial* | ➖ |
 | U3 | Beli bulanan | Paywall › Bulanan › Berlangganan, penguji lisensi | Layar pembelian uji Play; sesudahnya **Plus** (sumber *purchase*), perayaan tampil, Akun menunjukkan Plus; pembelian terlihat di RevenueCat (sandbox) | ➖ |
 | U4 | Beli tahunan | Paywall › Tahunan (Pendiri atau default) | Sama seperti U3; harga sesuai penawaran (Pendiri Rp129.000 bila `now ≤ founder_until`) | ➖ |
@@ -145,7 +145,7 @@ Beri tanda di kolom hasil: ✅ lulus, ❌ gagal (tulis temuannya di bawah tabel)
 | U12 | Akun peninjau | Masuk dengan email/sandi peninjau | Seluruh fitur Plus terbuka tanpa batas waktu; tombol beli tetap bekerja; tidak ada pendaftaran mandiri | ➖ |
 | U13 | Turun ke Gratis | Dari Plus ke Gratis (U6 atau U9) | Batas hanya menghalangi pekerjaan **baru** (proyek freelance ke-3, sumber notifikasi melebihi batas); data lama tetap terbaca dan bisa dihapus | ➖ |
 | U14 | Keluar dan berganti akun | Keluar akun saat uji coba; masuk lagi; masuk akun lain | Keluar: Gratis; masuk lagi akun yang sama: melanjutkan sisa tanpa perpanjang; Plus yang **dibeli** tidak hilang karena keluar akun | ➖ |
-| U15 | Build rilis tidak punya sakelar klien | Pasang build rilis (§2b) | Tidak ada Menu pengembang; `PLAN_OVERRIDE` dan `ENTITLEMENT_OVERRIDES` tidak berpengaruh; `plus_launch_at` kosong: masuk akun = Plus (pra-peluncuran), tanpa akun = Gratis | ➖ |
+| U15 | Build rilis tidak punya sakelar klien | Pasang build rilis (§2b) | Tidak ada Menu pengembang; `PLAN_OVERRIDE` dan `ENTITLEMENT_OVERRIDES` tidak berpengaruh; `plus_launch_at` kosong: masuk akun = Plus (pra-peluncuran), tanpa akun = Gratis | ➖ (sebagian: Menu pengembang tidak ada di build rilis; sisanya setelah §2b langkah 4 dicabut) |
 | U16 | Peristiwa analitik | Jalankan U2–U9 dengan DebugView Firebase | Peristiwa tanpa nominal, nama, atau isi (ADR-041 §3.12), mis. `trial_started` | ➖ |
 
 ### Yang diperhatikan di tiap skenario

@@ -35,16 +35,7 @@ class _FreelanceOverviewPageState extends State<FreelanceOverviewPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(t.freelance.title),
-        actions: [
-          const TutorialInfoButton(tour: TourId.freelance),
-          Builder(
-            builder: (context) => DsIconButton(
-              icon: Icons.add_rounded,
-              label: t.freelance.projectAddTitle,
-              onPressed: () => addProject(context),
-            ),
-          ),
-        ],
+        actions: const [TutorialInfoButton(tour: TourId.freelance)],
       ),
       body: SafeArea(
         child: BlocBuilder<FreelanceBloc, FreelanceState>(

@@ -6821,7 +6821,7 @@ tugas lama yang menyebutnya adalah riwayat, bukan keadaan sekarang.
       v2 (ikon clay, nama, tarif dan jam, nominal belum diterima atau lencana
       Lunas); tombol tambah `DsDashedButton` dengan lencana Plus; keadaan
       kosong `DsEmptyHero` + kartu; kerangka muat `DsSkeleton` dan galat
-      `DsErrorState`; tombol tambah di app bar `DsIconButton`. Target tur dan
+      `DsErrorState`; tanpa tombol + di app bar (tambah proyek lewat tombol di daftar, atau tombol keadaan kosong). Target tur dan
       kunci uji tidak berubah. Uji baru: ringkasan (dua keadaan, 360dp 1× dan
       2×), baris proyek (sisa, Lunas, nama panjang), keadaan kosong; uji
       bilah porsi lama diganti. Catatan: deskripsi awal saya menyebut kartu

@@ -21,4 +21,46 @@ void main() {
     );
     expect(tester.takeException(), isNull);
   });
+
+  Future<void> pump(WidgetTester tester, Widget child) => tester.pumpWidget(
+    MaterialApp(
+      theme: AppThemeBridge.build(DsThemePresets.fallback, Brightness.light),
+      home: Scaffold(
+        body: Padding(padding: const EdgeInsets.all(16), child: child),
+      ),
+    ),
+  );
+
+  testWidgets('DsSectionHeader: tautan Semua menempel di tepi kanan, sejajar kartu di bawahnya', (tester) async {
+    await pump(
+      tester,
+      const Column(
+        children: [
+          DsSectionHeader(title: 'Transaksi terbaru', actionLabel: 'Semua'),
+          SizedBox(key: ValueKey('card'), width: double.infinity, height: 10),
+        ],
+      ),
+    );
+    final right = tester.getTopRight(find.byKey(const ValueKey('card'))).dx;
+    // Ikon panah berada paling kanan; tepinya sama dengan tepi kartu.
+    expect(tester.getTopRight(find.byIcon(Icons.chevron_right)).dx, closeTo(right, 0.5));
+  });
+
+  testWidgets('DsPageHeader: pil di kanan judul menempel di tepi kanan', (tester) async {
+    await pump(
+      tester,
+      const Column(
+        children: [
+          DsPageHeader(
+            title: 'Halo, Kenji!',
+            trailing: DsStatusPill(label: 'LVL 12', pulse: false),
+          ),
+          SizedBox(key: ValueKey('card'), width: double.infinity, height: 10),
+        ],
+      ),
+    );
+    final right = tester.getTopRight(find.byKey(const ValueKey('card'))).dx;
+    expect(tester.getTopRight(find.byType(DsStatusPill)).dx, closeTo(right, 0.5));
+    expect(tester.takeException(), isNull);
+  });
 }

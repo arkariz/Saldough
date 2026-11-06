@@ -141,24 +141,34 @@ class DsPageHeader extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            Expanded(
-              child: Semantics(
-                header: true,
-                child: Text(
-                  title,
-                  style: ds.typography.headlineMd.copyWith(
-                    fontSize: 22,
-                    height: 30 / 22,
-                    fontWeight: FontWeight.w700,
-                    fontVariations: const [FontVariation.weight(700)],
+        LayoutBuilder(
+          builder: (context, box) => Row(
+            children: [
+              Expanded(
+                child: Semantics(
+                  header: true,
+                  child: Text(
+                    title,
+                    style: ds.typography.headlineMd.copyWith(
+                      fontSize: 22,
+                      height: 30 / 22,
+                      fontWeight: FontWeight.w700,
+                      fontVariations: const [FontVariation.weight(700)],
+                    ),
                   ),
                 ),
               ),
-            ),
-            if (trailing != null) ...[const SizedBox(width: 8), Flexible(child: trailing!)],
-          ],
+              // Pil menempel di tepi kanan, selebar isinya (paling lebar 55%);
+              // judul memakai sisanya.
+              if (trailing != null) ...[
+                const SizedBox(width: 8),
+                ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: box.maxWidth * 0.55),
+                  child: trailing,
+                ),
+              ],
+            ],
+          ),
         ),
         if (subtitle != null) ...[
           const SizedBox(height: 2),

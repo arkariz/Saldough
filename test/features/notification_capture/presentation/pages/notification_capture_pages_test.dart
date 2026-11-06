@@ -28,6 +28,7 @@ import 'package:saldough/features/notification_capture/domain/repositories/notif
 import 'package:saldough/features/notification_capture/domain/services/approved_shapes.dart';
 import 'package:saldough/features/notification_capture/domain/services/negative_shapes.dart';
 import 'package:saldough/features/notification_capture/presentation/navigation/notification_capture_route_keys.dart';
+import 'package:saldough/features/notification_capture/presentation/widgets/source_app_tile.dart';
 import 'package:saldough/features/premium/domain/plus_purchasing.dart';
 import 'package:saldough/shared/auth/auth.dart';
 import 'package:saldough/shared/capture/capture.dart';
@@ -90,6 +91,14 @@ void main() {
       ),
     );
     await tester.tap(find.text('buka'));
+    await tester.pumpAndSettle();
+  }
+
+  /// Membuka lembar aksi tangkapan [id] (mengetuk barisnya).
+  Future<void> openCard(WidgetTester tester, String id) async {
+    final row = find.byKey(ValueKey('inbox-row-$id'));
+    await tester.ensureVisible(row);
+    await tester.tap(row);
     await tester.pumpAndSettle();
   }
 
@@ -801,6 +810,7 @@ void main() {
       await store.saveInbox([unreadable()]);
       await open(tester, NotificationCaptureRouteKeys.inbox);
 
+      await openCard(tester, 'u');
       expect(find.byKey(const ValueKey('inbox-teach-u')), findsNothing);
       expect(find.byKey(const ValueKey('inbox-confirm-u')), findsOneWidget);
     });
@@ -818,10 +828,13 @@ void main() {
         ),
       ]);
       await open(tester, NotificationCaptureRouteKeys.inbox);
-      expect(find.text('Transaksi Rp50.000 berhasil'), findsOneWidget);
 
-      // Alasan perlu dicek tersimpan dan tampil sebagai badge (QA PR #43 F16).
+      // Alasan perlu dicek tersimpan dan tampil sebagai lencana di baris (QA PR #43 F16).
       expect(find.text(t.notificationCapture.reviewReason.kindUnclear), findsOneWidget);
+
+      // Teks notifikasi lengkap ada di lembar aksi.
+      await openCard(tester, 'a');
+      expect(find.text('Transaksi Rp50.000 berhasil'), findsOneWidget);
 
       await tester.tap(find.text(t.notificationCapture.dismissAction));
       await tester.pumpAndSettle();
@@ -832,7 +845,7 @@ void main() {
       await tester.tap(find.byKey(const ValueKey('inbox-dismiss-undo')));
       await tester.pumpAndSettle();
       expect((await store.loadInbox()).getOrElse((_) => throw StateError('')).single.id, 'a');
-      expect(find.text('Transaksi Rp50.000 berhasil'), findsOneWidget);
+      expect(find.byKey(const ValueKey('inbox-row-a')), findsOneWidget);
     });
 
     testWidgets('Bukan transaksi: kartu perlu diisi ditutup, bentuknya dipelajari, Urungkan memulihkan', (
@@ -850,6 +863,8 @@ void main() {
         ),
       ]);
       await open(tester, NotificationCaptureRouteKeys.inbox);
+
+      await openCard(tester, 'a');
 
       await tester.tap(find.byKey(const ValueKey('inbox-not-transaction-a')));
       await tester.pumpAndSettle();
@@ -894,6 +909,7 @@ void main() {
       testWidgets('Plus, kartu dikenali: Catat langsung mencatat tanpa formulir; Ubah dulu tetap ada', (tester) async {
         await store.saveInbox([known('a')]);
         await open(tester, NotificationCaptureRouteKeys.inbox);
+        await openCard(tester, 'a');
         expect(find.byKey(const ValueKey('inbox-edit-first-a')), findsOneWidget);
 
         await tester.tap(find.byKey(const ValueKey('inbox-confirm-a')));
@@ -927,6 +943,8 @@ void main() {
         );
         await store.saveInbox([entry]);
         await open(tester, NotificationCaptureRouteKeys.inbox);
+
+        await openCard(tester, 'a');
 
         await tester.tap(find.byKey(const ValueKey('inbox-confirm-a')));
         await tester.pumpAndSettle();
@@ -967,6 +985,8 @@ void main() {
         await store.saveInbox([entry]);
         await open(tester, NotificationCaptureRouteKeys.inbox);
 
+        await openCard(tester, 'a');
+
         await tester.tap(find.byKey(const ValueKey('inbox-confirm-a')));
         await tester.pumpAndSettle();
         await tester.tap(find.byKey(const ValueKey('inbox-confirm-undo')));
@@ -994,6 +1014,7 @@ void main() {
         );
         await store.saveInbox([entry]);
         await open(tester, NotificationCaptureRouteKeys.inbox);
+        await openCard(tester, 'a');
         await tester.tap(find.byKey(const ValueKey('inbox-confirm-a')));
         await tester.pumpAndSettle();
         await tester.tap(find.byKey(const ValueKey('inbox-auto-offer-later')));
@@ -1028,6 +1049,8 @@ void main() {
           await store.saveInbox([known('a')]);
           await open(tester, NotificationCaptureRouteKeys.inbox);
 
+          await openCard(tester, 'a');
+
           await tester.tap(find.byKey(const ValueKey('inbox-confirm-a')));
           await tester.pumpAndSettle();
 
@@ -1051,6 +1074,7 @@ void main() {
           await store.saveInbox([known('a', category: null)]);
           await open(tester, NotificationCaptureRouteKeys.inbox);
 
+          await openCard(tester, 'a');
           await tester.tap(find.text(t.notificationCapture.dismissAction));
           await tester.pumpAndSettle();
 
@@ -1074,6 +1098,7 @@ void main() {
           await store.saveInbox([known('a')]);
           await open(tester, NotificationCaptureRouteKeys.inbox);
 
+          await openCard(tester, 'a');
           await tester.tap(find.byKey(const ValueKey('inbox-close-duplicate')));
           await tester.pumpAndSettle();
 
@@ -1087,6 +1112,7 @@ void main() {
       testWidgets('Batalkan sesudah satu ketuk: transaksi dihapus dan kartu kembali', (tester) async {
         await store.saveInbox([known('a')]);
         await open(tester, NotificationCaptureRouteKeys.inbox);
+        await openCard(tester, 'a');
         await tester.tap(find.byKey(const ValueKey('inbox-confirm-a')));
         await tester.pumpAndSettle();
 
@@ -1095,7 +1121,7 @@ void main() {
 
         expect(await recorded(), isEmpty);
         expect((await store.loadInbox()).getOrElse((_) => throw StateError('')).single.id, 'a');
-        expect(find.text('Pembayaran ke KOPI a berhasil'), findsOneWidget);
+        expect(find.byKey(const ValueKey('inbox-row-a')), findsOneWidget);
       });
 
       testWidgets('kartu perlu diisi (tanpa kategori): tidak ada Ubah dulu, Catat membuka CATAT', (tester) async {
@@ -1202,6 +1228,7 @@ void main() {
         await store.saveInbox([card()]);
         await open(tester, NotificationCaptureRouteKeys.inbox);
 
+        await openCard(tester, 'a');
         expect(find.byKey(const ValueKey('inbox-duplicate-of')), findsNothing);
         expect(find.text(t.notificationCapture.recordAction), findsOneWidget);
         expect(find.text(t.notificationCapture.closeDuplicateAction), findsNothing);
@@ -1214,7 +1241,9 @@ void main() {
         await store.saveInbox([card()]);
         await open(tester, NotificationCaptureRouteKeys.inbox);
 
+        // Baris memuat lencana Mungkin duplikat; keterangannya ada di lembar aksi.
         expect(find.text(t.notificationCapture.possibleDuplicate), findsOneWidget);
+        await openCard(tester, 'a');
         expect(find.text(t.notificationCapture.duplicateOf(label: 'Kopi pagi')), findsOneWidget);
         expect(find.byKey(const ValueKey('inbox-record-anyway')), findsOneWidget);
         expect(find.byKey(const ValueKey('inbox-close-duplicate')), findsOneWidget);
@@ -1239,6 +1268,7 @@ void main() {
         container<LedgerChanges>().notifyChanged();
         await tester.pumpAndSettle();
 
+        await openCard(tester, 'a');
         expect(find.byKey(const ValueKey('inbox-duplicate-of')), findsOneWidget);
         // Kartu tetap ada: dua pembelian yang sama bisa sungguhan.
         expect(find.text('Pembayaran Rp50.000 ke KOPI berhasil'), findsOneWidget);
@@ -1262,8 +1292,15 @@ void main() {
         await store.saveInbox([newer, older]);
         await open(tester, NotificationCaptureRouteKeys.inbox);
 
+        await openCard(tester, 'old');
         expect(find.byKey(const ValueKey('inbox-duplicate-of')), findsOneWidget);
         expect(find.byKey(const ValueKey('inbox-record-anyway')), findsOneWidget);
+
+        // Kartu yang lebih baru tidak berduplikat: aksi biasa.
+        await tester.tapAt(const Offset(10, 10));
+        await tester.pumpAndSettle();
+        await openCard(tester, 'new');
+        expect(find.byKey(const ValueKey('inbox-duplicate-of')), findsNothing);
         expect(find.text(t.notificationCapture.recordAction), findsOneWidget);
       });
     });
@@ -1360,16 +1397,52 @@ void main() {
       note: 'KOPI $id',
     );
 
-    testWidgets('segmen memuat hitungan; kartu tampil sebagai DsCard dengan nominal dan tombol aksi', (tester) async {
+    testWidgets('segmen memuat hitungan; baris bergaya transaksi terbaru, aksi di lembar', (tester) async {
       await store.saveInbox([pending('a', note: 'INDOMARET'), pending('b')]);
       await store.saveAutoRecorded([auto('x')]);
       await open(tester, NotificationCaptureRouteKeys.inbox);
 
       expect(find.textContaining('${t.notificationCapture.inboxPendingTitle} 2', findRichText: true), findsOneWidget);
       expect(find.textContaining('${t.notificationCapture.inboxAutoTitle} 1', findRichText: true), findsOneWidget);
-      expect(find.byType(DsCard), findsWidgets);
-      expect(find.text('−Rp50.000'), findsWidgets);
+      expect(find.byType(DsLedgerRow), findsNWidgets(2));
+      expect(find.text('−Rp50.000'), findsNWidgets(2));
+      // Aksi tidak berjejer di baris: baru ada di lembar aksi.
+      expect(find.byKey(const ValueKey('inbox-confirm-a')), findsNothing);
+      await openCard(tester, 'a');
       expect(find.byKey(const ValueKey('inbox-confirm-a')), findsOneWidget);
+    });
+
+    testWidgets('ikon asli aplikasi sumber dipakai di baris dan lembar aksi, juga di segmen Otomatis', (tester) async {
+      final png = base64Decode(
+        'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGP4z8DwHwAFAAH/q842iQAAAABJRU5ErkJggg==',
+      );
+      gateway.apps = [InstalledApp(packageName: 'id.co.bri.brimo', label: 'BRImo', icon: png)];
+      await store.saveSettings(
+        const NotificationCaptureSettings(
+          enabled: true,
+          sources: [NotificationSource(packageName: 'id.co.bri.brimo', appLabel: 'BRImo')],
+        ),
+      );
+      await store.saveInbox([pending('a', note: 'INDOMARET')]);
+      await store.saveAutoRecorded([auto('x')]);
+      await open(tester, NotificationCaptureRouteKeys.inbox);
+
+      expect(find.byType(SourceAppTile), findsOneWidget);
+      await openCard(tester, 'a');
+      expect(find.byType(SourceAppTile), findsNWidgets(2));
+      await tester.tapAt(const Offset(10, 10));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.textContaining(t.notificationCapture.inboxAutoTitle, findRichText: true));
+      await tester.pumpAndSettle();
+      expect(find.byType(SourceAppTile), findsOneWidget);
+    });
+
+    testWidgets('tanpa ikon aplikasi: ikon clay kategori sebagai cadangan', (tester) async {
+      await store.saveInbox([pending('a', note: 'INDOMARET')]);
+      await open(tester, NotificationCaptureRouteKeys.inbox);
+      expect(find.byType(SourceAppTile), findsNothing);
+      expect(find.byType(DsIconTile), findsWidgets);
     });
 
     testWidgets('nominal tak terbaca ditulis sebagai peringatan, bukan angka', (tester) async {
@@ -1397,7 +1470,7 @@ void main() {
     });
 
     for (final scale in [1.0, 2.0]) {
-      testWidgets('360dp teks ${scale}x: kartu lengkap dan baris otomatis tanpa luap', (tester) async {
+      testWidgets('360dp teks ${scale}x: baris, lembar aksi, dan baris otomatis tanpa luap', (tester) async {
         tester.view
           ..physicalSize = const Size(360, 1600)
           ..devicePixelRatio = 1;
@@ -1408,6 +1481,12 @@ void main() {
         await store.saveAutoRecorded([auto('x')]);
         await open(tester, NotificationCaptureRouteKeys.inbox);
         expect(tester.takeException(), isNull);
+
+        // Lembar aksi: tumpukan tombol penuh lebar juga muat.
+        await openCard(tester, 'a');
+        expect(tester.takeException(), isNull);
+        await tester.tapAt(const Offset(10, 10));
+        await tester.pumpAndSettle();
 
         await tester.tap(find.textContaining(t.notificationCapture.inboxAutoTitle, findRichText: true));
         await tester.pumpAndSettle();

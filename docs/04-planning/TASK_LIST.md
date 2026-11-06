@@ -6798,6 +6798,18 @@ tugas lama yang menyebutnya adalah riwayat, bukan keadaan sekarang.
       teks tidak berubah. Uji: enam uji baru (hitungan segmen, kartu, nominal
       tak terbaca, kosong, baris otomatis, 360dp pada teks 1× dan 2×). Seluruh
       layar Catat dari notifikasi kini v2; sisa B-90: `freelance`.
+      **Revisi 6 Nov 2026 (tinjauan pemilik):** tiga tombol berjejer di kartu
+      dicabut. Tangkapan **Perlu dicek** kini satu baris `DsLedgerRow` seperti
+      "Transaksi terbaru" di Beranda (ikon, catatan, nominal, aplikasi dan
+      tanggal, satu lencana) dalam satu `DsListCard`; mengetuknya membuka
+      **lembar aksi** berisi teks notifikasi, semua lencana, dan tombol
+      bertumpuk (Catat, Ubah dulu, Abaikan, Bukan transaksi; untuk duplikat
+      Tautkan, Tutup, Tetap catat). Ikon baris, lembar, dan segmen Otomatis
+      adalah **ikon asli aplikasi sumber** (dicari lewat nama paket atau nama
+      aplikasi di antara sumber), ikon clay kategori hanya cadangan. Juga:
+      tautan "Lihat semua" (`DsSectionHeader`) dan pil level (`DsPageHeader`)
+      di Beranda kini menempel di tepi kanan sejajar kartu (sebelumnya
+      mengambang di tengah karena berbagi lebar secara fleks).
 
 **Tahap penutup: gerbang Accepted**
 

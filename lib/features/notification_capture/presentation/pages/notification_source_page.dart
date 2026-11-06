@@ -252,8 +252,8 @@ class _SourcePageState extends State<_SourcePage> {
                     children: [
                       Row(
                         children: [
-                          Icon(Icons.account_balance_wallet_outlined, size: 20, color: c.actionPrimary),
-                          const SizedBox(width: 8),
+                          DsIconTile.asset(asset: ClayIcons.walletNav, size: DsIconTileSize.sm),
+                          const SizedBox(width: 10),
                           Expanded(child: Text(texts.walletDefaultTitle, style: ds.typography.titleMd)),
                           DsPill(label: texts.walletFallbackPill, tone: DsPillTone.positive),
                         ],

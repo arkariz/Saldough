@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
@@ -142,11 +143,10 @@ class FreelanceAmountLine extends StatelessWidget {
   }
 }
 
-/// Kartu satu proyek di Ikhtisar Freelance (T-5.9): ikon, nama, tarif dan
-/// potongan; baris belum ditagih (jam dan nominal kotor); baris tertunda
-/// dan diterima (gaji bersih) kalau ada; bilah porsi diterima / tertunda /
-/// belum ditagih; dan tanggal entri terakhir. Mengetuknya membuka rincian
-/// proyek.
+/// Satu proyek di Ikhtisar Freelance (T-5.9, rupa v2): ikon clay, nama, tarif
+/// dan jam; di kanan nominal yang belum diterima, atau lencana Lunas bila
+/// seluruh kerjanya sudah dibayar. Mengetuknya membuka rincian proyek. Barisnya
+/// ditaruh di `DsListCard`.
 class ProjectCard extends StatelessWidget {
   /// Membuat [ProjectCard].
   const ProjectCard({
@@ -171,28 +171,84 @@ class ProjectCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ds = context.ds;
+    final c = ds.colors;
     final terms = [
       '${AppMoneyFormatter.format(project.hourlyRate)}/${t.freelance.hourShort}',
       t.freelance.hoursValue(hours: stats.totalHours),
     ].join(' · ');
     final unpaid = stats.earned - stats.paidAmount;
-    // Baris proyek (prototipe `Freelance.dc.html`): belum diterima di kanan,
-    // atau badge Lunas bila seluruh kerjanya sudah dibayar.
-    return AppListRow(
-      leading: const AppIconTile(IconKey.freelance),
-      title: project.name,
-      subtitle: terms,
-      onTap: onTap,
-      trailing: unpaid > 0
-          ? AppMoneyText(unpaid)
-          : stats.earned > 0
-          ? AppBadge(t.freelance.paidOffBadge, tone: AppTone.positive, icon: IconKey.check)
-          : null,
+    final trailing = unpaid > 0
+        ? Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: AlignmentDirectional.centerEnd,
+                child: Text(
+                  AppMoneyFormatter.format(unpaid),
+                  style: ds.typography.pixelAmount.copyWith(color: c.textPrimary),
+                ),
+              ),
+              Text(
+                t.freelance.unpaidLabel,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: ds.typography.bodySm.copyWith(fontSize: 11, color: c.textMuted),
+              ),
+            ],
+          )
+        : stats.earned > 0
+        ? DsBadge(label: t.freelance.paidOffBadge, tone: DsBadgeTone.income)
+        : null;
+    return DsPressable(
+      onPressed: onTap,
+      pressedScale: 1,
+      builder: (_, pressed) => AnimatedContainer(
+        duration: const Duration(milliseconds: 150),
+        color: pressed ? c.surfaceHover.withValues(alpha: DsOpacity.rowPressed) : Colors.transparent,
+        padding: const EdgeInsets.all(12),
+        child: Row(
+          children: [
+            DsIconTile.asset(asset: ClayIcons.stylus),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    project.name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: ds.typography.bodyMd.copyWith(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      fontVariations: const [FontVariation.weight(600)],
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    terms,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: ds.typography.bodySm.copyWith(fontSize: 12, color: c.textMuted),
+                  ),
+                ],
+              ),
+            ),
+            if (trailing != null) ...[
+              const SizedBox(width: 8),
+              ConstrainedBox(constraints: const BoxConstraints(maxWidth: 140), child: trailing),
+            ],
+          ],
+        ),
+      ),
     );
   }
 }
 
-/// Kartu bergaris putus-putus di atas daftar proyek: ajakan menambah
+/// Tombol bergaris putus-putus di bawah daftar proyek: ajakan menambah
 /// proyek.
 class AddProjectCard extends StatelessWidget {
   /// Membuat [AddProjectCard].
@@ -205,19 +261,16 @@ class AddProjectCard extends StatelessWidget {
   final bool limited;
 
   @override
-  Widget build(BuildContext context) {
-    return AppButton.secondary(
-      label: t.freelance.projectAddTitle,
-      icon: IconKey.add,
-      expand: true,
-      onPressed: onTap,
-      badge: PlusBadge(when: () => limited),
-    );
-  }
+  Widget build(BuildContext context) => DsDashedButton(
+    label: t.freelance.projectAddTitle,
+    trailing: PlusBadge(when: () => limited),
+    onPressed: onTap,
+  );
 }
 
-/// Ilustrasi keadaan kosong freelance: susunan ikon pixel besar dengan
-/// lencana, judul, penjelasan, dan tombol opsional (pola `BudgetEmptyState`).
+/// Keadaan kosong freelance (rupa v2): ilustrasi clay yang hidup, judul,
+/// penjelasan, dan tombol opsional. Dipakai juga oleh daftar yang kosong di
+/// rincian proyek.
 class FreelanceEmptyState extends StatelessWidget {
   /// Membuat [FreelanceEmptyState].
   const FreelanceEmptyState({
@@ -241,14 +294,33 @@ class FreelanceEmptyState extends StatelessWidget {
   final VoidCallback? onAction;
 
   @override
-  Widget build(BuildContext context) => AppEmptyState(
-    art: EmptyArt.freelance,
-    title: title,
-    body: body,
-    actionLabel: actionLabel,
-    actionIcon: IconKey.add,
-    onAction: onAction,
-  );
+  Widget build(BuildContext context) {
+    final ds = context.ds;
+    return DsCard(
+      padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
+      child: Column(
+        children: [
+          const DsEmptyHero(
+            asset: ClayIcons.stylus,
+            orbit: [ClayIcons.clock, ClayIcons.invoice, ClayIcons.coins],
+            size: 112,
+          ),
+          const SizedBox(height: 12),
+          Text(title, textAlign: TextAlign.center, style: ds.typography.titleMd.copyWith(fontSize: 18)),
+          const SizedBox(height: 4),
+          Text(
+            body,
+            textAlign: TextAlign.center,
+            style: ds.typography.bodySm.copyWith(color: ds.colors.textMuted),
+          ),
+          if (actionLabel != null) ...[
+            const SizedBox(height: 16),
+            DsButton(label: actionLabel!, icon: Icons.add_rounded, expand: true, onPressed: onAction),
+          ],
+        ],
+      ),
+    );
+  }
 }
 
 /// Bilah aksi yang menempel di dasar layar freelance, tidak ikut digulir.

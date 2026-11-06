@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/plan/active_plan.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
-import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/freelance/presentation/bloc/freelance_bloc.dart';
 import 'package:saldough/features/freelance/presentation/bloc/freelance_state.dart';
@@ -39,15 +38,18 @@ class _FreelanceOverviewPageState extends State<FreelanceOverviewPage> {
         actions: [
           const TutorialInfoButton(tour: TourId.freelance),
           Builder(
-            builder: (context) =>
-                AppIconButton(icon: IconKey.add, label: t.freelance.projectAddTitle, onPressed: () => addProject(context)),
+            builder: (context) => DsIconButton(
+              icon: Icons.add_rounded,
+              label: t.freelance.projectAddTitle,
+              onPressed: () => addProject(context),
+            ),
           ),
         ],
       ),
       body: SafeArea(
         child: BlocBuilder<FreelanceBloc, FreelanceState>(
           builder: (context, state) => switch (state) {
-            FreelanceState(isLoading: true) => const AppSkeletonPage(),
+            FreelanceState(isLoading: true) => const _OverviewSkeleton(),
             FreelanceState(loadFailed: true) => _LoadError(
               onRetry: () => context.read<FreelanceBloc>().add(const FreelanceStarted()),
             ),
@@ -59,27 +61,35 @@ class _FreelanceOverviewPageState extends State<FreelanceOverviewPage> {
   }
 }
 
+class _OverviewSkeleton extends StatelessWidget {
+  const _OverviewSkeleton();
+
+  @override
+  Widget build(BuildContext context) => const Padding(
+    padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        DsSkeleton(height: 200, radius: DsRadius.lgAll),
+        SizedBox(height: 24),
+        DsSkeleton(height: 20, width: 120),
+        SizedBox(height: 12),
+        DsSkeleton(height: 72, radius: DsRadius.lgAll),
+        SizedBox(height: 12),
+        DsSkeleton(height: 72, radius: DsRadius.lgAll),
+      ],
+    ),
+  );
+}
+
 class _LoadError extends StatelessWidget {
   const _LoadError({required this.onRetry});
 
   final VoidCallback onRetry;
 
   @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.space6),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(t.freelance.loadErrorTitle, style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(height: AppSpacing.space4),
-            AppButton(label: t.common.retry, onPressed: onRetry),
-          ],
-        ),
-      ),
-    );
-  }
+  Widget build(BuildContext context) =>
+      DsErrorState(title: t.freelance.loadErrorTitle, retryLabel: t.common.retry, onRetry: onRetry);
 }
 
 class _Overview extends StatelessWidget {
@@ -94,47 +104,47 @@ class _Overview extends StatelessWidget {
       tour: TourId.freelance,
       ready: state.projects.isNotEmpty,
       child: ListView(
-      padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space4, AppSpacing.space4, AppSpacing.space6),
-      children: [
-        if (state.projects.isEmpty)
-          FreelanceEmptyState(
-            title: t.freelance.projectsEmptyTitle,
-            body: t.freelance.projectsEmpty,
-            actionLabel: t.freelance.projectAddTitle,
-            onAction: () => addProject(context),
-          )
-        else ...[
-          FreelanceSummaryCard(
-            summary: state.summary,
-            projectCount: state.projects.length,
-            payments: state.paymentTotals,
-            unbilledHours: state.projects.fold(0, (sum, p) => sum + state.statsOf(p.id).unbilledHours),
-            unbilledAmount: state.projects.fold(0, (sum, p) => sum + state.statsOf(p.id).unbilledAmount),
-          ),
-          const SizedBox(height: AppSpacing.space6),
-          AppSectionHeader(t.freelance.projectsLabel, hint: t.freelance.projectCount(count: state.projects.length)),
-          const SizedBox(height: AppSpacing.space2),
-          AppListCard(
-            children: [
-              for (final (i, project) in state.projectsByNextPayment.indexed)
-                SpotlightTarget(
-                  spotlightKey: i == 0 ? SpotlightKey.freelanceProject : null,
-                  child: ProjectCard(
-                    project: project,
-                    stats: state.statsOf(project.id),
-                    paymentStats: state.paymentStatsOf(project.id),
-                    onTap: () => openFreelanceProject(context, project),
+        padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+        children: [
+          if (state.projects.isEmpty)
+            FreelanceEmptyState(
+              title: t.freelance.projectsEmptyTitle,
+              body: t.freelance.projectsEmpty,
+              actionLabel: t.freelance.projectAddTitle,
+              onAction: () => addProject(context),
+            )
+          else ...[
+            FreelanceSummaryCard(
+              summary: state.summary,
+              projectCount: state.projects.length,
+              payments: state.paymentTotals,
+              unbilledHours: state.projects.fold(0, (sum, p) => sum + state.statsOf(p.id).unbilledHours),
+              unbilledAmount: state.projects.fold(0, (sum, p) => sum + state.statsOf(p.id).unbilledAmount),
+            ),
+            const SizedBox(height: 24),
+            DsSectionHeader(title: t.freelance.projectsLabel),
+            const SizedBox(height: 8),
+            DsListCard(
+              children: [
+                for (final (i, project) in state.projectsByNextPayment.indexed)
+                  SpotlightTarget(
+                    spotlightKey: i == 0 ? SpotlightKey.freelanceProject : null,
+                    child: ProjectCard(
+                      project: project,
+                      stats: state.statsOf(project.id),
+                      paymentStats: state.paymentStatsOf(project.id),
+                      onTap: () => openFreelanceProject(context, project),
+                    ),
                   ),
-                ),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.space6),
-          AddProjectCard(
-            onTap: () => addProject(context),
-            limited: state.projects.length >= ActivePlan.limits.value.freeProjects,
-          ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            AddProjectCard(
+              onTap: () => addProject(context),
+              limited: state.projects.length >= ActivePlan.limits.value.freeProjects,
+            ),
+          ],
         ],
-      ],
       ),
     );
   }

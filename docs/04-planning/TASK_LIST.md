@@ -6811,6 +6811,25 @@ tugas lama yang menyebutnya adalah riwayat, bukan keadaan sekarang.
       di Beranda kini menempel di tepi kanan sejajar kartu (sebelumnya
       mengambang di tengah karena berbagi lebar secara fleks).
 
+- [ ] **T-26.32** (L) Rombak v2 `freelance` (B-90, tanpa acuan Stitch: pemilik
+      menyuruh langsung dengan gaya v2, 6 Nov 2026), dalam dua irisan yang
+      ditinjau satu per satu. **Irisan 1 selesai (Ikhtisar):** ringkasan jadi
+      `DsSummaryHero` (angka utama "Belum diterima", bilah = bagian yang sudah
+      diterima, statistik Sudah diterima dan Belum ditagih, lencana jumlah
+      proyek, ilustrasi clay pena; tagihan tertunda sebagai baris kaca di
+      kaki, hanya bila ada); daftar proyek `DsListCard` berbaris `ProjectCard`
+      v2 (ikon clay, nama, tarif dan jam, nominal belum diterima atau lencana
+      Lunas); tombol tambah `DsDashedButton` dengan lencana Plus; keadaan
+      kosong `DsEmptyHero` + kartu; kerangka muat `DsSkeleton` dan galat
+      `DsErrorState`; tombol tambah di app bar `DsIconButton`. Target tur dan
+      kunci uji tidak berubah. Uji baru: ringkasan (dua keadaan, 360dp 1× dan
+      2×), baris proyek (sisa, Lunas, nama panjang), keadaan kosong; uji
+      bilah porsi lama diganti. Catatan: deskripsi awal saya menyebut kartu
+      proyek tiga baris nominal; kode sebenarnya sudah satu baris, jadi
+      rupanya tetap satu baris. **Irisan 2 (menunggu):** halaman rincian proyek
+      (kop, tab, penyaring, kartu entri dan tagihan, bilah bawah), lima lembar
+      formulir, dan kartu rincian gaji bersih.
+
 **Tahap penutup: gerbang Accepted**
 
 - [ ] **T-26.26** (L, pemilik dan QA) Uji perangkat nyata untuk menjadikan

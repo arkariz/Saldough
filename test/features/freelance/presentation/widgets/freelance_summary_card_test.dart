@@ -1,35 +1,68 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/core/design_system/design_system.dart';
+import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/features/freelance/presentation/bloc/freelance_state.dart';
 import 'package:saldough/features/freelance/presentation/widgets/freelance_cards.dart';
 
 void main() {
-  testWidgets('bilah porsi diterima/belum diterima benar-benar setinggi 8', (tester) async {
+  Future<void> pump(WidgetTester tester, {int pendingCount = 0, double scale = 1, double width = 360}) async {
+    tester.view
+      ..physicalSize = Size(width, 900)
+      ..devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
     await tester.pumpWidget(
       MaterialApp(
-        theme: PixelTheme.light,
-        home: const Scaffold(
-          body: FreelanceSummaryCard(
-            summary: FreelanceSummary(totalHours: 39, earned: 300, paid: 200),
-            projectCount: 1,
-            payments: ProjectPaymentStats(
-              pendingCount: 0,
-              pendingNet: 0,
-              nextExpectedDate: null,
-              paidCount: 0,
-              paidNet: 0,
+        theme: AppThemeBridge.build(DsThemePresets.fallback, Brightness.light),
+        builder: (context, child) => MediaQuery(
+          data: MediaQuery.of(context).copyWith(textScaler: TextScaler.linear(scale)),
+          child: child!,
+        ),
+        home: Scaffold(
+          body: SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: FreelanceSummaryCard(
+              summary: const FreelanceSummary(totalHours: 39, earned: 30000000, paid: 20000000),
+              projectCount: 2,
+              unbilledHours: 6,
+              unbilledAmount: 4500000,
+              payments: ProjectPaymentStats(
+                pendingCount: pendingCount,
+                pendingNet: pendingCount == 0 ? 0 : 5000000,
+                nextExpectedDate: pendingCount == 0 ? null : DateTime(2026, 11, 12),
+                paidCount: 0,
+                paidNet: 0,
+              ),
             ),
           ),
         ),
       ),
     );
+    await tester.pump(const Duration(seconds: 2));
+  }
 
-    final segments = find.descendant(of: find.byType(FreelanceSummaryCard), matching: find.byType(ColoredBox));
-    final sizes = [for (final element in segments.evaluate()) tester.getSize(find.byWidget(element.widget))];
-    final bar = sizes.where((size) => size.height == 8).toList();
-    expect(bar, hasLength(2));
-    // Porsi lebarnya mengikuti nominal: 200 diterima, 100 belum.
-    expect(bar[0].width, closeTo(bar[1].width * 2, 1));
+  testWidgets('ringkasan: belum diterima sebagai angka utama, diterima dan belum ditagih sebagai statistik', (
+    tester,
+  ) async {
+    await pump(tester);
+
+    expect(find.byType(DsSummaryHero), findsOneWidget);
+    expect(find.text(t.freelance.projectCount(count: 2)), findsOneWidget);
+    expect(find.text(t.freelance.paidLabel), findsOneWidget);
+    expect(find.text(t.freelance.unbilledLabel), findsOneWidget);
+    // Tanpa tagihan tertunda, tidak ada baris Tertunda.
+    expect(find.text(t.freelance.pendingTotalLabel), findsNothing);
   });
+
+  testWidgets('tagihan tertunda tampil sebagai baris di kaki kartu', (tester) async {
+    await pump(tester, pendingCount: 2);
+    expect(find.text(t.freelance.pendingTotalLabel), findsOneWidget);
+  });
+
+  for (final scale in [1.0, 2.0]) {
+    testWidgets('360dp teks ${scale}x: tanpa luap', (tester) async {
+      await pump(tester, pendingCount: 2, scale: scale);
+      expect(tester.takeException(), isNull);
+    });
+  }
 }

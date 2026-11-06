@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
@@ -60,62 +61,70 @@ class FreelanceSummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space1),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(t.freelance.unpaidLabel, style: textTheme.bodyMedium?.copyWith(color: colors.ink2)),
-              HeroAmount(AppMoneyFormatter.format(summary.unpaid)),
-              Text.rich(
-                TextSpan(
-                  text: '${t.freelance.paidLabel} ',
-                  children: [
-                    TextSpan(
-                      text: AppMoneyFormatter.format(summary.paid),
-                      style: context.numberStyles.amountSm.copyWith(color: colors.positive),
-                    ),
-                  ],
-                ),
-                style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
-              ),
-              if (summary.earned > 0) ...[
-                const SizedBox(height: AppSpacing.space3),
-                FreelanceShareBar(parts: [(summary.paid, colors.positive), (summary.unpaid, colors.warningFill)]),
-              ],
-            ],
-          ),
-        ),
-        if (payments.pendingCount > 0 || unbilledHours > 0) ...[
-          const SizedBox(height: AppSpacing.space4),
-          AppListCard(
-            children: [
-              if (payments.pendingCount > 0)
-                AppListRow(
-                  leading: const AppIconTile(IconKey.pending),
-                  title: t.freelance.pendingTotalLabel,
-                  subtitle: t.freelance.nextExpected(
+    final unpaid = AppMoneyFormatter.format(summary.unpaid);
+    return DsSummaryHero(
+      label: t.freelance.unpaidLabel,
+      badge: t.freelance.projectCount(count: projectCount),
+      amount: summary.unpaid,
+      format: AppMoneyFormatter.format,
+      // Bagian yang sudah diterima dari seluruh pendapatan: bilah terisi
+      // makin penuh saat tagihan dicatat diterima.
+      ratio: summary.earned <= 0 ? 0 : summary.paid / summary.earned,
+      asset: ClayIcons.stylus,
+      semanticLabel: '${t.freelance.unpaidLabel} $unpaid',
+      stats: [
+        DsSummaryStat(label: t.freelance.paidLabel, value: AppMoneyFormatter.format(summary.paid)),
+        DsSummaryStat(label: t.freelance.unbilledLabel, value: AppMoneyFormatter.format(unbilledAmount)),
+      ],
+      footer: payments.pendingCount > 0 ? _PendingGlass(payments: payments) : null,
+    );
+  }
+}
+
+/// Tagihan tertunda (bersih) di kaki kartu ringkasan: jumlah dan tanggal
+/// terdekat, serta nominalnya.
+class _PendingGlass extends StatelessWidget {
+  const _PendingGlass({required this.payments});
+
+  final ProjectPaymentStats payments;
+
+  @override
+  Widget build(BuildContext context) {
+    final ds = context.ds;
+    final c = ds.colors;
+    return DsSummaryGlass(
+      child: Row(
+        children: [
+          Icon(Icons.hourglass_top_rounded, size: 18, color: c.onHero),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(t.freelance.pendingTotalLabel, style: ds.typography.bodySm.copyWith(color: c.onHeroMuted)),
+                Text(
+                  t.freelance.nextExpected(
                     count: payments.pendingCount,
                     date: CycleMonthFormatter.formatDayMonth(payments.nextExpectedDate!),
                   ),
-                  trailing: AppMoneyText(payments.pendingNet),
+                  style: ds.typography.bodySm.copyWith(fontSize: 12, color: c.onHeroMuted),
                 ),
-              if (unbilledHours > 0)
-                AppListRow(
-                  leading: const AppIconTile(IconKey.schedule, tint: TileTint.slate),
-                  title: t.freelance.unbilledLabel,
-                  subtitle: t.freelance.hoursValue(hours: unbilledHours),
-                  trailing: AppMoneyText(unbilledAmount),
-                ),
-            ],
+              ],
+            ),
+          ),
+          const SizedBox(width: 8),
+          Flexible(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: AlignmentDirectional.centerEnd,
+              child: Text(
+                AppMoneyFormatter.format(payments.pendingNet),
+                style: ds.typography.amount.copyWith(color: c.onHero),
+              ),
+            ),
           ),
         ],
-      ],
+      ),
     );
   }
 }

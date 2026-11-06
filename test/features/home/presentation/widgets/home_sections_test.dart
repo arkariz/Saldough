@@ -31,7 +31,7 @@ void main() {
       tester,
     ) async {
       var report = 0;
-      await tester.pumpWidget(_host(HomeQuickActions(onOpenReport: () => report++)));
+      await tester.pumpWidget(_host(HomeQuickActions(onOpenReport: () => report++, onOpenFreelance: () {})));
       expect(find.byKey(const ValueKey('home-action-scan')), findsNothing);
       expect(find.byKey(const ValueKey('home-action-notification')), findsNothing);
       // Tombol Catat di tengah bilah bawah satu-satunya pintu CATAT: tanpa tile Catat Transfer.
@@ -47,6 +47,7 @@ void main() {
         _host(
           HomeQuickActions(
             onOpenReport: () {},
+            onOpenFreelance: () {},
             notificationAction: DsQuickActionTile(
               key: const ValueKey('home-action-notification'),
               tile: DsIconTile.asset(asset: ClayIcons.bell),
@@ -60,8 +61,40 @@ void main() {
       expect(opened, 1);
     });
 
+    testWidgets('tile Freelance membuka Ikhtisar Freelance lewat callback-nya', (tester) async {
+      var opened = 0;
+      await tester.pumpWidget(_host(HomeQuickActions(onOpenReport: () {}, onOpenFreelance: () => opened++)));
+      expect(find.byKey(const ValueKey('home-action-freelance')), findsOneWidget);
+      await tester.tap(find.text(t.home.actionFreelance));
+      expect(opened, 1);
+    });
+
+    testWidgets('empat tile (notifikasi, laporan, freelance, misi) muat sebaris di 360dp teks 2x', (tester) async {
+      tester.view
+        ..physicalSize = const Size(360, 800)
+        ..devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      await tester.pumpWidget(
+        _host(
+          MediaQuery(
+            data: const MediaQueryData(textScaler: TextScaler.linear(2)),
+            child: HomeQuickActions(
+              onOpenReport: () {},
+              onOpenFreelance: () {},
+              notificationAction: DsQuickActionTile(
+                tile: DsIconTile.asset(asset: ClayIcons.bell),
+                label: t.home.actionNotification,
+                onPressed: () {},
+              ),
+            ),
+          ),
+        ),
+      );
+      expect(tester.takeException(), isNull);
+    });
+
     testWidgets('tidak ada kata kirim: aplikasi mencatat, bukan melakukan', (tester) async {
-      await tester.pumpWidget(_host(HomeQuickActions(onOpenReport: () {})));
+      await tester.pumpWidget(_host(HomeQuickActions(onOpenReport: () {}, onOpenFreelance: () {})));
       expect(find.textContaining('Kirim'), findsNothing);
     });
   });
@@ -70,7 +103,7 @@ void main() {
     var claims = 0;
     await tester.pumpWidget(
       _host(
-        HomeQuickActions(onOpenReport: () {}, onClaimed: () => claims++),
+        HomeQuickActions(onOpenReport: () {}, onOpenFreelance: () {}, onClaimed: () => claims++),
         reduced: false,
       ),
     );

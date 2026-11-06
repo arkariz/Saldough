@@ -2031,6 +2031,9 @@ class Translations$home$id {
 	/// id: 'Laporan'
 	String get actionReport => 'Laporan';
 
+	/// id: 'Freelance'
+	String get actionFreelance => 'Freelance';
+
 	/// id: 'Misi Hemat'
 	String get actionMission => 'Misi Hemat';
 
@@ -6543,6 +6546,7 @@ extension on Translations {
 			'home.actionTransfer' => 'Catat Transfer',
 			'home.actionNotification' => 'Notifikasi',
 			'home.actionReport' => 'Laporan',
+			'home.actionFreelance' => 'Freelance',
 			'home.actionMission' => 'Misi Hemat',
 			'home.firstSubtitle' => 'Mulai dari dompet pertamamu, lalu catat transaksinya.',
 			'home.firstLabel' => 'Tanuki masih tidur',
@@ -6850,9 +6854,9 @@ extension on Translations {
 			'notificationCapture.accountEntryBody' => 'Catat otomatis dari notifikasi bank dan e-wallet.',
 			'notificationCapture.settingsTitle' => 'Catat dari notifikasi',
 			'notificationCapture.enableLabel' => 'Aktifkan',
-			'notificationCapture.accessMissingTitle' => 'Butuh izin membaca notifikasi',
 			_ => null,
 		} ?? switch (path) {
+			'notificationCapture.accessMissingTitle' => 'Butuh izin membaca notifikasi',
 			'notificationCapture.accessMissingBody' => 'Tanpa izin ini, Tanukonomy tidak bisa melihat notifikasi bank.',
 			'notificationCapture.accessAction' => 'Beri izin',
 			'notificationCapture.accessGranted' => 'Izin notifikasi aktif',
@@ -7364,9 +7368,9 @@ extension on Translations {
 			'analysis.category.transactions' => 'Transaksi',
 			'analysis.category.aboveAvg' => ({required Object amount}) => '${amount} di atas rata-rata',
 			'analysis.category.belowAvg' => ({required Object amount}) => '${amount} di bawah rata-rata',
-			'analysis.category.avgLine' => ({required Object n}) => 'rata-rata ${n} bulan',
 			_ => null,
 		} ?? switch (path) {
+			'analysis.category.avgLine' => ({required Object n}) => 'rata-rata ${n} bulan',
 			'analysis.category.moreHint' => '20 transaksi terbaru',
 			'premium.title' => 'Tanukonomy Plus',
 			'premium.backToLatest' => 'Kembali ke periode terbaru',

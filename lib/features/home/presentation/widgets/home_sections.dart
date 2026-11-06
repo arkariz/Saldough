@@ -155,7 +155,8 @@ class HomeCarouselSection extends StatelessWidget {
 }
 
 /// Tile aksi cepat bergambar clay: Notifikasi (Android; pintu Catat dari
-/// notifikasi), Laporan, dan Misi Hemat (tiruan, [kHomePlaceholderPreview]).
+/// notifikasi), Laporan, Freelance (pintu ke Ikhtisar Freelance), dan Misi Hemat
+/// (tiruan, [kHomePlaceholderPreview]).
 /// Tanpa tile Catat: tombol Catat di tengah bilah bawah sudah jadi satu-satunya
 /// pintu CATAT. Misi Hemat berlencana "+50 XP"; mengetuknya
 /// mengklaim: perayaan, lalu [onClaimed] (pil level bergoyang). Status klaim
@@ -164,6 +165,7 @@ class HomeQuickActions extends StatefulWidget {
   /// Membuat [HomeQuickActions].
   const HomeQuickActions({
     required this.onOpenReport,
+    required this.onOpenFreelance,
     this.notificationAction,
     this.onClaimed,
     super.key,
@@ -171,6 +173,9 @@ class HomeQuickActions extends StatefulWidget {
 
   /// Membuka Analisis periode berjalan.
   final VoidCallback onOpenReport;
+
+  /// Membuka Ikhtisar Freelance.
+  final VoidCallback onOpenFreelance;
 
   /// Tile Catat dari notifikasi, disisipkan akar komposisi (`null` di platform tanpa dukungan).
   final Widget? notificationAction;
@@ -213,6 +218,12 @@ class _HomeQuickActionsState extends State<HomeQuickActions> {
         tile: DsIconTile.asset(asset: ClayIcons.report, tone: DsIconTileTone.info),
         label: t.home.actionReport,
         onPressed: widget.onOpenReport,
+      ),
+      DsQuickActionTile(
+        key: const ValueKey('home-action-freelance'),
+        tile: DsIconTile.asset(asset: ClayIcons.stylus, tone: DsIconTileTone.income),
+        label: t.home.actionFreelance,
+        onPressed: widget.onOpenFreelance,
       ),
       if (kHomePlaceholderPreview)
         Builder(

@@ -231,6 +231,8 @@ class _HomePageState extends State<HomePage> {
               onOpenReport: () => unawaited(
                 context.pushRoute(AnalysisRouteKeys.open, const AnalysisInput(source: AnalysisSource.home)),
               ),
+              onOpenFreelance: () =>
+                  _thenRefresh(() => context.pushRoute(FreelanceRouteKeys.overview, const EmptyInput())),
               notificationAction: widget.notificationAction,
               onClaimed: () => setState(() => _claims++),
             ),

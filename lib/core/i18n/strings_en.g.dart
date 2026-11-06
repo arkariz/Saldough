@@ -810,6 +810,7 @@ class _Translations$home$en extends Translations$home$id {
 	@override String get actionTransfer => 'Record Transfer';
 	@override String get actionNotification => 'Notifications';
 	@override String get actionReport => 'Report';
+	@override String get actionFreelance => 'Freelance';
 	@override String get actionMission => 'Saving Missions';
 	@override String get firstSubtitle => 'Start with your first wallet, then record a transaction.';
 	@override String get firstLabel => 'Tanuki is still asleep';
@@ -3254,6 +3255,7 @@ extension on TranslationsEn {
 			'home.actionTransfer' => 'Record Transfer',
 			'home.actionNotification' => 'Notifications',
 			'home.actionReport' => 'Report',
+			'home.actionFreelance' => 'Freelance',
 			'home.actionMission' => 'Saving Missions',
 			'home.firstSubtitle' => 'Start with your first wallet, then record a transaction.',
 			'home.firstLabel' => 'Tanuki is still asleep',
@@ -3561,9 +3563,9 @@ extension on TranslationsEn {
 			'notificationCapture.accountEntryBody' => 'Record automatically from bank and e-wallet notifications.',
 			'notificationCapture.settingsTitle' => 'Record from notifications',
 			'notificationCapture.enableLabel' => 'Turn on',
-			'notificationCapture.accessMissingTitle' => 'Permission needed to read notifications',
 			_ => null,
 		} ?? switch (path) {
+			'notificationCapture.accessMissingTitle' => 'Permission needed to read notifications',
 			'notificationCapture.accessMissingBody' => 'Without it, Tanukonomy can\'t see your bank notifications.',
 			'notificationCapture.accessAction' => 'Allow access',
 			'notificationCapture.accessGranted' => 'Notification permission is on',
@@ -4075,9 +4077,9 @@ extension on TranslationsEn {
 			'analysis.category.transactions' => 'Transactions',
 			'analysis.category.aboveAvg' => ({required Object amount}) => '${amount} above average',
 			'analysis.category.belowAvg' => ({required Object amount}) => '${amount} below average',
-			'analysis.category.avgLine' => ({required Object n}) => '${n}-month average',
 			_ => null,
 		} ?? switch (path) {
+			'analysis.category.avgLine' => ({required Object n}) => '${n}-month average',
 			'analysis.category.moreHint' => 'Latest 20 transactions',
 			'premium.title' => 'Tanukonomy Plus',
 			'premium.backToLatest' => 'Back to the latest period',

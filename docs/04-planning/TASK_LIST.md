@@ -6846,6 +6846,11 @@ tugas lama yang menyebutnya adalah riwayat, bukan keadaan sekarang.
       kartu entri dan tagihan (keadaan, 360dp 1× dan 2×), empat lembar
       formulir di 360dp 1× dan 2×, alur potongan dan jam cepat, menu tagihan,
       sinkron pil segmen. Seluruh `freelance` kini v2; B-90 selesai.
+      **Tambahan 6 Nov 2026 (permintaan pemilik):** tile aksi cepat
+      **Freelance** di Beranda (`home-action-freelance`, ikon clay pena, nada
+      pemasukan) di antara Laporan dan Misi Hemat; mengetuknya membuka Ikhtisar
+      Freelance seperti tautan "Lihat semua" di kartu Freelance. Empat tile
+      muat sebaris di 360dp pada teks 2×.
 
 **Tahap penutup: gerbang Accepted**
 

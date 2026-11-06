@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/freelance/domain/entities/freelance_payment.dart';
@@ -11,21 +10,20 @@ import 'package:saldough/features/freelance/domain/entities/worklog_entry.dart';
 import 'package:saldough/features/freelance/presentation/bloc/freelance_state.dart';
 import 'package:saldough/features/freelance/presentation/freelance_format.dart';
 import 'package:saldough/features/freelance/presentation/widgets/net_pay_breakdown_card.dart';
-import 'package:saldough/features/freelance/presentation/widgets/project_widgets.dart';
 
-/// Lencana status Freelance, diteruskan ke [AppBadge] (nada dari [color]).
+/// Lencana status Freelance: [DsBadge] dengan label kapital.
 class FreelanceBadge extends StatelessWidget {
   /// Membuat [FreelanceBadge].
-  const FreelanceBadge({required this.label, required this.color, super.key});
+  const FreelanceBadge({required this.label, required this.tone, super.key});
 
   /// Teks lencana.
   final String label;
 
-  /// Warna tinta.
-  final Color color;
+  /// Nada lencana.
+  final DsBadgeTone tone;
 
   @override
-  Widget build(BuildContext context) => AppBadge(label, tone: toneFromColor(context.appColors, color));
+  Widget build(BuildContext context) => DsBadge(label: label, tone: tone);
 }
 
 /// Ringkasan Freelance (prototipe `Freelance.dc.html`): "Belum diterima"
@@ -129,8 +127,8 @@ class _PendingGlass extends StatelessWidget {
   }
 }
 
-/// Kartu satu entri worklog di rincian proyek: ikon status, tanggal kerja,
-/// catatan, jam × tarif, diperoleh, dan status tagihannya (FR-FRL-002).
+/// Kartu satu entri worklog di rincian proyek (rupa v2): ikon status, tanggal
+/// kerja, catatan, jam × tarif, diperoleh, dan status tagihannya (FR-FRL-002).
 /// Entri yang sudah ditagih terkunci ([onTap] `null`).
 class WorklogEntryCard extends StatelessWidget {
   /// Membuat [WorklogEntryCard].
@@ -156,99 +154,114 @@ class WorklogEntryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
+    final ds = context.ds;
+    final c = ds.colors;
     final payment = this.payment;
-    final (statusIcon, statusLabel, statusColor, statusDetail) = switch (payment) {
-      null => (IconKey.worklog, t.freelance.statusUnbilled, colors.ink2, null),
+    final (asset, iconTone, badgeTone, statusLabel, statusColor, statusDetail) = switch (payment) {
+      null => (
+        ClayIcons.clipboard,
+        DsIconTileTone.neutral,
+        DsBadgeTone.neutral,
+        t.freelance.statusUnbilled,
+        c.textSecondary,
+        null,
+      ),
       FreelancePayment(isPaid: false) => (
-        IconKey.pending,
+        ClayIcons.hourglass,
+        DsIconTileTone.warning,
+        DsBadgeTone.warning,
         t.freelance.statusPending,
-        colors.warning,
+        c.warning,
         t.freelance.expectedOn(date: CycleMonthFormatter.formatDateShort(payment.expectedDate)),
       ),
       FreelancePayment() => (
-        IconKey.paid,
+        ClayIcons.done,
+        DsIconTileTone.income,
+        DsBadgeTone.income,
         t.freelance.statusPaid,
-        colors.positive,
+        c.income,
         t.freelance.receivedOn(
           date: CycleMonthFormatter.formatDateShort(payment.receivedDate!),
           wallet: walletName ?? t.freelance.unknownWallet,
         ),
       ),
     };
-    return AppTappable(
+    return DsCard(
       onTap: onTap,
-      child: AppCard(
-        padding: const EdgeInsets.all(AppSpacing.space2),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      padding: const EdgeInsets.all(12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              DsIconTile.asset(asset: asset, tone: iconTone),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      CycleMonthFormatter.formatDateWithWeekday(entry.date),
+                      style: ds.typography.titleMd.copyWith(fontSize: 14),
+                    ),
+                    if (entry.note case final note?)
+                      Text(note, style: ds.typography.bodySm.copyWith(color: c.textSecondary)),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 8),
+              FreelanceBadge(label: statusLabel, tone: badgeTone),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: BoxDecoration(color: c.surfaceSunken, borderRadius: DsRadius.baseAll),
+            child: Row(
               children: [
-                FreelanceIconBox(statusIcon, color: payment == null ? null : statusColor, size: 40),
-                const SizedBox(width: AppSpacing.space2),
                 Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(CycleMonthFormatter.formatDateWithWeekday(entry.date), style: textTheme.titleSmall),
-                      if (entry.note case final note?) Text(note, style: textTheme.bodyMedium),
-                    ],
+                  child: Text(
+                    formatHoursTimesRate(entry.hours, entry.hourlyRate),
+                    style: ds.typography.amountSm.copyWith(color: c.textSecondary),
                   ),
                 ),
-                FreelanceBadge(label: statusLabel, color: statusColor),
+                const SizedBox(width: 8),
+                // Nominal mengecil di layar sempit atau teks diperbesar.
+                Flexible(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: AlignmentDirectional.centerEnd,
+                    child: Text(
+                      AppMoneyFormatter.format(entry.earnedAmount),
+                      style: ds.typography.amount.copyWith(color: c.textPrimary),
+                    ),
+                  ),
+                ),
               ],
             ),
-            const SizedBox(height: AppSpacing.space1),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2, vertical: AppSpacing.space1),
-              decoration: BoxDecoration(color: colors.surface2, borderRadius: BorderRadius.circular(4)),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      formatHoursTimesRate(entry.hours, entry.hourlyRate),
-                      style: context.numberStyles.amountSm.copyWith(color: colors.ink2),
-                    ),
-                  ),
-                  const SizedBox(width: AppSpacing.space1),
-                  // Nominal mengecil di layar sempit atau teks diperbesar.
-                  Flexible(
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      alignment: AlignmentDirectional.centerEnd,
-                      child: Text(
-                        AppMoneyFormatter.format(entry.earnedAmount),
-                        style: context.numberStyles.amount.copyWith(color: colors.ink),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+          ),
+          if (statusDetail != null) ...[
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Icon(Icons.lock_outline_rounded, size: 14, color: c.textSecondary),
+                const SizedBox(width: 4),
+                Expanded(
+                  child: Text(statusDetail, style: ds.typography.bodySm.copyWith(fontSize: 12, color: statusColor)),
+                ),
+              ],
             ),
-            if (statusDetail != null) ...[
-              const SizedBox(height: 4),
-              Row(
-                children: [
-                  AppIcon(IconKey.locked, size: 14, color: colors.ink2),
-                  const SizedBox(width: 4),
-                  Expanded(
-                    child: Text(statusDetail, style: textTheme.bodySmall?.copyWith(color: statusColor)),
-                  ),
-                ],
-              ),
-            ],
           ],
-        ),
+        ],
       ),
     );
   }
 }
 
-/// Kartu satu pembayaran: proyek, status, entri tercakup, rincian gaji,
-/// tanggal, dan aksinya (FR-FRL-003/004/005).
+/// Kartu satu pembayaran (tagihan): judul rentang kerja, status, rincian gaji,
+/// tanggal, dan aksinya (FR-FRL-003/004/005). Aksi utama (Catat diterima)
+/// penuh lebar di dasar kartu; aksi lain ada di [menu] pojok kanan atas.
 class FreelancePaymentCard extends StatelessWidget {
   /// Membuat [FreelancePaymentCard].
   const FreelancePaymentCard({
@@ -259,6 +272,7 @@ class FreelancePaymentCard extends StatelessWidget {
     required this.hours,
     required this.walletName,
     required this.actions,
+    this.menu,
     super.key,
   });
 
@@ -280,44 +294,50 @@ class FreelancePaymentCard extends StatelessWidget {
   /// Nama dompet tujuan (pembayaran yang sudah diterima).
   final String? walletName;
 
-  /// Tombol aksi di dasar kartu.
+  /// Tombol aksi di dasar kartu, ditumpuk penuh lebar.
   final List<Widget> actions;
+
+  /// Menu aksi tambahan di pojok kanan atas (mis. Ubah tanggal, Hapus).
+  final Widget? menu;
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
+    final ds = context.ds;
+    final c = ds.colors;
     final paid = payment.isPaid;
-    return AppCard(
+    return DsCard(
+      padding: const EdgeInsets.all(12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const FreelanceIconBox(IconKey.invoice, size: 40),
-              const SizedBox(width: AppSpacing.space2),
+              DsIconTile.asset(asset: ClayIcons.invoice, tone: paid ? DsIconTileTone.income : DsIconTileTone.warning),
+              const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(title, style: textTheme.titleMedium),
+                    Text(title, style: ds.typography.titleMd.copyWith(fontSize: 14)),
                     Text(
                       t.freelance.paymentEntriesSummary(count: entryCount, hours: hours),
-                      style: textTheme.bodySmall?.copyWith(color: colors.ink2),
+                      style: ds.typography.bodySm.copyWith(color: c.textSecondary),
                     ),
                   ],
                 ),
               ),
+              const SizedBox(width: 8),
               FreelanceBadge(
                 label: paid ? t.freelance.statusPaid : t.freelance.statusPending,
-                color: paid ? colors.positive : colors.warning,
+                tone: paid ? DsBadgeTone.income : DsBadgeTone.warning,
               ),
+              ?menu,
             ],
           ),
-          const SizedBox(height: AppSpacing.space2),
+          const SizedBox(height: 12),
           NetPayBreakdownCard(breakdown: breakdown),
-          const SizedBox(height: AppSpacing.space2),
+          const SizedBox(height: 10),
           Text(
             paid
                 ? t.freelance.receivedOn(
@@ -325,11 +345,11 @@ class FreelancePaymentCard extends StatelessWidget {
                     wallet: walletName ?? t.freelance.unknownWallet,
                   )
                 : t.freelance.expectedOn(date: CycleMonthFormatter.formatDate(payment.expectedDate)),
-            style: textTheme.bodyMedium?.copyWith(color: paid ? colors.positive : colors.warning),
+            style: ds.typography.bodyMd.copyWith(color: paid ? c.income : c.warning),
           ),
           if (actions.isNotEmpty) ...[
-            const SizedBox(height: AppSpacing.space2),
-            Wrap(spacing: AppSpacing.space2, runSpacing: AppSpacing.space2, children: actions),
+            const SizedBox(height: 12),
+            for (final (i, action) in actions.indexed) ...[if (i > 0) const SizedBox(height: 8), action],
           ],
         ],
       ),

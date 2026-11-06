@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/freelance/domain/entities/freelance_project.dart';
 import 'package:saldough/features/freelance/domain/entities/worklog_entry.dart';
@@ -134,8 +134,8 @@ class _EntryFormSheetState extends State<EntryFormSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
+    final ds = context.ds;
+    final c = ds.colors;
     final editing = widget.initial != null;
     final hours = _hoursValue;
     final rate = _rateValue;
@@ -144,83 +144,96 @@ class _EntryFormSheetState extends State<EntryFormSheet> {
       child: Padding(
         padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
         child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space4, AppSpacing.space4, AppSpacing.space6),
+          padding: const EdgeInsets.fromLTRB(
+            16,
+            16,
+            16,
+            24,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               AppFormHeader(
                 title: editing ? t.freelance.entryEditTitle : t.freelance.entryAddTitle,
               ),
-              const SizedBox(height: AppSpacing.space4),
+              const SizedBox(height: 16),
               FreelanceNotice(title: t.freelance.ruleTitle, body: t.freelance.entryRuleBody),
-              const SizedBox(height: AppSpacing.space4),
-              AppSectionLabel(t.freelance.projectLabel, hint: t.freelance.requiredHint),
-              const SizedBox(height: AppSpacing.space1),
-              AppMenuSelectButton<String>(
-                icon: IconKey.freelance,
-                label: widget.projects.where((p) => p.id == _projectId).firstOrNull?.name ?? t.freelance.projectPick,
-                isPlaceholder: _projectId == null,
-                wrapLabel: true,
-                options: [
-                  for (final project in widget.projects)
-                    (value: project.id, label: project.name, icon: IconKey.freelance),
+              const SizedBox(height: 16),
+              DsFieldGroup(
+                children: [
+                  DsSelectRow<String>(
+                    icon: Icons.work_outline_rounded,
+                    label: t.freelance.projectLabel,
+                    title:
+                        widget.projects.where((p) => p.id == _projectId).firstOrNull?.name ?? t.freelance.projectPick,
+                    placeholder: _projectId == null,
+                    options: [
+                      for (final project in widget.projects) DsMenuOption(value: project.id, label: project.name),
+                    ],
+                    onSelected: (id) => setState(() => id == null ? null : _selectProject(id)),
+                  ),
                 ],
-                onSelected: (id) => setState(() => id == null ? null : _selectProject(id)),
               ),
-              const SizedBox(height: AppSpacing.space4),
+              const SizedBox(height: 16),
               FreelanceDateButton(
                 label: t.freelance.workDateLabel,
                 date: _date,
                 onChanged: (date) => setState(() => _date = date),
               ),
-              const SizedBox(height: AppSpacing.space4),
+              const SizedBox(height: 16),
               AppSectionLabel(t.freelance.hoursLabel, hint: t.freelance.requiredHint),
-              const SizedBox(height: AppSpacing.space1),
+              const SizedBox(height: 8),
               FreelanceHoursField(controller: _hours, onChanged: refresh),
-              const SizedBox(height: AppSpacing.space4),
+              const SizedBox(height: 16),
               AppSectionLabel(t.freelance.hourlyRateLabel, hint: t.freelance.requiredHint),
-              const SizedBox(height: AppSpacing.space1),
+              const SizedBox(height: 8),
               AppFormMoneyField(controller: _rate, onChanged: refresh),
               const SizedBox(height: 4),
-              Text(t.freelance.entryRateHelp, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
-              const SizedBox(height: AppSpacing.space4),
+              Text(t.freelance.entryRateHelp, style: ds.typography.bodySm.copyWith(color: c.textSecondary)),
+              const SizedBox(height: 16),
               // Kerja selesai bukan uang diterima (aturan 6): kotak netral,
               // bukan hijau pemasukan.
-              AppCard(
-                color: colors.surface2,
+              Container(
+                padding: const EdgeInsets.all(14),
+                decoration: BoxDecoration(color: c.surfaceSunken, borderRadius: DsRadius.lgAll),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(t.freelance.earnedLabel, style: textTheme.bodyMedium?.copyWith(color: colors.ink2)),
+                    Text(t.freelance.earnedLabel, style: ds.typography.bodyMd.copyWith(color: c.textSecondary)),
                     const SizedBox(height: 2),
-                    Text(
-                      hours == null || rate == null ? '—' : AppMoneyFormatter.format(hours * rate),
-                      style: context.numberStyles.amountLg.copyWith(color: colors.ink),
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: AlignmentDirectional.centerStart,
+                      child: Text(
+                        hours == null || rate == null ? '—' : AppMoneyFormatter.format(hours * rate),
+                        style: ds.typography.numericalDisplay.copyWith(color: c.textPrimary),
+                      ),
                     ),
                     if (hours != null && rate != null)
                       Text(
                         formatHoursTimesRate(hours, rate),
-                        style: textTheme.bodySmall?.copyWith(color: colors.ink2),
+                        style: ds.typography.bodySm.copyWith(color: c.textSecondary),
                       ),
                   ],
                 ),
               ),
-              const SizedBox(height: AppSpacing.space4),
+              const SizedBox(height: 16),
               AppSectionLabel(t.freelance.noteLabel),
-              const SizedBox(height: AppSpacing.space1),
+              const SizedBox(height: 8),
               AppFormTextField(controller: _note, hint: t.freelance.noteHint, maxLength: 120, onChanged: refresh),
-              const SizedBox(height: AppSpacing.space6),
-              AppButton(label: t.freelance.entrySaveAction, onPressed: _canSave ? _save : null),
-              const SizedBox(height: AppSpacing.space1),
+              const SizedBox(height: 24),
+              DsButton(label: t.freelance.entrySaveAction, expand: true, onPressed: _canSave ? _save : null),
+              const SizedBox(height: 8),
               Text(
                 t.freelance.entrySaveHint,
                 textAlign: TextAlign.center,
-                style: textTheme.bodySmall?.copyWith(color: colors.ink2),
+                style: ds.typography.bodySm.copyWith(color: c.textSecondary),
               ),
               if (editing) ...[
-                const SizedBox(height: AppSpacing.space4),
-                AppButton.danger(
+                const SizedBox(height: 16),
+                DsButton.danger(
                   label: t.freelance.entryDeleteAction,
+                  expand: true,
                   onPressed: () => Navigator.of(context).pop(const EntryFormDeleted()),
                 ),
               ],

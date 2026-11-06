@@ -1,13 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 
-/// Kartu aturan freelance: judul kecil dan satu paragraf. Dipakai untuk
-/// menyatakan bahwa kerja selesai bukan uang diterima, dan bahwa mencatat
-/// pembayaran bukan pembayaran yang dijalankan aplikasi (FR-FRL-004).
+/// Nada [FreelanceNotice].
+enum FreelanceNoticeTone {
+  /// Kuning lembut: kerja selesai bukan uang diterima (bawaan).
+  warning,
+
+  /// Hijau lembut: uang sudah diterima.
+  positive,
+}
+
+/// Kartu aturan freelance (rupa v2): tile ikon, judul kecil, dan satu
+/// paragraf. Dipakai untuk menyatakan bahwa kerja selesai bukan uang
+/// diterima, dan bahwa mencatat pembayaran bukan pembayaran yang dijalankan
+/// aplikasi (FR-FRL-004).
 class FreelanceNotice extends StatelessWidget {
   /// Membuat [FreelanceNotice].
-  const FreelanceNotice({required this.title, required this.body, this.color, super.key});
+  const FreelanceNotice({required this.title, required this.body, this.tone = FreelanceNoticeTone.warning, super.key});
 
   /// Judul kecil.
   final String title;
@@ -15,31 +24,32 @@ class FreelanceNotice extends StatelessWidget {
   /// Isi.
   final String body;
 
-  /// Warna aksen; bawaan warna tertunda.
-  final Color? color;
+  /// Nada.
+  final FreelanceNoticeTone tone;
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    // Banner nada lembut (design system Banner): latar `*-soft`, ikon dan
-    // judul berwarna status, isi `ink`.
-    final (background, ink) = colors.toneColors(color == null ? AppTone.warning : toneFromColor(colors, color));
-    final textTheme = Theme.of(context).textTheme;
+    final ds = context.ds;
+    final c = ds.colors;
+    final (background, ink) = switch (tone) {
+      FreelanceNoticeTone.warning => (c.warningContainer, c.onWarningContainer),
+      FreelanceNoticeTone.positive => (c.incomeContainer, c.onIncomeContainer),
+    };
     return Container(
-      padding: const EdgeInsets.all(AppSpacing.space3),
-      decoration: ShapeDecoration(color: background, shape: const PixelCornerBorder()),
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(color: background.withValues(alpha: 0.6), borderRadius: DsRadius.lgAll),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          AppIcon(IconKey.info, size: 20, color: ink),
-          const SizedBox(width: AppSpacing.space2),
+          Icon(Icons.info_outline_rounded, size: 20, color: ink),
+          const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: textTheme.labelLarge?.copyWith(color: ink)),
+                Text(title, style: ds.typography.titleMd.copyWith(fontSize: 14, color: ink)),
                 const SizedBox(height: 2),
-                Text(body, style: textTheme.bodyMedium?.copyWith(color: colors.ink)),
+                Text(body, style: ds.typography.bodySm.copyWith(color: c.textPrimary)),
               ],
             ),
           ),

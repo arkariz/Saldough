@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/freelance/domain/entities/freelance_project.dart';
@@ -85,8 +85,8 @@ class _PaymentFormSheetState extends State<PaymentFormSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
+    final ds = context.ds;
+    final c = ds.colors;
     final project = _project;
     final chosen = _entries.where((e) => _selected.contains(e.id)).toList();
     final hours = chosen.fold(0, (sum, e) => sum + e.hours);
@@ -99,67 +99,78 @@ class _PaymentFormSheetState extends State<PaymentFormSheet> {
     final canSave = project != null && chosen.isNotEmpty && breakdown!.netPay > 0;
     return SizedBox.expand(
       child: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space4, AppSpacing.space4, AppSpacing.space6),
+        padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             AppFormHeader(title: t.freelance.paymentAddTitle),
-            const SizedBox(height: AppSpacing.space4),
+            const SizedBox(height: 16),
             FreelanceNotice(title: t.freelance.ruleTitle, body: t.freelance.paymentCreateRuleBody),
-            const SizedBox(height: AppSpacing.space4),
-            AppSectionLabel(t.freelance.projectLabel, hint: t.freelance.requiredHint),
-            const SizedBox(height: AppSpacing.space1),
-            AppMenuSelectButton<String>(
-              icon: IconKey.freelance,
-              label: project?.name ?? t.freelance.projectPick,
-              isPlaceholder: project == null,
-              wrapLabel: true,
-              options: [
-                for (final p in widget.projects) (value: p.id, label: p.name, icon: IconKey.freelance),
+            const SizedBox(height: 16),
+            DsFieldGroup(
+              children: [
+                DsSelectRow<String>(
+                  icon: Icons.work_outline_rounded,
+                  label: t.freelance.projectLabel,
+                  title: project?.name ?? t.freelance.projectPick,
+                  placeholder: project == null,
+                  options: [for (final p in widget.projects) DsMenuOption(value: p.id, label: p.name)],
+                  onSelected: (id) => setState(() => id == null ? null : _selectProject(id)),
+                ),
               ],
-              onSelected: (id) => setState(() => id == null ? null : _selectProject(id)),
             ),
             if (project != null) ...[
-              const SizedBox(height: AppSpacing.space4),
+              const SizedBox(height: 16),
               AppSectionLabel(t.freelance.paymentEntriesLabel(count: chosen.length, hours: hours)),
-              const SizedBox(height: AppSpacing.space1),
-              for (final entry in _entries)
-                CheckboxListTile(
-                  value: _selected.contains(entry.id),
-                  contentPadding: EdgeInsets.zero,
-                  controlAffinity: ListTileControlAffinity.leading,
-                  activeColor: colors.brand,
-                  onChanged: (checked) => setState(() {
-                    _selected = checked ?? false ? {..._selected, entry.id} : ({..._selected}..remove(entry.id));
-                  }),
-                  title: Text(CycleMonthFormatter.formatDateShort(entry.date), style: textTheme.titleSmall),
-                  subtitle: Text(
-                    [formatHoursTimesRate(entry.hours, entry.hourlyRate), ?entry.note].join(' · '),
-                    style: textTheme.bodySmall?.copyWith(color: colors.ink2),
-                  ),
-                  secondary: Text(
-                    AppMoneyFormatter.format(entry.earnedAmount),
-                    style: context.numberStyles.amountSm.copyWith(color: colors.ink),
-                  ),
-                ),
-              const SizedBox(height: AppSpacing.space4),
+              const SizedBox(height: 8),
+              DsListCard(
+                children: [
+                  for (final entry in _entries)
+                    Material(
+                      type: MaterialType.transparency,
+                      child: CheckboxListTile(
+                        value: _selected.contains(entry.id),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+                        controlAffinity: ListTileControlAffinity.leading,
+                        activeColor: c.actionPrimary,
+                        onChanged: (checked) => setState(() {
+                          _selected = checked ?? false ? {..._selected, entry.id} : ({..._selected}..remove(entry.id));
+                        }),
+                        title: Text(
+                          CycleMonthFormatter.formatDateShort(entry.date),
+                          style: ds.typography.titleMd.copyWith(fontSize: 14),
+                        ),
+                        subtitle: Text(
+                          [formatHoursTimesRate(entry.hours, entry.hourlyRate), ?entry.note].join(' · '),
+                          style: ds.typography.bodySm.copyWith(color: c.textSecondary),
+                        ),
+                        secondary: Text(
+                          AppMoneyFormatter.format(entry.earnedAmount),
+                          style: ds.typography.amountSm.copyWith(color: c.textPrimary),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+              const SizedBox(height: 16),
               FreelanceDateButton(
                 label: t.freelance.expectedDateLabel,
                 date: _expectedDate,
                 onChanged: (date) => setState(() => _expectedDate = date),
               ),
               if (breakdown != null) ...[
-                const SizedBox(height: AppSpacing.space4),
+                const SizedBox(height: 16),
                 NetPayBreakdownCard(breakdown: breakdown),
                 if (breakdown.netPay <= 0) ...[
-                  const SizedBox(height: AppSpacing.space1),
-                  Text(t.freelance.netPayNotPositive, style: textTheme.bodySmall?.copyWith(color: colors.danger)),
+                  const SizedBox(height: 8),
+                  Text(t.freelance.netPayNotPositive, style: ds.typography.bodySm.copyWith(color: c.error)),
                 ],
               ],
             ],
-            const SizedBox(height: AppSpacing.space6),
-            AppButton(
+            const SizedBox(height: 24),
+            DsButton(
               label: t.freelance.paymentCreateAction,
+              expand: true,
               onPressed: canSave
                   ? () => Navigator.of(context).pop(
                       PaymentFormSaved(

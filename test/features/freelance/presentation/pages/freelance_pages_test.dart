@@ -242,6 +242,49 @@ void main() {
     expect(find.bySemanticsLabel(t.transaction.deleteAction), findsNothing);
   });
 
+  testWidgets('tagihan tertunda: aksi utama penuh lebar, Ubah tanggal dan Hapus di menu tiga titik', (tester) async {
+    tallViewport(tester);
+    await freelanceRepository.saveProject(project);
+    await freelanceRepository.saveEntries([entry]);
+    await freelanceRepository.savePayment(payment);
+    await openShell(tester);
+    await openFreelanceThroughRecord(tester);
+    await tester.tap(find.byType(ProjectCard));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(t.freelance.paymentsTab(count: 1)));
+    await tester.pumpAndSettle();
+
+    // Tanpa menu terbuka, hanya aksi utama yang terlihat.
+    expect(find.text(t.freelance.receiveAction), findsOneWidget);
+    expect(find.text(t.freelance.paymentChangeDateAction), findsNothing);
+    expect(find.text(t.freelance.paymentDeleteAction), findsNothing);
+
+    await tester.tap(find.byTooltip(t.freelance.paymentMenuLabel));
+    await tester.pumpAndSettle();
+    expect(find.text(t.freelance.paymentChangeDateAction), findsOneWidget);
+    expect(find.text(t.freelance.paymentDeleteAction), findsOneWidget);
+  });
+
+  testWidgets('ketuk pil segmen berpindah tab Jam kerja dan Tagihan', (tester) async {
+    tallViewport(tester);
+    await freelanceRepository.saveProject(project);
+    await freelanceRepository.saveEntries([entry]);
+    await freelanceRepository.savePayment(payment);
+    await openShell(tester);
+    await openFreelanceThroughRecord(tester);
+    await tester.tap(find.byType(ProjectCard));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(DsSegmentedPill<int>), findsOneWidget);
+    expect(find.byType(WorklogEntryCard), findsOneWidget);
+    await tester.tap(find.text(t.freelance.paymentsTab(count: 1)));
+    await tester.pumpAndSettle();
+    expect(find.text(t.freelance.receiveAction), findsOneWidget);
+    await tester.tap(find.text(t.freelance.worklogTab(count: 1)));
+    await tester.pumpAndSettle();
+    expect(find.byType(WorklogEntryCard), findsOneWidget);
+  });
+
   testWidgets('rincian proyek: penyaring bawaan belum ditagih, dikelompokkan per bulan, Tagih membuka pembayaran', (
     tester,
   ) async {
@@ -385,7 +428,12 @@ void main() {
     Future<void> seedProjects(int count) async {
       for (var i = 0; i < count; i++) {
         await freelanceRepository.saveProject(
-          FreelanceProject(id: 'p$i', name: 'Proyek $i', hourlyRate: project.hourlyRate, deductionRules: project.deductionRules),
+          FreelanceProject(
+            id: 'p$i',
+            name: 'Proyek $i',
+            hourlyRate: project.hourlyRate,
+            deductionRules: project.deductionRules,
+          ),
         );
       }
     }

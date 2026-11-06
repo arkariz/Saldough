@@ -665,6 +665,7 @@
     "netPayNotPositive": "Deductions cannot equal or exceed gross pay.",
     "paymentCreateAction": "Create invoice",
     "paymentChangeDateAction": "Change date",
+    "paymentMenuLabel": "More actions",
     "paymentDeleteAction": "Delete",
     "paymentDeleteConfirmTitle": "Delete invoice?",
     "paymentDeleteConfirmMessage": "This pending invoice is deleted and its work hours become unbilled again. Wallet balances do not change.",

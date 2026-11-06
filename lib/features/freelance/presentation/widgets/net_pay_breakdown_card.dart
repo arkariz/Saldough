@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
-import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/freelance/domain/entities/net_pay_breakdown.dart';
 import 'package:saldough/features/freelance/presentation/freelance_format.dart';
@@ -17,14 +16,19 @@ class NetPayBreakdownCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
+    final ds = context.ds;
+    final c = ds.colors;
     Widget row(String label, String value, {Color? color, bool strong = false}) => Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),
       child: Row(
         children: [
-          Expanded(child: Text(label, style: strong ? textTheme.titleSmall : textTheme.bodyMedium)),
-          const SizedBox(width: AppSpacing.space1),
+          Expanded(
+            child: Text(
+              label,
+              style: strong ? ds.typography.titleMd.copyWith(fontSize: 14) : ds.typography.bodyMd,
+            ),
+          ),
+          const SizedBox(width: 8),
           // Nominal mengecil di layar sempit atau teks diperbesar.
           Flexible(
             child: FittedBox(
@@ -32,8 +36,8 @@ class NetPayBreakdownCard extends StatelessWidget {
               alignment: AlignmentDirectional.centerEnd,
               child: Text(
                 value,
-                style: (strong ? context.numberStyles.amount : context.numberStyles.amountSm).copyWith(
-                  color: color ?? colors.ink,
+                style: (strong ? ds.typography.amount : ds.typography.amountSm).copyWith(
+                  color: color ?? c.textPrimary,
                 ),
               ),
             ),
@@ -41,24 +45,19 @@ class NetPayBreakdownCard extends StatelessWidget {
         ],
       ),
     );
-    return AppCard(
-      color: colors.surface2,
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(color: c.surfaceSunken, borderRadius: DsRadius.baseAll),
       child: Column(
         children: [
           row(t.freelance.grossPayLabel, AppMoneyFormatter.format(breakdown.grossPay)),
           for (final deduction in breakdown.deductions)
-            row(
-              describeDeduction(deduction.rule),
-              '−${AppMoneyFormatter.format(deduction.amount)}',
-              color: colors.ink,
-            ),
-          const Divider(height: AppSpacing.space4),
-          row(
-            t.freelance.netPayLabel,
-            AppMoneyFormatter.format(breakdown.netPay),
-            color: colors.positive,
-            strong: true,
+            row(describeDeduction(deduction.rule), '−${AppMoneyFormatter.format(deduction.amount)}'),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 6),
+            child: Divider(height: 1, thickness: 1, color: c.outlineSubtle),
           ),
+          row(t.freelance.netPayLabel, AppMoneyFormatter.format(breakdown.netPay), color: c.income, strong: true),
         ],
       ),
     );

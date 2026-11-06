@@ -2,39 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/freelance/domain/entities/freelance_project.dart';
 import 'package:saldough/features/freelance/presentation/bloc/freelance_state.dart';
-
-/// Kotak ikon pixel berlatar tipis, dipakai di kartu dan judul freelance.
-class FreelanceIconBox extends StatelessWidget {
-  /// Membuat [FreelanceIconBox].
-  const FreelanceIconBox(this.icon, {this.color, this.size = 44, super.key});
-
-  /// Ikon.
-  final IconKey icon;
-
-  /// Warna latar tipis; bawaan permukaan netral.
-  final Color? color;
-
-  /// Sisi kotak.
-  final double size;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return Container(
-      width: size,
-      height: size,
-      alignment: Alignment.center,
-      // Ikon piksel selalu di tile netral `surface2` (design system Ikon).
-      decoration: ShapeDecoration(color: colors.surface2, shape: const PixelCornerBorder.small()),
-      child: AppIcon(icon, size: size * 0.7),
-    );
-  }
-}
 
 /// Bilah porsi horizontal: tiap bagian selebar nominalnya.
 class FreelanceShareBar extends StatelessWidget {
@@ -52,7 +23,7 @@ class FreelanceShareBar extends StatelessWidget {
     final visible = parts.where((p) => p.$1 > 0).toList();
     if (visible.isEmpty) return const SizedBox.shrink();
     return ClipRRect(
-      borderRadius: BorderRadius.circular(2),
+      borderRadius: BorderRadius.circular(4),
       child: SizedBox(
         height: height,
         child: Row(
@@ -67,77 +38,6 @@ class FreelanceShareBar extends StatelessWidget {
               ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-/// Satu baris nominal di kartu freelance: ikon, label kapital, keterangan,
-/// dan nominal di kanan. Tanpa [color], latarnya permukaan netral dan
-/// labelnya redup.
-class FreelanceAmountLine extends StatelessWidget {
-  /// Membuat [FreelanceAmountLine].
-  const FreelanceAmountLine({
-    required this.icon,
-    required this.label,
-    required this.caption,
-    required this.amount,
-    this.color,
-    super.key,
-  });
-
-  /// Ikon.
-  final IconKey icon;
-
-  /// Label; ditampilkan kapital.
-  final String label;
-
-  /// Keterangan di bawah label.
-  final String caption;
-
-  /// Nominal, sen.
-  final int amount;
-
-  /// Warna label dan latar tipis; `null` untuk baris netral.
-  final Color? color;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
-    return Container(
-      padding: const EdgeInsets.all(AppSpacing.space2),
-      decoration: ShapeDecoration(
-        color: colors.toneColors(toneFromColor(colors, color)).$1,
-        shape: const PixelCornerBorder.small(),
-      ),
-      child: Row(
-        children: [
-          AppIcon(icon, size: 28),
-          const SizedBox(width: AppSpacing.space2),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(label, style: textTheme.labelLarge?.copyWith(color: color ?? colors.ink2)),
-                Text(caption, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
-              ],
-            ),
-          ),
-          const SizedBox(width: AppSpacing.space1),
-          // Nominal besar di layar sempit atau teks diperbesar mengecil,
-          // bukan meluber ke kanan.
-          Flexible(
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              alignment: AlignmentDirectional.centerEnd,
-              child: Text(
-                AppMoneyFormatter.format(amount),
-                style: context.numberStyles.amount.copyWith(color: colors.ink),
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -332,11 +232,11 @@ class FreelanceBottomBar extends StatelessWidget {
   final List<Widget> children;
 
   @override
-  Widget build(BuildContext context) => AppStickyBar(
+  Widget build(BuildContext context) => DsStickyBar(
     child: Row(
       children: [
         for (final (index, child) in children.indexed) ...[
-          if (index > 0) const SizedBox(width: AppSpacing.space2),
+          if (index > 0) const SizedBox(width: 8),
           Expanded(child: child),
         ],
       ],
@@ -361,16 +261,17 @@ class WorklogMonthHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
+    final ds = context.ds;
+    final c = ds.colors;
     final key = '${month.year}-${month.month.toString().padLeft(2, '0')}';
     return Padding(
-      padding: const EdgeInsets.only(top: AppSpacing.space4, bottom: AppSpacing.space1),
+      padding: const EdgeInsets.only(top: 16, bottom: 8),
       child: Row(
         children: [
-          const AppIcon(IconKey.calendar, size: 20),
-          const SizedBox(width: AppSpacing.space1),
-          Expanded(child: Text(CycleMonthFormatter.format(key), style: Theme.of(context).textTheme.titleSmall)),
-          const SizedBox(width: AppSpacing.space1),
+          Icon(Icons.calendar_month_outlined, size: 18, color: c.actionPrimary),
+          const SizedBox(width: 6),
+          Expanded(child: Text(CycleMonthFormatter.format(key), style: ds.typography.titleMd.copyWith(fontSize: 15))),
+          const SizedBox(width: 8),
           // Subtotal mengecil di layar sempit atau teks diperbesar.
           Flexible(
             child: FittedBox(
@@ -378,7 +279,7 @@ class WorklogMonthHeader extends StatelessWidget {
               alignment: AlignmentDirectional.centerEnd,
               child: Text(
                 '${t.freelance.hoursValue(hours: hours)} · ${AppMoneyFormatter.format(amount)}',
-                style: labelSmStyle(context, color: colors.ink2),
+                style: ds.typography.pixelCaption.copyWith(color: c.textSecondary),
               ),
             ),
           ),

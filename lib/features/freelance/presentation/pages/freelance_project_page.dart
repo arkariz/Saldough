@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
@@ -124,9 +124,9 @@ class _FreelanceProjectPageState extends State<FreelanceProjectPage> {
             appBar: AppBar(
               title: Text(project.name),
               actions: [
-                IconButton(
-                  tooltip: t.freelance.projectEditTitle,
-                  icon: const AppIcon(IconKey.edit),
+                DsIconButton(
+                  icon: Icons.edit_outlined,
+                  label: t.freelance.projectEditTitle,
                   onPressed: () async {
                     final deleted = await editProject(context, project);
                     if (deleted && context.mounted) Navigator.of(context).pop();
@@ -140,62 +140,55 @@ class _FreelanceProjectPageState extends State<FreelanceProjectPage> {
               tour: TourId.freelanceProject,
               ready: true,
               child: SafeArea(
-              child: Column(
-                children: [
-                  Expanded(
-                    // Kop proyek satu kali di atas tab, ikut tergulir; bilah
-                    // tab menempel. Isi tiap tab hanya penyaring dan daftarnya.
-                    child: NestedScrollView(
-                      headerSliverBuilder: (context, _) => [
-                        SliverPadding(
-                          padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space4, AppSpacing.space4, 0),
-                          sliver: SliverToBoxAdapter(
-                            child: _ProjectHeader(project: project, stats: stats),
+                child: Column(
+                  children: [
+                    Expanded(
+                      // Kop proyek satu kali di atas tab, ikut tergulir; bilah
+                      // tab menempel. Isi tiap tab hanya penyaring dan daftarnya.
+                      child: NestedScrollView(
+                        headerSliverBuilder: (context, _) => [
+                          SliverPadding(
+                            padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                            sliver: SliverToBoxAdapter(
+                              child: _ProjectHeader(project: project, stats: stats),
+                            ),
                           ),
-                        ),
-                        SliverOverlapAbsorber(
-                          handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-                          sliver: SliverPersistentHeader(
-                            pinned: true,
-                            delegate: _TabBarDelegate(
-                              TabBar(
-                                tabs: [
-                                  SpotlightTarget(
-                                    spotlightKey: SpotlightKey.freelanceWorklog,
-                                    child: Tab(text: t.freelance.worklogTab(count: entries.length)),
-                                  ),
-                                  Tab(text: t.freelance.paymentsTab(count: payments.length)),
-                                ],
+                          SliverOverlapAbsorber(
+                            handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                            sliver: SliverPersistentHeader(
+                              pinned: true,
+                              delegate: _TabBarDelegate(
+                                worklogLabel: t.freelance.worklogTab(count: entries.length),
+                                paymentsLabel: t.freelance.paymentsTab(count: payments.length),
                               ),
                             ),
                           ),
-                        ),
-                      ],
-                      body: TabBarView(
-                        children: [
-                          _worklogList(state, entries),
-                          _paymentList(state, payments),
                         ],
+                        body: TabBarView(
+                          children: [
+                            _worklogList(state, entries),
+                            _paymentList(state, payments),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  FreelanceBottomBar(
-                    children: [
-                      AppButton.secondary(
-                        label: t.freelance.entryAddShortAction,
-                        onPressed: () => addEntry(context, projectId: project.id),
-                      ),
-                      AppButton(
-                        label: t.freelance.billAction(count: stats.unbilledCount),
-                        onPressed: stats.unbilledCount == 0
-                            ? null
-                            : () => createPayment(context, projectId: project.id),
-                      ),
-                    ],
-                  ),
-                ],
+                    FreelanceBottomBar(
+                      children: [
+                        DsButton.secondary(
+                          label: t.freelance.entryAddShortAction,
+                          onPressed: () => addEntry(context, projectId: project.id),
+                        ),
+                        DsButton(
+                          label: t.freelance.billAction(count: stats.unbilledCount),
+                          onPressed: stats.unbilledCount == 0
+                              ? null
+                              : () => createPayment(context, projectId: project.id),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
             ),
           ),
         );
@@ -208,12 +201,11 @@ class _FreelanceProjectPageState extends State<FreelanceProjectPage> {
       for (final filter in EntryFilter.values) filter: entries.where((e) => filter.matches(state.statusOf(e))).length,
     };
     final rows = _entryRows(entries.where((e) => _entryFilter.matches(state.statusOf(e))).toList());
-    final colors = context.appColors;
     _FilterOption<EntryFilter> option(EntryFilter filter) => switch (filter) {
-      EntryFilter.all => (filter, t.freelance.filterAll, IconKey.worklog, colors.brand),
-      EntryFilter.unbilled => (filter, t.freelance.statusUnbilled, IconKey.workCompleted, colors.ink),
-      EntryFilter.pending => (filter, t.freelance.statusPending, IconKey.pending, colors.warning),
-      EntryFilter.paid => (filter, t.freelance.statusPaid, IconKey.paid, colors.positive),
+      EntryFilter.all => (filter, t.freelance.filterAll),
+      EntryFilter.unbilled => (filter, t.freelance.statusUnbilled),
+      EntryFilter.pending => (filter, t.freelance.statusPending),
+      EntryFilter.paid => (filter, t.freelance.statusPaid),
     };
     return _SectionList(
       storageKey: 'worklog',
@@ -237,7 +229,7 @@ class _FreelanceProjectPageState extends State<FreelanceProjectPage> {
           amount: amount,
         ),
         _EntryRow(:final entry) => Padding(
-          padding: const EdgeInsets.only(bottom: AppSpacing.space2),
+          padding: const EdgeInsets.only(bottom: 8),
           child: WorklogEntryCard(
             entry: entry,
             payment: state.paymentOf(entry),
@@ -256,11 +248,10 @@ class _FreelanceProjectPageState extends State<FreelanceProjectPage> {
   Widget _paymentList(FreelanceState state, List<FreelancePayment> payments) {
     final counts = {for (final filter in PaymentFilter.values) filter: payments.where(filter.matches).length};
     final rows = _paymentRows(state, payments.where(_paymentFilter.matches).toList());
-    final colors = context.appColors;
     _FilterOption<PaymentFilter> option(PaymentFilter filter) => switch (filter) {
-      PaymentFilter.all => (filter, t.freelance.filterAll, IconKey.invoice, colors.brand),
-      PaymentFilter.pending => (filter, t.freelance.statusPending, IconKey.pending, colors.warning),
-      PaymentFilter.paid => (filter, t.freelance.statusPaid, IconKey.paid, colors.positive),
+      PaymentFilter.all => (filter, t.freelance.filterAll),
+      PaymentFilter.pending => (filter, t.freelance.statusPending),
+      PaymentFilter.paid => (filter, t.freelance.statusPaid),
     };
     // Pembayaran tertunda pertama: aksi "catat diterima"-nya jadi target tur.
     final firstPendingId = payments.where((p) => !p.isPaid).firstOrNull?.id;
@@ -268,36 +259,36 @@ class _FreelanceProjectPageState extends State<FreelanceProjectPage> {
       tour: TourId.freelanceProject,
       ready: true,
       child: _SectionList(
-      storageKey: 'payments',
-      filters: _FilterRow<PaymentFilter>(
-        options: [for (final filter in PaymentFilter.values) option(filter)],
-        counts: counts,
-        selected: _paymentFilter,
-        onChanged: (filter) => setState(() => _paymentFilter = filter),
-      ),
-      rows: rows,
-      empty: payments.isEmpty
-          ? FreelanceEmptyState(
-              title: t.freelance.paymentsEmptyTitle,
-              body: t.freelance.paymentsEmptyBody,
-            )
-          : _FilteredEmpty(t.freelance.paymentsFilteredEmpty),
-      buildRow: (context, row) => switch (row) {
-        _MonthRow(:final month, :final hours, :final amount) => WorklogMonthHeader(
-          month: month,
-          hours: hours,
-          amount: amount,
+        storageKey: 'payments',
+        filters: _FilterRow<PaymentFilter>(
+          options: [for (final filter in PaymentFilter.values) option(filter)],
+          counts: counts,
+          selected: _paymentFilter,
+          onChanged: (filter) => setState(() => _paymentFilter = filter),
         ),
-        _PaymentRow(:final payment) => Padding(
-          padding: const EdgeInsets.only(bottom: AppSpacing.space2),
-          child: _PaymentCard(
-            state: state,
-            payment: payment,
-            spotlightReceive: payment.id == firstPendingId,
+        rows: rows,
+        empty: payments.isEmpty
+            ? FreelanceEmptyState(
+                title: t.freelance.paymentsEmptyTitle,
+                body: t.freelance.paymentsEmptyBody,
+              )
+            : _FilteredEmpty(t.freelance.paymentsFilteredEmpty),
+        buildRow: (context, row) => switch (row) {
+          _MonthRow(:final month, :final hours, :final amount) => WorklogMonthHeader(
+            month: month,
+            hours: hours,
+            amount: amount,
           ),
-        ),
-        _EntryRow() => const SizedBox.shrink(),
-      },
+          _PaymentRow(:final payment) => Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: _PaymentCard(
+              state: state,
+              payment: payment,
+              spotlightReceive: payment.id == firstPendingId,
+            ),
+          ),
+          _EntryRow() => const SizedBox.shrink(),
+        },
       ),
     );
   }
@@ -354,11 +345,10 @@ class _PaymentCard extends StatelessWidget {
     final entries = state.entriesOf(payment);
     final range = switch (entries) {
       [] => '',
-      [final first, ..., final last] when !DateUtils.isSameDay(first.date, last.date) =>
-        CycleMonthFormatter.range(
-          CycleMonthFormatter.formatDateShort(first.date),
-          CycleMonthFormatter.formatDateShort(last.date),
-        ),
+      [final first, ..., final last] when !DateUtils.isSameDay(first.date, last.date) => CycleMonthFormatter.range(
+        CycleMonthFormatter.formatDateShort(first.date),
+        CycleMonthFormatter.formatDateShort(last.date),
+      ),
       [final first, ...] => CycleMonthFormatter.formatDateShort(first.date),
     };
     return FreelancePaymentCard(
@@ -371,23 +361,59 @@ class _PaymentCard extends StatelessWidget {
         final walletId? => state.walletOf(walletId)?.name,
         null => null,
       },
+      // Aksi utama penuh lebar; Ubah tanggal dan Hapus ada di menu pojok.
+      menu: payment.isPaid ? null : _PaymentMenu(payment: payment),
       actions: payment.isPaid
-          ? [AppButton.text(small: true, label: t.freelance.receiptCancelAction, onPressed: () => cancelReceipt(context, payment))]
+          ? [
+              Align(
+                alignment: Alignment.centerRight,
+                child: DsInlineAction(
+                  dense: true,
+                  label: t.freelance.receiptCancelAction,
+                  onPressed: () => cancelReceipt(context, payment),
+                ),
+              ),
+            ]
           : [
               SpotlightTarget(
                 spotlightKey: spotlightReceive ? SpotlightKey.freelanceReceive : null,
-                child: AppButton(
+                child: DsButton(
                   label: t.freelance.receiveAction,
+                  expand: true,
                   onPressed: () => receivePayment(context, payment),
                 ),
               ),
-              AppButton.text(small: true, label: t.freelance.paymentChangeDateAction, onPressed: () => changePaymentDate(context, payment)),
-              AppButton.danger(
-                small: true,
-                label: t.freelance.paymentDeleteAction,
-                onPressed: () => deletePayment(context, payment),
-              ),
             ],
+    );
+  }
+}
+
+enum _PaymentAction { changeDate, delete }
+
+/// Menu tiga titik di kartu tagihan tertunda: Ubah tanggal dan Hapus.
+class _PaymentMenu extends StatelessWidget {
+  const _PaymentMenu({required this.payment});
+
+  final FreelancePayment payment;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.ds.colors;
+    return PopupMenuButton<_PaymentAction>(
+      tooltip: t.freelance.paymentMenuLabel,
+      icon: Icon(Icons.more_horiz_rounded, color: c.textSecondary),
+      padding: EdgeInsets.zero,
+      onSelected: (action) => switch (action) {
+        _PaymentAction.changeDate => changePaymentDate(context, payment),
+        _PaymentAction.delete => deletePayment(context, payment),
+      },
+      itemBuilder: (_) => [
+        PopupMenuItem(value: _PaymentAction.changeDate, child: Text(t.freelance.paymentChangeDateAction)),
+        PopupMenuItem(
+          value: _PaymentAction.delete,
+          child: Text(t.freelance.paymentDeleteAction, style: TextStyle(color: c.error)),
+        ),
+      ],
     );
   }
 }
@@ -419,7 +445,7 @@ class _SectionList extends StatelessWidget {
       slivers: [
         SliverOverlapInjector(handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context)),
         SliverPadding(
-          padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space2, AppSpacing.space4, AppSpacing.space6),
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
           sliver: SliverList.builder(
             itemCount: 1 + (rows.isEmpty ? 1 : rows.length),
             itemBuilder: (context, index) => switch (index) {
@@ -434,25 +460,88 @@ class _SectionList extends StatelessWidget {
   }
 }
 
-/// Bilah tab yang menempel di atas daftar saat kop proyek tergulir keluar.
+/// Bilah tab yang menempel di atas daftar saat kop proyek tergulir keluar:
+/// pil segmen v2 yang mengikuti `DefaultTabController` (ketukan pada pil dan
+/// gesek pada daftar saling menyinkronkan).
 class _TabBarDelegate extends SliverPersistentHeaderDelegate {
-  _TabBarDelegate(this.tabBar);
+  _TabBarDelegate({required this.worklogLabel, required this.paymentsLabel});
 
-  final TabBar tabBar;
+  final String worklogLabel;
+  final String paymentsLabel;
+
+  static const _extent = 60.0;
 
   @override
-  double get minExtent => tabBar.preferredSize.height;
+  double get minExtent => _extent;
 
   @override
-  double get maxExtent => tabBar.preferredSize.height;
+  double get maxExtent => _extent;
 
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return ColoredBox(color: Theme.of(context).scaffoldBackgroundColor, child: tabBar);
+    return ColoredBox(
+      color: Theme.of(context).scaffoldBackgroundColor,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+        child: _TabPill(worklogLabel: worklogLabel, paymentsLabel: paymentsLabel),
+      ),
+    );
   }
 
   @override
-  bool shouldRebuild(_TabBarDelegate oldDelegate) => oldDelegate.tabBar != tabBar;
+  bool shouldRebuild(_TabBarDelegate oldDelegate) =>
+      oldDelegate.worklogLabel != worklogLabel || oldDelegate.paymentsLabel != paymentsLabel;
+}
+
+class _TabPill extends StatefulWidget {
+  const _TabPill({required this.worklogLabel, required this.paymentsLabel});
+
+  final String worklogLabel;
+  final String paymentsLabel;
+
+  @override
+  State<_TabPill> createState() => _TabPillState();
+}
+
+class _TabPillState extends State<_TabPill> {
+  TabController? _controller;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final next = DefaultTabController.of(context);
+    if (next == _controller) return;
+    _controller?.animation?.removeListener(_sync);
+    _controller = next..animation?.addListener(_sync);
+  }
+
+  @override
+  void dispose() {
+    _controller?.animation?.removeListener(_sync);
+    super.dispose();
+  }
+
+  void _sync() {
+    if (mounted) setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = _controller!;
+    // Segmen aktif mengikuti posisi gulir tab, bukan hanya indeks akhir.
+    final index = (controller.animation?.value ?? controller.index.toDouble()).round();
+    return SpotlightTarget(
+      spotlightKey: SpotlightKey.freelanceWorklog,
+      child: DsSegmentedPill<int>(
+        segments: [
+          DsSegment(value: 0, label: widget.worklogLabel),
+          DsSegment(value: 1, label: widget.paymentsLabel),
+        ],
+        selected: index,
+        onChanged: controller.animateTo,
+      ),
+    );
+  }
 }
 
 class _FilteredEmpty extends StatelessWidget {
@@ -461,7 +550,14 @@ class _FilteredEmpty extends StatelessWidget {
   final String message;
 
   @override
-  Widget build(BuildContext context) => AppEmptyState(title: message);
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.symmetric(vertical: 32),
+    child: Text(
+      message,
+      textAlign: TextAlign.center,
+      style: context.ds.typography.bodyMd.copyWith(color: context.ds.colors.textSecondary),
+    ),
+  );
 }
 
 sealed class _Row {
@@ -488,8 +584,8 @@ final class _PaymentRow extends _Row {
   final FreelancePayment payment;
 }
 
-/// Kop rincian proyek: ikon, tarif, potongan, tiga angka status, dan bilah
-/// porsinya.
+/// Kop rincian proyek (rupa v2): tile clay, tarif, potongan, ringkasan jam,
+/// tiga angka status, dan bilah porsinya.
 class _ProjectHeader extends StatelessWidget {
   const _ProjectHeader({required this.project, required this.stats});
 
@@ -498,96 +594,89 @@ class _ProjectHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
-    return AppCard(
+    final ds = context.ds;
+    final c = ds.colors;
+    return DsCard(
+      padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Row(
             children: [
-              const FreelanceIconBox(IconKey.freelance, size: 56),
-              const SizedBox(width: AppSpacing.space2),
+              DsIconTile.asset(asset: ClayIcons.stylus, size: DsIconTileSize.lg),
+              const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      children: [
-                        const AppIcon(IconKey.hourlyRate, size: 20),
-                        const SizedBox(width: 4),
-                        // Tarif mengecil di layar sempit atau teks diperbesar.
-                        Flexible(
-                          child: FittedBox(
-                            fit: BoxFit.scaleDown,
-                            alignment: AlignmentDirectional.centerStart,
-                            child: Text(
-                              '${AppMoneyFormatter.format(project.hourlyRate)}/${t.freelance.hourShort}',
-                              style: context.numberStyles.amount.copyWith(color: colors.ink),
-                            ),
-                          ),
-                        ),
-                      ],
+                    // Tarif mengecil di layar sempit atau teks diperbesar.
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: AlignmentDirectional.centerStart,
+                      child: Text(
+                        '${AppMoneyFormatter.format(project.hourlyRate)}/${t.freelance.hourShort}',
+                        style: ds.typography.amount.copyWith(fontSize: 18, color: c.textPrimary),
+                      ),
                     ),
                     Text(
                       project.deductionRules.isEmpty
                           ? t.freelance.noDeductions
                           : project.deductionRules.map(describeDeduction).join(' · '),
-                      style: textTheme.bodySmall?.copyWith(color: colors.ink2),
+                      style: ds.typography.bodySm.copyWith(color: c.textSecondary),
                     ),
                     Text(
                       t.freelance.projectTotals(
                         hours: stats.totalHours,
                         amount: AppMoneyFormatter.format(stats.earned),
                       ),
-                      style: textTheme.bodySmall?.copyWith(color: colors.ink2),
+                      style: ds.typography.bodySm.copyWith(color: c.textSecondary),
                     ),
                   ],
                 ),
               ),
             ],
           ),
-          const SizedBox(height: AppSpacing.space2),
+          const SizedBox(height: 12),
           IntrinsicHeight(
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Expanded(
                   child: _StatTile(
-                    icon: IconKey.worklog,
+                    icon: Icons.edit_note_rounded,
                     label: t.freelance.statusUnbilled,
                     amount: stats.unbilledAmount,
-                    color: colors.ink2,
+                    color: c.textSecondary,
                   ),
                 ),
-                const SizedBox(width: AppSpacing.space1),
+                const SizedBox(width: 8),
                 Expanded(
                   child: _StatTile(
-                    icon: IconKey.pending,
+                    icon: Icons.hourglass_top_rounded,
                     label: t.freelance.statusPending,
                     amount: stats.pendingAmount,
-                    color: colors.warning,
+                    color: c.warning,
                   ),
                 ),
-                const SizedBox(width: AppSpacing.space1),
+                const SizedBox(width: 8),
                 Expanded(
                   child: _StatTile(
-                    icon: IconKey.paid,
+                    icon: Icons.check_circle_outline_rounded,
                     label: t.freelance.statusPaid,
                     amount: stats.paidAmount,
-                    color: colors.positive,
+                    color: c.income,
                   ),
                 ),
               ],
             ),
           ),
           if (stats.earned > 0) ...[
-            const SizedBox(height: AppSpacing.space2),
+            const SizedBox(height: 12),
             FreelanceShareBar(
               parts: [
-                (stats.paidAmount, colors.positive),
-                (stats.pendingAmount, colors.warning),
-                (stats.unbilledAmount, colors.ink2.withValues(alpha: 0.35)),
+                (stats.paidAmount, c.income),
+                (stats.pendingAmount, c.warning),
+                (stats.unbilledAmount, c.outline),
               ],
             ),
           ],
@@ -600,53 +689,55 @@ class _ProjectHeader extends StatelessWidget {
 class _StatTile extends StatelessWidget {
   const _StatTile({required this.icon, required this.label, required this.amount, required this.color});
 
-  final IconKey icon;
+  final IconData icon;
   final String label;
   final int amount;
   final Color color;
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    // Kotak angka `surface2` (design system Stat); warna status hanya di
-    // ikon supaya nominal tetap terbaca `ink`.
+    final ds = context.ds;
+    final c = ds.colors;
+    // Warna status hanya di ikon supaya nominal tetap terbaca.
     return Container(
-      padding: const EdgeInsets.all(AppSpacing.space2),
-      decoration: ShapeDecoration(color: colors.surface2, shape: const PixelCornerBorder.small()),
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(color: c.surfaceSunken, borderRadius: DsRadius.baseAll),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              AppIcon(icon, size: 16, color: color),
-              const SizedBox(width: AppSpacing.space1),
+              Icon(icon, size: 16, color: color),
+              const SizedBox(width: 4),
               Expanded(
                 child: Text(
                   label,
                   maxLines: 2,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(color: colors.ink2),
+                  style: ds.typography.bodySm.copyWith(fontSize: 12, color: c.textSecondary),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 2),
-          FitStart(child: AppMoneyText(amount, size: MoneySize.small)),
+          const SizedBox(height: 4),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: AlignmentDirectional.centerStart,
+            child: Text(
+              AppMoneyFormatter.format(amount),
+              style: ds.typography.amountSm.copyWith(color: c.textPrimary),
+            ),
+          ),
         ],
       ),
     );
   }
 }
 
-/// Chip penyaring beserta jumlahnya.
-/// Satu pilihan penyaring: nilai, label, ikon status, dan warnanya.
-typedef _FilterOption<T> = (T value, String label, IconKey icon, Color color);
+/// Satu pilihan penyaring: nilai dan label.
+typedef _FilterOption<T> = (T value, String label);
 
-/// Penyaring status berupa deretan ubin pixel selebar layar. Tiap ubin
-/// memuat ikon status, jumlahnya dalam angka besar, dan labelnya — jadi
-/// sekaligus ringkasan per status. Ubin terpilih diwarnai sesuai statusnya
-/// dan terangkat di atas bayangan keras; sisanya datar dan redup.
-/// Penyaring tab sebagai chip berhitungan (design system Chip). Label
-/// pembaca layar "Label (n)".
+/// Penyaring tab sebagai chip v2 berhitungan. Label pembaca layar
+/// "Label (n)".
 class _FilterRow<T> extends StatelessWidget {
   const _FilterRow({required this.options, required this.counts, required this.selected, required this.onChanged});
 
@@ -658,23 +749,19 @@ class _FilterRow<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: AppSpacing.space2),
+      padding: const EdgeInsets.symmetric(vertical: 4),
       child: Wrap(
-        spacing: AppSpacing.space2,
-        runSpacing: AppSpacing.space2,
+        spacing: 8,
         children: [
-          for (final (value, label, icon, _) in options)
+          for (final (value, label) in options)
             Semantics(
               button: true,
               selected: value == selected,
               label: '$label (${counts[value] ?? 0})',
               excludeSemantics: true,
-              child: AppChip(
-                label: label,
-                icon: icon,
-                count: counts[value] ?? 0,
+              child: DsFilterChip(
+                label: '$label ${counts[value] ?? 0}',
                 selected: value == selected,
-                onBg: true,
                 onTap: () => onChanged(value),
               ),
             ),

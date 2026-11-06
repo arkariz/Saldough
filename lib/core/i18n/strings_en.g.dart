@@ -710,6 +710,7 @@ class _Translations$freelance$en extends Translations$freelance$id {
 	@override String get netPayNotPositive => 'Deductions cannot equal or exceed gross pay.';
 	@override String get paymentCreateAction => 'Create invoice';
 	@override String get paymentChangeDateAction => 'Change date';
+	@override String get paymentMenuLabel => 'More actions';
 	@override String get paymentDeleteAction => 'Delete';
 	@override String get paymentDeleteConfirmTitle => 'Delete invoice?';
 	@override String get paymentDeleteConfirmMessage => 'This pending invoice is deleted and its work hours become unbilled again. Wallet balances do not change.';
@@ -3162,6 +3163,7 @@ extension on TranslationsEn {
 			'freelance.netPayNotPositive' => 'Deductions cannot equal or exceed gross pay.',
 			'freelance.paymentCreateAction' => 'Create invoice',
 			'freelance.paymentChangeDateAction' => 'Change date',
+			'freelance.paymentMenuLabel' => 'More actions',
 			'freelance.paymentDeleteAction' => 'Delete',
 			'freelance.paymentDeleteConfirmTitle' => 'Delete invoice?',
 			'freelance.paymentDeleteConfirmMessage' => 'This pending invoice is deleted and its work hours become unbilled again. Wallet balances do not change.',
@@ -3560,9 +3562,9 @@ extension on TranslationsEn {
 			'notificationCapture.settingsTitle' => 'Record from notifications',
 			'notificationCapture.enableLabel' => 'Turn on',
 			'notificationCapture.accessMissingTitle' => 'Permission needed to read notifications',
-			'notificationCapture.accessMissingBody' => 'Without it, Tanukonomy can\'t see your bank notifications.',
 			_ => null,
 		} ?? switch (path) {
+			'notificationCapture.accessMissingBody' => 'Without it, Tanukonomy can\'t see your bank notifications.',
 			'notificationCapture.accessAction' => 'Allow access',
 			'notificationCapture.accessGranted' => 'Notification permission is on',
 			'notificationCapture.disclosureTitle' => 'Before you grant permission',
@@ -4074,9 +4076,9 @@ extension on TranslationsEn {
 			'analysis.category.aboveAvg' => ({required Object amount}) => '${amount} above average',
 			'analysis.category.belowAvg' => ({required Object amount}) => '${amount} below average',
 			'analysis.category.avgLine' => ({required Object n}) => '${n}-month average',
-			'analysis.category.moreHint' => 'Latest 20 transactions',
 			_ => null,
 		} ?? switch (path) {
+			'analysis.category.moreHint' => 'Latest 20 transactions',
 			'premium.title' => 'Tanukonomy Plus',
 			'premium.backToLatest' => 'Back to the latest period',
 			'premium.seePlus' => 'See Plus',

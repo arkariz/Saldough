@@ -1749,6 +1749,9 @@ class Translations$freelance$id {
 	/// id: 'Ubah tanggal'
 	String get paymentChangeDateAction => 'Ubah tanggal';
 
+	/// id: 'Aksi lain'
+	String get paymentMenuLabel => 'Aksi lain';
+
 	/// id: 'Hapus'
 	String get paymentDeleteAction => 'Hapus';
 
@@ -6449,6 +6452,7 @@ extension on Translations {
 			'freelance.netPayNotPositive' => 'Potongan tidak boleh sama dengan atau melebihi gaji kotor.',
 			'freelance.paymentCreateAction' => 'Buat tagihan',
 			'freelance.paymentChangeDateAction' => 'Ubah tanggal',
+			'freelance.paymentMenuLabel' => 'Aksi lain',
 			'freelance.paymentDeleteAction' => 'Hapus',
 			'freelance.paymentDeleteConfirmTitle' => 'Hapus tagihan?',
 			'freelance.paymentDeleteConfirmMessage' => 'Tagihan tertunda ini dihapus dan jam kerjanya kembali belum ditagih. Saldo dompet tidak berubah.',
@@ -6847,9 +6851,9 @@ extension on Translations {
 			'notificationCapture.settingsTitle' => 'Catat dari notifikasi',
 			'notificationCapture.enableLabel' => 'Aktifkan',
 			'notificationCapture.accessMissingTitle' => 'Butuh izin membaca notifikasi',
-			'notificationCapture.accessMissingBody' => 'Tanpa izin ini, Tanukonomy tidak bisa melihat notifikasi bank.',
 			_ => null,
 		} ?? switch (path) {
+			'notificationCapture.accessMissingBody' => 'Tanpa izin ini, Tanukonomy tidak bisa melihat notifikasi bank.',
 			'notificationCapture.accessAction' => 'Beri izin',
 			'notificationCapture.accessGranted' => 'Izin notifikasi aktif',
 			'notificationCapture.disclosureTitle' => 'Sebelum memberi izin',
@@ -7361,9 +7365,9 @@ extension on Translations {
 			'analysis.category.aboveAvg' => ({required Object amount}) => '${amount} di atas rata-rata',
 			'analysis.category.belowAvg' => ({required Object amount}) => '${amount} di bawah rata-rata',
 			'analysis.category.avgLine' => ({required Object n}) => 'rata-rata ${n} bulan',
-			'analysis.category.moreHint' => '20 transaksi terbaru',
 			_ => null,
 		} ?? switch (path) {
+			'analysis.category.moreHint' => '20 transaksi terbaru',
 			'premium.title' => 'Tanukonomy Plus',
 			'premium.backToLatest' => 'Kembali ke periode terbaru',
 			'premium.seePlus' => 'Lihat Plus',

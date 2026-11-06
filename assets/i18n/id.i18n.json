@@ -665,6 +665,7 @@
     "netPayNotPositive": "Potongan tidak boleh sama dengan atau melebihi gaji kotor.",
     "paymentCreateAction": "Buat tagihan",
     "paymentChangeDateAction": "Ubah tanggal",
+    "paymentMenuLabel": "Aksi lain",
     "paymentDeleteAction": "Hapus",
     "paymentDeleteConfirmTitle": "Hapus tagihan?",
     "paymentDeleteConfirmMessage": "Tagihan tertunda ini dihapus dan jam kerjanya kembali belum ditagih. Saldo dompet tidak berubah.",

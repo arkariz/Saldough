@@ -6811,7 +6811,7 @@ tugas lama yang menyebutnya adalah riwayat, bukan keadaan sekarang.
       di Beranda kini menempel di tepi kanan sejajar kartu (sebelumnya
       mengambang di tengah karena berbagi lebar secara fleks).
 
-- [ ] **T-26.32** (L) Rombak v2 `freelance` (B-90, tanpa acuan Stitch: pemilik
+- [x] **T-26.32** (L) Rombak v2 `freelance` (B-90, tanpa acuan Stitch: pemilik
       menyuruh langsung dengan gaya v2, 6 Nov 2026), dalam dua irisan yang
       ditinjau satu per satu. **Irisan 1 selesai (Ikhtisar):** ringkasan jadi
       `DsSummaryHero` (angka utama "Belum diterima", bilah = bagian yang sudah
@@ -6826,9 +6826,26 @@ tugas lama yang menyebutnya adalah riwayat, bukan keadaan sekarang.
       2×), baris proyek (sisa, Lunas, nama panjang), keadaan kosong; uji
       bilah porsi lama diganti. Catatan: deskripsi awal saya menyebut kartu
       proyek tiga baris nominal; kode sebenarnya sudah satu baris, jadi
-      rupanya tetap satu baris. **Irisan 2 (menunggu):** halaman rincian proyek
-      (kop, tab, penyaring, kartu entri dan tagihan, bilah bawah), lima lembar
-      formulir, dan kartu rincian gaji bersih.
+      rupanya tetap satu baris. **Irisan 2 selesai (6 Nov 2026):** rincian
+      proyek: kop `DsCard` (tile clay, tarif, potongan, tiga kotak status,
+      bilah porsi), **tab jadi `DsSegmentedPill`** yang tersinkron dengan gesek
+      `TabBarView`, penyaring `DsFilterChip` berhitungan, judul bulan v2,
+      kartu jam kerja dan kartu tagihan `DsCard` (ikon clay per status,
+      `DsBadge`), bilah bawah `DsStickyBar` dengan `DsButton`. Di kartu tagihan
+      tertunda **Catat diterima penuh lebar** dan Ubah tanggal serta Hapus
+      pindah ke **menu tiga titik** (kunci i18n baru `paymentMenuLabel`); yang
+      sudah diterima menampilkan Batalkan penerimaan. Lembar formulir
+      (proyek, potongan, jam kerja, buat tagihan, catat diterima): baris
+      pilihan `DsSelectRow`, tanggal `DsFieldRow`, jam cepat `DsFilterChip`,
+      segmen jenis potongan `DsSegmentedPill`, kartu "Diperoleh" dan gaji
+      bersih bernada tenang, kotak gaji diterima bergaya hero, pemilih dompet
+      v2, tombol `DsButton`/`DsDashedButton`; pemberitahuan aturan
+      (`FreelanceNotice`) jadi banner v2 bernada kuning atau hijau. Kolom
+      uang dan jumlah sudah v2 sejak ADR-030 §3.5. Perilaku, kunci uji,
+      target tur, dan teks tidak berubah (selain satu kunci baru). Uji baru:
+      kartu entri dan tagihan (keadaan, 360dp 1× dan 2×), empat lembar
+      formulir di 360dp 1× dan 2×, alur potongan dan jam cepat, menu tagihan,
+      sinkron pil segmen. Seluruh `freelance` kini v2; B-90 selesai.
 
 **Tahap penutup: gerbang Accepted**
 
@@ -6935,7 +6952,7 @@ menambah dan memindahkannya ada di
 | B-87 | **E3 catat otomatis per bentuk** (**selesai 5 Nov 2026**, T-26.20–T-26.22; sisa "sakelar global ke Lanjutan" dilebur ke B-88 karena halaman setelan belum punya bagian Lanjutan): tawaran setelah konfirmasi pertama tanpa ubahan, pagar nominal besar, tanda "baru". Plus. | agen | NOTIFICATION_CAPTURE_V2.md §8, ADR-044 §3.7 |
 | B-88 | **E4 Lanjutan** (termasuk memindah sakelar global "Catat otomatis" ke sana): daftar aturan, filter, contoh; migrasi `walletRules` menjadi aturan. "Ajari pola", pola bawaan, dan ikatan rutin ke pola sudah dicabut (T-26.23), jadi tidak perlu dimigrasi. | agen | ADR-044 §3.7 |
 | B-89 | **E5 permukaan lain**: Quick Settings tile "Catat n transaksi" (S–M), widget layar utama bila data pemakaian mendukung (L). | agen | NOTIFICATION_CAPTURE_V2.md §11 |
-| B-90 | **Rombak v2 layar Catat dari notifikasi** (Setelan T-26.28 dan Mulai cepat T-26.29 selesai 6 Nov 2026; halaman sumber T-26.30 selesai 6 Nov 2026; Kotak masuk T-26.31 selesai 6 Nov 2026; sisa hanya `freelance`, acuan Stitch ada di `~/Downloads/stitch_tanukonomy_pixel_budget_tracker 2/`; kotak masuk belum) (kotak masuk, banner tawaran, setelan, halaman sumber, Mulai cepat) dan `freelance`: masih memakai `AppCard`/`AppButton`/`appColors` (hasil audit 5 Nov 2026: `notification_capture` 7 berkas lama, `freelance` 10). Bagian T-25.4. | agen | T-25.4, [ADR-043](../02-architecture/adr/0043-design-system-v2-dan-preset-tema.md) |
+| B-90 | ~~**Rombak v2 layar Catat dari notifikasi dan `freelance`**~~ **Selesai 6 Nov 2026**: seluruh layar Catat dari notifikasi (T-26.28–T-26.31) dan `freelance` (T-26.32) memakai `core/design_system`. Sisa kecil design system v2 ada di T-25.4 (satu-dua berkas lama di Analisis, Anggaran, Rencana). | agen | T-25.4, [ADR-043](../02-architecture/adr/0043-design-system-v2-dan-preset-tema.md) |
 | B-91 | **Pangkas sisa kode mati pola**: mesin templat `{from}`/`{to}` (`TemplateWordRole.from/to`, `NotificationTemplate.fromToken/toToken`, `NotificationTemplateMatch.fromText/toText`), `NotificationSource.walletForFragment`, dan uji `templat {from}/{to}`; rapikan fitur contoh notifikasi yang kini hanya "Jadikan filter" (string dan keterangan). Bisa bersama B-88. | agen | T-26.23 |
 | B-92 | **Poles snackbar dan tawaran**: `showAppSnackBar` belum punya prioritas (galat bisa tertimpa pesan biasa; yang terakhir menang); tawaran catat otomatis hanya hidup selama halaman Kotak masuk terbuka (hilang bila keluar sebelum menjawab, muncul lagi pada catatan berikutnya); tawaran belum ada untuk tombol Catat di notifikasi (aplikasi tertutup). | agen | T-26.25, T-26.22 |
 | B-39 | **Pengumuman pembaruan R2**: pembaruan wajib/versi minimum untuk perbaikan kritis (KT-U1), pembaruan untuk iOS (App Store) sesudah iOS dirilis, dan pilihan jalur uji untuk penguji. | agen + pemilik | [APP_UPDATE.md](../01-product/features/APP_UPDATE.md) §14 |

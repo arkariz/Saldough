@@ -60,13 +60,47 @@ di pojok layar). `trial` memberi uji coba yang berakhir besok.
 
 ### b. Build rilis lewat jalur uji internal (mirip pengguna)
 
-1. Naikkan versi, jalankan workflow **Shorebird Pipeline** `release`, lalu
-   publikasikan ke jalur **uji internal** di Play Console dan tambahkan penguji.
-2. Pasang dari tautan uji Play (bukan `adb install`), dengan akun penguji lisensi.
-3. Di build ini **tidak ada sakelar klien**: `plus_launch_at` kosong berarti
-   *pra-peluncuran* (masuk akun = Plus, tanpa akun = Gratis, uji coba tidak mulai,
-   tombol beli tidak tampil). Untuk menguji pembelian dan uji coba, isi
-   `plus_launch_at` **dengan kondisi hanya untuk penguji** di Remote Config.
+Disiapkan 6 Nov 2026: `pubspec.yaml` **`1.0.0+22`** dan
+`release_notes/22-0.json` (`version` `1.0.0`, tiga butir; wajib disetujui lewat
+PR sebelum workflow, [RELEASE_NOTES.md](../03-release/RELEASE_NOTES.md)).
+
+Fakta kode yang menentukan caranya:
+
+- Di build rilis **override debug mati** (`ENTITLEMENT_OVERRIDES` dan
+  `PLAN_OVERRIDE` diabaikan). `plus_launch_at` hanya dari Remote Config.
+- Kunci SDK RevenueCat di build rilis harus **`goog_…`**; lane menolak `test_…`.
+  Kunci itu dibaca dari secret GitHub `REVENUECAT_ANDROID_KEY`.
+- Lane `release_internal` mengunggah ke **jalur uji internal** (bukan produksi).
+- Workflow juga **menerbitkan catatan rilis ke Remote Config** per nomor build
+  (22) sebelum build; pengguna di build lain tidak terpengaruh.
+
+Langkah:
+
+1. Gabungkan perubahan ke `main` lewat PR (atau pilih cabang kerja saat
+   menjalankan workflow), dengan `release_notes/22-0.json` sudah disetujui.
+2. Jalankan workflow **Shorebird Pipeline** dengan `action_type = release`.
+3. Di Play Console pastikan penguji ada di jalur uji internal; pasang dari
+   tautan uji dengan **akun penguji lisensi**.
+4. Di Firebase Remote Config isi `plus_launch_at` (tanggal lampau) **dengan
+   kondisi "Versi aplikasi = 1.0.0"** (atau build 22) saja. Pengguna closed
+   testing yang masih di `0.12.2` tidak terpengaruh, dan pra-peluncuran tetap
+   berlaku untuk mereka.
+5. **Sebelum rilis produksi, hapus atau ubah kondisi itu.** Versi `1.0.0` akan
+   dipakai publik; kondisi yang tertinggal akan menghidupkan uji coba dan
+   penjualan Plus untuk semua pengguna. Putuskan dulu apakah Plus memang mulai
+   dijual saat rilis.
+6. Tanpa `plus_launch_at` (belum diisi), build ini berada di pra-peluncuran:
+   masuk akun = Plus, tanpa akun = Gratis, tombol beli tidak tampil. Ini juga
+   yang diuji di U15.
+
+Build rilis yang dipasang lokal lewat `adb` cukup untuk memeriksa R8 dan
+ketiadaan sakelar klien (U15), tetapi **belum tentu bisa membeli** (tanda
+tangan), dan di worktree tidak ada `android/key.properties` (jatuh ke kunci
+debug).
+
+**Catatan konfigurasi:** konfigurasi VS Code "Saldough (Plus sandbox)" memakai
+`flutterMode: release`, padahal override dimatikan di mode rilis; untuk jalur
+sandbox yang dijelaskan T-24.18 pakai mode debug.
 
 ### c. Konsol yang perlu dicek (pemilik)
 

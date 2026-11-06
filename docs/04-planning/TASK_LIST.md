@@ -5892,6 +5892,11 @@ Jalur kritis: T-24.2 → T-24.4 → T-24.6 → T-24.14 → T-24.18.
       tahunan Rp129.000 coret Rp179.000, bulanan Rp25.000) dan tanpa akun
       mengajak masuk. Pembelian dan skenario lain menunggu pemilik (akun
       penguji lisensi).
+      *Jalur rilis (6 Nov 2026):* versi dinaikkan ke **`1.0.0+22`** dan
+      `release_notes/22-0.json` disusun (menunggu persetujuan pemilik lewat PR)
+      supaya build bisa diunggah ke jalur uji internal Play; langkah, kondisi
+      Remote Config `plus_launch_at` khusus versi 1.0.0, dan peringatan
+      membersihkannya sebelum produksi ada di §2b rencana verifikasi.
 
 ## Fase 25: Design system baru dan preset tema
 

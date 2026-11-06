@@ -126,6 +126,30 @@ memakai tile berwarna kategori, tetapi datar.
   dapat dipertahankan, atau digambar ulang bila terasa kurang mewakili
   transfer.
 
+## Ikon peluncur (6 Nov 2026)
+
+Ikon aplikasi memakai maskot `tanuki_mascot.svg` (versi acuan dengan
+bayangan, tanpa urat daun yang terbaca seperti angka "7" di ukuran kecil)
+dan koin daun `tier_coin.svg` di kanan bawah, di atas latar gradasi matcha
+`#d9f5dd` → `primaryFixed` `#bdefc4` → `#94c99e` (direntangkan pada area tampak
+72/108 dp, cahaya tengah tipis) dengan kilap di tepi atas.
+Pengganti maskot piksel di latar terakota (ADR-015).
+
+| Berkas (`assets/icon/`) | Dipakai untuk |
+|---|---|
+| `background.png` | Latar ikon adaptif Android |
+| `foreground.png` | Latar depan adaptif, maskot di dalam lingkaran aman 66/108 dp (`adaptive_icon_foreground_inset: 0`) |
+| `monochrome.png` | Ikon bertema Android 13+ (siluet, hanya alfa) |
+| `icon.png` | Ikon Android lawas dan iOS (alfa dibuang) |
+| `play_store_512.png` | Ikon resolusi tinggi listing Play, diunggah manual di Play Console |
+
+Sumbernya SVG di `assets/icon/src/`, ditulis dan dirender oleh
+`scripts/launcher_icon/build_launcher_icon.py` (macOS, QuickLook), lalu
+`dart run flutter_launcher_icons`. Ubah rupa di skrip, bukan di SVG hasil.
+Selesai menjalankan generator, kembalikan `ios/Runner.xcodeproj/project.pbxproj`
+bila ia mengganti `ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS`
+menjadi `AppIcon` (bug generator; nilainya harus `YES`).
+
 ## Catatan teknis
 
 - Aset ini bisa dipasang lewat `flutter_svg` (sudah jadi dependensi) dengan

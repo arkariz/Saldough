@@ -121,20 +121,26 @@ dev_dependencies:
   mocktail: ^1.0.4
   slang_build_runner: ^4.7.0
 
-# Ikon peluncur dan splash screen Android, dari maskot tanuki (ADR-015).
+# Ikon peluncur Android dan iOS dari maskot tanuki clay design system v2
+# (ADR-043), dan splash screen Android dari maskot piksel lama (ADR-015).
 # `assets/icon/` sengaja TIDAK didaftarkan di `flutter: assets:` di bawah --
 # berkasnya hanya sumber untuk dua generator ini saat `dart run ...`, bukan
-# aset yang dibundel ke aplikasi. Hanya Android yang disasar (`ios: false`);
-# ikon iOS menyusul di T-8.3 (ganti nama) karena butuh artwork tanpa
-# transparansi terpisah. Jalankan ulang setelah artwork/warna berubah:
+# aset yang dibundel ke aplikasi. PNG ikon dibangun dari SVG di
+# `assets/icon/src/` oleh skrip di bawah (macOS, QuickLook). Ikon iOS memakai
+# `icon.png` dengan alfa dibuang; splash iOS belum ada (B-12).
+# Jalankan ulang setelah artwork/warna berubah:
+#   python3 scripts/launcher_icon/build_launcher_icon.py
 #   dart run flutter_launcher_icons
 #   dart run flutter_native_splash:create
 flutter_launcher_icons:
   android: "ic_launcher"
-  ios: false
-  image_path: "assets/icon/legacy.png"
-  adaptive_icon_background: "#BD5D41"
+  ios: true
+  remove_alpha_ios: true
+  image_path: "assets/icon/icon.png"
+  adaptive_icon_background: "assets/icon/background.png"
   adaptive_icon_foreground: "assets/icon/foreground.png"
+  adaptive_icon_foreground_inset: 0
+  adaptive_icon_monochrome: "assets/icon/monochrome.png"
   min_sdk_android: 23
 
 flutter_native_splash:

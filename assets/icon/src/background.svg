@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024"><defs>
+<linearGradient id="bg" gradientUnits="userSpaceOnUse" x1="170" y1="170" x2="854" y2="854">
+  <stop offset="0%" stop-color="#d9f5dd"/>
+  <stop offset="50%" stop-color="#bdefc4"/>
+  <stop offset="100%" stop-color="#94c99e"/>
+</linearGradient>
+<radialGradient id="bgGlow" cx="50%" cy="46%" r="34%">
+  <stop offset="0%" stop-color="#ffffff" stop-opacity="0.22"/>
+  <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+</radialGradient>
+<linearGradient id="bgGloss" x1="0" y1="0" x2="0" y2="1">
+  <stop offset="0%" stop-color="#ffffff" stop-opacity="0.6"/>
+  <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+</linearGradient>
+<linearGradient gradientUnits="userSpaceOnUse" id="clayTanukiBody" x1="27" x2="27" y1="12" y2="46"><stop offset="0%" stop-color="#8b6f57"/><stop offset="50%" stop-color="#6c523e"/><stop offset="100%" stop-color="#4d3727"/></linearGradient>
+<linearGradient gradientUnits="userSpaceOnUse" id="clayMuzzle" x1="27" x2="27" y1="28" y2="42"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#f5ebd9"/></linearGradient>
+<linearGradient gradientUnits="userSpaceOnUse" id="clayLeafPlump" x1="20" x2="32" y1="5" y2="17"><stop offset="0%" stop-color="#86efac"/><stop offset="40%" stop-color="#22c55e"/><stop offset="100%" stop-color="#15803d"/></linearGradient>
+<linearGradient id="claySoftHighlight" x1="0%" x2="0%" y1="0%" y2="100%"><stop offset="0%" stop-color="#ffffff" stop-opacity="0.75"/><stop offset="100%" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
+<filter height="130%" id="clayShadowFilter" width="130%" x="-10%" y="-10%"><feDropShadow dx="0" dy="2" flood-color="#2d1e15" flood-opacity="0.35" stdDeviation="1.5"/></filter>
+<filter height="140%" id="groundShadow" width="140%" x="-20%" y="-20%"><feDropShadow dx="0" dy="1.6" flood-color="#1f4b2c" flood-opacity="0.35" stdDeviation="1.6"/></filter>
+<linearGradient id="clayCoin" x1="0%" x2="100%" y1="0%" y2="100%"><stop offset="0%" stop-color="#fde047"/><stop offset="60%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#d97706"/></linearGradient>
+<linearGradient id="clayCoinHighlight" x1="30%" x2="70%" y1="0%" y2="100%"><stop offset="0%" stop-color="#ffffff" stop-opacity="0.8"/><stop offset="100%" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
+</defs><rect width="1024" height="1024" fill="url(#bg)"/><rect width="1024" height="1024" fill="url(#bgGlow)"/><ellipse cx="512.0" cy="0" rx="634.88" ry="286.72" fill="url(#bgGloss)"/></svg>

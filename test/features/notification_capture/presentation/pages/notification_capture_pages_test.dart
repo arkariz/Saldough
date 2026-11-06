@@ -10,13 +10,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
 import 'package:navigation/navigation.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
 import 'package:saldough/core/foundation/entitlement/entitlement.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/plan/active_plan.dart';
-import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/notification_capture/di/notification_capture_module.dart';
 import 'package:saldough/features/notification_capture/domain/entities/capture_inbox_entry.dart';
@@ -126,6 +126,11 @@ void main() {
     testWidgets('semua aplikasi terpasang ditawarkan, tidak ada yang tercentang bawaan (ADR-044 §3.4)', (
       tester,
     ) async {
+      // Viewport tinggi supaya ketiga kartu terbangun (daftar menggulir malas).
+      tester.view
+        ..physicalSize = const Size(800, 2000)
+        ..devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
       gateway.apps = const [gopay, calculator, bri];
       await open(tester, NotificationCaptureRouteKeys.quickStart);
 
@@ -136,7 +141,7 @@ void main() {
       expect(boxes, hasLength(3));
       expect(boxes.every((box) => !(box.value ?? true)), isTrue);
       // Tombol mati dengan alasan yang terbaca.
-      expect(tester.widget<AppButton>(find.byKey(const ValueKey('quick-start-turn-on'))).onPressed, isNull);
+      expect(tester.widget<DsButton>(find.byKey(const ValueKey('quick-start-turn-on'))).onPressed, isNull);
       expect(find.text(t.discovery.quickStart.pickHint), findsOneWidget);
     });
 
@@ -182,6 +187,61 @@ void main() {
       await open(tester, NotificationCaptureRouteKeys.quickStart);
 
       expect(find.text(t.discovery.quickStart.freeLimit), findsNothing);
+    });
+
+    testWidgets('ikon asli aplikasi dipakai; tanpa ikon jatuh ke huruf awal', (tester) async {
+      // PNG 1x1 transparan.
+      const png = <int>[
+        0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A, 0x00, 0x00, 0x00, 0x0D, 0x49, 0x48, 0x44, 0x52, //
+        0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x08, 0x06, 0x00, 0x00, 0x00, 0x1F, 0x15, 0xC4,
+        0x89, 0x00, 0x00, 0x00, 0x0D, 0x49, 0x44, 0x41, 0x54, 0x78, 0x9C, 0x63, 0xF8, 0xFF, 0xFF, 0x3F,
+        0x00, 0x05, 0xFE, 0x02, 0xFE, 0xA7, 0x35, 0x81, 0x84, 0x00, 0x00, 0x00, 0x00, 0x49, 0x45, 0x4E,
+        0x44, 0xAE, 0x42, 0x60, 0x82,
+      ];
+      gateway.apps = const [InstalledApp(packageName: 'id.co.bri.brimo', label: 'BRImo', icon: png), gopay];
+      await open(tester, NotificationCaptureRouteKeys.quickStart);
+
+      final briCard = find.byKey(const ValueKey('quick-start-id.co.bri.brimo'));
+      final gopayCard = find.byKey(ValueKey('quick-start-${gopay.packageName}'));
+      expect(find.descendant(of: briCard, matching: find.byType(Image)), findsOneWidget);
+      expect(find.descendant(of: gopayCard, matching: find.byType(Image)), findsNothing);
+      expect(
+        find.descendant(of: gopayCard, matching: find.text('G')),
+        findsOneWidget,
+        reason: 'huruf awal GoPay',
+      );
+    });
+
+    testWidgets('penunjuk langkah hanya bila izin belum ada: 1 dari 2, lalu 2 dari 2 sesudah Nyalakan', (tester) async {
+      gateway
+        ..apps = const [bri]
+        ..accessGranted = false;
+      await open(tester, NotificationCaptureRouteKeys.quickStart);
+      expect(find.text(t.discovery.quickStart.stepLabel(n: 1).toUpperCase()), findsOneWidget);
+
+      await pick(tester, const [bri]);
+      await tester.tap(find.text(t.discovery.quickStart.turnOn));
+      await tester.pumpAndSettle();
+      expect(find.text(t.discovery.quickStart.stepLabel(n: 2).toUpperCase()), findsOneWidget);
+    });
+
+    testWidgets('izin sudah ada: tanpa penunjuk langkah', (tester) async {
+      gateway
+        ..apps = const [bri]
+        ..accessGranted = true;
+      await open(tester, NotificationCaptureRouteKeys.quickStart);
+      expect(find.text(t.discovery.quickStart.stepLabel(n: 1).toUpperCase()), findsNothing);
+    });
+
+    testWidgets('Gratis: kartu ajakan Plus membuka paywall asli; Plus tidak melihatnya', (tester) async {
+      gateway.apps = const [bri];
+      ActivePlan.notifier.value = const FreePlan();
+      await open(tester, NotificationCaptureRouteKeys.quickStart);
+      await tester.ensureVisible(find.text(t.discovery.quickStart.plusInfo));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(t.discovery.quickStart.plusInfo));
+      await tester.pumpAndSettle();
+      expect(find.text(t.premium.signInTitle), findsOneWidget);
     });
 
     testWidgets('akses sudah ada: Nyalakan menyimpan sumber, menyalakan fitur, dan menutup layar', (tester) async {
@@ -230,7 +290,7 @@ void main() {
       final picker = find.byKey(const ValueKey('quick-start-wallet-id.co.bri.brimo'));
       expect(picker, findsOneWidget);
       expect(find.text(t.discovery.quickStart.walletHint), findsOneWidget);
-      expect(tester.widget<AppButton>(find.byKey(const ValueKey('quick-start-turn-on'))).onPressed, isNull);
+      expect(tester.widget<DsButton>(find.byKey(const ValueKey('quick-start-turn-on'))).onPressed, isNull);
 
       await tester.ensureVisible(picker);
       await tester.pumpAndSettle();
@@ -238,7 +298,7 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.text('BCA').last);
       await tester.pumpAndSettle();
-      expect(tester.widget<AppButton>(find.byKey(const ValueKey('quick-start-turn-on'))).onPressed, isNotNull);
+      expect(tester.widget<DsButton>(find.byKey(const ValueKey('quick-start-turn-on'))).onPressed, isNotNull);
 
       await tester.tap(find.text(t.discovery.quickStart.turnOn));
       await tester.pumpAndSettle();
@@ -359,14 +419,14 @@ void main() {
     testWidgets('tanpa centang dan tanpa sumber, Nyalakan nonaktif', (tester) async {
       gateway.apps = const [bri];
       await open(tester, NotificationCaptureRouteKeys.quickStart);
-      expect(tester.widget<AppButton>(find.byKey(const ValueKey('quick-start-turn-on'))).onPressed, isNull);
+      expect(tester.widget<DsButton>(find.byKey(const ValueKey('quick-start-turn-on'))).onPressed, isNull);
 
       await pick(tester, const [bri]);
-      expect(tester.widget<AppButton>(find.byKey(const ValueKey('quick-start-turn-on'))).onPressed, isNotNull);
+      expect(tester.widget<DsButton>(find.byKey(const ValueKey('quick-start-turn-on'))).onPressed, isNotNull);
       expect(find.text(t.discovery.quickStart.pickedCount(n: 1)), findsOneWidget);
 
       await pick(tester, const [bri]);
-      expect(tester.widget<AppButton>(find.byKey(const ValueKey('quick-start-turn-on'))).onPressed, isNull);
+      expect(tester.widget<DsButton>(find.byKey(const ValueKey('quick-start-turn-on'))).onPressed, isNull);
     });
 
     testWidgets('akses belum ada: pengungkapan dulu, lalu setelan sistem; kembali dengan akses menutup layar', (

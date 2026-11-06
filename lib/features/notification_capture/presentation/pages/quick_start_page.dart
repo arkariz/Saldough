@@ -4,25 +4,27 @@ import 'dart:typed_data';
 import 'package:dependencies/dependencies.dart' hide State;
 import 'package:failures/failures.dart';
 import 'package:flutter/material.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/plan/active_plan.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_gateway.dart';
 import 'package:saldough/features/notification_capture/domain/services/quick_start_apps.dart';
 import 'package:saldough/features/notification_capture/presentation/bloc/notification_settings_bloc.dart';
 import 'package:saldough/features/notification_capture/presentation/widgets/access_disclosure.dart';
 import 'package:saldough/features/notification_capture/presentation/widgets/plus_gate.dart';
+import 'package:saldough/features/notification_capture/presentation/widgets/source_app_tile.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
+import 'package:saldough/shared/wallet/wallet_presentation.dart';
 import 'package:state_management/state_management.dart';
 
 /// Paket aplikasi ini; tidak ditawarkan sebagai sumber notifikasi.
 const _ownPackage = 'com.arkarizdev.tanukonomy';
 
-/// Mulai cepat Catat dari notifikasi (FEATURE_DISCOVERY §5.1): daftar pendek
-/// aplikasi terpasang yang punya pola bawaan (tercentang), satu langkah izin
-/// akses, lalu selesai. Aplikasi lain membuka pemilih yang sudah ada.
+/// Mulai cepat Catat dari notifikasi (FEATURE_DISCOVERY §5.1), tampilan v2:
+/// semua aplikasi terpasang (tanpa daftar bank tertanam, ADR-044 §3.4), kartu
+/// per aplikasi berikon asli, satu langkah izin akses, lalu selesai.
 ///
 /// Sumber disimpan sebelum pengguna keluar ke setelan akses sistem, jadi
 /// kembali (atau proses dimatikan sistem) tidak kehilangan pilihan; tombol
@@ -120,7 +122,10 @@ class _QuickStartPageState extends State<QuickStartPage> with WidgetsBindingObse
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text(t.discovery.quickStart.screenTitle, style: context.ds.typography.headlineMd),
+        centerTitle: false,
+      ),
       body: SafeArea(
         child: BlocListener<NotificationSettingsBloc, NotificationSettingsState>(
           listenWhen: (previous, current) => _saved && !previous.accessGranted && current.accessGranted,
@@ -152,8 +157,8 @@ class _QuickStartPageState extends State<QuickStartPage> with WidgetsBindingObse
     required bool failed,
   }) {
     final texts = t.discovery.quickStart;
-    final textTheme = Theme.of(context).textTheme;
-    final colors = context.appColors;
+    final ds = context.ds;
+    final c = ds.colors;
     final selected = _selected ?? const <String>{};
     final hasSource = state.settings.sources.any((source) => source.enabled);
     final wallets = state.wallets;
@@ -171,116 +176,155 @@ class _QuickStartPageState extends State<QuickStartPage> with WidgetsBindingObse
             app.packageName.toLowerCase().contains(_query))
           app,
     ];
+    final hint = selected.isEmpty
+        ? (hasSource ? texts.pickedCount(n: 0) : texts.pickHint)
+        : (missingWallet.isEmpty ? texts.pickedCount(n: selected.length) : texts.walletHint);
     return Column(
       children: [
         Expanded(
           child: ListView(
-            padding: const EdgeInsets.all(AppSpacing.space4),
+            padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
             children: [
-              // Ilustrasi Mulai cepat (assets/illustration/mulai_cepat.png).
-              ExcludeSemantics(
-                child: Image.asset(
-                  'assets/illustration/mulai_cepat.png',
-                  height: 140,
-                  fit: BoxFit.contain,
-                  filterQuality: FilterQuality.none,
-                ),
+              // Dua fase nyata: memilih aplikasi, lalu memberi izin akses. Tanpa
+              // penunjuk bila izin sudah ada (hanya satu fase).
+              if (!state.accessGranted) ...[
+                _StepIndicator(step: _saved ? 2 : 1),
+                const SizedBox(height: 16),
+              ],
+              Center(
+                child: DsPill(label: texts.eyebrow.toUpperCase(), tone: DsPillTone.positive, dot: true),
               ),
-              const SizedBox(height: AppSpacing.space3),
-              Text(texts.title, style: textTheme.headlineSmall),
-              const SizedBox(height: AppSpacing.space2),
-              Text(texts.body, style: textTheme.bodyMedium),
-              const SizedBox(height: AppSpacing.space4),
-              TextField(
+              const SizedBox(height: 12),
+              Text(texts.title, textAlign: TextAlign.center, style: ds.typography.headlineSm),
+              const SizedBox(height: 6),
+              Text(
+                texts.body,
+                textAlign: TextAlign.center,
+                style: ds.typography.bodySm.copyWith(color: c.textSecondary),
+              ),
+              const SizedBox(height: 16),
+              DsSearchField(
                 key: const ValueKey('quick-start-search'),
-                decoration: InputDecoration(
-                  hintText: t.notificationCapture.searchApps,
-                  prefixIcon: const AppIcon(IconKey.search),
-                ),
+                query: _query,
+                hint: t.notificationCapture.searchApps,
                 onChanged: (value) => setState(() => _query = value.trim().toLowerCase()),
               ),
-              const SizedBox(height: AppSpacing.space2),
+              const SizedBox(height: 10),
               // Tombol Nyalakan mati selama belum ada pilihan: katakan kenapa.
-              Text(
-                key: const ValueKey('quick-start-hint'),
-                selected.isEmpty
-                    ? (hasSource ? texts.pickedCount(n: 0) : texts.pickHint)
-                    : (missingWallet.isEmpty ? texts.pickedCount(n: selected.length) : texts.walletHint),
-                style: textTheme.bodySmall?.copyWith(color: colors.ink2),
-              ),
-              if (!ActivePlan.isPlus) Text(texts.freeLimit, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
-              const SizedBox(height: AppSpacing.space3),
-              if (failed)
-                Column(
-                  children: [
-                    Text(t.notificationCapture.appsLoadFailed, textAlign: TextAlign.center),
-                    AppButton.text(
-                      key: const ValueKey('quick-start-retry'),
-                      label: t.common.retry,
-                      onPressed: () => setState(() {
-                        _apps = context.read<NotificationSettingsBloc>().loadInstalledApps();
-                      }),
+              Row(
+                children: [
+                  Icon(
+                    selected.isEmpty ? Icons.radio_button_unchecked_rounded : Icons.check_circle_rounded,
+                    size: 16,
+                    color: selected.isEmpty ? c.textMuted : c.actionPrimary,
+                  ),
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: Text(
+                      hint,
+                      key: const ValueKey('quick-start-hint'),
+                      style: ds.typography.labelMd.copyWith(color: c.textSecondary, letterSpacing: 0),
                     ),
-                  ],
+                  ),
+                ],
+              ),
+              if (!ActivePlan.isPlus) ...[
+                const SizedBox(height: 6),
+                Text(texts.freeLimit, style: ds.typography.bodySm.copyWith(color: c.textSecondary)),
+              ],
+              const SizedBox(height: 14),
+              if (failed)
+                DsErrorState(
+                  title: t.notificationCapture.appsLoadFailed,
+                  retryLabel: t.common.retry,
+                  onRetry: () => setState(() {
+                    _apps = context.read<NotificationSettingsBloc>().loadInstalledApps();
+                  }),
                 )
               else if (shown.isEmpty)
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: AppSpacing.space6),
-                  child: Text(t.notificationCapture.appsEmpty, textAlign: TextAlign.center),
+                  padding: const EdgeInsets.symmetric(vertical: 32),
+                  child: Column(
+                    children: [
+                      Icon(Icons.search_off_rounded, size: 32, color: c.textMuted),
+                      const SizedBox(height: 8),
+                      Text(
+                        t.notificationCapture.appsEmpty,
+                        textAlign: TextAlign.center,
+                        style: ds.typography.bodyMd.copyWith(color: c.textSecondary),
+                      ),
+                    ],
+                  ),
                 )
               else
-                AppListCard(
-                  children: [
-                    for (final app in shown) ...[
-                      AppListRow(
-                        key: ValueKey('quick-start-${app.packageName}'),
-                        leading: _icon(app),
-                        title: app.label,
-                        subtitle: app.packageName,
-                        trailing: Checkbox(
-                          value: selected.contains(app.packageName),
-                          onChanged: (value) => _toggle(app.packageName, on: value ?? false),
-                        ),
-                        onTap: () => _toggle(app.packageName, on: !selected.contains(app.packageName)),
+                for (final app in shown)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: _AppCard(
+                      app: app,
+                      selected: selected.contains(app.packageName),
+                      wallets: wallets,
+                      walletId: _walletFor(app.packageName, wallets),
+                      onToggle: (on) => _toggle(app.packageName, on: on),
+                      onWallet: (id) => setState(() {
+                        _walletOf[app.packageName] = id;
+                        _saved = false;
+                      }),
+                    ),
+                  ),
+              if (!ActivePlan.isPlus && !failed) ...[
+                const SizedBox(height: 6),
+                DsCard(
+                  child: Row(
+                    children: [
+                      DsIconTile.child(
+                        tone: DsIconTileTone.warning,
+                        size: DsIconTileSize.sm,
+                        child: Icon(Icons.workspace_premium_outlined, size: 18, color: c.onWarningContainer),
                       ),
-                      // Banyak dompet: tiap aplikasi pilihan ditanya dompetnya.
-                      if (selected.contains(app.packageName) && wallets.length > 1) _walletPicker(app, wallets),
+                      const SizedBox(width: 12),
+                      Expanded(child: Text(texts.plusTeaser, style: ds.typography.titleMd.copyWith(fontSize: 14))),
+                      const SizedBox(width: 8),
+                      DsButton.compact(
+                        label: texts.plusInfo,
+                        onPressed: () => unawaited(openNotificationPaywall(context)),
+                      ),
                     ],
-                  ],
+                  ),
                 ),
+              ],
             ],
           ),
         ),
-        AppStickyBar(
-          child: AppButton(
-            key: const ValueKey('quick-start-turn-on'),
-            label: needsAccess ? t.discovery.allowAccess : texts.turnOn,
-            expand: true,
-            loading: _busy,
-            onPressed: canTurnOn ? () => unawaited(_turnOn(candidates)) : null,
+        DsStickyBar(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              DsButton(
+                key: const ValueKey('quick-start-turn-on'),
+                label: needsAccess ? t.discovery.allowAccess : texts.turnOn,
+                expand: true,
+                onPressed: canTurnOn && !_busy ? () => unawaited(_turnOn(candidates)) : null,
+              ),
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.lock_outline_rounded, size: 14, color: c.textMuted),
+                  const SizedBox(width: 6),
+                  Flexible(
+                    child: Text(
+                      texts.privacyLine,
+                      textAlign: TextAlign.center,
+                      style: ds.typography.bodySm.copyWith(color: c.textMuted, fontSize: 12),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ],
-    );
-  }
-
-  Widget _walletPicker(InstalledApp app, List<Wallet> wallets) {
-    final chosen = _walletFor(app.packageName, wallets);
-    final wallet = wallets.where((w) => w.id == chosen).firstOrNull;
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(AppSpacing.space4, 0, AppSpacing.space4, AppSpacing.space3),
-      child: AppMenuSelectButton<String>(
-        key: ValueKey('quick-start-wallet-${app.packageName}'),
-        icon: wallet == null ? IconKey.wallets : walletIconKey(wallet.iconKey),
-        label: wallet?.name ?? t.notificationCapture.walletLabel,
-        isPlaceholder: wallet == null,
-        wrapLabel: true,
-        options: [for (final w in wallets) (value: w.id, label: w.name, icon: walletIconKey(w.iconKey))],
-        onSelected: (id) => setState(() {
-          if (id != null) _walletOf[app.packageName] = id;
-          _saved = false;
-        }),
-      ),
     );
   }
 
@@ -291,11 +335,145 @@ class _QuickStartPageState extends State<QuickStartPage> with WidgetsBindingObse
     // Pilihan berubah sesudah tersimpan: simpan ulang saat Nyalakan.
     _saved = false;
   });
+}
 
-  Widget _icon(InstalledApp app) {
+/// "Langkah n dari 2" dengan dua segmen kemajuan.
+class _StepIndicator extends StatelessWidget {
+  const _StepIndicator({required this.step});
+
+  final int step;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.ds.colors;
+    Widget bar({required bool active}) => AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      width: active ? 28 : 8,
+      height: 6,
+      decoration: BoxDecoration(
+        color: active ? c.actionPrimary : c.surfaceContainerHighest,
+        borderRadius: DsRadius.fullAll,
+      ),
+    );
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        DsPill(
+          label: t.discovery.quickStart.stepLabel(n: step).toUpperCase(),
+          tone: DsPillTone.positive,
+          dot: true,
+        ),
+        Row(
+          children: [
+            bar(active: step == 1),
+            const SizedBox(width: 4),
+            bar(active: step == 2),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+/// Kartu satu aplikasi: ikon asli, nama, paket, kotak centang; bila dicentang
+/// dan ada beberapa dompet, pemilih dompet tujuan muncul di dalamnya.
+class _AppCard extends StatelessWidget {
+  const _AppCard({
+    required this.app,
+    required this.selected,
+    required this.wallets,
+    required this.walletId,
+    required this.onToggle,
+    required this.onWallet,
+  });
+
+  final InstalledApp app;
+  final bool selected;
+  final List<Wallet> wallets;
+  final String? walletId;
+  final ValueChanged<bool> onToggle;
+  final ValueChanged<String> onWallet;
+
+  @override
+  Widget build(BuildContext context) {
+    final ds = context.ds;
+    final c = ds.colors;
     final icon = app.icon;
-    return icon == null
-        ? const AppIconTile(IconKey.walletEwallet)
-        : Image.memory(Uint8List.fromList(icon), width: AppSize.tile, height: AppSize.tile);
+    return DsCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          DsPressable(
+            key: ValueKey('quick-start-${app.packageName}'),
+            onPressed: () => onToggle(!selected),
+            pressedScale: 0.995,
+            dimWhenDisabled: false,
+            builder: (context, _) => Row(
+              children: [
+                SourceAppTile(label: app.label, icon: icon == null ? null : Uint8List.fromList(icon), size: 44),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(app.label, maxLines: 1, overflow: TextOverflow.ellipsis, style: ds.typography.titleMd),
+                      Text(
+                        app.packageName,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: ds.typography.bodySm.copyWith(color: c.textSecondary),
+                      ),
+                    ],
+                  ),
+                ),
+                Checkbox(
+                  value: selected,
+                  onChanged: (value) => onToggle(value ?? false),
+                  shape: const RoundedRectangleBorder(borderRadius: DsRadius.baseAll),
+                ),
+              ],
+            ),
+          ),
+          // Banyak dompet: tiap aplikasi pilihan ditanya dompetnya.
+          if (selected && wallets.length > 1) ...[
+            const SizedBox(height: 12),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(color: c.surfaceSunken, borderRadius: DsRadius.baseAll),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          t.discovery.quickStart.walletTarget,
+                          style: ds.typography.labelMd.copyWith(color: c.textSecondary, letterSpacing: 0),
+                        ),
+                      ),
+                      Icon(Icons.lock_outline_rounded, size: 14, color: c.actionPrimary),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  WalletSelectField(
+                    key: ValueKey('quick-start-wallet-${app.packageName}'),
+                    label: t.notificationCapture.walletLabel,
+                    wallets: wallets,
+                    selectedId: walletId,
+                    useDs: true,
+                    onSelected: onWallet,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    t.discovery.quickStart.walletNote,
+                    style: ds.typography.bodySm.copyWith(color: c.textSecondary, fontSize: 12),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
   }
 }

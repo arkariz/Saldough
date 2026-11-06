@@ -132,7 +132,7 @@ Beri tanda di kolom hasil: ✅ lulus, ❌ gagal (tulis temuannya di bawah tabel)
 | # | Skenario | Langkah | Hasil yang diharapkan | Hasil |
 |---|---|---|---|---|
 | U1 | Tanpa akun | Buka Akun › Plus tanpa masuk | Gratis; paywall mengajak **Masuk untuk mencoba Plus**; uji coba tidak mulai | ✅ 6 Nov 2026, build rilis `1.0.0+22` dari Play di emulator: Akun › Plus "Gratis", paywall "Masuk untuk mencoba Plus", harga toko tampil (Pendiri tahunan Rp129.000, bulanan Rp25.000), tombol beli tampil karena `plus_launch_at` sudah dikondisikan untuk 1.0.0 |
-| U2 | Masuk akun: uji coba mulai | Masuk (Google atau email), buka Akun › Plus | Plus berstatus uji coba; berakhir di akhir periode keuangan, paling cepat 14 hari (`trialEndsOn`); sumber *trial* | ➖ |
+| U2 | Masuk akun: uji coba mulai | Masuk (Google atau email), buka Akun › Plus | Plus berstatus uji coba; berakhir di akhir periode keuangan, paling cepat 14 hari (`trialEndsOn`); sumber *trial* | ✅ 6 Nov 2026: masuk Google di emulator; Akun › Plus "Sampai 30 Nov 2026. Tanpa kartu. Uji coba". Hari ini 6 Nov, periode 1–30 Nov, sisa 25 hari ≥ 14, jadi berakhir 30 Nov sesuai rumus. Paywall di masa uji coba tetap menampilkan opsi beli (bahan U5) |
 | U3 | Beli bulanan | Paywall › Bulanan › Berlangganan, penguji lisensi | Layar pembelian uji Play; sesudahnya **Plus** (sumber *purchase*), perayaan tampil, Akun menunjukkan Plus; pembelian terlihat di RevenueCat (sandbox) | ➖ |
 | U4 | Beli tahunan | Paywall › Tahunan (Pendiri atau default) | Sama seperti U3; harga sesuai penawaran (Pendiri Rp129.000 bila `now ≤ founder_until`) | ➖ |
 | U5 | Mulai berlangganan saat uji coba | Dari U2, beli | Langsung **Plus**; sisa uji coba tidak diperpanjang | ➖ |

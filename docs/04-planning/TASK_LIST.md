@@ -5884,6 +5884,14 @@ Jalur kritis: T-24.2 → T-24.4 → T-24.6 → T-24.14 → T-24.18.
       `test_…` tidak pernah dipakai di build rilis (Fastfile menolak kunci
       selain `goog_…` di lane rilis dan patch). Tahap 2 (Play Billing
       sungguhan, kunci `goog_…` sebagai secret GitHub) menyusul.
+      **Rencana dan lembar hasil:**
+      [VERIFICATION_PLAN_FASE_24.md](VERIFICATION_PLAN_FASE_24.md) (16 skenario,
+      persiapan Play/RevenueCat/Remote Config, cara mempercepat waktu).
+      *6 Nov 2026, smoke emulator (build debug dengan kunci `goog_` lokal, belum
+      ada pembelian):* paywall membaca harga toko lewat RevenueCat (Pendiri
+      tahunan Rp129.000 coret Rp179.000, bulanan Rp25.000) dan tanpa akun
+      mengajak masuk. Pembelian dan skenario lain menunggu pemilik (akun
+      penguji lisensi).
 
 ## Fase 25: Design system baru dan preset tema
 

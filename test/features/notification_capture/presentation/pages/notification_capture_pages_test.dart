@@ -449,6 +449,41 @@ void main() {
       expect(gateway.accessSettingsOpened, 1);
     });
 
+    testWidgets('optimasi baterai aktif: baris pintasan muncul dan membuka daftar pengecualian', (tester) async {
+      await store.saveSettings(const NotificationCaptureSettings(enabled: true));
+      gateway.batteryRestricted = true;
+      await open(tester, NotificationCaptureRouteKeys.settings);
+
+      final row = find.byKey(const ValueKey('notification-battery'));
+      expect(row, findsOneWidget);
+      expect(find.text(t.notificationCapture.batteryTitle), findsOneWidget);
+      await tester.tap(row);
+      await tester.pumpAndSettle();
+      expect(gateway.batterySettingsOpened, 1);
+    });
+
+    testWidgets('tanpa optimasi baterai, atau fitur mati: tidak ada baris baterai', (tester) async {
+      await store.saveSettings(const NotificationCaptureSettings(enabled: true));
+      await open(tester, NotificationCaptureRouteKeys.settings);
+      expect(find.byKey(const ValueKey('notification-battery')), findsNothing);
+    });
+
+    testWidgets('kartu Kotak masuk menampilkan jumlah yang menunggu', (tester) async {
+      await store.saveSettings(const NotificationCaptureSettings(enabled: true));
+      await store.saveInbox([
+        CaptureInboxEntry(
+          id: 'a',
+          packageName: 'id.co.bri.brimo',
+          appLabel: 'BRImo',
+          text: 'Pembayaran Rp50.000 berhasil',
+          capturedAt: DateTime(2026, 10, 1, 14),
+          draft: const RecordDraft(kind: DraftKind.expense, amountSen: 5000000),
+        ),
+      ]);
+      await open(tester, NotificationCaptureRouteKeys.settings);
+      expect(find.text(t.notificationCapture.pendingBadge(n: 1)), findsOneWidget);
+    });
+
     testWidgets('analitik: menyalakan sakelar di setelan = feature_enabled via account', (tester) async {
       final events = <AnalyticsEvent>[];
       AppAnalytics.debugSink = events.add;
@@ -1218,6 +1253,8 @@ void main() {
         matching: find.byType(Switch),
       );
       await tester.scrollUntilVisible(autoRecord, 200);
+      await tester.ensureVisible(autoRecord);
+      await tester.pumpAndSettle();
       await tester.tap(autoRecord);
       await tester.pumpAndSettle();
 

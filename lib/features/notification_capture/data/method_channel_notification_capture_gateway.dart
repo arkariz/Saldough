@@ -41,6 +41,12 @@ final class MethodChannelNotificationCaptureGateway with RepositoryGuard impleme
   Future<bool> canPostReminders() async => await _methods.invokeMethod<bool>('canPostReminders') ?? false;
 
   @override
+  Future<bool> isBatteryRestricted() async => await _methods.invokeMethod<bool>('isBatteryRestricted') ?? false;
+
+  @override
+  Future<void> openBatterySettings() => _methods.invokeMethod<void>('openBatterySettings');
+
+  @override
   Future<bool> requestReminderPermission() async =>
       await _methods.invokeMethod<bool>('requestReminderPermission') ?? false;
 
@@ -228,6 +234,12 @@ final class UnsupportedNotificationCaptureGateway implements NotificationCapture
 
   @override
   Future<bool> canPostReminders() async => false;
+
+  @override
+  Future<bool> isBatteryRestricted() async => false;
+
+  @override
+  Future<void> openBatterySettings() async {}
 
   @override
   Future<bool> requestReminderPermission() async => false;

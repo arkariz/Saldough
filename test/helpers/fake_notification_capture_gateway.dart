@@ -80,6 +80,18 @@ final class FakeNotificationCaptureGateway implements NotificationCaptureGateway
   @override
   Future<bool> canPostReminders() async => remindersAllowed;
 
+  /// Sistem menerapkan optimasi baterai (uji).
+  bool batteryRestricted = false;
+
+  /// Berapa kali daftar pengecualian baterai dibuka.
+  int batterySettingsOpened = 0;
+
+  @override
+  Future<bool> isBatteryRestricted() async => batteryRestricted;
+
+  @override
+  Future<void> openBatterySettings() async => batterySettingsOpened++;
+
   @override
   Future<bool> requestReminderPermission() async {
     reminderPermissionRequests++;

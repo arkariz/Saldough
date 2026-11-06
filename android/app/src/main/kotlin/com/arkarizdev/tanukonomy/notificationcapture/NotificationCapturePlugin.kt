@@ -87,6 +87,13 @@ class NotificationCapturePlugin(private val activity: Activity) : MethodChannel.
                 result.success(null)
             }
             "canPostReminders" -> result.success(canPostReminders())
+            // Optimasi baterai (T-26.26): sistem boleh menahan layanan latar. Hanya membuka daftar
+            // pengecualian (tanpa izin khusus; ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS dibatasi Play).
+            "isBatteryRestricted" -> result.success(isBatteryRestricted())
+            "openBatterySettings" -> {
+                activity.startActivity(Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS))
+                result.success(null)
+            }
             "requestReminderPermission" -> requestReminderPermission(result)
             "configure" -> {
                 configure(call)
@@ -147,6 +154,11 @@ class NotificationCapturePlugin(private val activity: Activity) : MethodChannel.
             }
             else -> result.notImplemented()
         }
+    }
+
+    private fun isBatteryRestricted(): Boolean {
+        val power = context.getSystemService(Context.POWER_SERVICE) as android.os.PowerManager
+        return !power.isIgnoringBatteryOptimizations(context.packageName)
     }
 
     private fun isAccessGranted(): Boolean {

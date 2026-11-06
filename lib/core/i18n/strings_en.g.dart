@@ -1169,6 +1169,7 @@ class _Translations$notificationCapture$en extends Translations$notificationCapt
 	@override String get sourcesEmpty => 'Pick the bank or e-wallet apps whose notifications you want recorded.';
 	@override String get addSource => 'Add app';
 	@override String get sourceNoWallet => 'No wallet chosen';
+	@override String get sourceNeedsAttention => 'Needs attention';
 	@override String get sourcePaused => 'Paused';
 	@override String get pickAppTitle => 'Pick an app';
 	@override String get searchApps => 'Search apps';
@@ -1288,6 +1289,11 @@ class _Translations$notificationCapture$en extends Translations$notificationCapt
 	@override String get enableHint => 'Transactions from the bank and e-wallet notifications you pick are recorded for you.';
 	@override String get inboxEntryTitle => 'Inbox';
 	@override String get inboxEntryBody => 'Check transactions from notifications and undo automatic ones.';
+	@override String get batteryTitle => 'Battery optimization is on';
+	@override String get batteryBody => 'Tap to exempt the app so notifications keep being read in battery saver.';
+	@override String pendingBadge({required Object n}) => '${n} waiting';
+	@override String sourcesFreeCount({required Object n, required Object max}) => '${n}/${max} Free';
+	@override String get privacyFootnote => 'Notifications are read on your phone. Hard-to-read text may be sent to Gemini without balances and account numbers, and is not stored on our servers.';
 	@override String get behaviorTitle => 'When a transaction is detected';
 	@override String get autoRecordLabel => 'Record automatically';
 	@override String get autoRecordOffHint => 'Everything waits for you to check in the inbox.';
@@ -3526,6 +3532,7 @@ extension on TranslationsEn {
 		} ?? switch (path) {
 			'notificationCapture.addSource' => 'Add app',
 			'notificationCapture.sourceNoWallet' => 'No wallet chosen',
+			'notificationCapture.sourceNeedsAttention' => 'Needs attention',
 			'notificationCapture.sourcePaused' => 'Paused',
 			'notificationCapture.pickAppTitle' => 'Pick an app',
 			'notificationCapture.searchApps' => 'Search apps',
@@ -3649,6 +3656,11 @@ extension on TranslationsEn {
 			'notificationCapture.enableHint' => 'Transactions from the bank and e-wallet notifications you pick are recorded for you.',
 			'notificationCapture.inboxEntryTitle' => 'Inbox',
 			'notificationCapture.inboxEntryBody' => 'Check transactions from notifications and undo automatic ones.',
+			'notificationCapture.batteryTitle' => 'Battery optimization is on',
+			'notificationCapture.batteryBody' => 'Tap to exempt the app so notifications keep being read in battery saver.',
+			'notificationCapture.pendingBadge' => ({required Object n}) => '${n} waiting',
+			'notificationCapture.sourcesFreeCount' => ({required Object n, required Object max}) => '${n}/${max} Free',
+			'notificationCapture.privacyFootnote' => 'Notifications are read on your phone. Hard-to-read text may be sent to Gemini without balances and account numbers, and is not stored on our servers.',
 			'notificationCapture.behaviorTitle' => 'When a transaction is detected',
 			'notificationCapture.autoRecordLabel' => 'Record automatically',
 			'notificationCapture.autoRecordOffHint' => 'Everything waits for you to check in the inbox.',
@@ -4030,14 +4042,14 @@ extension on TranslationsEn {
 			'premium.features.records.title' => 'Records for you',
 			'premium.features.records.text' => 'Photos of receipts and transfer slips, and notifications from every app, become entries. Fixed recurring bills record themselves.',
 			'premium.features.watches.title' => 'Keeps watch',
+			_ => null,
+		} ?? switch (path) {
 			'premium.features.watches.text' => 'A warning before a budget runs out or free money runs thin, plus a Monday summary.',
 			'premium.features.answers.title' => 'Answers questions',
 			'premium.features.answers.text' => 'Ask about your money in everyday words, typed or spoken.',
 			'premium.features.plans.title' => 'Plans ahead',
 			'premium.features.plans.text' => 'Try what if, set Goals with an expected date, and see 12 months ahead.',
 			'premium.features.reports.title' => 'Reports',
-			_ => null,
-		} ?? switch (path) {
 			'premium.features.reports.text' => 'Monthly reports with the story behind the numbers, a yearly tax summary, and Freelance Pro invoices.',
 			'premium.features.keeps.title' => 'Keeps safe',
 			'premium.features.keeps.text' => 'An automatic daily backup to your own Google Drive.',

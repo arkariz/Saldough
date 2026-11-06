@@ -116,6 +116,14 @@ abstract interface class NotificationCaptureGateway {
   /// Izin memunculkan notifikasi (Android 13+) sudah ada.
   Future<bool> canPostReminders();
 
+  /// Sistem masih menerapkan optimasi baterai pada aplikasi ini (layanan latar
+  /// bisa ditahan, terutama di vendor yang agresif). `false` di platform tanpa
+  /// dukungan.
+  Future<bool> isBatteryRestricted();
+
+  /// Membuka daftar pengecualian optimasi baterai sistem.
+  Future<void> openBatterySettings();
+
   /// Meminta izin memunculkan notifikasi; hasilnya diberikan atau tidak.
   Future<bool> requestReminderPermission();
 

@@ -90,7 +90,7 @@ Terakhir diperbarui: 29 Oktober 2026 (penyelarasan dokumen dengan `main` di `0.1
 | 23 — Catat notifikasi multi-dompet, contoh, dan rutin lebih awal ([ADR-042](../02-architecture/adr/0042-notifikasi-multi-dompet-sampel-dan-rutin.md)) | 5 | 5 | **Selesai 23 Okt 2026, di `main`** (commit `c83f360`), dirilis di `0.10.0+16`. QA emulator ([VERIFICATION_PLAN_FASE_23.md](VERIFICATION_PLAN_FASE_23.md)): kompilasi Kotlin lulus, 26 baris lulus, tanpa Gagal S1/S2, 5 temuan S3; sisanya di B-83; tindak lanjut QA T-23.5 (24 Okt 2026) dibawa ke branch Fase 26 |
 | 24 — Fondasi Plus ([ADR-041](../02-architecture/adr/0041-monetisasi-hak-plus-dan-uji-coba.md), [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md)) | 24 | 23 | Dijadwalkan 23 Okt 2026 (dari B-41); T-24.1 (ADR-041 revisi 2), T-24.2 (fondasi murni), T-24.3 (`AppUser.createdAt`), T-24.4 (penyimpanan hak), T-24.5 (batas dari Remote Config), T-24.6 (`Entitlements` lokal), T-24.7 (pengganti paket uji), T-24.8 (paywall sementara), T-24.9 (gerbang R3), T-24.10 (gerbang notifikasi), T-24.11 (kuota tafsir), T-24.12 (gerbang Analisis), T-24.13 (gerbang template dan proyek), dan T-24.14 (adaptor RevenueCat, uji palsu), dan T-24.15 (kebijakan offering, beli/pulihkan), dan T-24.16 (analitik dan dokumen rilis) selesai; T-24.17a (paywall berparameter, PlanCard, keadaan) T-24.17b (PlusLocked, lencana Plus), dan T-24.17c (status Plus di Akun, halaman fitur), T-24.17d (hadiah uji coba), T-24.17e (layar turun, kartu Plus, momen), dan T-24.17f (perbaikan temuan uji sandbox 25 Okt) selesai, jadi T-24.17 selesai; berikutnya T-24.18 (rupa sudah ada, PR #65) dan T-24.18. Uji nyata T-24.14 menunggu akun dan kunci RevenueCat; rilis build bergerbang menunggu penguji bisa masuk akun |
 | 25 — Design system baru dan preset tema ([ADR-043](../02-architecture/adr/0043-design-system-v2-dan-preset-tema.md), Proposed) | 6 | 4 | Berjalan sejak 29 Okt 2026 -- T-25.1 fondasi selesai (spek Tanukonomy Matcha); KT-DS1–KT-DS4 diputuskan; T-25.2 widget komponen dan T-25.5 animasi selesai (animasi belum dinilai di perangkat); T-25.3 terpasang; T-25.4 berjalan: hampir semua fitur sudah memakai v2 (sisa: `freelance` sama sekali, layar Catat dari notifikasi, dan satu-dua berkas lama di Analisis/Anggaran/Rencana, B-90); T-25.6 (ikon tanah liat) belum |
-| 26 — Catat dari notifikasi v2 ([ADR-044](../02-architecture/adr/0044-catat-dari-notifikasi-v2.md), Proposed; [NOTIFICATION_CAPTURE_V2.md](../01-product/features/NOTIFICATION_CAPTURE_V2.md)) | 27 | 25 | Dimulai 4 Nov 2026; tanpa saklar build, jalur internal test. Kode T-26.1–T-26.25 selesai 5 Nov 2026 di branch `claude/rombak-design-system-theming-5747b4` (125 komit di depan `main`, belum jadi PR): fondasi, MVP dalam aplikasi, notifikasi bertindak lewat mesin tanpa layar, E1–E3, pola buatan dicabut (T-26.23), snackbar v2 satu slot. **Sisa:** T-26.26 uji perangkat nyata (gerbang Accepted; baru 1 emulator dan perangkat pemilik) dan T-26.27 kebijakan privasi situs; antrean B-88–B-92 |
+| 26 — Catat dari notifikasi v2 ([ADR-044](../02-architecture/adr/0044-catat-dari-notifikasi-v2.md), Proposed; [NOTIFICATION_CAPTURE_V2.md](../01-product/features/NOTIFICATION_CAPTURE_V2.md)) | 27 | 25 | Dimulai 4 Nov 2026; tanpa saklar build, jalur internal test. Kode T-26.1–T-26.25 selesai 5 Nov 2026 (T-26.28 6 Nov) di branch `claude/rombak-design-system-theming-5747b4` (125 komit di depan `main`, belum jadi PR): fondasi, MVP dalam aplikasi, notifikasi bertindak lewat mesin tanpa layar, E1–E3, pola buatan dicabut (T-26.23), snackbar v2 satu slot. **Sisa:** T-26.26 uji perangkat nyata (gerbang Accepted; baru 1 emulator dan perangkat pemilik) dan T-26.27 kebijakan privasi situs; antrean B-88–B-92 |
 | Antrean (`B-n`, belum dijadwalkan) | 75 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
 
 ## Keputusan terbuka
@@ -6707,6 +6707,26 @@ tugas lama yang menyebutnya adalah riwayat, bukan keadaan sekarang.
       terakhir menang. Uji: tiga uji halaman diperbarui/ditambah dan satu uji
       satu-slot.
 
+- [x] **T-26.28** (M) Rombak v2 layar Catat dari notifikasi, irisan 1: **Setelan**
+      (6 Nov 2026; acuan Stitch "Setelan Notifikasi" dari pemilik; ditinjau
+      pemilik per layar). Layar memakai `DsListCard`/`DsSettingRow`/`DsBadge`/
+      `DsButton`; komponen baru `DsSwitchRow` (baris bersakelar, seluruh baris
+      bisa diketuk) menggantikan `AppSwitchRow` di layar ini. Urutan: sakelar
+      utama (status akses di keterangan), kartu izin hilang, **baris optimasi
+      baterai** (baru; tampil bila sistem masih menerapkan optimasi baterai,
+      mengetuknya membuka daftar pengecualian lewat
+      `ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS`, tanpa izin khusus karena
+      `REQUEST_IGNORE_BATTERY_OPTIMIZATIONS` dibatasi Play), kartu Kotak masuk
+      berlencana jumlah menunggu, daftar aplikasi dengan penghitung "n/m Gratis"
+      dan lencana Perlu dicek, perilaku (catat otomatis, kabari lewat
+      notifikasi), dan catatan privasi yang akurat (teks sulit dibaca bisa ke
+      Gemini tanpa saldo/rekening; klaim desain "terenkripsi AES-256" dan
+      "tidak pernah ke server luar" **tidak dipakai** karena keliru). Tidak
+      diadopsi dari desain: kartu "Opsi Lanjutan & Pengembang"/EVENT_LOG,
+      "Kelola Aturan", avatar di bilah atas, banner "Pengaturan diperbarui".
+      Gateway: `isBatteryRestricted`, `openBatterySettings`. Uji: tiga uji
+      baru; Kotlin dikompilasi. Mulai cepat dan halaman sumber menyusul (B-90).
+
 **Tahap penutup: gerbang Accepted**
 
 - [ ] **T-26.26** (L, pemilik dan QA) Uji perangkat nyata untuk menjadikan
@@ -6812,7 +6832,7 @@ menambah dan memindahkannya ada di
 | B-87 | **E3 catat otomatis per bentuk** (**selesai 5 Nov 2026**, T-26.20–T-26.22; sisa "sakelar global ke Lanjutan" dilebur ke B-88 karena halaman setelan belum punya bagian Lanjutan): tawaran setelah konfirmasi pertama tanpa ubahan, pagar nominal besar, tanda "baru". Plus. | agen | NOTIFICATION_CAPTURE_V2.md §8, ADR-044 §3.7 |
 | B-88 | **E4 Lanjutan** (termasuk memindah sakelar global "Catat otomatis" ke sana): daftar aturan, filter, contoh; migrasi `walletRules` menjadi aturan. "Ajari pola", pola bawaan, dan ikatan rutin ke pola sudah dicabut (T-26.23), jadi tidak perlu dimigrasi. | agen | ADR-044 §3.7 |
 | B-89 | **E5 permukaan lain**: Quick Settings tile "Catat n transaksi" (S–M), widget layar utama bila data pemakaian mendukung (L). | agen | NOTIFICATION_CAPTURE_V2.md §11 |
-| B-90 | **Rombak v2 layar Catat dari notifikasi** (kotak masuk, banner tawaran, setelan, halaman sumber, Mulai cepat) dan `freelance`: masih memakai `AppCard`/`AppButton`/`appColors` (hasil audit 5 Nov 2026: `notification_capture` 7 berkas lama, `freelance` 10). Bagian T-25.4. | agen | T-25.4, [ADR-043](../02-architecture/adr/0043-design-system-v2-dan-preset-tema.md) |
+| B-90 | **Rombak v2 layar Catat dari notifikasi** (Setelan selesai 6 Nov 2026, T-26.28; sisa Mulai cepat dan halaman sumber, acuan Stitch ada di `~/Downloads/stitch_tanukonomy_pixel_budget_tracker 2/`; kotak masuk belum) (kotak masuk, banner tawaran, setelan, halaman sumber, Mulai cepat) dan `freelance`: masih memakai `AppCard`/`AppButton`/`appColors` (hasil audit 5 Nov 2026: `notification_capture` 7 berkas lama, `freelance` 10). Bagian T-25.4. | agen | T-25.4, [ADR-043](../02-architecture/adr/0043-design-system-v2-dan-preset-tema.md) |
 | B-91 | **Pangkas sisa kode mati pola**: mesin templat `{from}`/`{to}` (`TemplateWordRole.from/to`, `NotificationTemplate.fromToken/toToken`, `NotificationTemplateMatch.fromText/toText`), `NotificationSource.walletForFragment`, dan uji `templat {from}/{to}`; rapikan fitur contoh notifikasi yang kini hanya "Jadikan filter" (string dan keterangan). Bisa bersama B-88. | agen | T-26.23 |
 | B-92 | **Poles snackbar dan tawaran**: `showAppSnackBar` belum punya prioritas (galat bisa tertimpa pesan biasa; yang terakhir menang); tawaran catat otomatis hanya hidup selama halaman Kotak masuk terbuka (hilang bila keluar sebelum menjawab, muncul lagi pada catatan berikutnya); tawaran belum ada untuk tombol Catat di notifikasi (aplikasi tertutup). | agen | T-26.25, T-26.22 |
 | B-39 | **Pengumuman pembaruan R2**: pembaruan wajib/versi minimum untuk perbaikan kritis (KT-U1), pembaruan untuk iOS (App Store) sesudah iOS dirilis, dan pilihan jalur uji untuk penguji. | agen + pemilik | [APP_UPDATE.md](../01-product/features/APP_UPDATE.md) §14 |

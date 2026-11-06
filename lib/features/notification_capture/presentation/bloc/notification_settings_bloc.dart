@@ -23,6 +23,8 @@ final class NotificationSettingsState extends UiState<NotificationSettingsState>
     this.settings = const NotificationCaptureSettings(),
     this.accessGranted = false,
     this.canPostReminders = false,
+    this.batteryRestricted = false,
+    this.pendingCount = 0,
     this.wallets = const [],
     this.samples = const [],
     this.debugSamples = const [],
@@ -41,6 +43,12 @@ final class NotificationSettingsState extends UiState<NotificationSettingsState>
   /// Izin memunculkan notifikasi sudah ada.
   final bool canPostReminders;
 
+  /// Sistem masih menerapkan optimasi baterai pada aplikasi (layanan latar bisa ditahan).
+  final bool batteryRestricted;
+
+  /// Jumlah tangkapan yang menunggu di kotak masuk.
+  final int pendingCount;
+
   /// Dompet aktif.
   final List<Wallet> wallets;
 
@@ -56,6 +64,8 @@ final class NotificationSettingsState extends UiState<NotificationSettingsState>
     NotificationCaptureSettings? settings,
     bool? accessGranted,
     bool? canPostReminders,
+    bool? batteryRestricted,
+    int? pendingCount,
     List<Wallet>? wallets,
     List<CapturedNotification>? samples,
     List<CapturedNotification>? debugSamples,
@@ -65,6 +75,8 @@ final class NotificationSettingsState extends UiState<NotificationSettingsState>
     settings: settings ?? this.settings,
     accessGranted: accessGranted ?? this.accessGranted,
     canPostReminders: canPostReminders ?? this.canPostReminders,
+    batteryRestricted: batteryRestricted ?? this.batteryRestricted,
+    pendingCount: pendingCount ?? this.pendingCount,
     wallets: wallets ?? this.wallets,
     samples: samples ?? this.samples,
     debugSamples: debugSamples ?? this.debugSamples,
@@ -77,6 +89,8 @@ final class NotificationSettingsState extends UiState<NotificationSettingsState>
     settings,
     accessGranted,
     canPostReminders,
+    batteryRestricted,
+    pendingCount,
     wallets,
     samples,
     debugSamples,
@@ -154,6 +168,8 @@ final class NotificationSettingsBloc extends Bloc<NotificationSettingsEvent, Not
         wallets: wallets,
         accessGranted: await _gateway.isAccessGranted(),
         canPostReminders: await _gateway.canPostReminders(),
+        batteryRestricted: await _gateway.isBatteryRestricted(),
+        pendingCount: await _pendingCount(),
         debugSamples: await _gateway.debugSamples(),
       ),
     );
@@ -176,11 +192,15 @@ final class NotificationSettingsBloc extends Bloc<NotificationSettingsEvent, Not
     emit(state.copyWith(samples: samples));
   }
 
+  Future<int> _pendingCount() async => (await _store.loadInbox()).getOrElse((_) => const []).length;
+
   Future<void> _onResumed(NotificationSettingsResumed event, Emitter<NotificationSettingsState> emit) async {
     emit(
       state.copyWith(
         accessGranted: await _gateway.isAccessGranted(),
         canPostReminders: await _gateway.canPostReminders(),
+        batteryRestricted: await _gateway.isBatteryRestricted(),
+        pendingCount: await _pendingCount(),
         debugSamples: await _gateway.debugSamples(),
       ),
     );
@@ -246,6 +266,9 @@ final class NotificationSettingsBloc extends Bloc<NotificationSettingsEvent, Not
   /// ADR-032 §3.8). Bukan event: tidak mengubah state; layar mengecek ulang
   /// akses saat kembali (`NotificationSettingsResumed`).
   Future<void> openAccessSettings() => _gateway.openAccessSettings();
+
+  /// Membuka daftar pengecualian optimasi baterai; layar mengecek ulang saat kembali.
+  Future<void> openBatterySettings() => _gateway.openBatterySettings();
 
   /// Jumlah aplikasi aktif sesudah [applyQuickStart] terakhir (analitik).
   int quickStartAppsCount = 0;

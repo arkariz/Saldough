@@ -8,8 +8,8 @@ import 'package:saldough/core/design_system/ds_theme.dart';
 class DsSettingRow extends StatelessWidget {
   /// Membuat baris setelan.
   const DsSettingRow({
-    required this.leading,
     required this.title,
+    this.leading,
     this.subtitle,
     this.trailing,
     this.badge,
@@ -18,7 +18,8 @@ class DsSettingRow extends StatelessWidget {
   });
 
   /// Ubin ikon (`DsIconTile`).
-  final Widget leading;
+  /// Tile atau ikon di depan; `null` untuk baris tanpa ikon (mis. sub-sakelar).
+  final Widget? leading;
 
   /// Judul baris.
   final String title;
@@ -61,15 +62,13 @@ class DsSettingRow extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
         child: Row(
           children: [
-            leading,
-            const SizedBox(width: 12),
+            if (leading != null) ...[leading!, const SizedBox(width: 12)],
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(title, style: ds.typography.titleMd.copyWith(fontSize: 14)),
-                  if (subtitle != null)
-                    Text(subtitle!, style: ds.typography.bodySm.copyWith(color: c.textSecondary)),
+                  if (subtitle != null) Text(subtitle!, style: ds.typography.bodySm.copyWith(color: c.textSecondary)),
                 ],
               ),
             ),

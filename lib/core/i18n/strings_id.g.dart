@@ -2875,6 +2875,9 @@ class Translations$notificationCapture$id {
 	/// id: 'Dompet belum dipilih'
 	String get sourceNoWallet => 'Dompet belum dipilih';
 
+	/// id: 'Perlu dicek'
+	String get sourceNeedsAttention => 'Perlu dicek';
+
 	/// id: 'Dijeda'
 	String get sourcePaused => 'Dijeda';
 
@@ -3223,6 +3226,21 @@ class Translations$notificationCapture$id {
 
 	/// id: 'Cek transaksi dari notifikasi dan batalkan yang tercatat otomatis.'
 	String get inboxEntryBody => 'Cek transaksi dari notifikasi dan batalkan yang tercatat otomatis.';
+
+	/// id: 'Optimasi baterai aktif'
+	String get batteryTitle => 'Optimasi baterai aktif';
+
+	/// id: 'Sentuh untuk memberi pengecualian supaya notifikasi tetap terbaca saat ponsel hemat daya.'
+	String get batteryBody => 'Sentuh untuk memberi pengecualian supaya notifikasi tetap terbaca saat ponsel hemat daya.';
+
+	/// id: '$n menunggu'
+	String pendingBadge({required Object n}) => '${n} menunggu';
+
+	/// id: '$n/$max Gratis'
+	String sourcesFreeCount({required Object n, required Object max}) => '${n}/${max} Gratis';
+
+	/// id: 'Notifikasi dibaca di ponselmu. Teks yang sulit dibaca bisa dikirim ke Gemini tanpa saldo dan nomor rekening, dan tidak disimpan di server kami.'
+	String get privacyFootnote => 'Notifikasi dibaca di ponselmu. Teks yang sulit dibaca bisa dikirim ke Gemini tanpa saldo dan nomor rekening, dan tidak disimpan di server kami.';
 
 	/// id: 'Saat transaksi terdeteksi'
 	String get behaviorTitle => 'Saat transaksi terdeteksi';
@@ -6735,6 +6753,7 @@ extension on Translations {
 		} ?? switch (path) {
 			'notificationCapture.addSource' => 'Tambah aplikasi',
 			'notificationCapture.sourceNoWallet' => 'Dompet belum dipilih',
+			'notificationCapture.sourceNeedsAttention' => 'Perlu dicek',
 			'notificationCapture.sourcePaused' => 'Dijeda',
 			'notificationCapture.pickAppTitle' => 'Pilih aplikasi',
 			'notificationCapture.searchApps' => 'Cari aplikasi',
@@ -6858,6 +6877,11 @@ extension on Translations {
 			'notificationCapture.enableHint' => 'Transaksi dari notifikasi bank dan e-wallet yang kamu pilih dicatat untukmu.',
 			'notificationCapture.inboxEntryTitle' => 'Kotak masuk',
 			'notificationCapture.inboxEntryBody' => 'Cek transaksi dari notifikasi dan batalkan yang tercatat otomatis.',
+			'notificationCapture.batteryTitle' => 'Optimasi baterai aktif',
+			'notificationCapture.batteryBody' => 'Sentuh untuk memberi pengecualian supaya notifikasi tetap terbaca saat ponsel hemat daya.',
+			'notificationCapture.pendingBadge' => ({required Object n}) => '${n} menunggu',
+			'notificationCapture.sourcesFreeCount' => ({required Object n, required Object max}) => '${n}/${max} Gratis',
+			'notificationCapture.privacyFootnote' => 'Notifikasi dibaca di ponselmu. Teks yang sulit dibaca bisa dikirim ke Gemini tanpa saldo dan nomor rekening, dan tidak disimpan di server kami.',
 			'notificationCapture.behaviorTitle' => 'Saat transaksi terdeteksi',
 			'notificationCapture.autoRecordLabel' => 'Catat otomatis',
 			'notificationCapture.autoRecordOffHint' => 'Semua menunggu kamu cek di kotak masuk.',
@@ -7239,14 +7263,14 @@ extension on Translations {
 			'premium.features.records.title' => 'Mencatat untukmu',
 			'premium.features.records.text' => 'Foto struk dan bukti transfer, serta notifikasi dari semua aplikasi, jadi catatan. Rutin bernominal tetap tercatat sendiri.',
 			'premium.features.watches.title' => 'Berjaga',
+			_ => null,
+		} ?? switch (path) {
 			'premium.features.watches.text' => 'Peringatan sebelum anggaran habis atau uang nganggur menipis, plus Ringkasan Senin.',
 			'premium.features.answers.title' => 'Menjawab pertanyaan',
 			'premium.features.answers.text' => 'Tanya soal uangmu dalam bahasa sehari-hari, diketik atau lewat suara.',
 			'premium.features.plans.title' => 'Merencanakan',
 			'premium.features.plans.text' => 'Coba bagaimana kalau, buat Target dengan perkiraan tanggal tercapai, dan lihat 12 bulan ke depan.',
 			'premium.features.reports.title' => 'Melapor',
-			_ => null,
-		} ?? switch (path) {
 			'premium.features.reports.text' => 'Rapor bulanan yang bercerita, Rekap SPT tahunan, dan invoice Freelance Pro.',
 			'premium.features.keeps.title' => 'Menyimpan',
 			'premium.features.keeps.text' => 'Cadangan otomatis tiap hari ke Google Drive milikmu.',

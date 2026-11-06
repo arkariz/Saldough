@@ -434,10 +434,7 @@ class _InboxCard extends StatelessWidget {
               clipBehavior: Clip.none,
               children: [
                 Positioned.fill(
-                  child: DsIconTile.child(
-                    size: DsIconTileSize.md,
-                    child: Icon(Icons.inbox_outlined, size: 22, color: c.textPrimary),
-                  ),
+                  child: DsIconTile.asset(asset: ClayIcons.bell),
                 ),
                 if (pending > 0)
                   Positioned(

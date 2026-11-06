@@ -8,7 +8,6 @@ import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/plan/active_plan.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/features/notification_capture/domain/entities/capture_inbox_entry.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_card_class.dart';
@@ -153,9 +152,9 @@ class CaptureInboxPage extends StatelessWidget {
 
 enum _InboxTab { pending, auto }
 
-/// Isi kotak masuk (prototipe `KotakMasuk.dc.html`): segmen "Perlu dicek" /
-/// "Tercatat otomatis" dengan hitungan, kartu tangkapan, dan daftar yang
-/// tercatat otomatis.
+/// Isi kotak masuk (prototipe `KotakMasuk.dc.html`, rupa design system v2):
+/// segmen "Perlu dicek" / "Tercatat otomatis" dengan hitungan, kartu
+/// tangkapan, dan daftar yang tercatat otomatis.
 class _InboxBody extends StatefulWidget {
   const _InboxBody({required this.page});
 
@@ -197,17 +196,14 @@ class _InboxBodyState extends State<_InboxBody> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     final texts = t.notificationCapture;
-    final textTheme = Theme.of(context).textTheme;
-    final colors = context.appColors;
+    final ds = context.ds;
     final page = widget.page;
     return Scaffold(
-      appBar: AppBar(
-        title: Text(texts.inboxTitle),
-      ),
+      appBar: AppBar(title: Text(texts.inboxTitle)),
       body: SafeArea(
         child: BlocBuilder<CaptureInboxBloc, CaptureInboxState>(
           builder: (context, state) {
-            if (state.isLoading) return const AppSkeletonPage();
+            if (state.isLoading) return const _InboxSkeleton();
             final inbox = context.read<CaptureInboxBloc>();
             final tab = _tabFor(state);
             // Kartu yang boleh dicatat satu ketuk (ADR-044 §3.6): dikenali atau
@@ -221,32 +217,37 @@ class _InboxBodyState extends State<_InboxBody> with WidgetsBindingObserver {
                   e,
             ];
             return ListView(
-              padding: const EdgeInsets.fromLTRB(AppSpacing.space4, 0, AppSpacing.space4, AppSpacing.space8),
+              padding: const EdgeInsets.fromLTRB(16, 4, 16, 32),
               children: [
                 const _AccessBanner(),
-                AppSegmentedControl<_InboxTab>(
-                  options: [(_InboxTab.pending, texts.inboxPendingTitle), (_InboxTab.auto, texts.inboxAutoTitle)],
+                DsSegmentedPill<_InboxTab>(
+                  segments: [
+                    DsSegment(value: _InboxTab.pending, label: texts.inboxPendingTitle, count: state.pending.length),
+                    DsSegment(value: _InboxTab.auto, label: texts.inboxAutoTitle, count: state.auto.length),
+                  ],
                   selected: tab,
-                  counts: {_InboxTab.pending: state.pending.length, _InboxTab.auto: state.auto.length},
                   onChanged: (tab) => setState(() => _picked = tab),
                 ),
-                // Pintu ke setelan sumber dan pola, juga saat kotak masuk
-                // kosong (FEATURE_DISCOVERY P-8).
+                // Pintu ke setelan sumber, juga saat kotak masuk kosong
+                // (FEATURE_DISCOVERY P-8).
                 Align(
                   alignment: Alignment.centerRight,
-                  child: AppButton.text(
-                    key: const ValueKey('inbox-manage-sources'),
-                    small: true,
-                    label: t.discovery.notification.manageSources,
-                    onPressed: () {
-                      AppAnalytics.log(
-                        DiscoveryEvents.notificationRowTapped(state: 'active', surface: 'inbox', action: 'manage'),
-                      );
-                      unawaited(context.pushRoute(NotificationCaptureRouteKeys.settings, const EmptyInput()));
-                    },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: DsInlineAction(
+                      key: const ValueKey('inbox-manage-sources'),
+                      dense: true,
+                      icon: Icons.tune_rounded,
+                      label: t.discovery.notification.manageSources,
+                      onPressed: () {
+                        AppAnalytics.log(
+                          DiscoveryEvents.notificationRowTapped(state: 'active', surface: 'inbox', action: 'manage'),
+                        );
+                        unawaited(context.pushRoute(NotificationCaptureRouteKeys.settings, const EmptyInput()));
+                      },
+                    ),
                   ),
                 ),
-                const SizedBox(height: AppSpacing.space2),
                 // Tawaran catat otomatis: tetap sampai dijawab, di tab mana pun.
                 if (state.offer case final offer?)
                   AutoOfferBanner(
@@ -256,22 +257,22 @@ class _InboxBodyState extends State<_InboxBody> with WidgetsBindingObserver {
                   ),
                 if (tab == _InboxTab.pending) ...[
                   if (state.pending.isEmpty)
-                    _InboxEmpty(text: texts.inboxEmpty)
-                  else ...[
-                    // Catat semua yang cocok: Plus, bila ada dua kartu atau lebih yang boleh satu ketuk.
-                    if (ActivePlan.isPlus && eligible.length > 1)
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: AppSpacing.space3),
-                        child: AppButton.secondary(
-                          key: const ValueKey('inbox-confirm-all'),
-                          label: texts.confirmAllAction(n: eligible.length),
-                          expand: true,
-                          onPressed: () => inbox.add(
-                            CaptureInboxConfirmed([for (final e in eligible) (e, state.matches[e.id])]),
-                          ),
+                    _InboxEmpty(asset: ClayIcons.done, text: texts.inboxEmpty)
+                  else
+                  // Catat semua yang cocok: Plus, bila ada dua kartu atau lebih yang boleh satu ketuk.
+                  if (ActivePlan.isPlus && eligible.length > 1)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: DsButton.secondary(
+                        key: const ValueKey('inbox-confirm-all'),
+                        label: texts.confirmAllAction(n: eligible.length),
+                        icon: Icons.done_all_rounded,
+                        expand: true,
+                        onPressed: () => inbox.add(
+                          CaptureInboxConfirmed([for (final e in eligible) (e, state.matches[e.id])]),
                         ),
                       ),
-                  ],
+                    ),
                   for (final entry in state.pending)
                     _PendingCard(
                       entry: entry,
@@ -293,17 +294,17 @@ class _InboxBodyState extends State<_InboxBody> with WidgetsBindingObserver {
                       onLink: (existing, match) =>
                           inbox.add(CaptureInboxLinkedToExisting(id: entry.id, existing: existing, match: match)),
                     ),
-                  const SizedBox(height: AppSpacing.space1),
+                  const SizedBox(height: 4),
                   Text(
                     texts.inboxRetention,
                     textAlign: TextAlign.center,
-                    style: textTheme.bodySmall?.copyWith(color: colors.ink3),
+                    style: ds.typography.bodySm.copyWith(color: ds.colors.textMuted),
                   ),
                 ] else ...[
                   if (state.auto.isEmpty)
-                    _InboxEmpty(text: texts.inboxAutoEmpty)
+                    _InboxEmpty(asset: ClayIcons.emptyTray, text: texts.inboxAutoEmpty)
                   else
-                    AppListCard(
+                    DsListCard(
                       children: [
                         for (final entry in state.auto)
                           _AutoRow(
@@ -314,25 +315,22 @@ class _InboxBodyState extends State<_InboxBody> with WidgetsBindingObserver {
                       ],
                     ),
                   if (state.linked.isNotEmpty) ...[
-                    const SizedBox(height: AppSpacing.space6),
-                    AppSectionHeader(t.recurring.linkedTitle),
-                    AppListCard(
+                    const SizedBox(height: 24),
+                    DsSectionHeader(title: t.recurring.linkedTitle),
+                    const SizedBox(height: 8),
+                    DsListCard(
                       children: [
                         for (final linked in state.linked)
-                          AppListRow(
+                          _InboxRow(
+                            leading: const DsIconTile(icon: Icons.link_rounded),
                             title: linked.ruleName,
                             subtitle: CycleMonthFormatter.formatDayMonth(linked.occurrenceDate),
-                            trailing: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                AppMoneyText(linked.amount),
-                                AppButton.text(
-                                  small: true,
-                                  label: t.recurring.unlinkAction,
-                                  onPressed: () => inbox.add(CaptureInboxUnlinked(linked)),
-                                ),
-                              ],
+                            amount: AppMoneyText.format(linked.amount, MoneyKind.balance),
+                            kind: DsLedgerKind.transfer,
+                            action: DsInlineAction(
+                              dense: true,
+                              label: t.recurring.unlinkAction,
+                              onPressed: () => inbox.add(CaptureInboxUnlinked(linked)),
                             ),
                           ),
                       ],
@@ -348,6 +346,28 @@ class _InboxBodyState extends State<_InboxBody> with WidgetsBindingObserver {
   }
 }
 
+/// Kerangka muat: segmen dan tiga kartu.
+class _InboxSkeleton extends StatelessWidget {
+  const _InboxSkeleton();
+
+  @override
+  Widget build(BuildContext context) => const Padding(
+    padding: EdgeInsets.fromLTRB(16, 4, 16, 0),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        DsSkeleton(height: 42, radius: DsRadius.lgAll),
+        SizedBox(height: 16),
+        DsSkeleton(height: 132, radius: DsRadius.lgAll),
+        SizedBox(height: 12),
+        DsSkeleton(height: 132, radius: DsRadius.lgAll),
+        SizedBox(height: 12),
+        DsSkeleton(height: 132, radius: DsRadius.lgAll),
+      ],
+    ),
+  );
+}
+
 /// Izin membaca notifikasi dicabut: tanpa banner ini kotak masuk tampak kosong
 /// ("Tidak ada yang perlu dicek") padahal tidak ada notifikasi yang masuk.
 class _AccessBanner extends StatelessWidget {
@@ -356,31 +376,41 @@ class _AccessBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final texts = t.notificationCapture;
-    final textTheme = Theme.of(context).textTheme;
-    final colors = context.appColors;
+    final ds = context.ds;
     return BlocBuilder<NotificationSettingsBloc, NotificationSettingsState>(
       builder: (context, state) {
         if (state.isLoading || !state.settings.enabled || state.accessGranted) return const SizedBox.shrink();
         return Padding(
-          padding: const EdgeInsets.only(top: AppSpacing.space2, bottom: AppSpacing.space3),
-          child: AppCard(
+          padding: const EdgeInsets.only(top: 8, bottom: 12),
+          child: DsCard(
             key: const ValueKey('inbox-access-banner'),
-            color: colors.warningSoft,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(texts.accessMissingTitle, style: textTheme.titleSmall),
-                const SizedBox(height: AppSpacing.space1),
-                Text(texts.accessMissingBody, style: textTheme.bodyMedium),
-                const SizedBox(height: AppSpacing.space2),
-                AppButton(
-                  key: const ValueKey('inbox-access-grant'),
-                  small: true,
-                  label: texts.accessAction,
-                  onPressed: () async {
-                    final bloc = context.read<NotificationSettingsBloc>();
-                    if (await showAccessDisclosure(context)) await bloc.openAccessSettings();
-                  },
+                DsIconTile.asset(asset: ClayIcons.warning, tone: DsIconTileTone.warning, size: DsIconTileSize.sm),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(texts.accessMissingTitle, style: ds.typography.titleMd),
+                      const SizedBox(height: 4),
+                      Text(
+                        texts.accessMissingBody,
+                        style: ds.typography.bodySm.copyWith(color: ds.colors.textSecondary),
+                      ),
+                      const SizedBox(height: 12),
+                      DsButton.compact(
+                        key: const ValueKey('inbox-access-grant'),
+                        label: texts.accessAction,
+                        onPressed: () async {
+                          final bloc = context.read<NotificationSettingsBloc>();
+                          if (await showAccessDisclosure(context)) await bloc.openAccessSettings();
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -392,24 +422,63 @@ class _AccessBanner extends StatelessWidget {
 }
 
 class _InboxEmpty extends StatelessWidget {
-  const _InboxEmpty({required this.text});
+  const _InboxEmpty({required this.asset, required this.text});
 
+  final String asset;
   final String text;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: AppSpacing.space8),
+    final ds = context.ds;
+    return DsCard(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
       child: Column(
         children: [
-          const AppIconTile(IconKey.taskAlt, tint: TileTint.green, size: 56),
-          const SizedBox(height: AppSpacing.space4),
+          DsIconTile.asset(asset: asset, size: DsIconTileSize.lg),
+          const SizedBox(height: 12),
           Text(
             text,
             textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: context.appColors.ink2),
+            style: ds.typography.bodyMd.copyWith(color: ds.colors.textSecondary),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Ikon kiri tangkapan, selaras dengan baris Riwayat: ikon clay kategori,
+/// atau ikon asli aplikasi sumber bila ada.
+class _EntryLeading extends StatelessWidget {
+  const _EntryLeading({required this.kind, this.categoryId, this.sourceIconId, this.title});
+
+  final DraftKind kind;
+  final String? categoryId;
+  final String? sourceIconId;
+  final String? title;
+
+  @override
+  Widget build(BuildContext context) {
+    final txKind = _transactionKind(kind);
+    final clay = sourceIconId == null
+        ? ClayIcons.forIcon(TransactionIcon.iconKeyFor(kind: txKind, categoryId: categoryId, title: title))
+        : null;
+    if (clay != null) {
+      return DsIconTile.asset(
+        asset: clay,
+        tone: txKind == TransactionKind.income ? DsIconTileTone.income : DsIconTileTone.neutral,
+      );
+    }
+    return SizedBox.square(
+      dimension: 40,
+      child: Center(
+        child: TransactionIcon(
+          kind: txKind,
+          categoryId: categoryId,
+          sourceIconId: sourceIconId,
+          title: title,
+          ringColor: context.ds.colors.surfaceCard,
+        ),
       ),
     );
   }
@@ -453,28 +522,42 @@ class _PendingCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final texts = t.notificationCapture;
-    final textTheme = Theme.of(context).textTheme;
-    final colors = context.appColors;
+    final ds = context.ds;
+    final c = ds.colors;
     final amount = entry.draft.amountSen;
     final note = entry.draft.note.trim();
+    final isIncome = entry.draft.kind == DraftKind.income;
     return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.space3),
-      child: AppCard(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: DsCard(
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Row(
               children: [
-                TransactionIcon(
-                  kind: _transactionKind(entry.draft.kind),
+                _EntryLeading(
+                  kind: entry.draft.kind,
                   categoryId: entry.draft.categoryId,
                   sourceIconId: entry.iconId,
+                  title: note,
                 ),
-                const SizedBox(width: AppSpacing.space2 + TransactionIcon.badgeOverhang),
+                const SizedBox(width: 12),
                 Expanded(
-                  child: Text(
-                    '${entry.appLabel} · ${CycleMonthFormatter.formatDateShort(entry.capturedAt)}',
-                    style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        entry.appLabel,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: ds.typography.titleMd.copyWith(fontSize: 14),
+                      ),
+                      Text(
+                        CycleMonthFormatter.formatDateShort(entry.capturedAt),
+                        style: ds.typography.bodySm.copyWith(fontSize: 12, color: c.textMuted),
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -484,88 +567,97 @@ class _PendingCard extends StatelessWidget {
                 match != null ||
                 budgetItem != null ||
                 _reasonShown != null) ...[
-              const SizedBox(height: AppSpacing.space2),
+              const SizedBox(height: 12),
               Wrap(
-                spacing: AppSpacing.space2,
-                runSpacing: AppSpacing.space1,
+                spacing: 8,
+                runSpacing: 4,
                 children: [
                   if (entry.possibleDuplicate || existing != null)
-                    AppBadge(texts.possibleDuplicate, tone: AppTone.warning),
+                    DsBadge(label: texts.possibleDuplicate, tone: DsBadgeTone.warning),
                   // Kenapa perlu dicek (QA PR #43 F16).
                   if (_reasonShown case final reason?)
-                    AppBadge(
+                    DsBadge(
                       key: const ValueKey('inbox-review-reason'),
-                      _reasonLabel(reason),
-                      tone: AppTone.info,
+                      label: _reasonLabel(reason),
+                      tone: DsBadgeTone.neutral,
                     ),
                   if (match case final m?)
-                    AppBadge(
-                      t.recurring.matchLabel(name: m.rule.note, date: CycleMonthFormatter.formatDayMonth(m.date)),
-                      tone: AppTone.positive,
+                    DsBadge(
+                      label: t.recurring.matchLabel(
+                        name: m.rule.note,
+                        date: CycleMonthFormatter.formatDayMonth(m.date),
+                      ),
+                      tone: DsBadgeTone.income,
                     ),
                   if (budgetItem case final item?)
-                    AppBadge(
+                    DsBadge(
                       key: const ValueKey('inbox-budget-suggestion'),
-                      texts.budgetSuggestion(name: item.itemName, budget: item.budgetName),
-                      tone: AppTone.info,
+                      label: texts.budgetSuggestion(name: item.itemName, budget: item.budgetName),
+                      tone: DsBadgeTone.neutral,
                     ),
                 ],
               ),
             ],
-            const SizedBox(height: AppSpacing.space3),
+            const SizedBox(height: 12),
             if (amount == null)
-              Text(texts.amountUnknown, style: textTheme.titleMedium?.copyWith(color: colors.warning))
+              Text(texts.amountUnknown, style: ds.typography.titleMd.copyWith(color: c.warning))
             else
-              AppMoneyText(amount, kind: _moneyKind(entry.draft.kind), size: MoneySize.large),
-            if (note.isNotEmpty) Text(note, style: textTheme.titleMedium),
-            const SizedBox(height: AppSpacing.space1),
+              Text(
+                AppMoneyText.format(amount, _moneyKind(entry.draft.kind)),
+                style: ds.typography.amount.copyWith(fontSize: 20, color: isIncome ? c.income : c.textPrimary),
+              ),
+            if (note.isNotEmpty) ...[
+              const SizedBox(height: 2),
+              Text(note, style: ds.typography.titleMd.copyWith(fontSize: 14)),
+            ],
+            const SizedBox(height: 4),
             Text(
               entry.text,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
-              style: textTheme.bodySmall?.copyWith(color: colors.ink2),
+              style: ds.typography.bodySm.copyWith(fontSize: 12, color: c.textSecondary),
             ),
             if (existing case final tx?) ...[
-              const SizedBox(height: AppSpacing.space1),
+              const SizedBox(height: 4),
               Text(
                 key: const ValueKey('inbox-duplicate-of'),
                 texts.duplicateOf(label: _existingLabel(tx)),
-                style: textTheme.bodySmall?.copyWith(color: colors.warning),
+                style: ds.typography.bodySm.copyWith(fontSize: 12, color: c.warning),
               ),
             ],
-            const SizedBox(height: AppSpacing.space3),
+            const SizedBox(height: 12),
             if (existing != null)
               _duplicateActions(existing!)
             else
-              // Wrap, bukan Row: tiga tombol (Abaikan, Ajari pola, Catat) tidak
-              // muat sebaris di 360dp.
+              // Wrap, bukan Row: tiga tombol tidak muat sebaris di 360dp.
               Wrap(
                 alignment: WrapAlignment.end,
-                spacing: AppSpacing.space2,
-                runSpacing: AppSpacing.space1,
+                spacing: 8,
+                runSpacing: 8,
                 children: [
-                  AppButton.text(small: true, label: texts.dismissAction, onPressed: onDismiss),
+                  DsInlineAction(dense: true, label: texts.dismissAction, onPressed: onDismiss),
                   // Promosi dan pengumuman: pelajari supaya tidak muncul lagi. Hanya
                   // untuk kartu yang perlu diisi dan punya nominal terbaca (bentuknya
                   // bisa dipelajari dengan aman).
                   if (!oneTap && negativeTemplateFor(entry.text) != null)
-                    AppButton.text(
+                    DsInlineAction(
                       key: ValueKey('inbox-not-transaction-${entry.id}'),
-                      small: true,
+                      dense: true,
                       label: texts.notTransactionAction,
                       onPressed: onNotTransaction,
                     ),
                   // Satu ketuk: Ubah dulu membuka CATAT, Catat langsung mencatat.
                   if (oneTap)
-                    AppButton.text(
+                    DsInlineAction(
                       key: ValueKey('inbox-edit-first-${entry.id}'),
-                      small: true,
+                      dense: true,
                       label: texts.editFirstAction,
                       onPressed: onRecord,
                     ),
-                  AppButton(
+                  DsInlineAction(
                     key: ValueKey('inbox-confirm-${entry.id}'),
-                    small: true,
+                    dense: true,
+                    tone: DsInlineActionTone.primary,
                     label: texts.recordAction,
                     onPressed: oneTap ? onConfirm : onRecord,
                   ),
@@ -591,33 +683,27 @@ class _PendingCard extends StatelessWidget {
     final canLink = tx.recurrence == null && rule != null;
     return Wrap(
       alignment: WrapAlignment.end,
-      spacing: AppSpacing.space2,
-      runSpacing: AppSpacing.space1,
+      spacing: 8,
+      runSpacing: 8,
       children: [
-        AppButton.text(
+        DsInlineAction(
           key: const ValueKey('inbox-record-anyway'),
-          small: true,
+          dense: true,
           label: texts.recordAnywayAction,
           onPressed: onRecord,
         ),
+        DsInlineAction(
+          key: const ValueKey('inbox-close-duplicate'),
+          dense: true,
+          tone: canLink ? DsInlineActionTone.tonal : DsInlineActionTone.primary,
+          label: texts.closeDuplicateAction,
+          onPressed: onDismiss,
+        ),
         if (canLink)
-          AppButton.secondary(
-            key: const ValueKey('inbox-close-duplicate'),
-            small: true,
-            label: texts.closeDuplicateAction,
-            onPressed: onDismiss,
-          )
-        else
-          AppButton(
-            key: const ValueKey('inbox-close-duplicate'),
-            small: true,
-            label: texts.closeDuplicateAction,
-            onPressed: onDismiss,
-          ),
-        if (canLink)
-          AppButton(
+          DsInlineAction(
             key: const ValueKey('inbox-link-existing'),
-            small: true,
+            dense: true,
+            tone: DsInlineActionTone.primary,
             label: texts.linkToRuleAction(name: rule.rule.note),
             onPressed: () => onLink(tx, rule),
           ),
@@ -643,10 +729,10 @@ String _reasonLabel(CaptureReviewReason reason) {
   };
 }
 
-TransactionKind _transactionKind(DraftKind kind) => switch (kind) {
+TransactionKind _transactionKind(DraftKind? kind) => switch (kind) {
   DraftKind.income => TransactionKind.income,
-  DraftKind.expense => TransactionKind.expense,
   DraftKind.transfer => TransactionKind.transfer,
+  DraftKind.expense || null => TransactionKind.expense,
 };
 
 MoneyKind _moneyKind(DraftKind? kind) => switch (kind) {
@@ -655,6 +741,56 @@ MoneyKind _moneyKind(DraftKind? kind) => switch (kind) {
   DraftKind.transfer => MoneyKind.transfer,
   null => MoneyKind.balance,
 };
+
+DsLedgerKind _ledgerKind(DraftKind? kind) => switch (kind) {
+  DraftKind.income => DsLedgerKind.income,
+  DraftKind.transfer => DsLedgerKind.transfer,
+  DraftKind.expense || null => DsLedgerKind.expense,
+};
+
+/// Baris daftar di kartu daftar: [DsLedgerRow] dengan satu aksi di bawahnya,
+/// rata kanan.
+class _InboxRow extends StatelessWidget {
+  const _InboxRow({
+    required this.leading,
+    required this.title,
+    required this.subtitle,
+    required this.amount,
+    required this.kind,
+    required this.action,
+    this.badge,
+    this.onTap,
+  });
+
+  final Widget leading;
+  final String title;
+  final String subtitle;
+  final String amount;
+  final DsLedgerKind kind;
+  final Widget action;
+  final Widget? badge;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: [
+      DsLedgerRow(
+        leading: leading,
+        title: title,
+        subtitle: subtitle,
+        amount: amount,
+        badge: badge,
+        kind: kind,
+        onTap: onTap,
+      ),
+      Align(
+        alignment: Alignment.centerRight,
+        child: Padding(padding: const EdgeInsets.fromLTRB(12, 0, 12, 10), child: action),
+      ),
+    ],
+  );
+}
 
 /// Satu transaksi yang tercatat otomatis: ketuk untuk meninjau, "Batalkan"
 /// menghapusnya (dengan konfirmasi).
@@ -668,31 +804,23 @@ class _AutoRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final texts = t.notificationCapture;
-    final amount = entry.amountSen;
-    return AppListRow(
+    final kind = _moneyKind(entry.kind);
+    return _InboxRow(
       onTap: onReview,
-      leading: TransactionIcon(
-        kind: _transactionKind(entry.kind),
+      leading: _EntryLeading(
+        kind: entry.kind,
         categoryId: entry.categoryId,
         sourceIconId: entry.iconId,
+        title: entry.note,
       ),
       title: entry.note.isEmpty ? entry.appLabel : entry.note,
       subtitle: '${entry.appLabel} · ${CycleMonthFormatter.formatDateShort(entry.transactionDate)}',
-      // Lencana di depan subjudul: subjudul satu baris dan elipsis memotong ekornya.
-      subtitleLeading: entry.isNew
-          ? Padding(
-              padding: const EdgeInsets.only(right: AppSpacing.space1),
-              child: AppBadge(key: const ValueKey('auto-new-badge'), texts.autoNewBadge, tone: AppTone.positive),
-            )
+      amount: AppMoneyText.format(entry.amountSen, kind),
+      kind: _ledgerKind(entry.kind),
+      badge: entry.isNew
+          ? DsBadge(key: const ValueKey('auto-new-badge'), label: texts.autoNewBadge, tone: DsBadgeTone.income)
           : null,
-      trailing: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          AppMoneyText(amount, kind: _moneyKind(entry.kind)),
-          AppButton.text(small: true, label: texts.undoAction, onPressed: onUndo),
-        ],
-      ),
+      action: DsInlineAction(dense: true, label: texts.undoAction, onPressed: onUndo),
     );
   }
 }

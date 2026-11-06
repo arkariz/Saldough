@@ -6782,6 +6782,23 @@ tugas lama yang menyebutnya adalah riwayat, bukan keadaan sekarang.
       contoh, hapus, sumber baru tanpa Hapus, ikon asli). `notification_widgets`
       lama tidak lagi dipakai siapa pun. Sisa B-90: Kotak masuk dan `freelance`.
 
+- [x] **T-26.31** (M) Rombak v2 layar Catat dari notifikasi, irisan 4: **Kotak
+      masuk** (6 Nov 2026; tanpa acuan Stitch, mengikuti bahasa v2 Riwayat dan
+      prototipe `KotakMasuk.dc.html`). Segmen **`DsSegmentedPill`** dengan
+      hitungan (`DsSegment.count` baru, ditulis lebih pudar sesudah label);
+      pintu Kelola aplikasi `DsInlineAction`; **kartu tangkapan `DsCard`** dengan
+      ikon clay kategori (atau ikon asli aplikasi), badge `DsBadge`, nominal
+      `typography.amount`, teks notifikasi, dan aksi `DsInlineAction` (Abaikan,
+      Bukan transaksi, Ubah dulu, Catat; duplikat: Tetap catat, Tutup, Tautkan);
+      Catat semua `DsButton.secondary`; segmen Otomatis memakai `DsListCard` +
+      `DsLedgerRow` dengan Batalkan sebagai aksi baris dan lencana Baru;
+      daftar tertaut rutin dengan Lepas tautan; banner izin dan **banner tawaran
+      catat otomatis** (`AutoOfferBanner`) jadi `DsCard` bertile clay; keadaan
+      kosong kartu clay; kerangka muat `DsSkeleton`. Perilaku, kunci uji, dan
+      teks tidak berubah. Uji: enam uji baru (hitungan segmen, kartu, nominal
+      tak terbaca, kosong, baris otomatis, 360dp pada teks 1× dan 2×). Seluruh
+      layar Catat dari notifikasi kini v2; sisa B-90: `freelance`.
+
 **Tahap penutup: gerbang Accepted**
 
 - [ ] **T-26.26** (L, pemilik dan QA) Uji perangkat nyata untuk menjadikan
@@ -6887,7 +6904,7 @@ menambah dan memindahkannya ada di
 | B-87 | **E3 catat otomatis per bentuk** (**selesai 5 Nov 2026**, T-26.20–T-26.22; sisa "sakelar global ke Lanjutan" dilebur ke B-88 karena halaman setelan belum punya bagian Lanjutan): tawaran setelah konfirmasi pertama tanpa ubahan, pagar nominal besar, tanda "baru". Plus. | agen | NOTIFICATION_CAPTURE_V2.md §8, ADR-044 §3.7 |
 | B-88 | **E4 Lanjutan** (termasuk memindah sakelar global "Catat otomatis" ke sana): daftar aturan, filter, contoh; migrasi `walletRules` menjadi aturan. "Ajari pola", pola bawaan, dan ikatan rutin ke pola sudah dicabut (T-26.23), jadi tidak perlu dimigrasi. | agen | ADR-044 §3.7 |
 | B-89 | **E5 permukaan lain**: Quick Settings tile "Catat n transaksi" (S–M), widget layar utama bila data pemakaian mendukung (L). | agen | NOTIFICATION_CAPTURE_V2.md §11 |
-| B-90 | **Rombak v2 layar Catat dari notifikasi** (Setelan T-26.28 dan Mulai cepat T-26.29 selesai 6 Nov 2026; halaman sumber T-26.30 selesai 6 Nov 2026; sisa Kotak masuk, acuan Stitch ada di `~/Downloads/stitch_tanukonomy_pixel_budget_tracker 2/`; kotak masuk belum) (kotak masuk, banner tawaran, setelan, halaman sumber, Mulai cepat) dan `freelance`: masih memakai `AppCard`/`AppButton`/`appColors` (hasil audit 5 Nov 2026: `notification_capture` 7 berkas lama, `freelance` 10). Bagian T-25.4. | agen | T-25.4, [ADR-043](../02-architecture/adr/0043-design-system-v2-dan-preset-tema.md) |
+| B-90 | **Rombak v2 layar Catat dari notifikasi** (Setelan T-26.28 dan Mulai cepat T-26.29 selesai 6 Nov 2026; halaman sumber T-26.30 selesai 6 Nov 2026; Kotak masuk T-26.31 selesai 6 Nov 2026; sisa hanya `freelance`, acuan Stitch ada di `~/Downloads/stitch_tanukonomy_pixel_budget_tracker 2/`; kotak masuk belum) (kotak masuk, banner tawaran, setelan, halaman sumber, Mulai cepat) dan `freelance`: masih memakai `AppCard`/`AppButton`/`appColors` (hasil audit 5 Nov 2026: `notification_capture` 7 berkas lama, `freelance` 10). Bagian T-25.4. | agen | T-25.4, [ADR-043](../02-architecture/adr/0043-design-system-v2-dan-preset-tema.md) |
 | B-91 | **Pangkas sisa kode mati pola**: mesin templat `{from}`/`{to}` (`TemplateWordRole.from/to`, `NotificationTemplate.fromToken/toToken`, `NotificationTemplateMatch.fromText/toText`), `NotificationSource.walletForFragment`, dan uji `templat {from}/{to}`; rapikan fitur contoh notifikasi yang kini hanya "Jadikan filter" (string dan keterangan). Bisa bersama B-88. | agen | T-26.23 |
 | B-92 | **Poles snackbar dan tawaran**: `showAppSnackBar` belum punya prioritas (galat bisa tertimpa pesan biasa; yang terakhir menang); tawaran catat otomatis hanya hidup selama halaman Kotak masuk terbuka (hilang bila keluar sebelum menjawab, muncul lagi pada catatan berikutnya); tawaran belum ada untuk tombol Catat di notifikasi (aplikasi tertutup). | agen | T-26.25, T-26.22 |
 | B-39 | **Pengumuman pembaruan R2**: pembaruan wajib/versi minimum untuk perbaikan kritis (KT-U1), pembaruan untuk iOS (App Store) sesudah iOS dirilis, dan pilihan jalur uji untuk penguji. | agen + pemilik | [APP_UPDATE.md](../01-product/features/APP_UPDATE.md) §14 |

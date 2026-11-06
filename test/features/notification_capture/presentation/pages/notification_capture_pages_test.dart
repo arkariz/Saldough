@@ -1335,6 +1335,87 @@ void main() {
     });
   });
 
+  group('kotak masuk v2 (T-26.31)', () {
+    final at = DateTime(2026, 10, 1, 14);
+
+    CaptureInboxEntry pending(String id, {int? amount = 5000000, String note = ''}) => CaptureInboxEntry(
+      id: id,
+      packageName: 'id.co.bri.brimo',
+      appLabel: 'BRImo',
+      text: 'Pembayaran Rp50.000 berhasil di INDOMARET',
+      capturedAt: at,
+      draft: RecordDraft(kind: DraftKind.expense, amountSen: amount, note: note),
+      reviewReason: CaptureReviewReason.categoryUnclear,
+      possibleDuplicate: true,
+    );
+
+    AutoRecordedEntry auto(String id) => AutoRecordedEntry(
+      captureId: id,
+      transactionId: 't$id',
+      transactionDate: at,
+      kind: DraftKind.expense,
+      amountSen: 2500000,
+      appLabel: 'BRImo',
+      recordedAt: at,
+      note: 'KOPI $id',
+    );
+
+    testWidgets('segmen memuat hitungan; kartu tampil sebagai DsCard dengan nominal dan tombol aksi', (tester) async {
+      await store.saveInbox([pending('a', note: 'INDOMARET'), pending('b')]);
+      await store.saveAutoRecorded([auto('x')]);
+      await open(tester, NotificationCaptureRouteKeys.inbox);
+
+      expect(find.textContaining('${t.notificationCapture.inboxPendingTitle} 2', findRichText: true), findsOneWidget);
+      expect(find.textContaining('${t.notificationCapture.inboxAutoTitle} 1', findRichText: true), findsOneWidget);
+      expect(find.byType(DsCard), findsWidgets);
+      expect(find.text('−Rp50.000'), findsWidgets);
+      expect(find.byKey(const ValueKey('inbox-confirm-a')), findsOneWidget);
+    });
+
+    testWidgets('nominal tak terbaca ditulis sebagai peringatan, bukan angka', (tester) async {
+      await store.saveInbox([pending('u', amount: null)]);
+      await open(tester, NotificationCaptureRouteKeys.inbox);
+      expect(find.text(t.notificationCapture.amountUnknown), findsOneWidget);
+    });
+
+    testWidgets('keadaan kosong tiap segmen memakai kartu v2 dengan ikon clay', (tester) async {
+      await open(tester, NotificationCaptureRouteKeys.inbox);
+      expect(find.text(t.notificationCapture.inboxEmpty), findsOneWidget);
+      expect(find.byType(DsIconTile), findsWidgets);
+
+      await tester.tap(find.textContaining(t.notificationCapture.inboxAutoTitle, findRichText: true));
+      await tester.pumpAndSettle();
+      expect(find.text(t.notificationCapture.inboxAutoEmpty), findsOneWidget);
+    });
+
+    testWidgets('segmen Otomatis: baris bernominal dan Batalkan sebagai aksi baris', (tester) async {
+      await store.saveAutoRecorded([auto('x')]);
+      await open(tester, NotificationCaptureRouteKeys.inbox);
+      expect(find.text('KOPI x'), findsOneWidget);
+      expect(find.text('−Rp25.000'), findsOneWidget);
+      expect(find.widgetWithText(DsInlineAction, t.notificationCapture.undoAction), findsOneWidget);
+    });
+
+    for (final scale in [1.0, 2.0]) {
+      testWidgets('360dp teks ${scale}x: kartu lengkap dan baris otomatis tanpa luap', (tester) async {
+        tester.view
+          ..physicalSize = const Size(360, 1600)
+          ..devicePixelRatio = 1;
+        addTearDown(tester.view.reset);
+        tester.platformDispatcher.textScaleFactorTestValue = scale;
+        addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+        await store.saveInbox([pending('a', note: 'INDOMARET KELAPA GADING')]);
+        await store.saveAutoRecorded([auto('x')]);
+        await open(tester, NotificationCaptureRouteKeys.inbox);
+        expect(tester.takeException(), isNull);
+
+        await tester.tap(find.textContaining(t.notificationCapture.inboxAutoTitle, findRichText: true));
+        await tester.pumpAndSettle();
+        expect(tester.takeException(), isNull);
+      });
+    }
+  });
+
   group('halaman sumber v2 (T-26.30)', () {
     Future<NotificationCaptureSettings> settings() async =>
         (await store.loadSettings()).getOrElse((_) => throw StateError(''));

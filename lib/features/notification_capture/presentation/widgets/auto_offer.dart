@@ -5,7 +5,6 @@ import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/plan/active_plan.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/notification_capture/presentation/bloc/capture_inbox_bloc.dart';
 import 'package:saldough/features/notification_capture/presentation/widgets/plus_gate.dart';
 
@@ -29,37 +28,47 @@ class AutoOfferBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final texts = t.notificationCapture;
-    final textTheme = Theme.of(context).textTheme;
-    final colors = context.appColors;
+    final ds = context.ds;
     return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.space3),
-      child: AppCard(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: DsCard(
         key: const ValueKey('inbox-auto-offer'),
-        color: colors.brandSoft,
-        child: Column(
+        padding: const EdgeInsets.all(16),
+        child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(texts.autoOfferTitle(app: prompt.appLabel), style: textTheme.titleSmall),
-            const SizedBox(height: AppSpacing.space1),
-            Text(texts.autoOfferBody, style: textTheme.bodyMedium?.copyWith(color: colors.ink2)),
-            const SizedBox(height: AppSpacing.space2),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                AppButton.text(
-                  key: const ValueKey('inbox-auto-offer-later'),
-                  small: true,
-                  label: texts.autoOfferLater,
-                  onPressed: onLater,
-                ),
-                const SizedBox(width: AppSpacing.space2),
-                AppButton(
-                  key: const ValueKey('inbox-auto-offer-yes'),
-                  small: true,
-                  label: texts.autoOfferYes,
-                  onPressed: onYes,
-                ),
-              ],
+            DsIconTile.asset(asset: ClayIcons.bolt, tone: DsIconTileTone.income, size: DsIconTileSize.sm),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(texts.autoOfferTitle(app: prompt.appLabel), style: ds.typography.titleMd),
+                  const SizedBox(height: 4),
+                  Text(texts.autoOfferBody, style: ds.typography.bodySm.copyWith(color: ds.colors.textSecondary)),
+                  const SizedBox(height: 12),
+                  Wrap(
+                    alignment: WrapAlignment.end,
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
+                      DsInlineAction(
+                        key: const ValueKey('inbox-auto-offer-later'),
+                        dense: true,
+                        label: texts.autoOfferLater,
+                        onPressed: onLater,
+                      ),
+                      DsInlineAction(
+                        key: const ValueKey('inbox-auto-offer-yes'),
+                        dense: true,
+                        tone: DsInlineActionTone.primary,
+                        label: texts.autoOfferYes,
+                        onPressed: onYes,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ],
         ),

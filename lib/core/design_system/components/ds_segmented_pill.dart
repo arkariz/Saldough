@@ -9,7 +9,7 @@ import 'package:saldough/core/design_system/tokens/ds_radius.dart';
 @immutable
 class DsSegment<T> {
   /// Membuat pilihan.
-  const DsSegment({required this.value, required this.label, this.icon, this.asset});
+  const DsSegment({required this.value, required this.label, this.icon, this.asset, this.count});
 
   /// Nilai pilihan.
   final T value;
@@ -22,6 +22,9 @@ class DsSegment<T> {
 
   /// Ikon clay (SVG) di depan teks; menggantikan [icon].
   final String? asset;
+
+  /// Jumlah isi, ditulis lebih pudar sesudah label bila ada.
+  final int? count;
 }
 
 /// Pengalih segmen dengan pil hijau yang meluncur ke pilihan aktif (acuan
@@ -69,7 +72,13 @@ class DsSegmentedPill<T> extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: c.actionPrimary,
                     borderRadius: DsRadius.mdAll,
-                    boxShadow: [BoxShadow(color: c.actionPrimary.withValues(alpha: 0.25), blurRadius: 6, offset: const Offset(0, 2))],
+                    boxShadow: [
+                      BoxShadow(
+                        color: c.actionPrimary.withValues(alpha: 0.25),
+                        blurRadius: 6,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -126,8 +135,17 @@ class _Segment<T> extends StatelessWidget {
                     const SizedBox(width: 4),
                   ],
                   Flexible(
-                    child: Text(
-                      segment.label,
+                    child: Text.rich(
+                      TextSpan(
+                        text: segment.label,
+                        children: [
+                          if (segment.count case final count?)
+                            TextSpan(
+                              text: ' $count',
+                              style: TextStyle(color: active ? color.withValues(alpha: 0.8) : c.textMuted),
+                            ),
+                        ],
+                      ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: ds.typography.labelMd.copyWith(color: color, fontSize: 12),

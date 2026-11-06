@@ -2974,6 +2974,30 @@ class Translations$notificationCapture$id {
 	/// id: 'Kata pengenal, pisahkan dengan koma'
 	String get walletRuleKeywordsField => 'Kata pengenal, pisahkan dengan koma';
 
+	/// id: 'Dompet bawaan'
+	String get walletDefaultTitle => 'Dompet bawaan';
+
+	/// id: 'Cadangan'
+	String get walletFallbackPill => 'Cadangan';
+
+	/// id: '$n aturan'
+	String walletRulesCount({required Object n}) => '${n} aturan';
+
+	/// id: 'Jika dua aturan cocok bersamaan, notifikasinya masuk ke Kotak masuk supaya kamu yang memutuskan.'
+	String get walletRulesAmbiguousNote => 'Jika dua aturan cocok bersamaan, notifikasinya masuk ke Kotak masuk supaya kamu yang memutuskan.';
+
+	/// id: '$n frasa aktif'
+	String keywordsActive({required Object n}) => '${n} frasa aktif';
+
+	/// id: 'Filter dan contoh notifikasi'
+	String get filterCardTitle => 'Filter dan contoh notifikasi';
+
+	/// id: 'Hapus aturan $n'
+	String removeRuleLabel({required Object n}) => 'Hapus aturan ${n}';
+
+	/// id: 'Hapus frasa $word'
+	String removeKeywordLabel({required Object word}) => 'Hapus frasa ${word}';
+
 	/// id: 'Tambah dompet'
 	String get walletRuleAdd => 'Tambah dompet';
 
@@ -6869,6 +6893,14 @@ extension on Translations {
 			'notificationCapture.walletRulesTitle' => 'Dompet lain di aplikasi ini',
 			'notificationCapture.walletRulesHint' => 'Untuk aplikasi yang punya beberapa dompet di dalamnya. Bila notifikasi memuat kata pengenalnya, dompet itu yang dipakai; bila tidak, dompet utama di atas.',
 			'notificationCapture.walletRuleKeywordsField' => 'Kata pengenal, pisahkan dengan koma',
+			'notificationCapture.walletDefaultTitle' => 'Dompet bawaan',
+			'notificationCapture.walletFallbackPill' => 'Cadangan',
+			'notificationCapture.walletRulesCount' => ({required Object n}) => '${n} aturan',
+			'notificationCapture.walletRulesAmbiguousNote' => 'Jika dua aturan cocok bersamaan, notifikasinya masuk ke Kotak masuk supaya kamu yang memutuskan.',
+			'notificationCapture.keywordsActive' => ({required Object n}) => '${n} frasa aktif',
+			'notificationCapture.filterCardTitle' => 'Filter dan contoh notifikasi',
+			'notificationCapture.removeRuleLabel' => ({required Object n}) => 'Hapus aturan ${n}',
+			'notificationCapture.removeKeywordLabel' => ({required Object word}) => 'Hapus frasa ${word}',
 			'notificationCapture.walletRuleAdd' => 'Tambah dompet',
 			'notificationCapture.walletRuleRemove' => 'Hapus',
 			'notificationCapture.walletRuleNeedsKeywords' => 'Isi minimal satu kata pengenal',
@@ -7330,6 +7362,8 @@ extension on Translations {
 			'analysis.category.belowAvg' => ({required Object amount}) => '${amount} di bawah rata-rata',
 			'analysis.category.avgLine' => ({required Object n}) => 'rata-rata ${n} bulan',
 			'analysis.category.moreHint' => '20 transaksi terbaru',
+			_ => null,
+		} ?? switch (path) {
 			'premium.title' => 'Tanukonomy Plus',
 			'premium.backToLatest' => 'Kembali ke periode terbaru',
 			'premium.seePlus' => 'Lihat Plus',
@@ -7338,8 +7372,6 @@ extension on Translations {
 			'premium.signInBody' => 'Fitur ini bagian dari Plus. Masuk dengan akunmu untuk memakainya. Mencatat tetap gratis dan tanpa akun.',
 			'premium.signInAction' => 'Masuk',
 			'premium.plusOnlyTitle' => 'Fitur ini bagian dari Plus',
-			_ => null,
-		} ?? switch (path) {
 			'premium.plusOnlyBody' => 'Berlangganan Plus belum tersedia. Mencatat tetap gratis.',
 			'premium.account.section' => 'Plus',
 			'premium.account.rowTitle' => 'Tanukonomy Plus',

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:ui' as ui;
 
 import 'package:api_storage/api_storage.dart';
@@ -1331,6 +1332,150 @@ void main() {
 
       expect((await ledger.listTransactionsInMonth(at)).getOrElse((_) => throw StateError('')), isEmpty);
       expect((await store.loadAutoRecorded()).getOrElse((_) => throw StateError('')), isEmpty);
+    });
+  });
+
+  group('halaman sumber v2 (T-26.30)', () {
+    Future<NotificationCaptureSettings> settings() async =>
+        (await store.loadSettings()).getOrElse((_) => throw StateError(''));
+
+    Future<void> openSource(WidgetTester tester, NotificationSource source) async {
+      tester.view
+        ..physicalSize = const Size(800, 3200)
+        ..devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      await store.saveSettings(NotificationCaptureSettings(enabled: true, sources: [source]));
+      await open(tester, NotificationCaptureRouteKeys.settings);
+      await tester.tap(find.text(source.appLabel));
+      await tester.pumpAndSettle();
+    }
+
+    const bri = NotificationSource(
+      packageName: 'id.co.bri.brimo',
+      appLabel: 'BRImo',
+      keywords: ['berhasil'],
+      walletId: 'bri',
+    );
+
+    testWidgets('kartu identitas, dompet bawaan, dan sakelar Didengarkan', (tester) async {
+      await openSource(tester, bri);
+      final texts = t.notificationCapture;
+
+      expect(find.text('id.co.bri.brimo'), findsOneWidget);
+      expect(find.text(texts.walletDefaultTitle), findsOneWidget);
+      expect(find.text(texts.walletFallbackPill), findsOneWidget);
+      expect(find.byKey(const ValueKey('notification-source-wallet')), findsOneWidget);
+      expect(tester.widget<Switch>(find.byKey(const ValueKey('notification-source-enabled'))).value, isTrue);
+
+      await tester.tap(find.byKey(const ValueKey('notification-source-enabled')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(texts.save));
+      await tester.pumpAndSettle();
+      expect((await settings()).sources.single.enabled, isFalse);
+    });
+
+    testWidgets('aturan dompet: tambah, tampil sebagai kartu bernomor, hapus', (tester) async {
+      await openSource(tester, bri);
+      final texts = t.notificationCapture;
+
+      expect(find.text(texts.walletRulesCount(n: 0)), findsOneWidget);
+
+      await tester.tap(find.text(texts.walletRuleAdd));
+      await tester.pumpAndSettle();
+      expect(find.text(texts.walletRulesCount(n: 1)), findsOneWidget);
+      expect(find.byTooltip(texts.walletRuleRemove), findsOneWidget);
+
+      await tester.tap(find.byTooltip(texts.walletRuleRemove));
+      await tester.pumpAndSettle();
+      expect(find.text(texts.walletRulesCount(n: 0)), findsOneWidget);
+      expect(find.byTooltip(texts.walletRuleRemove), findsNothing);
+    });
+
+    testWidgets('filter: akordeon tertutup bila ada frasa, terbuka bila kosong, tambah frasa disimpan', (
+      tester,
+    ) async {
+      await openSource(tester, bri);
+      final texts = t.notificationCapture;
+
+      expect(find.text(texts.keywordsActive(n: 1)), findsOneWidget);
+      expect(find.byKey(const ValueKey('notification-samples-switch')), findsNothing);
+
+      await tester.tap(find.byKey(const ValueKey('notification-source-advanced')));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const ValueKey('notification-samples-switch')), findsOneWidget);
+
+      await tester.enterText(find.widgetWithText(TextField, texts.keywordField), 'transfer');
+      await tester.tap(find.text(texts.addKeyword));
+      await tester.pumpAndSettle();
+      expect(find.text(texts.keywordsActive(n: 2)), findsOneWidget);
+
+      await tester.tap(find.text(texts.save));
+      await tester.pumpAndSettle();
+      expect((await settings()).sources.single.keywords, ['berhasil', 'transfer']);
+    });
+
+    testWidgets('tanpa frasa: akordeon langsung terbuka dengan peringatan', (tester) async {
+      await openSource(tester, const NotificationSource(packageName: 'id.co.bri.brimo', appLabel: 'BRImo'));
+      expect(find.text(t.notificationCapture.keywordsEmptyWarning), findsOneWidget);
+      expect(find.byKey(const ValueKey('notification-samples-switch')), findsOneWidget);
+    });
+
+    testWidgets('contoh notifikasi: persetujuan lembar v2; Batal membiarkan sakelar mati', (tester) async {
+      await openSource(tester, bri);
+      final texts = t.notificationCapture;
+      await tester.tap(find.byKey(const ValueKey('notification-source-advanced')));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byKey(const ValueKey('notification-samples-switch')));
+      await tester.pumpAndSettle();
+      expect(find.text(texts.samplesDisclosureTitle), findsOneWidget);
+      await tester.tap(find.text(texts.samplesDisclosureCancel));
+      await tester.pumpAndSettle();
+      expect((await settings()).saveSamples, isFalse);
+
+      await tester.tap(find.byKey(const ValueKey('notification-samples-switch')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(texts.samplesDisclosureAgree));
+      await tester.pumpAndSettle();
+      expect((await settings()).saveSamples, isTrue);
+    });
+
+    testWidgets('Hapus sumber ada untuk sumber tersimpan, meminta konfirmasi, lalu menghapus', (tester) async {
+      await openSource(tester, bri);
+      final texts = t.notificationCapture;
+
+      await tester.tap(find.text(texts.removeSource));
+      await tester.pumpAndSettle();
+      expect(find.text(texts.removeSourceConfirm(app: 'BRImo')), findsOneWidget);
+      await tester.tap(find.descendant(of: find.byType(AlertDialog), matching: find.byType(DsButton)).last);
+      await tester.pumpAndSettle();
+      expect((await settings()).sources, isEmpty);
+    });
+
+    testWidgets('sumber baru dari pemilih: tanpa tautan Hapus', (tester) async {
+      gateway.apps = const [InstalledApp(packageName: 'com.gojek.gopay', label: 'GoPay')];
+      tester.view
+        ..physicalSize = const Size(800, 3200)
+        ..devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      await store.saveSettings(const NotificationCaptureSettings(enabled: true));
+      await open(tester, NotificationCaptureRouteKeys.settings);
+      await tester.tap(find.text(t.notificationCapture.addSource));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('GoPay'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('com.gojek.gopay'), findsOneWidget);
+      expect(find.text(t.notificationCapture.removeSource), findsNothing);
+    });
+
+    testWidgets('ikon asli aplikasi dipakai di kartu identitas', (tester) async {
+      final png = base64Decode(
+        'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGP4z8DwHwAFAAH/q842iQAAAABJRU5ErkJggg==',
+      );
+      gateway.apps = [InstalledApp(packageName: 'id.co.bri.brimo', label: 'BRImo', icon: png)];
+      await openSource(tester, bri);
+      expect(find.byType(Image), findsWidgets);
     });
   });
 

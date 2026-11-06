@@ -1202,6 +1202,14 @@ class _Translations$notificationCapture$en extends Translations$notificationCapt
 	@override String get walletRulesTitle => 'Other wallets in this app';
 	@override String get walletRulesHint => 'For apps with several wallets. If the notification contains the keyword, that wallet is used; otherwise the main wallet above.';
 	@override String get walletRuleKeywordsField => 'Keywords, separated by commas';
+	@override String get walletDefaultTitle => 'Default wallet';
+	@override String get walletFallbackPill => 'Fallback';
+	@override String walletRulesCount({required Object n}) => '${n} rules';
+	@override String get walletRulesAmbiguousNote => 'If two rules match at once, the capture goes to the Inbox for you to decide.';
+	@override String keywordsActive({required Object n}) => '${n} phrases on';
+	@override String get filterCardTitle => 'Filter and sample notifications';
+	@override String removeRuleLabel({required Object n}) => 'Remove rule ${n}';
+	@override String removeKeywordLabel({required Object word}) => 'Remove phrase ${word}';
 	@override String get walletRuleAdd => 'Add wallet';
 	@override String get walletRuleRemove => 'Remove';
 	@override String get walletRuleNeedsKeywords => 'Enter at least one keyword';
@@ -3598,6 +3606,14 @@ extension on TranslationsEn {
 			'notificationCapture.walletRulesTitle' => 'Other wallets in this app',
 			'notificationCapture.walletRulesHint' => 'For apps with several wallets. If the notification contains the keyword, that wallet is used; otherwise the main wallet above.',
 			'notificationCapture.walletRuleKeywordsField' => 'Keywords, separated by commas',
+			'notificationCapture.walletDefaultTitle' => 'Default wallet',
+			'notificationCapture.walletFallbackPill' => 'Fallback',
+			'notificationCapture.walletRulesCount' => ({required Object n}) => '${n} rules',
+			'notificationCapture.walletRulesAmbiguousNote' => 'If two rules match at once, the capture goes to the Inbox for you to decide.',
+			'notificationCapture.keywordsActive' => ({required Object n}) => '${n} phrases on',
+			'notificationCapture.filterCardTitle' => 'Filter and sample notifications',
+			'notificationCapture.removeRuleLabel' => ({required Object n}) => 'Remove rule ${n}',
+			'notificationCapture.removeKeywordLabel' => ({required Object word}) => 'Remove phrase ${word}',
 			'notificationCapture.walletRuleAdd' => 'Add wallet',
 			'notificationCapture.walletRuleRemove' => 'Remove',
 			'notificationCapture.walletRuleNeedsKeywords' => 'Enter at least one keyword',
@@ -4059,6 +4075,8 @@ extension on TranslationsEn {
 			'analysis.category.belowAvg' => ({required Object amount}) => '${amount} below average',
 			'analysis.category.avgLine' => ({required Object n}) => '${n}-month average',
 			'analysis.category.moreHint' => 'Latest 20 transactions',
+			_ => null,
+		} ?? switch (path) {
 			'premium.title' => 'Tanukonomy Plus',
 			'premium.backToLatest' => 'Back to the latest period',
 			'premium.seePlus' => 'See Plus',
@@ -4067,8 +4085,6 @@ extension on TranslationsEn {
 			'premium.signInBody' => 'This feature is part of Plus. Sign in with your account to use it. Recording stays free and works without an account.',
 			'premium.signInAction' => 'Sign in',
 			'premium.plusOnlyTitle' => 'This feature is part of Plus',
-			_ => null,
-		} ?? switch (path) {
 			'premium.plusOnlyBody' => 'Plus subscriptions aren\'t available yet. Recording stays free.',
 			'premium.account.section' => 'Plus',
 			'premium.account.rowTitle' => 'Tanukonomy Plus',

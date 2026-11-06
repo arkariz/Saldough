@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saldough/core/design_system/design_system.dart';
-import 'package:saldough/core/design_system/legacy/app_theme_bridge.dart';
-import 'package:saldough/core/design_system/presets/ds_theme_presets.dart';
 import 'package:saldough/core/presentation/widgets/app_action_snack_bar.dart';
 
 /// Snackbar v2: tema, titik bernada, judul + isi, dan aksi.
@@ -45,7 +43,6 @@ void main() {
       tester,
       (context) => dsSnackBar(
         context.ds,
-        tone: DsSnackTone.info,
         content: const DsSnackMessage(title: 'Catat otomatis dari BCA?', message: 'Langsung dicatat tanpa kamu cek.'),
       ),
     );

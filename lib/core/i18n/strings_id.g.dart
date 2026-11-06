@@ -3227,11 +3227,44 @@ class Translations$notificationCapture$id {
 	/// id: 'Cek transaksi dari notifikasi dan batalkan yang tercatat otomatis.'
 	String get inboxEntryBody => 'Cek transaksi dari notifikasi dan batalkan yang tercatat otomatis.';
 
-	/// id: 'Optimasi baterai aktif'
-	String get batteryTitle => 'Optimasi baterai aktif';
+	/// id: 'Otomasi Tanuki'
+	String get settingsEyebrow => 'Otomasi Tanuki';
 
-	/// id: 'Sentuh untuk memberi pengecualian supaya notifikasi tetap terbaca saat ponsel hemat daya.'
-	String get batteryBody => 'Sentuh untuk memberi pengecualian supaya notifikasi tetap terbaca saat ponsel hemat daya.';
+	/// id: 'Aktif & diizinkan'
+	String get statusActive => 'Aktif & diizinkan';
+
+	/// id: 'Mati'
+	String get statusOff => 'Mati';
+
+	/// id: 'Izin belum diberikan'
+	String get statusNoAccess => 'Izin belum diberikan';
+
+	/// id: '$n transaksi siap ditinjau'
+	String pendingReady({required Object n}) => '${n} transaksi siap ditinjau';
+
+	/// id: 'Aktif'
+	String get sourceStateActive => 'Aktif';
+
+	/// id: 'Atur'
+	String get sourceStateSet => 'Atur';
+
+	/// id: 'Aplikasi aktif'
+	String get sourcesActiveTitle => 'Aplikasi aktif';
+
+	/// id: 'Opsi lanjutan & pengembang'
+	String get devOptionsTitle => 'Opsi lanjutan & pengembang';
+
+	/// id: 'Keamanan notifikasi'
+	String get helpTitle => 'Keamanan notifikasi';
+
+	/// id: 'Tanukonomy membaca notifikasi dari aplikasi yang kamu pilih langsung di ponselmu. Notifikasi OTP tidak pernah disimpan. Teks yang sulit dibaca bisa dikirim ke Gemini (Google) tanpa saldo dan nomor rekening, dan tidak disimpan di server kami. Teks notifikasi tersimpan di ponselmu paling lama 7 hari.'
+	String get helpBody => 'Tanukonomy membaca notifikasi dari aplikasi yang kamu pilih langsung di ponselmu. Notifikasi OTP tidak pernah disimpan. Teks yang sulit dibaca bisa dikirim ke Gemini (Google) tanpa saldo dan nomor rekening, dan tidak disimpan di server kami. Teks notifikasi tersimpan di ponselmu paling lama 7 hari.';
+
+	/// id: 'Mengerti'
+	String get helpClose => 'Mengerti';
+
+	/// id: 'Optimasi baterai aktif • Sentuh untuk pengecualian'
+	String get batteryBanner => 'Optimasi baterai aktif • Sentuh untuk pengecualian';
 
 	/// id: '$n menunggu'
 	String pendingBadge({required Object n}) => '${n} menunggu';
@@ -6877,8 +6910,19 @@ extension on Translations {
 			'notificationCapture.enableHint' => 'Transaksi dari notifikasi bank dan e-wallet yang kamu pilih dicatat untukmu.',
 			'notificationCapture.inboxEntryTitle' => 'Kotak masuk',
 			'notificationCapture.inboxEntryBody' => 'Cek transaksi dari notifikasi dan batalkan yang tercatat otomatis.',
-			'notificationCapture.batteryTitle' => 'Optimasi baterai aktif',
-			'notificationCapture.batteryBody' => 'Sentuh untuk memberi pengecualian supaya notifikasi tetap terbaca saat ponsel hemat daya.',
+			'notificationCapture.settingsEyebrow' => 'Otomasi Tanuki',
+			'notificationCapture.statusActive' => 'Aktif & diizinkan',
+			'notificationCapture.statusOff' => 'Mati',
+			'notificationCapture.statusNoAccess' => 'Izin belum diberikan',
+			'notificationCapture.pendingReady' => ({required Object n}) => '${n} transaksi siap ditinjau',
+			'notificationCapture.sourceStateActive' => 'Aktif',
+			'notificationCapture.sourceStateSet' => 'Atur',
+			'notificationCapture.sourcesActiveTitle' => 'Aplikasi aktif',
+			'notificationCapture.devOptionsTitle' => 'Opsi lanjutan & pengembang',
+			'notificationCapture.helpTitle' => 'Keamanan notifikasi',
+			'notificationCapture.helpBody' => 'Tanukonomy membaca notifikasi dari aplikasi yang kamu pilih langsung di ponselmu. Notifikasi OTP tidak pernah disimpan. Teks yang sulit dibaca bisa dikirim ke Gemini (Google) tanpa saldo dan nomor rekening, dan tidak disimpan di server kami. Teks notifikasi tersimpan di ponselmu paling lama 7 hari.',
+			'notificationCapture.helpClose' => 'Mengerti',
+			'notificationCapture.batteryBanner' => 'Optimasi baterai aktif • Sentuh untuk pengecualian',
 			'notificationCapture.pendingBadge' => ({required Object n}) => '${n} menunggu',
 			'notificationCapture.sourcesFreeCount' => ({required Object n, required Object max}) => '${n}/${max} Gratis',
 			'notificationCapture.privacyFootnote' => 'Notifikasi dibaca di ponselmu. Teks yang sulit dibaca bisa dikirim ke Gemini tanpa saldo dan nomor rekening, dan tidak disimpan di server kami.',
@@ -7252,6 +7296,8 @@ extension on Translations {
 			'premium.account.badgeTrial' => 'Uji coba',
 			'premium.account.badgeCheck' => 'Cek',
 			'premium.account.manage' => 'Kelola di Play Store',
+			_ => null,
+		} ?? switch (path) {
 			'premium.account.restore' => 'Pulihkan pembelian',
 			'premium.account.restoreDone' => 'Selesai. Langganan di akun Google Play ini akan aktif kembali bila ada.',
 			'premium.features.title' => 'Yang dikerjakan Plus',
@@ -7263,8 +7309,6 @@ extension on Translations {
 			'premium.features.records.title' => 'Mencatat untukmu',
 			'premium.features.records.text' => 'Foto struk dan bukti transfer, serta notifikasi dari semua aplikasi, jadi catatan. Rutin bernominal tetap tercatat sendiri.',
 			'premium.features.watches.title' => 'Berjaga',
-			_ => null,
-		} ?? switch (path) {
 			'premium.features.watches.text' => 'Peringatan sebelum anggaran habis atau uang nganggur menipis, plus Ringkasan Senin.',
 			'premium.features.answers.title' => 'Menjawab pertanyaan',
 			'premium.features.answers.text' => 'Tanya soal uangmu dalam bahasa sehari-hari, diketik atau lewat suara.',

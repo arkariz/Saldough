@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saldough/core/design_system/design_system.dart';
-import 'package:saldough/core/design_system/legacy/app_theme_bridge.dart';
 import 'package:saldough/core/foundation/effect_handler/src/snackbar_effect_handler.dart';
 import 'package:state_management/state_management.dart';
 

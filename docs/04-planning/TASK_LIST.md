@@ -6726,6 +6726,20 @@ tugas lama yang menyebutnya adalah riwayat, bukan keadaan sekarang.
       "Kelola Aturan", avatar di bilah atas, banner "Pengaturan diperbarui".
       Gateway: `isBatteryRestricted`, `openBatterySettings`. Uji: tiga uji
       baru; Kotlin dikompilasi. Mulai cepat dan halaman sumber menyusul (B-90).
+      **Revisi 6 Nov 2026 (tinjauan pemilik: tampilan tidak sesuai acuan, gaya
+      terlalu miskin):** kartu per elemen seperti acuan (kartu utama berjudul
+      besar dengan pil status "Aktif & diizinkan" dan pita baterai di dalamnya,
+      kartu Kotak masuk dengan titik dan pil "n menunggu →", **satu kartu per
+      aplikasi** dengan titik status dan pil Aktif/Atur/Dijeda, tombol tambah
+      bergaris putus-putus dengan lencana Plus, kartu Perilaku berjudul dengan
+      sakelar berkenop centang), anak judul "OTOMASI TANUKI" dengan tombol
+      bantuan (lembar "Keamanan notifikasi" dengan teks akurat), dan kartu
+      abu "Opsi lanjutan & pengembang" (hanya build non-rilis). **Ikon asli
+      aplikasi** sumber (dari `installedApps`, dimuat sekali di latar) menggantikan
+      huruf awal; huruf tetap sebagai cadangan (`SourceAppTile`). Komponen baru:
+      `DsPill`, `DsDashedButton`, `dsSwitchThumbIcon`. Tidak diadopsi: logo dan
+      avatar di bilah atas (bilah atas v2 lain tanpa keduanya), "Kelola Aturan",
+      ikon (i) di baris perilaku (keterangannya sudah di bawah judul).
 
 **Tahap penutup: gerbang Accepted**
 

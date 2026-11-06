@@ -1289,8 +1289,19 @@ class _Translations$notificationCapture$en extends Translations$notificationCapt
 	@override String get enableHint => 'Transactions from the bank and e-wallet notifications you pick are recorded for you.';
 	@override String get inboxEntryTitle => 'Inbox';
 	@override String get inboxEntryBody => 'Check transactions from notifications and undo automatic ones.';
-	@override String get batteryTitle => 'Battery optimization is on';
-	@override String get batteryBody => 'Tap to exempt the app so notifications keep being read in battery saver.';
+	@override String get settingsEyebrow => 'Tanuki automation';
+	@override String get statusActive => 'On and allowed';
+	@override String get statusOff => 'Off';
+	@override String get statusNoAccess => 'Permission needed';
+	@override String pendingReady({required Object n}) => '${n} transactions ready to review';
+	@override String get sourceStateActive => 'On';
+	@override String get sourceStateSet => 'Set up';
+	@override String get sourcesActiveTitle => 'Active apps';
+	@override String get devOptionsTitle => 'Advanced & developer options';
+	@override String get helpTitle => 'Notification security';
+	@override String get helpBody => 'Tanukonomy reads notifications from the apps you choose right on your phone. OTP notifications are never saved. Hard-to-read text may be sent to Gemini (Google) without balances and account numbers, and is not stored on our servers. Notification text stays on your phone for at most 7 days.';
+	@override String get helpClose => 'Got it';
+	@override String get batteryBanner => 'Battery optimization is on • Tap to exempt';
 	@override String pendingBadge({required Object n}) => '${n} waiting';
 	@override String sourcesFreeCount({required Object n, required Object max}) => '${n}/${max} Free';
 	@override String get privacyFootnote => 'Notifications are read on your phone. Hard-to-read text may be sent to Gemini without balances and account numbers, and is not stored on our servers.';
@@ -3656,8 +3667,19 @@ extension on TranslationsEn {
 			'notificationCapture.enableHint' => 'Transactions from the bank and e-wallet notifications you pick are recorded for you.',
 			'notificationCapture.inboxEntryTitle' => 'Inbox',
 			'notificationCapture.inboxEntryBody' => 'Check transactions from notifications and undo automatic ones.',
-			'notificationCapture.batteryTitle' => 'Battery optimization is on',
-			'notificationCapture.batteryBody' => 'Tap to exempt the app so notifications keep being read in battery saver.',
+			'notificationCapture.settingsEyebrow' => 'Tanuki automation',
+			'notificationCapture.statusActive' => 'On and allowed',
+			'notificationCapture.statusOff' => 'Off',
+			'notificationCapture.statusNoAccess' => 'Permission needed',
+			'notificationCapture.pendingReady' => ({required Object n}) => '${n} transactions ready to review',
+			'notificationCapture.sourceStateActive' => 'On',
+			'notificationCapture.sourceStateSet' => 'Set up',
+			'notificationCapture.sourcesActiveTitle' => 'Active apps',
+			'notificationCapture.devOptionsTitle' => 'Advanced & developer options',
+			'notificationCapture.helpTitle' => 'Notification security',
+			'notificationCapture.helpBody' => 'Tanukonomy reads notifications from the apps you choose right on your phone. OTP notifications are never saved. Hard-to-read text may be sent to Gemini (Google) without balances and account numbers, and is not stored on our servers. Notification text stays on your phone for at most 7 days.',
+			'notificationCapture.helpClose' => 'Got it',
+			'notificationCapture.batteryBanner' => 'Battery optimization is on • Tap to exempt',
 			'notificationCapture.pendingBadge' => ({required Object n}) => '${n} waiting',
 			'notificationCapture.sourcesFreeCount' => ({required Object n, required Object max}) => '${n}/${max} Free',
 			'notificationCapture.privacyFootnote' => 'Notifications are read on your phone. Hard-to-read text may be sent to Gemini without balances and account numbers, and is not stored on our servers.',
@@ -4031,6 +4053,8 @@ extension on TranslationsEn {
 			'premium.account.badgeTrial' => 'Trial',
 			'premium.account.badgeCheck' => 'Check',
 			'premium.account.manage' => 'Manage in the Play Store',
+			_ => null,
+		} ?? switch (path) {
 			'premium.account.restore' => 'Restore purchases',
 			'premium.account.restoreDone' => 'Done. A subscription on this Google Play account will turn on again if there is one.',
 			'premium.features.title' => 'What Plus does',
@@ -4042,8 +4066,6 @@ extension on TranslationsEn {
 			'premium.features.records.title' => 'Records for you',
 			'premium.features.records.text' => 'Photos of receipts and transfer slips, and notifications from every app, become entries. Fixed recurring bills record themselves.',
 			'premium.features.watches.title' => 'Keeps watch',
-			_ => null,
-		} ?? switch (path) {
 			'premium.features.watches.text' => 'A warning before a budget runs out or free money runs thin, plus a Monday summary.',
 			'premium.features.answers.title' => 'Answers questions',
 			'premium.features.answers.text' => 'Ask about your money in everyday words, typed or spoken.',

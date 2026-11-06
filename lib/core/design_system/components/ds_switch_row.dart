@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:saldough/core/design_system/components/ds_setting_row.dart';
+import 'package:saldough/core/design_system/ds_theme.dart';
 
 /// Baris setelan bersakelar v2: [DsSettingRow] dengan [Switch] di ujung. Seluruh
 /// baris bisa diketuk untuk mengganti nilai dan dibacakan sebagai satu
@@ -47,10 +48,24 @@ class DsSwitchRow extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             if (badge != null) ...[badge!, const SizedBox(width: 8)],
-            Switch(value: value, onChanged: onChanged),
+            Switch(
+              value: value,
+              onChanged: onChanged,
+              // Centang di kenop saat nyala: status terbaca tanpa bergantung warna.
+              thumbIcon: dsSwitchThumbIcon(context),
+            ),
           ],
         ),
       ),
     );
   }
+}
+
+/// Ikon kenop sakelar v2: centang saat nyala, kosong saat mati. Dipakai
+/// [Switch] di mana pun sakelar dibangun tersendiri.
+WidgetStateProperty<Icon?> dsSwitchThumbIcon(BuildContext context) {
+  final color = context.ds.colors.actionPrimary;
+  return WidgetStateProperty.resolveWith(
+    (states) => states.contains(WidgetState.selected) ? Icon(Icons.check_rounded, color: color) : null,
+  );
 }

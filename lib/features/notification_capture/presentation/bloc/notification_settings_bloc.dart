@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
 import 'package:saldough/core/discovery/discovery.dart';
@@ -25,6 +27,7 @@ final class NotificationSettingsState extends UiState<NotificationSettingsState>
     this.canPostReminders = false,
     this.batteryRestricted = false,
     this.pendingCount = 0,
+    this.appIcons = const {},
     this.wallets = const [],
     this.samples = const [],
     this.debugSamples = const [],
@@ -49,6 +52,9 @@ final class NotificationSettingsState extends UiState<NotificationSettingsState>
   /// Jumlah tangkapan yang menunggu di kotak masuk.
   final int pendingCount;
 
+  /// Ikon asli aplikasi sumber (PNG) per paket; paket tanpa ikon tidak ada di sini.
+  final Map<String, Uint8List> appIcons;
+
   /// Dompet aktif.
   final List<Wallet> wallets;
 
@@ -66,6 +72,7 @@ final class NotificationSettingsState extends UiState<NotificationSettingsState>
     bool? canPostReminders,
     bool? batteryRestricted,
     int? pendingCount,
+    Map<String, Uint8List>? appIcons,
     List<Wallet>? wallets,
     List<CapturedNotification>? samples,
     List<CapturedNotification>? debugSamples,
@@ -77,6 +84,7 @@ final class NotificationSettingsState extends UiState<NotificationSettingsState>
     canPostReminders: canPostReminders ?? this.canPostReminders,
     batteryRestricted: batteryRestricted ?? this.batteryRestricted,
     pendingCount: pendingCount ?? this.pendingCount,
+    appIcons: appIcons ?? this.appIcons,
     wallets: wallets ?? this.wallets,
     samples: samples ?? this.samples,
     debugSamples: debugSamples ?? this.debugSamples,
@@ -91,6 +99,7 @@ final class NotificationSettingsState extends UiState<NotificationSettingsState>
     canPostReminders,
     batteryRestricted,
     pendingCount,
+    appIcons,
     wallets,
     samples,
     debugSamples,
@@ -173,6 +182,28 @@ final class NotificationSettingsBloc extends Bloc<NotificationSettingsEvent, Not
         debugSamples: await _gateway.debugSamples(),
       ),
     );
+    await _loadIcons(emit);
+  }
+
+  /// Ikon asli aplikasi terpasang, dimuat sekali (di latar, sesudah layar tampil).
+  Map<String, Uint8List>? _installedIcons;
+
+  Future<void> _loadIcons(Emitter<NotificationSettingsState> emit) async {
+    if (_installedIcons == null) {
+      final apps = (await _gateway.installedApps()).getOrElse((_) => const []);
+      _installedIcons = {
+        for (final app in apps)
+          if (app.icon case final icon?) app.packageName: Uint8List.fromList(icon),
+      };
+    }
+    final icons = _installedIcons!;
+    emit(
+      state.copyWith(
+        appIcons: {
+          for (final source in state.settings.sources) source.packageName: ?icons[source.packageName],
+        },
+      ),
+    );
   }
 
   /// Menyalakan atau mematikan penyimpanan contoh (ADR-042 §3.2). Mematikan
@@ -232,6 +263,7 @@ final class NotificationSettingsBloc extends Bloc<NotificationSettingsEvent, Not
       sources[index] = event.source;
     }
     await _saveSettings(state.settings.copyWith(sources: sources), emit);
+    await _loadIcons(emit);
   }
 
   Future<void> _onSourceRemoved(NotificationSourceRemoved event, Emitter<NotificationSettingsState> emit) async {

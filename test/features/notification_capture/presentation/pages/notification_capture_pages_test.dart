@@ -456,7 +456,7 @@ void main() {
 
       final row = find.byKey(const ValueKey('notification-battery'));
       expect(row, findsOneWidget);
-      expect(find.text(t.notificationCapture.batteryTitle), findsOneWidget);
+      expect(find.text(t.notificationCapture.batteryBanner), findsOneWidget);
       await tester.tap(row);
       await tester.pumpAndSettle();
       expect(gateway.batterySettingsOpened, 1);

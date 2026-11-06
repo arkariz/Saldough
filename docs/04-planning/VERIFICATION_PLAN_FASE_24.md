@@ -138,7 +138,7 @@ Beri tanda di kolom hasil: ✅ lulus, ❌ gagal (tulis temuannya di bawah tabel)
 | U5 | Mulai berlangganan saat uji coba | Dari U2, beli | Langsung **Plus**; sisa uji coba tidak diperpanjang | ✅ Dibeli saat uji coba masih berjalan (uji coba hingga 30 Nov): langsung berstatus Plus pembelian, tanpa tersisa uji coba di Akun |
 | U6 | Uji coba berakhir | `PLAN_OVERRIDE=trial` atau majukan tanggal melewati `endsOn` | Turun ke Gratis, **layar turun** tampil; **data tidak terhapus** | ➖ |
 | U7 | Penawaran 48 jam | Dalam `post_trial_offer_hours` sesudah uji coba | Paywall memakai offering `post_trial` (tahunan harga perkenalan + bulanan); sesudah 48 jam kembali ke `default` | ➖ |
-| U8 | Masa tenggang | Setelah U3/U4, buat pembayaran gagal (kartu "always declines") | Tetap **Plus**, ada ajakan memperbaiki pembayaran (`inGrace`) | ➖ |
+| U8 | Masa tenggang | Setelah U3/U4, buat pembayaran gagal (kartu "always declines") | Tetap **Plus**, ada ajakan memperbaiki pembayaran (`inGrace`) | ➖ Percobaan 1 (6 Nov 23:2x–23:34) tidak bisa menilai: pembayaran perpanjangan ditolak (Play mengirim notifikasi), tetapi Akun menampilkan **Uji coba** karena akun masih punya uji coba aktif (lihat T1). Ulangi tanpa uji coba (keluar akun, beli sebagai anonim) |
 | U9 | Ditahan | Lewat masa tenggang | Perilaku **Gratis** dengan ajakan memperbaiki; bila dibayar, kembali Plus tanpa cabang khusus | ➖ |
 | U10 | Mode pesawat | Plus aktif, nyalakan mode pesawat, majukan tanggal | Selama `now ≤ until` tetap Plus tanpa koneksi; sesudah `until` tetap Plus sampai `until` (atau verifikasi terakhir) + **3 hari**, lalu Gratis. Fitur gratis tidak terganggu | ➖ |
 | U11 | Pulihkan di ponsel kedua | Pasang di ponsel lain dengan akun Google yang sama, Akun › **Pulihkan pembelian** | Muncul pesan selesai dan Plus kembali; hak lintas perangkat dengan akun masuk yang sama | ➖ |
@@ -160,4 +160,16 @@ Beri tanda di kolom hasil: ✅ lulus, ❌ gagal (tulis temuannya di bawah tabel)
 Tulis di sini (ID skenario, yang terjadi, bukti, tingkat S1–S3). Temuan yang
 menghalangi rilis masuk ke TASK_LIST sebagai `T-24.n` baru.
 
-_(belum ada)_
+**T1 (S3, desain): uji coba menutupi langganan yang ditahan atau habis.**
+`resolvePlan` memeriksa uji coba **sebelum** `OnHold`
+(`entitlement_resolver.dart`, urutan: cache Plus valid, pra-peluncuran, uji
+coba, `OnHold`, Gratis). Akibatnya pengguna yang membeli saat uji coba masih
+berjalan (U5) lalu pembayarannya gagal melihat status **Uji coba** tanpa ajakan
+memperbaiki pembayaran, dan begitu uji coba selesai langsung Gratis. Teramati
+6 Nov 2026 23:34: langganan bulanan uji habis karena perpanjangan ditolak,
+Akun › Plus kembali ke "Sampai 30 Nov 2026. Tanpa kartu. Uji coba". Mungkin
+diterima (Plus tetap terbuka selama uji coba), tetapi pemilik perlu memutuskan
+apakah ajakan memperbaiki pembayaran harus tetap tampil. Belum ada tugas.
+
+_(temuan lain: belum ada)_
+

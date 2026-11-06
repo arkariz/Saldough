@@ -2854,8 +2854,26 @@ class Translations$notificationCapture$id {
 	/// id: 'Sebelum memberi izin'
 	String get disclosureTitle => 'Sebelum memberi izin';
 
-	/// id: 'Tanukonomy akan bisa membaca notifikasi di ponselmu. • Hanya dari aplikasi yang kamu pilih dan cocok dengan filternya. • Notifikasi OTP tidak pernah disimpan. • Teks yang sulit dibaca bisa dikirim ke Gemini (Google). • Teks notifikasi disimpan di ponselmu paling lama 7 hari. • Notifikasi baru bisa diproses di latar saat Tanukonomy tertutup, supaya tombol Catat di notifikasi bisa dipakai. Sesudah Lanjut, Android membuka daftar akses notifikasi. Pilih Tanukonomy lalu nyalakan.'
-	String get disclosureBody => 'Tanukonomy akan bisa membaca notifikasi di ponselmu.\n\n• Hanya dari aplikasi yang kamu pilih dan cocok dengan filternya.\n• Notifikasi OTP tidak pernah disimpan.\n• Teks yang sulit dibaca bisa dikirim ke Gemini (Google).\n• Teks notifikasi disimpan di ponselmu paling lama 7 hari.\n• Notifikasi baru bisa diproses di latar saat Tanukonomy tertutup, supaya tombol Catat di notifikasi bisa dipakai.\n\nSesudah Lanjut, Android membuka daftar akses notifikasi. Pilih Tanukonomy lalu nyalakan.';
+	/// id: 'Tanukonomy akan bisa membaca notifikasi di ponselmu.'
+	String get disclosureIntro => 'Tanukonomy akan bisa membaca notifikasi di ponselmu.';
+
+	/// id: 'Hanya dari aplikasi yang kamu pilih dan cocok dengan filternya.'
+	String get disclosurePointApps => 'Hanya dari aplikasi yang kamu pilih dan cocok dengan filternya.';
+
+	/// id: 'Notifikasi OTP tidak pernah disimpan.'
+	String get disclosurePointOtp => 'Notifikasi OTP tidak pernah disimpan.';
+
+	/// id: 'Teks yang sulit dibaca bisa dikirim ke Gemini (Google).'
+	String get disclosurePointGemini => 'Teks yang sulit dibaca bisa dikirim ke Gemini (Google).';
+
+	/// id: 'Teks notifikasi disimpan di ponselmu paling lama 7 hari.'
+	String get disclosurePointRetention => 'Teks notifikasi disimpan di ponselmu paling lama 7 hari.';
+
+	/// id: 'Notifikasi baru bisa diproses di latar saat Tanukonomy tertutup, supaya tombol Catat di notifikasi bisa dipakai.'
+	String get disclosurePointBackground => 'Notifikasi baru bisa diproses di latar saat Tanukonomy tertutup, supaya tombol Catat di notifikasi bisa dipakai.';
+
+	/// id: 'Sesudah Lanjut, Android membuka daftar akses notifikasi. Pilih Tanukonomy lalu nyalakan.'
+	String get disclosureNext => 'Sesudah Lanjut, Android membuka daftar akses notifikasi. Pilih Tanukonomy lalu nyalakan.';
 
 	/// id: 'Lanjut'
 	String get disclosureAccept => 'Lanjut';
@@ -4796,20 +4814,44 @@ class Translations$discovery$quickStart$id {
 	/// id: 'Notifikasi dari aplikasi yang kamu pilih dibaca di perangkat dan jadi draf catatan. Kamu tinjau dulu.'
 	String get body => 'Notifikasi dari aplikasi yang kamu pilih dibaca di perangkat dan jadi draf catatan. Kamu tinjau dulu.';
 
+	/// id: 'Mulai cepat'
+	String get screenTitle => 'Mulai cepat';
+
+	/// id: 'Pendengar notifikasi'
+	String get eyebrow => 'Pendengar notifikasi';
+
+	/// id: 'Langkah $n dari 2'
+	String stepLabel({required Object n}) => 'Langkah ${n} dari 2';
+
+	/// id: 'Pilih dompet tujuan'
+	String get walletTarget => 'Pilih dompet tujuan';
+
+	/// id: 'Transaksi dari aplikasi ini selalu diarahkan ke dompet ini, tidak ditebak.'
+	String get walletNote => 'Transaksi dari aplikasi ini selalu diarahkan ke dompet ini, tidak ditebak.';
+
+	/// id: 'Pantau banyak bank dan e-wallet sekaligus?'
+	String get plusTeaser => 'Pantau banyak bank dan e-wallet sekaligus?';
+
+	/// id: 'Info Plus'
+	String get plusInfo => 'Info Plus';
+
+	/// id: 'Izin akses notifikasi hanya dipakai membaca aplikasi yang kamu pilih.'
+	String get privacyLine => 'Izin akses notifikasi hanya dipakai membaca aplikasi yang kamu pilih.';
+
 	/// id: 'Nyalakan'
 	String get turnOn => 'Nyalakan';
 
-	/// id: 'Pilih dompet untuk tiap aplikasi.'
-	String get walletHint => 'Pilih dompet untuk tiap aplikasi.';
+	/// id: 'Pilih dompet untuk tiap aplikasi'
+	String get walletHint => 'Pilih dompet untuk tiap aplikasi';
 
-	/// id: 'Pilih minimal satu aplikasi.'
-	String get pickHint => 'Pilih minimal satu aplikasi.';
+	/// id: 'Pilih minimal satu aplikasi'
+	String get pickHint => 'Pilih minimal satu aplikasi';
 
-	/// id: '${n} aplikasi dipilih.'
-	String pickedCount({required Object n}) => '${n} aplikasi dipilih.';
+	/// id: '$n aplikasi dipilih'
+	String pickedCount({required Object n}) => '${n} aplikasi dipilih';
 
-	/// id: 'Paket Gratis: satu aplikasi. Lebih dari itu dengan Plus.'
-	String get freeLimit => 'Paket Gratis: satu aplikasi. Lebih dari itu dengan Plus.';
+	/// id: 'Batas Gratis: $n aplikasi'
+	String freeLimit({required Object n}) => 'Batas Gratis: ${n} aplikasi';
 }
 
 // Path: notificationCapture.reviewReason
@@ -6763,27 +6805,41 @@ extension on Translations {
 			'discovery.allowAccess' => 'Izinkan',
 			'discovery.quickStart.title' => 'Pilih aplikasi bank atau dompet digitalmu',
 			'discovery.quickStart.body' => 'Notifikasi dari aplikasi yang kamu pilih dibaca di perangkat dan jadi draf catatan. Kamu tinjau dulu.',
+			'discovery.quickStart.screenTitle' => 'Mulai cepat',
+			'discovery.quickStart.eyebrow' => 'Pendengar notifikasi',
+			'discovery.quickStart.stepLabel' => ({required Object n}) => 'Langkah ${n} dari 2',
+			'discovery.quickStart.walletTarget' => 'Pilih dompet tujuan',
+			'discovery.quickStart.walletNote' => 'Transaksi dari aplikasi ini selalu diarahkan ke dompet ini, tidak ditebak.',
+			'discovery.quickStart.plusTeaser' => 'Pantau banyak bank dan e-wallet sekaligus?',
+			'discovery.quickStart.plusInfo' => 'Info Plus',
+			'discovery.quickStart.privacyLine' => 'Izin akses notifikasi hanya dipakai membaca aplikasi yang kamu pilih.',
 			'discovery.quickStart.turnOn' => 'Nyalakan',
-			'discovery.quickStart.walletHint' => 'Pilih dompet untuk tiap aplikasi.',
-			'discovery.quickStart.pickHint' => 'Pilih minimal satu aplikasi.',
-			'discovery.quickStart.pickedCount' => ({required Object n}) => '${n} aplikasi dipilih.',
-			'discovery.quickStart.freeLimit' => 'Paket Gratis: satu aplikasi. Lebih dari itu dengan Plus.',
+			'discovery.quickStart.walletHint' => 'Pilih dompet untuk tiap aplikasi',
+			'discovery.quickStart.pickHint' => 'Pilih minimal satu aplikasi',
+			'discovery.quickStart.pickedCount' => ({required Object n}) => '${n} aplikasi dipilih',
+			'discovery.quickStart.freeLimit' => ({required Object n}) => 'Batas Gratis: ${n} aplikasi',
 			'notificationCapture.accountEntryTitle' => 'Catat dari notifikasi',
 			'notificationCapture.accountEntryBody' => 'Catat otomatis dari notifikasi bank dan e-wallet.',
 			'notificationCapture.settingsTitle' => 'Catat dari notifikasi',
 			'notificationCapture.enableLabel' => 'Aktifkan',
 			'notificationCapture.accessMissingTitle' => 'Butuh izin membaca notifikasi',
 			'notificationCapture.accessMissingBody' => 'Tanpa izin ini, Tanukonomy tidak bisa melihat notifikasi bank.',
+			_ => null,
+		} ?? switch (path) {
 			'notificationCapture.accessAction' => 'Beri izin',
 			'notificationCapture.accessGranted' => 'Izin notifikasi aktif',
 			'notificationCapture.disclosureTitle' => 'Sebelum memberi izin',
-			'notificationCapture.disclosureBody' => 'Tanukonomy akan bisa membaca notifikasi di ponselmu.\n\n• Hanya dari aplikasi yang kamu pilih dan cocok dengan filternya.\n• Notifikasi OTP tidak pernah disimpan.\n• Teks yang sulit dibaca bisa dikirim ke Gemini (Google).\n• Teks notifikasi disimpan di ponselmu paling lama 7 hari.\n• Notifikasi baru bisa diproses di latar saat Tanukonomy tertutup, supaya tombol Catat di notifikasi bisa dipakai.\n\nSesudah Lanjut, Android membuka daftar akses notifikasi. Pilih Tanukonomy lalu nyalakan.',
+			'notificationCapture.disclosureIntro' => 'Tanukonomy akan bisa membaca notifikasi di ponselmu.',
+			'notificationCapture.disclosurePointApps' => 'Hanya dari aplikasi yang kamu pilih dan cocok dengan filternya.',
+			'notificationCapture.disclosurePointOtp' => 'Notifikasi OTP tidak pernah disimpan.',
+			'notificationCapture.disclosurePointGemini' => 'Teks yang sulit dibaca bisa dikirim ke Gemini (Google).',
+			'notificationCapture.disclosurePointRetention' => 'Teks notifikasi disimpan di ponselmu paling lama 7 hari.',
+			'notificationCapture.disclosurePointBackground' => 'Notifikasi baru bisa diproses di latar saat Tanukonomy tertutup, supaya tombol Catat di notifikasi bisa dipakai.',
+			'notificationCapture.disclosureNext' => 'Sesudah Lanjut, Android membuka daftar akses notifikasi. Pilih Tanukonomy lalu nyalakan.',
 			'notificationCapture.disclosureAccept' => 'Lanjut',
 			'notificationCapture.reminderPermissionDenied' => 'Izin notifikasi ditolak. Nyalakan di setelan Android untuk menerima pengingat.',
 			'notificationCapture.sourcesTitle' => 'Aplikasi',
 			'notificationCapture.sourcesEmpty' => 'Pilih aplikasi bank atau e-wallet yang notifikasinya mau dicatat.',
-			_ => null,
-		} ?? switch (path) {
 			'notificationCapture.addSource' => 'Tambah aplikasi',
 			'notificationCapture.sourceNoWallet' => 'Dompet belum dipilih',
 			'notificationCapture.sourceNeedsAttention' => 'Perlu dicek',
@@ -7282,6 +7338,8 @@ extension on Translations {
 			'premium.signInBody' => 'Fitur ini bagian dari Plus. Masuk dengan akunmu untuk memakainya. Mencatat tetap gratis dan tanpa akun.',
 			'premium.signInAction' => 'Masuk',
 			'premium.plusOnlyTitle' => 'Fitur ini bagian dari Plus',
+			_ => null,
+		} ?? switch (path) {
 			'premium.plusOnlyBody' => 'Berlangganan Plus belum tersedia. Mencatat tetap gratis.',
 			'premium.account.section' => 'Plus',
 			'premium.account.rowTitle' => 'Tanukonomy Plus',
@@ -7296,8 +7354,6 @@ extension on Translations {
 			'premium.account.badgeTrial' => 'Uji coba',
 			'premium.account.badgeCheck' => 'Cek',
 			'premium.account.manage' => 'Kelola di Play Store',
-			_ => null,
-		} ?? switch (path) {
 			'premium.account.restore' => 'Pulihkan pembelian',
 			'premium.account.restoreDone' => 'Selesai. Langganan di akun Google Play ini akan aktif kembali bila ada.',
 			'premium.features.title' => 'Yang dikerjakan Plus',

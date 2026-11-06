@@ -1098,10 +1098,10 @@
       "plusInfo": "Info Plus",
       "privacyLine": "Izin akses notifikasi hanya dipakai membaca aplikasi yang kamu pilih.",
       "turnOn": "Nyalakan",
-      "walletHint": "Pilih dompet untuk tiap aplikasi.",
-      "pickHint": "Pilih minimal satu aplikasi.",
-      "pickedCount": "${n} aplikasi dipilih.",
-      "freeLimit": "Paket Gratis: satu aplikasi. Lebih dari itu dengan Plus."
+      "walletHint": "Pilih dompet untuk tiap aplikasi",
+      "pickHint": "Pilih minimal satu aplikasi",
+      "pickedCount": "$n aplikasi dipilih",
+      "freeLimit": "Batas Gratis: $n aplikasi"
     }
   },
   "notificationCapture": {
@@ -1114,7 +1114,13 @@
     "accessAction": "Beri izin",
     "accessGranted": "Izin notifikasi aktif",
     "disclosureTitle": "Sebelum memberi izin",
-    "disclosureBody": "Tanukonomy akan bisa membaca notifikasi di ponselmu.\n\n• Hanya dari aplikasi yang kamu pilih dan cocok dengan filternya.\n• Notifikasi OTP tidak pernah disimpan.\n• Teks yang sulit dibaca bisa dikirim ke Gemini (Google).\n• Teks notifikasi disimpan di ponselmu paling lama 7 hari.\n• Notifikasi baru bisa diproses di latar saat Tanukonomy tertutup, supaya tombol Catat di notifikasi bisa dipakai.\n\nSesudah Lanjut, Android membuka daftar akses notifikasi. Pilih Tanukonomy lalu nyalakan.",
+    "disclosureIntro": "Tanukonomy akan bisa membaca notifikasi di ponselmu.",
+    "disclosurePointApps": "Hanya dari aplikasi yang kamu pilih dan cocok dengan filternya.",
+    "disclosurePointOtp": "Notifikasi OTP tidak pernah disimpan.",
+    "disclosurePointGemini": "Teks yang sulit dibaca bisa dikirim ke Gemini (Google).",
+    "disclosurePointRetention": "Teks notifikasi disimpan di ponselmu paling lama 7 hari.",
+    "disclosurePointBackground": "Notifikasi baru bisa diproses di latar saat Tanukonomy tertutup, supaya tombol Catat di notifikasi bisa dipakai.",
+    "disclosureNext": "Sesudah Lanjut, Android membuka daftar akses notifikasi. Pilih Tanukonomy lalu nyalakan.",
     "disclosureAccept": "Lanjut",
     "reminderPermissionDenied": "Izin notifikasi ditolak. Nyalakan di setelan Android untuk menerima pengingat.",
     "sourcesTitle": "Aplikasi",

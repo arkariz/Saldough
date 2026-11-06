@@ -179,14 +179,14 @@ void main() {
       ActivePlan.notifier.value = const FreePlan();
       await open(tester, NotificationCaptureRouteKeys.quickStart);
 
-      expect(find.text(t.discovery.quickStart.freeLimit), findsOneWidget);
+      expect(find.text(t.discovery.quickStart.freeLimit(n: 1)), findsOneWidget);
     });
 
     testWidgets('Plus tidak melihat catatan batas', (tester) async {
       gateway.apps = const [bri];
       await open(tester, NotificationCaptureRouteKeys.quickStart);
 
-      expect(find.text(t.discovery.quickStart.freeLimit), findsNothing);
+      expect(find.text(t.discovery.quickStart.freeLimit(n: 1)), findsNothing);
     });
 
     testWidgets('ikon asli aplikasi dipakai; tanpa ikon jatuh ke huruf awal', (tester) async {
@@ -542,6 +542,39 @@ void main() {
       ]);
       await open(tester, NotificationCaptureRouteKeys.settings);
       expect(find.text(t.notificationCapture.pendingBadge(n: 1)), findsOneWidget);
+    });
+
+    testWidgets('lembar izin v2: lima butir pengungkapan, langkah berikutnya, dan Batal tidak membuka setelan', (
+      tester,
+    ) async {
+      tester.view
+        ..physicalSize = const Size(800, 2400)
+        ..devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      await open(tester, NotificationCaptureRouteKeys.settings);
+      await tester.tap(find.byType(Switch).first);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(t.notificationCapture.accessAction));
+      await tester.pumpAndSettle();
+
+      final texts = t.notificationCapture;
+      expect(find.text(texts.disclosureTitle), findsOneWidget);
+      expect(find.text(texts.disclosureIntro), findsOneWidget);
+      for (final point in [
+        texts.disclosurePointApps,
+        texts.disclosurePointOtp,
+        texts.disclosurePointGemini,
+        texts.disclosurePointRetention,
+        texts.disclosurePointBackground,
+        texts.disclosureNext,
+      ]) {
+        expect(find.text(point), findsOneWidget, reason: point);
+      }
+
+      await tester.tap(find.text(t.common.cancel));
+      await tester.pumpAndSettle();
+      expect(find.text(texts.disclosureTitle), findsNothing);
+      expect(gateway.accessSettingsOpened, 0);
     });
 
     testWidgets('analitik: menyalakan sakelar di setelan = feature_enabled via account', (tester) async {
@@ -1149,7 +1182,7 @@ void main() {
       });
 
       testWidgets('dialog izin menjelaskan langkah sesudah Lanjut', (tester) async {
-        expect(t.notificationCapture.disclosureBody, contains('Pilih Tanukonomy'));
+        expect(t.notificationCapture.disclosureNext, contains('Pilih Tanukonomy'));
       });
     });
 

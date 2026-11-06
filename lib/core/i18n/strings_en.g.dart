@@ -1162,7 +1162,13 @@ class _Translations$notificationCapture$en extends Translations$notificationCapt
 	@override String get accessAction => 'Allow access';
 	@override String get accessGranted => 'Notification permission is on';
 	@override String get disclosureTitle => 'Before you grant permission';
-	@override String get disclosureBody => 'Tanukonomy will be able to read notifications on your phone.\n\n• Only from apps you pick that match their filter.\n• OTP notifications are never stored.\n• Text that is hard to read may be sent to Gemini (Google).\n• Notification text stays on your phone for at most 7 days.\n• New notifications may be processed in the background while Tanukonomy is closed, so the Record button on the notification works.\n\nAfter Continue, Android opens its notification access list. Pick Tanukonomy and turn it on.';
+	@override String get disclosureIntro => 'Tanukonomy will be able to read notifications on your phone.';
+	@override String get disclosurePointApps => 'Only from apps you pick that match their filter.';
+	@override String get disclosurePointOtp => 'OTP notifications are never stored.';
+	@override String get disclosurePointGemini => 'Text that is hard to read may be sent to Gemini (Google).';
+	@override String get disclosurePointRetention => 'Notification text stays on your phone for at most 7 days.';
+	@override String get disclosurePointBackground => 'New notifications may be processed in the background while Tanukonomy is closed, so the Record button on the notification works.';
+	@override String get disclosureNext => 'After Continue, Android opens its notification access list. Pick Tanukonomy and turn it on.';
 	@override String get disclosureAccept => 'Continue';
 	@override String get reminderPermissionDenied => 'Notification permission was denied. Turn it on in Android settings to get reminders.';
 	@override String get sourcesTitle => 'Apps';
@@ -1960,11 +1966,19 @@ class _Translations$discovery$quickStart$en extends Translations$discovery$quick
 	// Translations
 	@override String get title => 'Pick your bank or e-wallet apps';
 	@override String get body => 'Notifications from the apps you pick are read on this device and become draft transactions. You review them first.';
+	@override String get screenTitle => 'Quick start';
+	@override String get eyebrow => 'Notification listener';
+	@override String stepLabel({required Object n}) => 'Step ${n} of 2';
+	@override String get walletTarget => 'Choose the target wallet';
+	@override String get walletNote => 'Transactions from this app always go to this wallet, never guessed.';
+	@override String get plusTeaser => 'Track many banks and e-wallets at once?';
+	@override String get plusInfo => 'About Plus';
+	@override String get privacyLine => 'Notification access is only used to read the apps you choose.';
 	@override String get turnOn => 'Turn on';
-	@override String get walletHint => 'Pick a wallet for each app.';
-	@override String get pickHint => 'Pick at least one app.';
-	@override String pickedCount({required Object n}) => '${n} apps selected.';
-	@override String get freeLimit => 'Free plan: one app. More with Plus.';
+	@override String get walletHint => 'Pick a wallet for each app';
+	@override String get pickHint => 'Pick at least one app';
+	@override String pickedCount({required Object n}) => '${n} apps selected';
+	@override String freeLimit({required Object n}) => 'Free limit: ${n} apps';
 }
 
 // Path: notificationCapture.reviewReason
@@ -3520,27 +3534,41 @@ extension on TranslationsEn {
 			'discovery.allowAccess' => 'Allow',
 			'discovery.quickStart.title' => 'Pick your bank or e-wallet apps',
 			'discovery.quickStart.body' => 'Notifications from the apps you pick are read on this device and become draft transactions. You review them first.',
+			'discovery.quickStart.screenTitle' => 'Quick start',
+			'discovery.quickStart.eyebrow' => 'Notification listener',
+			'discovery.quickStart.stepLabel' => ({required Object n}) => 'Step ${n} of 2',
+			'discovery.quickStart.walletTarget' => 'Choose the target wallet',
+			'discovery.quickStart.walletNote' => 'Transactions from this app always go to this wallet, never guessed.',
+			'discovery.quickStart.plusTeaser' => 'Track many banks and e-wallets at once?',
+			'discovery.quickStart.plusInfo' => 'About Plus',
+			'discovery.quickStart.privacyLine' => 'Notification access is only used to read the apps you choose.',
 			'discovery.quickStart.turnOn' => 'Turn on',
-			'discovery.quickStart.walletHint' => 'Pick a wallet for each app.',
-			'discovery.quickStart.pickHint' => 'Pick at least one app.',
-			'discovery.quickStart.pickedCount' => ({required Object n}) => '${n} apps selected.',
-			'discovery.quickStart.freeLimit' => 'Free plan: one app. More with Plus.',
+			'discovery.quickStart.walletHint' => 'Pick a wallet for each app',
+			'discovery.quickStart.pickHint' => 'Pick at least one app',
+			'discovery.quickStart.pickedCount' => ({required Object n}) => '${n} apps selected',
+			'discovery.quickStart.freeLimit' => ({required Object n}) => 'Free limit: ${n} apps',
 			'notificationCapture.accountEntryTitle' => 'Record from notifications',
 			'notificationCapture.accountEntryBody' => 'Record automatically from bank and e-wallet notifications.',
 			'notificationCapture.settingsTitle' => 'Record from notifications',
 			'notificationCapture.enableLabel' => 'Turn on',
 			'notificationCapture.accessMissingTitle' => 'Permission needed to read notifications',
 			'notificationCapture.accessMissingBody' => 'Without it, Tanukonomy can\'t see your bank notifications.',
+			_ => null,
+		} ?? switch (path) {
 			'notificationCapture.accessAction' => 'Allow access',
 			'notificationCapture.accessGranted' => 'Notification permission is on',
 			'notificationCapture.disclosureTitle' => 'Before you grant permission',
-			'notificationCapture.disclosureBody' => 'Tanukonomy will be able to read notifications on your phone.\n\n• Only from apps you pick that match their filter.\n• OTP notifications are never stored.\n• Text that is hard to read may be sent to Gemini (Google).\n• Notification text stays on your phone for at most 7 days.\n• New notifications may be processed in the background while Tanukonomy is closed, so the Record button on the notification works.\n\nAfter Continue, Android opens its notification access list. Pick Tanukonomy and turn it on.',
+			'notificationCapture.disclosureIntro' => 'Tanukonomy will be able to read notifications on your phone.',
+			'notificationCapture.disclosurePointApps' => 'Only from apps you pick that match their filter.',
+			'notificationCapture.disclosurePointOtp' => 'OTP notifications are never stored.',
+			'notificationCapture.disclosurePointGemini' => 'Text that is hard to read may be sent to Gemini (Google).',
+			'notificationCapture.disclosurePointRetention' => 'Notification text stays on your phone for at most 7 days.',
+			'notificationCapture.disclosurePointBackground' => 'New notifications may be processed in the background while Tanukonomy is closed, so the Record button on the notification works.',
+			'notificationCapture.disclosureNext' => 'After Continue, Android opens its notification access list. Pick Tanukonomy and turn it on.',
 			'notificationCapture.disclosureAccept' => 'Continue',
 			'notificationCapture.reminderPermissionDenied' => 'Notification permission was denied. Turn it on in Android settings to get reminders.',
 			'notificationCapture.sourcesTitle' => 'Apps',
 			'notificationCapture.sourcesEmpty' => 'Pick the bank or e-wallet apps whose notifications you want recorded.',
-			_ => null,
-		} ?? switch (path) {
 			'notificationCapture.addSource' => 'Add app',
 			'notificationCapture.sourceNoWallet' => 'No wallet chosen',
 			'notificationCapture.sourceNeedsAttention' => 'Needs attention',
@@ -4039,6 +4067,8 @@ extension on TranslationsEn {
 			'premium.signInBody' => 'This feature is part of Plus. Sign in with your account to use it. Recording stays free and works without an account.',
 			'premium.signInAction' => 'Sign in',
 			'premium.plusOnlyTitle' => 'This feature is part of Plus',
+			_ => null,
+		} ?? switch (path) {
 			'premium.plusOnlyBody' => 'Plus subscriptions aren\'t available yet. Recording stays free.',
 			'premium.account.section' => 'Plus',
 			'premium.account.rowTitle' => 'Tanukonomy Plus',
@@ -4053,8 +4083,6 @@ extension on TranslationsEn {
 			'premium.account.badgeTrial' => 'Trial',
 			'premium.account.badgeCheck' => 'Check',
 			'premium.account.manage' => 'Manage in the Play Store',
-			_ => null,
-		} ?? switch (path) {
 			'premium.account.restore' => 'Restore purchases',
 			'premium.account.restoreDone' => 'Done. A subscription on this Google Play account will turn on again if there is one.',
 			'premium.features.title' => 'What Plus does',

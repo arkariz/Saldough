@@ -6757,6 +6757,14 @@ tugas lama yang menyebutnya adalah riwayat, bukan keadaan sekarang.
       berubah. Uji: empat uji baru (ikon asli, penunjuk langkah dua keadaan,
       ajakan Plus); uji lama disesuaikan (`DsButton`, viewport tinggi). Halaman
       sumber menyusul (B-90).
+      **Revisi 6 Nov 2026 (tinjauan pemilik):** teks informasi mengikuti acuan:
+      hitungan "n aplikasi dipilih" (tanpa titik) di kiri dan **pil "Batas
+      Gratis: n aplikasi"** di kanan, bukan kalimat panjang terpisah. **Dialog
+      izin** (`showAccessDisclosure`, dipakai Mulai cepat, Setelan, dan kotak
+      masuk) diganti **lembar bawah v2**: judul bertile, kalimat pembuka, lima
+      butir berikon (aplikasi pilihan, OTP tidak disimpan, Gemini, 7 hari, proses
+      di latar), kotak langkah sesudah Lanjut, tombol Lanjut dan Batal. Teks
+      tetap akurat (tidak memakai klaim "100% on-device" dari acuan).
 
 **Tahap penutup: gerbang Accepted**
 

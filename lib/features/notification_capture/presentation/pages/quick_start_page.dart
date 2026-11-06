@@ -210,28 +210,32 @@ class _QuickStartPageState extends State<QuickStartPage> with WidgetsBindingObse
                 onChanged: (value) => setState(() => _query = value.trim().toLowerCase()),
               ),
               const SizedBox(height: 10),
-              // Tombol Nyalakan mati selama belum ada pilihan: katakan kenapa.
-              Row(
-                children: [
-                  Icon(
-                    selected.isEmpty ? Icons.radio_button_unchecked_rounded : Icons.check_circle_rounded,
-                    size: 16,
-                    color: selected.isEmpty ? c.textMuted : c.actionPrimary,
-                  ),
-                  const SizedBox(width: 6),
-                  Expanded(
-                    child: Text(
-                      hint,
-                      key: const ValueKey('quick-start-hint'),
-                      style: ds.typography.labelMd.copyWith(color: c.textSecondary, letterSpacing: 0),
+              // Tombol Nyalakan mati selama belum ada pilihan: katakan kenapa. Hitungan di
+              // kiri, batas Gratis sebagai pil di kanan (acuan v2).
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4),
+                child: Row(
+                  children: [
+                    Icon(
+                      selected.isEmpty ? Icons.radio_button_unchecked_rounded : Icons.check_circle_rounded,
+                      size: 16,
+                      color: selected.isEmpty ? c.textMuted : c.actionPrimary,
                     ),
-                  ),
-                ],
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: Text(
+                        hint,
+                        key: const ValueKey('quick-start-hint'),
+                        style: ds.typography.labelMd.copyWith(color: c.textSecondary, letterSpacing: 0),
+                      ),
+                    ),
+                    if (!ActivePlan.isPlus) ...[
+                      const SizedBox(width: 8),
+                      DsPill(label: texts.freeLimit(n: ActivePlan.limits.value.freeNotificationSources)),
+                    ],
+                  ],
+                ),
               ),
-              if (!ActivePlan.isPlus) ...[
-                const SizedBox(height: 6),
-                Text(texts.freeLimit, style: ds.typography.bodySm.copyWith(color: c.textSecondary)),
-              ],
               const SizedBox(height: 14),
               if (failed)
                 DsErrorState(

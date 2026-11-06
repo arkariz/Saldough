@@ -1098,10 +1098,10 @@
       "plusInfo": "About Plus",
       "privacyLine": "Notification access is only used to read the apps you choose.",
       "turnOn": "Turn on",
-      "walletHint": "Pick a wallet for each app.",
-      "pickHint": "Pick at least one app.",
-      "pickedCount": "${n} apps selected.",
-      "freeLimit": "Free plan: one app. More with Plus."
+      "walletHint": "Pick a wallet for each app",
+      "pickHint": "Pick at least one app",
+      "pickedCount": "$n apps selected",
+      "freeLimit": "Free limit: $n apps"
     }
   },
   "notificationCapture": {
@@ -1114,7 +1114,13 @@
     "accessAction": "Allow access",
     "accessGranted": "Notification permission is on",
     "disclosureTitle": "Before you grant permission",
-    "disclosureBody": "Tanukonomy will be able to read notifications on your phone.\n\n• Only from apps you pick that match their filter.\n• OTP notifications are never stored.\n• Text that is hard to read may be sent to Gemini (Google).\n• Notification text stays on your phone for at most 7 days.\n• New notifications may be processed in the background while Tanukonomy is closed, so the Record button on the notification works.\n\nAfter Continue, Android opens its notification access list. Pick Tanukonomy and turn it on.",
+    "disclosureIntro": "Tanukonomy will be able to read notifications on your phone.",
+    "disclosurePointApps": "Only from apps you pick that match their filter.",
+    "disclosurePointOtp": "OTP notifications are never stored.",
+    "disclosurePointGemini": "Text that is hard to read may be sent to Gemini (Google).",
+    "disclosurePointRetention": "Notification text stays on your phone for at most 7 days.",
+    "disclosurePointBackground": "New notifications may be processed in the background while Tanukonomy is closed, so the Record button on the notification works.",
+    "disclosureNext": "After Continue, Android opens its notification access list. Pick Tanukonomy and turn it on.",
     "disclosureAccept": "Continue",
     "reminderPermissionDenied": "Notification permission was denied. Turn it on in Android settings to get reminders.",
     "sourcesTitle": "Apps",

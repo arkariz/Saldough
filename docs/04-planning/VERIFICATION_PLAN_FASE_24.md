@@ -187,6 +187,14 @@ yang menyesatkan. Konfirmasi: lihat pelanggan di dasbor RevenueCat (entitlement
 kedaluwarsa dan masalah penagihan masih tercatat). Usul: batasi "ditahan" hanya
 selama jendela penahanan Play, atau tampilkan ajakan **berlangganan lagi** bila
 `willRenew` salah dan tanggal berakhir sudah lewat. Belum ada tugas.
+*Bukti tambahan 7 Nov 2026 10:16:* data aplikasi emulator kedua dibersihkan
+(tanpa cache lokal), lalu masuk Google dengan akun yang sama. Akun › Plus
+langsung menampilkan "Langganan ditahan karena pembayaran belum berhasil",
+padahal langganan lama itu sudah kedaluwarsa. Karena cache lokal kosong, status
+itu **berasal dari server RevenueCat**, bukan dari cache aplikasi: RevenueCat
+memang masih melaporkan hak tidak aktif **dengan** tanda masalah pembayaran.
+Ini memperkuat dugaan T2 (belum dikonfirmasi lewat dasbor; ekspor CSV pelanggan
+tidak memuat data penagihan sandbox).
 
 **T3 (S2, terkonfirmasi di waktu nyata; diperbaiki di kode oleh T-24.19, menunggu U10 ulang di build berikutnya): tenggang luring 3 hari tidak bertahan
 saat aplikasi dibuka luring sesudah akhir periode.** Terkonfirmasi tanpa menggeser jam: periode berakhir sekitar 09:32, dibuka luring 09:34 → Gratis. Teramati 7 Nov 2026 09:03–09:06

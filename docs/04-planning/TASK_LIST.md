@@ -5897,6 +5897,13 @@ Jalur kritis: T-24.2 → T-24.4 → T-24.6 → T-24.14 → T-24.18.
       supaya build bisa diunggah ke jalur uji internal Play; langkah, kondisi
       Remote Config `plus_launch_at` khusus versi 1.0.0, dan peringatan
       membersihkannya sebelum produksi ada di §2b rencana verifikasi.
+      *Hasil uji perangkat 6–7 Nov 2026 (build rilis `1.0.0+22` dari Play,
+      akun penguji lisensi):* lulus U1–U5, U8, U9 (ditahan dan pemulihan), U11;
+      sebagian U14, U15. **U10 gagal:** tenggang luring 3 hari tidak bertahan
+      (T3, S2). Temuan lain: T1 (uji coba menutupi langganan ditahan, S3) dan T2
+      ("ditahan" tidak berakhir sesudah kedaluwarsa, S3). Belum: U6, U7, U12,
+      U13, U16. Rinci di `VERIFICATION_PLAN_FASE_24.md`. Tugas perbaikan T1–T3
+      belum dibuat (menunggu keputusan pemilik).
 
 ## Fase 25: Design system baru dan preset tema
 

@@ -280,8 +280,8 @@ definisi produk (CLAUDE.md) dan mencegah salah harap.
 
 | Aset | Syarat Play | Sumber / catatan |
 |---|---|---|
-| Ikon aplikasi | PNG 512×512, maks. 1 MB | Turunkan dari `assets/icon/legacy.png` (1024×1024) |
-| Grafis fitur | JPG/PNG 1024×500, tanpa transparansi | Belum ada — maskot tanuki + judul, teks tetap terbaca kalau dipotong |
+| Ikon aplikasi | PNG 512×512, maks. 1 MB | `docs/03-release/store_assets/app_icon_512.png` (7 Nov 2026, maskot clay v2, persegi penuh; Play menambah sudut bulat sendiri) |
+| Grafis fitur | JPG/PNG 1024×500, tanpa transparansi | `store_assets/feature_graphic_id.jpg` untuk `id-ID`, `feature_graphic_en.jpg` untuk `en-US` (7 Nov 2026): logo kata, judul tangkapan layar #1, tiga pil fitur, maskot clay di tengah kanan |
 | Tangkapan layar ponsel | 2–8 gambar, sisi 320–3840 px, sisi panjang **maks. 2× sisi pendek** | Minimal 4 gambar ≥1080 px supaya bisa masuk rekomendasi Play |
 
 ⚠ **Tangkapan layar Pixel 9 Pro (1280×2856) ditolak Play** — rasionya 2,23,
@@ -306,7 +306,16 @@ data pribadi pemilik. Pakai nama dompet generik ("Bank", "E-wallet") —
 merek bank/dompet digital sungguhan di aset toko rawan dianggap
 menyiratkan afiliasi.
 
-### 4.1 Grafis fitur lewat Gemini
+Ikon dan grafis fitur dibangun dari kode oleh
+`scripts/launcher_icon/build_store_assets.py` (macOS; rupa design system
+v2, huruf aplikasi disematkan). Ubah teks di `COPY` skrip itu, lalu jalankan
+ulang; unggah manual di Play Console. Bila judul tangkapan layar #1 di tabel
+bawah berubah, samakan slogan di skrip.
+
+### 4.1 Grafis fitur lewat Gemini (alternatif lama)
+
+Dipakai sebelum grafis fitur v2 di atas ada; gaya pikselnya mengikuti
+ADR-034 dan sudah tidak sesuai bahasa visual v2. Simpan sebagai rujukan.
 
 **Bahan** (render aplikasi sungguhan, data contoh, 1080×2160 — sekaligus
 lolos syarat tangkapan layar Play): `01-beranda`, `02-catat`,

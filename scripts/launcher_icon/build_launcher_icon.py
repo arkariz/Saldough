@@ -14,7 +14,6 @@ acuan dengan bayangan) dan `tier_coin.svg`; latar memakai nada matcha
 """
 
 import pathlib
-import subprocess
 
 from render import render_opaque, render_transparent
 
@@ -125,7 +124,7 @@ SOURCES = {
     "foreground": svg(mascot_with_coin(12)),
     # Ikon bertema (monokrom) Android 13+.
     "monochrome": svg(subject(12, MONO, dy=8)),
-    # Ikon utuh: Android lawas, iOS (alfa dibuang), dan ikon Play 512.
+    # Ikon utuh: Android lawas dan iOS (alfa dibuang).
     "icon": svg(background() + mascot_with_coin(16.5)),
 }
 
@@ -143,11 +142,7 @@ def main() -> None:
             render_transparent(text, SIZE, out)
         else:
             render_opaque(text, SIZE, out)
-    subprocess.run(
-        ["sips", "-Z", "512", str(OUT / "icon.png"), "--out", str(OUT / "play_store_512.png")],
-        check=True,
-        capture_output=True,
-    )
+    # Ikon 512 untuk listing Play dibuat build_store_assets.py.
 
 if __name__ == "__main__":
     main()

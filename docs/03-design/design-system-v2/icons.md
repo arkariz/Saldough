@@ -141,7 +141,7 @@ Pengganti maskot piksel di latar terakota (ADR-015).
 | `foreground.png` | Latar depan adaptif, maskot di dalam lingkaran aman 66/108 dp (`adaptive_icon_foreground_inset: 0`) |
 | `monochrome.png` | Ikon bertema Android 13+ (siluet, hanya alfa) |
 | `icon.png` | Ikon Android lawas dan iOS (alfa dibuang) |
-| `play_store_512.png` | Ikon resolusi tinggi listing Play, diunggah manual di Play Console |
+| `docs/03-release/store_assets/` | Ikon 512 dan grafis fitur listing Play (`build_store_assets.py`, lihat `PLAY_STORE_LISTING.md` §4), diunggah manual di Play Console |
 
 Sumbernya SVG di `assets/icon/src/`, ditulis dan dirender oleh
 `scripts/launcher_icon/build_launcher_icon.py` (macOS, QuickLook), lalu

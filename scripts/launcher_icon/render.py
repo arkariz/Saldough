@@ -115,3 +115,19 @@ def render_transparent(svg_text: str, size: int, out: pathlib.Path) -> None:
                 out_row[oi + 3] = alpha
         rows.append(bytes(out_row))
     _encode(out, width, height, rows)
+
+
+def crop_top(png: pathlib.Path, height: int) -> None:
+    """Memotong [png] menjadi [height] baris teratas (RGBA)."""
+    width, _, bpp, rows = _decode(png)
+    kept = []
+    for row in rows[:height]:
+        if bpp == 4:
+            kept.append(bytes(row))
+        else:
+            out = bytearray(width * 4)
+            for x in range(width):
+                out[x * 4 : x * 4 + 3] = row[x * 3 : x * 3 + 3]
+                out[x * 4 + 3] = 255
+            kept.append(bytes(out))
+    _encode(png, width, height, kept)

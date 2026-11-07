@@ -134,13 +134,13 @@ Beri tanda di kolom hasil: ✅ lulus, ❌ gagal (tulis temuannya di bawah tabel)
 | U1 | Tanpa akun | Buka Akun › Plus tanpa masuk | Gratis; paywall mengajak **Masuk untuk mencoba Plus**; uji coba tidak mulai | ✅ 6 Nov 2026, build rilis `1.0.0+22` dari Play di emulator: Akun › Plus "Gratis", paywall "Masuk untuk mencoba Plus", harga toko tampil (Pendiri tahunan Rp129.000, bulanan Rp25.000), tombol beli tampil karena `plus_launch_at` sudah dikondisikan untuk 1.0.0 |
 | U2 | Masuk akun: uji coba mulai | Masuk (Google atau email), buka Akun › Plus | Plus berstatus uji coba; berakhir di akhir periode keuangan, paling cepat 14 hari (`trialEndsOn`); sumber *trial* | ✅ 6 Nov 2026: masuk Google di emulator; Akun › Plus "Sampai 30 Nov 2026. Tanpa kartu. Uji coba". Hari ini 6 Nov, periode 1–30 Nov, sisa 25 hari ≥ 14, jadi berakhir 30 Nov sesuai rumus. Paywall di masa uji coba tetap menampilkan opsi beli (bahan U5) |
 | U3 | Beli bulanan | Paywall › Bulanan › Berlangganan, penguji lisensi | Layar pembelian uji Play; sesudahnya **Plus** (sumber *purchase*), perayaan tampil, Akun menunjukkan Plus; pembelian terlihat di RevenueCat (sandbox) | ✅ 6 Nov 2026 23:1x: Bulanan Rp25.000/5 menit (langganan uji dipercepat); sheet Play menampilkan "Test card, always approves" dan "This is a test subscription". Sesudah Berlangganan: perayaan "Plus aktif — Paket bulanan, diperpanjang 6 Nov 2026" (Plus, Bulanan, "Sekarang terbuka"); Akun › Plus "Aktif sampai 6 Nov 2026" dengan **Kelola di Play Store**. Dasbor RevenueCat: belum dicek pemilik. Catatan: ketukan `adb` tidak diterima tombol Subscribe di sheet Play; ditekan pemilik langsung |
-| U4 | Beli tahunan | Paywall › Tahunan (Pendiri atau default) | Sama seperti U3; harga sesuai penawaran (Pendiri Rp129.000 bila `now ≤ founder_until`) | ➖ |
+| U4 | Beli tahunan | Paywall › Tahunan (Pendiri atau default) | Sama seperti U3; harga sesuai penawaran (Pendiri Rp129.000 bila `now ≤ founder_until`) | ✅ 7 Nov 2026 09:02, emulator 5556 (anonim): Tahunan Pendiri Rp129.000, periode uji 30 menit; sheet Play "Test card, always approves" dan "This is a test subscription"; sesudahnya Akun "Aktif sampai 7 Nov 2026 · Plus" |
 | U5 | Mulai berlangganan saat uji coba | Dari U2, beli | Langsung **Plus**; sisa uji coba tidak diperpanjang | ✅ Dibeli saat uji coba masih berjalan (uji coba hingga 30 Nov): langsung berstatus Plus pembelian, tanpa tersisa uji coba di Akun |
 | U6 | Uji coba berakhir | `PLAN_OVERRIDE=trial` atau majukan tanggal melewati `endsOn` | Turun ke Gratis, **layar turun** tampil; **data tidak terhapus** | ➖ |
 | U7 | Penawaran 48 jam | Dalam `post_trial_offer_hours` sesudah uji coba | Paywall memakai offering `post_trial` (tahunan harga perkenalan + bulanan); sesudah 48 jam kembali ke `default` | ➖ |
 | U8 | Masa tenggang | Setelah U3/U4, buat pembayaran gagal (kartu "always declines") | Tetap **Plus**, ada ajakan memperbaiki pembayaran (`inGrace`) | ✅ 7 Nov 2026, anonim (tanpa uji coba), beli Bulanan 08:35, kartu diganti ke "always declines" 08:38: pada 08:41–08:45 Akun › Plus "Pembayaran belum berhasil. Plus tetap aktif sampai 7 Nov 2026." (masa tenggang, Plus tetap). Masa tenggang uji sekitar 5 menit |
 | U9 | Ditahan | Lewat masa tenggang | Perilaku **Gratis** dengan ajakan memperbaiki; bila dibayar, kembali Plus tanpa cabang khusus | ✅ 7 Nov 2026: 08:46 sekejap Gratis (peralihan), **08:47 "Langganan ditahan karena pembayaran belum berhasil. Perbaiki di Play Store."** (lencana Periksa, Kelola di Play Store). Percobaan 1 (6 Nov, akun masuk) juga ditahan. **Pemulihan lulus (08:49)**: kartu diganti ke "always approves" selagi ditahan, Akun kembali "Aktif sampai 7 Nov 2026 · Plus" tanpa cabang khusus dan tanpa pesan ditahan, stabil 08:49–08:51. Lihat T2 untuk keadaan sesudah kedaluwarsa |
-| U10 | Mode pesawat | Plus aktif, nyalakan mode pesawat, majukan tanggal | Selama `now ≤ until` tetap Plus tanpa koneksi; sesudah `until` tetap Plus sampai `until` (atau verifikasi terakhir) + **3 hari**, lalu Gratis. Fitur gratis tidak terganggu | ➖ percobaan 1 (7 Nov 09:00, emulator 5556) gagal dinilai: langganan bulanan uji sudah habis (batas perpanjangan uji), jadi saat luring maupun daring Akun menampilkan Gratis. Diulang dengan langganan baru (tahunan uji 30 menit, sekaligus U4) |
+| U10 | Mode pesawat | Plus aktif, nyalakan mode pesawat, majukan tanggal | Selama `now ≤ until` tetap Plus tanpa koneksi; sesudah `until` tetap Plus sampai `until` (atau verifikasi terakhir) + **3 hari**, lalu Gratis. Fitur gratis tidak terganggu | ❌ sebagian, 7 Nov 09:03–09:06 (emulator 5556, anonim, jam digeser lewat Setelan): luring dalam periode → Plus tetap (✅). Jam +2 hari (9 Nov), luring → **Gratis**, padahal masih dalam tenggang luring 3 hari. Jam dikembalikan ke 7 Nov (masih dalam periode) tetap luring → **tetap Gratis** (cache hak terhapus); daring lagi → Plus kembali. Lihat T3 |
 | U11 | Pulihkan di ponsel kedua | Pasang di ponsel lain dengan akun Google yang sama, Akun › **Pulihkan pembelian** | Muncul pesan selesai dan Plus kembali; hak lintas perangkat dengan akun masuk yang sama | ✅ 7 Nov 2026 08:58: emulator kedua (5556) dengan akun Google yang sama, aplikasi dipasang dari Play, belum masuk akun aplikasi: Akun › Plus "Gratis"; setelah **Pulihkan pembelian** menjadi "Aktif sampai 7 Nov 2026 · Plus" dengan **Kelola di Play Store**. Tanpa masuk akun aplikasi, jadi hak mengikuti akun Google Play lewat `restorePurchases`. Pesan selesai (snackbar) tidak tertangkap uiautomator |
 | U12 | Akun peninjau | Masuk dengan email/sandi peninjau | Seluruh fitur Plus terbuka tanpa batas waktu; tombol beli tetap bekerja; tidak ada pendaftaran mandiri | ➖ |
 | U13 | Turun ke Gratis | Dari Plus ke Gratis (U6 atau U9) | Batas hanya menghalangi pekerjaan **baru** (proyek freelance ke-3, sumber notifikasi melebihi batas); data lama tetap terbaca dan bisa dihapus | ➖ |
@@ -188,6 +188,27 @@ kedaluwarsa dan masalah penagihan masih tercatat). Usul: batasi "ditahan" hanya
 selama jendela penahanan Play, atau tampilkan ajakan **berlangganan lagi** bila
 `willRenew` salah dan tanggal berakhir sudah lewat. Belum ada tugas.
 
+**T3 (S2, perlu konfirmasi waktu nyata): tenggang luring 3 hari tidak bertahan
+saat aplikasi dibuka luring sesudah akhir periode.** Teramati 7 Nov 2026 09:03–09:06
+di emulator kedua (langganan Tahunan uji 30 menit aktif, dibaca daring 09:03):
+mode pesawat dan buka ulang aplikasi dalam periode → Plus (benar). Jam
+digeser +2 hari (9 Nov), masih luring, buka ulang → **Gratis**. Spek ADR-041
+§3.3 menjanjikan Plus sampai `until + 3 hari`. Jam dikembalikan ke 7 Nov
+(dalam periode), tetap luring → **tetap Gratis**, jadi cache hak sudah
+**terhapus**, bukan sekadar dinilai kedaluwarsa; baru daring lagi
+mengembalikannya. Log RevenueCat menunjukkan `NetworkError` saat membaca,
+jadi SDK kemungkinan mengembalikan `CustomerInfo` lama yang dihitung tidak aktif
+terhadap jam perangkat, lalu `RevenueCatPlanSource.apply` memanggil
+`cache.clear()` (tidak aktif tanpa masalah pembayaran) dan melewati tenggang
+aplikasi. Catatan kehati-hatian: menggeser jam perangkat bisa berbeda dari
+berlalunya waktu nyata; konfirmasi dengan uji waktu nyata (daring, buka sekali
+dalam periode, mode pesawat, tunggu lewat `until`, buka luring) di bawah.
+Usul bila terkonfirmasi: jangan hapus cache bila pembacaan gagal atau data SDK
+lebih tua dari `until` (pakai `requestDate` sebagai `lastVerifiedAt`, bukan
+`now`), dan hanya hapus bila verifikasi server sesudah `until` melaporkan tidak
+aktif.
+
 _(temuan lain: belum ada)_
+
 
 

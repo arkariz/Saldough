@@ -1,0 +1,22 @@
+{
+  "version": "1.0.0",
+  "groups": [
+    {
+      "category": "new",
+      "notes": [
+        {
+          "id": "Catat dari notifikasi kini belajar dari kebiasaanmu: kategori, dompet, dan pos anggaran tiap toko diingat, dan bentuk notifikasi yang kamu setujui bisa dicatat otomatis.",
+          "en": "Recording from notifications now learns from your habits: it remembers the category, wallet, and budget item for each shop, and notification patterns you approve can be recorded automatically."
+        },
+        {
+          "id": "Tampilan baru di seluruh aplikasi, termasuk Kotak masuk notifikasi dan Freelance.",
+          "en": "A fresh look across the whole app, including the notification Inbox and Freelance."
+        },
+        {
+          "id": "Pintasan Freelance di Beranda untuk membuka ringkasan proyek dan tagihanmu.",
+          "en": "A Freelance shortcut on Home opens your projects and invoices."
+        }
+      ]
+    }
+  ]
+}

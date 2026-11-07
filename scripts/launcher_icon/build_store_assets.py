@@ -127,7 +127,7 @@ def feature_graphic(lang: str) -> str:
 
 
 def _to_jpeg(png: pathlib.Path, jpg: pathlib.Path) -> None:
-    crop_top(png, HEIGHT)
+    """PNG ke JPG kualitas 92 (tanpa alfa)."""
     subprocess.run(
         ["sips", "-s", "format", "jpeg", "-s", "formatOptions", "92", str(png), "--out", str(jpg)],
         check=True,
@@ -145,6 +145,7 @@ def main() -> None:
             svg = feature_graphic(lang)
             png = pathlib.Path(d) / f"{lang}.png"
             render_opaque(svg, WIDTH, png)
+            crop_top(png, HEIGHT)
             _to_jpeg(png, OUT / f"feature_graphic_{lang}.jpg")
 
 

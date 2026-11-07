@@ -6,6 +6,8 @@ alfa = 1 - (putih - hitam) dan warna = hitam / alfa per piksel. Hasilnya
 tepat untuk gradasi, keburaman, dan bayangan.
 """
 
+from __future__ import annotations
+
 import pathlib
 import re
 import shutil
@@ -22,7 +24,7 @@ def _qlmanage(svg_text: str, size: int, tmp: pathlib.Path, name: str) -> pathlib
     return tmp / f"{name}.svg.png"
 
 
-def _decode(path: pathlib.Path) -> tuple[int, int, int, list[bytearray]]:
+def _decode(path: pathlib.Path, max_rows: int | None = None) -> tuple[int, int, int, list[bytearray]]:
     data = path.read_bytes()
     i, idat = 8, b""
     width = height = color_type = 0
@@ -36,10 +38,14 @@ def _decode(path: pathlib.Path) -> tuple[int, int, int, list[bytearray]]:
         elif kind == b"IDAT":
             idat += chunk
     bpp = {6: 4, 2: 3}[color_type]
-    raw = zlib.decompress(idat)
     stride = width * bpp
+    limit = height if max_rows is None else min(height, max_rows)
+    if max_rows is None:
+        raw = zlib.decompress(idat)
+    else:
+        raw = zlib.decompressobj().decompress(idat, (stride + 1) * limit)
     rows, prev, o = [], bytearray(stride), 0
-    for _ in range(height):
+    for _ in range(limit):
         f = raw[o]
         o += 1
         row = bytearray(raw[o : o + stride])
@@ -67,14 +73,15 @@ def _decode(path: pathlib.Path) -> tuple[int, int, int, list[bytearray]]:
     return width, height, bpp, rows
 
 
-def _encode(path: pathlib.Path, width: int, height: int, rows: list[bytes]) -> None:
+def _encode(path: pathlib.Path, width: int, height: int, rows: list[bytes], rgb: bool = False) -> None:
+    """Menulis PNG 8-bit; [rows] RGB bila [rgb] (tanpa alfa), selain itu RGBA."""
     raw = b"".join(b"\x00" + r for r in rows)
 
     def chunk(kind: bytes, body: bytes) -> bytes:
         return struct.pack(">I", len(body)) + kind + body + struct.pack(">I", zlib.crc32(kind + body) & 0xFFFFFFFF)
 
     png = b"\x89PNG\r\n\x1a\n"
-    png += chunk(b"IHDR", struct.pack(">IIBBBBB", width, height, 8, 6, 0, 0, 0))
+    png += chunk(b"IHDR", struct.pack(">IIBBBBB", width, height, 8, 2 if rgb else 6, 0, 0, 0))
     png += chunk(b"IDAT", zlib.compress(raw, 9))
     png += chunk(b"IEND", b"")
     path.write_bytes(png)

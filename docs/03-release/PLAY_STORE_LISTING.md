@@ -282,24 +282,26 @@ definisi produk (CLAUDE.md) dan mencegah salah harap.
 |---|---|---|
 | Ikon aplikasi | PNG 512×512, maks. 1 MB | `docs/03-release/store_assets/app_icon_512.png` (7 Nov 2026, maskot clay v2, persegi penuh; Play menambah sudut bulat sendiri) |
 | Grafis fitur | JPG/PNG 1024×500, tanpa transparansi | `store_assets/feature_graphic_id.jpg` untuk `id-ID`, `feature_graphic_en.jpg` untuk `en-US` (7 Nov 2026): logo kata, judul tangkapan layar #1, tiga pil fitur, maskot clay di tengah kanan |
-| Tangkapan layar ponsel | 2–8 gambar, sisi 320–3840 px, sisi panjang **maks. 2× sisi pendek** | Minimal 4 gambar ≥1080 px supaya bisa masuk rekomendasi Play |
+| Tangkapan layar ponsel | 2–8 gambar, sisi 320–3840 px, sisi panjang **maks. 2× sisi pendek** | `store_assets/screenshots/<id|en>/01–06_*.jpg` (7 Nov 2026), 1080×1920, enam gambar ≥1080 px supaya bisa masuk rekomendasi Play |
 
 ⚠ **Tangkapan layar Pixel 9 Pro (1280×2856) ditolak Play** — rasionya 2,23,
 melewati batas 2:1. Ambil di resolusi 1080×2160 (mis. `adb shell wm size
 1080x2160` sementara, kembalikan dengan `adb shell wm size reset`) atau
 render lewat `tools/screenshots/` di repo `tanukonomy-web`.
 
-Urutan dan teks judul tangkapan layar (dua gambar pertama paling sering
-dilihat, jadi dua pilar utama di depan):
+Urutan dan teks tangkapan layar v2 (7 Nov 2026; dua gambar pertama paling
+sering dilihat, jadi dua pilar utama di depan). Teks pil, judul dua baris
+(baris kedua warna aksen), dan subjudul ada di `SLIDES` skrip
+`build_store_screenshots.py`; tabel ini ringkasannya.
 
-| # | Layar | Teks `id` | Teks `en` |
-|---|---|---|---|
-| 1 | Beranda berisi data | Semua uangmu, satu buku | All your money, one book |
-| 2 | CATAT pengeluaran | Catat dalam hitungan detik | Record in seconds |
-| 3 | Anggaran dengan pos | Anggaran sebagai rencana | Budgets as a plan |
-| 4 | Freelance (worklog) | Jam kerja jadi pendapatan | Hours become income |
-| 5 | Daftar dompet | Bank, e-wallet & tunai | Bank, e-wallet & cash |
-| 6 | Riwayat transaksi (mode gelap) | Riwayat lengkap, mode gelap | Full history, dark mode |
+| # | Pil | Judul `id` | Judul `en` | Ponsel | Latar |
+|---|---|---|---|---|---|
+| 1 | Beranda | Semua uangmu, satu buku. | All your money, one book. | Beranda + kartu Sebaran saldo (Dompet), maskot | Matcha gelap |
+| 2 | Catat | Catat dalam hitungan detik. | Record it in seconds. | Lembar Catat terisi (bisikan Tanuki) + Riwayat | Mint |
+| 3 | Rutin | Tagihan rutin, sudah terjadwal. | Recurring bills, already scheduled. | Rencana › Rutin (7 hari ke depan) + daftar rutin | Madu |
+| 4 | Anggaran | Anggaran sebagai rencana. | Budgets, as a plan. | Rincian anggaran + Rencana › Anggaran, preset Pink, lencana "Warna pink" | Pink |
+| 5 | Freelance | Jam kerja jadi pendapatan. | Hours become income. | Rincian proyek + Freelance | Lavender |
+| 6 | Analisis | Tahu ke mana uangmu pergi. | See where your money goes. | Riwayat › Analisis mode gelap + kartu 6 bulan terakhir, lencana "Mode gelap" | Malam |
 
 Isi datanya dengan contoh yang realistis (nominal Rupiah wajar), bukan
 data pribadi pemilik. Pakai nama dompet generik ("Bank", "E-wallet") —
@@ -312,7 +314,33 @@ v2, huruf aplikasi disematkan). Ubah teks di `COPY` skrip itu, lalu jalankan
 ulang; unggah manual di Play Console. Bila judul tangkapan layar #1 di tabel
 bawah berubah, samakan slogan di skrip.
 
-### 4.1 Grafis fitur lewat Gemini (alternatif lama)
+### 4.1 Membuat ulang tangkapan layar
+
+1. **Data contoh.** `.fvm/flutter_sdk/bin/flutter test
+   tool/store_screenshots/demo_backup_test.dart` menulis
+   `build/store_screenshots/demo_id.tkbak` dan `demo_en.tkbak`: 4 dompet
+   generik, ±34 transaksi bulan lalu dan bulan berjalan (tanggal relatif ke
+   hari ini, jam wajar), anggaran Bulanan berpos tertaut, 6 rutin berjadwal ke
+   depan (tidak ada yang tertunggak), dan satu proyek freelance (satu tagihan
+   diterima awal bulan, satu menunggu). Cadangan disusun dengan repositori
+   nyata dan lolos `BackupValidator`.
+2. **Pulihkan di emulator** (`adb push` ke `/sdcard/Download/`, lalu Akun ›
+   Data kamu › Pulihkan dari cadangan; mengganti seluruh data di emulator).
+   Ganti bahasa aplikasi sesuai set; lewati tur spotlight di tiap layar
+   sebelum menangkap. Buat ulang cadangan bila tanggalnya sudah lewat bulan.
+3. **Tangkap** 1080×2400 (`adb exec-out screencap -p`) ke
+   `build/store_screenshots/raw/<id|en>_<layar>.png`: `home`, `dompet`,
+   `catat` (pengeluaran 45.000, Makan & Minum, pos Makan), `riwayat` (Daftar),
+   `rutin` dan `rutin2` (atas dan daftar), `budget_pink` dan `anggaran`
+   (preset Pink), `project` dan `freelance`, `analisis` dan `analisis2`
+   (mode gelap, atas dan grafik enam bulan). Kembalikan bahasa, mode, dan
+   warna emulator sesudahnya.
+4. **Susun:** `python3 scripts/launcher_icon/build_store_screenshots.py`
+   (macOS) menulis `store_assets/screenshots/<id|en>/NN_<nama>.jpg`. Status
+   bar asli ditimpa status bar 9.41; potongan kartu melayang ditentukan
+   kotak piksel di `Card`, jadi periksa lagi bila tata letak layar berubah.
+
+### 4.2 Grafis fitur lewat Gemini (alternatif lama)
 
 Dipakai sebelum grafis fitur v2 di atas ada; gaya pikselnya mengikuti
 ADR-034 dan sudah tidak sesuai bahasa visual v2. Simpan sebagai rujukan.

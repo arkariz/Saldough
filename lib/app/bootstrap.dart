@@ -12,6 +12,7 @@ import 'package:saldough/app/data_portability/app_reboot.dart';
 import 'package:saldough/app/data_portability/restore_recovery.dart';
 import 'package:saldough/app/di/di.dart';
 import 'package:saldough/app/premium/premium_wiring.dart';
+import 'package:saldough/app/startup/startup_intro.dart';
 import 'package:saldough/core/appearance/appearance.dart';
 import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
@@ -145,6 +146,10 @@ Future<void> bootstrapApp() async {
   if (!isReboot) registerEffectHandlers();
 
   final router = rootGetIt<GoRouter>();
+
+  // Intro pembuka hanya di boot pertama; gambarnya dimuat sebelum `runApp`
+  // supaya frame pertama sama dengan splash native.
+  if (!isReboot) await StartupIntro.preload();
 
   // Daftar langkah pemulihan di layar boot ulang selesai tepat saat aplikasi tampil.
   AppReboot.progress.value = null;

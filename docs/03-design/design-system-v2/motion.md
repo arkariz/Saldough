@@ -54,6 +54,7 @@ Acuan berikutnya, [home-clay.html](reference/home-clay.html), mengganti ikon
 | Garis laser menyapu (ikon kamera) | belum ada widget | 2 dtk, ±8px, berulang | Terus-menerus |
 | Gelombang suara (ikon headphone) | belum ada widget | 1,2 dtk, tunda 0,3 dtk per batang | Terus-menerus |
 | Tekan | `DsPressable` | 150ms, skala 0,98 / 0,95 | Tekan |
+| Intro pembuka "Daun mendarat" | `StartupIntro` (`lib/app/startup/`) | 1,9 dtk sekali, sesudah jeda 120 ms | Cold start; dilewati saat gerak dikurangi (rincian di [icons.md](icons.md)) |
 
 ## Perbaikan dari acuan
 

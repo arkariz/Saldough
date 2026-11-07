@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:navigation/navigation.dart';
+import 'package:saldough/app/startup/startup_intro.dart';
 import 'package:saldough/app/theme/appearance_theme.dart';
 import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
@@ -23,7 +24,7 @@ import 'package:saldough/shared/category/category.dart';
 /// memperbarui layar yang sudah terbuka (ADR-025 §3.6), begitu juga mengganti
 /// nama atau mengarsipkan kategori (ADR-026 §3.5).
 ///
-/// Juga memasang [SpotlightHost] (tur spotlight, ADR-021) dan tombol menu pengembang (hanya di build debug, T-1.10) lewat
+/// Juga memasang [StartupIntro] (intro pembuka sesudah splash native), [SpotlightHost] (tur spotlight, ADR-021) dan tombol menu pengembang (hanya di build debug, T-1.10) lewat
 /// `builder:` `MaterialApp.router`, sehingga muncul di atas layar apa pun.
 class SaldoughApp extends StatelessWidget {
   /// Membuat [SaldoughApp] dengan [getIt] (kontainer akar) dan [router].
@@ -57,13 +58,15 @@ class SaldoughApp extends StatelessWidget {
             localizationsDelegates: localizationsDelegates,
             routerConfig: router,
             // Lapisan tur spotlight di atas `Navigator`, supaya juga menutupi
-            // lembar modal (ADR-021 §3.3).
-            builder: (context, child) => SpotlightHost(
-              repository: getIt<TutorialProgressRepository>(),
-              child: _WithDebugMenu(
-                router: router,
-                registry: getIt<RouteRegistry>(),
-                child: child,
+            // lembar modal (ADR-021 §3.3). Intro pembuka di atas semuanya.
+            builder: (context, child) => StartupIntro(
+              child: SpotlightHost(
+                repository: getIt<TutorialProgressRepository>(),
+                child: _WithDebugMenu(
+                  router: router,
+                  registry: getIt<RouteRegistry>(),
+                  child: child,
+                ),
               ),
             ),
           ),

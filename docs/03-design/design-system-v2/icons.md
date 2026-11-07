@@ -146,9 +146,41 @@ Pengganti maskot piksel di latar terakota (ADR-015).
 Sumbernya SVG di `assets/icon/src/`, ditulis dan dirender oleh
 `scripts/launcher_icon/build_launcher_icon.py` (macOS, QuickLook), lalu
 `dart run flutter_launcher_icons`. Ubah rupa di skrip, bukan di SVG hasil.
+QuickLook selalu meratakan ke latar putih, jadi berkas transparan
+(`foreground`, `monochrome`, splash) dirender `render.py` dua kali, di atas
+putih dan hitam, lalu alfanya dihitung dari selisihnya; jangan merender
+berkas transparan langsung dengan `qlmanage`.
 Selesai menjalankan generator, kembalikan `ios/Runner.xcodeproj/project.pbxproj`
 bila ia mengganti `ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS`
 menjadi `AppIcon` (bug generator; nilainya harus `YES`).
+
+## Splash dan intro pembuka (6 Nov 2026)
+
+Splash native Android (`flutter_native_splash`) menampilkan tanuki clay
+**tanpa daun dan koin** di tengah latar `#DCF3E0` (gelap `#111412`), kotak
+viewBox maskot 180 dp. Frame pertama `StartupIntro`
+(`lib/app/startup/startup_intro.dart`) menggambar tubuh yang sama di posisi
+dan ukuran yang sama, lalu memutar animasi "Daun mendarat" (dipilih pemilik
+dari empat contoh): diam 120 ms sesudah frame pertama, daun melayang jatuh
+ke kepala (150–950 ms), tubuh memantul saat daun mendarat (760–1100 ms),
+koin daun meletup di kanan bawah (950–1400 ms), lalu memudar ke aplikasi
+(1550–1900 ms). Aplikasi dibangun di bawahnya sejak awal; ketuk untuk
+melompat ke akhir; dilewati saat gerak dikurangi dan saat boot ulang
+sesudah pemulihan. `MainActivity` melepas splash Android 12+ tanpa animasi
+keluar bawaan, karena pemudaran ikonnya membuat tanuki pucat sesaat.
+
+| Berkas | Dipakai untuk |
+|---|---|
+| `assets/icon/splash.png` | Splash pra-Android 12 (720 px, dianggap 4x) |
+| `assets/icon/splash_android12.png` | Ikon splash Android 12+ (kanvas 288 dp, latar ikon = latar splash supaya tidak ada lingkaran putih) |
+| `assets/illustration/splash_tanuki_body.svg`, `splash_tanuki_leaf.svg` | Lapisan intro Flutter (viewBox 54) |
+| `assets/icons_clay/tier_coin.svg` | Koin intro |
+
+Semua dibangun `scripts/launcher_icon/build_splash.py`, lalu
+`dart run flutter_native_splash:create`. Bayangan dibuang di gambar native
+dan Flutter karena `flutter_svg` tidak mendukung `feDropShadow`; ukuran dan
+warna di skrip harus sama dengan konstanta `StartupIntro`. Splash iOS belum
+ada (B-12).
 
 ## Catatan teknis
 

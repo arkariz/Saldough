@@ -122,7 +122,7 @@ dev_dependencies:
   slang_build_runner: ^4.7.0
 
 # Ikon peluncur Android dan iOS dari maskot tanuki clay design system v2
-# (ADR-043), dan splash screen Android dari maskot piksel lama (ADR-015).
+# (ADR-043), juga splash screen Android (tanuki tanpa daun, lihat StartupIntro).
 # `assets/icon/` sengaja TIDAK didaftarkan di `flutter: assets:` di bawah --
 # berkasnya hanya sumber untuk dua generator ini saat `dart run ...`, bukan
 # aset yang dibundel ke aplikasi. PNG ikon dibangun dari SVG di
@@ -144,8 +144,11 @@ flutter_launcher_icons:
   min_sdk_android: 23
 
 flutter_native_splash:
-  color: "#FFF8F5" # colors.background mode terang (app_colors_extension.dart)
-  color_dark: "#231F1B" # colors.background mode gelap
+  # Latar dan gambar harus sama dengan frame pertama intro Flutter
+  # (`StartupIntro` di lib/app/startup/), supaya peralihannya tidak terlihat.
+  # Gambar dibangun `scripts/launcher_icon/build_splash.py`.
+  color: "#DCF3E0"
+  color_dark: "#111412"
   image: "assets/icon/splash.png"
   image_dark: "assets/icon/splash.png"
   android: true
@@ -154,10 +157,11 @@ flutter_native_splash:
   android_12:
     image: "assets/icon/splash_android12.png"
     image_dark: "assets/icon/splash_android12.png"
-    icon_background_color: "#BD5D41"
-    icon_background_color_dark: "#BD5D41"
-    color: "#FFF8F5"
-    color_dark: "#231F1B"
+    # Tanpa ini Android 12+ menggambar lingkaran putih di belakang ikon.
+    icon_background_color: "#DCF3E0"
+    icon_background_color_dark: "#111412"
+    color: "#DCF3E0"
+    color_dark: "#111412"
 
 flutter:
   uses-material-design: true

@@ -2,7 +2,7 @@
 """Bangun sumber ikon peluncur v2 (ADR-043) dari maskot clay.
 
 Menulis SVG sumber ke `assets/icon/src/` lalu merendernya ke PNG 1024 px di
-`assets/icon/` lewat QuickLook macOS (`qlmanage`), yang mendukung gradasi dan
+`assets/icon/` lewat QuickLook macOS (`render.py`), yang mendukung gradasi dan
 `feDropShadow`. Sesudahnya jalankan:
 
     python3 scripts/launcher_icon/build_launcher_icon.py
@@ -14,9 +14,9 @@ acuan dengan bayangan) dan `tier_coin.svg`; latar memakai nada matcha
 """
 
 import pathlib
-import shutil
 import subprocess
-import tempfile
+
+from render import render_opaque, render_transparent
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 SRC = ROOT / "assets/icon/src"
@@ -130,28 +130,24 @@ SOURCES = {
 }
 
 
-def render(name: str, text: str, tmp: pathlib.Path) -> None:
-    src = SRC / f"{name}.svg"
-    src.write_text(text)
-    subprocess.run(
-        ["qlmanage", "-t", "-s", str(SIZE), "-o", str(tmp), str(src)],
-        check=True,
-        capture_output=True,
-    )
-    shutil.move(tmp / f"{name}.svg.png", OUT / f"{name}.png")
+# Berkas berlatar transparan; sisanya menutupi seluruh kanvas.
+TRANSPARENT = {"foreground", "monochrome"}
 
 
 def main() -> None:
     SRC.mkdir(parents=True, exist_ok=True)
-    with tempfile.TemporaryDirectory() as d:
-        for name, text in SOURCES.items():
-            render(name, text, pathlib.Path(d))
+    for name, text in SOURCES.items():
+        (SRC / f"{name}.svg").write_text(text)
+        out = OUT / f"{name}.png"
+        if name in TRANSPARENT:
+            render_transparent(text, SIZE, out)
+        else:
+            render_opaque(text, SIZE, out)
     subprocess.run(
         ["sips", "-Z", "512", str(OUT / "icon.png"), "--out", str(OUT / "play_store_512.png")],
         check=True,
         capture_output=True,
     )
-
 
 if __name__ == "__main__":
     main()

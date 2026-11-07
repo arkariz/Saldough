@@ -1685,6 +1685,7 @@
       "subActiveOpen": "Aktif",
       "subGrace": "Pembayaran belum berhasil. Plus tetap aktif sampai $date.",
       "subOnHold": "Langganan ditahan karena pembayaran belum berhasil. Perbaiki di Play Store.",
+      "subTrialOnHold": "Pembayaran langgananmu belum berhasil. Perbaiki di Play Store supaya Plus tidak berhenti setelah uji coba berakhir ($date).",
       "subTester": "Dari program penguji sampai $date",
       "subTesterOpen": "Dari program penguji",
       "badgeTrial": "Uji coba",

@@ -129,6 +129,7 @@ diputuskan, dan catat keputusannya di tugas atau ADR yang mengerjakannya.
   memperbaiki pembayaran di Akun walau uji coba berjalan. Rekomendasi agen: (b),
   karena pesannya murah dan mencegah kejutan saat uji coba habis. Tidak mengubah
   hak yang diterima pengguna.
+  **Diputuskan pemilik 7 Nov 2026: opsi (b)**, dikerjakan di T-24.21.
 
 KT-DS5–KT-DS8 (ikon clay, Fase 25) diputuskan 30 Okt 2026: clay menggantikan
 semua ikon piksel, tile datar dengan hanya tombol Catat bertimbul, ikon tetap
@@ -5936,6 +5937,17 @@ Jalur kritis: T-24.2 → T-24.4 → T-24.6 → T-24.14 → T-24.18.
       penahanan (atau tampilkan ajakan berlangganan lagi), jangan menebak
       sebelum bukti ada.
 
+- [x] **T-24.21** (S) Uji coba tidak lagi menutupi langganan yang ditahan
+      (KT-P19 opsi b, temuan T1). `TrialPlan` membawa `onHoldSince` (diisi
+      `resolvePlan` dari cache bila langganan Play ditahan); Akun › Plus
+      menampilkan ajakan *"Pembayaran langgananmu belum berhasil. Perbaiki di
+      Play Store supaya Plus tidak berhenti setelah uji coba berakhir (tanggal)."*
+      dengan lencana Cek dan tombol Kelola di Play Store. Hak tidak berubah
+      (Plus tetap terbuka selama uji coba). Uji: resolver (tanda ditahan ada dan
+      tidak ada), Akun (teks, lencana, Kelola, 360dp teks 200%). Catatan: ajakan
+      ini bergantung pada status "ditahan" yang benar; selama T-24.20 (ditahan
+      tidak berakhir setelah kedaluwarsa) belum terkonfirmasi, ajakan bisa
+      bertahan sampai uji coba habis walau langganannya sudah kedaluwarsa di Play.
 ## Fase 25: Design system baru dan preset tema
 
 Permintaan pemilik 29 Okt 2026: rombak design system dan siapkan preset tema

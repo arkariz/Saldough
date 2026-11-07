@@ -160,7 +160,7 @@ Beri tanda di kolom hasil: ✅ lulus, ❌ gagal (tulis temuannya di bawah tabel)
 Tulis di sini (ID skenario, yang terjadi, bukti, tingkat S1–S3). Temuan yang
 menghalangi rilis masuk ke TASK_LIST sebagai `T-24.n` baru.
 
-**T1 (S3, desain): uji coba menutupi langganan yang ditahan atau habis.**
+**T1 (S3, desain; diputuskan KT-P19 opsi b dan diperbaiki T-24.21, menunggu uji perangkat): uji coba menutupi langganan yang ditahan atau habis.**
 `resolvePlan` memeriksa uji coba **sebelum** `OnHold`
 (`entitlement_resolver.dart`, urutan: cache Plus valid, pra-peluncuran, uji
 coba, `OnHold`, Gratis). Akibatnya pengguna yang membeli saat uji coba masih

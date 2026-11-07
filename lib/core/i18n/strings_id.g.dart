@@ -5246,6 +5246,9 @@ class Translations$premium$account$id {
 	/// id: 'Langganan ditahan karena pembayaran belum berhasil. Perbaiki di Play Store.'
 	String get subOnHold => 'Langganan ditahan karena pembayaran belum berhasil. Perbaiki di Play Store.';
 
+	/// id: 'Pembayaran langgananmu belum berhasil. Perbaiki di Play Store supaya Plus tidak berhenti setelah uji coba berakhir ($date).'
+	String subTrialOnHold({required Object date}) => 'Pembayaran langgananmu belum berhasil. Perbaiki di Play Store supaya Plus tidak berhenti setelah uji coba berakhir (${date}).';
+
 	/// id: 'Dari program penguji sampai $date'
 	String subTester({required Object date}) => 'Dari program penguji sampai ${date}';
 
@@ -7389,6 +7392,7 @@ extension on Translations {
 			'premium.account.subActiveOpen' => 'Aktif',
 			'premium.account.subGrace' => ({required Object date}) => 'Pembayaran belum berhasil. Plus tetap aktif sampai ${date}.',
 			'premium.account.subOnHold' => 'Langganan ditahan karena pembayaran belum berhasil. Perbaiki di Play Store.',
+			'premium.account.subTrialOnHold' => ({required Object date}) => 'Pembayaran langgananmu belum berhasil. Perbaiki di Play Store supaya Plus tidak berhenti setelah uji coba berakhir (${date}).',
 			'premium.account.subTester' => ({required Object date}) => 'Dari program penguji sampai ${date}',
 			'premium.account.subTesterOpen' => 'Dari program penguji',
 			'premium.account.badgeTrial' => 'Uji coba',

@@ -40,16 +40,22 @@ final class FreePlan extends PlanState {
 /// (hari terakhir, inklusif).
 final class TrialPlan extends PlanState {
   /// Membuat [TrialPlan].
-  const TrialPlan({required this.endsOn});
+  const TrialPlan({required this.endsOn, this.onHoldSince});
 
   /// Hari terakhir uji coba (tanggal setempat, tanpa jam).
   final DateTime endsOn;
+
+  /// Pengguna juga punya langganan Play yang **ditahan** sejak tanggal ini,
+  /// tertutup uji coba yang masih berjalan (KT-P19, opsi b). Plus tetap
+  /// terbuka karena uji coba, tetapi Akun tetap mengajak memperbaiki
+  /// pembayaran supaya tidak jatuh ke Gratis saat uji coba habis.
+  final DateTime? onHoldSince;
 
   @override
   bool get isPlus => true;
 
   @override
-  List<Object?> get props => [endsOn];
+  List<Object?> get props => [endsOn, onHoldSince];
 }
 
 /// Plus aktif.

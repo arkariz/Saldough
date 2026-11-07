@@ -2194,6 +2194,7 @@ class _Translations$premium$account$en extends Translations$premium$account$id {
 	@override String get subActiveOpen => 'Active';
 	@override String subGrace({required Object date}) => 'Payment did not go through. Plus stays on until ${date}.';
 	@override String get subOnHold => 'Subscription on hold because payment did not go through. Fix it in the Play Store.';
+	@override String subTrialOnHold({required Object date}) => 'Your subscription payment did not go through. Fix it in the Play Store so Plus does not stop when your trial ends (${date}).';
 	@override String subTester({required Object date}) => 'From the tester program until ${date}';
 	@override String get subTesterOpen => 'From the tester program';
 	@override String get badgeTrial => 'Trial';
@@ -4098,6 +4099,7 @@ extension on TranslationsEn {
 			'premium.account.subActiveOpen' => 'Active',
 			'premium.account.subGrace' => ({required Object date}) => 'Payment did not go through. Plus stays on until ${date}.',
 			'premium.account.subOnHold' => 'Subscription on hold because payment did not go through. Fix it in the Play Store.',
+			'premium.account.subTrialOnHold' => ({required Object date}) => 'Your subscription payment did not go through. Fix it in the Play Store so Plus does not stop when your trial ends (${date}).',
 			'premium.account.subTester' => ({required Object date}) => 'From the tester program until ${date}',
 			'premium.account.subTesterOpen' => 'From the tester program',
 			'premium.account.badgeTrial' => 'Trial',

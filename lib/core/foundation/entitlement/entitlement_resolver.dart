@@ -108,9 +108,7 @@ PlanState resolvePlan({
       break;
   }
 
-  if (cached != null &&
-      cached.onHoldSince == null &&
-      _cacheValid(cached, now)) {
+  if (cached != null && cached.onHoldSince == null && _cacheValid(cached, now)) {
     return PlusPlan(
       source: cached.source,
       until: cached.until,
@@ -120,16 +118,11 @@ PlanState resolvePlan({
 
   final prelaunch = launchAt == null || now.isBefore(launchAt);
   if (prelaunch) {
-    return signedInUid == null
-        ? const FreePlan()
-        : const PlusPlan(source: PlanSource.prelaunch);
+    return signedInUid == null ? const FreePlan() : const PlusPlan(source: PlanSource.prelaunch);
   }
 
-  if (signedInUid != null &&
-      trial != null &&
-      trial.uid == signedInUid &&
-      !today.isAfter(trial.endsOn)) {
-    return TrialPlan(endsOn: trial.endsOn);
+  if (signedInUid != null && trial != null && trial.uid == signedInUid && !today.isAfter(trial.endsOn)) {
+    return TrialPlan(endsOn: trial.endsOn, onHoldSince: cached?.onHoldSince);
   }
 
   final onHold = cached?.onHoldSince;

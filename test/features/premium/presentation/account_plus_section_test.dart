@@ -77,6 +77,22 @@ void main() {
     expect(find.text(texts.manage), findsNothing);
   });
 
+  testWidgets('uji coba menutupi langganan ditahan: ajakan memperbaiki pembayaran, lencana Cek, dan Kelola (KT-P19)', (
+    tester,
+  ) async {
+    await pump(tester, TrialPlan(endsOn: DateTime(2026, 11, 24), onHoldSince: DateTime(2026, 11, 20)));
+    expect(find.text(texts.subTrialOnHold(date: '24 Nov 2026')), findsOneWidget);
+    expect(find.text(texts.subTrial(date: '24 Nov 2026')), findsNothing);
+    expect(find.text(texts.badgeCheck), findsOneWidget);
+    await tester.tap(find.text(texts.manage));
+    expect(launched, [playSubscriptionsUri]);
+  });
+
+  testWidgets('360dp teks 200%: ajakan perbaiki pembayaran saat uji coba tanpa overflow', (tester) async {
+    await pump(tester, TrialPlan(endsOn: DateTime(2026, 11, 24), onHoldSince: DateTime(2026, 11, 20)), scale: 2);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('aktif beli: tanggal akhir periode dan Kelola membuka Play Store', (tester) async {
     await pump(tester, PlusPlan(source: PlanSource.purchase, until: DateTime(2027, 10, 22)));
     expect(find.text(texts.subActive(date: '22 Okt 2027')), findsOneWidget);

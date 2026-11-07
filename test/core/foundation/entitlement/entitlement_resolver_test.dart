@@ -142,12 +142,20 @@ void main() {
         final held = cache(onHold: DateTime(2026, 12, 5));
         expect(resolve(cached: held), OnHoldPlan(since: DateTime(2026, 12, 5)));
         expect(resolve(cached: held).isPlus, isFalse);
+        // Uji coba tetap menang (Plus terbuka), tetapi membawa tanda "ditahan"
+        // supaya Akun mengajak memperbaiki pembayaran (KT-P19, opsi b).
         expect(
           resolve(uid: 'u1', trialRecord: trial, cached: held),
-          isA<TrialPlan>(),
+          TrialPlan(endsOn: DateTime(2026, 12, 24), onHoldSince: DateTime(2026, 12, 5)),
         );
+        expect(resolve(uid: 'u1', trialRecord: trial, cached: held).isPlus, isTrue);
       },
     );
+
+    test('uji coba tanpa langganan ditahan: tanpa tanda ditahan', () {
+      final plan = resolve(uid: 'u1', trialRecord: trial) as TrialPlan;
+      expect(plan.onHoldSince, isNull);
+    });
 
     test('hak promosi tanpa tanggal berakhir berlaku terus', () {
       final promo = CachedPlus(

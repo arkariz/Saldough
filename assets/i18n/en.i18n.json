@@ -1688,6 +1688,7 @@
       "subActiveOpen": "Active",
       "subGrace": "Payment did not go through. Plus stays on until $date.",
       "subOnHold": "Subscription on hold because payment did not go through. Fix it in the Play Store.",
+      "subTrialOnHold": "Your subscription payment did not go through. Fix it in the Play Store so Plus does not stop when your trial ends ($date).",
       "subTester": "From the tester program until $date",
       "subTesterOpen": "From the tester program",
       "badgeTrial": "Trial",

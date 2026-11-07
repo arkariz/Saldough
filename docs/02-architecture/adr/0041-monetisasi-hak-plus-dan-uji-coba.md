@@ -124,6 +124,13 @@ sealed class PlanState {
 ```
 
 - `isPlus` = `Trial` | `Plus` (termasuk tenggang). `Free` dan `OnHold` tidak.
+  **Revisi 7 Nov 2026 (KT-P19):** uji coba yang masih berjalan tetap menang atas
+  `OnHold` (Plus terbuka), tetapi `Trial` membawa `onHoldSince` bila langganan
+  Play ditahan di cache, supaya Akun mengajak memperbaiki pembayaran.
+  **Revisi T-24.19:** `RevenueCatPlanSource` mengabaikan bacaan basi (tanggal
+  jawaban server `verifiedAt` tidak lebih baru dari verifikasi terakhir) dan
+  menyimpan `lastVerifiedAt` dari tanggal jawaban server, supaya tenggang luring
+  3 hari tidak terhapus oleh jawaban lama SDK saat luring.
 - **Prioritas** bila beberapa sumber ada: `Plus` mengalahkan `Trial`. Trial yang
   habis tidak dihitung ulang bila pengguna memasang ulang sesudah membeli.
 - **Mulai berlangganan saat masih uji coba** langsung menjadi `Plus`; sisa

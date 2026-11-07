@@ -96,6 +96,14 @@ class AccountPlusSection extends StatelessWidget {
     String date(DateTime d) => CycleMonthFormatter.formatDateShort(d);
     return switch (plan) {
       FreePlan() => (texts.subFree, null, false, false, false),
+      // Langganan ditahan tertutup uji coba (KT-P19): ajak memperbaiki pembayaran.
+      TrialPlan(:final endsOn, :final onHoldSince) when onHoldSince != null => (
+        texts.subTrialOnHold(date: date(endsOn)),
+        texts.badgeCheck,
+        true,
+        true,
+        false,
+      ),
       TrialPlan(:final endsOn) => (texts.subTrial(date: date(endsOn)), texts.badgeTrial, false, false, false),
       OnHoldPlan() => (texts.subOnHold, texts.badgeCheck, true, true, false),
       PlusPlan(:final inGrace, :final until) when inGrace => (

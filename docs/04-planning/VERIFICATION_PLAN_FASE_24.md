@@ -171,5 +171,23 @@ Akun › Plus kembali ke "Sampai 30 Nov 2026. Tanpa kartu. Uji coba". Mungkin
 diterima (Plus tetap terbuka selama uji coba), tetapi pemilik perlu memutuskan
 apakah ajakan memperbaiki pembayaran harus tetap tampil. Belum ada tugas.
 
+**T2 (S3, kemungkinan, perlu dikonfirmasi): "ditahan" tidak pernah berakhir
+sesudah langganan kedaluwarsa di Play.** Teramati 7 Nov 2026 08:27–08:31: Play
+sudah menandai langganan uji **kedaluwarsa** (tidak ada lagi opsi mengganti
+metode bayar, hanya berlangganan ulang), tetapi Akun › Plus tetap menampilkan
+"Langganan ditahan karena pembayaran belum berhasil. Perbaiki di Play Store.",
+dua kali dibuka ulang. Penyebabnya diduga di `PlusSnapshot.onHold =
+!isActive && billingIssueSince != null` dan `RevenueCatPlanSource.apply`:
+cache hanya dihapus bila tidak aktif **dan tanpa** masalah pembayaran, sedangkan
+RevenueCat tampaknya mempertahankan `billingIssueDetectedAt` pada hak yang sudah
+habis. Akibatnya pengguna yang langganannya habis karena gagal bayar terus
+diminta "memperbaiki" sesuatu yang tidak bisa diperbaiki; satu-satunya jalan
+adalah berlangganan ulang. Perilakunya tetap seperti Gratis, jadi hanya pesan
+yang menyesatkan. Konfirmasi: lihat pelanggan di dasbor RevenueCat (entitlement
+kedaluwarsa dan masalah penagihan masih tercatat). Usul: batasi "ditahan" hanya
+selama jendela penahanan Play, atau tampilkan ajakan **berlangganan lagi** bila
+`willRenew` salah dan tanggal berakhir sudah lewat. Belum ada tugas.
+
 _(temuan lain: belum ada)_
+
 

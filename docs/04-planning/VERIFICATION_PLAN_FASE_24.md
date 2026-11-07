@@ -188,7 +188,7 @@ kedaluwarsa dan masalah penagihan masih tercatat). Usul: batasi "ditahan" hanya
 selama jendela penahanan Play, atau tampilkan ajakan **berlangganan lagi** bila
 `willRenew` salah dan tanggal berakhir sudah lewat. Belum ada tugas.
 
-**T3 (S2, terkonfirmasi di waktu nyata): tenggang luring 3 hari tidak bertahan
+**T3 (S2, terkonfirmasi di waktu nyata; diperbaiki di kode oleh T-24.19, menunggu U10 ulang di build berikutnya): tenggang luring 3 hari tidak bertahan
 saat aplikasi dibuka luring sesudah akhir periode.** Terkonfirmasi tanpa menggeser jam: periode berakhir sekitar 09:32, dibuka luring 09:34 → Gratis. Teramati 7 Nov 2026 09:03–09:06
 di emulator kedua (langganan Tahunan uji 30 menit aktif, dibaca daring 09:03):
 mode pesawat dan buka ulang aplikasi dalam periode → Plus (benar). Jam

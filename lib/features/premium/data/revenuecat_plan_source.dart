@@ -15,7 +15,12 @@ import 'package:saldough/features/premium/data/purchases_gateway.dart';
 /// - tidak aktif dengan masalah pembayaran → langganan ditahan;
 /// - tidak aktif tanpa masalah, atau tidak ada entitlement → cache dihapus
 ///   (hak benar-benar berakhir);
-/// - gagal membaca (luring, SDK) → cache lama dibiarkan.
+/// - gagal membaca (luring, SDK) → cache lama dibiarkan;
+/// - bacaan **basi** (SDK menjawab dari simpanannya sendiri saat luring, jadi
+///   `verifiedAt` tidak lebih baru dari verifikasi terakhir di cache) →
+///   diabaikan. Tanpa ini jawaban lama yang dihitung tidak aktif terhadap jam
+///   perangkat menghapus cache dan membuang tenggang luring 3 hari (T3,
+///   T-24.19).
 ///
 /// Tidak pernah melempar: gagal berarti hak yang diketahui tetap berlaku
 /// sampai tenggang luringnya habis.
@@ -84,6 +89,7 @@ final class RevenueCatPlanSource {
 
   /// Menerapkan [snapshot] (mis. hasil pembelian) ke cache hak.
   Future<void> apply(PlusSnapshot? snapshot) async {
+    if (await _isStale(snapshot)) return;
     if (snapshot == null || (!snapshot.isActive && !snapshot.onHold)) {
       await cache.clear();
     } else {
@@ -93,11 +99,23 @@ final class RevenueCatPlanSource {
           until: snapshot.expiration,
           inGrace: snapshot.inGrace,
           onHoldSince: snapshot.onHold ? snapshot.billingIssueSince : null,
-          lastVerifiedAt: _now(),
+          // Tanggal jawaban server, bukan jam perangkat: bacaan basi saat
+          // luring tidak boleh tampak "diverifikasi sesudah `until`".
+          lastVerifiedAt: snapshot.verifiedAt ?? _now(),
         ),
       );
     }
     await onChanged();
+  }
+
+  /// Bacaan basi: jawaban server-nya tidak lebih baru dari verifikasi terakhir
+  /// yang tersimpan, berarti SDK mengulang simpanannya (luring), bukan
+  /// membawa kabar baru. Tanpa tanggal jawaban atau tanpa cache, selalu baru.
+  Future<bool> _isStale(PlusSnapshot? snapshot) async {
+    final verifiedAt = snapshot?.verifiedAt;
+    if (verifiedAt == null) return false;
+    final cached = (await cache.load()).getOrElse((_) => null);
+    return cached != null && !verifiedAt.isAfter(cached.lastVerifiedAt);
   }
 
   /// Melepas langganan; dipakai uji dan boot ulang.

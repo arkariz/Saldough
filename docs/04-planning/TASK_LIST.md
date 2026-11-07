@@ -121,6 +121,14 @@ diputuskan, dan catat keputusannya di tugas atau ADR yang mengerjakannya.
   Pilihan: pertahankan dan tulis ADR-nya, atau catat selisih sebagai
   transaksi penyesuaian bertanggal hari ini (ADR domain baru, menyentuh
   aturan 8). Keputusan teknis menyusul sebagai ADR.
+- **KT-P19** Uji coba menutupi langganan yang ditahan (temuan T1, S3). Urutan
+  `resolvePlan`: cache Plus valid, pra-peluncuran, uji coba, ditahan, Gratis.
+  Pengguna yang membeli saat uji coba lalu gagal bayar tampak "Uji coba" tanpa
+  ajakan memperbaiki pembayaran, dan Gratis begitu uji coba selesai. Pilihan:
+  (a) biarkan, karena Plus tetap terbuka selama uji coba; (b) tampilkan ajakan
+  memperbaiki pembayaran di Akun walau uji coba berjalan. Rekomendasi agen: (b),
+  karena pesannya murah dan mencegah kejutan saat uji coba habis. Tidak mengubah
+  hak yang diterima pengguna.
 
 KT-DS5–KT-DS8 (ikon clay, Fase 25) diputuskan 30 Okt 2026: clay menggantikan
 semua ikon piksel, tile datar dengan hanya tombol Catat bertimbul, ikon tetap
@@ -5904,6 +5912,29 @@ Jalur kritis: T-24.2 → T-24.4 → T-24.6 → T-24.14 → T-24.18.
       ("ditahan" tidak berakhir sesudah kedaluwarsa, S3). Belum: U6, U7, U12,
       U13, U16. Rinci di `VERIFICATION_PLAN_FASE_24.md`. Tugas perbaikan T1–T3
       belum dibuat (menunggu keputusan pemilik).
+
+- [x] **T-24.19** (M) Tenggang luring 3 hari tidak boleh terhapus oleh bacaan
+      basi (temuan T3 uji perangkat 7 Nov 2026, U10, S2). Terkonfirmasi di waktu
+      nyata: dibuka luring dua menit sesudah akhir periode, Plus hilang. Sebab
+      yang diperbaiki: saat luring SDK RevenueCat menjawab dari simpanannya
+      sendiri, dan `RevenueCatPlanSource.apply` memperlakukannya sebagai bacaan
+      baru (menghapus cache bila tampak tidak aktif, dan mencap `lastVerifiedAt`
+      dengan jam perangkat sehingga tampak "diverifikasi sesudah `until`").
+      Perbaikan: `PlusSnapshot.verifiedAt` dari `CustomerInfo.requestDate`
+      (tanggal jawaban server); `apply` **mengabaikan** bacaan yang `verifiedAt`-nya
+      tidak lebih baru dari verifikasi terakhir di cache, dan menyimpan
+      `lastVerifiedAt` = `verifiedAt` (bukan `now`). Bacaan server yang lebih
+      baru tetap diterapkan penuh (perpanjangan, kedaluwarsa, tenggang,
+      ditahan). Tanpa `verifiedAt` perilaku lama. Uji: tujuh uji baru di
+      `revenuecat_plan_source_test.dart`. **Tersisa:** ulangi U10 di build
+      berikutnya dari jalur uji internal (daring, luring, lewati `until`, buka
+      luring: harus tetap Plus sampai `until + 3 hari`).
+- [ ] **T-24.20** (S) Pesan "ditahan" tidak berakhir sesudah langganan
+      kedaluwarsa (temuan T2, S3). **Menunggu konfirmasi** di dasbor RevenueCat:
+      apakah hak yang kedaluwarsa karena gagal bayar tetap membawa
+      `billingIssueDetectedAt`. Bila ya, batasi `PlusSnapshot.onHold` pada jendela
+      penahanan (atau tampilkan ajakan berlangganan lagi), jangan menebak
+      sebelum bukti ada.
 
 ## Fase 25: Design system baru dan preset tema
 

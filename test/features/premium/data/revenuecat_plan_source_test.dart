@@ -78,8 +78,7 @@ EntitlementInfo _info({
   billingIssueDetectedAt: billingIssue,
 );
 
-T _right<T>(Either<Object, T> result) =>
-    result.getOrElse((f) => throw StateError('Left: $f'));
+T _right<T>(Either<Object, T> result) => result.getOrElse((f) => throw StateError('Left: $f'));
 
 /// Hak dari RevenueCat ke cache (ADR-041 §3.3, §3.5).
 void main() {
@@ -95,6 +94,12 @@ void main() {
       expect(snapshot.isPromotional, isFalse);
       expect(snapshot.expiration, DateTime.utc(2027, 1, 10, 5).toLocal());
       expect(snapshot.billingIssueSince, isNull);
+    });
+
+    test('tanggal jawaban server ikut dibawa ke snapshot', () {
+      final at = DateTime.utc(2026, 12, 12, 2).toLocal();
+      expect(snapshotOfEntitlement(_info(), verifiedAt: at)!.verifiedAt, at);
+      expect(snapshotOfEntitlement(_info())!.verifiedAt, isNull);
     });
 
     test('hak promosi tanpa tanggal berakhir', () {
@@ -238,6 +243,70 @@ void main() {
         expect(changed, 1);
       },
     );
+
+    group('bacaan basi saat luring (T3, T-24.19)', () {
+      final verified = DateTime(2026, 12, 12, 8, 20);
+      final until = DateTime(2026, 12, 12, 8, 50);
+
+      Future<void> readFromServer() async {
+        gateway.next = PlusSnapshot(isActive: true, expiration: until, verifiedAt: verified);
+        await source.refresh();
+      }
+
+      test('waktu verifikasi di cache = tanggal jawaban server, bukan jam perangkat', () async {
+        await readFromServer();
+        expect((await cached())?.lastVerifiedAt, verified);
+        expect(now.isAfter(verified), isTrue, reason: 'jam perangkat lebih akhir, tetapi tidak dipakai');
+      });
+
+      test(
+        'SDK mengulang jawaban lama yang tampak tidak aktif: cache dan tenggang luring dibiarkan, tanpa memberi tahu',
+        () async {
+          await readFromServer();
+          final before = await cached();
+          final changedBefore = changed;
+
+          gateway.next = PlusSnapshot(isActive: false, verifiedAt: verified);
+          await source.refresh();
+
+          expect(await cached(), before);
+          expect(changed, changedBefore);
+        },
+      );
+
+      test('jawaban lama yang tampak aktif juga tidak menggeser verifikasi terakhir ke jam perangkat', () async {
+        await readFromServer();
+        gateway.next = PlusSnapshot(isActive: true, expiration: until, verifiedAt: verified);
+        await source.refresh();
+        expect((await cached())?.lastVerifiedAt, verified);
+      });
+
+      test('jawaban server yang lebih baru dan tidak aktif menghapus cache (hak benar-benar berakhir)', () async {
+        await readFromServer();
+        gateway.next = PlusSnapshot(isActive: false, verifiedAt: verified.add(const Duration(minutes: 30)));
+        await source.refresh();
+        expect(await cached(), isNull);
+      });
+
+      test('jawaban server yang lebih baru memperpanjang until (perpanjangan Play)', () async {
+        await readFromServer();
+        final renewed = until.add(const Duration(minutes: 30));
+        gateway.next = PlusSnapshot(
+          isActive: true,
+          expiration: renewed,
+          verifiedAt: verified.add(const Duration(minutes: 31)),
+        );
+        await source.refresh();
+        expect((await cached())?.until, renewed);
+      });
+
+      test('tanpa tanggal jawaban: perilaku lama (jam perangkat, selalu diterapkan)', () async {
+        await readFromServer();
+        gateway.next = const PlusSnapshot(isActive: false);
+        await source.refresh();
+        expect(await cached(), isNull);
+      });
+    });
 
     test('masuk meneruskan email dan nama ke gateway sebagai atribut pelanggan', () async {
       await source.setUser('u1', email: 'a@b.id', displayName: 'Ayu');

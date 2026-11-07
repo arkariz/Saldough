@@ -12,6 +12,7 @@ final class PlusSnapshot extends Equatable {
     this.isPromotional = false,
     this.expiration,
     this.billingIssueSince,
+    this.verifiedAt,
   });
 
   /// Entitlement aktif sekarang.
@@ -27,6 +28,12 @@ final class PlusSnapshot extends Equatable {
   /// Sejak kapan Play melaporkan masalah pembayaran, atau `null`.
   final DateTime? billingIssueSince;
 
+  /// Kapan **server** RevenueCat menjawab data ini (`CustomerInfo.requestDate`),
+  /// atau `null` bila tidak diketahui. Saat luring SDK mengembalikan jawaban
+  /// lama dari simpanannya sendiri, dan nilai ini tetap tanggal jawaban aslinya,
+  /// jadi bisa dipakai membedakan bacaan baru dari bacaan basi.
+  final DateTime? verifiedAt;
+
   /// Aktif tetapi ada masalah pembayaran: masa tenggang Play, tetap Plus.
   bool get inGrace => isActive && billingIssueSince != null;
 
@@ -34,5 +41,5 @@ final class PlusSnapshot extends Equatable {
   bool get onHold => !isActive && billingIssueSince != null;
 
   @override
-  List<Object?> get props => [isActive, isPromotional, expiration, billingIssueSince];
+  List<Object?> get props => [isActive, isPromotional, expiration, billingIssueSince, verifiedAt];
 }

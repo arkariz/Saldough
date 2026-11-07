@@ -42,8 +42,9 @@ abstract interface class PurchasesGateway {
 }
 
 /// Memetakan [info] (entitlement `plus` dari SDK) ke [PlusSnapshot].
-/// `null` bila entitlement itu tidak ada.
-PlusSnapshot? snapshotOfEntitlement(EntitlementInfo? info) {
+/// `null` bila entitlement itu tidak ada. [verifiedAt] = tanggal jawaban server
+/// (`CustomerInfo.requestDate`).
+PlusSnapshot? snapshotOfEntitlement(EntitlementInfo? info, {DateTime? verifiedAt}) {
   if (info == null) return null;
   return PlusSnapshot(
     isActive: info.isActive,
@@ -52,6 +53,7 @@ PlusSnapshot? snapshotOfEntitlement(EntitlementInfo? info) {
     billingIssueSince: info.billingIssueDetectedAt == null
         ? null
         : DateTime.tryParse(info.billingIssueDetectedAt!)?.toLocal(),
+    verifiedAt: verifiedAt,
   );
 }
 
@@ -70,7 +72,10 @@ final class PurchasesFlutterGateway implements PurchasesGateway {
   @override
   Stream<PlusSnapshot?> get updates => _updates.stream;
 
-  PlusSnapshot? _of(CustomerInfo info) => snapshotOfEntitlement(info.entitlements.all[plusEntitlementId]);
+  PlusSnapshot? _of(CustomerInfo info) => snapshotOfEntitlement(
+    info.entitlements.all[plusEntitlementId],
+    verifiedAt: DateTime.tryParse(info.requestDate)?.toLocal(),
+  );
 
   @override
   Future<void> configure() async {
@@ -112,8 +117,7 @@ final class PurchasesFlutterGateway implements PurchasesGateway {
     final offering = (await Purchases.getOfferings()).all[offeringId];
     return [
       for (final package in offering?.availablePackages ?? const <Package>[])
-        if (PlusPlanKind.fromId(package.identifier) case final kind?)
-          _optionOf(kind, package),
+        if (PlusPlanKind.fromId(package.identifier) case final kind?) _optionOf(kind, package),
     ];
   }
 

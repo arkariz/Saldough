@@ -5927,9 +5927,9 @@ Jalur kritis: T-24.2 → T-24.4 → T-24.6 → T-24.14 → T-24.18.
       `lastVerifiedAt` = `verifiedAt` (bukan `now`). Bacaan server yang lebih
       baru tetap diterapkan penuh (perpanjangan, kedaluwarsa, tenggang,
       ditahan). Tanpa `verifiedAt` perilaku lama. Uji: tujuh uji baru di
-      `revenuecat_plan_source_test.dart`. **Tersisa:** ulangi U10 di build
-      berikutnya dari jalur uji internal (daring, luring, lewati `until`, buka
-      luring: harus tetap Plus sampai `until + 3 hari`).
+      `revenuecat_plan_source_test.dart`. **Terbukti di perangkat 7 Nov 2026**
+      (build `1.0.0+23` dari Play): luring dua menit sesudah `until` dan dengan
+      jam +2 hari tetap Plus (U10 diulang, lulus).
 - [ ] **T-24.20** (S) Pesan "ditahan" tidak berakhir sesudah langganan
       kedaluwarsa (temuan T2, S3). **Menunggu konfirmasi** di dasbor RevenueCat:
       apakah hak yang kedaluwarsa karena gagal bayar tetap membawa

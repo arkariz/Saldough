@@ -14,6 +14,7 @@ import 'package:saldough/features/account/presentation/widgets/financial_month_s
 import 'package:saldough/features/account/presentation/widgets/hide_amounts_setting.dart';
 import 'package:saldough/features/account/presentation/widgets/language_setting.dart';
 import 'package:saldough/features/account/presentation/widgets/notification_capture_setting.dart';
+import 'package:saldough/features/account/presentation/widgets/rate_app_setting.dart';
 import 'package:saldough/features/account/presentation/widgets/recurring_reminder_setting.dart';
 import 'package:saldough/shared/auth/auth.dart';
 import 'package:saldough/shared/auth/auth_presentation.dart';
@@ -84,11 +85,16 @@ class _AccountPageState extends State<AccountPage> {
                         dataSection: widget.dataSection,
                         plusSection: widget.plusSection,
                       ),
-                    if (widget.versionEntry case final entry?) ...[
+                    if (widget.versionEntry != null || defaultTargetPlatform == TargetPlatform.android) ...[
                       const SizedBox(height: 24),
                       DsSectionHeader(title: t.account.appSection),
                       const SizedBox(height: 8),
-                      DsListCard(children: [entry]),
+                      DsListCard(
+                        children: [
+                          ?widget.versionEntry,
+                          if (defaultTargetPlatform == TargetPlatform.android) const RateAppSettingEntry(),
+                        ],
+                      ),
                     ],
                   ],
                 ),

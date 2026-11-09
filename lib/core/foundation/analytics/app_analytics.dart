@@ -88,6 +88,23 @@ abstract final class AppAnalytics {
   }
 }
 
+/// Peristiwa aktivasi pengguna baru dan ajakan memberi nilai, tanpa nominal,
+/// nama, atau catatan. Urutan "sudah mencatat" dibaca dari corong Firebase,
+/// bukan dari penanda lokal.
+abstract final class ActivationEvents {
+  ActivationEvents._();
+
+  /// Dompet baru tersimpan lewat layar Dompet.
+  static const walletCreated = AnalyticsEvent('wallet_created');
+
+  /// Transaksi baru tersimpan dari CATAT. [type]: `income`, `expense`, atau
+  /// `transfer`.
+  static AnalyticsEvent transactionRecorded(String type) => AnalyticsEvent('transaction_recorded', {'type': type});
+
+  /// Baris "Beri nilai di Play Store" di Akun diketuk.
+  static const rateAppTapped = AnalyticsEvent('rate_app_tapped');
+}
+
 /// Peristiwa rutin R1 (ADR-035 §7) dan R3 (ADR-037 §3.5), tanpa nominal.
 abstract final class RecurringEvents {
   RecurringEvents._();

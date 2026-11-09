@@ -968,6 +968,11 @@
     "displaySection": "Tampilan",
     "hideAmountsBody": "Ganti angka dengan titik di semua layar, mis. saat membuka aplikasi di depan orang lain.",
     "appSection": "Aplikasi",
+    "rateApp": {
+      "title": "Beri nilai di Play Store",
+      "body": "Ulasanmu membantu aplikasi kecil ini ditemukan orang lain.",
+      "openFailed": "Play Store tidak bisa dibuka. Coba lagi nanti."
+    },
     "version": {
       "label": "Versi aplikasi",
       "value": "$version ($build)",

@@ -168,6 +168,7 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
         await _recurringRepository.deleteRule(rule.id);
         emit(state.copyWith(isSaving: false, effect: _effectError(failure)));
       case Right():
+        _logRecorded(linked);
         _recurringChanges.notifyChanged(source: this);
         final effect = await _effectAfterRuleCreated(rule, _recordedAndScheduledMessage(rule));
         emit(state.copyWith(isSaving: false, saveCount: state.saveCount + 1, effect: effect));
@@ -480,6 +481,15 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
     toWalletId: e.toWalletId,
   );
 
+  /// Peristiwa aktivasi: hanya jenisnya, tanpa nominal atau catatan.
+  void _logRecorded(Transaction transaction) => AppAnalytics.log(
+    ActivationEvents.transactionRecorded(switch (transaction) {
+      IncomeTransaction() => 'income',
+      ExpenseTransaction() => 'expense',
+      TransferTransaction() => 'transfer',
+    }),
+  );
+
   Future<void> _save(
     Transaction transaction,
     Emitter<RecordState> emit,
@@ -493,6 +503,7 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
         emit(state.copyWith(isSaving: false, effect: _effectError(failure)));
       case Right():
         onSuccess?.call();
+        _logRecorded(transaction);
         emit(state.copyWith(isSaving: false, saveCount: state.saveCount + 1, effect: onSaved));
     }
   }

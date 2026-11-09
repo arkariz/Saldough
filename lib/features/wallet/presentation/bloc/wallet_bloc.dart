@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/features/wallet/presentation/bloc/wallet_state.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
@@ -73,7 +74,9 @@ final class WalletBloc extends Bloc<WalletEvent, WalletState> {
       initialBalance: event.initialBalance,
       currentBalance: event.initialBalance,
     );
-    await _afterWrite(await _walletRepository.saveWallet(wallet), t.wallet.savedMessage, emit);
+    final result = await _walletRepository.saveWallet(wallet);
+    if (result.isRight()) AppAnalytics.log(ActivationEvents.walletCreated);
+    await _afterWrite(result, t.wallet.savedMessage, emit);
   }
 
   Future<void> _onEdited(WalletEdited event, Emitter<WalletState> emit) async {

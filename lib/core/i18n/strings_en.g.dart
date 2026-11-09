@@ -1034,6 +1034,7 @@ class _Translations$account$en extends Translations$account$id {
 	@override String get displaySection => 'Display';
 	@override String get hideAmountsBody => 'Replace numbers with dots on every screen, handy when you open the app around others.';
 	@override String get appSection => 'App';
+	@override late final _Translations$account$rateApp$en rateApp = _Translations$account$rateApp$en._(_root);
 	@override late final _Translations$account$version$en version = _Translations$account$version$en._(_root);
 }
 
@@ -1857,6 +1858,18 @@ class _Translations$account$errors$en extends Translations$account$errors$id {
 	@override String get tooManyRequests => 'Too many attempts. Wait a moment, then try again.';
 	@override String get userDisabled => 'This account has been disabled.';
 	@override String get other => 'Couldn\'t sign in. Try again.';
+}
+
+// Path: account.rateApp
+class _Translations$account$rateApp$en extends Translations$account$rateApp$id {
+	_Translations$account$rateApp$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Rate on Play Store';
+	@override String get body => 'Your review helps other people find this small app.';
+	@override String get openFailed => 'Couldn\'t open Play Store. Try again later.';
 }
 
 // Path: account.version
@@ -3453,6 +3466,9 @@ extension on TranslationsEn {
 			'account.displaySection' => 'Display',
 			'account.hideAmountsBody' => 'Replace numbers with dots on every screen, handy when you open the app around others.',
 			'account.appSection' => 'App',
+			'account.rateApp.title' => 'Rate on Play Store',
+			'account.rateApp.body' => 'Your review helps other people find this small app.',
+			'account.rateApp.openFailed' => 'Couldn\'t open Play Store. Try again later.',
 			'account.version.label' => 'App version',
 			'account.version.value' => ({required Object version, required Object build}) => '${version} (${build})',
 			'account.version.valuePatched' => ({required Object version, required Object build, required Object patch}) => '${version} (${build}), patch ${patch}',
@@ -3561,11 +3577,11 @@ extension on TranslationsEn {
 			'discovery.quickStart.pickedCount' => ({required Object n}) => '${n} apps selected',
 			'discovery.quickStart.freeLimit' => ({required Object n}) => 'Free limit: ${n} apps',
 			'notificationCapture.accountEntryTitle' => 'Record from notifications',
+			_ => null,
+		} ?? switch (path) {
 			'notificationCapture.accountEntryBody' => 'Record automatically from bank and e-wallet notifications.',
 			'notificationCapture.settingsTitle' => 'Record from notifications',
 			'notificationCapture.enableLabel' => 'Turn on',
-			_ => null,
-		} ?? switch (path) {
 			'notificationCapture.accessMissingTitle' => 'Permission needed to read notifications',
 			'notificationCapture.accessMissingBody' => 'Without it, Tanukonomy can\'t see your bank notifications.',
 			'notificationCapture.accessAction' => 'Allow access',
@@ -4075,11 +4091,11 @@ extension on TranslationsEn {
 			'analysis.category.frequencyUsual' => ({required Object count, required Object amount}) => 'usually ${count} transactions · ${amount}',
 			'analysis.category.seeAll' => 'See all transactions',
 			'analysis.category.seeCategory' => ({required Object category}) => 'See ${category} details',
+			_ => null,
+		} ?? switch (path) {
 			'analysis.category.transactions' => 'Transactions',
 			'analysis.category.aboveAvg' => ({required Object amount}) => '${amount} above average',
 			'analysis.category.belowAvg' => ({required Object amount}) => '${amount} below average',
-			_ => null,
-		} ?? switch (path) {
 			'analysis.category.avgLine' => ({required Object n}) => '${n}-month average',
 			'analysis.category.moreHint' => 'Latest 20 transactions',
 			'premium.title' => 'Tanukonomy Plus',

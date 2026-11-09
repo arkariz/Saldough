@@ -968,6 +968,11 @@
     "displaySection": "Display",
     "hideAmountsBody": "Replace numbers with dots on every screen, handy when you open the app around others.",
     "appSection": "App",
+    "rateApp": {
+      "title": "Rate on Play Store",
+      "body": "Your review helps other people find this small app.",
+      "openFailed": "Couldn't open Play Store. Try again later."
+    },
     "version": {
       "label": "App version",
       "value": "$version ($build)",

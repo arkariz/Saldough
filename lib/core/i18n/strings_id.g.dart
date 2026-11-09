@@ -2629,6 +2629,7 @@ class Translations$account$id {
 	/// id: 'Aplikasi'
 	String get appSection => 'Aplikasi';
 
+	late final Translations$account$rateApp$id rateApp = Translations$account$rateApp$id.internal(_root);
 	late final Translations$account$version$id version = Translations$account$version$id.internal(_root);
 }
 
@@ -4648,6 +4649,24 @@ class Translations$account$errors$id {
 
 	/// id: 'Gagal masuk. Coba lagi.'
 	String get other => 'Gagal masuk. Coba lagi.';
+}
+
+// Path: account.rateApp
+class Translations$account$rateApp$id {
+	Translations$account$rateApp$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Beri nilai di Play Store'
+	String get title => 'Beri nilai di Play Store';
+
+	/// id: 'Ulasanmu membantu aplikasi kecil ini ditemukan orang lain.'
+	String get body => 'Ulasanmu membantu aplikasi kecil ini ditemukan orang lain.';
+
+	/// id: 'Play Store tidak bisa dibuka. Coba lagi nanti.'
+	String get openFailed => 'Play Store tidak bisa dibuka. Coba lagi nanti.';
 }
 
 // Path: account.version
@@ -6746,6 +6765,9 @@ extension on Translations {
 			'account.displaySection' => 'Tampilan',
 			'account.hideAmountsBody' => 'Ganti angka dengan titik di semua layar, mis. saat membuka aplikasi di depan orang lain.',
 			'account.appSection' => 'Aplikasi',
+			'account.rateApp.title' => 'Beri nilai di Play Store',
+			'account.rateApp.body' => 'Ulasanmu membantu aplikasi kecil ini ditemukan orang lain.',
+			'account.rateApp.openFailed' => 'Play Store tidak bisa dibuka. Coba lagi nanti.',
 			'account.version.label' => 'Versi aplikasi',
 			'account.version.value' => ({required Object version, required Object build}) => '${version} (${build})',
 			'account.version.valuePatched' => ({required Object version, required Object build, required Object patch}) => '${version} (${build}), pembaruan ${patch}',
@@ -6854,11 +6876,11 @@ extension on Translations {
 			'discovery.quickStart.pickedCount' => ({required Object n}) => '${n} aplikasi dipilih',
 			'discovery.quickStart.freeLimit' => ({required Object n}) => 'Batas Gratis: ${n} aplikasi',
 			'notificationCapture.accountEntryTitle' => 'Catat dari notifikasi',
+			_ => null,
+		} ?? switch (path) {
 			'notificationCapture.accountEntryBody' => 'Catat otomatis dari notifikasi bank dan e-wallet.',
 			'notificationCapture.settingsTitle' => 'Catat dari notifikasi',
 			'notificationCapture.enableLabel' => 'Aktifkan',
-			_ => null,
-		} ?? switch (path) {
 			'notificationCapture.accessMissingTitle' => 'Butuh izin membaca notifikasi',
 			'notificationCapture.accessMissingBody' => 'Tanpa izin ini, Tanukonomy tidak bisa melihat notifikasi bank.',
 			'notificationCapture.accessAction' => 'Beri izin',
@@ -7368,11 +7390,11 @@ extension on Translations {
 			'analysis.category.frequencyUsual' => ({required Object count, required Object amount}) => 'biasanya ${count} transaksi · ${amount}',
 			'analysis.category.seeAll' => 'Lihat semua transaksi',
 			'analysis.category.seeCategory' => ({required Object category}) => 'Lihat rincian ${category}',
+			_ => null,
+		} ?? switch (path) {
 			'analysis.category.transactions' => 'Transaksi',
 			'analysis.category.aboveAvg' => ({required Object amount}) => '${amount} di atas rata-rata',
 			'analysis.category.belowAvg' => ({required Object amount}) => '${amount} di bawah rata-rata',
-			_ => null,
-		} ?? switch (path) {
 			'analysis.category.avgLine' => ({required Object n}) => 'rata-rata ${n} bulan',
 			'analysis.category.moreHint' => '20 transaksi terbaru',
 			'premium.title' => 'Tanukonomy Plus',

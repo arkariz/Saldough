@@ -11,6 +11,9 @@ import 'package:saldough/features/account/presentation/widgets/setting_row.dart'
 String appearancePresetLabel(String id) => switch (id) {
   'matcha' => t.appearance.presets.matcha,
   'pink' => t.appearance.presets.pink,
+  'taro' => t.appearance.presets.taro,
+  'tanuki' => t.appearance.presets.tanuki,
+  'laut' => t.appearance.presets.laut,
   _ => DsThemePresets.byId(id).name,
 };
 
@@ -66,6 +69,31 @@ class AppearanceModeEntry extends StatelessWidget {
   }
 }
 
+/// Membuka lembar pilihan preset warna dan menyimpan pilihannya ke
+/// `ActiveAppearance`. Dipakai baris Akun › Tampilan dan tile aksi cepat Beranda.
+Future<void> showAppearancePresetPicker(
+  BuildContext context, {
+  List<DsThemePreset> presets = DsThemePresets.all,
+}) async {
+  final current = DsThemePresets.byId(ActiveAppearance.value.presetId).id;
+  final picked = await showOptionSheet<String>(
+    context,
+    title: t.appearance.presetPickerTitle,
+    current: current,
+    options: [
+      for (final preset in presets)
+        OptionSheetItem(
+          key: ValueKey('appearance-preset-${preset.id}'),
+          value: preset.id,
+          label: appearancePresetLabel(preset.id),
+          leading: _Swatch(color: preset.light.actionPrimary),
+        ),
+    ],
+  );
+  if (picked == null || picked == current) return;
+  ActiveAppearance.notifier.value = ActiveAppearance.value.copyWith(presetId: picked);
+}
+
 /// Pilihan preset warna. Tidak tampil bila hanya ada satu preset.
 class AppearancePresetEntry extends StatelessWidget {
   /// Membuat [AppearancePresetEntry]. [presets] hanya diganti oleh uji.
@@ -74,24 +102,7 @@ class AppearancePresetEntry extends StatelessWidget {
   /// Preset yang bisa dipilih.
   final List<DsThemePreset> presets;
 
-  Future<void> _choose(BuildContext context, String current) async {
-    final picked = await showOptionSheet<String>(
-      context,
-      title: t.appearance.presetPickerTitle,
-      current: current,
-      options: [
-        for (final preset in presets)
-          OptionSheetItem(
-            key: ValueKey('appearance-preset-${preset.id}'),
-            value: preset.id,
-            label: appearancePresetLabel(preset.id),
-            leading: _Swatch(color: preset.light.actionPrimary),
-          ),
-      ],
-    );
-    if (picked == null || picked == current) return;
-    ActiveAppearance.notifier.value = ActiveAppearance.value.copyWith(presetId: picked);
-  }
+  Future<void> _choose(BuildContext context, String current) => showAppearancePresetPicker(context, presets: presets);
 
   @override
   Widget build(BuildContext context) {

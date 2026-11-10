@@ -3,6 +3,7 @@ import 'package:di/di.dart';
 import 'package:flutter/material.dart';
 import 'package:navigation/navigation.dart';
 import 'package:saldough/app/data_portability/app_reboot.dart';
+import 'package:saldough/app/shell/appearance_quick_action.dart';
 import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
@@ -199,6 +200,7 @@ class _AppShellPageState extends State<AppShellPage> {
         notificationAction: _captureSupported(parentContainer)
             ? NotificationQuickAction(container: parentContainer)
             : null,
+        appearanceAction: const AppearanceQuickAction(),
         pendingRecurring: RecurringPendingCard(
           board: _statusBoard,
           container: parentContainer,

@@ -167,6 +167,7 @@ class HomeQuickActions extends StatefulWidget {
     required this.onOpenReport,
     required this.onOpenFreelance,
     this.notificationAction,
+    this.appearanceAction,
     this.onClaimed,
     super.key,
   });
@@ -179,6 +180,9 @@ class HomeQuickActions extends StatefulWidget {
 
   /// Tile Catat dari notifikasi, disisipkan akar komposisi (`null` di platform tanpa dukungan).
   final Widget? notificationAction;
+
+  /// Tile pilihan warna aplikasi, disisipkan akar komposisi (`null` = tidak ada).
+  final Widget? appearanceAction;
 
   /// Dipanggil sekali per klaim misi.
   final VoidCallback? onClaimed;
@@ -225,6 +229,7 @@ class _HomeQuickActionsState extends State<HomeQuickActions> {
         label: t.home.actionFreelance,
         onPressed: widget.onOpenFreelance,
       ),
+      ?widget.appearanceAction,
       if (kHomePlaceholderPreview)
         Builder(
           builder: (tileContext) => _Badged(

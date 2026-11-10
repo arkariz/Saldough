@@ -1,13 +1,16 @@
 import 'package:saldough/core/design_system/presets/ds_theme_preset.dart';
+import 'package:saldough/core/design_system/presets/laut.dart';
 import 'package:saldough/core/design_system/presets/matcha.dart';
 import 'package:saldough/core/design_system/presets/pink.dart';
+import 'package:saldough/core/design_system/presets/tanuki.dart';
+import 'package:saldough/core/design_system/presets/taro.dart';
 
 /// Registri preset tema. Satu-satunya tempat mendaftarkan preset baru.
 abstract final class DsThemePresets {
   DsThemePresets._();
 
   /// Seluruh preset yang bisa dipilih, urut tampil.
-  static const List<DsThemePreset> all = [matcha, pink];
+  static const List<DsThemePreset> all = [matcha, pink, taro, tanuki, laut];
 
   /// Preset bawaan, juga dipakai bila pilihan tersimpan tidak dikenal lagi.
   static const DsThemePreset fallback = matcha;

@@ -811,6 +811,7 @@ class _Translations$home$en extends Translations$home$id {
 	@override String get actionNotification => 'Notifications';
 	@override String get actionReport => 'Report';
 	@override String get actionFreelance => 'Freelance';
+	@override String get actionAppearance => 'Colors';
 	@override String get actionMission => 'Saving Missions';
 	@override String get firstSubtitle => 'Start with your first wallet, then record a transaction.';
 	@override String get firstLabel => 'Tanuki is still asleep';
@@ -1921,6 +1922,9 @@ class _Translations$appearance$presets$en extends Translations$appearance$preset
 	// Translations
 	@override String get matcha => 'Matcha';
 	@override String get pink => 'Pink';
+	@override String get taro => 'Taro';
+	@override String get tanuki => 'Tanuki';
+	@override String get laut => 'Sea';
 }
 
 // Path: discovery.payday
@@ -3270,6 +3274,7 @@ extension on TranslationsEn {
 			'home.actionNotification' => 'Notifications',
 			'home.actionReport' => 'Report',
 			'home.actionFreelance' => 'Freelance',
+			'home.actionAppearance' => 'Colors',
 			'home.actionMission' => 'Saving Missions',
 			'home.firstSubtitle' => 'Start with your first wallet, then record a transaction.',
 			'home.firstLabel' => 'Tanuki is still asleep',
@@ -3547,6 +3552,9 @@ extension on TranslationsEn {
 			'appearance.presetPickerTitle' => 'Choose app colors',
 			'appearance.presets.matcha' => 'Matcha',
 			'appearance.presets.pink' => 'Pink',
+			'appearance.presets.taro' => 'Taro',
+			'appearance.presets.tanuki' => 'Tanuki',
+			'appearance.presets.laut' => 'Sea',
 			'discovery.payday.title' => ({required Object d}) => 'Payday on the ${d}?',
 			'discovery.payday.body' => ({required Object d}) => 'Start your financial month on day ${d} so Plan and Analysis follow your payday.',
 			'discovery.payday.action' => 'Set',
@@ -3573,12 +3581,12 @@ extension on TranslationsEn {
 			'discovery.quickStart.privacyLine' => 'Notification access is only used to read the apps you choose.',
 			'discovery.quickStart.turnOn' => 'Turn on',
 			'discovery.quickStart.walletHint' => 'Pick a wallet for each app',
+			_ => null,
+		} ?? switch (path) {
 			'discovery.quickStart.pickHint' => 'Pick at least one app',
 			'discovery.quickStart.pickedCount' => ({required Object n}) => '${n} apps selected',
 			'discovery.quickStart.freeLimit' => ({required Object n}) => 'Free limit: ${n} apps',
 			'notificationCapture.accountEntryTitle' => 'Record from notifications',
-			_ => null,
-		} ?? switch (path) {
 			'notificationCapture.accountEntryBody' => 'Record automatically from bank and e-wallet notifications.',
 			'notificationCapture.settingsTitle' => 'Record from notifications',
 			'notificationCapture.enableLabel' => 'Turn on',
@@ -4087,12 +4095,12 @@ extension on TranslationsEn {
 			'analysis.trend.seePeriod' => ({required Object period}) => 'See ${period} analysis',
 			'analysis.trend.column' => ({required Object period, required Object income, required Object expense, required Object net}) => '${period}, income ${income}, expenses ${expense}, net ${net}',
 			'analysis.category.frequency' => ({required Object count, required Object amount}) => '${count} transactions · ${amount} average each',
+			_ => null,
+		} ?? switch (path) {
 			'analysis.category.frequencyOne' => ({required Object count, required Object amount}) => '${count} transaction · ${amount} average each',
 			'analysis.category.frequencyUsual' => ({required Object count, required Object amount}) => 'usually ${count} transactions · ${amount}',
 			'analysis.category.seeAll' => 'See all transactions',
 			'analysis.category.seeCategory' => ({required Object category}) => 'See ${category} details',
-			_ => null,
-		} ?? switch (path) {
 			'analysis.category.transactions' => 'Transactions',
 			'analysis.category.aboveAvg' => ({required Object amount}) => '${amount} above average',
 			'analysis.category.belowAvg' => ({required Object amount}) => '${amount} below average',

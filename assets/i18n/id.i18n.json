@@ -759,6 +759,7 @@
     "actionNotification": "Notifikasi",
     "actionReport": "Laporan",
     "actionFreelance": "Freelance",
+    "actionAppearance": "Warna",
     "actionMission": "Misi Hemat",
     "firstSubtitle": "Mulai dari dompet pertamamu, lalu catat transaksinya.",
     "firstLabel": "Tanuki masih tidur",
@@ -1065,7 +1066,10 @@
     "presetPickerTitle": "Pilih warna aplikasi",
     "presets": {
       "matcha": "Matcha",
-      "pink": "Pink"
+      "pink": "Pink",
+      "taro": "Taro",
+      "tanuki": "Tanuki",
+      "laut": "Laut"
     }
   },
   "discovery": {

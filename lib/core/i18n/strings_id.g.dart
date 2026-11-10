@@ -2034,6 +2034,9 @@ class Translations$home$id {
 	/// id: 'Freelance'
 	String get actionFreelance => 'Freelance';
 
+	/// id: 'Warna'
+	String get actionAppearance => 'Warna';
+
 	/// id: 'Misi Hemat'
 	String get actionMission => 'Misi Hemat';
 
@@ -4766,6 +4769,15 @@ class Translations$appearance$presets$id {
 
 	/// id: 'Pink'
 	String get pink => 'Pink';
+
+	/// id: 'Taro'
+	String get taro => 'Taro';
+
+	/// id: 'Tanuki'
+	String get tanuki => 'Tanuki';
+
+	/// id: 'Laut'
+	String get laut => 'Laut';
 }
 
 // Path: discovery.payday
@@ -6569,6 +6581,7 @@ extension on Translations {
 			'home.actionNotification' => 'Notifikasi',
 			'home.actionReport' => 'Laporan',
 			'home.actionFreelance' => 'Freelance',
+			'home.actionAppearance' => 'Warna',
 			'home.actionMission' => 'Misi Hemat',
 			'home.firstSubtitle' => 'Mulai dari dompet pertamamu, lalu catat transaksinya.',
 			'home.firstLabel' => 'Tanuki masih tidur',
@@ -6846,6 +6859,9 @@ extension on Translations {
 			'appearance.presetPickerTitle' => 'Pilih warna aplikasi',
 			'appearance.presets.matcha' => 'Matcha',
 			'appearance.presets.pink' => 'Pink',
+			'appearance.presets.taro' => 'Taro',
+			'appearance.presets.tanuki' => 'Tanuki',
+			'appearance.presets.laut' => 'Laut',
 			'discovery.payday.title' => ({required Object d}) => 'Gajian tanggal ${d}?',
 			'discovery.payday.body' => ({required Object d}) => 'Mulai bulan keuangan dari tanggal ${d}, supaya Rencana dan Analisis mengikuti gajianmu.',
 			'discovery.payday.action' => 'Atur',
@@ -6872,12 +6888,12 @@ extension on Translations {
 			'discovery.quickStart.privacyLine' => 'Izin akses notifikasi hanya dipakai membaca aplikasi yang kamu pilih.',
 			'discovery.quickStart.turnOn' => 'Nyalakan',
 			'discovery.quickStart.walletHint' => 'Pilih dompet untuk tiap aplikasi',
+			_ => null,
+		} ?? switch (path) {
 			'discovery.quickStart.pickHint' => 'Pilih minimal satu aplikasi',
 			'discovery.quickStart.pickedCount' => ({required Object n}) => '${n} aplikasi dipilih',
 			'discovery.quickStart.freeLimit' => ({required Object n}) => 'Batas Gratis: ${n} aplikasi',
 			'notificationCapture.accountEntryTitle' => 'Catat dari notifikasi',
-			_ => null,
-		} ?? switch (path) {
 			'notificationCapture.accountEntryBody' => 'Catat otomatis dari notifikasi bank dan e-wallet.',
 			'notificationCapture.settingsTitle' => 'Catat dari notifikasi',
 			'notificationCapture.enableLabel' => 'Aktifkan',
@@ -7386,12 +7402,12 @@ extension on Translations {
 			'analysis.trend.seePeriod' => ({required Object period}) => 'Lihat analisis ${period}',
 			'analysis.trend.column' => ({required Object period, required Object income, required Object expense, required Object net}) => '${period}, pemasukan ${income}, pengeluaran ${expense}, selisih ${net}',
 			'analysis.category.frequency' => ({required Object count, required Object amount}) => '${count} transaksi · rata-rata ${amount} per transaksi',
+			_ => null,
+		} ?? switch (path) {
 			'analysis.category.frequencyOne' => ({required Object count, required Object amount}) => '${count} transaksi · rata-rata ${amount} per transaksi',
 			'analysis.category.frequencyUsual' => ({required Object count, required Object amount}) => 'biasanya ${count} transaksi · ${amount}',
 			'analysis.category.seeAll' => 'Lihat semua transaksi',
 			'analysis.category.seeCategory' => ({required Object category}) => 'Lihat rincian ${category}',
-			_ => null,
-		} ?? switch (path) {
 			'analysis.category.transactions' => 'Transaksi',
 			'analysis.category.aboveAvg' => ({required Object amount}) => '${amount} di atas rata-rata',
 			'analysis.category.belowAvg' => ({required Object amount}) => '${amount} di bawah rata-rata',

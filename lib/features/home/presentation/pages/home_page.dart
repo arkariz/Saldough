@@ -44,11 +44,15 @@ class HomePage extends StatefulWidget {
     this.forecast,
     this.statusBoard,
     this.notificationAction,
+    this.appearanceAction,
     super.key,
   });
 
   /// Tile aksi cepat Catat dari notifikasi, disisipkan akar komposisi (`null` = tidak ada).
   final Widget? notificationAction;
+
+  /// Tile pilihan warna aplikasi, disisipkan akar komposisi (`null` = tidak ada).
+  final Widget? appearanceAction;
 
   /// Membuka alur CATAT.
   final Future<void> Function() onRecord;
@@ -234,6 +238,7 @@ class _HomePageState extends State<HomePage> {
               onOpenFreelance: () =>
                   _thenRefresh(() => context.pushRoute(FreelanceRouteKeys.overview, const EmptyInput())),
               notificationAction: widget.notificationAction,
+              appearanceAction: widget.appearanceAction,
               onClaimed: () => setState(() => _claims++),
             ),
           ],

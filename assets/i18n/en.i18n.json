@@ -759,6 +759,7 @@
     "actionNotification": "Notifications",
     "actionReport": "Report",
     "actionFreelance": "Freelance",
+    "actionAppearance": "Colors",
     "actionMission": "Saving Missions",
     "firstSubtitle": "Start with your first wallet, then record a transaction.",
     "firstLabel": "Tanuki is still asleep",
@@ -1065,7 +1066,10 @@
     "presetPickerTitle": "Choose app colors",
     "presets": {
       "matcha": "Matcha",
-      "pink": "Pink"
+      "pink": "Pink",
+      "taro": "Taro",
+      "tanuki": "Tanuki",
+      "laut": "Sea"
     }
   },
   "discovery": {

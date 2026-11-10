@@ -16,7 +16,7 @@ void main() {
   test('setiap preset terdaftar punya nama terjemahan', () {
     // Preset baru wajib menambah `appearance.presets.<id>` dan cabang di
     // `appearancePresetLabel`; daftar ini dijaga supaya tidak terlewat.
-    const translated = {'matcha', 'pink'};
+    const translated = {'matcha', 'pink', 'taro', 'tanuki', 'laut'};
     expect(DsThemePresets.all.map((p) => p.id).toSet().difference(translated), isEmpty);
   });
 

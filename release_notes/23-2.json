@@ -1,0 +1,18 @@
+{
+  "version": "1.0.0",
+  "groups": [
+    {
+      "category": "new",
+      "notes": [
+        {
+          "id": "Tiga pilihan warna aplikasi baru: Taro (ungu), Tanuki (terakota), dan Laut (cyan).",
+          "en": "Three new app color choices: Taro (purple), Tanuki (terracotta), and Sea (cyan)."
+        },
+        {
+          "id": "Pintasan Warna di Beranda untuk mengganti warna aplikasi dengan satu ketukan.",
+          "en": "A Colors shortcut on Home to switch the app color with one tap."
+        }
+      ]
+    }
+  ]
+}

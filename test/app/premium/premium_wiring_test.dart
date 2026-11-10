@@ -11,15 +11,20 @@ void main() {
   GetIt container({
     String key = 'goog_xxx',
     TargetPlatform platform = TargetPlatform.android,
+    bool isDebug = false,
   }) {
     final c = GetIt.asNewInstance()
       ..registerSingleton<KeyValueStorage>(InMemoryKeyValueStorage());
-    registerEntitlements(c, revenueCatKey: key, platform: platform);
+    registerEntitlements(c, revenueCatKey: key, platform: platform, isDebug: isDebug);
     return c;
   }
 
   test('Android dengan kunci: sumber terdaftar', () {
     expect(container().isRegistered<RevenueCatPlanSource>(), isTrue);
+  });
+
+  test('mode debug: RevenueCat tidak didaftarkan', () {
+    expect(container(isDebug: true).isRegistered<RevenueCatPlanSource>(), isFalse);
   });
 
   test('tanpa kunci: tidak ada sumber RevenueCat', () {

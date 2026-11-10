@@ -9,6 +9,8 @@ import 'package:flutter/widgets.dart' show NavigatorObserver;
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:saldough/core/config/firebase_config.dart';
 
+const _analyticsInDebug = bool.fromEnvironment('ANALYTICS_IN_DEBUG');
+
 /// Inisialisasi Firebase (ADR-023): Analytics, Crashlytics, App Check
 /// (wajib untuk Firebase AI Logic, ADR-027 §3.5 butir 5), dan Google
 /// Sign-In. Dipanggil sekali dari `main.dart`, sebelum `runApp`.
@@ -37,6 +39,10 @@ abstract final class AppBootstrap {
   static Future<void> run() async {
     await Firebase.initializeApp();
 
+    // Build debug tidak boleh terbaca sebagai pengguna aktif/baru: Analytics
+    // dan Crashlytics sama-sama mati. Nyalakan sementara untuk DebugView lewat
+    // `--dart-define=ANALYTICS_IN_DEBUG=true`.
+    await FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(!kDebugMode || _analyticsInDebug);
     await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode);
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
     PlatformDispatcher.instance.onError = (error, stack) {

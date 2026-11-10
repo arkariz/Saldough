@@ -33,6 +33,11 @@ import 'package:saldough/shared/recurring/recurring.dart';
 /// dan pra-peluncuran.
 const _revenueCatKey = String.fromEnvironment('REVENUECAT_ANDROID_KEY');
 
+/// Build debug tidak memakai RevenueCat supaya `logIn(uid)` tidak membuat
+/// pelanggan baru di dasbor. Untuk menguji pembelian dengan kunci Test Store:
+/// `--dart-define=REVENUECAT_IN_DEBUG=true`.
+const _revenueCatInDebug = bool.fromEnvironment('REVENUECAT_IN_DEBUG');
+
 /// Mendaftarkan hak Plus ke [container] (ADR-041 §3.1). Malas: tidak ada yang
 /// menyentuh Firebase sampai [startEntitlements] atau pemakai pertama.
 ///
@@ -42,8 +47,9 @@ void registerEntitlements(
   GetIt container, {
   String revenueCatKey = _revenueCatKey,
   TargetPlatform? platform,
+  bool isDebug = kDebugMode && !_revenueCatInDebug,
 }) {
-  if (revenueCatKey.isNotEmpty && (platform ?? defaultTargetPlatform) == TargetPlatform.android) {
+  if (!isDebug && revenueCatKey.isNotEmpty && (platform ?? defaultTargetPlatform) == TargetPlatform.android) {
     container
       ..registerLazySingleton<PurchasesGateway>(() => PurchasesFlutterGateway(apiKey: revenueCatKey))
       ..registerLazySingleton<RevenueCatPlanSource>(

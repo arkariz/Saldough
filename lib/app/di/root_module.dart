@@ -8,6 +8,7 @@ import 'package:saldough/app/data_portability/app_backup_registry.dart';
 import 'package:saldough/app/data_portability/app_export_data_source.dart';
 import 'package:saldough/app/data_portability/restore_reboot.dart';
 import 'package:saldough/app/data_portability/restore_recovery.dart';
+import 'package:saldough/app/dev_seed/dev_seed_page.dart';
 import 'package:saldough/app/discovery/app_feature_statuses.dart';
 import 'package:saldough/app/premium/debug_plan_page.dart';
 import 'package:saldough/app/premium/premium_wiring.dart';
@@ -119,6 +120,7 @@ abstract final class RootModule {
     BudgetRouteModule(),
     DataPortabilityRouteModule(reboot: restoreReboot),
     DebugPlanRouteModule(),
+    DevSeedRouteModule(),
     PremiumRouteModule(),
     FreelanceRouteModule(),
     NotificationCaptureRouteModule(),

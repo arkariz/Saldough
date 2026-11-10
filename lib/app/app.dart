@@ -106,20 +106,27 @@ class _WithDebugMenu extends StatelessWidget {
                 child: FloatingActionButton.small(
                   heroTag: 'debug-menu',
                   tooltip: 'Menu pengembang',
-                  onPressed: () => Navigator.of(context).push(
-                    MaterialPageRoute<void>(
-                      builder: (_) => DevMenuScreen(
-                        registry: registry,
-                        onEntryTap: (entry) {
-                          Navigator.of(context).pop();
-                          router.goNamed(
-                            entry.keyId,
-                            extra: entry.createInput(),
-                          );
-                        },
+                  // FAB ada di atas `Navigator` (builder `MaterialApp.router`),
+                  // jadi `Navigator.of(context)` tidak menemukannya; pakai
+                  // navigator milik router.
+                  onPressed: () {
+                    final navigator = router.routerDelegate.navigatorKey.currentState;
+                    if (navigator == null) return;
+                    navigator.push(
+                      MaterialPageRoute<void>(
+                        builder: (_) => DevMenuScreen(
+                          registry: registry,
+                          onEntryTap: (entry) {
+                            navigator.pop();
+                            router.goNamed(
+                              entry.keyId,
+                              extra: entry.createInput(),
+                            );
+                          },
+                        ),
                       ),
-                    ),
-                  ),
+                    );
+                  },
                   child: const AppIcon(IconKey.debugMenu),
                 ),
               ),

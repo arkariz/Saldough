@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
+import 'package:saldough/core/foundation/review/review_service.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/features/account/presentation/widgets/setting_row.dart';
@@ -24,14 +25,18 @@ Future<bool> openPlayStorePage() async {
   return false;
 }
 
+/// Meminta ulasan: lembar Play dalam aplikasi dulu, jatuh ke halaman toko
+/// bila tidak tersedia atau tidak ditampilkan (jatah Play habis).
+Future<bool> requestReviewOrOpenStore() => ReviewPrompt.requestFromUser(openStore: openPlayStorePage);
+
 /// Baris "Beri nilai di Play Store" di Akun. Hanya dipasang di Android.
-/// Membuka halaman toko, bukan lembar ulasan di dalam aplikasi, jadi tanpa
-/// kode native baru (bisa lewat pembaruan kecil Shorebird).
+/// Memakai `in_app_review` (plugin native: perlu rilis toko, tidak bisa lewat
+/// pembaruan kecil Shorebird).
 class RateAppSettingEntry extends StatelessWidget {
   /// Membuat [RateAppSettingEntry].
-  const RateAppSettingEntry({this.opener = openPlayStorePage, super.key});
+  const RateAppSettingEntry({this.opener = requestReviewOrOpenStore, super.key});
 
-  /// Pembuka halaman toko; diganti saat uji.
+  /// Pembuka ulasan/toko; diganti saat uji.
   final Future<bool> Function() opener;
 
   Future<void> _open(BuildContext context) async {

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
+import 'package:saldough/core/foundation/review/review_service.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/app_action_snack_bar.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
@@ -482,13 +483,16 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
   );
 
   /// Peristiwa aktivasi: hanya jenisnya, tanpa nominal atau catatan.
-  void _logRecorded(Transaction transaction) => AppAnalytics.log(
-    ActivationEvents.transactionRecorded(switch (transaction) {
-      IncomeTransaction() => 'income',
-      ExpenseTransaction() => 'expense',
-      TransferTransaction() => 'transfer',
-    }),
-  );
+  void _logRecorded(Transaction transaction) {
+    ReviewPrompt.noteRecorded();
+    AppAnalytics.log(
+      ActivationEvents.transactionRecorded(switch (transaction) {
+        IncomeTransaction() => 'income',
+        ExpenseTransaction() => 'expense',
+        TransferTransaction() => 'transfer',
+      }),
+    );
+  }
 
   Future<void> _save(
     Transaction transaction,

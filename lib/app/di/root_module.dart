@@ -22,6 +22,8 @@ import 'package:saldough/core/discovery/discovery.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/foundation/analytics/app_bootstrap_firebase.dart';
 import 'package:saldough/core/foundation/navigation/app_route_registry.dart';
+import 'package:saldough/core/foundation/review/review_service.dart';
+import 'package:saldough/core/foundation/review/review_thresholds.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/language/language.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
@@ -147,6 +149,7 @@ abstract final class RootModule {
       boxName: 'saldough_kv',
     );
     container.registerSingleton<KeyValueStorage>(storage);
+    ReviewPrompt.install(ReviewService(storage: storage, config: FirebaseReviewConfig()));
 
     // ADR-040 §3.4: box kedua untuk jurnal dan salinan pemulihan. Jurnal
     // diperiksa SEKARANG, sebelum repositori mana pun dibuat, supaya tidak ada

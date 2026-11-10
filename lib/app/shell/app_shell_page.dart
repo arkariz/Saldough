@@ -6,6 +6,7 @@ import 'package:saldough/app/data_portability/app_reboot.dart';
 import 'package:saldough/app/shell/appearance_quick_action.dart';
 import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
+import 'package:saldough/core/foundation/review/review_service.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/clay_icons.dart';
@@ -102,7 +103,12 @@ class _AppShellPageState extends State<AppShellPage> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _showRestoreDone());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _showRestoreDone();
+      // Permintaan ulasan otomatis dicoba saat aplikasi dibuka, tidak pernah
+      // di tengah pencatatan; diam bila syaratnya belum terpenuhi.
+      unawaited(ReviewPrompt.maybePrompt());
+    });
   }
 
   /// Sesudah pemulihan cadangan, aplikasi dimulai ulang dan shell membuka

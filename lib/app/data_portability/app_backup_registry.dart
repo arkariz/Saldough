@@ -72,6 +72,7 @@ final appBackupRegistry = BackupRegistry(
     // P-1 ADR-040: log jendela batal pencatatan otomatis dari notifikasi.
     'capture_auto_recorded': 'sementara, terkait kotak masuk yang tidak ikut',
     // Mencatat aksi di perangkat ini, bukan data keuangan (ADR-040 §3.5).
+    'settings_review_prompt': 'kemajuan permintaan ulasan, milik perangkat',
     'settings_last_backup': 'status aksi di perangkat ini',
     // Hak Plus milik akun Play/RevenueCat dan perangkat, bukan data keuangan;
     // menyalinnya bisa memberi atau memulai ulang hak secara tidak sah

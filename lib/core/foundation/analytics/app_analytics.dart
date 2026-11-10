@@ -101,6 +101,10 @@ abstract final class ActivationEvents {
   /// `transfer`.
   static AnalyticsEvent transactionRecorded(String type) => AnalyticsEvent('transaction_recorded', {'type': type});
 
+  /// Lembar ulasan dalam aplikasi diminta. [source]: `row` (ketukan di
+  /// Akun) atau `auto` (sesudah momen positif).
+  static AnalyticsEvent reviewRequested(String source) => AnalyticsEvent('review_requested', {'source': source});
+
   /// Baris "Beri nilai di Play Store" di Akun diketuk.
   static const rateAppTapped = AnalyticsEvent('rate_app_tapped');
 }

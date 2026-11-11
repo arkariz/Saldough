@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:navigation/navigation.dart';
 import 'package:saldough/app/dev_seed/seed_pack.dart';
+import 'package:saldough/app/dev_seed/spending_seed_pack.dart';
 import 'package:saldough/app/dev_seed/wallet_seed_pack.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
@@ -14,6 +15,7 @@ const devSeedRouteKey = RouteKey<EmptyInput>('app.devSeed');
 /// ditambahkan di sini; lihat aturan di [SeedPack].
 const List<SeedPack> devSeedPacks = [
   WalletSeedPack(),
+  SpendingSeedPack(),
 ];
 
 /// Modul rute data seed. Milik `lib/app/` karena perlakuan pengembang, bukan

@@ -193,6 +193,20 @@ perlu tahu mekanismenya; istilahnya mengikuti apa yang mereka alami.
 | Pembaruan kecil | Patch Shorebird | Perbaikan yang diunduh otomatis dan berlaku sesudah aplikasi dibuka ulang | patch, tambalan, hotfix (di teks antarmuka) |
 | Apa yang baru | Ditulis pemilik/agen per rilis | Catatan manfaat satu versi atau pembaruan kecil, tampil sekali dan bisa dibuka dari Akun | changelog, catatan rilis (di teks antarmuka) |
 
+## Tonggak dan stempel
+
+Ditambahkan 11 Nov 2026 untuk gamifikasi ringan
+([GAMIFICATION.md](../01-product/features/GAMIFICATION.md)).
+
+| Istilah | Arti | Jangan pakai |
+|---|---|---|
+| Stempel | Tanda kecil untuk satu hal nyata yang berhasil dilakukan pengguna; diraih sekali, tidak pernah hilang | badge, lencana, trofi, poin |
+| Buku Stempel | Tempat stempel yang diraih dikumpulkan, di Akun | koleksi, galeri prestasi, papan skor |
+| Tonggak | Syarat di balik satu stempel (istilah dokumen dan kode; di antarmuka cukup "stempel") | misi, tantangan, level |
+| Perayaan | Kabar kecil saat stempel diraih; bisa dimatikan | notifikasi pencapaian |
+
+Tanpa streak, poin, level, skor, atau peringkat dalam bentuk apa pun.
+
 ## Istilah arsitektur
 
 Istilah di bagian ini berasal dari paket internal yang dipakai Saldough.

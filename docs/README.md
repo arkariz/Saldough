@@ -101,6 +101,7 @@ docs/
 │       ├── FINANCIAL_ANALYSIS.md      # analisis keuangan (Fase 19)
 │       ├── APP_UPDATE.md              # pengumuman pembaruan Play Store dan Shorebird (Fase 20)
 │       ├── EXPORT_BACKUP.md           # ekspor ke spreadsheet, cadangkan dan pulihkan manual (Fase 22)
+│       ├── GAMIFICATION.md            # tonggak dan Buku Stempel, gamifikasi ringan (draf, B-94)
 │       └── FEATURE_DISCOVERY.md       # penemuan fitur: notifikasi, pengingat rutin, awal bulan (Fase 21)
 ├── 02-architecture/           # bagaimana membangunnya
 │   ├── ARCHITECTURE_OVERVIEW.md

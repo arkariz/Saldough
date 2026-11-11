@@ -969,6 +969,39 @@ masih menunggu (B-67).
 - [x] Pemulihan atomik; data sebelumnya disimpan sebagai cadangan pengaman
       yang bisa dikembalikan; saldo dompet dihitung ulang.
 
+### 7.13 Tonggak dan Buku Stempel (draf, ditambahkan 11 November 2026)
+
+Gamifikasi ringan dari B-81/B-82 (FREEMIUM_PAYWALL §16): pengakuan kecil
+untuk ketepatan dan kemampuan, tanpa streak, poin, level, atau skor. Perilaku,
+aturan G-1–G-11, daftar tonggak, dan teksnya di
+[GAMIFICATION.md](features/GAMIFICATION.md). Menunggu keputusan pemilik
+(KT-G1–KT-G7) dan belum dijadwalkan (B-94).
+
+**FR-STP-001 — Tonggak dan Buku Stempel (R1)**
+- [ ] Tonggak nyata (dompet pertama, catatan pertama, periode rapi, rutin tak
+      terlewat, kotak masuk bersih, cadangan pertama, anggaran terpakai,
+      pembayaran pertama diterima) diraih sekali dan tersimpan di perangkat.
+- [ ] Buku Stempel menampilkan yang diraih dengan tanggalnya dan cara
+      mendapatkan yang belum, tanpa hitungan, peringkat, atau tekanan.
+- [ ] Tidak ada tonggak berbasis jumlah transaksi, nominal, arah belanja,
+      atau hari berturut-turut.
+
+**FR-STP-002 — Perayaan yang tenang (R1)**
+- [ ] Paling banyak satu perayaan per pembukaan aplikasi, tidak pernah di
+      Catat, lembar lain, onboarding, atau tur; banner pembaruan didahulukan.
+- [ ] Pengguna lama mendapat stempel yang sudah terpenuhi diam-diam dengan
+      satu banner pengenalan.
+
+**FR-STP-003 — Tidak ada yang hilang, bisa dimatikan (R1)**
+- [ ] Stempel yang diraih tidak pernah dicabut; absen tidak mengubah apa pun.
+- [ ] Sakelar Perayaan stempel di Akun mematikan perayaan dan pintu masuk;
+      stempel tetap tersimpan diam-diam.
+- [ ] Stempel ikut cadangan dan pemulihan.
+
+**FR-STP-004 — Bisa diperluas (R2, R3)**
+- [ ] Tonggak baru, edisi musiman, tier Plus, dan hadiah baru (barang Kamar
+      Tanuki) ditambahkan tanpa mengubah penyimpanan stempel yang ada.
+
 ## 8. Kebutuhan non-fungsional
 
 ### 8.1 Ketepatan

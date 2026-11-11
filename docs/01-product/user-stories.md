@@ -376,6 +376,25 @@ belum berkategori dari Analisis, supaya analisisnya makin tepat.
 - Sesudah disunting lewat CATAT, Analisis segar.
 - Memenuhi FR-ANL-005.
 
+**US-29 — Merasa dihargai tanpa ditekan**
+
+Sebagai pengguna, saya ingin mendapat pengakuan kecil saat catatan saya
+makin tepat atau data saya makin aman, supaya saya terdorong kembali tanpa
+merasa bersalah saat absen.
+
+- Stempel diraih sekali, tidak pernah hilang, tanpa streak, poin, atau skor.
+- Perayaan paling banyak satu per pembukaan dan tidak mengganggu pencatatan.
+- Memenuhi FR-STP-001–FR-STP-003.
+
+**US-30 — Mematikan perayaan**
+
+Sebagai pengguna, saya ingin mematikan perayaan stempel, supaya aplikasi
+tetap tenang bila saya tidak menyukainya.
+
+- Satu sakelar di Akun mematikan perayaan dan pintu masuknya.
+- Menyalakan lagi menampilkan semua yang sudah diraih.
+- Memenuhi FR-STP-003.
+
 ## Prioritas
 
 Urutan pengerjaan mengikuti loop inti produk: tempat uang dulu, lalu peristiwa,

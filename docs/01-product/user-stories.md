@@ -411,8 +411,18 @@ Sebagai pengguna Plus, saya ingin Rak Buku berisi semua periode, supaya saya
 bisa membuka ceritanya kapan saja, juga sesudah langganan berakhir untuk
 yang sudah pernah saya buka.
 
-- Buku yang belum dibuka terkunci bagi pengguna Gratis dengan teaser.
-- Memenuhi FR-BKP-004, FR-BKP-005.
+- Buku yang belum dibuka terkunci bagi pengguna Gratis; yang sudah pernah
+  dibuka tetap bisa dibuka.
+- Memenuhi FR-BKP-004.
+
+**US-33 — Membagikan kartu periode**
+
+Sebagai pengguna, saya ingin membagikan kartu ringkas periode saya tanpa
+nominal, supaya saya bisa bercerita ke teman tanpa membuka data keuangan.
+
+- Saya memilih fakta mana yang tampil; nominal tidak pernah ikut.
+- Tersedia untuk semua pengguna, juga yang Gratis.
+- Memenuhi FR-BKP-005.
 
 ## Prioritas
 

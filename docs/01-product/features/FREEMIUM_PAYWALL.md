@@ -162,7 +162,7 @@ otomasi dan bukan pencatatan:
 | **② Tanuki Berjaga** | **Cicip 1 peringatan** per periode | **Penjaga**: prediksi anggaran habis, uang nganggur menipis, pengeluaran tak biasa, tagihan besar minggu depan, langganan naik/menganggur; **Ringkasan Senin** |
 | **③ Tanya Tanuki** | **Cicip 3 pertanyaan** per periode | Tanya jawab bahasa sehari-hari tentang uangmu sendiri, ketik atau suara |
 | **④ Tanuki Merencanakan** | — | **Bagaimana kalau** (simulasi), **Target** dengan perkiraan tanggal tercapai, perkiraan 12 bulan |
-| **⑤ Tanuki Melapor** | Teaser Buku Periode (sampul diburamkan, sekali per periode); Arus, Analisis 6 periode, dan kilas balik tetap gratis (§16.4) | **Rapor bulanan bercerita**, **Rapor Tahunan**, **Rekap SPT tahunan**, ekspor laporan PDF/Excel; Freelance Pro (invoice, status tagihan, penghasilan per klien) |
+| **⑤ Tanuki Melapor** | **Kartu Periode** yang bisa dibagikan tanpa nominal (sekali per periode); Arus, Analisis 6 periode, dan kilas balik tetap gratis (§16.4) | **Rapor bulanan bercerita**, **Rapor Tahunan**, **Rekap SPT tahunan**, ekspor laporan PDF/Excel; Freelance Pro (invoice, status tagihan, penghasilan per klien) |
 | **⑥ Tanuki Menyimpan** | Ekspor CSV, cadangkan dan pulihkan manual ke berkas | Cadangan otomatis harian ke Google Drive pengguna; kelak sinkronisasi antar perangkat |
 | **Keamanan dan dasar** | Kunci aplikasi, sembunyikan nominal, mode gelap, bahasa, mata uang | — (sama) |
 | **Widget** | Widget tombol Catat | Widget ringkasan (sisa anggaran, uang nganggur, Menunggu) |
@@ -288,7 +288,7 @@ singkat, kepatuhan terhadap aturan proyek, biaya, dan ketergantungan.
 - **Rapor bulanan bercerita:** di akhir tiap periode, Tanuki menyusun satu
   halaman: tiga hal yang menonjol, perbandingan dengan biasanya, rutin yang
   berubah, kemajuan target. Kalimat dari templat lokal (tanpa mengirim
-  data). Versi gratis: tidak ada; hanya teaser (revisi 12 Nov 2026, §16.4;
+  data). Versi gratis: satu **Kartu Periode** yang bisa dibagikan tanpa nominal (revisi 12 Nov 2026, §16.4;
   rancangan di [BUKU_PERIODE.md](BUKU_PERIODE.md)).
 - **Rapor Tahunan ("Tahun Tanuki-mu"):** rangkuman setahun dalam kartu
   geser bergaya piksel yang bisa dibagikan tanpa nominal (persentase dan
@@ -431,7 +431,7 @@ itu diam 30 hari; selalu memakai angka milik pengguna; nada mengikuti
 | P3 | Sesudah "Contoh Penjaga" bulanan | "Peringatan ini datang 9 hari sebelum anggaran Makan habis. Plus memberi tahu tiap kali ada yang seperti ini." | ② |
 | P4 | Jatah Tanya Tanuki habis, atau pertanyaan ke-4 diketik | Pertanyaannya tetap tersimpan: "Simpan pertanyaan ini dan jawab sekarang dengan Plus." | ③ |
 | P5 | Membuka perkiraan Rencana dan menggeser melewati +2 bulan | "Lihat 12 bulan ke depan, dan coba bagaimana kalau ada cicilan baru." | ④ |
-| P6 | Akhir periode: kartu teaser Buku Periode (revisi §16.4) | Sampul buku diburamkan, memakai data asli; satu kali per periode | ⑤ |
+| P6 | Akhir periode: Kartu Periode di Beranda (revisi §16.4) | Satu baris ajakan Plus di pratinjau dengan sampul buku diburamkan (data asli); tidak ada hambatan membagikan | ⑤ |
 | P7 | Proyek freelance: pembayaran sudah lewat 14 hari dari worklog terakhir | "Klien A belum membayar 21 hari. Buat invoice dan pantau jatuh temponya dengan Plus." | ⑤ |
 | P8 | 30 hari atau 200 transaksi tanpa cadangan | "200 catatanmu hanya ada di ponsel ini. Cadangkan sekarang (gratis), atau biarkan Plus mencadangkan tiap hari." | ⑥ |
 | P9 | Desember dan Januari | "Tahun Tanuki-mu sudah siap" dan "Rekap SPT 2026-mu sudah bisa disusun" | ⑤ |
@@ -763,12 +763,13 @@ retensi versi gratis; Plus menjual kosmetiknya (B-56) dan Rapor lengkap.
 ### 16.4 Revisi 4: Buku Periode seluruhnya Plus (12 Nov 2026)
 
 Keputusan pemilik: **ritual Tutup buku, rapor bercerita, Tanuki sebagai
-narator, dan Rak Buku seluruhnya Plus.** Rancangan lengkap di
+narator, dan Rak Buku seluruhnya Plus; Gratis mendapat satu Kartu Periode yang
+bisa dibagikan sebagai jalur pertumbuhan.** Rancangan lengkap di
 [BUKU_PERIODE.md](BUKU_PERIODE.md). Yang berubah dari keputusan sebelumnya:
 
 | Sebelumnya | Sekarang |
 |---|---|
-| §6.5 dan baris ⑤: Gratis mendapat rapor ringkas yang bisa dibagikan | Gratis hanya melihat satu teaser sampul diburamkan per periode (P6 diubah) |
+| §6.5 dan baris ⑤: Gratis mendapat rapor ringkas yang bisa dibagikan | Gratis mendapat satu **Kartu Periode** yang bisa dibagikan tanpa nominal, bernama aplikasi dan bertautan toko umum (jalur pertumbuhan); isi buku tetap Plus (P6 diubah) |
 | §16.2: gamifikasi terutama alat retensi versi gratis | Stempel B-94 tetap gratis; Buku Periode adalah lapisan Plus di atasnya |
 | B-49 "Plus; gratis: rapor ringkas" | B-49 menjadi R2 di atas B-95 (tipe tanuki, bagikan, PDF/Excel) |
 

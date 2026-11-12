@@ -1005,8 +1005,8 @@ aturan G-1–G-11, daftar tonggak, dan teksnya di
 ### 7.14 Buku Periode (Plus, draf, ditambahkan 12 November 2026)
 
 Kebutuhan ini lahir dari penyatuan tutup buku periode, Tanuki yang bereaksi,
-dan rapor bercerita (B-49) atas keputusan pemilik 12 Nov 2026: **seluruhnya
-Plus**. Perilaku, aturan BP-1–BP-14, dan teksnya di
+dan rapor bercerita (B-49) atas keputusan pemilik 12 Nov 2026: **buku
+seluruhnya Plus, dengan satu Kartu Periode gratis yang bisa dibagikan**. Perilaku, aturan BP-1–BP-14, dan teksnya di
 [BUKU_PERIODE.md](features/BUKU_PERIODE.md). Menunggu keputusan pemilik
 (KT-BP1–KT-BP9) dan belum dijadwalkan (B-95). Merevisi pembagian rapor
 gratis di FREEMIUM_PAYWALL §6.5 (lihat §16.4).
@@ -1030,10 +1030,15 @@ gratis di FREEMIUM_PAYWALL §6.5 (lihat §16.4).
 - [ ] Rak Buku mendaftar semua buku; buku yang pernah dibuka tetap bisa
       dibuka sesudah Plus berakhir, yang belum dibuka terkunci.
 
-**FR-BKP-005 — Teaser Gratis**
-- [ ] Gratis melihat paling banyak satu teaser sampul diburamkan per periode
-      yang tidak muncul lagi sesudah ditutup, tidak di Catat, onboarding,
-      atau tur.
+**FR-BKP-005 — Kartu Periode gratis**
+- [ ] Semua pengguna mendapat paling banyak satu Kartu Periode per periode
+      yang punya ≥3 transaksi; tidak muncul lagi sesudah ditutup, tidak di
+      Catat, onboarding, atau tur.
+- [ ] Kartu bisa dibagikan lewat lembar bagikan sistem tanpa nominal, nama
+      dompet, atau nama kategori buatan pengguna; hanya fakta yang dipilih
+      pengguna; membawa nama aplikasi dan satu tautan toko umum.
+- [ ] Pratinjau memuat paling banyak satu ajakan Plus tanpa hambatan
+      membagikan.
 
 ## 8. Kebutuhan non-fungsional
 

@@ -207,6 +207,16 @@ Ditambahkan 11 Nov 2026 untuk gamifikasi ringan
 
 Tanpa streak, poin, level, skor, atau peringkat dalam bentuk apa pun.
 
+Ditambahkan 12 Nov 2026 untuk Buku Periode
+([BUKU_PERIODE.md](../01-product/features/BUKU_PERIODE.md), seluruhnya Plus):
+
+| Istilah | Arti | Jangan pakai |
+|---|---|---|
+| Buku Periode | Satu periode keuangan yang sudah berakhir, dirangkum sebagai satu buku | laporan bulanan, statement |
+| Tutup buku | Ritual singkat di akhir periode untuk merapikan dan merayakan; tidak mengunci data | kunci periode, closing, tutup bulan |
+| Rapor | Isi buku: sampul dan halaman yang diceritakan Tanuki | skor, nilai, penilaian |
+| Rak Buku | Daftar semua buku periode | arsip, galeri |
+
 ## Istilah arsitektur
 
 Istilah di bagian ini berasal dari paket internal yang dipakai Saldough.

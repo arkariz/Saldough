@@ -10,6 +10,14 @@ gamifikasi, B-81, B-82, KT-P16),
 [APP_UPDATE.md](APP_UPDATE.md) (pola perayaan yang menunggu dan tidak
 mengganggu), [EXPORT_BACKUP.md](EXPORT_BACKUP.md) (`BackupRegistry`).
 
+**Revisi 12 Nov 2026:** ide "tutup buku periode", "Tanuki yang bereaksi", dan
+rapor bercerita disatukan menjadi [BUKU_PERIODE.md](BUKU_PERIODE.md), seluruhnya
+**Plus** (keputusan pemilik). Mesin tonggak dan stempel di dokumen ini tetap
+**gratis** dan menjadi pengisi sampul buku bagi pengguna Plus: stempel periode
+tercetak di sampul dan perayaannya dilipat ke ritual/rapor pada pembukaan yang
+sama (BUKU_PERIODE BP-13). Stempel tetap menjadi satu-satunya mekanik
+retensi untuk pengguna Gratis.
+
 Dokumen ini merancang perilaku, aturan, dan teks: apa yang dialami pengguna
 dan apa yang boleh tumbuh. Cara teknisnya diputuskan engineer (§12). Rupa
 visual belum ada dan ditandai "perlu rupa dari ui-ux-designer".

@@ -395,6 +395,25 @@ tetap tenang bila saya tidak menyukainya.
 - Menyalakan lagi menampilkan semua yang sudah diraih.
 - Memenuhi FR-STP-003.
 
+**US-31 — Menutup satu periode dengan rapi**
+
+Sebagai pengguna Plus, saya ingin ajakan singkat di akhir periode untuk
+merapikan yang tertinggal dan melihat ceritanya, supaya catatan saya tepat
+dan saya merasa satu periode selesai.
+
+- Ritual boleh dilewati dan tidak mengunci data.
+- Rapor memakai angka yang sama dengan Analisis dan tidak menilai belanja.
+- Memenuhi FR-BKP-001–FR-BKP-003.
+
+**US-32 — Membuka kembali buku periode lama**
+
+Sebagai pengguna Plus, saya ingin Rak Buku berisi semua periode, supaya saya
+bisa membuka ceritanya kapan saja, juga sesudah langganan berakhir untuk
+yang sudah pernah saya buka.
+
+- Buku yang belum dibuka terkunci bagi pengguna Gratis dengan teaser.
+- Memenuhi FR-BKP-004, FR-BKP-005.
+
 ## Prioritas
 
 Urutan pengerjaan mengikuti loop inti produk: tempat uang dulu, lalu peristiwa,

@@ -1002,6 +1002,39 @@ aturan G-1–G-11, daftar tonggak, dan teksnya di
 - [ ] Tonggak baru, edisi musiman, tier Plus, dan hadiah baru (barang Kamar
       Tanuki) ditambahkan tanpa mengubah penyimpanan stempel yang ada.
 
+### 7.14 Buku Periode (Plus, draf, ditambahkan 12 November 2026)
+
+Kebutuhan ini lahir dari penyatuan tutup buku periode, Tanuki yang bereaksi,
+dan rapor bercerita (B-49) atas keputusan pemilik 12 Nov 2026: **seluruhnya
+Plus**. Perilaku, aturan BP-1–BP-14, dan teksnya di
+[BUKU_PERIODE.md](features/BUKU_PERIODE.md). Menunggu keputusan pemilik
+(KT-BP1–KT-BP9) dan belum dijadwalkan (B-95). Merevisi pembagian rapor
+gratis di FREEMIUM_PAYWALL §6.5 (lihat §16.4).
+
+**FR-BKP-001 — Buku tiap periode (Plus)**
+- [ ] Tiap periode keuangan yang sudah berakhir dan punya transaksi punya satu
+      buku; periode berjalan dan periode tanpa transaksi tidak.
+- [ ] Angka di buku sama persis dengan Arus Beranda, Analisis, dan Rencana
+      dan dihitung langsung dari data.
+
+**FR-BKP-002 — Tutup buku (Plus)**
+- [ ] Ajakan Tutup buku muncul untuk periode terakhir; ritual tiga langkah
+      (tanpa kategori, rutin menunggu, kilas balik) boleh dilewati per
+      langkah dan tidak mengunci data.
+
+**FR-BKP-003 — Rapor dan Tanuki (Plus)**
+- [ ] Rapor memuat sampul + stempel periode dan halaman bersyarat; kalimat
+      Tanuki dari templat lokal tanpa kata yang menilai belanja.
+
+**FR-BKP-004 — Rak Buku dan hak (Plus)**
+- [ ] Rak Buku mendaftar semua buku; buku yang pernah dibuka tetap bisa
+      dibuka sesudah Plus berakhir, yang belum dibuka terkunci.
+
+**FR-BKP-005 — Teaser Gratis**
+- [ ] Gratis melihat paling banyak satu teaser sampul diburamkan per periode
+      yang tidak muncul lagi sesudah ditutup, tidak di Catat, onboarding,
+      atau tur.
+
 ## 8. Kebutuhan non-fungsional
 
 ### 8.1 Ketepatan

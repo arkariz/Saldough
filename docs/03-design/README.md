@@ -1,6 +1,17 @@
 # Desain Tanukonomy
 
-Bahasa visual aplikasi diputuskan di
+> **12 Nov 2026:** artefak Design System kini berisi **design system v2
+> (Matcha, [ADR-043](../02-architecture/adr/0043-design-system-v2-dan-preset-tema.md))**,
+> menggantikan bahasa visual ADR-034. Salinannya di
+> [`design-system-v2/artifact/`](design-system-v2/artifact/README.md) (token 4
+> tema, `bundle.css` berprefiks `ds-`, 18 komponen, 61 ikon clay di
+> `assets/icons_clay/`); spek dan acuan pemilik di
+> [`design-system-v2/`](design-system-v2/README.md). Folder `design-system/`
+> dan prototipe di bawah masih berwajah ADR-034 dan **usang** sampai dirombak
+> per kelompok layar; `design-system/writing.md` tetap berlaku (dipakai uji
+> i18n).
+
+Bahasa visual lama diputuskan di
 [ADR-034](../02-architecture/adr/0034-bahasa-visual-buku-catatan-piksel.md).
 Sumber kebenarannya artefak di akun pemilik; folder ini salinannya. Agen
 `ui-ux-designer` (`.claude/agents/ui-ux-designer.md`) boleh menyunting

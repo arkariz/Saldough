@@ -27,8 +27,9 @@ ui-ux-designer".
    Nov 2026): ritual, rapor, Tanuki sebagai narator, dan Rak Buku hanya Plus.
    Semua pengguna, termasuk Gratis, mendapat **satu Kartu Periode** yang bisa
    dibagikan sebagai jalur pertumbuhan (BP-15–BP-20). Kartu itu memuat nama
-   aplikasi, tidak memuat nominal, dan di pratinjaunya ada satu ajakan tenang
-   ke Plus. Akibatnya ke keputusan sebelumnya ada di §2.
+   aplikasi dan hanya fakta yang dipilih pengguna; **nominal boleh ditampilkan
+   dan dibagikan** (keputusan pemilik 12 Nov 2026) bila pengguna
+   menyalakannya sendiri, dan di pratinjaunya ada satu ajakan tenang ke Plus. Akibatnya ke keputusan sebelumnya ada di §2.
 3. **Yang sudah gratis tetap gratis:** kartu Arus Beranda, Analisis 6 periode,
    dan kilas balik di kartu tinjau awal bulan sudah dikirim dan tidak
    ditarik (KT-BP3).
@@ -49,7 +50,7 @@ tidak, supaya tidak ada dokumen yang saling bertentangan:
 
 | Yang sebelumnya | Sekarang |
 |---|---|
-| §6.5: "Versi gratis: kartu angka ringkas" untuk rapor | **Diganti Kartu Periode:** satu kartu tetap, bisa dibagikan, tanpa nominal (BP-15). Tidak ada rapor berhalaman untuk Gratis |
+| §6.5: "Versi gratis: kartu angka ringkas" untuk rapor | **Diganti Kartu Periode:** satu kartu tetap yang bisa dibagikan, nominal opsional atas pilihan pengguna (BP-15, BP-16). Tidak ada rapor berhalaman untuk Gratis |
 | §5 baris ⑤: Gratis "Rapor bulanan ringkas (angka, bisa dibagikan)" | Gratis: Kartu Periode yang bisa dibagikan + ajakan Plus di pratinjau. Arus, Analisis 6 periode, dan kilas balik tetap gratis |
 | §9 P6: "rapor ringkas tampil, rapor bercerita diburamkan" | Kartu Periode di Beranda; sampul buku yang diburamkan (data asli) ada di pratinjau kartu sebagai ajakan Plus |
 | §8.2 uji coba: "Rapor bulanan bercerita untuk periode uji coba" sebagai momen Plus terakhir | Tetap, kini berupa **Buku Periode** uji coba (lebih kuat: pengalaman penuh) |
@@ -148,9 +149,12 @@ stempel Periode rapi diraih pada pembukaan berikutnya (GAMIFICATION S5).
 **S3 — Dodi (Gratis), Kartu Periode.** Pada 25 Nov Dodi melihat satu kartu di
 Beranda: "Kartu periode 25 Okt – 24 Nov siap dibagikan." Ia mengetuk
 **Bagikan**, dan pratinjau terbuka: Tanuki, nama periode, dan tiga fakta
-tanpa nominal yang bisa ia nyalakan atau matikan: "12 catatan", "Rutin beres:
+yang bisa ia nyalakan atau matikan: "12 catatan", "Rutin beres:
 2 tercatat, 1 dilewati", dan stempel "Periode rapi". Fakta "Kategori terbesar"
-mati secara bawaan (KT-BP10). Ia mengetuk **Bagikan kartu**, memilih
+dan ketiga nominal (Pemasukan, Pengeluaran, Selisih) mati secara bawaan
+(KT-BP10). Dodi menyalakan **Selisih**: kartu kini menampilkan "Selisih
+Rp3.795.000", dan satu baris kecil mengingatkan "Nominal yang kamu nyalakan
+terlihat oleh siapa pun yang menerima gambar." Ia mengetuk **Bagikan kartu**, memilih
 aplikasinya di lembar bagikan sistem, dan gambar terkirim bersama teks
 "Periode 25 Okt – 24 Nov aku mencatat dengan Tanukonomy" dan tautan toko.
 Di bawah pratinjau ada satu baris tenang: "Cerita lengkapnya ada di buku
@@ -183,7 +187,7 @@ menunggu" di Beranda.
 flowchart TD
   A[Periode berakhir, aplikasi dibuka] --> B{Plus atau uji coba?}
   B -- tidak --> T[Kartu Periode di Beranda, sekali per periode]
-  T -- Bagikan --> V[Pratinjau: pilih fakta tanpa nominal]
+  T -- Bagikan --> V[Pratinjau: pilih fakta, nominal opsional]
   V -- Bagikan kartu --> W[Lembar bagikan sistem: gambar + teks + tautan toko]
   V -- Cerita lengkap dengan Plus --> P[Paywall, sumber period_card]
   T -- Nanti --> Z[Tidak tampil lagi untuk periode ini]
@@ -231,12 +235,15 @@ Halaman 1–3 memakai aturan dan angka Analisis tanpa menghitung ulang.
 bisa dibagikan, bukan halaman buku. Kebutuhan informasi, tanpa rupa:
 
 1. Nama periode (P-11; peralihan berlabel) dan Tanuki.
-2. Hingga tiga fakta **tanpa nominal** yang dipilih pengguna di pratinjau:
-   jumlah catatan, rutin beres, stempel periode, dan (bawaan mati) kategori
-   bawaan terbesar dengan persen.
+2. Fakta yang dipilih pengguna di pratinjau (paling banyak enam, semua
+   opsional): jumlah catatan, rutin beres, stempel periode, kategori bawaan
+   terbesar dengan persen, dan **nominal** Pemasukan, Pengeluaran, dan
+   Selisih (ketiganya bawaan mati; selisih negatif tampil dengan tanda minus,
+   tanpa warna peringatan).
 3. Nama aplikasi dan tautan toko (satu tautan umum, BP-18).
-4. Di pratinjau, bukan di gambar: pilihan fakta, tombol Bagikan kartu, dan
-   satu baris ajakan Plus dengan sampul buku diburamkan (BP-19).
+4. Di pratinjau, bukan di gambar: pilihan fakta, satu baris pengingat bahwa
+   nominal yang dinyalakan terlihat penerima, tombol Bagikan kartu, dan satu
+   baris ajakan Plus dengan sampul buku diburamkan (BP-19).
 
 Keadaan pratinjau: tanpa fakta dinyalakan (tombol nonaktif), semua fakta
 tersedia, dan periode peralihan. Bagi Plus, kartu yang sama menjadi satu
@@ -263,7 +270,8 @@ masing-masing saat ada (§11).
 | BP-13 | Ajakan dan rapor tidak tampil di Catat, lembar lain, onboarding, atau tur. Perayaan stempel periode dilipat ke sampul bila ritual atau rapor dibuka pada pembukaan yang sama (GAMIFICATION G-4: satu perayaan per pembukaan). |
 | BP-14 | Pengguna Plus bisa mematikan **Ajakan akhir periode**; rapor dan Rak Buku tetap bisa dibuka manual. |
 | BP-15 | **Kartu Periode** tersedia untuk semua pengguna (Gratis, Plus, uji coba): satu kartu bertema tetap per periode yang berakhir, hanya satu templat dan satu ukuran. Plus mendapat varian dan kartu geser di R2. |
-| BP-16 | Kartu tidak pernah memuat nominal, nama dompet, nama kategori buatan pengguna, nama pedagang, atau catatan transaksi. Hanya fakta yang **dipilih pengguna** di pratinjau: jumlah catatan, rutin beres, stempel, dan (bawaan mati) kategori bawaan terbesar dengan persen. Kategori buatan pengguna tampil sebagai "kategori buatanmu". |
+| BP-16 | Kartu hanya memuat fakta yang **dipilih pengguna** di pratinjau: jumlah catatan, rutin beres, stempel, kategori bawaan terbesar dengan persen, dan **nominal** Pemasukan, Pengeluaran, Selisih periode itu (keputusan pemilik 12 Nov 2026: nominal boleh ditampilkan dan dibagikan). Nominal dan kategori terbesar **mati secara bawaan**. Kartu tidak pernah memuat nama dompet, saldo dompet, nama kategori buatan pengguna (tampil "kategori buatanmu"), nama pedagang, nominal per transaksi, atau catatan transaksi. |
+| BP-21 | Pratinjau menampilkan satu baris pengingat bila ada nominal yang dinyalakan: "Nominal yang kamu nyalakan terlihat oleh siapa pun yang menerima gambar." Bila pengguna menyembunyikan nominal di aplikasi (BP-12), sakelar nominal nonaktif dengan keterangan, dan kartu tidak memuat nominal. |
 | BP-17 | Gambar kartu dibuat di perangkat dan hanya keluar lewat lembar bagikan sistem atas tindakan pengguna. Tidak ada unggah ke server kita dan tidak ada berbagi otomatis. |
 | BP-18 | Kartu dan teks bagikannya membawa nama aplikasi dan **satu tautan toko yang sama untuk semua pengguna**, dengan penanda sumber (`utm_source=period_card`) untuk mengukur pertumbuhan. Tanpa kode atau tautan per pengguna, tanpa hadiah atau referral (KT-P18). |
 | BP-19 | Pratinjau kartu memuat satu baris ajakan Plus ("Cerita lengkapnya ada di buku periode") dengan sampul buku yang diburamkan. Maksimal satu ajakan, tidak ada hitung mundur, dan tidak ada hambatan untuk membagikan kartu. |
@@ -300,7 +308,7 @@ nominal, nama kategori, atau teks pengguna.
 | `period_card_shown` | `plus: true\|false` | Kartu Periode tampil di Beranda |
 | `period_card_dismissed` | `action: later\|forever` | Kartu ditutup |
 | `period_card_opened` | `plus: true\|false` | Pratinjau dibuka |
-| `period_card_shared` | `facts: n`, `with_category: true\|false` | Lembar bagikan sistem dibuka dari pratinjau (tidak diketahui apakah selesai terkirim) |
+| `period_card_shared` | `facts: n`, `with_category: true\|false`, `with_amounts: true\|false` (hanya benar/salah, tidak pernah nilai nominal) | Lembar bagikan sistem dibuka dari pratinjau (tidak diketahui apakah selesai terkirim) |
 | `book_ritual_started` | — | Ritual dibuka |
 | `book_ritual_step` | `step: uncategorized\|recurring\|review`, `action: done\|skipped\|opened_fix` | Langkah selesai atau dilewati |
 | `book_opened` | `source: ritual\|card\|shelf\|trial`, `plus: true\|false` | Rapor dibuka |
@@ -312,7 +320,7 @@ data baru keluar. Peristiwa memakai id tetap dan masuk kategori "Aktivitas
 aplikasi" yang sudah dideklarasikan
 ([PLAY_DATA_SAFETY.md](../../03-release/PLAY_DATA_SAFETY.md)); tetap dicek di
 tugas verifikasi. R2 (bagikan, PDF): gambar dan berkas bagikan tidak memuat
-data di luar yang dipilih pengguna, dan kartu bagikan tanpa nominal.
+data di luar yang dipilih pengguna. Nominal di Kartu Periode hanya atas pilihan pengguna dan tidak pernah tercatat di analitik; gambar yang sudah dibagikan berada di luar kendali aplikasi, sehingga pengingat BP-21 wajib ada.
 
 ## 11. Titik perluasan
 
@@ -370,7 +378,12 @@ glosarium ("kamu", tanpa tanda seru; istilah terlarang tidak dipakai).
 | `book.share.action` | Bagikan | Share |
 | `book.share.later` | Nanti | Later |
 | `book.share.previewTitle` | Kartu periode | Period card |
-| `book.share.previewHint` | Pilih yang mau kamu tampilkan. Nominal tidak pernah ikut. | Choose what to show. Amounts never come along. |
+| `book.share.previewHint` | Pilih yang mau kamu tampilkan. Nominal hanya ikut kalau kamu menyalakannya. | Choose what to show. Amounts only appear if you turn them on. |
+| `book.share.factIncome` | Pemasukan $amount | Income $amount |
+| `book.share.factExpense` | Pengeluaran $amount | Spending $amount |
+| `book.share.factNet` | Selisih $amount | Difference $amount |
+| `book.share.amountWarning` | Nominal yang kamu nyalakan terlihat oleh siapa pun yang menerima gambar. | Amounts you turn on are visible to anyone who receives the image. |
+| `book.share.amountsHidden` | Nominal sedang disembunyikan di aplikasi. Matikan dulu untuk menampilkannya di kartu. | Amounts are hidden in the app. Turn that off first to show them on the card. |
 | `book.share.factRecords` | $count catatan | $count records |
 | `book.share.factRecurring` | Rutin beres: $recorded tercatat, $skipped dilewati | Recurring done: $recorded recorded, $skipped skipped |
 | `book.share.factStamp` | Stempel: $name | Stamp: $name |
@@ -420,6 +433,10 @@ Istilah baru masuk glosarium: **Buku Periode**, **Tutup buku**, **Rapor**,
 | Periode terakhir tanpa transaksi | Tidak ada buku dan tidak ada kartu (BP-3, BP-20). |
 | Hanya satu periode di riwayat | Kartu dan buku pertama muncul sesudah periode itu berakhir, bila ≥3 transaksi. |
 | Pratinjau tanpa fakta yang dinyalakan | Tombol Bagikan kartu nonaktif; ajakan memilih sedikitnya satu fakta. |
+| Nominal disembunyikan di aplikasi | Sakelar nominal di pratinjau nonaktif dengan keterangan; kartu tidak memuat nominal (BP-21). |
+| Selisih negatif (pengeluaran lebih besar dari pemasukan) | Tampil dengan tanda minus dan tanpa warna peringatan, sama dengan Arus Beranda; kalimat tidak menilai. |
+| Pengguna mematikan nominal lalu menyalakan lagi | Pilihan sakelar tidak diingat antarperiode; bawaan mati tiap kartu baru. |
+| Nominal di pratinjau bila mata uang bukan IDR | Memakai `AppMoneyFormatter` dengan mata uang aktif (ADR-025). |
 | Kategori terbesar adalah kategori buatan pengguna | Tampil "kategori buatanmu" dengan persen, atau disembunyikan bila pengguna lebih suka (BP-16). |
 | Pengguna membagikan lalu mengubah data periode itu | Gambar yang sudah terkirim tidak berubah; membagikan lagi memakai data terbaru. |
 | Lembar bagikan dibatalkan | Tidak ada apa pun; peristiwa tetap tercatat sekali per pembukaan lembar. |
@@ -440,7 +457,7 @@ Istilah baru masuk glosarium: **Buku Periode**, **Tutup buku**, **Rapor**,
   templat, Rak Buku, **Kartu Periode** (pratinjau, bagikan, ajakan Plus),
   gerbang, sakelar, analitik. Kartu Periode bisa dikirim lebih dulu daripada
   buku karena tidak bergantung pada ritual dan rapor (T-n.7a).
-- **R2 (B-49 disesuaikan, Plus):** tipe tanuki, bagikan tanpa nominal,
+- **R2 (B-49 disesuaikan, Plus):** tipe tanuki, bagikan kaya (varian, kartu geser),
   PDF/Excel.
 - **R3 (B-53, B-54, B-81):** Rapor Tahunan sebagai rak 12 buku, Rekap SPT,
   Kamar Tanuki, halaman Target dan Utang saat domainnya ada.
@@ -462,7 +479,7 @@ menaikkan B-95 ke fase):
 | T-n.9 | Verifikasi perangkat S1–S7 | S | semua |
 
 Perlu rupa dari ui-ux-designer: Kartu Periode (rasio gambar, tata letak
-tanpa nominal, pose Tanuki) dan pratinjaunya, kartu Beranda, lembar ritual,
+dengan nominal opsional, pose Tanuki) dan pratinjaunya, kartu Beranda, lembar ritual,
 sampul, halaman rapor, ekspresi Tanuki, dan Rak Buku.
 
 ## 16. Pertanyaan untuk pemilik
@@ -497,10 +514,12 @@ sampul, halaman rapor, ekspresi Tanuki, dan Rak Buku.
 - **KT-BP9 — Buku lama saat fitur dirilis.** Rekomendasi: periode yang
   sudah berakhir muncul di Rak Buku sebagai "Belum dibuka" untuk Plus;
   ajakan Tutup buku hanya untuk periode terakhir (BP-9).
-- **KT-BP10 — Fakta bawaan di Kartu Periode.** Rekomendasi: **jumlah catatan,
-  rutin beres, dan stempel menyala; kategori terbesar mati** (opt-in), karena
-  persen kategori mengungkap pola belanja. Alternatif: semua menyala, kartu
-  lebih menarik tetapi privasinya lebih tipis.
+- **KT-BP10 — Fakta bawaan di Kartu Periode.** Nominal boleh dibagikan
+  (keputusan pemilik 12 Nov 2026). Rekomendasi: **jumlah catatan, rutin beres,
+  dan stempel menyala; kategori terbesar dan ketiga nominal mati**, karena
+  pengguna sebaiknya memutuskan sendiri apa yang dibuka ke orang lain dan
+  pemasukan (gaji) paling sensitif. Alternatif: nominal menyala bawaan, kartu
+  lebih menarik tetapi paling mudah membocorkan tanpa disadari.
 - **KT-BP11 — Tautan dan pengukuran.** Rekomendasi: satu tautan Play Store
   umum dengan `referrer=utm_source%3Dperiod_card`, tanpa kode per pengguna.
   Engineer memastikan penanda terbaca Firebase tanpa data baru dan
@@ -508,6 +527,14 @@ sampul, halaman rapor, ekspresi Tanuki, dan Rak Buku.
 - **KT-BP12 — Kartu untuk Plus.** Rekomendasi: Plus mendapat kartu yang sama
   sebagai satu halaman buku dan, di R2, varian serta kartu geser. Jangan
   menyembunyikan Kartu Periode dari Plus.
+- **KT-BP13 — Nominal di tempat lain.** Keputusan ini hanya untuk Kartu Periode.
+  Rekomendasi: bagikan stempel (GAMIFICATION G-9), Rapor Tahunan (B-53), dan
+  Ringkasan untuk pasangan (B-75) **tetap tanpa nominal** sampai pemilik
+  memutuskan lain; Rapor Tahunan bisa mengikuti pola yang sama (nominal opsional)
+  bila hasil Kartu Periode baik.
+- **KT-BP14 — Pemasukan terpisah dari selisih.** Rekomendasi: tiga sakelar
+  terpisah (Pemasukan, Pengeluaran, Selisih), karena membagikan selisih tidak
+  membuka gaji dan sebaliknya.
 
 ## 17. Yang sengaja tidak dikerjakan
 

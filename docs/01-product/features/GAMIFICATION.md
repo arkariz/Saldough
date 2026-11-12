@@ -211,7 +211,7 @@ flowchart TD
 | G-6 | Pada pembukaan pertama sesudah fitur ada, stempel yang sudah memenuhi syarat dimasukkan **tanpa perayaan satu per satu**; hanya satu banner pengenalan sekali. |
 | G-7 | Stempel tidak pernah mengubah saldo, anggaran, rutin, atau data keuangan mana pun, dan tidak pernah membuka atau mengunci kemampuan inti. Aplikasi mencatat, bukan melakukan. |
 | G-8 | Sakelar **Perayaan stempel** mati: tidak ada snackbar atau lembar, dan Buku Stempel tidak tampil di Akun. Evaluasi dan penyimpanan tetap berjalan diam-diam; menyalakan lagi menampilkan semuanya, tanpa perayaan ulang untuk yang sudah ada. |
-| G-9 | Teks dan gambar yang bisa dibagikan (R2) tidak memuat nominal, nama dompet, atau nama kategori buatan pengguna. |
+| G-9 | Teks dan gambar yang bisa dibagikan (R2) tidak memuat nominal, nama dompet, atau nama kategori buatan pengguna. Berlaku untuk bagikan stempel; **Kartu Periode** (BUKU_PERIODE) boleh memuat nominal atas pilihan pengguna sesuai keputusan pemilik 12 Nov 2026. |
 | G-10 | Stempel dan sakelar adalah milik perangkat (ADR-024). Ikut cadangan dan pemulihan; pemulihan mengganti stempel bersama data lain, tanpa penggabungan. |
 | G-11 | Kemampuan inti tetap berfungsi penuh tanpa koneksi dan tanpa akun; Buku Stempel juga, kecuali saklar jarak jauh dan edisi musiman yang menunggu koneksi (R2). |
 

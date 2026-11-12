@@ -1034,9 +1034,13 @@ gratis di FREEMIUM_PAYWALL §6.5 (lihat §16.4).
 - [ ] Semua pengguna mendapat paling banyak satu Kartu Periode per periode
       yang punya ≥3 transaksi; tidak muncul lagi sesudah ditutup, tidak di
       Catat, onboarding, atau tur.
-- [ ] Kartu bisa dibagikan lewat lembar bagikan sistem tanpa nominal, nama
-      dompet, atau nama kategori buatan pengguna; hanya fakta yang dipilih
-      pengguna; membawa nama aplikasi dan satu tautan toko umum.
+- [ ] Kartu bisa dibagikan lewat lembar bagikan sistem; hanya fakta yang
+      dipilih pengguna; nominal (pemasukan, pengeluaran, selisih) boleh ikut
+      tetapi mati secara bawaan, dengan pengingat bahwa penerima akan
+      melihatnya, dan tidak ikut bila nominal disembunyikan di aplikasi.
+- [ ] Kartu tidak pernah memuat nama dompet, saldo dompet, nama kategori
+      buatan pengguna, nama pedagang, atau nominal per transaksi; membawa nama
+      aplikasi dan satu tautan toko umum.
 - [ ] Pratinjau memuat paling banyak satu ajakan Plus tanpa hambatan
       membagikan.
 

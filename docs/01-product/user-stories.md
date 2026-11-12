@@ -417,10 +417,12 @@ yang sudah pernah saya buka.
 
 **US-33 — Membagikan kartu periode**
 
-Sebagai pengguna, saya ingin membagikan kartu ringkas periode saya tanpa
-nominal, supaya saya bisa bercerita ke teman tanpa membuka data keuangan.
+Sebagai pengguna, saya ingin membagikan kartu ringkas periode saya dan
+memilih sendiri apa yang tampil, termasuk nominal bila saya mau, supaya saya
+bisa bercerita ke teman tanpa membuka lebih dari yang saya inginkan.
 
-- Saya memilih fakta mana yang tampil; nominal tidak pernah ikut.
+- Saya memilih fakta mana yang tampil; nominal hanya ikut bila saya
+  menyalakannya.
 - Tersedia untuk semua pengguna, juga yang Gratis.
 - Memenuhi FR-BKP-005.
 

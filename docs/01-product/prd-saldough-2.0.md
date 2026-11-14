@@ -969,6 +969,81 @@ masih menunggu (B-67).
 - [x] Pemulihan atomik; data sebelumnya disimpan sebagai cadangan pengaman
       yang bisa dikembalikan; saldo dompet dihitung ulang.
 
+### 7.13 Tonggak dan Buku Stempel (draf, ditambahkan 11 November 2026)
+
+Gamifikasi ringan dari B-81/B-82 (FREEMIUM_PAYWALL §16): pengakuan kecil
+untuk ketepatan dan kemampuan, tanpa streak, poin, level, atau skor. Perilaku,
+aturan G-1–G-11, daftar tonggak, dan teksnya di
+[GAMIFICATION.md](features/GAMIFICATION.md). Menunggu keputusan pemilik
+(KT-G1–KT-G7) dan belum dijadwalkan (B-94).
+
+**FR-STP-001 — Tonggak dan Buku Stempel (R1)**
+- [ ] Tonggak nyata (dompet pertama, catatan pertama, periode rapi, rutin tak
+      terlewat, kotak masuk bersih, cadangan pertama, anggaran terpakai,
+      pembayaran pertama diterima) diraih sekali dan tersimpan di perangkat.
+- [ ] Buku Stempel menampilkan yang diraih dengan tanggalnya dan cara
+      mendapatkan yang belum, tanpa hitungan, peringkat, atau tekanan.
+- [ ] Tidak ada tonggak berbasis jumlah transaksi, nominal, arah belanja,
+      atau hari berturut-turut.
+
+**FR-STP-002 — Perayaan yang tenang (R1)**
+- [ ] Paling banyak satu perayaan per pembukaan aplikasi, tidak pernah di
+      Catat, lembar lain, onboarding, atau tur; banner pembaruan didahulukan.
+- [ ] Pengguna lama mendapat stempel yang sudah terpenuhi diam-diam dengan
+      satu banner pengenalan.
+
+**FR-STP-003 — Tidak ada yang hilang, bisa dimatikan (R1)**
+- [ ] Stempel yang diraih tidak pernah dicabut; absen tidak mengubah apa pun.
+- [ ] Sakelar Perayaan stempel di Akun mematikan perayaan dan pintu masuk;
+      stempel tetap tersimpan diam-diam.
+- [ ] Stempel ikut cadangan dan pemulihan.
+
+**FR-STP-004 — Bisa diperluas (R2, R3)**
+- [ ] Tonggak baru, edisi musiman, tier Plus, dan hadiah baru (barang Kamar
+      Tanuki) ditambahkan tanpa mengubah penyimpanan stempel yang ada.
+
+### 7.14 Buku Periode (Plus, draf, ditambahkan 12 November 2026)
+
+Kebutuhan ini lahir dari penyatuan tutup buku periode, Tanuki yang bereaksi,
+dan rapor bercerita (B-49) atas keputusan pemilik 12 Nov 2026: **buku
+seluruhnya Plus, dengan satu Kartu Periode gratis yang bisa dibagikan**. Perilaku, aturan BP-1–BP-14, dan teksnya di
+[BUKU_PERIODE.md](features/BUKU_PERIODE.md). Menunggu keputusan pemilik
+(KT-BP1–KT-BP9) dan belum dijadwalkan (B-95). Merevisi pembagian rapor
+gratis di FREEMIUM_PAYWALL §6.5 (lihat §16.4).
+
+**FR-BKP-001 — Buku tiap periode (Plus)**
+- [ ] Tiap periode keuangan yang sudah berakhir dan punya transaksi punya satu
+      buku; periode berjalan dan periode tanpa transaksi tidak.
+- [ ] Angka di buku sama persis dengan Arus Beranda, Analisis, dan Rencana
+      dan dihitung langsung dari data.
+
+**FR-BKP-002 — Tutup buku (Plus)**
+- [ ] Ajakan Tutup buku muncul untuk periode terakhir; ritual tiga langkah
+      (tanpa kategori, rutin menunggu, kilas balik) boleh dilewati per
+      langkah dan tidak mengunci data.
+
+**FR-BKP-003 — Rapor dan Tanuki (Plus)**
+- [ ] Rapor memuat sampul + stempel periode dan halaman bersyarat; kalimat
+      Tanuki dari templat lokal tanpa kata yang menilai belanja.
+
+**FR-BKP-004 — Rak Buku dan hak (Plus)**
+- [ ] Rak Buku mendaftar semua buku; buku yang pernah dibuka tetap bisa
+      dibuka sesudah Plus berakhir, yang belum dibuka terkunci.
+
+**FR-BKP-005 — Kartu Periode gratis**
+- [ ] Semua pengguna mendapat paling banyak satu Kartu Periode per periode
+      yang punya ≥3 transaksi; tidak muncul lagi sesudah ditutup, tidak di
+      Catat, onboarding, atau tur.
+- [ ] Kartu bisa dibagikan lewat lembar bagikan sistem; hanya fakta yang
+      dipilih pengguna; nominal (pemasukan, pengeluaran, selisih) boleh ikut
+      tetapi mati secara bawaan, dengan pengingat bahwa penerima akan
+      melihatnya, dan tidak ikut bila nominal disembunyikan di aplikasi.
+- [ ] Kartu tidak pernah memuat nama dompet, saldo dompet, nama kategori
+      buatan pengguna, nama pedagang, atau nominal per transaksi; membawa nama
+      aplikasi dan satu tautan toko umum.
+- [ ] Pratinjau memuat paling banyak satu ajakan Plus tanpa hambatan
+      membagikan.
+
 ## 8. Kebutuhan non-fungsional
 
 ### 8.1 Ketepatan

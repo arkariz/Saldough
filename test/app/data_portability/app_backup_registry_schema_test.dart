@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saldough/app/data_portability/app_backup_registry.dart';
+import 'package:saldough/features/milestone/data/milestone_store_impl.dart';
 import 'package:saldough/features/period_book/data/period_book_memory_store_impl.dart';
 import 'package:saldough/shared/category/data/category_model.dart';
 import 'package:saldough/shared/recurring/data/recurring_rule_model.dart';
@@ -16,6 +17,7 @@ void main() {
     expect(appBackupRegistry.specOf('category_all').schema, CategoryModel.schemaVersion);
     expect(appBackupRegistry.specOf('recurring_all').schema, RecurringRuleModel.schemaVersion);
     expect(appBackupRegistry.specOf('period_book_memory').schema, PeriodBookMemoryStoreImpl.schemaVersion);
+    expect(appBackupRegistry.specOf('milestone_ledger').schema, MilestoneStoreImpl.schemaVersion);
     expect(appBackupRegistry.transactionSchema, TransactionModel.schemaVersion);
     expect(appBackupRegistry.specOf('transaction_2026-10').schema, TransactionModel.schemaVersion);
   });

@@ -3,6 +3,7 @@ import 'package:saldough/features/budget/data/models/budget_model.dart';
 import 'package:saldough/features/budget/data/models/budget_template_model.dart';
 import 'package:saldough/features/data_portability/domain/backup_registry.dart';
 import 'package:saldough/features/freelance/data/models/freelance_models.dart';
+import 'package:saldough/features/milestone/data/milestone_store_impl.dart';
 import 'package:saldough/features/notification_capture/data/approved_shape_store_impl.dart';
 import 'package:saldough/features/notification_capture/data/merchant_memory_store_impl.dart';
 import 'package:saldough/features/notification_capture/data/negative_shape_store_impl.dart';
@@ -57,6 +58,9 @@ final appBackupRegistry = BackupRegistry(
     const BackupKeySpec('capture_approved_shapes', supportedSchema: ApprovedShapeStoreImpl.schemaVersion),
     const BackupKeySpec('capture_negative_shapes', supportedSchema: NegativeShapeStoreImpl.schemaVersion),
     const BackupKeySpec('capture_merchant_memory', supportedSchema: MerchantMemoryStoreImpl.schemaVersion),
+    // Stempel diraih dan sakelar perayaan (ADR-046 §3.5, G-10): tidak bisa dihitung ulang tanpa
+    // melanggar G-1. Tanpa angka keuangan.
+    const BackupKeySpec('milestone_ledger', supportedSchema: MilestoneStoreImpl.schemaVersion),
     // Ingatan Buku Periode (ADR-045 §3.5): buku mana yang sudah dibuka, langkah ritual, kartu ditutup,
     // sakelar. Tanpa angka keuangan. Menjaga BP-10 (buku yang pernah dibuka tetap terbuka) lintas perangkat.
     const BackupKeySpec('period_book_memory', supportedSchema: PeriodBookMemoryStoreImpl.schemaVersion),

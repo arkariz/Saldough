@@ -293,8 +293,10 @@ atau teks pengguna; id hanya dari kosakata tetap di §5.
 | `celebration_setting_changed` | `enabled` | Sakelar diubah |
 | `milestone_celebration_shown` | `count` (1 atau lebih bila digabung) | Perayaan tampil |
 
-Uji A/B (KT-G6): parameter Remote Config `stamps_enabled` per kelompok
-selama 4 minggu, untuk membaca ukuran di §3.
+**Tanpa uji A/B** (keputusan pemilik 14 Nov 2026, KT-G6): semua pengguna
+mendapat stempel. Parameter Remote Config `stamps_enabled` tetap ada hanya
+sebagai saklar mati jarak jauh. Ukuran di §3 dibaca dari tren sebelum/sesudah
+rilis, bukan dari kelompok pembanding.
 
 ## 11. Privasi dan Keamanan Data
 
@@ -409,16 +411,22 @@ menaikkan B-94 ke fase):
 
 | Usulan | Isi | Ukuran | Butuh |
 |---|---|---|---|
-| T-27.1 | ADR teknis (§12) | S | KT-G1–G6 dijawab |
-| T-27.2 | Katalog, jenis syarat, mesin evaluasi, penyimpanan + `BackupRegistry` | M | T-27.1 |
-| T-27.3 | Penyedia fakta dari dompet, transaksi, periode, rutin, kotak masuk, cadangan, anggaran, freelance | M | T-27.1 |
-| T-27.4 | Perayaan (snackbar, lembar pengenalan, banner pengguna lama) dan aturan G-4/G-6 | M | T-27.2, rupa |
-| T-27.5 | Buku Stempel dan baris/sakelar di Akun | M | T-27.2, rupa dari ui-ux-designer |
-| T-27.6 | Analitik §10, saklar jarak jauh, uji A/B | S | T-27.4, T-27.5 |
-| T-27.7 | Teks id/en, glosarium, dokumen rilis | S | T-27.5 |
-| T-27.8 | Verifikasi perangkat: S1–S8 | S | semua |
+| T-28.1 | ADR teknis (§12) | S | KT-G1–G6 dijawab |
+| T-28.2 | Katalog, jenis syarat, mesin evaluasi, penyimpanan + `BackupRegistry` | M | T-28.1 |
+| T-28.3 | Penyedia fakta dari dompet, transaksi, periode, rutin, kotak masuk, cadangan, anggaran, freelance | M | T-28.1 |
+| T-28.4 | Perayaan (snackbar, lembar pengenalan, banner pengguna lama) dan aturan G-4/G-6 | M | T-27.2, rupa |
+| T-28.5 | Buku Stempel dan baris/sakelar di Akun | M | T-27.2, rupa dari ui-ux-designer |
+| T-28.6 | Analitik §10, saklar jarak jauh `stamps_enabled` (tanpa uji A/B) | S | T-27.4, T-27.5 |
+| T-28.7 | Teks id/en, glosarium, dokumen rilis | S | T-28.5 |
+| T-28.8 | Verifikasi perangkat: S1–S8 | S | semua |
 
 ## 16. Pertanyaan untuk pemilik
+
+**Diputuskan pemilik 14 Nov 2026:** semua rekomendasi disetujui (KT-G1–G5,
+G7), **kecuali KT-G6: tanpa uji A/B**. Dijadwalkan sebagai Fase 28
+(T-28.1–T-28.8) di TASK_LIST, dikerjakan sebelum Fase 27 karena Buku Periode
+membaca fakta "periode tertutup" dari mesin ini. Daftar di bawah dibiarkan
+sebagai catatan alasan.
 
 - **KT-G1 — Tampilkan "n dari N"?** Rekomendasi: **tidak.** Hitungan koleksi
   mudah terbaca sebagai skor dan mengundang "tinggal satu lagi"; yang

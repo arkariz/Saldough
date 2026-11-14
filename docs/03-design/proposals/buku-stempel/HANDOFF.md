@@ -118,3 +118,25 @@ Satu stempel; dua stempel digabung; stempel pertama (lembar sekali); pengguna la
 1. Stempel yang diraih juga menempel ke sampul Buku Periode (Plus), atau hanya Periode rapi dan Rutin tak terlewat?
 2. Subjudul baris Akun "Stempel yang sudah kamu raih" tanpa hitungan. Kalau hitungan sederhana ("4 stempel") boleh, itu satu baris.
 3. Warna segel (hijau dan emas) belum token; setuju ditambah ke preset?
+
+## 9. Gaya Kaya (usulan, perlu keputusan pemilik)
+
+Prototipe punya saklar **Gaya**: *Tenang (G-4)* = bagian 2 sampai 4 di atas; *Kaya* = tambahan di bawah. **Kaya melanggar G-4** untuk perayaan yang muncul sendiri (snackbar, lembar pengenalan, banner) dan tidak boleh dikirim sebelum pemilik merevisi G-4 atau membatasi Kaya ke layar yang dibuka pengguna (Buku Stempel dan lembar detail). Semua gerak Kaya mati lewat `DsMotion.reduced(context)` dan kembali ke gaya Tenang.
+
+| Tempat | Tambahan Kaya | Spek |
+|---|---|---|
+| Buku Stempel | Adegan atas: gradasi `scene`, enam daun melayang (7–14 dtk), Tanuki 76 bernapas dan melompat (`cheer` 900ms) saat stempel diketuk, dua kilau, balon ketik per huruf (`liveRegion`) | `DsMascotBubble` |
+| Buku Stempel | Cap berurutan saat layar tampil pertama: tiap segel `cap` 600ms, jeda 90ms antarbaris | `animation-delay` = indeks × 90ms |
+| Segel diraih | Kilap holografik menyapu tiap 4,5 dtk (`overlay`, gradasi 6 titik); tekan: bergoyang ±12°/8° | `DsStampSeal` opsi `shine` |
+| Lembar detail | Sinar emas berputar 14 dtk di belakang segel, segel miring 3D mengikuti jari (±20° Y, ±17° X), tombol **Cap lagi** (cap ulang murni kosmetik) | `DsStampDetailSheet` |
+| Cap | Konfeti kanvas: daun, koin, bintang (stempel baru, 36) atau tinta hijau (cap ulang, 28 tinta + 10 koin), layar bergetar 420ms | `DsConfettiBurst` (`CustomPainter`) |
+| Snackbar | Tanuki mini 54 mengintip dari atas snackbar (700ms), segel mengetuk, konfeti 18, bingkai emas tipis | – |
+| Lembar pengenalan | Sinar berputar, konfeti 44, layar bergetar | – |
+| Banner pengguna lama | Segel kecil terbang ke tile Buku (rantai 2,6 dtk), tile melompat | – |
+| Tonggak tersembunyi | Saat fitur dipakai: baris terbuka dengan balik 3D (`flipin` 800ms), kilau bintang, Tanuki berkomentar | – |
+| Akun | Ikon Buku Stempel melompat pelan selama ada stempel belum dilihat | – |
+| Grup | Judul kelompok diberi garis emas 18×3 | – |
+
+Tetap berlaku di Kaya: tanpa "n dari N", tanpa bilah progres, tanpa peringkat, tanpa streak, tanpa hitung mundur, Tanuki tidak sedih (G-1, G-2, G-7). Konfeti dan sinar tidak ada pada gambar yang dibagikan. Ukur kinerja di perangkat Android kelas bawah; konfeti dibatasi ≤44 partikel per ledakan dan satu `Ticker` per komponen.
+
+Pertanyaan tambahan: (4) pilih Tenang atau Kaya, atau Kaya hanya di dalam layar Buku Stempel; (5) bolehkah tombol "Cap lagi" (kosmetik) ada, karena stempel tidak boleh terasa bisa dikejar atau diulang untuk hadiah (G-3).

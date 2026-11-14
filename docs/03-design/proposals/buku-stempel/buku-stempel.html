@@ -114,7 +114,7 @@ header.top p { margin: 0; color: var(--text-2); }
 .hero .tn { position: absolute; right: 10px; top: 8px; width: 56px; height: 56px; }
 .banner { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 16px; background: var(--card); border: 1px solid var(--line); box-shadow: var(--shadow-card); animation: rise .5s cubic-bezier(.3,1.4,.5,1) both; }
 .banner.info { background: var(--info-bg); color: var(--info-ink); border-color: transparent; font-size: 13px; line-height: 18px; }
-.banner .tx { flex: 1; min-width: 0; display: grid; gap: 2px; } .banner .tx b { font-size: 13px; line-height: 18px; font-weight: 600; } .banner .ey { font: 700 11px/14px var(--mono); letter-spacing: .025em; text-transform: uppercase; color: var(--action); }
+.banner { flex-wrap: wrap; } .banner .tx { flex: 1 1 150px; min-width: 0; display: grid; gap: 2px; } #lgBanner .btn { margin-left: auto; } .banner .tx b { font-size: 13px; line-height: 18px; font-weight: 600; } .banner .ey { font: 700 11px/14px var(--mono); letter-spacing: .025em; text-transform: uppercase; color: var(--action); }
 .tile { width: 36px; height: 36px; border-radius: 12px; background: var(--action); color: var(--on-action); display: grid; place-items: center; flex: none; }
 .xbtn { width: 32px; height: 32px; border-radius: 50%; border: 0; background: none; color: var(--muted); display: grid; place-items: center; cursor: pointer; }
 @keyframes rise { 0% { transform: translateY(14px); opacity: 0 } 100% { transform: none; opacity: 1 } }
@@ -144,9 +144,61 @@ header.top p { margin: 0; color: var(--text-2); }
 .reduce *, .reduce *::before, .reduce *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; } }
 .notes { max-width: 78ch; display: grid; gap: 12px; } .notes h2 { margin: 0; font-size: 22px; font-weight: 800; } .notes ol { margin: 0; padding-left: 1.2em; display: grid; gap: 8px; color: var(--text-2); } .notes b { color: var(--text); }
+
+/* ===== Gaya Kaya ===== */
+.rich .scene { background: radial-gradient(120% 90% at 50% 0%, var(--scene-a), var(--scene-b) 72%); }
+.scene { position: relative; margin: -16px -20px 0; padding: 14px 20px 12px; overflow: hidden; display: none; }
+.rich .scene { display: block; }
+.leaves { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.leaves i { position: absolute; width: 12px; height: 12px; border-radius: 0 100% 0 100%; background: #6ee7b7; opacity: .35; animation: drift linear infinite; }
+.leaves i:nth-child(odd) { background: #86efac; width: 9px; height: 9px; }
+@keyframes drift { 0% { transform: translate3d(0,-20px,0) rotate(0); opacity: 0 } 15% { opacity: .45 } 100% { transform: translate3d(var(--dx),300px,0) rotate(360deg); opacity: 0 } }
+.talk { position: relative; display: flex; gap: 10px; align-items: flex-end; }
+.talk .tn { width: 76px; height: 76px; flex: none; cursor: pointer; border: 0; background: none; padding: 0; }
+.talk .tn.cheer { animation: cheer .9s cubic-bezier(.3,1.6,.5,1) 1; }
+@keyframes cheer { 0% { transform: none } 18% { transform: translateY(2px) scale(1.12,.86) } 45% { transform: translateY(-22px) rotate(-8deg) } 65% { transform: translateY(-18px) rotate(8deg) } 85% { transform: translateY(0) scale(1.08,.92) } 100% { transform: none } }
+.bubble { flex: 1; position: relative; background: var(--card); border: 1px solid var(--line); border-radius: 16px 16px 16px 4px; padding: 9px 12px; font-size: 13px; line-height: 18px; box-shadow: var(--shadow-card); align-self: center; min-height: 52px; }
+.bubble::before { content: "Tanuki"; display: block; font: 700 10px/12px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--action); margin-bottom: 2px; }
+.spk { position: absolute; width: 10px; height: 10px; background: var(--gold); clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%); animation: twinkle 2.4s ease-in-out infinite; }
+@keyframes twinkle { 0%,100% { transform: scale(0) rotate(0); opacity: 0 } 50% { transform: scale(1) rotate(90deg); opacity: 1 } }
+.rich .list { background: linear-gradient(180deg, color-mix(in srgb, var(--gold) 9%, var(--card)), var(--card) 40%); }
+.rich .grp h3 { display: inline-flex; align-items: center; gap: 8px; }
+.rich .grp h3::before { content: ""; width: 18px; height: 3px; border-radius: 2px; background: var(--gold-deep); }
+.rich .st.in .seal { animation: cap .6s cubic-bezier(.2,1.5,.4,1) both; animation-delay: var(--d, 0ms); }
+.rich .seal.earned::before { content: ""; position: absolute; inset: 0; border-radius: 50%; background: linear-gradient(115deg, transparent 30%, rgba(255,255,255,.45) 48%, rgba(255,214,102,.5) 54%, transparent 70%); background-size: 260% 100%; animation: sheen 4.5s ease-in-out infinite; animation-delay: var(--d, 0ms); mix-blend-mode: overlay; }
+@keyframes sheen { 0%,55% { background-position: 150% 0 } 100% { background-position: -60% 0 } }
+.rich .st:active .seal { animation: wob .5s ease-out 1; }
+@keyframes wob { 30% { transform: rotate(calc(var(--rot) - 12deg)) scale(1.1) } 60% { transform: rotate(calc(var(--rot) + 8deg)) scale(.95) } }
+.reveal { animation: flipin .8s cubic-bezier(.2,1.3,.4,1) both; }
+@keyframes flipin { 0% { transform: perspective(400px) rotateX(-90deg); opacity: 0 } 100% { transform: none; opacity: 1 } }
+.rich .sheet .rays { display: block; }
+.rays { display: none; position: absolute; top: 4px; width: 230px; height: 230px; left: 50%; margin-left: -115px; z-index: -1; opacity: .9; background: repeating-conic-gradient(from 0deg, rgba(245,158,11,.28) 0 8deg, transparent 8deg 20deg); -webkit-mask: radial-gradient(circle, #000 25%, transparent 70%); mask: radial-gradient(circle, #000 25%, transparent 70%); animation: spin 14s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg) } }
+.sheet { position: absolute; overflow: hidden; isolation: isolate; }
+.sealwrap { position: relative; display: grid; place-items: center; width: 150px; height: 130px; perspective: 600px; }
+.sealwrap .seal { transition: transform .2s ease-out; transform: rotate(var(--rot,0deg)) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)); }
+.rich .sealwrap .seal.earned::before { animation-duration: 3s; }
+.peek { position: absolute; left: 14px; bottom: calc(100% - 12px); width: 54px; height: 54px; pointer-events: none; display: none; transform-origin: 50% 100%; }
+.rich .snack.on .peek { display: block; animation: peek .7s cubic-bezier(.2,1.6,.4,1) both .15s; }
+@keyframes peek { 0% { transform: translateY(60px) rotate(-10deg) } 100% { transform: none } }
+.snack { overflow: visible; }
+.rich .snack { box-shadow: 0 10px 24px -6px rgba(0,0,0,.35), 0 0 0 1px color-mix(in srgb, var(--gold) 40%, transparent); }
+.chain { display: none; position: relative; width: 30px; height: 24px; flex: none; }
+.rich .chain { display: block; }
+.chain .seal { position: absolute; left: 4px; top: 1px; width: 22px; height: 22px; opacity: 0; animation: fly 2.6s ease-in-out infinite; animation-delay: var(--d); } .chain .seal img { width: 12px !important; height: 12px !important; }
+@keyframes fly { 0% { transform: translateX(-16px) scale(.4); opacity: 0 } 25% { opacity: 1; transform: none } 80% { transform: translateX(8px) scale(.9); opacity: 1 } 100% { transform: translateX(16px) scale(.3); opacity: 0 } }
+.tile.hop { animation: hop 2.6s ease-in-out infinite; } @keyframes hop { 0%,70%,100% { transform: none } 80% { transform: translateY(-4px) scale(1.12) } }
+.bookbounce { animation: hop 1.8s ease-in-out infinite; }
+canvas#fx { position: fixed; inset: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 60; }
+.phone.shake { animation: shake .42s cubic-bezier(.36,.07,.19,.97); }
+@keyframes shake { 10%,90% { transform: translateX(-1px) } 20%,80% { transform: translateX(3px) } 30%,50%,70% { transform: translateX(-5px) } 40%,60% { transform: translateX(5px) } }
+.rich .btn.cap2 { display: flex; }
+.cap2 { display: none; background: var(--card); color: var(--action); border: 1px solid var(--line-strong); }
+.rich .scene .leaves, .rich .scene .spk { display: block; } .reduce .leaves, .reduce .spk { display: none !important; }
+.reduce .rays { animation: none; }
 </style>
 
-<div class="wrap" id="wrap">
+<div class="wrap rich" id="wrap">
   <header class="top">
     <span class="eyebrow">Tanukonomy · Fase 28 · T-28.4 dan T-28.5</span>
     <h1>Buku Stempel dan perayaannya</h1>
@@ -154,11 +206,13 @@ header.top p { margin: 0; color: var(--text-2); }
   </header>
 
   <div class="ctrl">
+    <div class="ctl"><span>Gaya</span><div class="seg"><button type="button" data-style="rich" aria-pressed="true">Kaya</button><button type="button" data-style="calm" aria-pressed="false">Tenang (G-4)</button></div></div>
     <div class="ctl"><span>Isi buku</span><div class="seg"><button type="button" data-book="part" aria-pressed="true">Sebagian</button><button type="button" data-book="empty" aria-pressed="false">Kosong</button><button type="button" data-book="all" aria-pressed="false">Semua</button><button type="button" data-book="load" aria-pressed="false">Memuat</button></div></div>
     <div class="ctl"><span>Tonggak tersembunyi (KT-G3)</span><div class="seg"><button type="button" data-hid="1" aria-pressed="true">Belum dipakai</button><button type="button" data-hid="0" aria-pressed="false">Sudah dipakai</button></div></div>
     <div class="ctl"><span>Picu perayaan</span><div class="seg"><button type="button" data-fx="one" aria-pressed="false">Satu</button><button type="button" data-fx="many" aria-pressed="false">Dua</button><button type="button" data-fx="first" aria-pressed="false">Pertama</button><button type="button" data-fx="legacy" aria-pressed="false">Pengguna lama</button><button type="button" data-fx="wait" aria-pressed="false">Menunggu</button></div></div>
     <div class="ctl"><span>Gerak</span><div class="seg"><button type="button" data-motion="full" aria-pressed="true">Penuh</button><button type="button" data-motion="less" aria-pressed="false">Dikurangi</button></div></div>
     <div class="ctl"><span>Tema</span><div class="seg"><button type="button" data-theme-set="light" aria-pressed="false">Terang</button><button type="button" data-theme-set="dark" aria-pressed="false">Gelap</button></div></div>
+    <button class="btn compact" id="useFeat" type="button" style="background:var(--card);color:var(--text);border:1px solid var(--line-strong);min-height:36px">Pakai Kotak masuk dan Freelance</button>
     <button class="btn compact" id="reset" type="button" style="background:var(--card);color:var(--text);border:1px solid var(--line-strong);min-height:36px"><span class="icon">restart_alt</span>Ulangi</button>
   </div>
 
@@ -174,11 +228,11 @@ header.top p { margin: 0; color: var(--text-2); }
           <div class="card" style="padding:0"><div class="row"><span class="main"><span class="t">Arus periode ini</span><span class="s">Pemasukan Rp8.500.000 · Pengeluaran Rp4.705.000</span></span></div><div class="row"><span class="main"><span class="t">Kos bulanan</span><span class="s">Catat dari rutin</span></span><span class="amt">-Rp 1.200.000</span></div></div>
         </div>
         <div class="tabs"><div class="on"><span class="icon">home</span>Beranda</div><div><span class="icon">receipt_long</span>Riwayat</div><div><span class="icon">schedule</span>Rencana</div><div><span class="icon">savings</span>Dompet</div></div>
-        <div class="snack" id="snack" role="status"><span id="snackSeals"></span><span class="tx" id="snackTx"></span><button type="button" id="snackGo">Lihat</button></div>
+        <div class="snack" id="snack" role="status"><span class="peek" aria-hidden="true"><img data-img="tanuki_mascot" alt="" style="width:100%"></span><span id="snackSeals"></span><span class="tx" id="snackTx"></span><button type="button" id="snackGo">Lihat</button></div>
         <div class="scrim" id="scrim1"></div>
         <div class="sheet" id="firstSheet" role="dialog" aria-modal="true" aria-labelledby="fsT">
           <span class="grab"></span>
-          <span class="seal earned lg" id="fsSeal" style="--rot:-8deg"><img data-img="note_pencil" alt=""></span>
+          <span class="rays" aria-hidden="true"></span><span class="sealwrap"><span class="seal earned lg" id="fsSeal" style="--rot:-8deg"><img data-img="note_pencil" alt=""></span></span>
           <h3 id="fsT">Buku Stempel</h3>
           <p>Setiap kali kamu menguasai hal baru atau merapikan catatan, satu stempel masuk ke sini. Tidak ada target harian dan tidak ada yang berkurang. Kamu bisa mematikannya kapan saja di Akun.</p>
           <div class="acts"><button class="btn" id="fsOk" type="button">Oke</button><button class="btn ghost" id="fsSet" type="button">Atur di Akun</button></div>
@@ -195,9 +249,9 @@ header.top p { margin: 0; color: var(--text-2); }
         <div class="scroll" id="bookScroll"></div>
         <div class="scrim" id="scrim2"></div>
         <div class="sheet" id="detail" role="dialog" aria-modal="true" aria-labelledby="dtT">
-          <span class="grab"></span><span id="dtSeal"></span>
+          <span class="grab"></span><span class="rays" aria-hidden="true"></span><span class="sealwrap" id="dtSealWrap"><span id="dtSeal"></span></span>
           <h3 id="dtT"></h3><p id="dtP"></p>
-          <div class="acts"><button class="btn" id="dtOk" type="button">Tutup</button></div>
+          <div class="acts"><button class="btn cap2" id="dtAgain" type="button">Cap lagi</button><button class="btn" id="dtOk" type="button">Tutup</button></div>
         </div>
       </div>
       <p class="cap">Tanpa "n dari N", tanpa bilah progres, tanpa peringkat. Yang belum diraih samar dengan satu baris cara mendapatkannya.</p>
@@ -235,6 +289,7 @@ header.top p { margin: 0; color: var(--text-2); }
     </ol>
   </div>
 </div>
+<canvas id="fx" aria-hidden="true"></canvas>
 
 <script>
 (function () {
@@ -251,7 +306,29 @@ header.top p { margin: 0; color: var(--text-2); }
     { id: "budget_first", g: "Rencana", n: "Anggaran terpakai", how: "Tautkan satu transaksi ke pos anggaran.", img: "coins_currency", date: "", rot: -7 },
     { id: "freelance_paid", g: "Rencana", n: "Pembayaran pertama diterima", how: "Catat satu pembayaran freelance yang sudah diterima.", img: "coin_paid", date: "", rot: 5, hidden: 1 }
   ];
-  var S = { book: "part", hid: 1, earned: {}, unseen: {}, cel: true, less: false, newIds: [] };
+  var S = { book: "part", hid: 1, earned: {}, unseen: {}, cel: true, less: false, newIds: [], rich: true, reveal: {}, line: "hello" };
+  function rich() { return S.rich && !reduced(); }
+  /* konfeti kanvas */
+  var cv = $("#fx"), cx = cv.getContext("2d"), parts = [], raf = 0, W, H;
+  function fit() { var d = window.devicePixelRatio || 1; W = innerWidth; H = innerHeight; cv.width = W * d; cv.height = H * d; cx.setTransform(d, 0, 0, d, 0, 0); }
+  function burst(el, n, kind) {
+    if (!rich() || !el) return; fit(); var r = el.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
+    for (var i = 0; i < n; i++) { var a = Math.random() * 6.28, sp = 2 + Math.random() * 5, k = kind || ["leaf", "coin", "star"][i % 3];
+      parts.push({ x: x, y: y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - 3, r: Math.random() * 6, vr: (Math.random() - .5) * .3, l: 0, m: 60 + Math.random() * 40, k: k, c: k === "leaf" ? (i % 2 ? "#34d399" : "#86efac") : k === "coin" ? "#f59e0b" : k === "ink" ? "#14532d" : "#fde68a", z: k === "ink" ? 2 + Math.random() * 3 : 4 + Math.random() * 5 }); }
+    if (!raf) raf = requestAnimationFrame(tick);
+  }
+  function tick() {
+    cx.clearRect(0, 0, W, H); parts = parts.filter(function (p) { return p.l < p.m; });
+    parts.forEach(function (p) { p.l++; p.vy += .16; p.x += p.vx; p.y += p.vy; p.vx *= .99; p.r += p.vr; cx.save(); cx.globalAlpha = Math.max(0, 1 - p.l / p.m); cx.translate(p.x, p.y); cx.rotate(p.r); cx.fillStyle = p.c;
+      if (p.k === "leaf") { cx.beginPath(); cx.moveTo(0, -p.z); cx.quadraticCurveTo(p.z, 0, 0, p.z); cx.quadraticCurveTo(-p.z, 0, 0, -p.z); cx.fill(); }
+      else if (p.k === "coin") { cx.beginPath(); cx.ellipse(0, 0, p.z * .8, p.z * Math.abs(Math.cos(p.l * .2)) + .5, 0, 0, 7); cx.fill(); }
+      else if (p.k === "ink") { cx.beginPath(); cx.arc(0, 0, p.z, 0, 7); cx.fill(); }
+      else { cx.beginPath(); for (var i = 0; i < 8; i++) { var rr = i % 2 ? p.z * .35 : p.z; cx.lineTo(Math.cos(i * Math.PI / 4) * rr, Math.sin(i * Math.PI / 4) * rr); } cx.closePath(); cx.fill(); } cx.restore(); });
+    raf = parts.length ? requestAnimationFrame(tick) : 0; if (!raf) cx.clearRect(0, 0, W, H);
+  }
+  function shake(el) { if (!rich()) return; el.classList.remove("shake"); void el.offsetWidth; el.classList.add("shake"); }
+  var LINES = { hello: "Ini bukumu. Setiap stempel masuk sendiri, aku cuma membantu menempelkannya.", tap: "Ketuk stempel untuk melihat ceritanya.", cap: "Cap. Rapi sekali.", locked: "Yang ini belum. Tidak ada yang buru-buru.", reveal: "Satu halaman baru terbuka karena kamu sudah memakai fiturnya.", poke: "Aku di sini. Kita catat saja." };
+  function tsay(k) { S.line = k; var b = $("#tsay"); if (b) b.textContent = LINES[k] || k; var t = $("#tnb"); if (t) { t.classList.remove("cheer"); void t.offsetWidth; t.classList.add("cheer"); } }
   function reduced() { return S.less || (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches); }
   function baseEarned(mode) {
     var e = {};
@@ -267,7 +344,8 @@ header.top p { margin: 0; color: var(--text-2); }
     var el = $("#bookScroll"), mode = S.book;
     if (mode === "load") { el.innerHTML = '<div class="card intro"><span class="tn"><img src="' + IMG.tanuki_mascot + '" alt=""></span><p>Stempel kecil untuk hal yang berhasil kamu lakukan. Tidak ada yang hilang.</p></div><div class="sk"><i></i><i></i><i></i><i></i></div>'; return; }
     var any = CAT.some(function (c) { return S.earned[c.id]; });
-    var h = '<div class="card intro"><span class="tn"><img src="' + IMG.tanuki_mascot + '" alt=""></span><p>Stempel kecil untuk hal yang berhasil kamu lakukan. Tidak ada yang hilang.</p></div>';
+    var h = '<div class="scene"><div class="leaves" aria-hidden="true">' + [0,1,2,3,4,5].map(function (i) { return '<i style="left:' + (i * 17 + 4) + '%;--dx:' + ((i % 2 ? 1 : -1) * (16 + i * 5)) + 'px;animation-duration:' + (7 + i * 1.3) + 's;animation-delay:-' + (i * 1.5) + 's"></i>'; }).join("") + '</div><div class="talk"><button type="button" class="tn" id="tnb" aria-label="Tanuki"><img src="' + IMG.tanuki_mascot + '" alt=""><span class="spk" style="left:-2px;top:6px"></span><span class="spk" style="right:0;top:-2px;animation-delay:1s;width:8px;height:8px"></span></button><div class="bubble" role="status" aria-live="polite"><span id="tsay">' + (LINES[S.line] || "") + '</span></div></div></div>' +
+      '<div class="card intro"><span class="tn"><img src="' + IMG.tanuki_mascot + '" alt=""></span><p>Stempel kecil untuk hal yang berhasil kamu lakukan. Tidak ada yang hilang.</p></div>';
     if (!any) {
       h += '<div class="emptyb"><span class="tn"><img src="' + IMG.tanuki_sleeping + '" alt=""></span><b>Belum ada stempel</b><p>Buat dompet pertamamu dan stempel pertama akan masuk ke sini.</p></div>';
     } else {
@@ -275,13 +353,15 @@ header.top p { margin: 0; color: var(--text-2); }
         var items = CAT.filter(function (c) { return c.g === g && visible(c); }); if (!items.length) return;
         h += '<div class="grp"><h3>' + g + '</h3><div class="card list">' + items.map(function (c) {
           var e = S.earned[c.id], u = S.unseen[c.id];
-          return '<button type="button" class="st' + (e ? "" : " lk") + '" data-c="' + c.id + '">' + sealHtml(c, u ? " new" : "") + '<span class="m"><span class="n">' + c.n + '</span><span class="s">' + (e ? "Diraih " + (c.date || "14 Nov") : c.how) + '</span></span>' + (u ? '<span class="dotnew"></span>' : '<span class="icon chev">chevron_right</span>') + '</button>';
+          return '<button type="button" class="st' + (e ? "" : " lk") + '" data-c="' + c.id + '" style="--rot:' + c.rot + 'deg">' + sealHtml(c, u ? " new" : "") + '<span class="m"><span class="n">' + c.n + '</span><span class="s">' + (e ? "Diraih " + (c.date || "14 Nov") : c.how) + '</span></span>' + (u ? '<span class="dotnew"></span>' : '<span class="icon chev">chevron_right</span>') + '</button>';
         }).join("") + "</div></div>";
       });
       if (mode === "all") h += '<div class="alldone">Semua stempel yang ada sudah kamu raih. Yang baru datang bersama fitur baru.</div>';
     }
     el.innerHTML = h;
-    $$(".st", el).forEach(function (b) { b.onclick = function () { openDetail(b.getAttribute("data-c")); }; });
+    var tn = $("#tnb"); if (tn) tn.onclick = function () { tsay("poke"); burst(tn, 6, "star"); };
+    $$(".st", el).forEach(function (b, i) { b.style.setProperty("--d", (i * 90) + "ms"); if (S.cascade) b.classList.add("in"); var id = b.getAttribute("data-c"); if (S.reveal[id]) { b.classList.add("reveal"); } b.onclick = function () { openDetail(id); }; });
+    S.cascade = false;
     updateDots();
   }
   function openDetail(id) {
@@ -289,14 +369,17 @@ header.top p { margin: 0; color: var(--text-2); }
     $("#dtSeal").innerHTML = sealHtml(c, " lg" + (isNew && e && !reduced() ? " press" : ""));
     $("#dtT").textContent = c.n;
     $("#dtP").textContent = e ? "Diraih " + (c.date || "14 Nov") + ". " + c.how.replace(/^(\w)/, function (m) { return "Syaratnya: " + m.toLowerCase(); }) : c.how + " Stempelnya masuk sendiri begitu syaratnya terpenuhi.";
-    $("#scrim2").classList.add("on"); $("#detail").classList.add("on");
+    $("#scrim2").classList.add("on"); $("#detail").classList.add("on"); S.cur = id;
+    if (e) { setTimeout(function () { var sl = $("#dtSeal .seal"); burst(sl, isNew ? 36 : 14, isNew ? null : "ink"); if (isNew) shake($("#p2")); }, reduced() ? 0 : 380); tsay(isNew ? "cap" : "tap"); } else tsay("locked");
     if (isNew) { delete S.unseen[id]; setTimeout(renderBook, 300); }
   }
+  $("#dtAgain").onclick = function () { var c = CAT.filter(function (x) { return x.id === S.cur; })[0]; if (!c || !S.earned[c.id]) return; $("#dtSeal").innerHTML = ""; void $("#dtSeal").offsetWidth; $("#dtSeal").innerHTML = sealHtml(c, " lg press"); setTimeout(function () { burst($("#dtSeal .seal"), 28, "ink"); burst($("#dtSeal .seal"), 10, "coin"); shake($("#p2")); }, reduced() ? 0 : 330); };
+  (function () { var w = $("#dtSealWrap"); w.addEventListener("pointermove", function (e) { if (!rich()) return; var s = $(".seal", w), r = w.getBoundingClientRect(); if (!s) return; s.style.setProperty("--ry", (((e.clientX - r.left) / r.width - .5) * 40).toFixed(1) + "deg"); s.style.setProperty("--rx", ((.5 - (e.clientY - r.top) / r.height) * 34).toFixed(1) + "deg"); }); w.addEventListener("pointerleave", function () { var s = $(".seal", w); if (s) { s.style.setProperty("--rx", "0deg"); s.style.setProperty("--ry", "0deg"); } }); })();
   function closeDetail() { $("#scrim2").classList.remove("on"); $("#detail").classList.remove("on"); }
   $("#dtOk").onclick = closeDetail; $("#scrim2").onclick = closeDetail;
   function updateDots() {
     var n = Object.keys(S.unseen).length > 0;
-    $("#rowDot").hidden = !(n && S.cel); $("#avDot").hidden = !(S.waiting && n && S.cel);
+    $("#rowDot").hidden = !(n && S.cel); $("#avDot").hidden = !(S.waiting && n && S.cel); var ic = $("#rowBook .ic"); if (ic) ic.classList.toggle("bookbounce", !!(n && S.cel && rich()));
   }
 
   /* ---- Beranda dan perayaan ---- */
@@ -305,7 +388,7 @@ header.top p { margin: 0; color: var(--text-2); }
     clearTimeout(snackT); var sn = $("#snack"), cs = ids.map(function (i) { return CAT.filter(function (c) { return c.id === i; })[0]; });
     $("#snackSeals").innerHTML = '<span class="pair">' + cs.map(function (c) { return sealHtml(c, " sm" + (reduced() ? "" : " press")); }).join("") + "</span>";
     $("#snackTx").textContent = cs.length === 1 ? "Stempel baru: " + cs[0].n : cs.length + " stempel baru";
-    sn.classList.add("on"); snackT = setTimeout(function () { sn.classList.remove("on"); }, 5200);
+    sn.classList.add("on"); setTimeout(function () { burst($("#snackSeals .seal"), 18); }, reduced() ? 0 : 380); snackT = setTimeout(function () { sn.classList.remove("on"); }, 5200);
   }
   function addEarned(ids) { ids.forEach(function (i) { S.earned[i] = 1; S.unseen[i] = 1; var c = CAT.filter(function (x) { return x.id === i; })[0]; if (!c.date) c.date = "14 Nov"; S.newIds = ids; }); }
   function nextIds(n) { return CAT.filter(function (c) { return !S.earned[c.id] && !(c.hidden && S.hid); }).slice(0, n).map(function (c) { return c.id; }); }
@@ -322,11 +405,11 @@ header.top p { margin: 0; color: var(--text-2); }
     } else if (kind === "first") {
       S.book = "part"; S.earned = {}; S.unseen = {}; addEarned(["wallet_first"]); renderBook();
       var f = $("#fsSeal"); f.classList.remove("press"); void f.offsetWidth; if (!reduced()) f.classList.add("press");
-      $("#scrim1").classList.add("on"); $("#firstSheet").classList.add("on");
+      $("#scrim1").classList.add("on"); $("#firstSheet").classList.add("on"); setTimeout(function () { burst($("#fsSeal"), 44); shake($("#p1")); }, reduced() ? 0 : 420);
       $("#cap1").textContent = "Stempel pertama sepanjang masa: satu lembar pendek yang menjelaskan Buku Stempel dan sakelarnya, sekali saja.";
     } else if (kind === "legacy") {
       S.book = "part"; S.earned = baseEarned("part"); S.unseen = {}; renderBook();
-      stage('<div class="banner" id="lgBanner"><span class="tile"><span class="icon">verified</span></span><span class="tx"><span class="ey">Buku Stempel</span><b>Buku Stempel baru. Yang sudah kamu capai sudah ada di sini.</b></span><button class="btn compact" id="lgGo" type="button">Lihat</button><button class="xbtn" id="lgX" type="button" aria-label="Tutup"><span class="icon" style="font-size:18px">close</span></button></div>');
+      stage('<div class="banner" id="lgBanner"><span class="tile hop"><span class="icon">verified</span></span><span class="chain" aria-hidden="true"><span class="seal earned" style="--d:0s"><img src="' + IMG.bank_wallet + '" alt=""></span><span class="seal earned" style="--d:.5s"><img src="' + IMG.note_pencil + '" alt=""></span><span class="seal earned" style="--d:1s"><img src="' + IMG.box_backup + '" alt=""></span></span><span class="tx"><span class="ey">Buku Stempel</span><b>Buku Stempel baru. Yang sudah kamu capai sudah ada di sini.</b></span><button class="btn compact" id="lgGo" type="button">Lihat</button><button class="xbtn" id="lgX" type="button" aria-label="Tutup"><span class="icon" style="font-size:18px">close</span></button></div>');
       $("#lgGo").onclick = function () { stage(""); go("#s2"); }; $("#lgX").onclick = function () { stage(""); };
       $("#cap1").textContent = "Pengguna lama: stempel yang sudah memenuhi syarat masuk diam-diam (G-6), lalu satu banner sekali. Tanpa perayaan satu per satu.";
     } else if (kind === "wait") {
@@ -349,14 +432,17 @@ header.top p { margin: 0; color: var(--text-2); }
   $("#rowBook").onclick = function () { go("#s2"); };
 
   function seg(attr, fn) { $$("[" + attr + "]").forEach(function (b) { b.addEventListener("click", function () { if (attr !== "data-fx") $$("[" + attr + "]").forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); }); fn(b.getAttribute(attr)); }); }); }
-  seg("data-book", function (v) { S.book = v; S.earned = baseEarned(v); S.unseen = {}; renderBook(); });
-  seg("data-hid", function (v) { S.hid = +v; renderBook(); });
+  seg("data-book", function (v) { S.book = v; S.earned = baseEarned(v); S.unseen = {}; S.cascade = true; renderBook(); });
+  seg("data-style", function (v) { S.rich = v === "rich"; $("#wrap").classList.toggle("rich", S.rich); S.cascade = true; renderBook(); updateDots(); });
+  $("#useFeat").onclick = function () { S.hid = 0; $$("[data-hid]").forEach(function (b) { b.setAttribute("aria-pressed", b.getAttribute("data-hid") === "0" ? "true" : "false"); }); S.reveal = { inbox_clear: 1, freelance_paid: 1 }; renderBook(); tsay("reveal"); go("#s2"); setTimeout(function () { var b = $('.st[data-c="inbox_clear"]'); if (b) { b.scrollIntoView({ block: "center" }); burst(b.querySelector(".seal"), 14, "star"); } S.reveal = {}; }, 700); };
+  seg("data-hid", function (v) { S.hid = +v; S.reveal = {}; renderBook(); });
   seg("data-fx", function (v) { fx(v); });
   seg("data-motion", function (v) { S.less = v === "less"; $("#wrap").classList.toggle("reduce", S.less); });
   seg("data-theme-set", function (v) { document.documentElement.setAttribute("data-theme", v); });
   var dark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
   $('[data-theme-set="' + (dark ? "dark" : "light") + '"]').setAttribute("aria-pressed", "true");
   $("#reset").onclick = function () { S.book = "part"; S.earned = baseEarned("part"); S.unseen = {}; S.waiting = false; CAT.forEach(function (c) { if (["recurring_clear", "budget_first"].indexOf(c.id) >= 0) c.date = ""; }); $$("[data-book]").forEach(function (b) { b.setAttribute("aria-pressed", b.getAttribute("data-book") === "part" ? "true" : "false"); }); $("#swCel").checked = true; $("#swCel").onchange(); stage(""); $("#snack").classList.remove("on"); $("#cap1").textContent = 'Pilih "Picu perayaan" di atas. Perayaan yang muncul sendiri paling banyak satu per pembukaan aplikasi (G-4).'; renderBook(); };
-  S.earned = baseEarned("part"); renderBook();
+  S.earned = baseEarned("part"); S.cascade = true; renderBook(); window.addEventListener("resize", fit);
+  var obs = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting && !S.seenBook) { S.seenBook = 1; S.cascade = true; renderBook(); } }); }, { threshold: .4 }); obs.observe($("#p2"));
 })();
 </script>

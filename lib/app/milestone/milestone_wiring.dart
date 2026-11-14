@@ -4,6 +4,7 @@ import 'dart:developer' as developer;
 import 'package:api_storage/api_storage.dart';
 import 'package:di/di.dart';
 import 'package:saldough/app/milestone/app_milestone_facts_source.dart';
+import 'package:saldough/app/milestone/backup_recorded_gateway.dart';
 import 'package:saldough/app/milestone/inbox_clear_tracker.dart';
 import 'package:saldough/app/milestone/milestone_coordinator.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
@@ -70,6 +71,7 @@ Stream<void> _signals(GetIt container, CaptureInboxChanges? captureChanges) {
   container<LedgerChanges>().changes.listen((_) => controller.add(null));
   container<RecurringChanges>().changes.listen((_) => controller.add(null));
   captureChanges?.stream.listen((_) => controller.add(null));
+  container<BackupRecorded>().stream.listen((_) => controller.add(null));
   return controller.stream;
 }
 

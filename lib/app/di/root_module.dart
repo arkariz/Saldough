@@ -10,6 +10,7 @@ import 'package:saldough/app/data_portability/restore_reboot.dart';
 import 'package:saldough/app/data_portability/restore_recovery.dart';
 import 'package:saldough/app/dev_seed/dev_seed_page.dart';
 import 'package:saldough/app/discovery/app_feature_statuses.dart';
+import 'package:saldough/app/milestone/backup_recorded_gateway.dart';
 import 'package:saldough/app/milestone/milestone_wiring.dart';
 import 'package:saldough/app/premium/debug_plan_page.dart';
 import 'package:saldough/app/premium/premium_wiring.dart';
@@ -181,15 +182,19 @@ abstract final class RootModule {
       ..registerLazySingleton<ExportGateway>(
         () => ExportService(source: container<ExportDataSource>(), labels: exportLabelsFromI18n),
       )
+      ..registerLazySingleton<BackupRecorded>(BackupRecorded.new)
       ..registerLazySingleton<BackupGateway>(
-        () => BackupService(
-          storage: container<KeyValueStorage>(),
-          registry: appBackupRegistry,
-          appInfo: () async {
-            final info = await PackageInfo.fromPlatform();
-            return (version: info.version, build: int.tryParse(info.buildNumber) ?? 0);
-          },
-          fileStem: () => t.dataPortability.backupFileStem,
+        () => BackupRecordedGateway(
+          BackupService(
+            storage: container<KeyValueStorage>(),
+            registry: appBackupRegistry,
+            appInfo: () async {
+              final info = await PackageInfo.fromPlatform();
+              return (version: info.version, build: int.tryParse(info.buildNumber) ?? 0);
+            },
+            fileStem: () => t.dataPortability.backupFileStem,
+          ),
+          container<BackupRecorded>(),
         ),
       )
       ..registerLazySingleton<RestoreGateway>(

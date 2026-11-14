@@ -1,0 +1,466 @@
+<title>Kartu Periode Tanuki</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400,0..1,0&icon_names=arrow_back,check,compare_arrows,eco,event_repeat,flip,info,ios_share,lock,receipt_long,replay,restaurant,trending_down,trending_up,visibility_off,workspace_premium&display=block">
+<style>
+/* Tata letak: papan satu layar 360dp bergaya permainan (maskot, kartu koleksi, stiker, stempel, konfeti) di kiri, pengatur keadaan dan catatan di kanan. Token Matcha design system v2; huruf Plus Jakarta Sans + Space Mono. */
+:root {
+  --canvas: #fafaf9; --card: #ffffff; --sunken: #f3f4f6; --text: #111827; --text-2: #4b5563; --muted: #6b7280; --tertiary: #9ca3af;
+  --line: #eaecef; --line-strong: #d1d5db; --focus: #1f4b2c;
+  --action: #1f4b2c; --on-action: #ffffff; --action-pressed: #163720;
+  --info-bg: #eff6ff; --info-ink: #1e3a8a; --scene-a: #e3efe5; --scene-b: #f4f8f4; --bubble: #ffffff;
+  --hero: #1f4b2c; --hero-border: #1d4a33; --on-hero: #ffffff; --on-hero-muted: #b3dfc5; --gold: #fde68a; --gold-deep: #f59e0b;
+  --shadow-card: 0 2px 8px rgba(0,0,0,.03); --shadow-overlay: 0 8px 24px -4px rgba(17,24,39,.08);
+  --stage: #eef0ee; --font: "Plus Jakarta Sans", "Segoe UI", system-ui, sans-serif; --mono: "Space Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --canvas: #0f1210; --card: #171b18; --sunken: #1a1e1b; --text: #eef1ee; --text-2: #b8c0ba; --muted: #9aa29c; --tertiary: #858d87;
+  --line: #2a302c; --line-strong: #4a524c; --focus: #a2d2a9; --action: #a2d2a9; --on-action: #00210c; --action-pressed: #bdefc4;
+  --info-bg: #172338; --info-ink: #cfe0ff; --scene-a: #16241a; --scene-b: #0f1210; --bubble: #1d221e;
+  --shadow-card: none; --shadow-overlay: 0 8px 24px -4px rgba(0,0,0,.4); --stage: #0a0c0b; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --canvas: #0f1210; --card: #171b18; --sunken: #1a1e1b; --text: #eef1ee; --text-2: #b8c0ba; --muted: #9aa29c; --tertiary: #858d87;
+  --line: #2a302c; --line-strong: #4a524c; --focus: #a2d2a9; --action: #a2d2a9; --on-action: #00210c; --action-pressed: #bdefc4;
+  --info-bg: #172338; --info-ink: #cfe0ff; --scene-a: #16241a; --scene-b: #0f1210; --bubble: #1d221e;
+  --shadow-card: none; --shadow-overlay: 0 8px 24px -4px rgba(0,0,0,.4); --stage: #0a0c0b; color-scheme: dark; }
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--stage); color: var(--text); font-family: var(--font); font-size: 14px; line-height: 1.5; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 32px 48px; }
+.icon { font-family: "Material Symbols Outlined"; font-weight: 400; font-style: normal; font-size: 20px; line-height: 1; letter-spacing: normal; text-transform: none; white-space: nowrap; display: inline-block; flex: none; font-feature-settings: "liga"; user-select: none; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.board { max-width: 940px; margin: 0 auto; display: grid; grid-template-columns: 360px minmax(0, 1fr); gap: 40px; align-items: start; }
+@media (max-width: 840px) { .board { grid-template-columns: minmax(0, 1fr); justify-items: center; } .notes { width: 100%; max-width: 360px; } }
+
+/* ---------- Layar ---------- */
+.phone { width: 360px; max-width: 100%; height: 800px; background: var(--canvas); border-radius: 28px; border: 1px solid var(--line); box-shadow: var(--shadow-overlay); overflow: hidden; display: flex; flex-direction: column; position: relative; }
+.phone.shake { animation: shake .42s cubic-bezier(.36,.07,.19,.97); }
+@keyframes shake { 10%,90% { transform: translateX(-1px) } 20%,80% { transform: translateX(3px) } 30%,50%,70% { transform: translateX(-5px) } 40%,60% { transform: translateX(5px) } }
+.topbar { flex: none; display: flex; align-items: center; gap: 4px; height: 56px; padding: 0 8px; border-bottom: 1px solid var(--line); position: relative; z-index: 3; background: var(--canvas); }
+.iconbtn { width: 44px; height: 44px; display: grid; place-items: center; border: 0; background: none; border-radius: 50%; color: var(--text-2); cursor: pointer; }
+.topbar h1 { margin: 0; flex: 1; font-size: 18px; line-height: 26px; font-weight: 600; letter-spacing: -.015em; }
+.edisi { font: 700 10px/14px var(--mono); letter-spacing: .06em; text-transform: uppercase; padding: 3px 8px; border-radius: 6px; background: var(--sunken); color: var(--text-2); margin-right: 8px; transition: background-color .3s, color .3s; }
+.edisi[data-lv="1"] { background: #d8e6dc; color: #1f4b2c; } .edisi[data-lv="2"] { background: #e0e7ff; color: #3730a3; } .edisi[data-lv="3"] { background: var(--gold); color: #422006; }
+.scroll { flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; position: relative; display: flex; flex-direction: column; gap: 14px; padding-bottom: 20px; }
+.scroll > * { flex: none; }
+.scene { position: relative; padding: 14px 20px 6px; background: radial-gradient(120% 90% at 50% 0%, var(--scene-a), var(--scene-b) 70%); overflow: hidden; }
+.leaves { position: absolute; inset: 0; pointer-events: none; }
+.leaves i { position: absolute; width: 14px; height: 14px; border-radius: 0 100% 0 100%; background: #6ee7b7; opacity: .35; animation: drift linear infinite; }
+.leaves i:nth-child(odd) { background: #86efac; width: 10px; height: 10px; }
+@keyframes drift { 0% { transform: translate3d(0,-20px,0) rotate(0); opacity: 0 } 15% { opacity: .45 } 100% { transform: translate3d(var(--dx),420px,0) rotate(360deg); opacity: 0 } }
+.talk { position: relative; display: flex; align-items: flex-end; gap: 10px; min-height: 92px; }
+.mascot { position: relative; width: 84px; height: 84px; flex: none; transform-origin: 50% 100%; animation: bob 3.2s ease-in-out infinite; cursor: pointer; border: 0; background: none; padding: 0; }
+.mascot img { width: 100%; height: 100%; display: block; filter: drop-shadow(0 6px 6px rgba(0,0,0,.15)); }
+.mascot::after { content: ""; position: absolute; left: 14%; right: 14%; bottom: -6px; height: 8px; border-radius: 50%; background: rgba(0,0,0,.14); filter: blur(3px); z-index: -1; animation: shadow 3.2s ease-in-out infinite; }
+@keyframes bob { 0%,100% { transform: translateY(0) scaleY(1) } 50% { transform: translateY(-5px) scaleY(1.03) } }
+@keyframes shadow { 0%,100% { transform: scaleX(1); opacity: .9 } 50% { transform: scaleX(.8); opacity: .6 } }
+.mascot.cheer { animation: cheer .9s cubic-bezier(.3,1.6,.5,1) 1; }
+@keyframes cheer { 0% { transform: translateY(0) rotate(0) scale(1,1) } 18% { transform: translateY(2px) scale(1.12,.86) } 45% { transform: translateY(-26px) rotate(-8deg) scale(.95,1.08) } 65% { transform: translateY(-22px) rotate(8deg) } 85% { transform: translateY(0) scale(1.08,.92) } 100% { transform: translateY(0) rotate(0) scale(1) } }
+.mascot.wave { animation: wave .9s ease-in-out 1; }
+@keyframes wave { 0%,100% { transform: rotate(0) } 20% { transform: rotate(-10deg) } 40% { transform: rotate(9deg) } 60% { transform: rotate(-7deg) } 80% { transform: rotate(5deg) } }
+.mascot.think { animation: think 1.2s ease-in-out 1; }
+@keyframes think { 0%,100% { transform: rotate(0) } 40%,70% { transform: rotate(-12deg) translateY(-2px) } }
+.sparkle { position: absolute; width: 10px; height: 10px; background: var(--gold); clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%); animation: twinkle 2.4s ease-in-out infinite; }
+@keyframes twinkle { 0%,100% { transform: scale(0) rotate(0); opacity: 0 } 50% { transform: scale(1) rotate(90deg); opacity: 1 } }
+.bubble { position: relative; flex: 1; background: var(--bubble); border: 1px solid var(--line); border-radius: 16px 16px 16px 4px; padding: 10px 12px; font-size: 13px; line-height: 18px; min-height: 52px; box-shadow: var(--shadow-card); align-self: center; }
+.bubble::before { content: "Tanuki"; display: block; font: 700 10px/12px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--action); margin-bottom: 2px; }
+.bubble .caret { display: inline-block; width: 1px; height: 12px; background: var(--text-2); margin-left: 1px; vertical-align: -2px; animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0 } }
+
+.stagebox { perspective: 900px; display: grid; place-items: center; padding: 6px 0 4px; margin-top: -4px; }
+.flipper { position: relative; width: 252px; height: 315px; transform-style: preserve-3d; transition: transform .7s cubic-bezier(.3,1.2,.4,1); }
+.flipper.flipped { transform: rotateY(180deg); }
+.tilt { position: absolute; inset: 0; transform-style: preserve-3d; transform: rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)); transition: transform .25s ease-out; }
+.tilt.active { transition: transform .05s linear; }
+.flipper.fly { animation: fly 1.1s cubic-bezier(.5,-0.4,.5,1.3) 1; }
+@keyframes fly { 0% { transform: translateY(0) rotate(0) } 35% { transform: translateY(-34px) rotate(-5deg) scale(1.04) } 60% { transform: translateY(-300px) rotate(8deg) scale(.7); opacity: .2 } 61% { transform: translateY(40px) scale(.9); opacity: 0 } 100% { transform: translateY(0) rotate(0) scale(1); opacity: 1 } }
+.face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 22px; overflow: hidden; }
+.front { padding: 16px; display: flex; flex-direction: column; gap: 8px; color: var(--on-hero); background: linear-gradient(150deg, #2d6a40 0%, var(--hero) 45%, #123320 100%); border: 1px solid var(--hero-border); box-shadow: 0 16px 30px -12px rgba(31,75,44,.6), inset 0 1px 0 rgba(255,255,255,.2); isolation: isolate; }
+.front.gold { box-shadow: 0 0 0 3px var(--gold), 0 0 22px 2px rgba(253,230,138,.55), 0 16px 30px -12px rgba(31,75,44,.6); }
+.front::before { content: ""; position: absolute; z-index: -1; right: -50px; top: -50px; width: 190px; height: 190px; border-radius: 50%; background: #10b981; opacity: .22; filter: blur(32px); }
+.foil { position: absolute; inset: 0; z-index: 4; pointer-events: none; opacity: calc(var(--foil, 0) * .75); mix-blend-mode: color-dodge; transition: opacity .6s; background: linear-gradient(115deg, transparent calc(var(--mx,50%) - 36%), rgba(255,255,255,.35) calc(var(--mx,50%) - 14%), rgba(255,214,102,.5) calc(var(--mx,50%) - 4%), rgba(120,255,200,.5) calc(var(--mx,50%) + 6%), rgba(160,140,255,.45) calc(var(--mx,50%) + 16%), transparent calc(var(--mx,50%) + 38%)); }
+.glare { position: absolute; inset: 0; z-index: 5; pointer-events: none; background: radial-gradient(circle at var(--mx,50%) var(--my,30%), rgba(255,255,255,.28), transparent 45%); opacity: calc(.25 + var(--foil, 0) * .25); }
+.k-head { display: flex; align-items: flex-start; justify-content: space-between; }
+.k-brand { display: inline-flex; align-items: center; gap: 6px; font: 700 11px/16px var(--mono); letter-spacing: .04em; color: #bdefc4; }
+.k-leaf { width: 20px; height: 20px; border-radius: 50%; background: #bdefc4; color: #1f4b2c; display: grid; place-items: center; } .k-leaf .icon { font-size: 13px; }
+.k-tanuki { width: 46px; height: 46px; margin: -4px -2px 0 0; animation: bob 3.6s ease-in-out infinite; }
+.k-title { margin: 0; font-size: 22px; line-height: 26px; font-weight: 800; letter-spacing: -.02em; }
+.k-sub { margin: 1px 0 0; font-size: 12px; line-height: 16px; color: var(--on-hero-muted); }
+.k-facts { display: grid; gap: 6px; margin-top: auto; }
+.k-row2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+.k-tile { padding: 7px 9px; border-radius: 12px; background: rgba(0,0,0,.28); border: 1px solid rgba(255,255,255,.16); display: grid; gap: 0; min-width: 0; animation: slap .5s cubic-bezier(.3,1.7,.5,1) both; }
+.k-tile.wide { grid-column: 1 / -1; }
+.k-tile.old { animation: none; }
+@keyframes slap { 0% { transform: scale(2.4) rotate(-10deg); opacity: 0 } 55% { transform: scale(.9) rotate(2deg); opacity: 1 } 100% { transform: scale(1) rotate(0) } }
+.k-label { font: 700 9px/12px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--on-hero-muted); }
+.k-val { font-size: 13px; line-height: 18px; font-weight: 700; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.k-val small { font-weight: 500; font-size: 11px; color: var(--on-hero-muted); }
+.k-money { display: grid; gap: 2px; padding: 7px 10px; border-radius: 12px; background: rgba(0,0,0,.28); border: 1px solid rgba(255,255,255,.16); animation: slap .5s cubic-bezier(.3,1.7,.5,1) both; }
+.k-money.old { animation: none; }
+.k-money div { display: flex; justify-content: space-between; align-items: baseline; gap: 6px; }
+.k-foot { display: flex; justify-content: space-between; gap: 6px; padding-top: 7px; border-top: 1px solid rgba(255,255,255,.14); font-size: 10px; line-height: 12px; color: var(--on-hero-muted); }
+.k-empty { margin: auto 0; text-align: center; font-size: 13px; color: var(--on-hero-muted); padding: 0 12px; }
+.seal { position: absolute; z-index: 3; right: 10px; top: 86px; width: 84px; height: 84px; display: grid; place-items: center; opacity: 0; transform: scale(3) rotate(-30deg); pointer-events: none; }
+.seal.on { animation: stamp .6s cubic-bezier(.2,1.5,.4,1) forwards; }
+.seal.settled { opacity: 1; transform: rotate(-12deg); animation: none; }
+@keyframes stamp { 0% { opacity: 0; transform: scale(3.2) rotate(-40deg) } 55% { opacity: 1; transform: scale(.88) rotate(-8deg) } 75% { transform: scale(1.06) rotate(-13deg) } 100% { opacity: 1; transform: scale(1) rotate(-12deg) } }
+.seal svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.seal img { width: 34px; height: 34px; position: relative; filter: drop-shadow(0 2px 2px rgba(0,0,0,.3)); }
+.seal text { font: 700 9.5px var(--mono); letter-spacing: .12em; fill: #fde68a; text-transform: uppercase; }
+.back { transform: rotateY(180deg); background: var(--card); border: 1px solid var(--line); padding: 16px; display: flex; flex-direction: column; gap: 10px; box-shadow: var(--shadow-overlay); }
+.back h3 { margin: 0; font-size: 16px; line-height: 22px; font-weight: 700; }
+.back p { margin: 0; font-size: 12px; line-height: 16px; color: var(--muted); }
+.rack { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 2px; }
+.slot { display: grid; justify-items: center; gap: 4px; padding: 8px 4px; border-radius: 14px; background: var(--sunken); text-align: center; font-size: 11px; line-height: 14px; font-weight: 600; }
+.slot img { width: 34px; height: 34px; }
+.slot small { display: block; font: 700 9px/12px var(--mono); color: var(--muted); letter-spacing: .04em; text-transform: uppercase; }
+.slot.fresh { animation: slap .6s cubic-bezier(.3,1.7,.5,1) both; box-shadow: 0 0 0 2px var(--gold); }
+.slot.next { background: transparent; box-shadow: inset 0 0 0 2px var(--line-strong); border-radius: 14px; color: var(--muted); }
+.slot.next .icon { font-size: 26px; height: 34px; display: grid; place-items: center; animation: pulse 2s ease-in-out infinite; }
+@keyframes pulse { 50% { transform: scale(1.15); opacity: .6 } }
+.hintflip { text-align: center; font: 700 10px/14px var(--mono); letter-spacing: .05em; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; justify-content: center; gap: 6px; }
+.hintflip .icon { font-size: 15px; }
+
+.mood { margin: 0 20px; display: grid; gap: 6px; }
+.mood-top { display: flex; justify-content: space-between; align-items: baseline; font-size: 12px; font-weight: 600; }
+.mood-top b { font: 700 11px/14px var(--mono); letter-spacing: .05em; text-transform: uppercase; color: var(--action); }
+.meter { display: grid; grid-template-columns: repeat(10, 1fr); gap: 4px; }
+.meter i { height: 10px; border-radius: 4px; background: var(--sunken); box-shadow: inset 0 0 0 1px var(--line); transition: background-color .25s, transform .25s; }
+.meter i.on { background: var(--action); box-shadow: none; animation: pop .35s cubic-bezier(.3,1.8,.5,1); }
+.meter i.on:last-of-type { background: #34d399; }
+@keyframes pop { 0% { transform: scaleY(.3) } 100% { transform: scaleY(1) } }
+.tray-h { margin: 0 20px -6px; font: 700 11px/14px var(--mono); letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+.tray { margin: 0 20px; display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 6px 12px 6px 10px; border-radius: 99px; border: 1px solid var(--line-strong); background: var(--card); color: var(--text); font-size: 13px; font-weight: 600; cursor: pointer; transition: transform .15s ease-out, background-color .15s; }
+.chip:active { transform: scale(.94); }
+.chip .icon { font-size: 18px; }
+.chip[aria-pressed="true"] { background: var(--action); color: var(--on-action); border-color: transparent; }
+.chip.gold[aria-pressed="true"] { background: var(--gold); color: #422006; }
+.chip.gold { border-color: var(--gold-deep); }
+.chip:disabled { opacity: .45; cursor: not-allowed; }
+.chip.locked { border-style: dashed; color: var(--text-2); }
+.banner { margin: 0 20px; display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border-radius: 14px; background: var(--info-bg); color: var(--info-ink); font-size: 12px; line-height: 16px; }
+.banner .icon { font-size: 17px; }
+.plus-hint { margin: 0 20px; font-size: 12px; line-height: 16px; color: var(--muted); text-align: center; }
+.bar { flex: none; padding: 10px 20px 14px; background: var(--canvas); border-top: 1px solid var(--line); display: grid; grid-template-columns: 1fr 1fr; gap: 8px; position: relative; z-index: 3; }
+.btn { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; border: 0; border-radius: 8px; background: var(--action); color: var(--on-action); font-weight: 700; font-size: 14px; cursor: pointer; transition: transform .15s ease-out, background-color .15s; position: relative; overflow: hidden; }
+.btn:active { transform: scale(.97); background: var(--action-pressed); }
+.btn.sec { background: var(--card); color: var(--text); border: 1px solid var(--line-strong); }
+.btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+.btn.ready::after { content: ""; position: absolute; inset: 0; background: linear-gradient(100deg, transparent 30%, rgba(255,255,255,.4) 50%, transparent 70%); transform: translateX(-120%); animation: shine 2.6s ease-in-out infinite; }
+@keyframes shine { 55%,100% { transform: translateX(120%) } }
+.toast { position: absolute; left: 20px; right: 20px; bottom: 82px; z-index: 6; background: var(--text); color: var(--canvas); padding: 10px 14px; border-radius: 12px; font-size: 13px; line-height: 18px; text-align: center; opacity: 0; transform: translateY(8px); transition: opacity .15s, transform .15s; pointer-events: none; }
+.toast.show { opacity: 1; transform: none; }
+canvas.fx { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; }
+
+/* Gerak dikurangi: pengguna atau tombol di panel */
+.reduce *, .reduce *::before, .reduce *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+.reduce .leaves, .reduce .sparkle { display: none; }
+@media (prefers-reduced-motion: reduce) { .phone *, .phone *::before, .phone *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; } .leaves, .sparkle { display: none; } }
+
+/* ---------- Panel ---------- */
+.notes { display: grid; gap: 20px; min-width: 0; }
+.eyebrow { font: 700 12px/16px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--action); }
+.notes h2 { margin: 4px 0 0; font-size: 24px; line-height: 30px; font-weight: 800; letter-spacing: -.01em; text-wrap: balance; }
+.notes p { margin: 0; color: var(--text-2); max-width: 60ch; }
+.panel { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 16px; display: grid; gap: 12px; }
+.panel h3 { margin: 0; font-size: 14px; font-weight: 700; }
+.seg { display: inline-grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 2px; padding: 3px; border-radius: 8px; background: var(--sunken); }
+.seg button { border: 1px solid transparent; background: none; border-radius: 6px; padding: 8px 12px; font-size: 13px; font-weight: 600; color: var(--text-2); cursor: pointer; min-height: 40px; }
+.seg button[aria-pressed="true"] { background: var(--card); border-color: var(--line); color: var(--text); }
+.ctl { display: grid; gap: 6px; } .ctl > span { font-size: 12px; font-weight: 600; color: var(--muted); }
+.act { border: 1px solid var(--line-strong); background: var(--card); border-radius: 8px; min-height: 40px; padding: 8px 12px; font-weight: 600; cursor: pointer; display: inline-flex; gap: 6px; align-items: center; justify-self: start; }
+.rows { margin: 0; padding-left: 1.1em; display: grid; gap: 8px; color: var(--text-2); font-size: 13px; } .rows b { color: var(--text); }
+</style>
+
+<main class="board">
+  <div class="phone" id="phone" aria-label="Layar kartu periode bergaya permainan, 360dp">
+    <header class="topbar">
+      <button class="iconbtn" type="button" aria-label="Kembali"><span class="icon">arrow_back</span></button>
+      <h1>Kartu periode</h1>
+      <span class="edisi" id="edisi" data-lv="0">Kilap polos</span>
+    </header>
+    <div class="scroll" id="scroll">
+      <div class="scene">
+        <div class="leaves" aria-hidden="true" id="leaves"></div>
+        <div class="talk">
+          <button class="mascot" id="mascot" type="button" aria-label="Tanuki. Ketuk untuk menyapa"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGZpbGw9Im5vbmUiIHZpZXdCb3g9IjAgMCA1NCA1NCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiBpZD0iY2xheVRhbnVraUJvZHkiIHgxPSIyNyIgeDI9IjI3IiB5MT0iMTIiIHkyPSI0NiI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzhiNmY1NyIvPjxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjNmM1MjNlIi8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjNGQzNzI3Ii8+PC9saW5lYXJHcmFkaWVudD48bGluZWFyR3JhZGllbnQgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiIGlkPSJjbGF5TXV6emxlIiB4MT0iMjciIHgyPSIyNyIgeTE9IjI4IiB5Mj0iNDIiPjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNmZmZmZmYiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNmNWViZDkiLz48L2xpbmVhckdyYWRpZW50PjxsaW5lYXJHcmFkaWVudCBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgaWQ9ImNsYXlMZWFmUGx1bXAiIHgxPSIyMCIgeDI9IjMyIiB5MT0iNSIgeTI9IjE3Ij48c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjODZlZmFjIi8+PHN0b3Agb2Zmc2V0PSI0MCUiIHN0b3AtY29sb3I9IiMyMmM1NWUiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMxNTgwM2QiLz48L2xpbmVhckdyYWRpZW50PjxsaW5lYXJHcmFkaWVudCBpZD0iY2xheVNvZnRIaWdobGlnaHQiIHgxPSIwJSIgeDI9IjAlIiB5MT0iMCUiIHkyPSIxMDAlIj48c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjZmZmZmZmIiBzdG9wLW9wYWNpdHk9IjAuNzUiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNmZmZmZmYiIHN0b3Atb3BhY2l0eT0iMCIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IGZpbGw9IiM0ZDM3MjciIGhlaWdodD0iMTAiIHJ4PSI0LjUiIHdpZHRoPSIxMCIgeD0iMTEiIHk9IjgiLz48cmVjdCBmaWxsPSIjNGQzNzI3IiBoZWlnaHQ9IjEwIiByeD0iNC41IiB3aWR0aD0iMTAiIHg9IjMzIiB5PSI4Ii8+PHJlY3QgZmlsbD0iI2Y1ZWJkOSIgaGVpZ2h0PSI2IiByeD0iMi41IiB3aWR0aD0iNiIgeD0iMTMiIHk9IjEwIi8+PHJlY3QgZmlsbD0iI2Y1ZWJkOSIgaGVpZ2h0PSI2IiByeD0iMi41IiB3aWR0aD0iNiIgeD0iMzUiIHk9IjEwIi8+PHJlY3QgZmlsbD0idXJsKCNjbGF5VGFudWtpQm9keSkiIGhlaWdodD0iMzAiIHJ4PSIxNCIgd2lkdGg9IjM4IiB4PSI4IiB5PSIxNCIvPjxlbGxpcHNlIGN4PSIyNyIgY3k9IjE3IiBmaWxsPSJ1cmwoI2NsYXlTb2Z0SGlnaGxpZ2h0KSIgcng9IjE0IiByeT0iNCIvPjxyZWN0IGZpbGw9IiMyMjQ3MmQiIGhlaWdodD0iMTQiIHJ4PSI1LjUiIHdpZHRoPSIxMyIgeD0iMTEiIHk9IjIwIi8+PHJlY3QgZmlsbD0iIzIyNDcyZCIgaGVpZ2h0PSIxNCIgcng9IjUuNSIgd2lkdGg9IjEzIiB4PSIzMCIgeT0iMjAiLz48Y2lyY2xlIGN4PSIxNy41IiBjeT0iMjYuNSIgZmlsbD0iI2ZmZmZmZiIgcj0iMy44Ii8+PGNpcmNsZSBjeD0iMTgiIGN5PSIyNi41IiBmaWxsPSIjMWExYTFhIiByPSIyLjIiLz48Y2lyY2xlIGN4PSIxOSIgY3k9IjI1IiBmaWxsPSIjZmZmZmZmIiByPSIxIi8+PGNpcmNsZSBjeD0iMzYuNSIgY3k9IjI2LjUiIGZpbGw9IiNmZmZmZmYiIHI9IjMuOCIvPjxjaXJjbGUgY3g9IjM2IiBjeT0iMjYuNSIgZmlsbD0iIzFhMWExYSIgcj0iMi4yIi8+PGNpcmNsZSBjeD0iMzciIGN5PSIyNSIgZmlsbD0iI2ZmZmZmZiIgcj0iMSIvPjxlbGxpcHNlIGN4PSIyNyIgY3k9IjM1IiBmaWxsPSJ1cmwoI2NsYXlNdXp6bGUpIiByeD0iOCIgcnk9IjYiLz48ZWxsaXBzZSBjeD0iMjciIGN5PSIzMyIgZmlsbD0idXJsKCNjbGF5U29mdEhpZ2hsaWdodCkiIHJ4PSI2IiByeT0iMiIvPjxlbGxpcHNlIGN4PSIyNyIgY3k9IjMyIiBmaWxsPSIjMmQxZTE1IiByeD0iMi44IiByeT0iMiIvPjxwYXRoIGQ9Ik0yNSAzNi41QzI2IDM3LjggMjggMzcuOCAyOSAzNi41IiBzdHJva2U9IiM2YzUyM2UiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48ZWxsaXBzZSBjeD0iMTIiIGN5PSIzMyIgZmlsbD0iI2Y4NzE3MSIgb3BhY2l0eT0iMC42IiByeD0iMi4yIiByeT0iMS40Ii8+PGVsbGlwc2UgY3g9IjQyIiBjeT0iMzMiIGZpbGw9IiNmODcxNzEiIG9wYWNpdHk9IjAuNiIgcng9IjIuMiIgcnk9IjEuNCIvPjxwYXRoIGQ9Ik0yNiAxNUMyMiAxMyAyMyA4IDI4IDhDMzMgOCAzNCAxMyAzMCAxNUMyOC41IDE1LjggMjcuNSAxNS44IDI2IDE1WiIgZmlsbD0idXJsKCNjbGF5TGVhZlBsdW1wKSIvPjxwYXRoIGQ9Ik0yNiAxM0wyOSAxMCIgc3Ryb2tlPSIjYmJmN2QwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS13aWR0aD0iMC45Ii8+PGVsbGlwc2UgY3g9IjI2LjUiIGN5PSI5LjUiIGZpbGw9IiNmZmZmZmYiIG9wYWNpdHk9IjAuOCIgcng9IjIuNSIgcnk9IjEuMiIvPjxjaXJjbGUgY3g9IjI5LjUiIGN5PSIxMiIgZmlsbD0iI2ZmZmZmZiIgb3BhY2l0eT0iMC45IiByPSIxIi8+PC9zdmc+Cg==" alt=""><span class="sparkle" style="left:-2px;top:6px;animation-delay:.2s"></span><span class="sparkle" style="right:2px;top:-4px;animation-delay:1.1s;width:8px;height:8px"></span></button>
+          <div class="bubble" id="bubble" role="status" aria-live="polite"><span id="say"></span><span class="caret"></span></div>
+        </div>
+        <div class="stagebox">
+          <div class="flipper" id="flipper">
+            <div class="tilt" id="tilt">
+              <div class="face front" id="front" style="--foil:0">
+                <div class="foil"></div><div class="glare"></div>
+                <div id="cardbody" style="display:contents"></div>
+                <div class="seal" id="seal"><svg viewBox="0 0 84 84" aria-hidden="true"><circle cx="42" cy="42" r="40" fill="#14532d" stroke="#fde68a" stroke-width="2"/><circle cx="42" cy="42" r="33" fill="none" stroke="#fde68a" stroke-width="1" stroke-dasharray="2 3"/><defs><path id="arc" d="M42 42 m-26 0 a26 26 0 1 1 52 0 a26 26 0 1 1 -52 0"/></defs><text><textPath href="#arc" startOffset="0">Periode rapi · Periode rapi ·</textPath></text></svg><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJjbGF5Q29pbiIgeDE9IjAlIiB4Mj0iMTAwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZkZTA0NyIvPjxzdG9wIG9mZnNldD0iNjAlIiBzdG9wLWNvbG9yPSIjZjU5ZTBiIi8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjZDk3NzA2Ii8+PC9saW5lYXJHcmFkaWVudD48bGluZWFyR3JhZGllbnQgaWQ9ImNsYXlDb2luSGlnaGxpZ2h0IiB4MT0iMzAlIiB4Mj0iNzAlIiB5MT0iMCUiIHkyPSIxMDAlIj48c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjZmZmZmZmIiBzdG9wLW9wYWNpdHk9IjAuOCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIgc3RvcC1vcGFjaXR5PSIwIi8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgZmlsbD0idXJsKCNjbGF5Q29pbikiIHI9IjEwIi8+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgZmlsbD0iI2Q5NzcwNiIgb3BhY2l0eT0iMC4yIiByPSI4Ii8+PHBhdGggZD0iTTEyIDdDOS41IDcgOCA5LjUgOCAxMS41QzggMTQgMTAuNSAxNS41IDEyIDE2LjVDMTMuNSAxNS41IDE2IDE0IDE2IDExLjVDMTYgOS41IDE0LjUgNyAxMiA3WiIgZmlsbD0iIzE1ODAzZCIgb3BhY2l0eT0iMC45Ii8+PHBhdGggZD0iTTEyIDdDMTEuNSA5IDEwLjUgMTIgOC41IDEzIiBzdHJva2U9IiM4NmVmYWMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIwLjgiLz48ZWxsaXBzZSBjeD0iOSIgY3k9IjcuNSIgZmlsbD0idXJsKCNjbGF5Q29pbkhpZ2hsaWdodCkiIHJ4PSI0LjUiIHJ5PSIyLjIiIHRyYW5zZm9ybT0icm90YXRlKC0yNSA5IDcuNSkiLz48L3N2Zz4K" alt=""></div>
+              </div>
+              <div class="face back" id="back">
+                <h3>Rak stempelmu</h3><p>Stempel yang kamu raih tersimpan di sini dan tercetak di sampul bukumu.</p>
+                <div class="rack" id="rack"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="hintflip"><span class="icon">flip</span>Ketuk kartu untuk membaliknya</div>
+      </div>
+
+      <div class="mood">
+        <div class="mood-top"><span>Semangat Tanuki</span><b id="moodLabel">Santai</b></div>
+        <div class="meter" id="meter"></div>
+      </div>
+      <p class="tray-h">Tempel stiker ke kartu</p>
+      <div class="tray" id="tray"></div>
+      <div class="banner" id="warn" hidden><span class="icon">info</span><span>Nominal yang kamu tempel terlihat oleh siapa pun yang menerima gambar.</span></div>
+      <div class="banner" id="hiddenNote" hidden><span class="icon">visibility_off</span><span>Nominal disembunyikan di aplikasi, jadi stiker nominal belum bisa ditempel.</span></div>
+      <p class="plus-hint" id="plusHint">Stempel emas dan buku periode lengkap ada di Plus. Kartumu tetap lengkap tanpa itu.</p>
+    </div>
+    <div class="bar">
+      <button class="btn sec" id="stampBtn" type="button"><span class="icon">eco</span><span id="stampTxt">Cap stempel</span></button>
+      <button class="btn" id="share" type="button"><span class="icon">ios_share</span>Bagikan</button>
+    </div>
+    <div class="toast" id="toast" role="status">Lembar bagikan sistem terbuka di sini.</div>
+    <canvas class="fx" id="fx" aria-hidden="true"></canvas>
+  </div>
+
+  <aside class="notes">
+    <div>
+      <span class="eyebrow">D2 · versi gamifikasi</span>
+      <h2>Kartu periode yang seru dipamerkan</h2>
+      <p>Tempel stiker, cap stempel, balik kartunya, dan lihat Tanuki bereaksi. Semakin banyak yang kamu tempel, semakin berkilap kartunya. Gesek kartu untuk melihat kilapnya bergerak.</p>
+    </div>
+    <div class="panel">
+      <h3>Atur keadaan</h3>
+      <div class="ctl"><span>Paket</span><div class="seg"><button type="button" data-plan="free" aria-pressed="true">Gratis</button><button type="button" data-plan="plus" aria-pressed="false">Plus</button></div></div>
+      <div class="ctl"><span>Nominal di aplikasi</span><div class="seg"><button type="button" data-hide="0" aria-pressed="true">Tampil</button><button type="button" data-hide="1" aria-pressed="false">Disembunyikan</button></div></div>
+      <div class="ctl"><span>Selisih periode</span><div class="seg"><button type="button" data-neg="0" aria-pressed="true">Positif</button><button type="button" data-neg="1" aria-pressed="false">Negatif</button></div></div>
+      <div class="ctl"><span>Gerak</span><div class="seg"><button type="button" data-motion="full" aria-pressed="true">Penuh</button><button type="button" data-motion="less" aria-pressed="false">Dikurangi</button></div></div>
+      <div class="ctl"><span>Tema</span><div class="seg"><button type="button" data-theme-set="light" aria-pressed="false">Terang</button><button type="button" data-theme-set="dark" aria-pressed="false">Gelap</button></div></div>
+      <button class="act" id="reset" type="button"><span class="icon">replay</span>Mulai dari awal</button>
+    </div>
+    <div class="panel">
+      <h3>Yang saya longgarkan dari dokumen, dan yang tidak</h3>
+      <ol class="rows">
+        <li><b>Dilonggarkan atas permintaan:</b> animasi, konfeti, kilap kartu, maskot yang bereaksi, dan meter "Semangat Tanuki". Dokumen BP-13 dan GAMIFICATION menuntut tenang dan satu perayaan per pembukaan; versi ini sengaja ramai dan perlu diputuskan product owner.</li>
+        <li><b>Tetap dijaga:</b> Tanuki tidak pernah sedih, tidak ada kata yang menilai belanja, tidak ada peringkat, skor, atau hitung mundur, dan meter tidak pernah turun karena kamu melewatkan sesuatu.</li>
+        <li><b>Tetap dijaga:</b> nominal mati secara bawaan, ada pengingat saat dinyalakan, dan tidak ada nama dompet atau pedagang di kartu.</li>
+        <li><b>Pertanyaan:</b> apakah "Kilap" (polos sampai emas) dan rak stempel boleh jadi bagian resmi Buku Periode, atau hanya efek di layar bagikan.</li>
+        <li><b>Pertanyaan:</b> stempel dicap oleh pengguna dengan satu ketukan. Stempel Periode rapi di aturan mesin tonggak (B-94) diraih otomatis; apakah ketukan ini hanya seremoni atau memang syaratnya.</li>
+      </ol>
+    </div>
+  </aside>
+</main>
+
+<script>
+(function () {
+  var TANUKI = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGZpbGw9Im5vbmUiIHZpZXdCb3g9IjAgMCA1NCA1NCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiBpZD0iY2xheVRhbnVraUJvZHkiIHgxPSIyNyIgeDI9IjI3IiB5MT0iMTIiIHkyPSI0NiI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzhiNmY1NyIvPjxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjNmM1MjNlIi8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjNGQzNzI3Ii8+PC9saW5lYXJHcmFkaWVudD48bGluZWFyR3JhZGllbnQgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiIGlkPSJjbGF5TXV6emxlIiB4MT0iMjciIHgyPSIyNyIgeTE9IjI4IiB5Mj0iNDIiPjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNmZmZmZmYiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNmNWViZDkiLz48L2xpbmVhckdyYWRpZW50PjxsaW5lYXJHcmFkaWVudCBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgaWQ9ImNsYXlMZWFmUGx1bXAiIHgxPSIyMCIgeDI9IjMyIiB5MT0iNSIgeTI9IjE3Ij48c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjODZlZmFjIi8+PHN0b3Agb2Zmc2V0PSI0MCUiIHN0b3AtY29sb3I9IiMyMmM1NWUiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMxNTgwM2QiLz48L2xpbmVhckdyYWRpZW50PjxsaW5lYXJHcmFkaWVudCBpZD0iY2xheVNvZnRIaWdobGlnaHQiIHgxPSIwJSIgeDI9IjAlIiB5MT0iMCUiIHkyPSIxMDAlIj48c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjZmZmZmZmIiBzdG9wLW9wYWNpdHk9IjAuNzUiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNmZmZmZmYiIHN0b3Atb3BhY2l0eT0iMCIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IGZpbGw9IiM0ZDM3MjciIGhlaWdodD0iMTAiIHJ4PSI0LjUiIHdpZHRoPSIxMCIgeD0iMTEiIHk9IjgiLz48cmVjdCBmaWxsPSIjNGQzNzI3IiBoZWlnaHQ9IjEwIiByeD0iNC41IiB3aWR0aD0iMTAiIHg9IjMzIiB5PSI4Ii8+PHJlY3QgZmlsbD0iI2Y1ZWJkOSIgaGVpZ2h0PSI2IiByeD0iMi41IiB3aWR0aD0iNiIgeD0iMTMiIHk9IjEwIi8+PHJlY3QgZmlsbD0iI2Y1ZWJkOSIgaGVpZ2h0PSI2IiByeD0iMi41IiB3aWR0aD0iNiIgeD0iMzUiIHk9IjEwIi8+PHJlY3QgZmlsbD0idXJsKCNjbGF5VGFudWtpQm9keSkiIGhlaWdodD0iMzAiIHJ4PSIxNCIgd2lkdGg9IjM4IiB4PSI4IiB5PSIxNCIvPjxlbGxpcHNlIGN4PSIyNyIgY3k9IjE3IiBmaWxsPSJ1cmwoI2NsYXlTb2Z0SGlnaGxpZ2h0KSIgcng9IjE0IiByeT0iNCIvPjxyZWN0IGZpbGw9IiMyMjQ3MmQiIGhlaWdodD0iMTQiIHJ4PSI1LjUiIHdpZHRoPSIxMyIgeD0iMTEiIHk9IjIwIi8+PHJlY3QgZmlsbD0iIzIyNDcyZCIgaGVpZ2h0PSIxNCIgcng9IjUuNSIgd2lkdGg9IjEzIiB4PSIzMCIgeT0iMjAiLz48Y2lyY2xlIGN4PSIxNy41IiBjeT0iMjYuNSIgZmlsbD0iI2ZmZmZmZiIgcj0iMy44Ii8+PGNpcmNsZSBjeD0iMTgiIGN5PSIyNi41IiBmaWxsPSIjMWExYTFhIiByPSIyLjIiLz48Y2lyY2xlIGN4PSIxOSIgY3k9IjI1IiBmaWxsPSIjZmZmZmZmIiByPSIxIi8+PGNpcmNsZSBjeD0iMzYuNSIgY3k9IjI2LjUiIGZpbGw9IiNmZmZmZmYiIHI9IjMuOCIvPjxjaXJjbGUgY3g9IjM2IiBjeT0iMjYuNSIgZmlsbD0iIzFhMWExYSIgcj0iMi4yIi8+PGNpcmNsZSBjeD0iMzciIGN5PSIyNSIgZmlsbD0iI2ZmZmZmZiIgcj0iMSIvPjxlbGxpcHNlIGN4PSIyNyIgY3k9IjM1IiBmaWxsPSJ1cmwoI2NsYXlNdXp6bGUpIiByeD0iOCIgcnk9IjYiLz48ZWxsaXBzZSBjeD0iMjciIGN5PSIzMyIgZmlsbD0idXJsKCNjbGF5U29mdEhpZ2hsaWdodCkiIHJ4PSI2IiByeT0iMiIvPjxlbGxpcHNlIGN4PSIyNyIgY3k9IjMyIiBmaWxsPSIjMmQxZTE1IiByeD0iMi44IiByeT0iMiIvPjxwYXRoIGQ9Ik0yNSAzNi41QzI2IDM3LjggMjggMzcuOCAyOSAzNi41IiBzdHJva2U9IiM2YzUyM2UiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48ZWxsaXBzZSBjeD0iMTIiIGN5PSIzMyIgZmlsbD0iI2Y4NzE3MSIgb3BhY2l0eT0iMC42IiByeD0iMi4yIiByeT0iMS40Ii8+PGVsbGlwc2UgY3g9IjQyIiBjeT0iMzMiIGZpbGw9IiNmODcxNzEiIG9wYWNpdHk9IjAuNiIgcng9IjIuMiIgcnk9IjEuNCIvPjxwYXRoIGQ9Ik0yNiAxNUMyMiAxMyAyMyA4IDI4IDhDMzMgOCAzNCAxMyAzMCAxNUMyOC41IDE1LjggMjcuNSAxNS44IDI2IDE1WiIgZmlsbD0idXJsKCNjbGF5TGVhZlBsdW1wKSIvPjxwYXRoIGQ9Ik0yNiAxM0wyOSAxMCIgc3Ryb2tlPSIjYmJmN2QwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS13aWR0aD0iMC45Ii8+PGVsbGlwc2UgY3g9IjI2LjUiIGN5PSI5LjUiIGZpbGw9IiNmZmZmZmYiIG9wYWNpdHk9IjAuOCIgcng9IjIuNSIgcnk9IjEuMiIvPjxjaXJjbGUgY3g9IjI5LjUiIGN5PSIxMiIgZmlsbD0iI2ZmZmZmZiIgb3BhY2l0eT0iMC45IiByPSIxIi8+PC9zdmc+Cg==", COIN = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJjbGF5Q29pbiIgeDE9IjAlIiB4Mj0iMTAwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZkZTA0NyIvPjxzdG9wIG9mZnNldD0iNjAlIiBzdG9wLWNvbG9yPSIjZjU5ZTBiIi8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjZDk3NzA2Ii8+PC9saW5lYXJHcmFkaWVudD48bGluZWFyR3JhZGllbnQgaWQ9ImNsYXlDb2luSGlnaGxpZ2h0IiB4MT0iMzAlIiB4Mj0iNzAlIiB5MT0iMCUiIHkyPSIxMDAlIj48c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjZmZmZmZmIiBzdG9wLW9wYWNpdHk9IjAuOCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIgc3RvcC1vcGFjaXR5PSIwIi8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgZmlsbD0idXJsKCNjbGF5Q29pbikiIHI9IjEwIi8+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgZmlsbD0iI2Q5NzcwNiIgb3BhY2l0eT0iMC4yIiByPSI4Ii8+PHBhdGggZD0iTTEyIDdDOS41IDcgOCA5LjUgOCAxMS41QzggMTQgMTAuNSAxNS41IDEyIDE2LjVDMTMuNSAxNS41IDE2IDE0IDE2IDExLjVDMTYgOS41IDE0LjUgNyAxMiA3WiIgZmlsbD0iIzE1ODAzZCIgb3BhY2l0eT0iMC45Ii8+PHBhdGggZD0iTTEyIDdDMTEuNSA5IDEwLjUgMTIgOC41IDEzIiBzdHJva2U9IiM4NmVmYWMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIwLjgiLz48ZWxsaXBzZSBjeD0iOSIgY3k9IjcuNSIgZmlsbD0idXJsKCNjbGF5Q29pbkhpZ2hsaWdodCkiIHJ4PSI0LjUiIHJ5PSIyLjIiIHRyYW5zZm9ybT0icm90YXRlKC0yNSA5IDcuNSkiLz48L3N2Zz4K";
+  var $ = function (id) { return document.getElementById(id); };
+  var phone = $("phone");
+  var state = { plan: "free", hide: 0, neg: 0, less: false, stamped: false, flipped: false, on: {}, seen: {} };
+  var STK = [
+    { id: "count", icon: "receipt_long", label: "12 catatan" },
+    { id: "routine", icon: "event_repeat", label: "Rutin beres" },
+    { id: "cat", icon: "restaurant", label: "Kategori terbesar" },
+    { id: "in", icon: "trending_up", label: "Pemasukan", money: 1 },
+    { id: "out", icon: "trending_down", label: "Pengeluaran", money: 1 },
+    { id: "diff", icon: "compare_arrows", label: "Selisih", money: 1 },
+    { id: "gold", icon: "workspace_premium", label: "Rim emas", gold: 1 }
+  ];
+  var LINES = {
+    hello: "Halo. Periode 25 Okt sampai 24 Nov sudah rapi. Tempel stiker, lalu cap stempelnya.",
+    count: "Dua belas catatan. Aku sudah menghitung dua kali.",
+    routine: "Rutinmu beres. Satu yang dilewati juga ikut tercatat.",
+    cat: "Makan paling besar periode ini. Cuma fakta, tanpa nilai.",
+    money: "Nominal ikut ke kartu. Orang yang menerimanya bisa melihatnya.",
+    gold: "Rim emas terpasang. Kartumu sekarang berkilau.",
+    goldlock: "Rim emas ada di Plus. Kartumu tetap lengkap tanpa itu.",
+    off: "Stikernya kulepas. Kartumu tetap rapi.",
+    stamp: "Cap. Periode rapi, semua transaksi punya kategori.",
+    stamped: "Stempel ini sudah tersimpan di rakmu.",
+    flip: "Ini rak stempelmu. Ketuk lagi untuk kembali.",
+    flipback: "Kembali ke kartu. Mau tempel apa lagi.",
+    share: "Kartu meluncur. Kamu yang memilih siapa yang melihatnya.",
+    empty: "Kartunya masih kosong. Tempel satu stiker dulu.",
+    poke: "Aku di sini. Kita catat saja, tidak ada yang buru-buru.",
+    hidden: "Nominalmu lagi disembunyikan. Stiker nominal kutahan dulu."
+  };
+  function reduced() { return state.less || (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches); }
+  var rp = function (n) { return (n < 0 ? "−" : "") + "Rp" + Math.abs(n).toLocaleString("id-ID"); };
+  function money() { var i = 8500000, o = state.neg ? 9100000 : 4705000; return { in: i, out: o, diff: i - o }; }
+
+  /* ---- bubble: ketik per huruf ---- */
+  var typeT;
+  function say(key) {
+    var txt = LINES[key] || key, el = $("say"); clearInterval(typeT);
+    if (reduced()) { el.textContent = txt; return; }
+    var i = 0; el.textContent = "";
+    typeT = setInterval(function () { el.textContent = txt.slice(0, ++i); if (i >= txt.length) clearInterval(typeT); }, 16);
+  }
+  function mascot(cls) { var m = $("mascot"); m.classList.remove("cheer", "wave", "think"); void m.offsetWidth; m.classList.add(cls); }
+
+  /* ---- konfeti kanvas ---- */
+  var cv = $("fx"), cx = cv.getContext("2d"), parts = [], raf = 0, W = 0, H = 0;
+  function size() { var r = phone.getBoundingClientRect(), d = window.devicePixelRatio || 1; W = r.width; H = r.height; cv.width = W * d; cv.height = H * d; cx.setTransform(d, 0, 0, d, 0, 0); }
+  function burst(x, y, n, kind) {
+    if (reduced()) return; size();
+    for (var i = 0; i < n; i++) {
+      var a = Math.random() * Math.PI * 2, s = 2 + Math.random() * 5;
+      var k = kind || ["leaf", "coin", "star"][i % 3];
+      parts.push({ x: x, y: y, vx: Math.cos(a) * s, vy: Math.sin(a) * s - 3, r: Math.random() * 6, vr: (Math.random() - .5) * .3, life: 0, max: 70 + Math.random() * 40, k: k, c: k === "leaf" ? (i % 2 ? "#34d399" : "#86efac") : k === "coin" ? "#f59e0b" : "#fde68a", z: 4 + Math.random() * 5 });
+    }
+    if (!raf) raf = requestAnimationFrame(tick);
+  }
+  function tick() {
+    cx.clearRect(0, 0, W, H);
+    parts = parts.filter(function (p) { return p.life < p.max; });
+    parts.forEach(function (p) {
+      p.life++; p.vy += .16; p.x += p.vx; p.y += p.vy; p.vx *= .99; p.r += p.vr;
+      cx.save(); cx.globalAlpha = Math.max(0, 1 - p.life / p.max); cx.translate(p.x, p.y); cx.rotate(p.r); cx.fillStyle = p.c;
+      if (p.k === "leaf") { cx.beginPath(); cx.moveTo(0, -p.z); cx.quadraticCurveTo(p.z, 0, 0, p.z); cx.quadraticCurveTo(-p.z, 0, 0, -p.z); cx.fill(); }
+      else if (p.k === "coin") { cx.beginPath(); cx.ellipse(0, 0, p.z * .8, p.z * Math.abs(Math.cos(p.life * .2)) + .5, 0, 0, 7); cx.fill(); }
+      else { cx.beginPath(); for (var i = 0; i < 8; i++) { var rr = i % 2 ? p.z * .35 : p.z; cx.lineTo(Math.cos(i * Math.PI / 4) * rr, Math.sin(i * Math.PI / 4) * rr); } cx.closePath(); cx.fill(); }
+      cx.restore();
+    });
+    raf = parts.length ? requestAnimationFrame(tick) : 0;
+    if (!raf) cx.clearRect(0, 0, W, H);
+  }
+  function cardCenter() { var r = $("front").getBoundingClientRect(), p = phone.getBoundingClientRect(); return [r.left - p.left + r.width / 2, r.top - p.top + r.height / 2]; }
+
+  /* ---- daun melayang di latar ---- */
+  (function () {
+    var h = ""; for (var i = 0; i < 9; i++) h += '<i style="left:' + (i * 11 + 2) + '%;--dx:' + ((i % 2 ? 1 : -1) * (20 + i * 4)) + 'px;animation-duration:' + (7 + i * 1.3) + 's;animation-delay:-' + (i * 1.7) + 's"></i>';
+    $("leaves").innerHTML = h;
+  })();
+
+  /* ---- render ---- */
+  function level() {
+    var n = STK.filter(function (s) { return state.on[s.id] && !s.gold; }).length;
+    return Math.min(3, Math.floor(n / 2) + (state.stamped ? 1 : 0) + (state.on.gold ? 1 : 0));
+  }
+  var LV = ["Kilap polos", "Kilap hijau", "Kilap pelangi", "Kilap emas"];
+  function moodVal() { var n = STK.filter(function (s) { return state.on[s.id]; }).length; return Math.min(10, 3 + n + (state.stamped ? 3 : 0)); }
+  var MOOD = ["Santai", "Santai", "Santai", "Siap", "Siap", "Semangat", "Semangat", "Girang", "Girang", "Meluap", "Meluap"];
+  var lastMood = 0;
+  function renderMeter() {
+    var v = moodVal(), h = "";
+    for (var i = 0; i < 10; i++) h += '<i class="' + (i < v ? "on" : "") + '"></i>';
+    var m = $("meter"); var prev = lastMood; m.innerHTML = h;
+    m.querySelectorAll("i").forEach(function (el, i) { if (i < prev) el.style.animation = "none"; });
+    lastMood = v; $("moodLabel").textContent = MOOD[v];
+  }
+  function tileCls(id) { return state.seen[id] ? "k-tile old" : "k-tile"; }
+  function renderCard() {
+    var m = money(), on = state.on, html = "", tiles = [];
+    if (on.count) tiles.push(["count", '<span class="k-label">Catatan</span><span class="k-val">12 <small>dicatat</small></span>']);
+    if (on.routine) tiles.push(["routine", '<span class="k-label">Rutin beres</span><span class="k-val">2 <small>tercatat, 1 dilewati</small></span>']);
+    if (on.cat) tiles.push(["cat", '<span class="k-label">Kategori terbesar</span><span class="k-val">Makan <small>35%</small></span>']);
+    var odd = tiles.length % 2 === 1;
+    var tHtml = tiles.map(function (t, i) { return '<div class="' + tileCls(t[0]) + (odd && i === tiles.length - 1 ? " wide" : "") + '">' + t[1] + "</div>"; }).join("");
+    var any = on.in || on.out || on.diff, mon = "";
+    if (any) { mon = '<div class="k-money' + (state.seen.money ? " old" : "") + '">' + (on.in ? '<div><span class="k-label">Pemasukan</span><span class="k-val">' + rp(m.in) + "</span></div>" : "") + (on.out ? '<div><span class="k-label">Pengeluaran</span><span class="k-val">' + rp(m.out) + "</span></div>" : "") + (on.diff ? '<div><span class="k-label">Selisih</span><span class="k-val">' + rp(m.diff) + "</span></div>" : "") + "</div>"; }
+    var has = tiles.length || any;
+    html += '<div class="k-head"><span class="k-brand"><span class="k-leaf"><span class="icon">eco</span></span>tanukonomy</span><img class="k-tanuki" src="' + TANUKI + '" alt=""></div>';
+    html += '<div><h2 class="k-title">25 Okt – 24 Nov</h2><p class="k-sub">Periodeku, dicatat Tanuki.</p></div>';
+    html += has ? '<div class="k-facts"><div class="k-row2">' + tHtml + "</div>" + mon + "</div>" : '<p class="k-empty">Tempel stiker di bawah untuk mengisi kartu.</p>';
+    html += '<div class="k-foot"><span>Mencatat, bukan melakukan</span><span>Google Play</span></div>';
+    $("cardbody").innerHTML = html;
+    ["count", "routine", "cat"].forEach(function (k) { state.seen[k] = !!on[k]; });
+    state.seen.money = !!any;
+    $("front").classList.toggle("gold", !!on.gold);
+    var lv = level(); $("front").style.setProperty("--foil", lv / 3);
+    var e = $("edisi"); e.textContent = LV[lv]; e.setAttribute("data-lv", lv);
+  }
+  function renderTray() {
+    var h = "", hidden = state.hide === 1, plus = state.plan === "plus";
+    STK.forEach(function (s) {
+      var dis = (s.money && hidden), lock = s.gold && !plus;
+      h += '<button type="button" class="chip' + (s.gold ? " gold" : "") + (lock || dis ? " locked" : "") + '" data-s="' + s.id + '" aria-pressed="' + (!!state.on[s.id]) + '"' + (dis ? " disabled" : "") + '><span class="icon">' + (lock || dis ? "lock" : state.on[s.id] ? "check" : s.icon) + "</span>" + s.label + "</button>";
+    });
+    $("tray").innerHTML = h;
+    $("hiddenNote").hidden = !hidden; $("plusHint").hidden = plus;
+    $("warn").hidden = !(state.on.in || state.on.out || state.on.diff);
+  }
+  function renderRack() {
+    var past = [["Sep", "Periode rapi"], ["Agu", "Rutin tak terlewat"], ["Jul", "Periode rapi"]], h = "";
+    past.forEach(function (p) { h += '<div class="slot"><img src="' + COIN + '" alt=""><span>' + p[1] + "</span><small>" + p[0] + "</small></div>"; });
+    h += state.stamped ? '<div class="slot fresh"><img src="' + COIN + '" alt=""><span>Periode rapi</span><small>Nov</small></div>' : '<div class="slot next"><span class="icon">eco</span><span>Cap stempel</span><small>Nov</small></div>';
+    $("rack").innerHTML = h;
+  }
+  function renderBar() {
+    var any = STK.some(function (s) { return state.on[s.id] && !s.gold; });
+    $("share").disabled = !any;
+    $("stampBtn").disabled = state.stamped; $("stampTxt").textContent = state.stamped ? "Sudah dicap" : "Cap stempel";
+    $("stampBtn").classList.toggle("ready", false);
+    $("share").classList.toggle("ready", any && state.stamped);
+  }
+  function render() {
+    state.on.in = state.on.in && state.hide === 0; state.on.out = state.on.out && state.hide === 0; state.on.diff = state.on.diff && state.hide === 0;
+    if (state.plan !== "plus") state.on.gold = false;
+    renderCard(); renderTray(); renderMeter(); renderRack(); renderBar();
+  }
+
+  /* ---- interaksi ---- */
+  $("tray").addEventListener("click", function (e) {
+    var b = e.target.closest(".chip"); if (!b) return;
+    var id = b.getAttribute("data-s"), s = STK.filter(function (x) { return x.id === id; })[0];
+    if (s.gold && state.plan !== "plus") { say("goldlock"); mascot("think"); return; }
+    state.on[id] = !state.on[id]; render();
+    if (state.on[id]) {
+      mascot("cheer"); say(s.gold ? "gold" : s.money ? "money" : id);
+      var c = cardCenter(); burst(c[0], c[1] - 20, s.gold ? 26 : 12);
+    } else { mascot("think"); say("off"); }
+  });
+  $("stampBtn").addEventListener("click", function () {
+    if (state.stamped) { say("stamped"); return; }
+    state.stamped = true; if (state.flipped) flip(false);
+    var seal = $("seal"); seal.classList.remove("settled"); seal.classList.add("on");
+    setTimeout(function () {
+      phone.classList.remove("shake"); void phone.offsetWidth; if (!reduced()) phone.classList.add("shake");
+      var c = cardCenter(); burst(c[0] + 50, c[1] - 60, 44);
+      setTimeout(function () { seal.classList.add("settled"); seal.classList.remove("on"); }, 700);
+    }, reduced() ? 0 : 330);
+    mascot("cheer"); say("stamp"); render();
+    $("scroll").scrollTo({ top: 0, behavior: reduced() ? "auto" : "smooth" });
+  });
+  $("share").addEventListener("click", function () {
+    var any = STK.some(function (s) { return state.on[s.id] && !s.gold; });
+    if (!any) { say("empty"); return; }
+    var f = $("flipper"); f.classList.remove("fly"); void f.offsetWidth; if (!reduced()) f.classList.add("fly");
+    mascot("wave"); say("share"); var c = cardCenter(); burst(c[0], c[1], 30, "star");
+    var t = $("toast"); t.classList.add("show"); setTimeout(function () { t.classList.remove("show"); }, 2300);
+  });
+  function flip(v) { state.flipped = v; $("flipper").classList.toggle("flipped", v); say(v ? "flip" : "flipback"); mascot(v ? "think" : "wave"); if (v) renderRack(); }
+  $("flipper").addEventListener("click", function () { flip(!state.flipped); });
+  $("mascot").addEventListener("click", function () { mascot("wave"); say("poke"); burst($("mascot").getBoundingClientRect().left - phone.getBoundingClientRect().left + 42, $("mascot").getBoundingClientRect().top - phone.getBoundingClientRect().top + 20, 6, "star"); });
+
+  /* kilap dan miring mengikuti jari */
+  var tilt = $("tilt"), stage = document.querySelector(".stagebox");
+  stage.addEventListener("pointermove", function (e) {
+    if (reduced() || state.flipped) return; var r = $("flipper").getBoundingClientRect();
+    var px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height;
+    tilt.classList.add("active"); tilt.style.setProperty("--ry", ((px - .5) * 22).toFixed(1) + "deg"); tilt.style.setProperty("--rx", ((.5 - py) * 18).toFixed(1) + "deg");
+    $("front").style.setProperty("--mx", (px * 100).toFixed(0) + "%"); $("front").style.setProperty("--my", (py * 100).toFixed(0) + "%");
+  });
+  stage.addEventListener("pointerleave", function () { tilt.classList.remove("active"); tilt.style.setProperty("--rx", "0deg"); tilt.style.setProperty("--ry", "0deg"); });
+
+  function seg(attr, fn) {
+    document.querySelectorAll("[" + attr + "]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        document.querySelectorAll("[" + attr + "]").forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+        fn(b.getAttribute(attr)); render();
+      });
+    });
+  }
+  seg("data-plan", function (v) { state.plan = v; });
+  seg("data-hide", function (v) { state.hide = +v; if (+v) say("hidden"); });
+  seg("data-neg", function (v) { state.neg = +v; });
+  seg("data-motion", function (v) { state.less = v === "less"; phone.classList.toggle("reduce", state.less); });
+  seg("data-theme-set", function (v) { document.documentElement.setAttribute("data-theme", v); });
+  var dark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  document.querySelector('[data-theme-set="' + (dark ? "dark" : "light") + '"]').setAttribute("aria-pressed", "true");
+  $("reset").addEventListener("click", function () { state.on = { count: true, routine: true }; state.seen = {}; state.stamped = false; $("seal").classList.remove("on", "settled"); if (state.flipped) flip(false); lastMood = 0; render(); say("hello"); mascot("wave"); });
+
+  state.on = { count: true, routine: true }; lastMood = 0; render(); say("hello");
+  window.addEventListener("resize", size);
+})();
+</script>

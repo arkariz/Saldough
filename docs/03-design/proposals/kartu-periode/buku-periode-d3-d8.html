@@ -1,0 +1,506 @@
+<title>Buku Periode Tanuki</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400,0..1,0&icon_names=arrow_back,auto_stories,check,chevron_left,chevron_right,close,eco,home,lock,notifications,receipt_long,restart_alt,savings,schedule,swap_horiz,trending_down,trending_up,workspace_premium&display=block">
+<style>
+/* Tata letak: papan alur D3 sampai D8 Buku Periode; tiap layar 360dp dalam kartu berlabel, saling tersambung lewat tombol. Token Matcha design system v2; gaya permainan sama dengan layar kartu periode. */
+:root {
+  --canvas: #fafaf9; --card: #ffffff; --sunken: #f3f4f6; --text: #111827; --text-2: #4b5563; --muted: #6b7280; --tertiary: #9ca3af;
+  --line: #eaecef; --line-strong: #d1d5db; --focus: #1f4b2c; --action: #1f4b2c; --on-action: #ffffff; --action-pressed: #163720;
+  --info-bg: #eff6ff; --info-ink: #1e3a8a; --scene-a: #e3efe5; --scene-b: #f4f8f4; --bubble: #ffffff; --warm: #f4ede2; --warm-ink: #5c4d3c;
+  --hero: #1f4b2c; --hero-border: #1d4a33; --on-hero: #ffffff; --on-hero-muted: #b3dfc5; --gold: #fde68a; --gold-deep: #f59e0b;
+  --shadow-card: 0 2px 8px rgba(0,0,0,.03); --shadow-overlay: 0 8px 24px -4px rgba(17,24,39,.08);
+  --stage: #eef0ee; --font: "Plus Jakarta Sans", "Segoe UI", system-ui, sans-serif; --mono: "Space Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --canvas: #0f1210; --card: #171b18; --sunken: #1a1e1b; --text: #eef1ee; --text-2: #b8c0ba; --muted: #9aa29c; --tertiary: #858d87;
+  --line: #2a302c; --line-strong: #4a524c; --focus: #a2d2a9; --action: #a2d2a9; --on-action: #00210c; --action-pressed: #bdefc4;
+  --info-bg: #172338; --info-ink: #cfe0ff; --scene-a: #16241a; --scene-b: #0f1210; --bubble: #1d221e; --warm: #2e2820; --warm-ink: #e8d9c3;
+  --shadow-card: none; --shadow-overlay: 0 8px 24px -4px rgba(0,0,0,.4); --stage: #0a0c0b; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --canvas: #0f1210; --card: #171b18; --sunken: #1a1e1b; --text: #eef1ee; --text-2: #b8c0ba; --muted: #9aa29c; --tertiary: #858d87;
+  --line: #2a302c; --line-strong: #4a524c; --focus: #a2d2a9; --action: #a2d2a9; --on-action: #00210c; --action-pressed: #bdefc4;
+  --info-bg: #172338; --info-ink: #cfe0ff; --scene-a: #16241a; --scene-b: #0f1210; --bubble: #1d221e; --warm: #2e2820; --warm-ink: #e8d9c3;
+  --shadow-card: none; --shadow-overlay: 0 8px 24px -4px rgba(0,0,0,.4); --stage: #0a0c0b; color-scheme: dark; }
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--stage); color: var(--text); font-family: var(--font); font-size: 14px; line-height: 1.5; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 24px 56px; }
+.icon { font-family: "Material Symbols Outlined"; font-weight: 400; font-style: normal; font-size: 20px; line-height: 1; letter-spacing: normal; text-transform: none; white-space: nowrap; display: inline-block; flex: none; font-feature-settings: "liga"; user-select: none; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+img { max-width: 100%; }
+.wrap { max-width: 1240px; margin: 0 auto; display: grid; gap: 28px; }
+header.top { display: grid; gap: 6px; max-width: 70ch; }
+.eyebrow { font: 700 12px/16px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--action); }
+h1 { margin: 0; font-size: clamp(26px, 5vw, 34px); line-height: 1.15; font-weight: 800; letter-spacing: -.02em; text-wrap: balance; }
+header.top p { margin: 0; color: var(--text-2); }
+.ctrl { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 30; background: var(--stage); padding-block: 10px; display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: flex-end; border-bottom: 1px solid var(--line); }
+.ctl { display: grid; gap: 4px; } .ctl > span { font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: .04em; text-transform: uppercase; }
+.seg { display: inline-grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 2px; padding: 3px; border-radius: 8px; background: var(--sunken); }
+.seg button { border: 1px solid transparent; background: none; border-radius: 6px; padding: 6px 12px; font-size: 13px; font-weight: 600; color: var(--text-2); cursor: pointer; min-height: 36px; }
+.seg button[aria-pressed="true"] { background: var(--card); border-color: var(--line); color: var(--text); }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr)); gap: 36px 28px; justify-items: center; align-items: start; }
+.slot { width: 360px; max-width: 100%; display: grid; gap: 10px; scroll-margin-top: 90px; }
+.slot-h { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.id { font: 700 13px/18px var(--mono); background: var(--action); color: var(--on-action); padding: 1px 8px; border-radius: 4px; }
+.slot-h b { font-size: 16px; font-weight: 700; } .slot-h span.w { font-size: 13px; color: var(--muted); }
+.cap { margin: 0; font-size: 13px; line-height: 18px; color: var(--text-2); }
+
+/* ---------- ponsel ---------- */
+.phone { width: 360px; max-width: 100%; height: 740px; background: var(--canvas); border-radius: 28px; border: 1px solid var(--line); box-shadow: var(--shadow-overlay); overflow: hidden; display: flex; flex-direction: column; position: relative; }
+.phone.shake { animation: shake .42s cubic-bezier(.36,.07,.19,.97); }
+@keyframes shake { 10%,90% { transform: translateX(-1px) } 20%,80% { transform: translateX(3px) } 30%,50%,70% { transform: translateX(-5px) } 40%,60% { transform: translateX(5px) } }
+.topbar { flex: none; display: flex; align-items: center; gap: 4px; height: 56px; padding: 0 8px 0 12px; border-bottom: 1px solid var(--line); background: var(--canvas); z-index: 3; position: relative; }
+.topbar h2 { margin: 0; flex: 1; font-size: 18px; line-height: 26px; font-weight: 600; letter-spacing: -.015em; }
+.iconbtn { width: 44px; height: 44px; display: grid; place-items: center; border: 0; background: none; border-radius: 50%; color: var(--text-2); cursor: pointer; }
+.iconbtn.sm { width: 36px; height: 36px; }
+.scroll { flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; display: flex; flex-direction: column; gap: 14px; padding: 16px 20px 20px; }
+.scroll > * { flex: none; }
+.bar { flex: none; padding: 10px 20px 14px; background: var(--canvas); border-top: 1px solid var(--line); display: grid; gap: 8px; z-index: 3; position: relative; }
+.bar.two { grid-template-columns: 1fr 1fr; }
+.btn { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; border: 0; border-radius: 8px; background: var(--action); color: var(--on-action); font-weight: 700; font-size: 14px; cursor: pointer; transition: transform .15s ease-out; position: relative; overflow: hidden; width: 100%; }
+.btn:active { transform: scale(.97); background: var(--action-pressed); }
+.btn.sec { background: var(--card); color: var(--text); border: 1px solid var(--line-strong); }
+.btn.ghost { background: none; color: var(--text-2); }
+.btn.sm { min-height: 36px; padding: 0 14px; font-size: 13px; width: auto; }
+.btn.shine::after { content: ""; position: absolute; inset: 0; background: linear-gradient(100deg, transparent 30%, rgba(255,255,255,.4) 50%, transparent 70%); transform: translateX(-120%); animation: shine 2.6s ease-in-out infinite; }
+@keyframes shine { 55%,100% { transform: translateX(120%) } }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow-card); padding: 14px; }
+.pix { font: 700 11px/14px var(--mono); letter-spacing: .05em; text-transform: uppercase; }
+.muted { color: var(--muted); } .t2 { color: var(--text-2); }
+.num { font-variant-numeric: tabular-nums; }
+
+/* maskot */
+.tn { position: relative; display: inline-block; transform-origin: 50% 100%; animation: bob 3.2s ease-in-out infinite; }
+.tn img { width: 100%; height: 100%; display: block; filter: drop-shadow(0 5px 5px rgba(0,0,0,.15)); }
+@keyframes bob { 0%,100% { transform: translateY(0) scaleY(1) } 50% { transform: translateY(-5px) scaleY(1.03) } }
+.tn.cheer { animation: cheer .9s cubic-bezier(.3,1.6,.5,1) 1; }
+@keyframes cheer { 0% { transform: translateY(0) } 18% { transform: translateY(2px) scale(1.12,.86) } 45% { transform: translateY(-24px) rotate(-8deg) } 65% { transform: translateY(-20px) rotate(8deg) } 85% { transform: translateY(0) scale(1.08,.92) } 100% { transform: none } }
+.sparkle { position: absolute; width: 10px; height: 10px; background: var(--gold); clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%); animation: twinkle 2.4s ease-in-out infinite; }
+@keyframes twinkle { 0%,100% { transform: scale(0) rotate(0); opacity: 0 } 50% { transform: scale(1) rotate(90deg); opacity: 1 } }
+.bubble { position: relative; background: var(--bubble); border: 1px solid var(--line); border-radius: 16px 16px 16px 4px; padding: 10px 12px; font-size: 13px; line-height: 18px; box-shadow: var(--shadow-card); }
+.bubble::before { content: "Tanuki"; display: block; font: 700 10px/12px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--action); margin-bottom: 2px; }
+.leaves { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.leaves i { position: absolute; width: 12px; height: 12px; border-radius: 0 100% 0 100%; background: #6ee7b7; opacity: .35; animation: drift linear infinite; }
+.leaves i:nth-child(odd) { background: #86efac; width: 9px; height: 9px; }
+@keyframes drift { 0% { transform: translate3d(0,-20px,0) rotate(0); opacity: 0 } 15% { opacity: .45 } 100% { transform: translate3d(var(--dx),420px,0) rotate(360deg); opacity: 0 } }
+.meter { display: grid; grid-template-columns: repeat(10, 1fr); gap: 4px; }
+.meter i { height: 8px; border-radius: 4px; background: var(--sunken); box-shadow: inset 0 0 0 1px var(--line); } .meter i.on { background: var(--action); box-shadow: none; }
+.coin { width: 34px; height: 34px; }
+
+/* D3 Beranda */
+.hero { position: relative; overflow: hidden; border-radius: 24px; padding: 18px; color: var(--on-hero); background: linear-gradient(150deg, #2d6a40, var(--hero) 45%, #123320); border: 1px solid var(--hero-border); display: grid; gap: 4px; }
+.hero small { font: 700 11px/14px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--on-hero-muted); }
+.hero b { font-size: 34px; line-height: 40px; font-weight: 800; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+.hero b span { font-size: 16px; font-weight: 600; color: #bdefc4; margin-right: 6px; }
+.hero .tn { position: absolute; right: 10px; top: 8px; width: 56px; height: 56px; }
+.pcard { position: relative; border-radius: 20px; border: 1px solid var(--line); background: var(--card); box-shadow: var(--shadow-card); padding: 14px; display: grid; grid-template-columns: 76px 1fr; gap: 12px; align-items: center; overflow: hidden; animation: rise .6s cubic-bezier(.3,1.4,.5,1) both; }
+.pcard.gone { animation: out .35s ease-in forwards; }
+@keyframes rise { 0% { transform: translateY(24px) scale(.96); opacity: 0 } 100% { transform: none; opacity: 1 } }
+@keyframes out { to { transform: translateX(60px) scale(.9); opacity: 0; height: 0; padding: 0; margin: -7px 0; border-width: 0; } }
+.pcard .txt { display: grid; gap: 2px; min-width: 0; } .pcard .txt b { font-size: 14px; line-height: 20px; font-weight: 700; } .pcard .txt span { font-size: 12px; line-height: 16px; color: var(--muted); }
+.pcard .acts { grid-column: 1 / -1; display: flex; gap: 8px; justify-content: flex-end; }
+.pcard::before { content: ""; position: absolute; inset: -40% auto auto -20%; width: 140px; height: 140px; border-radius: 50%; background: #34d399; opacity: .12; filter: blur(28px); }
+.minibook { position: relative; width: 70px; height: 92px; border-radius: 4px 10px 10px 4px; background: linear-gradient(145deg, #2d6a40, #14391f); box-shadow: 4px 6px 10px rgba(0,0,0,.2), inset -3px 0 0 rgba(0,0,0,.25); display: grid; place-items: center; animation: wob 3.4s ease-in-out infinite; transform-origin: 50% 100%; }
+@keyframes wob { 0%,100% { transform: rotate(-3deg) } 50% { transform: rotate(3deg) translateY(-3px) } }
+.minibook::before { content: ""; position: absolute; inset: 6px 6px 6px 10px; border: 1px solid rgba(253,230,138,.7); border-radius: 2px; }
+.minibook img { width: 36px; position: relative; }
+.minicard { position: relative; width: 68px; height: 86px; border-radius: 12px; background: linear-gradient(150deg, #2d6a40, #123320); box-shadow: 0 6px 12px -4px rgba(31,75,44,.6); display: grid; place-items: center; animation: wob 3.4s ease-in-out infinite; }
+.minicard::after { content: ""; position: absolute; inset: 0; border-radius: 12px; background: linear-gradient(115deg, transparent 30%, rgba(255,255,255,.3) 48%, rgba(255,214,102,.35) 54%, transparent 70%); background-size: 200% 100%; animation: sweep 3s linear infinite; mix-blend-mode: overlay; }
+@keyframes sweep { from { background-position: 150% 0 } to { background-position: -50% 0 } }
+.minicard img { width: 38px; }
+.row { display: flex; align-items: center; gap: 12px; padding: 12px; } .row + .row { border-top: 1px solid var(--line); }
+.row .main { flex: 1; min-width: 0; display: grid; } .row .t { font-size: 13px; font-weight: 600; line-height: 18px; } .row .s { font-size: 12px; line-height: 16px; color: var(--muted); }
+.row .amt { font: 700 12px var(--mono); }
+.updbanner { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 16px; background: var(--info-bg); color: var(--info-ink); font-size: 13px; line-height: 18px; }
+.tabs { flex: none; display: grid; grid-template-columns: repeat(4, 1fr); height: 60px; border-top: 1px solid var(--line); background: var(--canvas); }
+.tabs div { display: grid; place-items: center; align-content: center; gap: 2px; font: 700 10px/12px var(--mono); color: var(--text-2); } .tabs .on { color: var(--action); }
+
+/* D4 ritual */
+.steps { display: flex; gap: 6px; } .steps i { flex: 1; height: 6px; border-radius: 3px; background: var(--sunken); box-shadow: inset 0 0 0 1px var(--line); transition: background-color .3s; } .steps i.on { background: var(--action); box-shadow: none; }
+.panel-step { display: none; gap: 12px; animation: rise .45s cubic-bezier(.3,1.4,.5,1) both; } .panel-step.on { display: grid; }
+.panel-step h3 { margin: 0; font-size: 20px; line-height: 26px; font-weight: 800; letter-spacing: -.01em; text-wrap: balance; }
+.okrow { display: flex; gap: 12px; align-items: center; padding: 14px; border-radius: 16px; background: var(--card); border: 1px solid var(--line); }
+.okrow.ok { background: color-mix(in srgb, var(--action) 8%, var(--card)); }
+.tick { width: 30px; height: 30px; border-radius: 50%; background: var(--action); color: var(--on-action); display: grid; place-items: center; flex: none; animation: pop .5s cubic-bezier(.3,1.8,.5,1) both; }
+@keyframes pop { 0% { transform: scale(0) } 100% { transform: scale(1) } }
+.warmrow { background: var(--warm); color: var(--warm-ink); border-color: transparent; }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.kv { padding: 12px; border-radius: 14px; background: var(--sunken); display: grid; gap: 2px; } .kv b { font-size: 16px; font-weight: 800; } .kv span { font-size: 12px; color: var(--muted); }
+
+/* D5 sampul */
+.cover-scene { position: relative; flex: 1; display: grid; place-items: center; padding: 20px; background: radial-gradient(110% 80% at 50% 0%, var(--scene-a), var(--scene-b) 70%); overflow: hidden; perspective: 1000px; }
+.book { position: relative; width: 232px; height: 320px; transform-style: preserve-3d; transform: rotateY(-18deg) rotateX(4deg); animation: float 4s ease-in-out infinite; }
+@keyframes float { 0%,100% { transform: rotateY(-18deg) rotateX(4deg) translateY(0) } 50% { transform: rotateY(-12deg) rotateX(2deg) translateY(-8px) } }
+.book.open { animation: open .9s cubic-bezier(.3,1.2,.4,1) forwards; }
+@keyframes open { to { transform: rotateY(-6deg) rotateX(0) scale(1.04); } }
+.bcover { position: absolute; inset: 0; border-radius: 6px 16px 16px 6px; background: linear-gradient(145deg, #2f6e43, #14391f 70%); box-shadow: 10px 14px 24px rgba(0,0,0,.35), inset -6px 0 0 rgba(0,0,0,.25), inset 2px 0 0 rgba(255,255,255,.12); padding: 22px 22px 22px 30px; display: grid; align-content: space-between; color: #fff; overflow: hidden; }
+.bcover::before { content: ""; position: absolute; inset: 10px 10px 10px 18px; border: 1.5px solid rgba(253,230,138,.65); border-radius: 4px 12px 12px 4px; pointer-events: none; }
+.bcover::after { content: ""; position: absolute; inset: 0; background: linear-gradient(115deg, transparent 30%, rgba(255,255,255,.22) 48%, rgba(255,214,102,.25) 54%, transparent 70%); background-size: 220% 100%; animation: sweep 4s linear infinite; mix-blend-mode: overlay; pointer-events: none; }
+.bcover .k { font: 700 10px/14px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: #bdefc4; }
+.bcover h3 { margin: 4px 0 0; font-size: 26px; line-height: 30px; font-weight: 800; letter-spacing: -.02em; }
+.bcover .lbl { display: inline-block; margin-top: 8px; font: 700 10px/14px var(--mono); letter-spacing: .05em; text-transform: uppercase; padding: 2px 8px; border-radius: 6px; background: rgba(253,230,138,.2); color: var(--gold); }
+.bcover .tn { width: 74px; height: 74px; justify-self: end; }
+.stamps { display: flex; gap: 10px; min-height: 66px; align-items: center; }
+.st { width: 64px; height: 64px; border-radius: 50%; border: 2px solid var(--gold); background: #14532d; display: grid; place-items: center; text-align: center; transform: scale(3) rotate(-30deg); opacity: 0; position: relative; }
+.st img { width: 26px; position: relative; top: -6px; } .st em { position: absolute; bottom: 9px; left: 0; right: 0; font: 700 7.5px/9px var(--mono); letter-spacing: .05em; text-transform: uppercase; color: var(--gold); font-style: normal; padding: 0 4px; }
+.st.in { animation: stamp .6s cubic-bezier(.2,1.5,.4,1) forwards; }
+@keyframes stamp { 0% { opacity: 0; transform: scale(3.2) rotate(-40deg) } 55% { opacity: 1; transform: scale(.88) rotate(-6deg) } 75% { transform: scale(1.06) rotate(-12deg) } 100% { opacity: 1; transform: scale(1) rotate(-10deg) } }
+.st.set { opacity: 1; transform: rotate(-10deg); animation: none; }
+.st:nth-child(2).set, .st:nth-child(2).in { --r: 8deg; }
+
+/* D6 rapor */
+.pages { flex: 1; min-height: 0; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+.pages::-webkit-scrollbar { display: none; }
+.pg { flex: none; width: 100%; scroll-snap-align: start; overflow-y: auto; padding: 16px 20px; display: flex; flex-direction: column; gap: 12px; }
+.pg h3 { margin: 0; font-size: 22px; line-height: 28px; font-weight: 800; letter-spacing: -.015em; text-wrap: balance; }
+.big { font-size: 32px; line-height: 38px; font-weight: 800; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+.dots { display: flex; gap: 6px; justify-content: center; padding: 10px; } .dots i { width: 7px; height: 7px; border-radius: 50%; background: var(--line-strong); transition: width .25s, background-color .25s; border-radius: 4px; } .dots i.on { width: 20px; background: var(--action); }
+.catrow { display: grid; grid-template-columns: 34px 1fr auto; gap: 10px; align-items: center; }
+.catrow .nm { font-size: 13px; font-weight: 600; } .catrow .nm small { display: block; font-size: 11px; font-weight: 500; color: var(--muted); }
+.catrow .pct { font: 700 12px var(--mono); }
+.bar-t { grid-column: 2 / -1; height: 8px; border-radius: 4px; background: var(--sunken); overflow: hidden; margin-top: -4px; }
+.bar-t i { display: block; height: 100%; width: 0; border-radius: 4px; background: var(--action); transition: width .9s cubic-bezier(.2,1,.3,1); }
+.catrow img { width: 34px; height: 34px; }
+.cmp { display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; padding: 12px 14px; border-radius: 14px; background: var(--sunken); }
+.cmp b { font-size: 14px; } .cmp span { font-size: 12px; color: var(--text-2); } .cmp .d { grid-row: 1 / 3; grid-column: 2; align-self: center; font: 700 13px var(--mono); }
+.stampline { display: flex; gap: 12px; align-items: center; padding: 12px; border-radius: 14px; background: var(--card); border: 1px solid var(--line); }
+.stampline img { width: 38px; }
+.kata { display: grid; gap: 12px; justify-items: start; }
+.kata .tn { width: 96px; height: 96px; }
+
+/* D7 rak */
+.seg3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; padding: 3px; border-radius: 8px; background: var(--sunken); }
+.seg3 div { text-align: center; padding: 8px 0; border-radius: 6px; font-size: 13px; font-weight: 600; color: var(--text-2); } .seg3 .on { background: var(--card); box-shadow: inset 0 0 0 1px var(--line); color: var(--text); }
+.shelf { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 14px; padding-bottom: 6px; }
+.bk { position: relative; display: grid; gap: 6px; cursor: pointer; border: 0; background: none; text-align: left; padding: 0; }
+.bk .sp { position: relative; height: 128px; border-radius: 4px 10px 10px 4px; background: linear-gradient(145deg, #2f6e43, #14391f); box-shadow: 4px 6px 10px rgba(0,0,0,.18), inset -3px 0 0 rgba(0,0,0,.25); display: grid; place-items: center; transition: transform .2s; }
+.bk:active .sp { transform: translateY(2px) scale(.98); }
+.bk .sp::before { content: ""; position: absolute; inset: 7px 7px 7px 12px; border: 1px solid rgba(253,230,138,.6); border-radius: 2px; }
+.bk .sp img { width: 40px; position: relative; }
+.bk.new .sp { animation: wob 3.2s ease-in-out infinite; transform-origin: 50% 100%; }
+.bk.new .sp::after { content: "Baru"; position: absolute; top: 8px; right: -6px; font: 700 9px/12px var(--mono); letter-spacing: .05em; text-transform: uppercase; padding: 2px 6px; border-radius: 4px 0 0 4px; background: var(--gold); color: #422006; }
+.bk.opened .sp { background: linear-gradient(145deg, #3d5c47, #223a2a); }
+.bk.locked .sp { filter: saturate(.4) brightness(.8); } .bk.locked .sp > .icon { position: absolute; z-index: 2; font-size: 28px; color: #fff; }
+.bk.locked .sp img { opacity: .5; filter: blur(2px); }
+.bk .nm { font-size: 13px; font-weight: 700; line-height: 18px; } .bk .st2 { font-size: 11px; line-height: 14px; color: var(--muted); }
+.shelfline { grid-column: 1 / -1; height: 6px; border-radius: 3px; background: linear-gradient(var(--line-strong), var(--line)); margin-top: -12px; }
+.empty { display: grid; gap: 10px; justify-items: center; text-align: center; padding: 40px 12px; }
+.empty .tn { width: 110px; height: 110px; }
+
+/* D8 pose */
+.poses { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.pose { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 14px 10px 12px; display: grid; justify-items: center; gap: 6px; text-align: center; position: relative; overflow: hidden; }
+.pose .stage { position: relative; width: 110px; height: 110px; display: grid; place-items: center; }
+.pose h4 { margin: 0; font-size: 14px; font-weight: 700; } .pose p { margin: 0; font-size: 11px; line-height: 15px; color: var(--muted); }
+.pose .tn { width: 92px; height: 92px; }
+.pose.happy .tn { animation: cheer 1.8s cubic-bezier(.3,1.6,.5,1) infinite; }
+.pose.write .tn { animation: write 1.4s ease-in-out infinite; }
+@keyframes write { 0%,100% { transform: rotate(0) } 50% { transform: rotate(-5deg) translateY(1px) } }
+.pose.write .pen { position: absolute; right: 4px; bottom: 8px; width: 42px; animation: scribble .7s ease-in-out infinite; }
+@keyframes scribble { 0%,100% { transform: translate(0,0) rotate(0) } 50% { transform: translate(-6px,2px) rotate(-8deg) } }
+.pose.calm .tn { animation: breathe 4s ease-in-out infinite; }
+@keyframes breathe { 0%,100% { transform: scale(1) } 50% { transform: scale(1.04) } }
+.pose .z { position: absolute; font: 700 14px var(--mono); color: var(--action); animation: zz 3s ease-in-out infinite; opacity: 0; }
+@keyframes zz { 0% { transform: translate(0,0); opacity: 0 } 30% { opacity: .9 } 100% { transform: translate(14px,-26px); opacity: 0 } }
+.donts { display: grid; gap: 4px; font-size: 12px; color: var(--text-2); }
+
+.toast { position: absolute; left: 20px; right: 20px; bottom: 84px; z-index: 6; background: var(--text); color: var(--canvas); padding: 10px 14px; border-radius: 12px; font-size: 13px; line-height: 18px; text-align: center; opacity: 0; transform: translateY(8px); transition: opacity .15s, transform .15s; pointer-events: none; }
+.toast.show { opacity: 1; transform: none; }
+canvas#fx { position: fixed; inset: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 60; }
+.reduce *, .reduce *::before, .reduce *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+.reduce .leaves, .reduce .sparkle { display: none; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; } .leaves, .sparkle { display: none; } }
+.notes { max-width: 78ch; display: grid; gap: 14px; }
+.notes h2 { margin: 0; font-size: 22px; font-weight: 800; letter-spacing: -.01em; }
+.notes ol { margin: 0; padding-left: 1.2em; display: grid; gap: 8px; color: var(--text-2); font-size: 14px; } .notes ol b { color: var(--text); }
+</style>
+
+<div class="wrap" id="wrap">
+  <header class="top">
+    <span class="eyebrow">Tanukonomy · Buku Periode · D3 sampai D8</span>
+    <h1>Dari kartu Beranda sampai Rak Buku</h1>
+    <p>Satu periode, satu buku. Tekan tombol di tiap layar dan alurnya berlanjut ke layar berikutnya. Data contoh: periode 25 Okt – 24 Nov 2026.</p>
+  </header>
+
+  <div class="ctrl" aria-label="Pengatur keadaan">
+    <div class="ctl"><span>Paket</span><div class="seg"><button type="button" data-plan="plus" aria-pressed="true">Plus</button><button type="button" data-plan="free" aria-pressed="false">Gratis</button></div></div>
+    <div class="ctl"><span>Contoh</span><div class="seg"><button type="button" data-who="rani" aria-pressed="true">Rani, rapi</button><button type="button" data-who="budi" aria-pressed="false">Budi, 2 tanpa kategori</button></div></div>
+    <div class="ctl"><span>Banner pembaruan</span><div class="seg"><button type="button" data-upd="0" aria-pressed="true">Tidak ada</button><button type="button" data-upd="1" aria-pressed="false">Ada</button></div></div>
+    <div class="ctl"><span>Gerak</span><div class="seg"><button type="button" data-motion="full" aria-pressed="true">Penuh</button><button type="button" data-motion="less" aria-pressed="false">Dikurangi</button></div></div>
+    <div class="ctl"><span>Tema</span><div class="seg"><button type="button" data-theme-set="light" aria-pressed="false">Terang</button><button type="button" data-theme-set="dark" aria-pressed="false">Gelap</button></div></div>
+    <button class="btn sec sm" id="reset" type="button"><span class="icon">restart_alt</span>Ulangi alur</button>
+  </div>
+
+  <div class="grid">
+    <!-- D3 -->
+    <section class="slot" id="s3">
+      <div class="slot-h"><span class="id">D3</span><b>Kartu Beranda akhir periode</b></div>
+      <div class="phone" id="p3">
+        <div class="topbar"><h2>Beranda</h2><button class="iconbtn" type="button" aria-label="Notifikasi"><span class="icon">notifications</span></button></div>
+        <div class="scroll" id="homeScroll">
+          <div class="hero"><small>Total saldo</small><b><span>Rp</span>27.522.000</b><span class="tn" style="position:absolute"><img data-img="tanuki_mascot" alt=""></span></div>
+          <div id="updSlot"></div>
+          <div id="pcardSlot"></div>
+          <div class="card" style="padding:0"><div class="row"><span class="main"><span class="t">Arus periode ini</span><span class="s">Pemasukan Rp8.500.000 · Pengeluaran Rp4.705.000</span></span></div><div class="row"><span class="main"><span class="t">Kos bulanan</span><span class="s">Catat dari rutin</span></span><span class="amt">-Rp 1.200.000</span></div><div class="row"><span class="main"><span class="t">Makan siang kantor</span><span class="s">Kemarin</span></span><span class="amt">-Rp 45.000</span></div></div>
+        </div>
+        <div class="tabs"><div class="on"><span class="icon">home</span>Beranda</div><div><span class="icon">receipt_long</span>Riwayat</div><div><span class="icon">schedule</span>Rencana</div><div><span class="icon">savings</span>Dompet</div></div>
+        <div class="toast" id="t3" role="status"></div>
+      </div>
+      <p class="cap" id="cap3">Satu kartu pada satu waktu. Banner pembaruan selalu menang atas kartu ini.</p>
+    </section>
+
+    <!-- D4 -->
+    <section class="slot" id="s4">
+      <div class="slot-h"><span class="id">D4</span><b>Ritual Tutup buku</b><span class="w">Plus</span></div>
+      <div class="phone" id="p4">
+        <div class="topbar"><button class="iconbtn" type="button" aria-label="Tutup"><span class="icon">close</span></button><h2>Tutup buku</h2></div>
+        <div class="scroll" style="position:relative">
+          <div class="leaves" aria-hidden="true" data-leaves="6"></div>
+          <div class="steps" id="steps"><i class="on"></i><i></i><i></i></div>
+          <div style="display:flex;gap:10px;align-items:flex-end"><span class="tn" style="width:64px;height:64px" id="tn4"><img data-img="tanuki_mascot" alt=""></span><div class="bubble" style="flex:1" id="say4"></div></div>
+
+          <div class="panel-step on" data-step="0" id="step0"></div>
+          <div class="panel-step" data-step="1" id="step1"></div>
+          <div class="panel-step" data-step="2" id="step2"></div>
+        </div>
+        <div class="bar two"><button class="btn ghost" id="skip4" type="button">Lewati</button><button class="btn shine" id="next4" type="button">Lanjut</button></div>
+      </div>
+      <p class="cap">Tiga langkah, semuanya boleh dilewati. Tutup buku tidak mengunci atau mengubah data apa pun.</p>
+    </section>
+
+    <!-- D5 -->
+    <section class="slot" id="s5">
+      <div class="slot-h"><span class="id">D5</span><b>Sampul buku</b><span class="w">Plus</span></div>
+      <div class="phone" id="p5">
+        <div class="topbar"><button class="iconbtn" type="button" aria-label="Kembali"><span class="icon">arrow_back</span></button><h2>Buku periode</h2></div>
+        <div class="cover-scene" id="cscene">
+          <div class="leaves" aria-hidden="true" data-leaves="8"></div>
+          <div class="book" id="book"><div class="bcover">
+            <div><span class="k">Buku periode</span><h3 id="btitle">25 Okt – 24 Nov</h3><span class="lbl" id="blbl">2026</span></div>
+            <span class="tn"><img data-img="tanuki_mascot" alt=""></span>
+            <div class="stamps" id="stamps"></div>
+          </div></div>
+        </div>
+        <div class="bar"><button class="btn shine" id="open5" type="button"><span class="icon">auto_stories</span>Buka rapor</button></div>
+      </div>
+      <p class="cap">Stempel tercetak di sampul satu per satu. Perayaan stempel dilipat ke sini bila ritual dibuka pada pembukaan yang sama.</p>
+    </section>
+
+    <!-- D6 -->
+    <section class="slot" id="s6">
+      <div class="slot-h"><span class="id">D6</span><b>Halaman rapor</b><span class="w">geser</span></div>
+      <div class="phone" id="p6">
+        <div class="topbar"><button class="iconbtn" type="button" aria-label="Kembali"><span class="icon">arrow_back</span></button><h2>25 Okt – 24 Nov</h2></div>
+        <div class="pages" id="pages">
+          <div class="pg" data-pg="0">
+            <span class="pix t2">Arus periode</span><h3>Uang masuk lebih besar dari uang keluar.</h3>
+            <div class="two"><div class="kv"><span>Pemasukan</span><b class="num" data-count="8500000">Rp0</b></div><div class="kv"><span>Pengeluaran</span><b class="num" data-count="4705000">Rp0</b></div></div>
+            <div class="card" style="display:grid;gap:2px"><span class="muted" style="font-size:12px">Selisih</span><span class="big num" data-count="3795000" id="diffbig">Rp0</span></div>
+            <span class="muted" style="font-size:12px">Angkanya sama dengan Arus di Beranda dan Analisis.</span>
+          </div>
+          <div class="pg" data-pg="1">
+            <span class="pix t2">Ke mana uang pergi</span><h3>Makan dan kos memegang separuh lebih.</h3>
+            <div style="display:grid;gap:12px" id="cats"></div>
+          </div>
+          <div class="pg" data-pg="2">
+            <span class="pix t2">Dibanding biasanya</span><h3>Dua hal yang beda dari rata-rata tiga periode.</h3>
+            <div class="cmp"><b>Makan</b><span>Rp1.640.000 · rata-rata Rp1.280.000</span><span class="d">+28%</span></div>
+            <div class="cmp"><b>Transport</b><span>Rp520.000 · rata-rata Rp650.000</span><span class="d">−20%</span></div>
+            <span class="muted" style="font-size:12px">Hanya selisih ≥20% dan ≥Rp50.000, maksimal tiga. Tanpa warna peringatan.</span>
+          </div>
+          <div class="pg" data-pg="3">
+            <span class="pix t2">Rutin dan rencana</span><h3>Rutinmu berjalan. Dua tercatat, satu dilewati.</h3>
+            <div class="stampline"><img data-img="check_completed" alt=""><div><b>Kos dan internet tercatat</b><div class="muted" style="font-size:12px">Rutin tak terlewat</div></div></div>
+            <div class="stampline"><img data-img="calendar_date" alt=""><div><b>Cicilan Rp2.914.000 dilewati</b><div class="muted" style="font-size:12px">Tercatat sebagai dilewati, bukan hilang</div></div></div>
+            <div class="card"><div style="display:flex;justify-content:space-between;font-size:13px;font-weight:600"><span>Anggaran Makan</span><span class="num">Rp1.640.000 / Rp1.800.000</span></div><div class="meter" style="margin-top:8px" id="mealmeter"></div></div>
+          </div>
+          <div class="pg" data-pg="4">
+            <span class="pix t2">Kata Tanuki</span>
+            <div class="kata"><span class="tn"><img data-img="tanuki_mascot" alt=""></span><div class="bubble" id="kata" style="min-height:120px"></div></div>
+          </div>
+        </div>
+        <div class="dots" id="dots"><i class="on"></i><i></i><i></i><i></i><i></i></div>
+      </div>
+      <p class="cap">Lima halaman bersyarat. Geser, atau ketuk titik. Nominal bisa disembunyikan; persen dan kalimat tetap tampil.</p>
+    </section>
+
+    <!-- D7 -->
+    <section class="slot" id="s7">
+      <div class="slot-h"><span class="id">D7</span><b>Rak Buku</b><span class="w">Riwayat, segmen ketiga</span></div>
+      <div class="phone" id="p7">
+        <div class="topbar"><h2>Riwayat</h2></div>
+        <div class="scroll" id="shelfScroll">
+          <div class="seg3"><div>Daftar</div><div>Analisis</div><div class="on">Buku</div></div>
+          <div id="shelf"></div>
+          <div class="ctl" style="margin-top:4px"><span>Contoh rak</span><div class="seg" style="width:100%"><button type="button" data-shelf="full" aria-pressed="true" style="flex:1">Berisi</button><button type="button" data-shelf="empty" aria-pressed="false">Kosong</button></div></div>
+        </div>
+        <div class="tabs"><div><span class="icon">home</span>Beranda</div><div class="on"><span class="icon">receipt_long</span>Riwayat</div><div><span class="icon">schedule</span>Rencana</div><div><span class="icon">savings</span>Dompet</div></div>
+        <div class="toast" id="t7" role="status"></div>
+      </div>
+      <p class="cap">Belum dibuka berayun pelan dengan pita Baru. Terkunci hanya muncul bagi Gratis. Tanpa hitungan "n buku menunggu".</p>
+    </section>
+
+    <!-- D8 -->
+    <section class="slot" id="s8">
+      <div class="slot-h"><span class="id">D8</span><b>Ekspresi Tanuki</b></div>
+      <div class="phone" id="p8">
+        <div class="topbar"><h2>Pose Tanuki</h2></div>
+        <div class="scroll">
+          <div class="poses">
+            <div class="pose"><div class="stage"><span class="tn"><img data-img="tanuki_mascot" alt=""></span></div><h4>Biasa</h4><p>Kartu Beranda, sampul, halaman umum.</p></div>
+            <div class="pose happy"><div class="stage"><span class="tn"><img data-img="tanuki_mascot" alt=""></span><span class="sparkle" style="left:6px;top:8px"></span><span class="sparkle" style="right:8px;top:2px;animation-delay:.8s"></span></div><h4>Senang</h4><p>Periode rapi, stempel diraih, stiker menempel.</p></div>
+            <div class="pose write"><div class="stage"><span class="tn"><img data-img="tanuki_mascot" alt=""></span><img class="pen" data-img="note_pencil" alt=""></div><h4>Menulis</h4><p>Ritual Tutup buku, saat Tanuki menyusun rapor.</p></div>
+            <div class="pose calm"><div class="stage"><span class="tn"><img data-img="tanuki_sleeping" alt=""></span><span class="z" style="right:14px;top:22px">z</span><span class="z" style="right:22px;top:34px;animation-delay:1.2s">z</span></div><h4>Tenang</h4><p>Ada yang tertinggal. Santai, tanpa tekanan.</p></div>
+          </div>
+          <div class="card" style="display:grid;gap:6px"><b style="font-size:14px">Aturan pose</b>
+            <div class="donts"><span>Tidak ada pose sedih atau kecewa.</span><span>Satu set pose dipakai di kartu bagikan dan di buku.</span><span>Pose Kamar Tanuki (B-81) menyusul di atas dasar ini.</span><span>Pose tenang memakai gambar tidur yang sudah ada; pose menulis memakai pensil clay. Aset pose baru belum digambar.</span></div></div>
+        </div>
+      </div>
+      <p class="cap">Dibuat dari ilustrasi clay yang ada ditambah gerak. Kalau perlu pose tangan dan wajah baru, itu butuh aset baru.</p>
+    </section>
+  </div>
+
+  <div class="notes">
+    <h2>Catatan untuk product owner</h2>
+    <ol>
+      <li><b>Gaya permainan dilonggarkan dari dokumen</b> (BP-13, satu perayaan per pembukaan; GAMIFICATION). Tanuki tidak pernah sedih, tidak ada peringkat atau skor, tidak ada hitung mundur, dan kata yang menilai belanja tidak dipakai.</li>
+      <li><b>Angka contoh yang saya tambahkan</b> di D6: rata-rata tiga periode untuk Makan (Rp1.280.000) dan Transport (Rp650.000), serta anggaran Makan Rp1.800.000. Dokumen tidak memberi angka ini; ganti dengan data uji emas bila ada.</li>
+      <li><b>Halaman "Dibanding biasanya"</b> memakai satu panah arah lewat tanda + dan − tanpa warna. Mohon dicek apakah cukup netral.</li>
+      <li><b>KT-BP5:</b> Rak Buku sebagai segmen ketiga Riwayat memengaruhi arsitektur informasi; rupa ini mengikuti usulan itu.</li>
+      <li><b>Pose Tanuki</b> D8 baru efek gerak di atas aset yang ada. Perlu keputusan apakah aset pose baru digambar.</li>
+    </ol>
+  </div>
+</div>
+<canvas id="fx" aria-hidden="true"></canvas>
+
+<script>
+(function () {
+  var IMG = {"tanuki_mascot": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGZpbGw9Im5vbmUiIHZpZXdCb3g9IjAgMCA1NCA1NCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiBpZD0iY2xheVRhbnVraUJvZHkiIHgxPSIyNyIgeDI9IjI3IiB5MT0iMTIiIHkyPSI0NiI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzhiNmY1NyIvPjxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjNmM1MjNlIi8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjNGQzNzI3Ii8+PC9saW5lYXJHcmFkaWVudD48bGluZWFyR3JhZGllbnQgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiIGlkPSJjbGF5TXV6emxlIiB4MT0iMjciIHgyPSIyNyIgeTE9IjI4IiB5Mj0iNDIiPjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNmZmZmZmYiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNmNWViZDkiLz48L2xpbmVhckdyYWRpZW50PjxsaW5lYXJHcmFkaWVudCBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgaWQ9ImNsYXlMZWFmUGx1bXAiIHgxPSIyMCIgeDI9IjMyIiB5MT0iNSIgeTI9IjE3Ij48c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjODZlZmFjIi8+PHN0b3Agb2Zmc2V0PSI0MCUiIHN0b3AtY29sb3I9IiMyMmM1NWUiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMxNTgwM2QiLz48L2xpbmVhckdyYWRpZW50PjxsaW5lYXJHcmFkaWVudCBpZD0iY2xheVNvZnRIaWdobGlnaHQiIHgxPSIwJSIgeDI9IjAlIiB5MT0iMCUiIHkyPSIxMDAlIj48c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjZmZmZmZmIiBzdG9wLW9wYWNpdHk9IjAuNzUiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNmZmZmZmYiIHN0b3Atb3BhY2l0eT0iMCIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IGZpbGw9IiM0ZDM3MjciIGhlaWdodD0iMTAiIHJ4PSI0LjUiIHdpZHRoPSIxMCIgeD0iMTEiIHk9IjgiLz48cmVjdCBmaWxsPSIjNGQzNzI3IiBoZWlnaHQ9IjEwIiByeD0iNC41IiB3aWR0aD0iMTAiIHg9IjMzIiB5PSI4Ii8+PHJlY3QgZmlsbD0iI2Y1ZWJkOSIgaGVpZ2h0PSI2IiByeD0iMi41IiB3aWR0aD0iNiIgeD0iMTMiIHk9IjEwIi8+PHJlY3QgZmlsbD0iI2Y1ZWJkOSIgaGVpZ2h0PSI2IiByeD0iMi41IiB3aWR0aD0iNiIgeD0iMzUiIHk9IjEwIi8+PHJlY3QgZmlsbD0idXJsKCNjbGF5VGFudWtpQm9keSkiIGhlaWdodD0iMzAiIHJ4PSIxNCIgd2lkdGg9IjM4IiB4PSI4IiB5PSIxNCIvPjxlbGxpcHNlIGN4PSIyNyIgY3k9IjE3IiBmaWxsPSJ1cmwoI2NsYXlTb2Z0SGlnaGxpZ2h0KSIgcng9IjE0IiByeT0iNCIvPjxyZWN0IGZpbGw9IiMyMjQ3MmQiIGhlaWdodD0iMTQiIHJ4PSI1LjUiIHdpZHRoPSIxMyIgeD0iMTEiIHk9IjIwIi8+PHJlY3QgZmlsbD0iIzIyNDcyZCIgaGVpZ2h0PSIxNCIgcng9IjUuNSIgd2lkdGg9IjEzIiB4PSIzMCIgeT0iMjAiLz48Y2lyY2xlIGN4PSIxNy41IiBjeT0iMjYuNSIgZmlsbD0iI2ZmZmZmZiIgcj0iMy44Ii8+PGNpcmNsZSBjeD0iMTgiIGN5PSIyNi41IiBmaWxsPSIjMWExYTFhIiByPSIyLjIiLz48Y2lyY2xlIGN4PSIxOSIgY3k9IjI1IiBmaWxsPSIjZmZmZmZmIiByPSIxIi8+PGNpcmNsZSBjeD0iMzYuNSIgY3k9IjI2LjUiIGZpbGw9IiNmZmZmZmYiIHI9IjMuOCIvPjxjaXJjbGUgY3g9IjM2IiBjeT0iMjYuNSIgZmlsbD0iIzFhMWExYSIgcj0iMi4yIi8+PGNpcmNsZSBjeD0iMzciIGN5PSIyNSIgZmlsbD0iI2ZmZmZmZiIgcj0iMSIvPjxlbGxpcHNlIGN4PSIyNyIgY3k9IjM1IiBmaWxsPSJ1cmwoI2NsYXlNdXp6bGUpIiByeD0iOCIgcnk9IjYiLz48ZWxsaXBzZSBjeD0iMjciIGN5PSIzMyIgZmlsbD0idXJsKCNjbGF5U29mdEhpZ2hsaWdodCkiIHJ4PSI2IiByeT0iMiIvPjxlbGxpcHNlIGN4PSIyNyIgY3k9IjMyIiBmaWxsPSIjMmQxZTE1IiByeD0iMi44IiByeT0iMiIvPjxwYXRoIGQ9Ik0yNSAzNi41QzI2IDM3LjggMjggMzcuOCAyOSAzNi41IiBzdHJva2U9IiM2YzUyM2UiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48ZWxsaXBzZSBjeD0iMTIiIGN5PSIzMyIgZmlsbD0iI2Y4NzE3MSIgb3BhY2l0eT0iMC42IiByeD0iMi4yIiByeT0iMS40Ii8+PGVsbGlwc2UgY3g9IjQyIiBjeT0iMzMiIGZpbGw9IiNmODcxNzEiIG9wYWNpdHk9IjAuNiIgcng9IjIuMiIgcnk9IjEuNCIvPjxwYXRoIGQ9Ik0yNiAxNUMyMiAxMyAyMyA4IDI4IDhDMzMgOCAzNCAxMyAzMCAxNUMyOC41IDE1LjggMjcuNSAxNS44IDI2IDE1WiIgZmlsbD0idXJsKCNjbGF5TGVhZlBsdW1wKSIvPjxwYXRoIGQ9Ik0yNiAxM0wyOSAxMCIgc3Ryb2tlPSIjYmJmN2QwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS13aWR0aD0iMC45Ii8+PGVsbGlwc2UgY3g9IjI2LjUiIGN5PSI5LjUiIGZpbGw9IiNmZmZmZmYiIG9wYWNpdHk9IjAuOCIgcng9IjIuNSIgcnk9IjEuMiIvPjxjaXJjbGUgY3g9IjI5LjUiIGN5PSIxMiIgZmlsbD0iI2ZmZmZmZiIgb3BhY2l0eT0iMC45IiByPSIxIi8+PC9zdmc+Cg==", "tanuki_sleeping": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGZpbGw9Im5vbmUiIHZpZXdCb3g9IjAgMCA1NCA1NCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiBpZD0iY2xheVRhbnVraUJvZHkiIHgxPSIyNyIgeDI9IjI3IiB5MT0iMTIiIHkyPSI0NiI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzhiNmY1NyIvPjxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjNmM1MjNlIi8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjNGQzNzI3Ii8+PC9saW5lYXJHcmFkaWVudD48bGluZWFyR3JhZGllbnQgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiIGlkPSJjbGF5TXV6emxlIiB4MT0iMjciIHgyPSIyNyIgeTE9IjI4IiB5Mj0iNDIiPjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNmZmZmZmYiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNmNWViZDkiLz48L2xpbmVhckdyYWRpZW50PjxsaW5lYXJHcmFkaWVudCBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgaWQ9ImNsYXlMZWFmUGx1bXAiIHgxPSIyMCIgeDI9IjMyIiB5MT0iNSIgeTI9IjE3Ij48c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjODZlZmFjIi8+PHN0b3Agb2Zmc2V0PSI0MCUiIHN0b3AtY29sb3I9IiMyMmM1NWUiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMxNTgwM2QiLz48L2xpbmVhckdyYWRpZW50PjxsaW5lYXJHcmFkaWVudCBpZD0iY2xheVNvZnRIaWdobGlnaHQiIHgxPSIwJSIgeDI9IjAlIiB5MT0iMCUiIHkyPSIxMDAlIj48c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjZmZmZmZmIiBzdG9wLW9wYWNpdHk9IjAuNzUiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNmZmZmZmYiIHN0b3Atb3BhY2l0eT0iMCIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IGZpbGw9IiM0ZDM3MjciIGhlaWdodD0iMTAiIHJ4PSI0LjUiIHdpZHRoPSIxMCIgeD0iMTEiIHk9IjgiLz48cmVjdCBmaWxsPSIjNGQzNzI3IiBoZWlnaHQ9IjEwIiByeD0iNC41IiB3aWR0aD0iMTAiIHg9IjMzIiB5PSI4Ii8+PHJlY3QgZmlsbD0iI2Y1ZWJkOSIgaGVpZ2h0PSI2IiByeD0iMi41IiB3aWR0aD0iNiIgeD0iMTMiIHk9IjEwIi8+PHJlY3QgZmlsbD0iI2Y1ZWJkOSIgaGVpZ2h0PSI2IiByeD0iMi41IiB3aWR0aD0iNiIgeD0iMzUiIHk9IjEwIi8+PHJlY3QgZmlsbD0idXJsKCNjbGF5VGFudWtpQm9keSkiIGhlaWdodD0iMzAiIHJ4PSIxNCIgd2lkdGg9IjM4IiB4PSI4IiB5PSIxNCIvPjxlbGxpcHNlIGN4PSIyNyIgY3k9IjE3IiBmaWxsPSJ1cmwoI2NsYXlTb2Z0SGlnaGxpZ2h0KSIgcng9IjE0IiByeT0iNCIvPjxyZWN0IGZpbGw9IiMyMjQ3MmQiIGhlaWdodD0iMTQiIHJ4PSI1LjUiIHdpZHRoPSIxMyIgeD0iMTEiIHk9IjIwIi8+PHJlY3QgZmlsbD0iIzIyNDcyZCIgaGVpZ2h0PSIxNCIgcng9IjUuNSIgd2lkdGg9IjEzIiB4PSIzMCIgeT0iMjAiLz48cGF0aCBkPSJNMTMuNiAyNy40QzE1LjQgMjkuOCAxOS42IDI5LjggMjEuNCAyNy40IiBzdHJva2U9IiNlN2Y1ZWEiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIxLjgiLz48cGF0aCBkPSJNMzIuNiAyNy40QzM0LjQgMjkuOCAzOC42IDI5LjggNDAuNCAyNy40IiBzdHJva2U9IiNlN2Y1ZWEiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIxLjgiLz48ZWxsaXBzZSBjeD0iMjciIGN5PSIzNSIgZmlsbD0idXJsKCNjbGF5TXV6emxlKSIgcng9IjgiIHJ5PSI2Ii8+PGVsbGlwc2UgY3g9IjI3IiBjeT0iMzMiIGZpbGw9InVybCgjY2xheVNvZnRIaWdobGlnaHQpIiByeD0iNiIgcnk9IjIiLz48ZWxsaXBzZSBjeD0iMjciIGN5PSIzMiIgZmlsbD0iIzJkMWUxNSIgcng9IjIuOCIgcnk9IjIiLz48cGF0aCBkPSJNMjUgMzYuNUMyNiAzNy44IDI4IDM3LjggMjkgMzYuNSIgc3Ryb2tlPSIjNmM1MjNlIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS13aWR0aD0iMS40Ii8+PGVsbGlwc2UgY3g9IjEyIiBjeT0iMzMiIGZpbGw9IiNmODcxNzEiIG9wYWNpdHk9IjAuNiIgcng9IjIuMiIgcnk9IjEuNCIvPjxlbGxpcHNlIGN4PSI0MiIgY3k9IjMzIiBmaWxsPSIjZjg3MTcxIiBvcGFjaXR5PSIwLjYiIHJ4PSIyLjIiIHJ5PSIxLjQiLz48cGF0aCBkPSJNMjYgMTVDMjIgMTMgMjMgOCAyOCA4QzMzIDggMzQgMTMgMzAgMTVDMjguNSAxNS44IDI3LjUgMTUuOCAyNiAxNVoiIGZpbGw9InVybCgjY2xheUxlYWZQbHVtcCkiLz48cGF0aCBkPSJNMjYgMTNMMjkgMTAiIHN0cm9rZT0iI2JiZjdkMCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2Utd2lkdGg9IjAuOSIvPjxlbGxpcHNlIGN4PSIyNi41IiBjeT0iOS41IiBmaWxsPSIjZmZmZmZmIiBvcGFjaXR5PSIwLjgiIHJ4PSIyLjUiIHJ5PSIxLjIiLz48Y2lyY2xlIGN4PSIyOS41IiBjeT0iMTIiIGZpbGw9IiNmZmZmZmYiIG9wYWNpdHk9IjAuOSIgcj0iMSIvPjwvc3ZnPgo=", "tier_coin": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJjbGF5Q29pbiIgeDE9IjAlIiB4Mj0iMTAwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZkZTA0NyIvPjxzdG9wIG9mZnNldD0iNjAlIiBzdG9wLWNvbG9yPSIjZjU5ZTBiIi8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjZDk3NzA2Ii8+PC9saW5lYXJHcmFkaWVudD48bGluZWFyR3JhZGllbnQgaWQ9ImNsYXlDb2luSGlnaGxpZ2h0IiB4MT0iMzAlIiB4Mj0iNzAlIiB5MT0iMCUiIHkyPSIxMDAlIj48c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjZmZmZmZmIiBzdG9wLW9wYWNpdHk9IjAuOCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIgc3RvcC1vcGFjaXR5PSIwIi8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgZmlsbD0idXJsKCNjbGF5Q29pbikiIHI9IjEwIi8+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgZmlsbD0iI2Q5NzcwNiIgb3BhY2l0eT0iMC4yIiByPSI4Ii8+PHBhdGggZD0iTTEyIDdDOS41IDcgOCA5LjUgOCAxMS41QzggMTQgMTAuNSAxNS41IDEyIDE2LjVDMTMuNSAxNS41IDE2IDE0IDE2IDExLjVDMTYgOS41IDE0LjUgNyAxMiA3WiIgZmlsbD0iIzE1ODAzZCIgb3BhY2l0eT0iMC45Ii8+PHBhdGggZD0iTTEyIDdDMTEuNSA5IDEwLjUgMTIgOC41IDEzIiBzdHJva2U9IiM4NmVmYWMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIwLjgiLz48ZWxsaXBzZSBjeD0iOSIgY3k9IjcuNSIgZmlsbD0idXJsKCNjbGF5Q29pbkhpZ2hsaWdodCkiIHJ4PSI0LjUiIHJ5PSIyLjIiIHRyYW5zZm9ybT0icm90YXRlKC0yNSA5IDcuNSkiLz48L3N2Zz4K", "note_pencil": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJhIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmZmJlYiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2ZkZTY4YSIvPjwvbGluZWFyR3JhZGllbnQ+PGxpbmVhckdyYWRpZW50IGlkPSJiIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZkZTY4YSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2Y1OWUwYiIvPjwvbGluZWFyR3JhZGllbnQ+PGxpbmVhckdyYWRpZW50IGlkPSJjIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzkzYzVmZCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzFkNGVkOCIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IGZpbGw9InVybCgjYSkiIGhlaWdodD0iMjQiIHJ4PSI1IiB3aWR0aD0iMjAiIHg9IjQiIHk9IjUiLz48cmVjdCBmaWxsPSIjOTRhM2I4IiBoZWlnaHQ9IjEuOCIgcng9IjAuOSIgd2lkdGg9IjEyIiB4PSI4IiB5PSIxMSIvPjxyZWN0IGZpbGw9IiM5NGEzYjgiIGhlaWdodD0iMS44IiByeD0iMC45IiB3aWR0aD0iOSIgeD0iOCIgeT0iMTUuNCIvPjxyZWN0IGZpbGw9IiM5NGEzYjgiIGhlaWdodD0iMS44IiByeD0iMC45IiB3aWR0aD0iNiIgeD0iOCIgeT0iMTkuOCIvPjxwYXRoIGQ9Ik0yMi40IDE0LjJMMjcuMiAxOUwxOC42IDI3LjZMMTMgMjguOEwxNC4yIDIzLjJaIiBmaWxsPSJ1cmwoI2IpIi8+PHBhdGggZD0iTTIyLjQgMTQuMkwyNC40IDEyLjJDMjUuMiAxMS40IDI2LjQgMTEuNCAyNy4yIDEyLjJMMjguOCAxMy44QzI5LjYgMTQuNiAyOS42IDE1LjggMjguOCAxNi42TDI3LjIgMTlaIiBmaWxsPSJ1cmwoI2MpIi8+PHBhdGggZD0iTTEzIDI4LjhMMTQuMiAyMy4yTDE4LjYgMjcuNloiIGZpbGw9IiNmZGU2OGEiLz48cGF0aCBkPSJNMTMgMjguOEwxMy42IDI2TDE1LjggMjguMloiIGZpbGw9IiMzMzQxNTUiLz48ZWxsaXBzZSBjeD0iMTAiIGN5PSI3LjYiIGZpbGw9IiNmZmZmZmYiIG9wYWNpdHk9IjAuNyIgcng9IjQiIHJ5PSIwLjgiLz48L3N2Zz4=", "bowl_food": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJhIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZkYmE3NCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2VhNTgwYyIvPjwvbGluZWFyR3JhZGllbnQ+PGxpbmVhckdyYWRpZW50IGlkPSJiIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmZmJlYiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2ZkZTY4YSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxwYXRoIGQ9Ik00LjUgMTVIMjcuNUMyNy41IDIyIDIyLjUgMjcgMTYgMjdTNC41IDIyIDQuNSAxNVoiIGZpbGw9InVybCgjYSkiLz48ZWxsaXBzZSBjeD0iMTYiIGN5PSIxNSIgZmlsbD0idXJsKCNiKSIgcng9IjExLjUiIHJ5PSIyLjYiLz48Y2lyY2xlIGN4PSIxMiIgY3k9IjE0LjYiIGZpbGw9IiNmODcxNzEiIHI9IjEuNSIvPjxjaXJjbGUgY3g9IjE3IiBjeT0iMTQuMiIgZmlsbD0iIzg2ZWZhYyIgcj0iMS41Ii8+PGNpcmNsZSBjeD0iMjEiIGN5PSIxNC44IiBmaWxsPSIjZmRlMDQ3IiByPSIxLjMiLz48cGF0aCBkPSJNMjAgNEwyNSAxMyIgc3Ryb2tlPSIjYjQ1MzA5IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS13aWR0aD0iMS44Ii8+PHBhdGggZD0iTTI0IDMuNEwyNi41IDEyIiBzdHJva2U9IiNiNDUzMDkiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIxLjgiLz48cGF0aCBkPSJNMTAuNSA1QzEwIDYuMyAxMS42IDcuMiAxMSA5IiBzdHJva2U9IiNmZWQ3YWEiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48ZWxsaXBzZSBjeD0iOSIgY3k9IjE5IiBmaWxsPSIjZmZmZmZmIiBvcGFjaXR5PSIwLjUiIHJ4PSIyIiByeT0iMy42Ii8+PC9zdmc+", "house_household": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJhIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZkYTRhZiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2UxMWQ0OCIvPjwvbGluZWFyR3JhZGllbnQ+PGxpbmVhckdyYWRpZW50IGlkPSJiIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmZmJlYiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2ZkZTY4YSIvPjwvbGluZWFyR3JhZGllbnQ+PGxpbmVhckdyYWRpZW50IGlkPSJjIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2UwYjk4YSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzkyNDAwZSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IGZpbGw9InVybCgjYikiIGhlaWdodD0iMTIuNSIgcng9IjMiIHdpZHRoPSIxOSIgeD0iNi41IiB5PSIxNS41Ii8+PHBhdGggZD0iTTE2IDRMMjkgMTUuNUgzWiIgZmlsbD0idXJsKCNhKSIvPjxyZWN0IGZpbGw9InVybCgjYykiIGhlaWdodD0iOCIgcng9IjIuMiIgd2lkdGg9IjUuNCIgeD0iMTMuMyIgeT0iMjAiLz48cmVjdCBmaWxsPSIjYmFlNmZkIiBoZWlnaHQ9IjQuMiIgcng9IjEuMiIgd2lkdGg9IjQiIHg9IjguNCIgeT0iMTguNCIvPjxyZWN0IGZpbGw9IiNiYWU2ZmQiIGhlaWdodD0iNC4yIiByeD0iMS4yIiB3aWR0aD0iNCIgeD0iMTkuNiIgeT0iMTguNCIvPjxlbGxpcHNlIGN4PSIxMyIgY3k9IjkiIGZpbGw9IiNmZmZmZmYiIG9wYWNpdHk9IjAuNiIgcng9IjQuNSIgcnk9IjEuMiIvPjwvc3ZnPg==", "receipt_bills": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJhIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmZmJlYiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2ZkZTY4YSIvPjwvbGluZWFyR3JhZGllbnQ+PGxpbmVhckdyYWRpZW50IGlkPSJiIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzkzYzVmZCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzFkNGVkOCIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxwYXRoIGQ9Ik03IDRIMjVWMjhMMjIgMjZMMTkgMjhMMTYgMjZMMTMgMjhMMTAgMjZMNyAyOFoiIGZpbGw9InVybCgjYSkiLz48cmVjdCBmaWxsPSJ1cmwoI2IpIiBoZWlnaHQ9IjQuNCIgcng9IjEuNCIgd2lkdGg9IjE4IiB4PSI3IiB5PSI0Ii8+PHJlY3QgZmlsbD0iIzk0YTNiOCIgaGVpZ2h0PSIxLjgiIHJ4PSIwLjkiIHdpZHRoPSIxMiIgeD0iMTAiIHk9IjExLjUiLz48cmVjdCBmaWxsPSIjOTRhM2I4IiBoZWlnaHQ9IjEuOCIgcng9IjAuOSIgd2lkdGg9IjkiIHg9IjEwIiB5PSIxNS41Ii8+PHJlY3QgZmlsbD0iIzk0YTNiOCIgaGVpZ2h0PSIxLjgiIHJ4PSIwLjkiIHdpZHRoPSI3IiB4PSIxMCIgeT0iMTkuNSIvPjxjaXJjbGUgY3g9IjIxIiBjeT0iMjEuNiIgZmlsbD0iI2Y1OWUwYiIgcj0iMy4yIi8+PGNpcmNsZSBjeD0iMjAuNTIiIGN5PSIyMS4xMiIgZmlsbD0iI2ZlZjA4YSIgcj0iMS43NiIvPjxlbGxpcHNlIGN4PSIxMSIgY3k9IjciIGZpbGw9IiNmZmZmZmYiIG9wYWNpdHk9IjAuNiIgcng9IjMiIHJ5PSIwLjgiLz48L3N2Zz4=", "bag_shopping": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJhIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2Y5YThkNCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2RiMjc3NyIvPjwvbGluZWFyR3JhZGllbnQ+PGxpbmVhckdyYWRpZW50IGlkPSJiIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZkYTRhZiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2UxMWQ0OCIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxwYXRoIGQ9Ik0xMSAxMVY5LjVDMTEgNi41IDEzIDQuNSAxNiA0LjVTMjEgNi41IDIxIDkuNVYxMSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjOWQxNzRkIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS13aWR0aD0iMiIvPjxwYXRoIGQ9Ik02IDEwLjVIMjZMMjcuNSAyNUMyNy43IDI3IDI2LjQgMjguNSAyNC41IDI4LjVINy41QzUuNiAyOC41IDQuMyAyNyA0LjUgMjVaIiBmaWxsPSJ1cmwoI2EpIi8+PGNpcmNsZSBjeD0iMTIiIGN5PSIxNC41IiBmaWxsPSIjZmZmZmZmIiByPSIxLjMiLz48Y2lyY2xlIGN4PSIyMCIgY3k9IjE0LjUiIGZpbGw9IiNmZmZmZmYiIHI9IjEuMyIvPjxjaXJjbGUgY3g9IjE2IiBjeT0iMjEiIGZpbGw9IiNmNTllMGIiIHI9IjMuMiIvPjxjaXJjbGUgY3g9IjE1LjUyIiBjeT0iMjAuNTIiIGZpbGw9IiNmZWYwOGEiIHI9IjEuNzYiLz48ZWxsaXBzZSBjeD0iOS41IiBjeT0iMTYiIGZpbGw9IiNmZmZmZmYiIG9wYWNpdHk9IjAuNSIgcng9IjEuNiIgcnk9IjQiLz48L3N2Zz4=", "train_transport": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJjbGF5VHJhaW4iIHgxPSIwJSIgeDI9IjAlIiB5MT0iMCUiIHkyPSIxMDAlIj48c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjNjBhNWZhIi8+PHN0b3Agb2Zmc2V0PSI2MCUiIHN0b3AtY29sb3I9IiMyNTYzZWIiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMxZDRlZDgiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCBmaWxsPSJ1cmwoI2NsYXlUcmFpbikiIGhlaWdodD0iMjAiIHJ4PSI3IiB3aWR0aD0iMjAiIHg9IjYiIHk9IjYiLz48cmVjdCBmaWxsPSIjZTBmMmZlIiBoZWlnaHQ9IjgiIHJ4PSIzIiB3aWR0aD0iMTQiIHg9IjkiIHk9IjkiLz48cmVjdCBmaWxsPSIjMDI4NGM3IiBoZWlnaHQ9IjUiIHJ4PSIxLjUiIHdpZHRoPSI0LjUiIHg9IjExIiB5PSIxMC41Ii8+PHJlY3QgZmlsbD0iIzAyODRjNyIgaGVpZ2h0PSI1IiByeD0iMS41IiB3aWR0aD0iNC41IiB4PSIxNi41IiB5PSIxMC41Ii8+PGVsbGlwc2UgY3g9IjE2IiBjeT0iNy41IiBmaWxsPSIjZmZmZmZmIiBvcGFjaXR5PSIwLjc1IiByeD0iNyIgcnk9IjEuNCIvPjxjaXJjbGUgY3g9IjEwIiBjeT0iMjAuNSIgZmlsbD0iI2ZlZjA4YSIgcj0iMiIvPjxjaXJjbGUgY3g9IjIyIiBjeT0iMjAuNSIgZmlsbD0iI2ZlZjA4YSIgcj0iMiIvPjxjaXJjbGUgY3g9IjkuNSIgY3k9IjIwIiBmaWxsPSIjZmZmZmZmIiByPSIwLjgiLz48Y2lyY2xlIGN4PSIyMS41IiBjeT0iMjAiIGZpbGw9IiNmZmZmZmYiIHI9IjAuOCIvPjxyZWN0IGZpbGw9IiMxZTNhOGEiIGhlaWdodD0iMiIgcng9IjEiIHdpZHRoPSI2IiB4PSIxMyIgeT0iMjEiLz48L3N2Zz4K", "wifi_internet": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJhIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzVlZWFkNCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzBkOTQ4OCIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IGZpbGw9InVybCgjYSkiIGhlaWdodD0iMjQiIHJ4PSI4IiB3aWR0aD0iMjYiIHg9IjMiIHk9IjQiLz48cGF0aCBkPSJNOCAxMy41QzEzIDkgMTkgOSAyNCAxMy41IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIyLjQiLz48cGF0aCBkPSJNMTEgMTcuNUMxNCAxNSAxOCAxNSAyMSAxNy41IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIyLjQiLz48Y2lyY2xlIGN4PSIxNiIgY3k9IjIyIiBmaWxsPSIjZmVmMDhhIiByPSIyLjIiLz48ZWxsaXBzZSBjeD0iMTEiIGN5PSI4IiBmaWxsPSIjZmZmZmZmIiBvcGFjaXR5PSIwLjYiIHJ4PSI2IiByeT0iMS4yIi8+PC9zdmc+", "star_bonus": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJhIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZlZjA4YSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2VhYjMwOCIvPjwvbGluZWFyR3JhZGllbnQ+PGxpbmVhckdyYWRpZW50IGlkPSJiIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZkZTY4YSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2Y1OWUwYiIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxwYXRoIGQ9Ik0xNiAzTDE5LjcgMTEuNEwyOC44IDEyLjNMMjIgMTguNEwyNCAyNy40TDE2IDIyLjdMOCAyNy40TDEwIDE4LjRMMy4yIDEyLjNMMTIuMyAxMS40WiIgZmlsbD0idXJsKCNhKSIvPjxwYXRoIGQ9Ik0xNiAzTDE5LjcgMTEuNEwyOC44IDEyLjNMMjIgMTguNEwxNiAxN1oiIGZpbGw9InVybCgjYikiIG9wYWNpdHk9IjAuMzUiLz48cGF0aCBkPSJNMTYgMjIuN0w4IDI3LjRMMTAgMTguNEwxNiAxN1oiIGZpbGw9IiNkOTc3MDYiIG9wYWNpdHk9IjAuMyIvPjxlbGxpcHNlIGN4PSIxMi40IiBjeT0iMTAuMiIgZmlsbD0iI2ZmZmZmZiIgb3BhY2l0eT0iMC44IiByeD0iMi42IiByeT0iMS4xIi8+PGNpcmNsZSBjeD0iMjYuNiIgY3k9IjUuNCIgZmlsbD0iI2ZmZmZmZiIgcj0iMS4xIi8+PGNpcmNsZSBjeD0iNS40IiBjeT0iMjQuNiIgZmlsbD0iI2ZmZmZmZiIgcj0iMC45Ii8+PC9zdmc+", "cup_coffee": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJjbGF5Q3VwIiB4MT0iMCUiIHgyPSIxMDAlIiB5MT0iMCUiIHkyPSIxMDAlIj48c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjZmVmM2M3Ii8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjZmRlNjhhIi8+PC9saW5lYXJHcmFkaWVudD48bGluZWFyR3JhZGllbnQgaWQ9ImNsYXlNYXRjaGFGb2FtIiB4MT0iMCUiIHgyPSIxMDAlIiB5MT0iMCUiIHkyPSIxMDAlIj48c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjODZlZmFjIi8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjMjJjNTVlIi8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3QgZmlsbD0idXJsKCNjbGF5Q3VwKSIgaGVpZ2h0PSIxNCIgcng9IjQuNSIgd2lkdGg9IjE1IiB4PSI3IiB5PSIxMSIvPjxwYXRoIGQ9Ik0yMiAxM0gyNUMyNi41IDEzIDI3LjUgMTQuMiAyNy41IDE1LjVDMjcuNSAxNy41IDI2IDE5IDI0IDE5SDIyIiBmaWxsPSJub25lIiBzdHJva2U9IiNmNTllMGIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIyIi8+PGVsbGlwc2UgY3g9IjE0LjUiIGN5PSIxMSIgZmlsbD0idXJsKCNjbGF5TWF0Y2hhRm9hbSkiIHJ4PSI3LjUiIHJ5PSIzIi8+PGVsbGlwc2UgY3g9IjE0LjUiIGN5PSIxMSIgZmlsbD0iI2ZmZmZmZiIgb3BhY2l0eT0iMC42IiByeD0iNC41IiByeT0iMS44Ii8+PGNpcmNsZSBjeD0iMTQuNSIgY3k9IjExIiBmaWxsPSIjMTU4MDNkIiByPSIxLjIiLz48cGF0aCBkPSJNMTIgNUMxMS41IDYuNSAxMyA3LjUgMTIuNSA5IiBzdHJva2U9IiNiYmY3ZDAiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMTYgNEMxNS41IDUuNSAxNyA2LjggMTYuNSA4IiBzdHJva2U9IiNiYmY3ZDAiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48ZWxsaXBzZSBjeD0iMTAuNSIgY3k9IjE1IiBmaWxsPSIjZmZmZmZmIiBvcGFjaXR5PSIwLjU1IiByeD0iMiIgcnk9IjQiLz48L3N2Zz4K", "tray_other": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJhIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2NiZDVlMSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzY0NzQ4YiIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IGZpbGw9InVybCgjYSkiIGhlaWdodD0iMjIiIHJ4PSI3IiB3aWR0aD0iMjQiIHg9IjQiIHk9IjUiLz48Y2lyY2xlIGN4PSIxMC41IiBjeT0iMTYiIGZpbGw9IiNmZmZmZmYiIHI9IjIuMyIvPjxjaXJjbGUgY3g9IjE2IiBjeT0iMTYiIGZpbGw9IiNmZmZmZmYiIHI9IjIuMyIvPjxjaXJjbGUgY3g9IjIxLjUiIGN5PSIxNiIgZmlsbD0iI2ZmZmZmZiIgcj0iMi4zIi8+PGVsbGlwc2UgY3g9IjExIiBjeT0iOC40IiBmaWxsPSIjZmZmZmZmIiBvcGFjaXR5PSIwLjYiIHJ4PSI2IiByeT0iMS4zIi8+PC9zdmc+", "calendar_date": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJhIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmZmJlYiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2ZkZTY4YSIvPjwvbGluZWFyR3JhZGllbnQ+PGxpbmVhckdyYWRpZW50IGlkPSJiIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZkYTRhZiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2UxMWQ0OCIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IGZpbGw9InVybCgjYSkiIGhlaWdodD0iMjIiIHJ4PSI1IiB3aWR0aD0iMjYiIHg9IjMiIHk9IjciLz48cGF0aCBkPSJNMyAxMkMzIDkuMiA1LjIgNyA4IDdIMjRDMjYuOCA3IDI5IDkuMiAyOSAxMlYxMy40SDNaIiBmaWxsPSJ1cmwoI2IpIi8+PHJlY3QgZmlsbD0iIzlmMTIzOSIgaGVpZ2h0PSI2IiByeD0iMS42IiB3aWR0aD0iMyIgeD0iOSIgeT0iMy42Ii8+PHJlY3QgZmlsbD0iIzlmMTIzOSIgaGVpZ2h0PSI2IiByeD0iMS42IiB3aWR0aD0iMyIgeD0iMjAiIHk9IjMuNiIvPjxyZWN0IGZpbGw9IiNjYmQ1ZTEiIGhlaWdodD0iMy42IiByeD0iMS4yIiB3aWR0aD0iMy42IiB4PSI3LjUiIHk9IjE2LjUiLz48cmVjdCBmaWxsPSIjY2JkNWUxIiBoZWlnaHQ9IjMuNiIgcng9IjEuMiIgd2lkdGg9IjMuNiIgeD0iMTQuMiIgeT0iMTYuNSIvPjxyZWN0IGZpbGw9IiNjYmQ1ZTEiIGhlaWdodD0iMy42IiByeD0iMS4yIiB3aWR0aD0iMy42IiB4PSIyMC45IiB5PSIxNi41Ii8+PHJlY3QgZmlsbD0iI2NiZDVlMSIgaGVpZ2h0PSIzLjYiIHJ4PSIxLjIiIHdpZHRoPSIzLjYiIHg9IjcuNSIgeT0iMjIiLz48cmVjdCBmaWxsPSIjZjU5ZTBiIiBoZWlnaHQ9IjMuOCIgcng9IjEuMiIgd2lkdGg9IjMuOCIgeD0iMTQuMSIgeT0iMjEuOSIvPjxlbGxpcHNlIGN4PSIxMCIgY3k9IjEwIiBmaWxsPSIjZmZmZmZmIiBvcGFjaXR5PSIwLjYiIHJ4PSI1IiByeT0iMC45Ii8+PC9zdmc+", "check_completed": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJhIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzZlZTdiNyIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzA1OTY2OSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxjaXJjbGUgY3g9IjE2IiBjeT0iMTYiIGZpbGw9InVybCgjYSkiIHI9IjEyLjUiLz48cGF0aCBkPSJNOS44IDE2LjRMMTQgMjAuNkwyMi40IDExLjgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2Utd2lkdGg9IjMuMiIvPjxlbGxpcHNlIGN4PSIxMiIgY3k9IjguNiIgZmlsbD0iI2ZmZmZmZiIgb3BhY2l0eT0iMC42IiByeD0iNS4yIiByeT0iMS42Ii8+PGNpcmNsZSBjeD0iMjUuNiIgY3k9IjYuNCIgZmlsbD0iI2Y1OWUwYiIgcj0iMi40Ii8+PGNpcmNsZSBjeD0iMjUuMjQiIGN5PSI2LjA0IiBmaWxsPSIjZmVmMDhhIiByPSIxLjMyIi8+PC9zdmc+", "coin_paid": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJhIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZlZjA4YSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2VhYjMwOCIvPjwvbGluZWFyR3JhZGllbnQ+PGxpbmVhckdyYWRpZW50IGlkPSJiIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzZlZTdiNyIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzA1OTY2OSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxjaXJjbGUgY3g9IjE0IiBjeT0iMTUuNiIgZmlsbD0iI2Y1OWUwYiIgcj0iMTEuNiIvPjxjaXJjbGUgY3g9IjE0IiBjeT0iMTUuNiIgZmlsbD0idXJsKCNhKSIgcj0iOS42Ii8+PGNpcmNsZSBjeD0iMTQiIGN5PSIxNS42IiBmaWxsPSJub25lIiByPSI2LjgiIHN0cm9rZT0iI2Y1OWUwYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMTEgMTUuNkwxMy40IDE4TDE3LjQgMTMiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2I0NTMwOSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2Utd2lkdGg9IjIiLz48Y2lyY2xlIGN4PSIyNC42IiBjeT0iMjMuNiIgZmlsbD0idXJsKCNiKSIgcj0iNiIvPjxwYXRoIGQ9Ik0yMS42IDIzLjZMMjMuOCAyNS44TDI3LjYgMjEuNiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiIvPjxlbGxpcHNlIGN4PSI5LjQiIGN5PSI5LjYiIGZpbGw9IiNmZmZmZmYiIG9wYWNpdHk9IjAuOCIgcng9IjMuNCIgcnk9IjEuMSIvPjwvc3ZnPg=="};
+  var $ = function (s, r) { return (r || document).querySelector(s); }, $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  $$("[data-img]").forEach(function (i) { i.src = IMG[i.getAttribute("data-img")]; });
+  $$("[data-leaves]").forEach(function (el) { var n = +el.getAttribute("data-leaves"), h = ""; for (var i = 0; i < n; i++) h += '<i style="left:' + (i * (100 / n) + 3) + '%;--dx:' + ((i % 2 ? 1 : -1) * (16 + i * 4)) + 'px;animation-duration:' + (7 + i * 1.2) + 's;animation-delay:-' + (i * 1.6) + 's"></i>'; el.innerHTML = h; });
+  var S = { plan: "plus", who: "rani", upd: 0, less: false, step: 0, fixed: false, dismissed: false, shelf: "full", opened: {} };
+  function reduced() { return S.less || (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches); }
+  var rp = function (n) { return "Rp" + n.toLocaleString("id-ID"); };
+
+  /* konfeti sebelah layar */
+  var cv = $("#fx"), cx = cv.getContext("2d"), parts = [], raf = 0, W, H;
+  function fit() { var d = window.devicePixelRatio || 1; W = innerWidth; H = innerHeight; cv.width = W * d; cv.height = H * d; cx.setTransform(d, 0, 0, d, 0, 0); }
+  function burst(el, n, kind) {
+    if (reduced()) return; fit(); var r = el.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
+    for (var i = 0; i < n; i++) { var a = Math.random() * 6.28, s = 2 + Math.random() * 5, k = kind || ["leaf", "coin", "star"][i % 3]; parts.push({ x: x, y: y, vx: Math.cos(a) * s, vy: Math.sin(a) * s - 3, r: Math.random() * 6, vr: (Math.random() - .5) * .3, l: 0, m: 70 + Math.random() * 40, k: k, c: k === "leaf" ? (i % 2 ? "#34d399" : "#86efac") : k === "coin" ? "#f59e0b" : "#fde68a", z: 4 + Math.random() * 5 }); }
+    if (!raf) raf = requestAnimationFrame(tick);
+  }
+  function tick() {
+    cx.clearRect(0, 0, W, H); parts = parts.filter(function (p) { return p.l < p.m; });
+    parts.forEach(function (p) { p.l++; p.vy += .16; p.x += p.vx; p.y += p.vy; p.vx *= .99; p.r += p.vr; cx.save(); cx.globalAlpha = Math.max(0, 1 - p.l / p.m); cx.translate(p.x, p.y); cx.rotate(p.r); cx.fillStyle = p.c;
+      if (p.k === "leaf") { cx.beginPath(); cx.moveTo(0, -p.z); cx.quadraticCurveTo(p.z, 0, 0, p.z); cx.quadraticCurveTo(-p.z, 0, 0, -p.z); cx.fill(); }
+      else if (p.k === "coin") { cx.beginPath(); cx.ellipse(0, 0, p.z * .8, p.z * Math.abs(Math.cos(p.l * .2)) + .5, 0, 0, 7); cx.fill(); }
+      else { cx.beginPath(); for (var i = 0; i < 8; i++) { var rr = i % 2 ? p.z * .35 : p.z; cx.lineTo(Math.cos(i * Math.PI / 4) * rr, Math.sin(i * Math.PI / 4) * rr); } cx.closePath(); cx.fill(); } cx.restore(); });
+    raf = parts.length ? requestAnimationFrame(tick) : 0; if (!raf) cx.clearRect(0, 0, W, H);
+  }
+  function shake(p) { p.classList.remove("shake"); void p.offsetWidth; if (!reduced()) p.classList.add("shake"); }
+  function cheer(el) { el.classList.remove("cheer"); void el.offsetWidth; el.classList.add("cheer"); }
+  function go(id) { var el = $(id); el.scrollIntoView({ behavior: reduced() ? "auto" : "smooth", block: "center", inline: "center" }); }
+  function toast(id, msg) { var t = $(id); t.textContent = msg; t.classList.add("show"); setTimeout(function () { t.classList.remove("show"); }, 2200); }
+  function type(el, txt, cb) { if (el._t) clearInterval(el._t); if (reduced()) { el.textContent = txt; return; } var i = 0; el.textContent = ""; el._t = setInterval(function () { el.textContent = txt.slice(0, ++i); if (i >= txt.length) clearInterval(el._t); }, 14); }
+
+  /* ---- D3 ---- */
+  function renderHome() {
+    $("#updSlot").innerHTML = S.upd ? '<div class="updbanner"><span class="icon">notifications</span><span><b>Versi baru tersedia.</b> Pasang dari Akun kapan saja.</span></div>' : "";
+    var slot = $("#pcardSlot"), plus = S.plan === "plus";
+    if (S.upd) { slot.innerHTML = ""; $("#cap3").textContent = "Banner pembaruan sedang tampil, jadi kartu periode menunggu. Satu kartu pada satu waktu."; return; }
+    if (S.dismissed) { slot.innerHTML = ""; $("#cap3").textContent = "Kartu ditutup. Buku tetap menunggu di Rak Buku."; return; }
+    $("#cap3").textContent = plus ? "Plus: buku siap ditutup. Satu kartu pada satu waktu, banner pembaruan selalu menang." : "Gratis: kartu periode siap dibagikan. Satu kartu pada satu waktu, banner pembaruan selalu menang.";
+    slot.innerHTML = '<div class="pcard"><span>' + (plus ? '<span class="minibook"><img data-img="tier_coin" alt=""></span>' : '<span class="minicard"><img data-img="tanuki_mascot" alt=""></span>') + '</span><div class="txt"><span class="pix" style="color:var(--action)">' + (plus ? "Buku periode" : "Kartu periode") + '</span><b>' + (plus ? "Buku 25 Okt – 24 Nov siap ditutup" : "Kartu periode 25 Okt – 24 Nov siap dibagikan") + '</b><span>' + (plus ? "Tiga langkah, semuanya boleh dilewati." : "Pilih fakta yang mau kamu tampilkan.") + '</span></div><div class="acts"><button class="btn ghost sm" type="button" id="pcNo">Nanti</button><button class="btn sm shine" type="button" id="pcGo">' + (plus ? "Tutup buku" : "Bagikan") + '</button></div></div>';
+    $$("[data-img]", slot).forEach(function (i) { i.src = IMG[i.getAttribute("data-img")]; });
+    $("#pcNo").onclick = function () { var c = $(".pcard"); c.classList.add("gone"); setTimeout(function () { S.dismissed = true; renderHome(); }, 350); };
+    $("#pcGo").onclick = function () { if (plus) { S.step = 0; renderRitual(); go("#s4"); } else { toast("#t3", "Lembar bagikan sistem terbuka di sini."); burst($("#pcGo"), 14, "star"); } };
+  }
+
+  /* ---- D4 ---- */
+  var SAY = ["Mari lihat dulu transaksi yang belum punya kategori.", "Sekarang rutinmu. Yang menunggu kita lihat bersama.", "Terakhir, rencana dan kenyataan. Tidak ada yang dinilai.", "Buku siap. Semua data tetap bisa kamu ubah kapan saja."];
+  function renderRitual() {
+    var budi = S.who === "budi" && !S.fixed;
+    $("#step0").innerHTML = budi ? '<h3>2 transaksi belum berkategori</h3><div class="okrow warmrow"><span class="icon">receipt_long</span><span style="flex:1"><b>Makan siang · Rp45.000</b><br><b>Parkir · Rp12.000</b></span></div><button class="btn sec" type="button" id="fixCat">Beri kategori</button>' : '<h3>Semua transaksi sudah berkategori</h3><div class="okrow ok"><span class="tick"><span class="icon">check</span></span><b>12 dari 12 transaksi rapi</b></div>';
+    $("#step1").innerHTML = '<h3>Semua rutin sudah selesai</h3><div class="okrow ok"><span class="tick"><span class="icon">check</span></span><span><b>Kos dan internet tercatat</b><br><span class="muted" style="font-size:12px">Cicilan dilewati, itu tidak apa-apa.</span></span></div>';
+    $("#step2").innerHTML = '<h3>Rencana dan kenyataan</h3><div class="two"><div class="kv"><span>Anggaran Makan</span><b>Rp1.800.000</b></div><div class="kv"><span>Terpakai</span><b>Rp1.640.000</b></div></div><div class="okrow"><span class="icon">info</span><span style="font-size:13px">Data tetap bisa kamu ubah kapan saja.</span></div>';
+    $$(".panel-step").forEach(function (p) { p.classList.toggle("on", +p.getAttribute("data-step") === S.step); });
+    $$("#steps i").forEach(function (i, k) { i.classList.toggle("on", k <= S.step); });
+    type($("#say4"), SAY[S.step]); $("#next4").firstChild && 0;
+    $("#next4").textContent = S.step === 2 ? "Tutup buku" : "Lanjut"; $("#skip4").style.visibility = S.step === 2 ? "hidden" : "visible";
+    var fx = $("#fixCat"); if (fx) fx.onclick = function () { S.fixed = true; cheer($("#tn4")); burst(fx, 14); renderRitual(); renderBook(); };
+  }
+  function advance() {
+    if (S.step < 2) { S.step++; cheer($("#tn4")); renderRitual(); return; }
+    type($("#say4"), SAY[3]); burst($("#next4"), 40); shake($("#p4")); cheer($("#tn4"));
+    setTimeout(function () { go("#s5"); playStamps(); }, reduced() ? 0 : 700);
+  }
+  $("#next4").onclick = advance; $("#skip4").onclick = advance;
+
+  /* ---- D5 ---- */
+  function stamps() { return S.who === "budi" && !S.fixed ? [["Rutin tak terlewat"]] : [["Periode rapi"], ["Rutin tak terlewat"]]; }
+  function renderBook() {
+    var lbl = $("#blbl"); lbl.textContent = "2026"; var sl = $("#stamps"); sl.innerHTML = stamps().map(function (s) { return '<div class="st set"><img data-img="tier_coin" alt=""><em>' + s[0] + "</em></div>"; }).join("");
+    $$("[data-img]", sl).forEach(function (i) { i.src = IMG[i.getAttribute("data-img")]; });
+  }
+  function playStamps() {
+    var sl = $("#stamps"); sl.innerHTML = stamps().map(function (s) { return '<div class="st"><img data-img="tier_coin" alt=""><em>' + s[0] + "</em></div>"; }).join("");
+    $$("[data-img]", sl).forEach(function (i) { i.src = IMG[i.getAttribute("data-img")]; });
+    $$(".st", sl).forEach(function (st, k) { setTimeout(function () { st.classList.add("in"); setTimeout(function () { shake($("#p5")); burst(st, 22); }, reduced() ? 0 : 340); st.addEventListener("animationend", function () { st.classList.add("set"); }, { once: true }); }, reduced() ? 0 : 500 + k * 900); });
+    $("#book").classList.remove("open");
+  }
+  $("#open5").onclick = function () { $("#book").classList.add("open"); burst($("#book"), 24, "star"); setTimeout(function () { go("#s6"); resetPages(); }, reduced() ? 0 : 650); };
+
+  /* ---- D6 ---- */
+  var CATS = [["Makan", 1640000, 35, "bowl_food"], ["Kos", 1200000, 26, "house_household"], ["Belanja", 780000, 17, "bag_shopping"], ["Transport", 520000, 11, "train_transport"], ["Internet", 350000, 7, "wifi_internet"], ["Hiburan", 215000, 5, "cup_coffee"]];
+  $("#cats").innerHTML = CATS.map(function (c) { return '<div class="catrow"><img src="' + IMG[c[3]] + '" alt=""><div class="nm">' + c[0] + '<small class="num">' + rp(c[1]) + '</small></div><span class="pct num">' + c[2] + '%</span><div class="bar-t"><i data-w="' + c[2] * 2.6 + '"></i></div></div>'; }).join("");
+  $("#mealmeter").innerHTML = (function () { var h = ""; for (var i = 0; i < 10; i++) h += '<i class="' + (i < 9 ? "on" : "") + '"></i>'; return h; })();
+  var KATA = "Periode ini 12 catatan, semuanya punya kategori. Makan paling besar, dan kosmu tercatat tepat waktu. Satu cicilan dilewati, itu juga tercatat. Sampai ketemu di periode berikutnya.";
+  var pg = 0, played = {};
+  function playPage(k) {
+    if (played[k]) return; played[k] = 1;
+    if (k === 0) $$("[data-count]").forEach(function (el) { var t = +el.getAttribute("data-count"), t0 = performance.now(), dur = reduced() ? 1 : 1100; (function f(n) { var q = Math.min(1, (n - t0) / dur), e = 1 - Math.pow(1 - q, 3); el.textContent = rp(Math.round(t * e)); if (q < 1) requestAnimationFrame(f); })(t0); });
+    if (k === 1) setTimeout(function () { $$(".bar-t i").forEach(function (i) { i.style.width = i.getAttribute("data-w") + "%"; }); }, 60);
+    if (k === 4) type($("#kata"), KATA);
+  }
+  function resetPages() { played = {}; $$("[data-count]").forEach(function (e) { e.textContent = "Rp0"; }); $$(".bar-t i").forEach(function (i) { i.style.width = 0; }); $("#kata").textContent = ""; $("#pages").scrollLeft = 0; setPg(0); }
+  function setPg(k) { pg = k; $$("#dots i").forEach(function (d, i) { d.classList.toggle("on", i === k); }); playPage(k); }
+  $("#pages").addEventListener("scroll", function () { var k = Math.round(this.scrollLeft / this.clientWidth); if (k !== pg) setPg(k); });
+  $$("#dots i").forEach(function (d, i) { d.style.cursor = "pointer"; d.onclick = function () { $("#pages").scrollTo({ left: i * $("#pages").clientWidth, behavior: reduced() ? "auto" : "smooth" }); }; });
+
+  /* ---- D7 ---- */
+  var BOOKS = [["25 Okt – 24 Nov", "new"], ["25 Sep – 24 Okt", "new"], ["25 Agu – 24 Sep", "opened"], ["25 Jul – 24 Agu", "opened"], ["25 Jun – 31 Jul", "opened", "Periode peralihan · 37 hari"]];
+  function renderShelf() {
+    var plus = S.plan === "plus", el = $("#shelf");
+    if (S.shelf === "empty") { el.innerHTML = '<div class="empty"><span class="tn"><img src="' + IMG.tanuki_mascot + '" alt=""></span><b style="font-size:16px">Belum ada buku</b><span class="muted" style="font-size:13px;max-width:240px">Buku pertama siap saat periodemu berakhir.</span></div>'; return; }
+    el.innerHTML = '<div class="shelf">' + BOOKS.map(function (b, i) {
+      var kind = b[1]; if (!plus && kind === "new") kind = "locked"; var open = S.opened[i];
+      var cls = "bk " + (kind === "new" && !open ? "new" : kind === "locked" ? "locked" : "opened");
+      var st = kind === "locked" ? "Dibuka dengan Plus" : (kind === "new" && !open ? "Belum dibuka" : "Sudah dibuka");
+      return '<button type="button" class="' + cls + '" data-b="' + i + '"><span class="sp">' + (kind === "locked" ? '<span class="icon">lock</span>' : "") + '<img src="' + IMG.tier_coin + '" alt=""></span><span><span class="nm">' + b[0] + '</span><br><span class="st2">' + (b[2] ? b[2] + " · " : "") + st + '</span></span></button>' + (i % 2 === 1 ? '<span class="shelfline"></span>' : "");
+    }).join("") + '</div>';
+    $$("#shelf .bk").forEach(function (b) { b.onclick = function () {
+      var i = +b.getAttribute("data-b"), locked = b.classList.contains("locked");
+      if (locked) { toast("#t7", "Buku ini dibuka dengan Plus. Kartu periodenya tetap bisa kamu bagikan."); return; }
+      S.opened[i] = 1; burst(b, 12, "star"); if (i === 0) { go("#s5"); playStamps(); } else toast("#t7", "Buku " + BOOKS[i][0] + " terbuka."); renderShelf(); }; });
+  }
+
+  /* ---- kontrol ---- */
+  function seg(attr, fn) { $$("[" + attr + "]").forEach(function (b) { b.addEventListener("click", function () { $$("[" + attr + "]").forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); }); fn(b.getAttribute(attr)); }); }); }
+  seg("data-plan", function (v) { S.plan = v; S.dismissed = false; renderHome(); renderShelf(); });
+  seg("data-who", function (v) { S.who = v; S.fixed = false; renderRitual(); renderBook(); });
+  seg("data-upd", function (v) { S.upd = +v; renderHome(); });
+  seg("data-motion", function (v) { S.less = v === "less"; $("#wrap").classList.toggle("reduce", S.less); });
+  seg("data-theme-set", function (v) { document.documentElement.setAttribute("data-theme", v); });
+  seg("data-shelf", function (v) { S.shelf = v; renderShelf(); });
+  var dark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  $('[data-theme-set="' + (dark ? "dark" : "light") + '"]').setAttribute("aria-pressed", "true");
+  $("#reset").onclick = function () { S.step = 0; S.fixed = false; S.dismissed = false; S.opened = {}; renderHome(); renderRitual(); renderBook(); resetPages(); renderShelf(); $("#book").classList.remove("open"); go("#s3"); };
+
+  renderHome(); renderRitual(); renderBook(); renderShelf();
+  setTimeout(function () { setPg(0); }, 300);
+  window.addEventListener("resize", fit);
+})();
+</script>

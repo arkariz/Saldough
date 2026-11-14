@@ -26,12 +26,15 @@ import 'package:state_management/state_management.dart';
 /// Keduanya memuat bagian "Pengaturan" (mata uang, ADR-025).
 class AccountPage extends StatefulWidget {
   /// Membuat [AccountPage].
-  const AccountPage({this.versionEntry, this.dataSection, this.plusSection, super.key});
+  const AccountPage({this.versionEntry, this.dataSection, this.plusSection, this.appEntries = const [], super.key});
 
   /// Baris Versi aplikasi di grup paling bawah (APP_UPDATE F4), disisipkan
   /// akar komposisi karena isinya milik fitur lain (ADR-030); `null` = tanpa
   /// grup itu.
   final Widget? versionEntry;
+
+  /// Baris tambahan grup Aplikasi, di atas Versi aplikasi (akar komposisi).
+  final List<Widget> appEntries;
 
   /// Bagian Data kamu (ekspor, cadangkan, pulihkan; ADR-040), disisipkan akar
   /// komposisi karena isinya milik fitur lain; tampil sesudah setelan, sama
@@ -85,12 +88,13 @@ class _AccountPageState extends State<AccountPage> {
                         dataSection: widget.dataSection,
                         plusSection: widget.plusSection,
                       ),
-                    if (widget.versionEntry != null || defaultTargetPlatform == TargetPlatform.android) ...[
+                    if (widget.versionEntry != null || widget.appEntries.isNotEmpty || defaultTargetPlatform == TargetPlatform.android) ...[
                       const SizedBox(height: 24),
                       DsSectionHeader(title: t.account.appSection),
                       const SizedBox(height: 8),
                       DsListCard(
                         children: [
+                          ...widget.appEntries,
                           ?widget.versionEntry,
                           if (defaultTargetPlatform == TargetPlatform.android) const RateAppSettingEntry(),
                         ],

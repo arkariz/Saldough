@@ -5,6 +5,7 @@ import 'package:saldough/features/milestone/domain/entities/milestone_ledger.dar
 import 'package:saldough/features/milestone/domain/repositories/milestone_ports.dart';
 import 'package:saldough/features/milestone/domain/services/celebration_policy.dart';
 import 'package:saldough/features/milestone/domain/usecases/evaluate_milestones.dart';
+import 'package:saldough/features/milestone/presentation/stamp_book_access.dart';
 
 /// Menjalankan evaluasi tonggak pada pemicunya dan membagikan keadaan serta
 /// perayaan ke layar (ADR-046 §3.4). Satu instans di akar.
@@ -13,7 +14,7 @@ import 'package:saldough/features/milestone/domain/usecases/evaluate_milestones.
 /// transaksi, rutin, kotak masuk, cadangan), digabung per [debounce] supaya
 /// satu rentetan perubahan menjadi satu evaluasi. Evaluasi tidak pernah
 /// melempar dan tidak menunda tindakan (G-5).
-class MilestoneCoordinator {
+class MilestoneCoordinator implements MilestoneBookAccess {
   /// Membuat [MilestoneCoordinator].
   MilestoneCoordinator({
     required this._evaluate,
@@ -47,6 +48,7 @@ class MilestoneCoordinator {
   bool Function() canCelebrate = () => false;
 
   /// Catatan terkini, untuk titik, banner, dan Buku Stempel.
+  @override
   ValueListenable<MilestoneLedger> get ledger => _ledger;
 
   /// Ada stempel belum dilihat dan perayaan menyala: titik kecil di ikon Akun.
@@ -102,6 +104,7 @@ class MilestoneCoordinator {
   }
 
   /// Buku Stempel dibuka: semua stempel dianggap dilihat (titik hilang).
+  @override
   Future<void> markAllSeen() => _update(
     (l) => l.earned.values.every((e) => e.seen)
         ? l
@@ -116,6 +119,7 @@ class MilestoneCoordinator {
 
   /// Sakelar Perayaan stempel (G-8). Evaluasi dan penyimpanan tetap jalan;
   /// menyalakan lagi tidak merayakan ulang yang sudah ada.
+  @override
   Future<void> setCelebrationEnabled({required bool enabled}) => _update(
     (l) => l.celebrationEnabled == enabled
         ? l

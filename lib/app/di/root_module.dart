@@ -14,6 +14,7 @@ import 'package:saldough/app/milestone/backup_recorded_gateway.dart';
 import 'package:saldough/app/milestone/milestone_wiring.dart';
 import 'package:saldough/app/premium/debug_plan_page.dart';
 import 'package:saldough/app/premium/premium_wiring.dart';
+import 'package:saldough/app/shell/account_app_entries.dart';
 import 'package:saldough/app/shell/account_data_section.dart';
 import 'package:saldough/app/shell/account_plus_section.dart';
 import 'package:saldough/app/shell/account_version_entry.dart';
@@ -70,6 +71,7 @@ import 'package:saldough/features/freelance/domain/repositories/freelance_reposi
 import 'package:saldough/features/freelance/presentation/navigation/freelance_route_module.dart';
 import 'package:saldough/features/home/domain/budget_overview_source.dart';
 import 'package:saldough/features/home/domain/freelance_overview_source.dart';
+import 'package:saldough/features/milestone/presentation/navigation/milestone_route_module.dart';
 import 'package:saldough/features/notification_capture/di/notification_capture_module.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_gateway.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_store.dart';
@@ -118,6 +120,7 @@ abstract final class RootModule {
       versionEntry: accountVersionEntry,
       dataSection: accountDataSection,
       plusSection: accountPlusSection,
+      appEntries: accountAppEntries,
     ),
     AnalysisRouteModule(),
     AppUpdateRouteModule(),
@@ -127,6 +130,7 @@ abstract final class RootModule {
     DevSeedRouteModule(),
     PremiumRouteModule(),
     FreelanceRouteModule(),
+    MilestoneRouteModule(),
     NotificationCaptureRouteModule(),
     RecordRouteModule(),
     RecurringRouteModule(),

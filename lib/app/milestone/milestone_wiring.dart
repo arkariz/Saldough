@@ -12,6 +12,7 @@ import 'package:saldough/features/data_portability/domain/backup_gateway.dart';
 import 'package:saldough/features/milestone/data/milestone_store_impl.dart';
 import 'package:saldough/features/milestone/domain/repositories/milestone_ports.dart';
 import 'package:saldough/features/milestone/domain/usecases/evaluate_milestones.dart';
+import 'package:saldough/features/milestone/presentation/stamp_book_access.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_store.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_inbox_changes.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
@@ -55,6 +56,7 @@ void registerMilestone(GetIt container) {
         facts: container<MilestoneFactsSource>(),
       ),
     )
+    ..registerLazySingleton<MilestoneBookAccess>(() => container<MilestoneCoordinator>())
     ..registerLazySingleton<MilestoneCoordinator>(
       () => MilestoneCoordinator(
         evaluate: container<EvaluateMilestones>(),

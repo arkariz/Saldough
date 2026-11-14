@@ -1856,6 +1856,38 @@
     }
   },
   "stamps": {
+  "screen": {
+      "title": "Stamp Book"
+    },
+    "intro": "Small stamps for things you got done. Nothing ever goes away.",
+    "groups": {
+      "start": "Start",
+      "tidy": "Tidy",
+      "safe": "Safe",
+      "plan": "Plan"
+    },
+    "earnedOn": "Earned $date",
+    "empty": {
+      "title": "No stamps yet",
+      "body": "Create your first wallet and the first stamp will land here."
+    },
+    "allDone": "You have every stamp there is. New ones arrive with new features.",
+    "detail": {
+      "earned": "Earned $date. Requirement: $how",
+      "locked": "$how The stamp lands on its own once you do.",
+      "close": "Close"
+    },
+    "semantic": {
+      "earned": "$name, earned $date",
+      "locked": "$name, not earned yet"
+    },
+    "account": {
+      "entryTitle": "Stamp Book",
+      "entrySubtitle": "Stamps you have earned",
+      "switchTitle": "Stamp celebrations",
+      "switchHintOn": "Show a small note when you earn a stamp.",
+      "switchHintOff": "Celebrations are off. Stamps are still earned quietly; turn them back on to see everything."
+    },
     "names": {
       "wallet_first": "First wallet",
       "record_first": "First record",

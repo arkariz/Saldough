@@ -1853,6 +1853,38 @@
     }
   },
   "stamps": {
+  "screen": {
+      "title": "Buku Stempel"
+    },
+    "intro": "Stempel kecil untuk hal yang berhasil kamu lakukan. Tidak ada yang hilang.",
+    "groups": {
+      "start": "Mulai",
+      "tidy": "Rapi",
+      "safe": "Aman",
+      "plan": "Rencana"
+    },
+    "earnedOn": "Diraih $date",
+    "empty": {
+      "title": "Belum ada stempel",
+      "body": "Buat dompet pertamamu dan stempel pertama akan masuk ke sini."
+    },
+    "allDone": "Semua stempel yang ada sudah kamu raih. Yang baru datang bersama fitur baru.",
+    "detail": {
+      "earned": "Diraih $date. Syaratnya: $how",
+      "locked": "$how Stempelnya masuk sendiri begitu syaratnya terpenuhi.",
+      "close": "Tutup"
+    },
+    "semantic": {
+      "earned": "$name, diraih $date",
+      "locked": "$name, belum diraih"
+    },
+    "account": {
+      "entryTitle": "Buku Stempel",
+      "entrySubtitle": "Stempel yang sudah kamu raih",
+      "switchTitle": "Perayaan stempel",
+      "switchHintOn": "Tampilkan kabar kecil saat kamu meraih stempel.",
+      "switchHintOff": "Perayaan mati. Stempel tetap diraih diam-diam; nyalakan lagi untuk melihat semuanya."
+    },
     "names": {
       "wallet_first": "Dompet pertama",
       "record_first": "Catatan pertama",

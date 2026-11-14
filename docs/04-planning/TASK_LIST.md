@@ -7021,9 +7021,26 @@ L lebih dari seminggu.
       T-28.5. Belum diuji di perangkat dan tuan rumah belum punya uji widget
       sendiri (T-28.8).
       Rupa (14 Nov 2026, menunggu persetujuan pemilik): `docs/03-design/proposals/buku-stempel/` (HANDOFF.md + prototipe).
-- [ ] **T-28.5** (M) Buku Stempel dan baris/sakelar di Akun. Butuh T-28.2, rupa
-      dari ui-ux-designer. Rupa (14 Nov 2026, menunggu persetujuan pemilik):
+- [x] **T-28.5** (M) Buku Stempel dan baris/sakelar di Akun. Butuh T-28.2, rupa
+      dari ui-ux-designer. Rupa (14 Nov 2026, disetujui pemilik):
       `docs/03-design/proposals/buku-stempel/` (HANDOFF.md + prototipe).
+      Selesai 14 Nov 2026: token warna segel (`stampSeal`, `stampSealDeep`,
+      `stampGold`, `stampGoldDeep`) di skema warna dan lima preset;
+      `StampBookPage` (rute `milestone.book`, kelompok Mulai/Rapi/Aman/Rencana,
+      keadaan kosong/sebagian/semua, lembar detail, segel dicap masuk berurutan,
+      titik "baru", tanpa hitungan/bilah/gembok), `MilestoneBookAccess`
+      (diimplementasi koordinator), dua baris di grup Aplikasi Akun
+      (`AccountRouteModule.appEntries`: Buku Stempel dan sakelar Perayaan
+      stempel; sakelar mati menutup baris Buku Stempel, G-8). "Lihat" dan banner
+      kini membuka Buku Stempel. Perbaikan terkait: evaluasi dipicu sesudah
+      cadangan tersimpan (`BackupRecordedGateway`). Uji widget halaman dan entri
+      Akun; uji app/milestone lulus, analyze bersih.
+      ⚠ Selisih dari rupa: (1) Kaya hanya sebagian (segel dicap berurutan, cincin
+      baru); belum ada adegan daun, Tanuki melompat, balon ketik, kilap, sinar
+      dan segel miring 3D di detail, konfeti, getar layar; (2) tonggak tersembunyi
+      tampil hanya bila diraih (belum ada pelacak "fitur sudah dipakai"); (3)
+      keterangan sakelar berubah saat mati, catatan terpisah di bawah kartu tidak
+      ada; (4) keadaan memuat tidak ada (catatan dibaca sinkron dari koordinator).
 - [ ] **T-28.6** (S) Analitik §10 dan saklar jarak jauh `stamps_enabled`
       (tanpa uji A/B). Butuh T-28.4, T-28.5.
 - [ ] **T-28.7** (S) Teks id/en, glosarium, dokumen rilis. Butuh T-28.5.

@@ -4288,6 +4288,24 @@ class Translations$stamps$id {
 	final Translations _root; // ignore: unused_field
 
 	// Translations
+	late final Translations$stamps$screen$id screen = Translations$stamps$screen$id.internal(_root);
+
+	/// id: 'Stempel kecil untuk hal yang berhasil kamu lakukan. Tidak ada yang hilang.'
+	String get intro => 'Stempel kecil untuk hal yang berhasil kamu lakukan. Tidak ada yang hilang.';
+
+	late final Translations$stamps$groups$id groups = Translations$stamps$groups$id.internal(_root);
+
+	/// id: 'Diraih $date'
+	String earnedOn({required Object date}) => 'Diraih ${date}';
+
+	late final Translations$stamps$empty$id empty = Translations$stamps$empty$id.internal(_root);
+
+	/// id: 'Semua stempel yang ada sudah kamu raih. Yang baru datang bersama fitur baru.'
+	String get allDone => 'Semua stempel yang ada sudah kamu raih. Yang baru datang bersama fitur baru.';
+
+	late final Translations$stamps$detail$id detail = Translations$stamps$detail$id.internal(_root);
+	late final Translations$stamps$semantic$id semantic = Translations$stamps$semantic$id.internal(_root);
+	late final Translations$stamps$account$id account = Translations$stamps$account$id.internal(_root);
 	late final Translations$stamps$names$id names = Translations$stamps$names$id.internal(_root);
 	late final Translations$stamps$how$id how = Translations$stamps$how$id.internal(_root);
 	late final Translations$stamps$snackbar$id snackbar = Translations$stamps$snackbar$id.internal(_root);
@@ -5595,6 +5613,111 @@ class Translations$premium$paywall$id {
 
 	/// id: 'Berlangganan Plus belum tersedia. Mencatat tetap gratis.'
 	String get notSellingBody => 'Berlangganan Plus belum tersedia. Mencatat tetap gratis.';
+}
+
+// Path: stamps.screen
+class Translations$stamps$screen$id {
+	Translations$stamps$screen$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Buku Stempel'
+	String get title => 'Buku Stempel';
+}
+
+// Path: stamps.groups
+class Translations$stamps$groups$id {
+	Translations$stamps$groups$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Mulai'
+	String get start => 'Mulai';
+
+	/// id: 'Rapi'
+	String get tidy => 'Rapi';
+
+	/// id: 'Aman'
+	String get safe => 'Aman';
+
+	/// id: 'Rencana'
+	String get plan => 'Rencana';
+}
+
+// Path: stamps.empty
+class Translations$stamps$empty$id {
+	Translations$stamps$empty$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Belum ada stempel'
+	String get title => 'Belum ada stempel';
+
+	/// id: 'Buat dompet pertamamu dan stempel pertama akan masuk ke sini.'
+	String get body => 'Buat dompet pertamamu dan stempel pertama akan masuk ke sini.';
+}
+
+// Path: stamps.detail
+class Translations$stamps$detail$id {
+	Translations$stamps$detail$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Diraih $date. Syaratnya: $how'
+	String earned({required Object date, required Object how}) => 'Diraih ${date}. Syaratnya: ${how}';
+
+	/// id: '$how Stempelnya masuk sendiri begitu syaratnya terpenuhi.'
+	String locked({required Object how}) => '${how} Stempelnya masuk sendiri begitu syaratnya terpenuhi.';
+
+	/// id: 'Tutup'
+	String get close => 'Tutup';
+}
+
+// Path: stamps.semantic
+class Translations$stamps$semantic$id {
+	Translations$stamps$semantic$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: '$name, diraih $date'
+	String earned({required Object name, required Object date}) => '${name}, diraih ${date}';
+
+	/// id: '$name, belum diraih'
+	String locked({required Object name}) => '${name}, belum diraih';
+}
+
+// Path: stamps.account
+class Translations$stamps$account$id {
+	Translations$stamps$account$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Buku Stempel'
+	String get entryTitle => 'Buku Stempel';
+
+	/// id: 'Stempel yang sudah kamu raih'
+	String get entrySubtitle => 'Stempel yang sudah kamu raih';
+
+	/// id: 'Perayaan stempel'
+	String get switchTitle => 'Perayaan stempel';
+
+	/// id: 'Tampilkan kabar kecil saat kamu meraih stempel.'
+	String get switchHintOn => 'Tampilkan kabar kecil saat kamu meraih stempel.';
+
+	/// id: 'Perayaan mati. Stempel tetap diraih diam-diam; nyalakan lagi untuk melihat semuanya.'
+	String get switchHintOff => 'Perayaan mati. Stempel tetap diraih diam-diam; nyalakan lagi untuk melihat semuanya.';
 }
 
 // Path: stamps.names
@@ -7685,6 +7808,26 @@ extension on Translations {
 			'premium.paywall.done' => 'Selesai',
 			'premium.paywall.notSellingTitle' => 'Plus belum dijual',
 			'premium.paywall.notSellingBody' => 'Berlangganan Plus belum tersedia. Mencatat tetap gratis.',
+			'stamps.screen.title' => 'Buku Stempel',
+			'stamps.intro' => 'Stempel kecil untuk hal yang berhasil kamu lakukan. Tidak ada yang hilang.',
+			'stamps.groups.start' => 'Mulai',
+			'stamps.groups.tidy' => 'Rapi',
+			'stamps.groups.safe' => 'Aman',
+			'stamps.groups.plan' => 'Rencana',
+			'stamps.earnedOn' => ({required Object date}) => 'Diraih ${date}',
+			'stamps.empty.title' => 'Belum ada stempel',
+			'stamps.empty.body' => 'Buat dompet pertamamu dan stempel pertama akan masuk ke sini.',
+			'stamps.allDone' => 'Semua stempel yang ada sudah kamu raih. Yang baru datang bersama fitur baru.',
+			'stamps.detail.earned' => ({required Object date, required Object how}) => 'Diraih ${date}. Syaratnya: ${how}',
+			'stamps.detail.locked' => ({required Object how}) => '${how} Stempelnya masuk sendiri begitu syaratnya terpenuhi.',
+			'stamps.detail.close' => 'Tutup',
+			'stamps.semantic.earned' => ({required Object name, required Object date}) => '${name}, diraih ${date}',
+			'stamps.semantic.locked' => ({required Object name}) => '${name}, belum diraih',
+			'stamps.account.entryTitle' => 'Buku Stempel',
+			'stamps.account.entrySubtitle' => 'Stempel yang sudah kamu raih',
+			'stamps.account.switchTitle' => 'Perayaan stempel',
+			'stamps.account.switchHintOn' => 'Tampilkan kabar kecil saat kamu meraih stempel.',
+			'stamps.account.switchHintOff' => 'Perayaan mati. Stempel tetap diraih diam-diam; nyalakan lagi untuk melihat semuanya.',
 			'stamps.names.wallet_first' => 'Dompet pertama',
 			'stamps.names.record_first' => 'Catatan pertama',
 			'stamps.names.period_tidy' => 'Periode rapi',

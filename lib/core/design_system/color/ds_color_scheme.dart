@@ -170,6 +170,10 @@ class DsColorScheme extends ThemeExtension<DsColorScheme> {
     required this.heroSurface,
     required this.heroBorder,
     required this.heroGlow,
+    required this.stampSeal,
+    required this.stampSealDeep,
+    required this.stampGold,
+    required this.stampGoldDeep,
     required this.onHero,
     required this.onHeroMuted,
     required this.heroAccent,
@@ -413,6 +417,18 @@ class DsColorScheme extends ThemeExtension<DsColorScheme> {
   /// Cahaya sekitar di sudut kartu saldo (dipakai dengan alfa rendah).
   final Color heroGlow;
 
+  /// Tengah gradasi segel stempel diraih.
+  final Color stampSeal;
+
+  /// Tepi gradasi segel stempel diraih.
+  final Color stampSealDeep;
+
+  /// Cincin emas segel.
+  final Color stampGold;
+
+  /// Emas pekat (cincin segel baru).
+  final Color stampGoldDeep;
+
   /// Teks dan nominal di kartu saldo.
   final Color onHero;
 
@@ -604,6 +620,10 @@ class DsColorScheme extends ThemeExtension<DsColorScheme> {
     Color? heroSurface,
     Color? heroBorder,
     Color? heroGlow,
+    Color? stampSeal,
+    Color? stampSealDeep,
+    Color? stampGold,
+    Color? stampGoldDeep,
     Color? onHero,
     Color? onHeroMuted,
     Color? heroAccent,
@@ -697,6 +717,10 @@ class DsColorScheme extends ThemeExtension<DsColorScheme> {
       heroSurface: heroSurface ?? this.heroSurface,
       heroBorder: heroBorder ?? this.heroBorder,
       heroGlow: heroGlow ?? this.heroGlow,
+      stampSeal: stampSeal ?? this.stampSeal,
+      stampSealDeep: stampSealDeep ?? this.stampSealDeep,
+      stampGold: stampGold ?? this.stampGold,
+      stampGoldDeep: stampGoldDeep ?? this.stampGoldDeep,
       onHero: onHero ?? this.onHero,
       onHeroMuted: onHeroMuted ?? this.onHeroMuted,
       heroAccent: heroAccent ?? this.heroAccent,
@@ -795,6 +819,10 @@ class DsColorScheme extends ThemeExtension<DsColorScheme> {
       heroSurface: Color.lerp(heroSurface, other.heroSurface, t)!,
       heroBorder: Color.lerp(heroBorder, other.heroBorder, t)!,
       heroGlow: Color.lerp(heroGlow, other.heroGlow, t)!,
+      stampSeal: Color.lerp(stampSeal, other.stampSeal, t)!,
+      stampSealDeep: Color.lerp(stampSealDeep, other.stampSealDeep, t)!,
+      stampGold: Color.lerp(stampGold, other.stampGold, t)!,
+      stampGoldDeep: Color.lerp(stampGoldDeep, other.stampGoldDeep, t)!,
       onHero: Color.lerp(onHero, other.onHero, t)!,
       onHeroMuted: Color.lerp(onHeroMuted, other.onHeroMuted, t)!,
       heroAccent: Color.lerp(heroAccent, other.heroAccent, t)!,
@@ -892,6 +920,10 @@ class DsColorScheme extends ThemeExtension<DsColorScheme> {
     'heroSurface': heroSurface,
     'heroBorder': heroBorder,
     'heroGlow': heroGlow,
+    'stampSeal': stampSeal,
+    'stampSealDeep': stampSealDeep,
+    'stampGold': stampGold,
+    'stampGoldDeep': stampGoldDeep,
     'onHero': onHero,
     'onHeroMuted': onHeroMuted,
     'heroAccent': heroAccent,

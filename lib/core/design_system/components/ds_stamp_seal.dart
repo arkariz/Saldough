@@ -25,24 +25,6 @@ enum DsStampSealSize {
   final double icon;
 }
 
-/// Hijau dan emas segel. Belum token preset (rupa buku-stempel §5, disetujui
-/// jadi token); sementara konstanta di sini, sama di terang dan gelap karena
-/// segel selalu di atas permukaan sendiri. Preset Pink: periksa kontras ikon
-/// clay di atas hijau ini.
-abstract final class DsStampPalette {
-  /// Tengah gradasi segel diraih.
-  static const Color sealLight = Color(0xFF1F7A43);
-
-  /// Tepi gradasi segel diraih.
-  static const Color sealDeep = Color(0xFF14532D);
-
-  /// Cincin emas.
-  static const Color gold = Color(0xFFFDE68A);
-
-  /// Emas pekat (cincin segel baru).
-  static const Color goldDeep = Color(0xFFF59E0B);
-}
-
 /// Segel bulat stempel: koin clay di dalam cincin emas (diraih) atau cincin
 /// abu-abu dengan ikon pudar (terkunci). **Tidak ada gembok dan tidak ada
 /// hitungan** (KT-G1). Tiap stempel punya sudut tetap [rotation] agar terasa
@@ -120,6 +102,7 @@ class _DsStampSealState extends State<DsStampSeal> with SingleTickerProviderStat
   @override
   Widget build(BuildContext context) {
     final ds = context.ds;
+    final c = ds.colors;
     final d = widget.size.diameter;
     final earned = widget.earned;
     final ringWidth = d >= 100 ? 3.0 : 2.0;
@@ -130,16 +113,16 @@ class _DsStampSealState extends State<DsStampSeal> with SingleTickerProviderStat
       decoration: earned
           ? BoxDecoration(
               shape: BoxShape.circle,
-              gradient: const RadialGradient(
-                center: Alignment(-0.3, -0.4),
+              gradient: RadialGradient(
+                center: const Alignment(-0.3, -0.4),
                 radius: 0.9,
-                colors: [DsStampPalette.sealLight, DsStampPalette.sealDeep],
-                stops: [0, 0.7],
+                colors: [c.stampSeal, c.stampSealDeep],
+                stops: const [0, 0.7],
               ),
-              border: Border.all(color: DsStampPalette.gold, width: ringWidth),
+              border: Border.all(color: c.stampGold, width: ringWidth),
               boxShadow: [
                 BoxShadow(
-                  color: DsStampPalette.sealDeep.withValues(alpha: 0.5),
+                  color: c.stampSealDeep.withValues(alpha: 0.5),
                   blurRadius: 8,
                   offset: const Offset(0, 4),
                   spreadRadius: -2,
@@ -194,7 +177,7 @@ class _DsStampSealState extends State<DsStampSeal> with SingleTickerProviderStat
                         height: d + 10,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          border: Border.all(color: DsStampPalette.goldDeep.withValues(alpha: alpha), width: 2),
+                          border: Border.all(color: c.stampGoldDeep.withValues(alpha: alpha), width: 2),
                         ),
                       ),
                     );

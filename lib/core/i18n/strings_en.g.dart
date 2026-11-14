@@ -1696,6 +1696,15 @@ class _Translations$stamps$en extends Translations$stamps$id {
 	final TranslationsEn _root; // ignore: unused_field
 
 	// Translations
+	@override late final _Translations$stamps$screen$en screen = _Translations$stamps$screen$en._(_root);
+	@override String get intro => 'Small stamps for things you got done. Nothing ever goes away.';
+	@override late final _Translations$stamps$groups$en groups = _Translations$stamps$groups$en._(_root);
+	@override String earnedOn({required Object date}) => 'Earned ${date}';
+	@override late final _Translations$stamps$empty$en empty = _Translations$stamps$empty$en._(_root);
+	@override String get allDone => 'You have every stamp there is. New ones arrive with new features.';
+	@override late final _Translations$stamps$detail$en detail = _Translations$stamps$detail$en._(_root);
+	@override late final _Translations$stamps$semantic$en semantic = _Translations$stamps$semantic$en._(_root);
+	@override late final _Translations$stamps$account$en account = _Translations$stamps$account$en._(_root);
 	@override late final _Translations$stamps$names$en names = _Translations$stamps$names$en._(_root);
 	@override late final _Translations$stamps$how$en how = _Translations$stamps$how$en._(_root);
 	@override late final _Translations$stamps$snackbar$en snackbar = _Translations$stamps$snackbar$en._(_root);
@@ -2362,6 +2371,77 @@ class _Translations$premium$paywall$en extends Translations$premium$paywall$id {
 	@override String get done => 'Done';
 	@override String get notSellingTitle => 'Plus is not on sale yet';
 	@override String get notSellingBody => 'Subscribing to Plus is not available yet. Recording stays free.';
+}
+
+// Path: stamps.screen
+class _Translations$stamps$screen$en extends Translations$stamps$screen$id {
+	_Translations$stamps$screen$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Stamp Book';
+}
+
+// Path: stamps.groups
+class _Translations$stamps$groups$en extends Translations$stamps$groups$id {
+	_Translations$stamps$groups$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get start => 'Start';
+	@override String get tidy => 'Tidy';
+	@override String get safe => 'Safe';
+	@override String get plan => 'Plan';
+}
+
+// Path: stamps.empty
+class _Translations$stamps$empty$en extends Translations$stamps$empty$id {
+	_Translations$stamps$empty$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'No stamps yet';
+	@override String get body => 'Create your first wallet and the first stamp will land here.';
+}
+
+// Path: stamps.detail
+class _Translations$stamps$detail$en extends Translations$stamps$detail$id {
+	_Translations$stamps$detail$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String earned({required Object date, required Object how}) => 'Earned ${date}. Requirement: ${how}';
+	@override String locked({required Object how}) => '${how} The stamp lands on its own once you do.';
+	@override String get close => 'Close';
+}
+
+// Path: stamps.semantic
+class _Translations$stamps$semantic$en extends Translations$stamps$semantic$id {
+	_Translations$stamps$semantic$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String earned({required Object name, required Object date}) => '${name}, earned ${date}';
+	@override String locked({required Object name}) => '${name}, not earned yet';
+}
+
+// Path: stamps.account
+class _Translations$stamps$account$en extends Translations$stamps$account$id {
+	_Translations$stamps$account$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get entryTitle => 'Stamp Book';
+	@override String get entrySubtitle => 'Stamps you have earned';
+	@override String get switchTitle => 'Stamp celebrations';
+	@override String get switchHintOn => 'Show a small note when you earn a stamp.';
+	@override String get switchHintOff => 'Celebrations are off. Stamps are still earned quietly; turn them back on to see everything.';
 }
 
 // Path: stamps.names
@@ -4324,6 +4404,26 @@ extension on TranslationsEn {
 			'premium.paywall.done' => 'Done',
 			'premium.paywall.notSellingTitle' => 'Plus is not on sale yet',
 			'premium.paywall.notSellingBody' => 'Subscribing to Plus is not available yet. Recording stays free.',
+			'stamps.screen.title' => 'Stamp Book',
+			'stamps.intro' => 'Small stamps for things you got done. Nothing ever goes away.',
+			'stamps.groups.start' => 'Start',
+			'stamps.groups.tidy' => 'Tidy',
+			'stamps.groups.safe' => 'Safe',
+			'stamps.groups.plan' => 'Plan',
+			'stamps.earnedOn' => ({required Object date}) => 'Earned ${date}',
+			'stamps.empty.title' => 'No stamps yet',
+			'stamps.empty.body' => 'Create your first wallet and the first stamp will land here.',
+			'stamps.allDone' => 'You have every stamp there is. New ones arrive with new features.',
+			'stamps.detail.earned' => ({required Object date, required Object how}) => 'Earned ${date}. Requirement: ${how}',
+			'stamps.detail.locked' => ({required Object how}) => '${how} The stamp lands on its own once you do.',
+			'stamps.detail.close' => 'Close',
+			'stamps.semantic.earned' => ({required Object name, required Object date}) => '${name}, earned ${date}',
+			'stamps.semantic.locked' => ({required Object name}) => '${name}, not earned yet',
+			'stamps.account.entryTitle' => 'Stamp Book',
+			'stamps.account.entrySubtitle' => 'Stamps you have earned',
+			'stamps.account.switchTitle' => 'Stamp celebrations',
+			'stamps.account.switchHintOn' => 'Show a small note when you earn a stamp.',
+			'stamps.account.switchHintOff' => 'Celebrations are off. Stamps are still earned quietly; turn them back on to see everything.',
 			'stamps.names.wallet_first' => 'First wallet',
 			'stamps.names.record_first' => 'First record',
 			'stamps.names.period_tidy' => 'Tidy period',

@@ -26,6 +26,7 @@ import 'package:saldough/features/home/di/home_scope.dart';
 import 'package:saldough/features/home/presentation/bloc/home_bloc.dart';
 import 'package:saldough/features/home/presentation/bloc/home_state.dart';
 import 'package:saldough/features/home/presentation/pages/home_page.dart';
+import 'package:saldough/features/milestone/presentation/navigation/milestone_route_keys.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_gateway.dart';
 import 'package:saldough/features/notification_capture/presentation/host/notification_capture_host.dart';
 import 'package:saldough/features/notification_capture/presentation/widgets/capture_inbox_banner.dart';
@@ -200,13 +201,12 @@ class _AppShellPageState extends State<AppShellPage> {
             TrialGiftHost(container: parentContainer, active: _activeTab == _homeTabIndex),
             AppUpdateBanner(container: parentContainer, board: _statusBoard),
             PlusHomeCard(container: parentContainer),
-            // Perayaan stempel (ADR-046, T-28.4); Buku Stempel sendiri menyusul (T-28.5),
-            // sementara "Lihat" membuka Akun.
+            // Perayaan stempel (ADR-046, T-28.4); "Lihat" membuka Buku Stempel (T-28.5).
             MilestoneCelebrationHost(
               container: parentContainer,
               active: _activeTab == _homeTabIndex,
               board: _statusBoard,
-              onOpenBook: () => context.pushRoute(AccountRouteKeys.page, const EmptyInput()),
+              onOpenBook: () => context.pushRoute(MilestoneRouteKeys.book, const EmptyInput()),
               onOpenSettings: () => context.pushRoute(AccountRouteKeys.page, const EmptyInput()),
             ),
           ],

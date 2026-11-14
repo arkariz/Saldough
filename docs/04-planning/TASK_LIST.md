@@ -6981,9 +6981,24 @@ L lebih dari seminggu.
       terdaftar di `BackupRegistry`). Uji milestone + registri +
       arsitektur lulus, `flutter analyze` bersih. Port `MilestoneFactsSource`
       belum punya implementasi (T-28.3).
-- [ ] **T-28.3** (M) Penyedia fakta dari dompet, transaksi, periode, rutin,
+- [x] **T-28.3** (M) Penyedia fakta dari dompet, transaksi, periode, rutin,
       kotak masuk, cadangan, anggaran, freelance, dirakit di `lib/app/`.
       Butuh T-28.1. Memberi fakta "periode tertutup" bagi Fase 27.
+      Selesai 14 Nov 2026 (`lib/app/milestone/`): `milestoneFactsFrom` (murni,
+      aturan periode sama dengan Analisis: `periodDateOf` + `financialPeriodOf`;
+      Periode rapi = tertutup, ≥3 pemasukan/pengeluaran, tanpa yang tanpa
+      kategori; Rutin tak terlewat = tertutup, ≥1 kemunculan tidak dijeda, tanpa
+      Menunggu/Terlewat, paling jauh 24 periode ke belakang),
+      `AppMilestoneFactsSource`, dan `InboxClearTracker` (penanda kotak masuk
+      turun ≥1 → 0 lewat sinyal `CaptureInboxChanges`; kedaluwarsa tujuh hari
+      tidak dihitung; kunci `milestone_signal_inbox_cleared` dikecualikan dari
+      cadangan). Uji lulus (15 kasus fakta), arsitektur dan registri lulus,
+      analyze bersih. ⚠ **Belum dirakit:** pendaftaran di DI dan pemicu
+      evaluasi (aplikasi dibuka, `LedgerChanges`, `RecurringChanges`, sesudah
+      cadangan) ikut T-28.4 karena hasilnya dikonsumsi perayaan. Kategori yang
+      dihapus tapi masih dirujuk transaksi belum dianggap tanpa kategori
+      (Analisis menganggapnya begitu); kasus langka, dicatat sebagai
+      penyempurnaan.
 - [ ] **T-28.4** (M) Perayaan (snackbar v2, lembar pengenalan, banner pengguna
       lama) dan aturan G-4/G-6. Butuh T-28.2, rupa.
 - [ ] **T-28.5** (M) Buku Stempel dan baris/sakelar di Akun. Butuh T-28.2, rupa
@@ -7021,7 +7036,7 @@ S sehari, M beberapa hari, L lebih dari seminggu. Rilis bertahap: Kartu Periode
       (`features/period_book`) dan entri `period_book_memory` di
       `BackupRegistry`; uji lulus, `flutter analyze` bersih. **Belum:** fakta
       "periode tertutup" untuk mesin B-94: mesin tonggak itu belum ada di
-      `lib/` (B-94 masih draf), jadi bagian ini menunggu Fase 28 (T-28.3). Pemeriksaan di rute menunggu rutenya (T-27.5/T-27.6).
+      `lib/` (B-94 masih draf), jadi bagian ini fakta sudah tersedia dari Fase 28 (T-28.3: `milestoneFactsFrom`); tinggal dipakai T-27.5/T-27.6. Pemeriksaan di rute menunggu rutenya (T-27.5/T-27.6).
 - [ ] **T-27.3** (M) Model baca buku halaman 1–4 dari sumber Analisis, Arus,
       Rencana; `financialPeriodOf`/`periodDateOf`.
       Verifikasi: uji kecocokan total (B-3, B-15) dengan data uji emas.

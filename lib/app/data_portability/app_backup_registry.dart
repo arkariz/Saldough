@@ -82,6 +82,8 @@ final appBackupRegistry = BackupRegistry(
     // Mencatat aksi di perangkat ini, bukan data keuangan (ADR-040 §3.5).
     'settings_review_prompt': 'kemajuan permintaan ulasan, milik perangkat',
     'settings_last_backup': 'status aksi di perangkat ini',
+    // Pemicu stempel Kotak masuk bersih (ADR-046); stempelnya yang ikut cadangan lewat milestone_ledger.
+    'milestone_signal_inbox_cleared': 'pemicu milik perangkat; kotak masuk tidak ikut cadangan',
     // Hak Plus milik akun Play/RevenueCat dan perangkat, bukan data keuangan;
     // menyalinnya bisa memberi atau memulai ulang hak secara tidak sah
     // (ADR-041 §3.9).

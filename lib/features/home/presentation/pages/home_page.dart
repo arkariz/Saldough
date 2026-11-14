@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:navigation/navigation.dart';
@@ -39,6 +40,7 @@ class HomePage extends StatefulWidget {
     required this.onShowTransactions,
     required this.onShowWallets,
     this.updateHost,
+    this.accountBadge,
     this.pendingRecurring,
     this.featureNudge,
     this.forecast,
@@ -71,6 +73,10 @@ class HomePage extends StatefulWidget {
   /// "Apa yang baru" dibuka darinya (APP_UPDATE, ADR-043 §3.6). `null` = tidak
   /// ada.
   final Widget? updateHost;
+
+  /// Titik kecil di ikon Akun bila bernilai benar (stempel belum dilihat, ADR-046).
+  /// `null` = tanpa titik.
+  final ValueListenable<bool>? accountBadge;
 
   /// Kartu Menunggu dicatat (T-15.6), disisipkan akar komposisi supaya
   /// `home` tidak mengimpor fitur `recurring`; tampil hanya bila ada isinya.
@@ -177,8 +183,41 @@ class _HomePageState extends State<HomePage> {
         const TutorialInfoButton(tour: TourId.home),
         // Titik masuk layar Akun (ADR-023/024) -- identitas opsional, bukan
         // navigasi bawah karena bukan aktivitas harian.
-        AccountAvatarButton(onPressed: () => context.pushRoute(AccountRouteKeys.page, const EmptyInput())),
+        _withBadge(
+          AccountAvatarButton(onPressed: () => context.pushRoute(AccountRouteKeys.page, const EmptyInput())),
+        ),
       ],
+    );
+  }
+
+  Widget _withBadge(Widget child) {
+    final badge = widget.accountBadge;
+    if (badge == null) return child;
+    return ValueListenableBuilder<bool>(
+      valueListenable: badge,
+      builder: (context, show, child) => Stack(
+        clipBehavior: Clip.none,
+        children: [
+          child!,
+          if (show)
+            Positioned(
+              right: 8,
+              top: 8,
+              child: IgnorePointer(
+                child: Container(
+                  width: 9,
+                  height: 9,
+                  decoration: BoxDecoration(
+                    color: context.ds.colors.actionPrimary,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: context.ds.colors.surfaceCanvas, width: 2),
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
+      child: child,
     );
   }
 

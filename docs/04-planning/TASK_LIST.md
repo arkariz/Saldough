@@ -6999,8 +6999,27 @@ L lebih dari seminggu.
       dihapus tapi masih dirujuk transaksi belum dianggap tanpa kategori
       (Analisis menganggapnya begitu); kasus langka, dicatat sebagai
       penyempurnaan.
-- [ ] **T-28.4** (M) Perayaan (snackbar v2, lembar pengenalan, banner pengguna
+- [x] **T-28.4** (M) Perayaan (snackbar v2, lembar pengenalan, banner pengguna
       lama) dan aturan G-4/G-6. Butuh T-28.2, rupa.
+      Selesai 14 Nov 2026. Keputusan rupa: Kaya hanya di Buku Stempel dan
+      lembar detailnya (T-28.5); perayaan yang muncul sendiri tetap tenang;
+      tanpa "Cap lagi"; subjudul Akun tanpa hitungan; G-4 direvisi.
+      Logika: `planCelebration` (murni), `MilestoneCoordinator` (pemicu: aplikasi
+      dibuka + sinyal `LedgerChanges`/`RecurringChanges`/kotak masuk, digabung 1 dtk;
+      cadangan baru terbaca pada evaluasi berikutnya), `registerMilestone` di
+      `RootModule`, `startMilestones` di bootstrap (di belakang, tidak menunda
+      layar pertama). UI: `DsStampSeal` (core/design_system), snackbar, lembar
+      pengenalan, slide banner pengguna lama di papan status, titik di ikon Akun
+      (`HomePage.accountBadge`), tuan rumah `MilestoneCelebrationHost`; teks
+      `stamps.*` id/en. Terhalang (tab bukan Beranda, tur, rute lain, banner
+      pembaruan, Apa yang baru) = tidak ada perayaan yang menunggu. Uji:
+      kebijakan, koordinator, segel, snackbar, lembar, slide; 373 uji
+      app/i18n/home/design-system/arsitektur lulus, analyze bersih.
+      ⚠ Sisa untuk T-28.5: "Lihat" dan banner membuka **Akun** sementara (layar
+      Buku Stempel belum ada) dan `markAllSeen` belum dipanggil siapa pun;
+      warna segel masih konstanta `DsStampPalette`, jadikan token preset di
+      T-28.5. Belum diuji di perangkat dan tuan rumah belum punya uji widget
+      sendiri (T-28.8).
       Rupa (14 Nov 2026, menunggu persetujuan pemilik): `docs/03-design/proposals/buku-stempel/` (HANDOFF.md + prototipe).
 - [ ] **T-28.5** (M) Buku Stempel dan baris/sakelar di Akun. Butuh T-28.2, rupa
       dari ui-ux-designer. Rupa (14 Nov 2026, menunggu persetujuan pemilik):

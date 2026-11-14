@@ -66,6 +66,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$appUpdate$id appUpdate = Translations$appUpdate$id.internal(_root);
 	late final Translations$analysis$id analysis = Translations$analysis$id.internal(_root);
 	late final Translations$premium$id premium = Translations$premium$id.internal(_root);
+	late final Translations$stamps$id stamps = Translations$stamps$id.internal(_root);
 }
 
 // Path: app
@@ -4280,6 +4281,20 @@ class Translations$premium$id {
 	late final Translations$premium$paywall$id paywall = Translations$premium$paywall$id.internal(_root);
 }
 
+// Path: stamps
+class Translations$stamps$id {
+	Translations$stamps$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+	late final Translations$stamps$names$id names = Translations$stamps$names$id.internal(_root);
+	late final Translations$stamps$how$id how = Translations$stamps$how$id.internal(_root);
+	late final Translations$stamps$snackbar$id snackbar = Translations$stamps$snackbar$id.internal(_root);
+	late final Translations$stamps$firstSheet$id firstSheet = Translations$stamps$firstSheet$id.internal(_root);
+	late final Translations$stamps$legacyBanner$id legacyBanner = Translations$stamps$legacyBanner$id.internal(_root);
+}
+
 // Path: record.draftIssue
 class Translations$record$draftIssue$id {
 	Translations$record$draftIssue$id.internal(this._root);
@@ -5580,6 +5595,132 @@ class Translations$premium$paywall$id {
 
 	/// id: 'Berlangganan Plus belum tersedia. Mencatat tetap gratis.'
 	String get notSellingBody => 'Berlangganan Plus belum tersedia. Mencatat tetap gratis.';
+}
+
+// Path: stamps.names
+class Translations$stamps$names$id {
+	Translations$stamps$names$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Dompet pertama'
+	String get wallet_first => 'Dompet pertama';
+
+	/// id: 'Catatan pertama'
+	String get record_first => 'Catatan pertama';
+
+	/// id: 'Periode rapi'
+	String get period_tidy => 'Periode rapi';
+
+	/// id: 'Rutin tak terlewat'
+	String get recurring_clear => 'Rutin tak terlewat';
+
+	/// id: 'Kotak masuk bersih'
+	String get inbox_clear => 'Kotak masuk bersih';
+
+	/// id: 'Cadangan pertama'
+	String get backup_first => 'Cadangan pertama';
+
+	/// id: 'Anggaran terpakai'
+	String get budget_first => 'Anggaran terpakai';
+
+	/// id: 'Pembayaran pertama diterima'
+	String get freelance_paid => 'Pembayaran pertama diterima';
+}
+
+// Path: stamps.how
+class Translations$stamps$how$id {
+	Translations$stamps$how$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Buat satu dompet.'
+	String get wallet_first => 'Buat satu dompet.';
+
+	/// id: 'Catat satu transaksi lewat Catat.'
+	String get record_first => 'Catat satu transaksi lewat Catat.';
+
+	/// id: 'Selesaikan satu periode dengan semua transaksinya berkategori.'
+	String get period_tidy => 'Selesaikan satu periode dengan semua transaksinya berkategori.';
+
+	/// id: 'Selesaikan satu periode tanpa rutin yang tertinggal.'
+	String get recurring_clear => 'Selesaikan satu periode tanpa rutin yang tertinggal.';
+
+	/// id: 'Tinjau semua catatan di kotak masuk sampai kosong.'
+	String get inbox_clear => 'Tinjau semua catatan di kotak masuk sampai kosong.';
+
+	/// id: 'Buat satu cadangan, lalu simpan atau bagikan.'
+	String get backup_first => 'Buat satu cadangan, lalu simpan atau bagikan.';
+
+	/// id: 'Tautkan satu transaksi ke pos anggaran.'
+	String get budget_first => 'Tautkan satu transaksi ke pos anggaran.';
+
+	/// id: 'Catat satu pembayaran freelance yang sudah diterima.'
+	String get freelance_paid => 'Catat satu pembayaran freelance yang sudah diterima.';
+}
+
+// Path: stamps.snackbar
+class Translations$stamps$snackbar$id {
+	Translations$stamps$snackbar$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Stempel baru: $name'
+	String one({required Object name}) => 'Stempel baru: ${name}';
+
+	/// id: '$count stempel baru'
+	String many({required Object count}) => '${count} stempel baru';
+
+	/// id: 'Lihat'
+	String get action => 'Lihat';
+}
+
+// Path: stamps.firstSheet
+class Translations$stamps$firstSheet$id {
+	Translations$stamps$firstSheet$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Buku Stempel'
+	String get title => 'Buku Stempel';
+
+	/// id: 'Setiap kali kamu menguasai hal baru atau merapikan catatan, satu stempel masuk ke sini. Tidak ada target harian dan tidak ada yang berkurang. Kamu bisa mematikannya kapan saja di Akun.'
+	String get body => 'Setiap kali kamu menguasai hal baru atau merapikan catatan, satu stempel masuk ke sini. Tidak ada target harian dan tidak ada yang berkurang. Kamu bisa mematikannya kapan saja di Akun.';
+
+	/// id: 'Oke'
+	String get ok => 'Oke';
+
+	/// id: 'Atur di Akun'
+	String get settings => 'Atur di Akun';
+}
+
+// Path: stamps.legacyBanner
+class Translations$stamps$legacyBanner$id {
+	Translations$stamps$legacyBanner$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Buku Stempel'
+	String get eyebrow => 'Buku Stempel';
+
+	/// id: 'Buku Stempel baru. Yang sudah kamu capai sudah ada di sini.'
+	String get body => 'Buku Stempel baru. Yang sudah kamu capai sudah ada di sini.';
+
+	/// id: 'Lihat'
+	String get action => 'Lihat';
+
+	/// id: 'Tutup'
+	String get dismiss => 'Tutup';
 }
 
 // Path: record.voice.failure
@@ -7544,6 +7685,33 @@ extension on Translations {
 			'premium.paywall.done' => 'Selesai',
 			'premium.paywall.notSellingTitle' => 'Plus belum dijual',
 			'premium.paywall.notSellingBody' => 'Berlangganan Plus belum tersedia. Mencatat tetap gratis.',
+			'stamps.names.wallet_first' => 'Dompet pertama',
+			'stamps.names.record_first' => 'Catatan pertama',
+			'stamps.names.period_tidy' => 'Periode rapi',
+			'stamps.names.recurring_clear' => 'Rutin tak terlewat',
+			'stamps.names.inbox_clear' => 'Kotak masuk bersih',
+			'stamps.names.backup_first' => 'Cadangan pertama',
+			'stamps.names.budget_first' => 'Anggaran terpakai',
+			'stamps.names.freelance_paid' => 'Pembayaran pertama diterima',
+			'stamps.how.wallet_first' => 'Buat satu dompet.',
+			'stamps.how.record_first' => 'Catat satu transaksi lewat Catat.',
+			'stamps.how.period_tidy' => 'Selesaikan satu periode dengan semua transaksinya berkategori.',
+			'stamps.how.recurring_clear' => 'Selesaikan satu periode tanpa rutin yang tertinggal.',
+			'stamps.how.inbox_clear' => 'Tinjau semua catatan di kotak masuk sampai kosong.',
+			'stamps.how.backup_first' => 'Buat satu cadangan, lalu simpan atau bagikan.',
+			'stamps.how.budget_first' => 'Tautkan satu transaksi ke pos anggaran.',
+			'stamps.how.freelance_paid' => 'Catat satu pembayaran freelance yang sudah diterima.',
+			'stamps.snackbar.one' => ({required Object name}) => 'Stempel baru: ${name}',
+			'stamps.snackbar.many' => ({required Object count}) => '${count} stempel baru',
+			'stamps.snackbar.action' => 'Lihat',
+			'stamps.firstSheet.title' => 'Buku Stempel',
+			'stamps.firstSheet.body' => 'Setiap kali kamu menguasai hal baru atau merapikan catatan, satu stempel masuk ke sini. Tidak ada target harian dan tidak ada yang berkurang. Kamu bisa mematikannya kapan saja di Akun.',
+			'stamps.firstSheet.ok' => 'Oke',
+			'stamps.firstSheet.settings' => 'Atur di Akun',
+			'stamps.legacyBanner.eyebrow' => 'Buku Stempel',
+			'stamps.legacyBanner.body' => 'Buku Stempel baru. Yang sudah kamu capai sudah ada di sini.',
+			'stamps.legacyBanner.action' => 'Lihat',
+			'stamps.legacyBanner.dismiss' => 'Tutup',
 			_ => null,
 		};
 	}

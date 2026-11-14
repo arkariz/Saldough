@@ -3,6 +3,8 @@ import 'package:di/di.dart';
 import 'package:flutter/material.dart';
 import 'package:navigation/navigation.dart';
 import 'package:saldough/app/data_portability/app_reboot.dart';
+import 'package:saldough/app/milestone/milestone_celebration_host.dart';
+import 'package:saldough/app/milestone/milestone_coordinator.dart';
 import 'package:saldough/app/shell/appearance_quick_action.dart';
 import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
@@ -198,8 +200,20 @@ class _AppShellPageState extends State<AppShellPage> {
             TrialGiftHost(container: parentContainer, active: _activeTab == _homeTabIndex),
             AppUpdateBanner(container: parentContainer, board: _statusBoard),
             PlusHomeCard(container: parentContainer),
+            // Perayaan stempel (ADR-046, T-28.4); Buku Stempel sendiri menyusul (T-28.5),
+            // sementara "Lihat" membuka Akun.
+            MilestoneCelebrationHost(
+              container: parentContainer,
+              active: _activeTab == _homeTabIndex,
+              board: _statusBoard,
+              onOpenBook: () => context.pushRoute(AccountRouteKeys.page, const EmptyInput()),
+              onOpenSettings: () => context.pushRoute(AccountRouteKeys.page, const EmptyInput()),
+            ),
           ],
         ),
+        accountBadge: parentContainer.isRegistered<MilestoneCoordinator>()
+            ? parentContainer<MilestoneCoordinator>().hasUnseen
+            : null,
         // Kotak masuk notifikasi (Android): pintu permanen Catat dari
         // notifikasi, P-6 sesudah kartu pembaruan.
         statusBoard: _statusBoard,

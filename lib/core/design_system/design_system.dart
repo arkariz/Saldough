@@ -43,6 +43,7 @@ export 'components/ds_segmented_pill.dart';
 export 'components/ds_setting_row.dart';
 export 'components/ds_skeleton.dart';
 export 'components/ds_snack_bar.dart';
+export 'components/ds_stamp_seal.dart';
 export 'components/ds_status_board.dart';
 export 'components/ds_status_carousel.dart';
 export 'components/ds_sticky_bar.dart';

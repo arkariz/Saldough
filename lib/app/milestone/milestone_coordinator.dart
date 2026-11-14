@@ -21,7 +21,9 @@ class MilestoneCoordinator {
     required this._signals,
     this.debounce = const Duration(seconds: 1),
     Set<String> Function()? disabledIds,
-  }) : _disabledIds = disabledIds ?? (() => const {});
+  }) : _disabledIds = disabledIds ?? (() => const {}) {
+    _ledger.addListener(() => _unseen.value = hasUnseenStamps(_ledger.value));
+  }
 
   final EvaluateMilestones _evaluate;
   final MilestoneStore _store;
@@ -32,6 +34,7 @@ class MilestoneCoordinator {
   final Duration debounce;
 
   final _ledger = ValueNotifier<MilestoneLedger>(MilestoneLedger.empty);
+  final _unseen = ValueNotifier<bool>(false);
   final _celebrations = StreamController<CelebrationPlan>.broadcast();
   StreamSubscription<void>? _subscription;
   Timer? _timer;
@@ -45,6 +48,9 @@ class MilestoneCoordinator {
 
   /// Catatan terkini, untuk titik, banner, dan Buku Stempel.
   ValueListenable<MilestoneLedger> get ledger => _ledger;
+
+  /// Ada stempel belum dilihat dan perayaan menyala: titik kecil di ikon Akun.
+  ValueListenable<bool> get hasUnseen => _unseen;
 
   /// Perayaan yang harus ditampilkan sekarang (snackbar atau lembar).
   Stream<CelebrationPlan> get celebrations => _celebrations.stream;

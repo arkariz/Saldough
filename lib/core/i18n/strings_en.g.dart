@@ -64,6 +64,7 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$appUpdate$en appUpdate = _Translations$appUpdate$en._(_root);
 	@override late final _Translations$analysis$en analysis = _Translations$analysis$en._(_root);
 	@override late final _Translations$premium$en premium = _Translations$premium$en._(_root);
+	@override late final _Translations$stamps$en stamps = _Translations$stamps$en._(_root);
 }
 
 // Path: app
@@ -1688,6 +1689,20 @@ class _Translations$premium$en extends Translations$premium$id {
 	@override late final _Translations$premium$paywall$en paywall = _Translations$premium$paywall$en._(_root);
 }
 
+// Path: stamps
+class _Translations$stamps$en extends Translations$stamps$id {
+	_Translations$stamps$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override late final _Translations$stamps$names$en names = _Translations$stamps$names$en._(_root);
+	@override late final _Translations$stamps$how$en how = _Translations$stamps$how$en._(_root);
+	@override late final _Translations$stamps$snackbar$en snackbar = _Translations$stamps$snackbar$en._(_root);
+	@override late final _Translations$stamps$firstSheet$en firstSheet = _Translations$stamps$firstSheet$en._(_root);
+	@override late final _Translations$stamps$legacyBanner$en legacyBanner = _Translations$stamps$legacyBanner$en._(_root);
+}
+
 // Path: record.draftIssue
 class _Translations$record$draftIssue$en extends Translations$record$draftIssue$id {
 	_Translations$record$draftIssue$en._(TranslationsEn root) : this._root = root, super.internal(root);
@@ -2347,6 +2362,78 @@ class _Translations$premium$paywall$en extends Translations$premium$paywall$id {
 	@override String get done => 'Done';
 	@override String get notSellingTitle => 'Plus is not on sale yet';
 	@override String get notSellingBody => 'Subscribing to Plus is not available yet. Recording stays free.';
+}
+
+// Path: stamps.names
+class _Translations$stamps$names$en extends Translations$stamps$names$id {
+	_Translations$stamps$names$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get wallet_first => 'First wallet';
+	@override String get record_first => 'First record';
+	@override String get period_tidy => 'Tidy period';
+	@override String get recurring_clear => 'Recurring all clear';
+	@override String get inbox_clear => 'Inbox cleared';
+	@override String get backup_first => 'First backup';
+	@override String get budget_first => 'Budget in use';
+	@override String get freelance_paid => 'First payment received';
+}
+
+// Path: stamps.how
+class _Translations$stamps$how$en extends Translations$stamps$how$id {
+	_Translations$stamps$how$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get wallet_first => 'Create a wallet.';
+	@override String get record_first => 'Record one transaction with Record.';
+	@override String get period_tidy => 'Finish a period with every transaction categorized.';
+	@override String get recurring_clear => 'Finish a period with no recurring item left behind.';
+	@override String get inbox_clear => 'Review every note in the inbox until it is empty.';
+	@override String get backup_first => 'Make a backup, then save or share it.';
+	@override String get budget_first => 'Link a transaction to a budget item.';
+	@override String get freelance_paid => 'Record a freelance payment you have received.';
+}
+
+// Path: stamps.snackbar
+class _Translations$stamps$snackbar$en extends Translations$stamps$snackbar$id {
+	_Translations$stamps$snackbar$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String one({required Object name}) => 'New stamp: ${name}';
+	@override String many({required Object count}) => '${count} new stamps';
+	@override String get action => 'See';
+}
+
+// Path: stamps.firstSheet
+class _Translations$stamps$firstSheet$en extends Translations$stamps$firstSheet$id {
+	_Translations$stamps$firstSheet$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Stamp Book';
+	@override String get body => 'Each time you learn something new or tidy up your records, a stamp lands here. There are no daily goals and nothing ever shrinks. You can turn it off anytime in Account.';
+	@override String get ok => 'Okay';
+	@override String get settings => 'Set up in Account';
+}
+
+// Path: stamps.legacyBanner
+class _Translations$stamps$legacyBanner$en extends Translations$stamps$legacyBanner$id {
+	_Translations$stamps$legacyBanner$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get eyebrow => 'Stamp Book';
+	@override String get body => 'A new Stamp Book. What you have already done is here.';
+	@override String get action => 'See';
+	@override String get dismiss => 'Close';
 }
 
 // Path: record.voice.failure
@@ -4237,6 +4324,33 @@ extension on TranslationsEn {
 			'premium.paywall.done' => 'Done',
 			'premium.paywall.notSellingTitle' => 'Plus is not on sale yet',
 			'premium.paywall.notSellingBody' => 'Subscribing to Plus is not available yet. Recording stays free.',
+			'stamps.names.wallet_first' => 'First wallet',
+			'stamps.names.record_first' => 'First record',
+			'stamps.names.period_tidy' => 'Tidy period',
+			'stamps.names.recurring_clear' => 'Recurring all clear',
+			'stamps.names.inbox_clear' => 'Inbox cleared',
+			'stamps.names.backup_first' => 'First backup',
+			'stamps.names.budget_first' => 'Budget in use',
+			'stamps.names.freelance_paid' => 'First payment received',
+			'stamps.how.wallet_first' => 'Create a wallet.',
+			'stamps.how.record_first' => 'Record one transaction with Record.',
+			'stamps.how.period_tidy' => 'Finish a period with every transaction categorized.',
+			'stamps.how.recurring_clear' => 'Finish a period with no recurring item left behind.',
+			'stamps.how.inbox_clear' => 'Review every note in the inbox until it is empty.',
+			'stamps.how.backup_first' => 'Make a backup, then save or share it.',
+			'stamps.how.budget_first' => 'Link a transaction to a budget item.',
+			'stamps.how.freelance_paid' => 'Record a freelance payment you have received.',
+			'stamps.snackbar.one' => ({required Object name}) => 'New stamp: ${name}',
+			'stamps.snackbar.many' => ({required Object count}) => '${count} new stamps',
+			'stamps.snackbar.action' => 'See',
+			'stamps.firstSheet.title' => 'Stamp Book',
+			'stamps.firstSheet.body' => 'Each time you learn something new or tidy up your records, a stamp lands here. There are no daily goals and nothing ever shrinks. You can turn it off anytime in Account.',
+			'stamps.firstSheet.ok' => 'Okay',
+			'stamps.firstSheet.settings' => 'Set up in Account',
+			'stamps.legacyBanner.eyebrow' => 'Stamp Book',
+			'stamps.legacyBanner.body' => 'A new Stamp Book. What you have already done is here.',
+			'stamps.legacyBanner.action' => 'See',
+			'stamps.legacyBanner.dismiss' => 'Close',
 			_ => null,
 		};
 	}

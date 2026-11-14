@@ -1851,5 +1851,44 @@
       "notSellingTitle": "Plus belum dijual",
       "notSellingBody": "Berlangganan Plus belum tersedia. Mencatat tetap gratis."
     }
+  },
+  "stamps": {
+    "names": {
+      "wallet_first": "Dompet pertama",
+      "record_first": "Catatan pertama",
+      "period_tidy": "Periode rapi",
+      "recurring_clear": "Rutin tak terlewat",
+      "inbox_clear": "Kotak masuk bersih",
+      "backup_first": "Cadangan pertama",
+      "budget_first": "Anggaran terpakai",
+      "freelance_paid": "Pembayaran pertama diterima"
+    },
+    "how": {
+      "wallet_first": "Buat satu dompet.",
+      "record_first": "Catat satu transaksi lewat Catat.",
+      "period_tidy": "Selesaikan satu periode dengan semua transaksinya berkategori.",
+      "recurring_clear": "Selesaikan satu periode tanpa rutin yang tertinggal.",
+      "inbox_clear": "Tinjau semua catatan di kotak masuk sampai kosong.",
+      "backup_first": "Buat satu cadangan, lalu simpan atau bagikan.",
+      "budget_first": "Tautkan satu transaksi ke pos anggaran.",
+      "freelance_paid": "Catat satu pembayaran freelance yang sudah diterima."
+    },
+    "snackbar": {
+      "one": "Stempel baru: $name",
+      "many": "$count stempel baru",
+      "action": "Lihat"
+    },
+    "firstSheet": {
+      "title": "Buku Stempel",
+      "body": "Setiap kali kamu menguasai hal baru atau merapikan catatan, satu stempel masuk ke sini. Tidak ada target harian dan tidak ada yang berkurang. Kamu bisa mematikannya kapan saja di Akun.",
+      "ok": "Oke",
+      "settings": "Atur di Akun"
+    },
+    "legacyBanner": {
+      "eyebrow": "Buku Stempel",
+      "body": "Buku Stempel baru. Yang sudah kamu capai sudah ada di sini.",
+      "action": "Lihat",
+      "dismiss": "Tutup"
+    }
   }
 }

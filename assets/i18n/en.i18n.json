@@ -1854,5 +1854,44 @@
       "notSellingTitle": "Plus is not on sale yet",
       "notSellingBody": "Subscribing to Plus is not available yet. Recording stays free."
     }
+  },
+  "stamps": {
+    "names": {
+      "wallet_first": "First wallet",
+      "record_first": "First record",
+      "period_tidy": "Tidy period",
+      "recurring_clear": "Recurring all clear",
+      "inbox_clear": "Inbox cleared",
+      "backup_first": "First backup",
+      "budget_first": "Budget in use",
+      "freelance_paid": "First payment received"
+    },
+    "how": {
+      "wallet_first": "Create a wallet.",
+      "record_first": "Record one transaction with Record.",
+      "period_tidy": "Finish a period with every transaction categorized.",
+      "recurring_clear": "Finish a period with no recurring item left behind.",
+      "inbox_clear": "Review every note in the inbox until it is empty.",
+      "backup_first": "Make a backup, then save or share it.",
+      "budget_first": "Link a transaction to a budget item.",
+      "freelance_paid": "Record a freelance payment you have received."
+    },
+    "snackbar": {
+      "one": "New stamp: $name",
+      "many": "$count new stamps",
+      "action": "See"
+    },
+    "firstSheet": {
+      "title": "Stamp Book",
+      "body": "Each time you learn something new or tidy up your records, a stamp lands here. There are no daily goals and nothing ever shrinks. You can turn it off anytime in Account.",
+      "ok": "Okay",
+      "settings": "Set up in Account"
+    },
+    "legacyBanner": {
+      "eyebrow": "Stamp Book",
+      "body": "A new Stamp Book. What you have already done is here.",
+      "action": "See",
+      "dismiss": "Close"
+    }
   }
 }

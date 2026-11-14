@@ -176,7 +176,7 @@ final class EntitlementLimits extends Equatable {
     PlusFeature.freelanceProjects => freeProjects,
     PlusFeature.ask => tasteAsk,
     PlusFeature.guardian => tasteGuardian,
-    PlusFeature.notificationAutoRecord || PlusFeature.recurringAutomation => 0,
+    PlusFeature.notificationAutoRecord || PlusFeature.recurringAutomation || PlusFeature.periodBook => 0,
   };
 
   /// Batas wajar bulanan [feature] untuk Plus, atau `null` bila tidak ada.

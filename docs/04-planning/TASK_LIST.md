@@ -6980,6 +6980,13 @@ S sehari, M beberapa hari, L lebih dari seminggu. Rilis bertahap: Kartu Periode
       sakelar) dan pendaftaran `BackupRegistry`. Butuh T-27.1, mesin B-94.
       ⚠ Gerbang BP-10 diperiksa di rute, bukan hanya di UI.
       Verifikasi: uji registri, uji gerbang (Plus, tenggang, berakhir).
+      **Selesai sebagian 14 Nov 2026:** `PlusFeature.periodBook`, aturan murni
+      `bookAccessOf` (BP-1, BP-10), `PeriodBookMemory` + store
+      (`features/period_book`) dan entri `period_book_memory` di
+      `BackupRegistry`; uji lulus, `flutter analyze` bersih. **Belum:** fakta
+      "periode tertutup" untuk mesin B-94: mesin tonggak itu belum ada di
+      `lib/` (B-94 masih draf), jadi bagian ini menunggu B-94 atau dipisah
+      keputusannya. Pemeriksaan di rute menunggu rutenya (T-27.5/T-27.6).
 - [ ] **T-27.3** (M) Model baca buku halaman 1–4 dari sumber Analisis, Arus,
       Rencana; `financialPeriodOf`/`periodDateOf`.
       Verifikasi: uji kecocokan total (B-3, B-15) dengan data uji emas.

@@ -31,4 +31,8 @@ enum PlusFeature {
 
   /// Penjaga (jatah cicip di Gratis).
   guardian,
+
+  /// Buku Periode: ritual Tutup buku, sampul, rapor, dan Rak Buku (ADR-045
+  /// §3.1, BP-1). Kartu Periode tidak punya nilai di sini (BP-15).
+  periodBook,
 }

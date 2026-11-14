@@ -7,6 +7,7 @@ import 'package:saldough/features/notification_capture/data/approved_shape_store
 import 'package:saldough/features/notification_capture/data/merchant_memory_store_impl.dart';
 import 'package:saldough/features/notification_capture/data/negative_shape_store_impl.dart';
 import 'package:saldough/features/notification_capture/data/notification_capture_store_impl.dart';
+import 'package:saldough/features/period_book/data/period_book_memory_store_impl.dart';
 
 /// Daftar kunci penyimpanan dan statusnya terhadap cadangan (ADR-040 §3.3).
 ///
@@ -56,6 +57,9 @@ final appBackupRegistry = BackupRegistry(
     const BackupKeySpec('capture_approved_shapes', supportedSchema: ApprovedShapeStoreImpl.schemaVersion),
     const BackupKeySpec('capture_negative_shapes', supportedSchema: NegativeShapeStoreImpl.schemaVersion),
     const BackupKeySpec('capture_merchant_memory', supportedSchema: MerchantMemoryStoreImpl.schemaVersion),
+    // Ingatan Buku Periode (ADR-045 §3.5): buku mana yang sudah dibuka, langkah ritual, kartu ditutup,
+    // sakelar. Tanpa angka keuangan. Menjaga BP-10 (buku yang pernah dibuka tetap terbuka) lintas perangkat.
+    const BackupKeySpec('period_book_memory', supportedSchema: PeriodBookMemoryStoreImpl.schemaVersion),
   ],
   excluded: const {
     // Milik perangkat (R-9).

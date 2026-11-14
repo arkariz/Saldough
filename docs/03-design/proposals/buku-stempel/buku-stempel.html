@@ -1,0 +1,362 @@
+<title>Buku Stempel Tanuki</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400,0..1,0&icon_names=arrow_back,chevron_right,close,eco,home,info,notifications,receipt_long,restart_alt,savings,schedule,system_update,verified&display=block">
+<style>
+/* Tata letak: papan T-28.4 (perayaan) dan T-28.5 (Buku Stempel, baris Akun); tiga layar 360dp berlabel, saling tersambung. Token Matcha design system v2. Gerak kecil dan tenang sesuai G-4. */
+:root {
+  --canvas: #fafaf9; --card: #ffffff; --sunken: #f3f4f6; --text: #111827; --text-2: #4b5563; --muted: #6b7280; --tertiary: #9ca3af;
+  --line: #eaecef; --line-strong: #d1d5db; --focus: #1f4b2c; --action: #1f4b2c; --on-action: #ffffff; --action-pressed: #163720;
+  --info-bg: #eff6ff; --info-ink: #1e3a8a; --inv: #2f3130; --on-inv: #f1f1f0; --inv-action: #a2d2a9; --scrim: rgba(17,24,39,.4);
+  --hero: #1f4b2c; --on-hero: #fff; --on-hero-muted: #b3dfc5; --gold: #fde68a; --gold-deep: #f59e0b; --seal: #14532d;
+  --shadow-card: 0 2px 8px rgba(0,0,0,.03); --shadow-overlay: 0 8px 24px -4px rgba(17,24,39,.08);
+  --stage: #eef0ee; --font: "Plus Jakarta Sans", "Segoe UI", system-ui, sans-serif; --mono: "Space Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --canvas: #0f1210; --card: #171b18; --sunken: #1a1e1b; --text: #eef1ee; --text-2: #b8c0ba; --muted: #9aa29c; --tertiary: #858d87;
+  --line: #2a302c; --line-strong: #4a524c; --focus: #a2d2a9; --action: #a2d2a9; --on-action: #00210c; --action-pressed: #bdefc4;
+  --info-bg: #172338; --info-ink: #cfe0ff; --inv: #e2e3df; --on-inv: #2f3130; --inv-action: #1f4b2c; --scrim: rgba(0,0,0,.6);
+  --shadow-card: none; --shadow-overlay: 0 8px 24px -4px rgba(0,0,0,.4); --stage: #0a0c0b; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --canvas: #0f1210; --card: #171b18; --sunken: #1a1e1b; --text: #eef1ee; --text-2: #b8c0ba; --muted: #9aa29c; --tertiary: #858d87;
+  --line: #2a302c; --line-strong: #4a524c; --focus: #a2d2a9; --action: #a2d2a9; --on-action: #00210c; --action-pressed: #bdefc4;
+  --info-bg: #172338; --info-ink: #cfe0ff; --inv: #e2e3df; --on-inv: #2f3130; --inv-action: #1f4b2c; --scrim: rgba(0,0,0,.6);
+  --shadow-card: none; --shadow-overlay: 0 8px 24px -4px rgba(0,0,0,.4); --stage: #0a0c0b; color-scheme: dark; }
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--stage); color: var(--text); font-family: var(--font); font-size: 14px; line-height: 1.5; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 24px 56px; }
+.icon { font-family: "Material Symbols Outlined"; font-weight: 400; font-style: normal; font-size: 20px; line-height: 1; letter-spacing: normal; text-transform: none; white-space: nowrap; display: inline-block; flex: none; font-feature-settings: "liga"; user-select: none; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.wrap { max-width: 1240px; margin: 0 auto; display: grid; gap: 28px; }
+header.top { display: grid; gap: 6px; max-width: 72ch; }
+.eyebrow { font: 700 12px/16px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--action); }
+h1 { margin: 0; font-size: clamp(26px, 5vw, 34px); line-height: 1.15; font-weight: 800; letter-spacing: -.02em; text-wrap: balance; }
+header.top p { margin: 0; color: var(--text-2); }
+.ctrl { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 30; background: var(--stage); padding-block: 10px; display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: flex-end; border-bottom: 1px solid var(--line); }
+.ctl { display: grid; gap: 4px; } .ctl > span { font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: .04em; text-transform: uppercase; }
+.seg { display: inline-grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 2px; padding: 3px; border-radius: 8px; background: var(--sunken); }
+.seg button { border: 1px solid transparent; background: none; border-radius: 6px; padding: 6px 12px; font-size: 13px; font-weight: 600; color: var(--text-2); cursor: pointer; min-height: 36px; }
+.seg button[aria-pressed="true"] { background: var(--card); border-color: var(--line); color: var(--text); }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr)); gap: 36px 28px; justify-items: center; align-items: start; }
+.slot { width: 360px; max-width: 100%; display: grid; gap: 10px; scroll-margin-top: 100px; }
+.slot-h { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.id { font: 700 13px/18px var(--mono); background: var(--action); color: var(--on-action); padding: 1px 8px; border-radius: 4px; }
+.slot-h b { font-size: 16px; font-weight: 700; } .slot-h .w { font-size: 13px; color: var(--muted); }
+.cap { margin: 0; font-size: 13px; line-height: 18px; color: var(--text-2); }
+
+.phone { width: 360px; max-width: 100%; height: 740px; background: var(--canvas); border-radius: 28px; border: 1px solid var(--line); box-shadow: var(--shadow-overlay); overflow: hidden; display: flex; flex-direction: column; position: relative; }
+.topbar { flex: none; display: flex; align-items: center; gap: 4px; height: 56px; padding: 0 8px 0 8px; border-bottom: 1px solid var(--line); background: var(--canvas); z-index: 3; position: relative; }
+.topbar h2 { margin: 0; flex: 1; font-size: 18px; line-height: 26px; font-weight: 600; letter-spacing: -.015em; padding-left: 4px; }
+.iconbtn { position: relative; width: 44px; height: 44px; display: grid; place-items: center; border: 0; background: none; border-radius: 50%; color: var(--text-2); cursor: pointer; }
+.dotbadge { position: absolute; width: 9px; height: 9px; border-radius: 50%; background: var(--action); box-shadow: 0 0 0 2px var(--canvas); animation: breathe 2.4s ease-in-out infinite; }
+@keyframes breathe { 50% { transform: scale(1.25); } }
+.scroll { flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; display: flex; flex-direction: column; gap: 16px; padding: 16px 20px 24px; position: relative; }
+.scroll > * { flex: none; }
+.pix { font: 700 11px/14px var(--mono); letter-spacing: .05em; text-transform: uppercase; }
+.muted { color: var(--muted); }
+.btn { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; border: 0; border-radius: 8px; background: var(--action); color: var(--on-action); font-weight: 700; font-size: 14px; cursor: pointer; transition: transform .15s ease-out; width: 100%; padding: 0 16px; }
+.btn:active { transform: scale(.98); background: var(--action-pressed); }
+.btn.ghost { background: none; color: var(--action); min-height: 44px; }
+.btn.compact { min-height: 32px; width: auto; padding: 6px 12px; font: 700 11px/14px var(--mono); letter-spacing: .05em; text-transform: uppercase; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow-card); }
+.tn { position: relative; display: inline-block; animation: bob 3.4s ease-in-out infinite; transform-origin: 50% 100%; } .tn img { width: 100%; height: 100%; display: block; filter: drop-shadow(0 4px 4px rgba(0,0,0,.14)); }
+@keyframes bob { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-4px) } }
+
+/* ---- stempel ---- */
+.seal { position: relative; flex: none; width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; transform: rotate(var(--rot, -6deg)); }
+.seal.earned { background: radial-gradient(circle at 35% 30%, #1f7a43, var(--seal) 70%); box-shadow: inset 0 0 0 2px var(--gold), inset 0 0 0 5px rgba(253,230,138,.28), 0 4px 8px -2px rgba(20,83,45,.5); }
+.seal.earned img { width: 30px; height: 30px; filter: drop-shadow(0 1px 1px rgba(0,0,0,.3)); }
+.seal.locked { background: var(--sunken); box-shadow: inset 0 0 0 2px var(--line-strong); }
+.seal.locked img { width: 28px; height: 28px; filter: grayscale(1); opacity: .4; }
+.seal.lg { width: 120px; height: 120px; } .seal.lg.earned img { width: 62px; height: 62px; } .seal.lg.locked img { width: 58px; height: 58px; }
+.seal.sm { width: 34px; height: 34px; } .seal.sm img { width: 18px !important; height: 18px !important; }
+.seal.new::after { content: ""; position: absolute; inset: -5px; border-radius: 50%; border: 2px solid var(--gold-deep); opacity: 0; animation: ring 2.6s ease-out infinite; }
+@keyframes ring { 0% { transform: scale(.85); opacity: .8 } 70%,100% { transform: scale(1.18); opacity: 0 } }
+.seal.press { animation: cap .55s cubic-bezier(.2,1.5,.4,1) both; }
+@keyframes cap { 0% { transform: scale(2.2) rotate(-30deg); opacity: 0 } 55% { transform: scale(.9) rotate(-4deg); opacity: 1 } 75% { transform: scale(1.05) rotate(-8deg) } 100% { transform: scale(1) rotate(var(--rot, -6deg)); opacity: 1 } }
+
+.intro { display: flex; gap: 12px; align-items: center; padding: 14px; }
+.intro .tn { width: 60px; height: 60px; flex: none; } .intro p { margin: 0; font-size: 13px; line-height: 18px; color: var(--text-2); }
+.grp { display: grid; gap: 8px; }
+.grp h3 { margin: 0; font: 700 11px/14px var(--mono); letter-spacing: .05em; text-transform: uppercase; color: var(--muted); padding-left: 4px; }
+.list { overflow: hidden; }
+.st { display: flex; align-items: center; gap: 14px; width: 100%; padding: 12px 14px; border: 0; background: none; text-align: left; cursor: pointer; position: relative; transition: background-color .15s; }
+.st + .st { border-top: 1px solid var(--line); }
+.st:active { background: color-mix(in srgb, var(--action) 6%, transparent); }
+.st .m { flex: 1; min-width: 0; display: grid; }
+.st .n { font-size: 14px; line-height: 20px; font-weight: 700; }
+.st .s { font-size: 12px; line-height: 16px; color: var(--muted); }
+.st.lk .n { color: var(--text-2); font-weight: 600; }
+.st .dotnew { position: absolute; right: 14px; top: 50%; margin-top: -4px; width: 8px; height: 8px; border-radius: 50%; background: var(--action); }
+.st .chev { color: var(--tertiary); font-size: 18px; }
+.sk { display: grid; gap: 8px; } .sk i { display: block; height: 66px; border-radius: 16px; background: linear-gradient(90deg, var(--sunken) 30%, var(--line) 50%, var(--sunken) 70%); background-size: 200% 100%; animation: sh 1.4s linear infinite; }
+@keyframes sh { to { background-position: -200% 0 } }
+.emptyb { display: grid; gap: 10px; justify-items: center; text-align: center; padding: 28px 12px; }
+.emptyb .tn { width: 110px; height: 110px; } .emptyb b { font-size: 16px; } .emptyb p { margin: 0; font-size: 13px; color: var(--muted); max-width: 240px; }
+.alldone { padding: 12px 14px; border-radius: 14px; background: color-mix(in srgb, var(--action) 8%, var(--card)); font-size: 13px; line-height: 18px; text-align: center; color: var(--text-2); }
+.note { font-size: 12px; line-height: 16px; color: var(--muted); padding: 0 4px; }
+
+/* ---- sheet dan overlay ---- */
+.scrim { position: absolute; inset: 0; background: var(--scrim); z-index: 20; opacity: 0; pointer-events: none; transition: opacity .25s; }
+.scrim.on { opacity: 1; pointer-events: auto; }
+.sheet { position: absolute; left: 0; right: 0; bottom: 0; z-index: 21; background: var(--card); border-radius: 20px 20px 0 0; padding: 10px 20px 20px; display: grid; gap: 12px; justify-items: center; text-align: center; transform: translateY(105%); transition: transform .35s cubic-bezier(.2,.9,.3,1); box-shadow: var(--shadow-overlay); border: 1px solid var(--line); border-bottom: 0; }
+.sheet.on { transform: none; }
+.sheet .grab { width: 36px; height: 4px; border-radius: 2px; background: var(--line-strong); }
+.sheet h3 { margin: 0; font-size: 20px; line-height: 26px; font-weight: 800; letter-spacing: -.01em; }
+.sheet p { margin: 0; font-size: 14px; line-height: 20px; color: var(--text-2); max-width: 300px; }
+.sheet .acts { display: grid; gap: 4px; width: 100%; margin-top: 4px; }
+
+/* ---- Beranda ---- */
+.hero { position: relative; overflow: hidden; border-radius: 24px; padding: 18px; color: var(--on-hero); background: linear-gradient(150deg, #2d6a40, var(--hero) 45%, #123320); border: 1px solid #1d4a33; display: grid; gap: 4px; }
+.hero small { font: 700 11px/14px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--on-hero-muted); }
+.hero b { font-size: 34px; line-height: 40px; font-weight: 800; letter-spacing: -.03em; font-variant-numeric: tabular-nums; } .hero b span { font-size: 16px; font-weight: 600; color: #bdefc4; margin-right: 6px; }
+.hero .tn { position: absolute; right: 10px; top: 8px; width: 56px; height: 56px; }
+.banner { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 16px; background: var(--card); border: 1px solid var(--line); box-shadow: var(--shadow-card); animation: rise .5s cubic-bezier(.3,1.4,.5,1) both; }
+.banner.info { background: var(--info-bg); color: var(--info-ink); border-color: transparent; font-size: 13px; line-height: 18px; }
+.banner .tx { flex: 1; min-width: 0; display: grid; gap: 2px; } .banner .tx b { font-size: 13px; line-height: 18px; font-weight: 600; } .banner .ey { font: 700 11px/14px var(--mono); letter-spacing: .025em; text-transform: uppercase; color: var(--action); }
+.tile { width: 36px; height: 36px; border-radius: 12px; background: var(--action); color: var(--on-action); display: grid; place-items: center; flex: none; }
+.xbtn { width: 32px; height: 32px; border-radius: 50%; border: 0; background: none; color: var(--muted); display: grid; place-items: center; cursor: pointer; }
+@keyframes rise { 0% { transform: translateY(14px); opacity: 0 } 100% { transform: none; opacity: 1 } }
+.row { display: flex; align-items: center; gap: 12px; padding: 12px; } .row + .row { border-top: 1px solid var(--line); }
+.row .main { flex: 1; min-width: 0; display: grid; } .row .t { font-size: 13px; font-weight: 600; line-height: 18px; } .row .s { font-size: 12px; color: var(--muted); line-height: 16px; } .row .amt { font: 700 12px var(--mono); }
+.tabs { flex: none; display: grid; grid-template-columns: repeat(4, 1fr); height: 60px; border-top: 1px solid var(--line); background: var(--canvas); }
+.tabs div { display: grid; place-items: center; align-content: center; gap: 2px; font: 700 10px/12px var(--mono); color: var(--text-2); } .tabs .on { color: var(--action); }
+.snack { position: absolute; left: 16px; right: 16px; bottom: 74px; z-index: 12; display: flex; align-items: center; gap: 12px; padding: 8px 8px 8px 12px; min-height: 52px; border-radius: 12px; background: var(--inv); color: var(--on-inv); box-shadow: 0 10px 24px -6px rgba(0,0,0,.35); transform: translateY(140%); opacity: 0; transition: transform .4s cubic-bezier(.2,.9,.3,1), opacity .2s; }
+.snack.on { transform: none; opacity: 1; }
+.snack .tx { flex: 1; font-size: 13px; line-height: 18px; font-weight: 600; min-width: 0; }
+.snack button { border: 0; background: none; font: 700 11px/14px var(--mono); letter-spacing: .05em; text-transform: uppercase; color: var(--inv-action); min-height: 44px; padding: 0 12px; cursor: pointer; border-radius: 8px; }
+.snack .pair { display: flex; } .snack .pair .seal + .seal { margin-left: -12px; }
+.snack .seal.earned { box-shadow: inset 0 0 0 1.5px var(--gold), 0 0 0 2px var(--inv); }
+
+/* ---- Akun ---- */
+.acc { display: flex; align-items: center; gap: 14px; padding: 14px; } .acc .tn { width: 56px; height: 56px; } .acc b { display: block; font-size: 14px; } .acc span { font-size: 12px; color: var(--muted); line-height: 16px; display: block; }
+.rowl { display: flex; align-items: center; gap: 12px; padding: 12px 14px; min-height: 56px; width: 100%; background: none; border: 0; text-align: left; cursor: pointer; overflow: hidden; transition: max-height .35s ease, opacity .25s, padding .35s; max-height: 80px; }
+.rowl + .rowl { border-top: 1px solid var(--line); }
+.rowl.gone { max-height: 0; min-height: 0; opacity: 0; padding-block: 0; border-top-width: 0; pointer-events: none; }
+.rowl .ic { width: 36px; height: 36px; border-radius: 12px; background: var(--sunken); display: grid; place-items: center; flex: none; color: var(--text-2); position: relative; }
+.rowl .m { flex: 1; min-width: 0; display: grid; } .rowl .t { font-size: 14px; font-weight: 600; line-height: 20px; } .rowl .s { font-size: 12px; line-height: 16px; color: var(--muted); }
+.sw { position: relative; width: 44px; height: 26px; flex: none; } .sw input { position: absolute; inset: 0; opacity: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+.sw i { position: absolute; inset: 0; border-radius: 99px; background: var(--line-strong); transition: background-color .15s; } .sw i::after { content: ""; position: absolute; left: 3px; top: 3px; width: 20px; height: 20px; border-radius: 50%; background: #fff; transition: transform .15s; }
+.sw input:checked + i { background: var(--action); } .sw input:checked + i::after { transform: translateX(18px); background: var(--on-action); }
+.sw input:focus-visible + i { outline: 2px solid var(--focus); outline-offset: 2px; }
+.hl { animation: hl 1.6s ease-out 1; } @keyframes hl { 0%,60% { background: color-mix(in srgb, var(--gold) 45%, transparent) } 100% { background: transparent } }
+.reduce *, .reduce *::before, .reduce *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; } }
+.notes { max-width: 78ch; display: grid; gap: 12px; } .notes h2 { margin: 0; font-size: 22px; font-weight: 800; } .notes ol { margin: 0; padding-left: 1.2em; display: grid; gap: 8px; color: var(--text-2); } .notes b { color: var(--text); }
+</style>
+
+<div class="wrap" id="wrap">
+  <header class="top">
+    <span class="eyebrow">Tanukonomy · Fase 28 · T-28.4 dan T-28.5</span>
+    <h1>Buku Stempel dan perayaannya</h1>
+    <p>Stempel kecil untuk hal yang berhasil kamu lakukan. Gratis untuk semua, tenang, dan tidak pernah berkurang. Atur keadaan di bawah, lalu coba layarnya.</p>
+  </header>
+
+  <div class="ctrl">
+    <div class="ctl"><span>Isi buku</span><div class="seg"><button type="button" data-book="part" aria-pressed="true">Sebagian</button><button type="button" data-book="empty" aria-pressed="false">Kosong</button><button type="button" data-book="all" aria-pressed="false">Semua</button><button type="button" data-book="load" aria-pressed="false">Memuat</button></div></div>
+    <div class="ctl"><span>Tonggak tersembunyi (KT-G3)</span><div class="seg"><button type="button" data-hid="1" aria-pressed="true">Belum dipakai</button><button type="button" data-hid="0" aria-pressed="false">Sudah dipakai</button></div></div>
+    <div class="ctl"><span>Picu perayaan</span><div class="seg"><button type="button" data-fx="one" aria-pressed="false">Satu</button><button type="button" data-fx="many" aria-pressed="false">Dua</button><button type="button" data-fx="first" aria-pressed="false">Pertama</button><button type="button" data-fx="legacy" aria-pressed="false">Pengguna lama</button><button type="button" data-fx="wait" aria-pressed="false">Menunggu</button></div></div>
+    <div class="ctl"><span>Gerak</span><div class="seg"><button type="button" data-motion="full" aria-pressed="true">Penuh</button><button type="button" data-motion="less" aria-pressed="false">Dikurangi</button></div></div>
+    <div class="ctl"><span>Tema</span><div class="seg"><button type="button" data-theme-set="light" aria-pressed="false">Terang</button><button type="button" data-theme-set="dark" aria-pressed="false">Gelap</button></div></div>
+    <button class="btn compact" id="reset" type="button" style="background:var(--card);color:var(--text);border:1px solid var(--line-strong);min-height:36px"><span class="icon">restart_alt</span>Ulangi</button>
+  </div>
+
+  <div class="grid">
+    <!-- E1 Beranda + perayaan -->
+    <section class="slot" id="s1">
+      <div class="slot-h"><span class="id">T-28.4</span><b>Perayaan di Beranda</b></div>
+      <div class="phone" id="p1">
+        <div class="topbar"><h2>Beranda</h2><button class="iconbtn" id="avatar" type="button" aria-label="Akun"><span class="icon">notifications</span><span class="dotbadge" id="avDot" style="right:10px;top:10px" hidden></span></button></div>
+        <div class="scroll" id="homeScroll">
+          <div class="hero"><small>Total saldo</small><b><span>Rp</span>27.522.000</b><span class="tn"><img data-img="tanuki_mascot" alt=""></span></div>
+          <div id="stage1" style="display:grid;gap:12px"></div>
+          <div class="card" style="padding:0"><div class="row"><span class="main"><span class="t">Arus periode ini</span><span class="s">Pemasukan Rp8.500.000 · Pengeluaran Rp4.705.000</span></span></div><div class="row"><span class="main"><span class="t">Kos bulanan</span><span class="s">Catat dari rutin</span></span><span class="amt">-Rp 1.200.000</span></div></div>
+        </div>
+        <div class="tabs"><div class="on"><span class="icon">home</span>Beranda</div><div><span class="icon">receipt_long</span>Riwayat</div><div><span class="icon">schedule</span>Rencana</div><div><span class="icon">savings</span>Dompet</div></div>
+        <div class="snack" id="snack" role="status"><span id="snackSeals"></span><span class="tx" id="snackTx"></span><button type="button" id="snackGo">Lihat</button></div>
+        <div class="scrim" id="scrim1"></div>
+        <div class="sheet" id="firstSheet" role="dialog" aria-modal="true" aria-labelledby="fsT">
+          <span class="grab"></span>
+          <span class="seal earned lg" id="fsSeal" style="--rot:-8deg"><img data-img="note_pencil" alt=""></span>
+          <h3 id="fsT">Buku Stempel</h3>
+          <p>Setiap kali kamu menguasai hal baru atau merapikan catatan, satu stempel masuk ke sini. Tidak ada target harian dan tidak ada yang berkurang. Kamu bisa mematikannya kapan saja di Akun.</p>
+          <div class="acts"><button class="btn" id="fsOk" type="button">Oke</button><button class="btn ghost" id="fsSet" type="button">Atur di Akun</button></div>
+        </div>
+      </div>
+      <p class="cap" id="cap1">Pilih "Picu perayaan" di atas. Perayaan yang muncul sendiri paling banyak satu per pembukaan aplikasi (G-4).</p>
+    </section>
+
+    <!-- E2 Buku Stempel -->
+    <section class="slot" id="s2">
+      <div class="slot-h"><span class="id">T-28.5</span><b>Buku Stempel</b><span class="w">Akun › Buku Stempel</span></div>
+      <div class="phone" id="p2">
+        <div class="topbar"><button class="iconbtn" type="button" aria-label="Kembali"><span class="icon">arrow_back</span></button><h2>Buku Stempel</h2></div>
+        <div class="scroll" id="bookScroll"></div>
+        <div class="scrim" id="scrim2"></div>
+        <div class="sheet" id="detail" role="dialog" aria-modal="true" aria-labelledby="dtT">
+          <span class="grab"></span><span id="dtSeal"></span>
+          <h3 id="dtT"></h3><p id="dtP"></p>
+          <div class="acts"><button class="btn" id="dtOk" type="button">Tutup</button></div>
+        </div>
+      </div>
+      <p class="cap">Tanpa "n dari N", tanpa bilah progres, tanpa peringkat. Yang belum diraih samar dengan satu baris cara mendapatkannya.</p>
+    </section>
+
+    <!-- E3 Akun -->
+    <section class="slot" id="s3">
+      <div class="slot-h"><span class="id">T-28.5</span><b>Baris dan sakelar di Akun</b></div>
+      <div class="phone" id="p3">
+        <div class="topbar"><button class="iconbtn" type="button" aria-label="Kembali"><span class="icon">arrow_back</span></button><h2>Akun</h2></div>
+        <div class="scroll">
+          <div class="card acc"><span class="tn"><img data-img="tanuki_mascot" alt=""></span><div><b>Belum masuk</b><span>Pencatatan tetap berjalan penuh tanpa akun.</span></div></div>
+          <div class="grp"><h3>Aplikasi</h3>
+            <div class="card list" id="appList">
+              <button class="rowl" id="rowBook" type="button"><span class="ic"><span class="icon">verified</span><span class="dotbadge" id="rowDot" style="right:-3px;top:-3px" hidden></span></span><span class="m"><span class="t">Buku Stempel</span><span class="s">Stempel yang sudah kamu raih</span></span><span class="icon" style="color:var(--tertiary);font-size:18px">chevron_right</span></button>
+              <label class="rowl" id="rowSw"><span class="ic"><span class="icon">eco</span></span><span class="m"><span class="t">Perayaan stempel</span><span class="s">Tampilkan kabar kecil saat kamu meraih stempel.</span></span><span class="sw"><input type="checkbox" id="swCel" checked aria-label="Perayaan stempel"><i></i></span></label>
+              <button class="rowl" type="button"><span class="ic"><span class="icon">system_update</span></span><span class="m"><span class="t">Versi aplikasi</span><span class="s">0.12.2 (21)</span></span><span class="icon" style="color:var(--tertiary);font-size:18px">chevron_right</span></button>
+            </div>
+          </div>
+          <p class="note" id="accNote">Mematikan perayaan menyembunyikan Buku Stempel. Stempel tetap diraih diam-diam dan semuanya muncul lagi saat kamu menyalakannya.</p>
+        </div>
+      </div>
+      <p class="cap">Posisi di grup Aplikasi, dekat Versi aplikasi. Sakelar mati: baris Buku Stempel menutup (G-8), tidak ada snackbar atau lembar.</p>
+    </section>
+  </div>
+
+  <div class="notes">
+    <h2>Catatan untuk product owner</h2>
+    <ol>
+      <li><b>Gerak sengaja kecil.</b> Perayaan yang muncul sendiri (snackbar, lembar, banner) hanya bergeser naik dan stempel mengetuk sekali; tanpa konfeti, tanpa getar layar, sesuai G-4. Versi ramai hanya di Buku Periode dan Kartu Periode, yang dipicu tindakan pengguna (revisi G-4, 14 Nov).</li>
+      <li><b>Stempel yang disembunyikan (KT-G3):</b> Kotak masuk bersih dan Pembayaran pertama diterima baru tampil sesudah fiturnya dipakai sekali. Ubah "Tonggak tersembunyi" untuk membandingkan.</li>
+      <li><b>Subjudul baris Akun</b> "Stempel yang sudah kamu raih" tanpa hitungan, agar tidak terbaca "n dari N". Kalau hitungan sederhana boleh ("4 stempel"), itu perubahan satu baris.</li>
+      <li><b>Titik baru</b> muncul di dua tempat: ikon Akun di app bar Beranda saat perayaan menunggu, dan baris Buku Stempel di Akun. Keduanya hilang begitu buku dibuka.</li>
+      <li><b>Pertanyaan:</b> apakah stempel yang diraih menempel juga ke sampul Buku Periode untuk pengguna Plus, atau hanya stempel periode (Periode rapi, Rutin tak terlewat)? Rupa di sini memakai segel yang sama dengan sampul.</li>
+    </ol>
+  </div>
+</div>
+
+<script>
+(function () {
+  var IMG = {"tanuki_mascot": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGZpbGw9Im5vbmUiIHZpZXdCb3g9IjAgMCA1NCA1NCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiBpZD0iY2xheVRhbnVraUJvZHkiIHgxPSIyNyIgeDI9IjI3IiB5MT0iMTIiIHkyPSI0NiI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzhiNmY1NyIvPjxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjNmM1MjNlIi8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjNGQzNzI3Ii8+PC9saW5lYXJHcmFkaWVudD48bGluZWFyR3JhZGllbnQgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiIGlkPSJjbGF5TXV6emxlIiB4MT0iMjciIHgyPSIyNyIgeTE9IjI4IiB5Mj0iNDIiPjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNmZmZmZmYiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNmNWViZDkiLz48L2xpbmVhckdyYWRpZW50PjxsaW5lYXJHcmFkaWVudCBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgaWQ9ImNsYXlMZWFmUGx1bXAiIHgxPSIyMCIgeDI9IjMyIiB5MT0iNSIgeTI9IjE3Ij48c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjODZlZmFjIi8+PHN0b3Agb2Zmc2V0PSI0MCUiIHN0b3AtY29sb3I9IiMyMmM1NWUiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMxNTgwM2QiLz48L2xpbmVhckdyYWRpZW50PjxsaW5lYXJHcmFkaWVudCBpZD0iY2xheVNvZnRIaWdobGlnaHQiIHgxPSIwJSIgeDI9IjAlIiB5MT0iMCUiIHkyPSIxMDAlIj48c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjZmZmZmZmIiBzdG9wLW9wYWNpdHk9IjAuNzUiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNmZmZmZmYiIHN0b3Atb3BhY2l0eT0iMCIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IGZpbGw9IiM0ZDM3MjciIGhlaWdodD0iMTAiIHJ4PSI0LjUiIHdpZHRoPSIxMCIgeD0iMTEiIHk9IjgiLz48cmVjdCBmaWxsPSIjNGQzNzI3IiBoZWlnaHQ9IjEwIiByeD0iNC41IiB3aWR0aD0iMTAiIHg9IjMzIiB5PSI4Ii8+PHJlY3QgZmlsbD0iI2Y1ZWJkOSIgaGVpZ2h0PSI2IiByeD0iMi41IiB3aWR0aD0iNiIgeD0iMTMiIHk9IjEwIi8+PHJlY3QgZmlsbD0iI2Y1ZWJkOSIgaGVpZ2h0PSI2IiByeD0iMi41IiB3aWR0aD0iNiIgeD0iMzUiIHk9IjEwIi8+PHJlY3QgZmlsbD0idXJsKCNjbGF5VGFudWtpQm9keSkiIGhlaWdodD0iMzAiIHJ4PSIxNCIgd2lkdGg9IjM4IiB4PSI4IiB5PSIxNCIvPjxlbGxpcHNlIGN4PSIyNyIgY3k9IjE3IiBmaWxsPSJ1cmwoI2NsYXlTb2Z0SGlnaGxpZ2h0KSIgcng9IjE0IiByeT0iNCIvPjxyZWN0IGZpbGw9IiMyMjQ3MmQiIGhlaWdodD0iMTQiIHJ4PSI1LjUiIHdpZHRoPSIxMyIgeD0iMTEiIHk9IjIwIi8+PHJlY3QgZmlsbD0iIzIyNDcyZCIgaGVpZ2h0PSIxNCIgcng9IjUuNSIgd2lkdGg9IjEzIiB4PSIzMCIgeT0iMjAiLz48Y2lyY2xlIGN4PSIxNy41IiBjeT0iMjYuNSIgZmlsbD0iI2ZmZmZmZiIgcj0iMy44Ii8+PGNpcmNsZSBjeD0iMTgiIGN5PSIyNi41IiBmaWxsPSIjMWExYTFhIiByPSIyLjIiLz48Y2lyY2xlIGN4PSIxOSIgY3k9IjI1IiBmaWxsPSIjZmZmZmZmIiByPSIxIi8+PGNpcmNsZSBjeD0iMzYuNSIgY3k9IjI2LjUiIGZpbGw9IiNmZmZmZmYiIHI9IjMuOCIvPjxjaXJjbGUgY3g9IjM2IiBjeT0iMjYuNSIgZmlsbD0iIzFhMWExYSIgcj0iMi4yIi8+PGNpcmNsZSBjeD0iMzciIGN5PSIyNSIgZmlsbD0iI2ZmZmZmZiIgcj0iMSIvPjxlbGxpcHNlIGN4PSIyNyIgY3k9IjM1IiBmaWxsPSJ1cmwoI2NsYXlNdXp6bGUpIiByeD0iOCIgcnk9IjYiLz48ZWxsaXBzZSBjeD0iMjciIGN5PSIzMyIgZmlsbD0idXJsKCNjbGF5U29mdEhpZ2hsaWdodCkiIHJ4PSI2IiByeT0iMiIvPjxlbGxpcHNlIGN4PSIyNyIgY3k9IjMyIiBmaWxsPSIjMmQxZTE1IiByeD0iMi44IiByeT0iMiIvPjxwYXRoIGQ9Ik0yNSAzNi41QzI2IDM3LjggMjggMzcuOCAyOSAzNi41IiBzdHJva2U9IiM2YzUyM2UiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48ZWxsaXBzZSBjeD0iMTIiIGN5PSIzMyIgZmlsbD0iI2Y4NzE3MSIgb3BhY2l0eT0iMC42IiByeD0iMi4yIiByeT0iMS40Ii8+PGVsbGlwc2UgY3g9IjQyIiBjeT0iMzMiIGZpbGw9IiNmODcxNzEiIG9wYWNpdHk9IjAuNiIgcng9IjIuMiIgcnk9IjEuNCIvPjxwYXRoIGQ9Ik0yNiAxNUMyMiAxMyAyMyA4IDI4IDhDMzMgOCAzNCAxMyAzMCAxNUMyOC41IDE1LjggMjcuNSAxNS44IDI2IDE1WiIgZmlsbD0idXJsKCNjbGF5TGVhZlBsdW1wKSIvPjxwYXRoIGQ9Ik0yNiAxM0wyOSAxMCIgc3Ryb2tlPSIjYmJmN2QwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS13aWR0aD0iMC45Ii8+PGVsbGlwc2UgY3g9IjI2LjUiIGN5PSI5LjUiIGZpbGw9IiNmZmZmZmYiIG9wYWNpdHk9IjAuOCIgcng9IjIuNSIgcnk9IjEuMiIvPjxjaXJjbGUgY3g9IjI5LjUiIGN5PSIxMiIgZmlsbD0iI2ZmZmZmZiIgb3BhY2l0eT0iMC45IiByPSIxIi8+PC9zdmc+Cg==", "tanuki_sleeping": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGZpbGw9Im5vbmUiIHZpZXdCb3g9IjAgMCA1NCA1NCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiBpZD0iY2xheVRhbnVraUJvZHkiIHgxPSIyNyIgeDI9IjI3IiB5MT0iMTIiIHkyPSI0NiI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzhiNmY1NyIvPjxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjNmM1MjNlIi8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjNGQzNzI3Ii8+PC9saW5lYXJHcmFkaWVudD48bGluZWFyR3JhZGllbnQgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiIGlkPSJjbGF5TXV6emxlIiB4MT0iMjciIHgyPSIyNyIgeTE9IjI4IiB5Mj0iNDIiPjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNmZmZmZmYiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNmNWViZDkiLz48L2xpbmVhckdyYWRpZW50PjxsaW5lYXJHcmFkaWVudCBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgaWQ9ImNsYXlMZWFmUGx1bXAiIHgxPSIyMCIgeDI9IjMyIiB5MT0iNSIgeTI9IjE3Ij48c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjODZlZmFjIi8+PHN0b3Agb2Zmc2V0PSI0MCUiIHN0b3AtY29sb3I9IiMyMmM1NWUiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMxNTgwM2QiLz48L2xpbmVhckdyYWRpZW50PjxsaW5lYXJHcmFkaWVudCBpZD0iY2xheVNvZnRIaWdobGlnaHQiIHgxPSIwJSIgeDI9IjAlIiB5MT0iMCUiIHkyPSIxMDAlIj48c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjZmZmZmZmIiBzdG9wLW9wYWNpdHk9IjAuNzUiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNmZmZmZmYiIHN0b3Atb3BhY2l0eT0iMCIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IGZpbGw9IiM0ZDM3MjciIGhlaWdodD0iMTAiIHJ4PSI0LjUiIHdpZHRoPSIxMCIgeD0iMTEiIHk9IjgiLz48cmVjdCBmaWxsPSIjNGQzNzI3IiBoZWlnaHQ9IjEwIiByeD0iNC41IiB3aWR0aD0iMTAiIHg9IjMzIiB5PSI4Ii8+PHJlY3QgZmlsbD0iI2Y1ZWJkOSIgaGVpZ2h0PSI2IiByeD0iMi41IiB3aWR0aD0iNiIgeD0iMTMiIHk9IjEwIi8+PHJlY3QgZmlsbD0iI2Y1ZWJkOSIgaGVpZ2h0PSI2IiByeD0iMi41IiB3aWR0aD0iNiIgeD0iMzUiIHk9IjEwIi8+PHJlY3QgZmlsbD0idXJsKCNjbGF5VGFudWtpQm9keSkiIGhlaWdodD0iMzAiIHJ4PSIxNCIgd2lkdGg9IjM4IiB4PSI4IiB5PSIxNCIvPjxlbGxpcHNlIGN4PSIyNyIgY3k9IjE3IiBmaWxsPSJ1cmwoI2NsYXlTb2Z0SGlnaGxpZ2h0KSIgcng9IjE0IiByeT0iNCIvPjxyZWN0IGZpbGw9IiMyMjQ3MmQiIGhlaWdodD0iMTQiIHJ4PSI1LjUiIHdpZHRoPSIxMyIgeD0iMTEiIHk9IjIwIi8+PHJlY3QgZmlsbD0iIzIyNDcyZCIgaGVpZ2h0PSIxNCIgcng9IjUuNSIgd2lkdGg9IjEzIiB4PSIzMCIgeT0iMjAiLz48cGF0aCBkPSJNMTMuNiAyNy40QzE1LjQgMjkuOCAxOS42IDI5LjggMjEuNCAyNy40IiBzdHJva2U9IiNlN2Y1ZWEiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIxLjgiLz48cGF0aCBkPSJNMzIuNiAyNy40QzM0LjQgMjkuOCAzOC42IDI5LjggNDAuNCAyNy40IiBzdHJva2U9IiNlN2Y1ZWEiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIxLjgiLz48ZWxsaXBzZSBjeD0iMjciIGN5PSIzNSIgZmlsbD0idXJsKCNjbGF5TXV6emxlKSIgcng9IjgiIHJ5PSI2Ii8+PGVsbGlwc2UgY3g9IjI3IiBjeT0iMzMiIGZpbGw9InVybCgjY2xheVNvZnRIaWdobGlnaHQpIiByeD0iNiIgcnk9IjIiLz48ZWxsaXBzZSBjeD0iMjciIGN5PSIzMiIgZmlsbD0iIzJkMWUxNSIgcng9IjIuOCIgcnk9IjIiLz48cGF0aCBkPSJNMjUgMzYuNUMyNiAzNy44IDI4IDM3LjggMjkgMzYuNSIgc3Ryb2tlPSIjNmM1MjNlIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS13aWR0aD0iMS40Ii8+PGVsbGlwc2UgY3g9IjEyIiBjeT0iMzMiIGZpbGw9IiNmODcxNzEiIG9wYWNpdHk9IjAuNiIgcng9IjIuMiIgcnk9IjEuNCIvPjxlbGxpcHNlIGN4PSI0MiIgY3k9IjMzIiBmaWxsPSIjZjg3MTcxIiBvcGFjaXR5PSIwLjYiIHJ4PSIyLjIiIHJ5PSIxLjQiLz48cGF0aCBkPSJNMjYgMTVDMjIgMTMgMjMgOCAyOCA4QzMzIDggMzQgMTMgMzAgMTVDMjguNSAxNS44IDI3LjUgMTUuOCAyNiAxNVoiIGZpbGw9InVybCgjY2xheUxlYWZQbHVtcCkiLz48cGF0aCBkPSJNMjYgMTNMMjkgMTAiIHN0cm9rZT0iI2JiZjdkMCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2Utd2lkdGg9IjAuOSIvPjxlbGxpcHNlIGN4PSIyNi41IiBjeT0iOS41IiBmaWxsPSIjZmZmZmZmIiBvcGFjaXR5PSIwLjgiIHJ4PSIyLjUiIHJ5PSIxLjIiLz48Y2lyY2xlIGN4PSIyOS41IiBjeT0iMTIiIGZpbGw9IiNmZmZmZmYiIG9wYWNpdHk9IjAuOSIgcj0iMSIvPjwvc3ZnPgo=", "tier_coin": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJjbGF5Q29pbiIgeDE9IjAlIiB4Mj0iMTAwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZkZTA0NyIvPjxzdG9wIG9mZnNldD0iNjAlIiBzdG9wLWNvbG9yPSIjZjU5ZTBiIi8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjZDk3NzA2Ii8+PC9saW5lYXJHcmFkaWVudD48bGluZWFyR3JhZGllbnQgaWQ9ImNsYXlDb2luSGlnaGxpZ2h0IiB4MT0iMzAlIiB4Mj0iNzAlIiB5MT0iMCUiIHkyPSIxMDAlIj48c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjZmZmZmZmIiBzdG9wLW9wYWNpdHk9IjAuOCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIgc3RvcC1vcGFjaXR5PSIwIi8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgZmlsbD0idXJsKCNjbGF5Q29pbikiIHI9IjEwIi8+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgZmlsbD0iI2Q5NzcwNiIgb3BhY2l0eT0iMC4yIiByPSI4Ii8+PHBhdGggZD0iTTEyIDdDOS41IDcgOCA5LjUgOCAxMS41QzggMTQgMTAuNSAxNS41IDEyIDE2LjVDMTMuNSAxNS41IDE2IDE0IDE2IDExLjVDMTYgOS41IDE0LjUgNyAxMiA3WiIgZmlsbD0iIzE1ODAzZCIgb3BhY2l0eT0iMC45Ii8+PHBhdGggZD0iTTEyIDdDMTEuNSA5IDEwLjUgMTIgOC41IDEzIiBzdHJva2U9IiM4NmVmYWMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIwLjgiLz48ZWxsaXBzZSBjeD0iOSIgY3k9IjcuNSIgZmlsbD0idXJsKCNjbGF5Q29pbkhpZ2hsaWdodCkiIHJ4PSI0LjUiIHJ5PSIyLjIiIHRyYW5zZm9ybT0icm90YXRlKC0yNSA5IDcuNSkiLz48L3N2Zz4K", "note_pencil": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJhIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmZmJlYiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2ZkZTY4YSIvPjwvbGluZWFyR3JhZGllbnQ+PGxpbmVhckdyYWRpZW50IGlkPSJiIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZkZTY4YSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2Y1OWUwYiIvPjwvbGluZWFyR3JhZGllbnQ+PGxpbmVhckdyYWRpZW50IGlkPSJjIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzkzYzVmZCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzFkNGVkOCIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IGZpbGw9InVybCgjYSkiIGhlaWdodD0iMjQiIHJ4PSI1IiB3aWR0aD0iMjAiIHg9IjQiIHk9IjUiLz48cmVjdCBmaWxsPSIjOTRhM2I4IiBoZWlnaHQ9IjEuOCIgcng9IjAuOSIgd2lkdGg9IjEyIiB4PSI4IiB5PSIxMSIvPjxyZWN0IGZpbGw9IiM5NGEzYjgiIGhlaWdodD0iMS44IiByeD0iMC45IiB3aWR0aD0iOSIgeD0iOCIgeT0iMTUuNCIvPjxyZWN0IGZpbGw9IiM5NGEzYjgiIGhlaWdodD0iMS44IiByeD0iMC45IiB3aWR0aD0iNiIgeD0iOCIgeT0iMTkuOCIvPjxwYXRoIGQ9Ik0yMi40IDE0LjJMMjcuMiAxOUwxOC42IDI3LjZMMTMgMjguOEwxNC4yIDIzLjJaIiBmaWxsPSJ1cmwoI2IpIi8+PHBhdGggZD0iTTIyLjQgMTQuMkwyNC40IDEyLjJDMjUuMiAxMS40IDI2LjQgMTEuNCAyNy4yIDEyLjJMMjguOCAxMy44QzI5LjYgMTQuNiAyOS42IDE1LjggMjguOCAxNi42TDI3LjIgMTlaIiBmaWxsPSJ1cmwoI2MpIi8+PHBhdGggZD0iTTEzIDI4LjhMMTQuMiAyMy4yTDE4LjYgMjcuNloiIGZpbGw9IiNmZGU2OGEiLz48cGF0aCBkPSJNMTMgMjguOEwxMy42IDI2TDE1LjggMjguMloiIGZpbGw9IiMzMzQxNTUiLz48ZWxsaXBzZSBjeD0iMTAiIGN5PSI3LjYiIGZpbGw9IiNmZmZmZmYiIG9wYWNpdHk9IjAuNyIgcng9IjQiIHJ5PSIwLjgiLz48L3N2Zz4=", "bowl_food": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJhIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZkYmE3NCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2VhNTgwYyIvPjwvbGluZWFyR3JhZGllbnQ+PGxpbmVhckdyYWRpZW50IGlkPSJiIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmZmJlYiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2ZkZTY4YSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxwYXRoIGQ9Ik00LjUgMTVIMjcuNUMyNy41IDIyIDIyLjUgMjcgMTYgMjdTNC41IDIyIDQuNSAxNVoiIGZpbGw9InVybCgjYSkiLz48ZWxsaXBzZSBjeD0iMTYiIGN5PSIxNSIgZmlsbD0idXJsKCNiKSIgcng9IjExLjUiIHJ5PSIyLjYiLz48Y2lyY2xlIGN4PSIxMiIgY3k9IjE0LjYiIGZpbGw9IiNmODcxNzEiIHI9IjEuNSIvPjxjaXJjbGUgY3g9IjE3IiBjeT0iMTQuMiIgZmlsbD0iIzg2ZWZhYyIgcj0iMS41Ii8+PGNpcmNsZSBjeD0iMjEiIGN5PSIxNC44IiBmaWxsPSIjZmRlMDQ3IiByPSIxLjMiLz48cGF0aCBkPSJNMjAgNEwyNSAxMyIgc3Ryb2tlPSIjYjQ1MzA5IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS13aWR0aD0iMS44Ii8+PHBhdGggZD0iTTI0IDMuNEwyNi41IDEyIiBzdHJva2U9IiNiNDUzMDkiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIxLjgiLz48cGF0aCBkPSJNMTAuNSA1QzEwIDYuMyAxMS42IDcuMiAxMSA5IiBzdHJva2U9IiNmZWQ3YWEiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48ZWxsaXBzZSBjeD0iOSIgY3k9IjE5IiBmaWxsPSIjZmZmZmZmIiBvcGFjaXR5PSIwLjUiIHJ4PSIyIiByeT0iMy42Ii8+PC9zdmc+", "house_household": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJhIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZkYTRhZiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2UxMWQ0OCIvPjwvbGluZWFyR3JhZGllbnQ+PGxpbmVhckdyYWRpZW50IGlkPSJiIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmZmJlYiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2ZkZTY4YSIvPjwvbGluZWFyR3JhZGllbnQ+PGxpbmVhckdyYWRpZW50IGlkPSJjIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2UwYjk4YSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzkyNDAwZSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IGZpbGw9InVybCgjYikiIGhlaWdodD0iMTIuNSIgcng9IjMiIHdpZHRoPSIxOSIgeD0iNi41IiB5PSIxNS41Ii8+PHBhdGggZD0iTTE2IDRMMjkgMTUuNUgzWiIgZmlsbD0idXJsKCNhKSIvPjxyZWN0IGZpbGw9InVybCgjYykiIGhlaWdodD0iOCIgcng9IjIuMiIgd2lkdGg9IjUuNCIgeD0iMTMuMyIgeT0iMjAiLz48cmVjdCBmaWxsPSIjYmFlNmZkIiBoZWlnaHQ9IjQuMiIgcng9IjEuMiIgd2lkdGg9IjQiIHg9IjguNCIgeT0iMTguNCIvPjxyZWN0IGZpbGw9IiNiYWU2ZmQiIGhlaWdodD0iNC4yIiByeD0iMS4yIiB3aWR0aD0iNCIgeD0iMTkuNiIgeT0iMTguNCIvPjxlbGxpcHNlIGN4PSIxMyIgY3k9IjkiIGZpbGw9IiNmZmZmZmYiIG9wYWNpdHk9IjAuNiIgcng9IjQuNSIgcnk9IjEuMiIvPjwvc3ZnPg==", "receipt_bills": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJhIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmZmJlYiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2ZkZTY4YSIvPjwvbGluZWFyR3JhZGllbnQ+PGxpbmVhckdyYWRpZW50IGlkPSJiIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzkzYzVmZCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzFkNGVkOCIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxwYXRoIGQ9Ik03IDRIMjVWMjhMMjIgMjZMMTkgMjhMMTYgMjZMMTMgMjhMMTAgMjZMNyAyOFoiIGZpbGw9InVybCgjYSkiLz48cmVjdCBmaWxsPSJ1cmwoI2IpIiBoZWlnaHQ9IjQuNCIgcng9IjEuNCIgd2lkdGg9IjE4IiB4PSI3IiB5PSI0Ii8+PHJlY3QgZmlsbD0iIzk0YTNiOCIgaGVpZ2h0PSIxLjgiIHJ4PSIwLjkiIHdpZHRoPSIxMiIgeD0iMTAiIHk9IjExLjUiLz48cmVjdCBmaWxsPSIjOTRhM2I4IiBoZWlnaHQ9IjEuOCIgcng9IjAuOSIgd2lkdGg9IjkiIHg9IjEwIiB5PSIxNS41Ii8+PHJlY3QgZmlsbD0iIzk0YTNiOCIgaGVpZ2h0PSIxLjgiIHJ4PSIwLjkiIHdpZHRoPSI3IiB4PSIxMCIgeT0iMTkuNSIvPjxjaXJjbGUgY3g9IjIxIiBjeT0iMjEuNiIgZmlsbD0iI2Y1OWUwYiIgcj0iMy4yIi8+PGNpcmNsZSBjeD0iMjAuNTIiIGN5PSIyMS4xMiIgZmlsbD0iI2ZlZjA4YSIgcj0iMS43NiIvPjxlbGxpcHNlIGN4PSIxMSIgY3k9IjciIGZpbGw9IiNmZmZmZmYiIG9wYWNpdHk9IjAuNiIgcng9IjMiIHJ5PSIwLjgiLz48L3N2Zz4=", "bag_shopping": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJhIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2Y5YThkNCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2RiMjc3NyIvPjwvbGluZWFyR3JhZGllbnQ+PGxpbmVhckdyYWRpZW50IGlkPSJiIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZkYTRhZiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2UxMWQ0OCIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxwYXRoIGQ9Ik0xMSAxMVY5LjVDMTEgNi41IDEzIDQuNSAxNiA0LjVTMjEgNi41IDIxIDkuNVYxMSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjOWQxNzRkIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS13aWR0aD0iMiIvPjxwYXRoIGQ9Ik02IDEwLjVIMjZMMjcuNSAyNUMyNy43IDI3IDI2LjQgMjguNSAyNC41IDI4LjVINy41QzUuNiAyOC41IDQuMyAyNyA0LjUgMjVaIiBmaWxsPSJ1cmwoI2EpIi8+PGNpcmNsZSBjeD0iMTIiIGN5PSIxNC41IiBmaWxsPSIjZmZmZmZmIiByPSIxLjMiLz48Y2lyY2xlIGN4PSIyMCIgY3k9IjE0LjUiIGZpbGw9IiNmZmZmZmYiIHI9IjEuMyIvPjxjaXJjbGUgY3g9IjE2IiBjeT0iMjEiIGZpbGw9IiNmNTllMGIiIHI9IjMuMiIvPjxjaXJjbGUgY3g9IjE1LjUyIiBjeT0iMjAuNTIiIGZpbGw9IiNmZWYwOGEiIHI9IjEuNzYiLz48ZWxsaXBzZSBjeD0iOS41IiBjeT0iMTYiIGZpbGw9IiNmZmZmZmYiIG9wYWNpdHk9IjAuNSIgcng9IjEuNiIgcnk9IjQiLz48L3N2Zz4=", "train_transport": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJjbGF5VHJhaW4iIHgxPSIwJSIgeDI9IjAlIiB5MT0iMCUiIHkyPSIxMDAlIj48c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjNjBhNWZhIi8+PHN0b3Agb2Zmc2V0PSI2MCUiIHN0b3AtY29sb3I9IiMyNTYzZWIiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMxZDRlZDgiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCBmaWxsPSJ1cmwoI2NsYXlUcmFpbikiIGhlaWdodD0iMjAiIHJ4PSI3IiB3aWR0aD0iMjAiIHg9IjYiIHk9IjYiLz48cmVjdCBmaWxsPSIjZTBmMmZlIiBoZWlnaHQ9IjgiIHJ4PSIzIiB3aWR0aD0iMTQiIHg9IjkiIHk9IjkiLz48cmVjdCBmaWxsPSIjMDI4NGM3IiBoZWlnaHQ9IjUiIHJ4PSIxLjUiIHdpZHRoPSI0LjUiIHg9IjExIiB5PSIxMC41Ii8+PHJlY3QgZmlsbD0iIzAyODRjNyIgaGVpZ2h0PSI1IiByeD0iMS41IiB3aWR0aD0iNC41IiB4PSIxNi41IiB5PSIxMC41Ii8+PGVsbGlwc2UgY3g9IjE2IiBjeT0iNy41IiBmaWxsPSIjZmZmZmZmIiBvcGFjaXR5PSIwLjc1IiByeD0iNyIgcnk9IjEuNCIvPjxjaXJjbGUgY3g9IjEwIiBjeT0iMjAuNSIgZmlsbD0iI2ZlZjA4YSIgcj0iMiIvPjxjaXJjbGUgY3g9IjIyIiBjeT0iMjAuNSIgZmlsbD0iI2ZlZjA4YSIgcj0iMiIvPjxjaXJjbGUgY3g9IjkuNSIgY3k9IjIwIiBmaWxsPSIjZmZmZmZmIiByPSIwLjgiLz48Y2lyY2xlIGN4PSIyMS41IiBjeT0iMjAiIGZpbGw9IiNmZmZmZmYiIHI9IjAuOCIvPjxyZWN0IGZpbGw9IiMxZTNhOGEiIGhlaWdodD0iMiIgcng9IjEiIHdpZHRoPSI2IiB4PSIxMyIgeT0iMjEiLz48L3N2Zz4K", "wifi_internet": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJhIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzVlZWFkNCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzBkOTQ4OCIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IGZpbGw9InVybCgjYSkiIGhlaWdodD0iMjQiIHJ4PSI4IiB3aWR0aD0iMjYiIHg9IjMiIHk9IjQiLz48cGF0aCBkPSJNOCAxMy41QzEzIDkgMTkgOSAyNCAxMy41IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIyLjQiLz48cGF0aCBkPSJNMTEgMTcuNUMxNCAxNSAxOCAxNSAyMSAxNy41IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIyLjQiLz48Y2lyY2xlIGN4PSIxNiIgY3k9IjIyIiBmaWxsPSIjZmVmMDhhIiByPSIyLjIiLz48ZWxsaXBzZSBjeD0iMTEiIGN5PSI4IiBmaWxsPSIjZmZmZmZmIiBvcGFjaXR5PSIwLjYiIHJ4PSI2IiByeT0iMS4yIi8+PC9zdmc+", "star_bonus": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJhIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZlZjA4YSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2VhYjMwOCIvPjwvbGluZWFyR3JhZGllbnQ+PGxpbmVhckdyYWRpZW50IGlkPSJiIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZkZTY4YSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2Y1OWUwYiIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxwYXRoIGQ9Ik0xNiAzTDE5LjcgMTEuNEwyOC44IDEyLjNMMjIgMTguNEwyNCAyNy40TDE2IDIyLjdMOCAyNy40TDEwIDE4LjRMMy4yIDEyLjNMMTIuMyAxMS40WiIgZmlsbD0idXJsKCNhKSIvPjxwYXRoIGQ9Ik0xNiAzTDE5LjcgMTEuNEwyOC44IDEyLjNMMjIgMTguNEwxNiAxN1oiIGZpbGw9InVybCgjYikiIG9wYWNpdHk9IjAuMzUiLz48cGF0aCBkPSJNMTYgMjIuN0w4IDI3LjRMMTAgMTguNEwxNiAxN1oiIGZpbGw9IiNkOTc3MDYiIG9wYWNpdHk9IjAuMyIvPjxlbGxpcHNlIGN4PSIxMi40IiBjeT0iMTAuMiIgZmlsbD0iI2ZmZmZmZiIgb3BhY2l0eT0iMC44IiByeD0iMi42IiByeT0iMS4xIi8+PGNpcmNsZSBjeD0iMjYuNiIgY3k9IjUuNCIgZmlsbD0iI2ZmZmZmZiIgcj0iMS4xIi8+PGNpcmNsZSBjeD0iNS40IiBjeT0iMjQuNiIgZmlsbD0iI2ZmZmZmZiIgcj0iMC45Ii8+PC9zdmc+", "cup_coffee": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJjbGF5Q3VwIiB4MT0iMCUiIHgyPSIxMDAlIiB5MT0iMCUiIHkyPSIxMDAlIj48c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjZmVmM2M3Ii8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjZmRlNjhhIi8+PC9saW5lYXJHcmFkaWVudD48bGluZWFyR3JhZGllbnQgaWQ9ImNsYXlNYXRjaGFGb2FtIiB4MT0iMCUiIHgyPSIxMDAlIiB5MT0iMCUiIHkyPSIxMDAlIj48c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjODZlZmFjIi8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjMjJjNTVlIi8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3QgZmlsbD0idXJsKCNjbGF5Q3VwKSIgaGVpZ2h0PSIxNCIgcng9IjQuNSIgd2lkdGg9IjE1IiB4PSI3IiB5PSIxMSIvPjxwYXRoIGQ9Ik0yMiAxM0gyNUMyNi41IDEzIDI3LjUgMTQuMiAyNy41IDE1LjVDMjcuNSAxNy41IDI2IDE5IDI0IDE5SDIyIiBmaWxsPSJub25lIiBzdHJva2U9IiNmNTllMGIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIyIi8+PGVsbGlwc2UgY3g9IjE0LjUiIGN5PSIxMSIgZmlsbD0idXJsKCNjbGF5TWF0Y2hhRm9hbSkiIHJ4PSI3LjUiIHJ5PSIzIi8+PGVsbGlwc2UgY3g9IjE0LjUiIGN5PSIxMSIgZmlsbD0iI2ZmZmZmZiIgb3BhY2l0eT0iMC42IiByeD0iNC41IiByeT0iMS44Ii8+PGNpcmNsZSBjeD0iMTQuNSIgY3k9IjExIiBmaWxsPSIjMTU4MDNkIiByPSIxLjIiLz48cGF0aCBkPSJNMTIgNUMxMS41IDYuNSAxMyA3LjUgMTIuNSA5IiBzdHJva2U9IiNiYmY3ZDAiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMTYgNEMxNS41IDUuNSAxNyA2LjggMTYuNSA4IiBzdHJva2U9IiNiYmY3ZDAiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48ZWxsaXBzZSBjeD0iMTAuNSIgY3k9IjE1IiBmaWxsPSIjZmZmZmZmIiBvcGFjaXR5PSIwLjU1IiByeD0iMiIgcnk9IjQiLz48L3N2Zz4K", "tray_other": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJhIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2NiZDVlMSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzY0NzQ4YiIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IGZpbGw9InVybCgjYSkiIGhlaWdodD0iMjIiIHJ4PSI3IiB3aWR0aD0iMjQiIHg9IjQiIHk9IjUiLz48Y2lyY2xlIGN4PSIxMC41IiBjeT0iMTYiIGZpbGw9IiNmZmZmZmYiIHI9IjIuMyIvPjxjaXJjbGUgY3g9IjE2IiBjeT0iMTYiIGZpbGw9IiNmZmZmZmYiIHI9IjIuMyIvPjxjaXJjbGUgY3g9IjIxLjUiIGN5PSIxNiIgZmlsbD0iI2ZmZmZmZiIgcj0iMi4zIi8+PGVsbGlwc2UgY3g9IjExIiBjeT0iOC40IiBmaWxsPSIjZmZmZmZmIiBvcGFjaXR5PSIwLjYiIHJ4PSI2IiByeT0iMS4zIi8+PC9zdmc+", "calendar_date": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJhIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmZmJlYiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2ZkZTY4YSIvPjwvbGluZWFyR3JhZGllbnQ+PGxpbmVhckdyYWRpZW50IGlkPSJiIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZkYTRhZiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2UxMWQ0OCIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IGZpbGw9InVybCgjYSkiIGhlaWdodD0iMjIiIHJ4PSI1IiB3aWR0aD0iMjYiIHg9IjMiIHk9IjciLz48cGF0aCBkPSJNMyAxMkMzIDkuMiA1LjIgNyA4IDdIMjRDMjYuOCA3IDI5IDkuMiAyOSAxMlYxMy40SDNaIiBmaWxsPSJ1cmwoI2IpIi8+PHJlY3QgZmlsbD0iIzlmMTIzOSIgaGVpZ2h0PSI2IiByeD0iMS42IiB3aWR0aD0iMyIgeD0iOSIgeT0iMy42Ii8+PHJlY3QgZmlsbD0iIzlmMTIzOSIgaGVpZ2h0PSI2IiByeD0iMS42IiB3aWR0aD0iMyIgeD0iMjAiIHk9IjMuNiIvPjxyZWN0IGZpbGw9IiNjYmQ1ZTEiIGhlaWdodD0iMy42IiByeD0iMS4yIiB3aWR0aD0iMy42IiB4PSI3LjUiIHk9IjE2LjUiLz48cmVjdCBmaWxsPSIjY2JkNWUxIiBoZWlnaHQ9IjMuNiIgcng9IjEuMiIgd2lkdGg9IjMuNiIgeD0iMTQuMiIgeT0iMTYuNSIvPjxyZWN0IGZpbGw9IiNjYmQ1ZTEiIGhlaWdodD0iMy42IiByeD0iMS4yIiB3aWR0aD0iMy42IiB4PSIyMC45IiB5PSIxNi41Ii8+PHJlY3QgZmlsbD0iI2NiZDVlMSIgaGVpZ2h0PSIzLjYiIHJ4PSIxLjIiIHdpZHRoPSIzLjYiIHg9IjcuNSIgeT0iMjIiLz48cmVjdCBmaWxsPSIjZjU5ZTBiIiBoZWlnaHQ9IjMuOCIgcng9IjEuMiIgd2lkdGg9IjMuOCIgeD0iMTQuMSIgeT0iMjEuOSIvPjxlbGxpcHNlIGN4PSIxMCIgY3k9IjEwIiBmaWxsPSIjZmZmZmZmIiBvcGFjaXR5PSIwLjYiIHJ4PSI1IiByeT0iMC45Ii8+PC9zdmc+", "check_completed": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJhIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzZlZTdiNyIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzA1OTY2OSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxjaXJjbGUgY3g9IjE2IiBjeT0iMTYiIGZpbGw9InVybCgjYSkiIHI9IjEyLjUiLz48cGF0aCBkPSJNOS44IDE2LjRMMTQgMjAuNkwyMi40IDExLjgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2Utd2lkdGg9IjMuMiIvPjxlbGxpcHNlIGN4PSIxMiIgY3k9IjguNiIgZmlsbD0iI2ZmZmZmZiIgb3BhY2l0eT0iMC42IiByeD0iNS4yIiByeT0iMS42Ii8+PGNpcmNsZSBjeD0iMjUuNiIgY3k9IjYuNCIgZmlsbD0iI2Y1OWUwYiIgcj0iMi40Ii8+PGNpcmNsZSBjeD0iMjUuMjQiIGN5PSI2LjA0IiBmaWxsPSIjZmVmMDhhIiByPSIxLjMyIi8+PC9zdmc+", "coin_paid": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJhIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZlZjA4YSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2VhYjMwOCIvPjwvbGluZWFyR3JhZGllbnQ+PGxpbmVhckdyYWRpZW50IGlkPSJiIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzZlZTdiNyIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzA1OTY2OSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxjaXJjbGUgY3g9IjE0IiBjeT0iMTUuNiIgZmlsbD0iI2Y1OWUwYiIgcj0iMTEuNiIvPjxjaXJjbGUgY3g9IjE0IiBjeT0iMTUuNiIgZmlsbD0idXJsKCNhKSIgcj0iOS42Ii8+PGNpcmNsZSBjeD0iMTQiIGN5PSIxNS42IiBmaWxsPSJub25lIiByPSI2LjgiIHN0cm9rZT0iI2Y1OWUwYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMTEgMTUuNkwxMy40IDE4TDE3LjQgMTMiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2I0NTMwOSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2Utd2lkdGg9IjIiLz48Y2lyY2xlIGN4PSIyNC42IiBjeT0iMjMuNiIgZmlsbD0idXJsKCNiKSIgcj0iNiIvPjxwYXRoIGQ9Ik0yMS42IDIzLjZMMjMuOCAyNS44TDI3LjYgMjEuNiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiIvPjxlbGxpcHNlIGN4PSI5LjQiIGN5PSI5LjYiIGZpbGw9IiNmZmZmZmYiIG9wYWNpdHk9IjAuOCIgcng9IjMuNCIgcnk9IjEuMSIvPjwvc3ZnPg==", "bank_wallet": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJhIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzkzYzVmZCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzFkNGVkOCIvPjwvbGluZWFyR3JhZGllbnQ+PGxpbmVhckdyYWRpZW50IGlkPSJiIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2NiZDVlMSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzY0NzQ4YiIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxwYXRoIGQ9Ik0xNiA0TDI4IDEwLjVWMTJINFYxMC41WiIgZmlsbD0idXJsKCNhKSIvPjxyZWN0IGZpbGw9IiNlMGYyZmUiIGhlaWdodD0iMTAiIHJ4PSIxLjYiIHdpZHRoPSIzLjYiIHg9IjYuNSIgeT0iMTMiLz48cmVjdCBmaWxsPSIjZTBmMmZlIiBoZWlnaHQ9IjEwIiByeD0iMS42IiB3aWR0aD0iMy42IiB4PSIxMS41IiB5PSIxMyIvPjxyZWN0IGZpbGw9IiNlMGYyZmUiIGhlaWdodD0iMTAiIHJ4PSIxLjYiIHdpZHRoPSIzLjYiIHg9IjE2LjkiIHk9IjEzIi8+PHJlY3QgZmlsbD0iI2UwZjJmZSIgaGVpZ2h0PSIxMCIgcng9IjEuNiIgd2lkdGg9IjMuNiIgeD0iMjEuOSIgeT0iMTMiLz48cmVjdCBmaWxsPSJ1cmwoI2IpIiBoZWlnaHQ9IjQuNSIgcng9IjIiIHdpZHRoPSIyNiIgeD0iMyIgeT0iMjQiLz48ZWxsaXBzZSBjeD0iMTIiIGN5PSI3LjYiIGZpbGw9IiNmZmZmZmYiIG9wYWNpdHk9IjAuNyIgcng9IjYiIHJ5PSIxLjIiLz48Y2lyY2xlIGN4PSIxNiIgY3k9IjguNCIgZmlsbD0iI2Y1OWUwYiIgcj0iMS44Ii8+PGNpcmNsZSBjeD0iMTUuNzMiIGN5PSI4LjEzIiBmaWxsPSIjZmVmMDhhIiByPSIwLjk5Ii8+PC9zdmc+", "repeat_loop": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJhIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzZlZTdiNyIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzA1OTY2OSIvPjwvbGluZWFyR3JhZGllbnQ+PGxpbmVhckdyYWRpZW50IGlkPSJiIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzg2ZWZhYyIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzE2YTM0YSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxjaXJjbGUgY3g9IjE2IiBjeT0iMTYiIGZpbGw9InVybCgjYSkiIHI9IjEyLjUiLz48cGF0aCBkPSJNOS40IDE1LjZDOS40IDExLjggMTIuNCA5LjIgMTYgOS4yQzE3LjggOS4yIDE5LjQgOS44IDIwLjYgMTAuOE0yMi42IDE2LjRDMjIuNiAyMC4yIDE5LjYgMjIuOCAxNiAyMi44QzE0LjIgMjIuOCAxMi42IDIyLjIgMTEuNCAyMS4yIiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIyLjQiLz48cGF0aCBkPSJNMjEuNiA3LjZWMTEuNEgxNy44TTEwLjQgMjQuNFYyMC42SDE0LjIiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2Utd2lkdGg9IjIuNCIvPjxlbGxpcHNlIGN4PSIxMiIgY3k9IjgiIGZpbGw9IiNmZmZmZmYiIG9wYWNpdHk9IjAuNTUiIHJ4PSI1IiByeT0iMS41Ii8+PGNpcmNsZSBjeD0iMjUuNiIgY3k9IjI1LjYiIGZpbGw9IiNmNTllMGIiIHI9IjIuNCIvPjxjaXJjbGUgY3g9IjI1LjI0IiBjeT0iMjUuMjQiIGZpbGw9IiNmZWYwOGEiIHI9IjEuMzIiLz48L3N2Zz4=", "tray_empty": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJhIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2NiZDVlMSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzY0NzQ4YiIvPjwvbGluZWFyR3JhZGllbnQ+PGxpbmVhckdyYWRpZW50IGlkPSJiIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmZmJlYiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2ZkZTY4YSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxwYXRoIGQ9Ik00IDE3TDguNCA3LjZDOC45IDYuNiA5LjggNiAxMC45IDZIMjEuMUMyMi4yIDYgMjMuMSA2LjYgMjMuNiA3LjZMMjggMTdaIiBmaWxsPSJ1cmwoI2IpIi8+PHBhdGggZD0iTTQgMTdIMTEuNEMxMS44IDE5LjQgMTMuNiAyMSAxNiAyMVMyMC4yIDE5LjQgMjAuNiAxN0gyOFYyNEMyOCAyNi4yIDI2LjIgMjggMjQgMjhIOEM1LjggMjggNCAyNi4yIDQgMjRaIiBmaWxsPSJ1cmwoI2EpIi8+PHBhdGggZD0iTTEzIDMuNUMxMy40IDQuNyAxMi42IDUuMiAxMyA2LjQiIHN0cm9rZT0iI2NiZDVlMSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxjaXJjbGUgY3g9IjIzLjQiIGN5PSI0LjYiIGZpbGw9IiNmNTllMGIiIHI9IjEuNCIvPjxlbGxpcHNlIGN4PSI5IiBjeT0iMjIuNCIgZmlsbD0iI2ZmZmZmZiIgb3BhY2l0eT0iMC41NSIgcng9IjMuNiIgcnk9IjEiLz48L3N2Zz4=", "box_backup": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJhIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzkzYzVmZCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzFkNGVkOCIvPjwvbGluZWFyR3JhZGllbnQ+PGxpbmVhckdyYWRpZW50IGlkPSJiIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2E1YjRmYyIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzQzMzhjYSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxwYXRoIGQ9Ik05IDI1QzUuNyAyNSAzLjUgMjIuNiAzLjUgMTkuNkMzLjUgMTYuOSA1LjQgMTQuOCA4IDE0LjNDOC42IDEwLjYgMTEuOSA4IDE1LjggOEMxOS42IDggMjIuOCAxMC42IDIzLjYgMTQuMkMyNi43IDE0LjUgMjguNSAxNi43IDI4LjUgMTkuNEMyOC41IDIyLjkgMjYgMjUgMjIuNiAyNVoiIGZpbGw9InVybCgjYSkiLz48cGF0aCBkPSJNMTYgMjIuNFYxMy42TTE2IDEzLjZMMTIuNCAxNy4yTTE2IDEzLjZMMTkuNiAxNy4yIiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIyLjIiLz48ZWxsaXBzZSBjeD0iMTEiIGN5PSIxMi40IiBmaWxsPSIjZmZmZmZmIiBvcGFjaXR5PSIwLjU1IiByeD0iNC40IiByeT0iMS4zIi8+PGNpcmNsZSBjeD0iMjUuNCIgY3k9IjciIGZpbGw9IiNmNTllMGIiIHI9IjIuNCIvPjxjaXJjbGUgY3g9IjI1LjA0IiBjeT0iNi42NCIgZmlsbD0iI2ZlZjA4YSIgcj0iMS4zMiIvPjwvc3ZnPg==", "coins_currency": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJhIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZlZjA4YSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2VhYjMwOCIvPjwvbGluZWFyR3JhZGllbnQ+PGxpbmVhckdyYWRpZW50IGlkPSJiIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZkZTY4YSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2Y1OWUwYiIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxlbGxpcHNlIGN4PSIxNiIgY3k9IjIzIiBmaWxsPSJ1cmwoI2IpIiByeD0iMTEiIHJ5PSI0LjgiLz48cmVjdCBmaWxsPSJ1cmwoI2IpIiBoZWlnaHQ9IjciIHdpZHRoPSIyMiIgeD0iNSIgeT0iMTYiLz48ZWxsaXBzZSBjeD0iMTYiIGN5PSIxNiIgZmlsbD0idXJsKCNhKSIgcng9IjExIiByeT0iNC44Ii8+PGVsbGlwc2UgY3g9IjE2IiBjeT0iMTUiIGZpbGw9InVybCgjYikiIHJ4PSIxMSIgcnk9IjQuOCIvPjxyZWN0IGZpbGw9InVybCgjYikiIGhlaWdodD0iNyIgd2lkdGg9IjIyIiB4PSI1IiB5PSI4Ii8+PGVsbGlwc2UgY3g9IjE2IiBjeT0iOCIgZmlsbD0idXJsKCNhKSIgcng9IjExIiByeT0iNC44Ii8+PGVsbGlwc2UgY3g9IjE2IiBjeT0iOCIgZmlsbD0ibm9uZSIgb3BhY2l0eT0iMC43IiByeD0iNi40IiByeT0iMi42IiBzdHJva2U9IiNiNDUzMDkiIHN0cm9rZS13aWR0aD0iMS40Ii8+PGVsbGlwc2UgY3g9IjEwLjYiIGN5PSI2LjgiIGZpbGw9IiNmZmZmZmYiIG9wYWNpdHk9IjAuNyIgcng9IjMiIHJ5PSIwLjkiLz48L3N2Zz4="};
+  var $ = function (s, r) { return (r || document).querySelector(s); }, $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  function hydrate(r) { $$("[data-img]", r).forEach(function (i) { i.src = IMG[i.getAttribute("data-img")]; }); } hydrate();
+  var CAT = [
+    { id: "wallet_first", g: "Mulai", n: "Dompet pertama", how: "Buat satu dompet.", img: "bank_wallet", date: "3 Sep", rot: -6 },
+    { id: "record_first", g: "Mulai", n: "Catatan pertama", how: "Catat satu transaksi.", img: "note_pencil", date: "3 Sep", rot: 5 },
+    { id: "period_tidy", g: "Rapi", n: "Periode rapi", how: "Satu periode yang sudah lewat, semua transaksinya berkategori.", img: "check_completed", date: "25 Okt", rot: -4 },
+    { id: "recurring_clear", g: "Rapi", n: "Rutin tak terlewat", how: "Satu periode yang sudah lewat, semua kemunculan rutin sudah dicatat, ditautkan, atau dilewati.", img: "repeat_loop", date: "", rot: 6 },
+    { id: "inbox_clear", g: "Rapi", n: "Kotak masuk bersih", how: "Tinjau semua yang menunggu di kotak masuk notifikasi.", img: "tray_empty", date: "", rot: -5, hidden: 1 },
+    { id: "backup_first", g: "Aman", n: "Cadangan pertama", how: "Simpan satu cadangan dari Akun.", img: "box_backup", date: "21 Okt", rot: 4 },
+    { id: "budget_first", g: "Rencana", n: "Anggaran terpakai", how: "Tautkan satu transaksi ke pos anggaran.", img: "coins_currency", date: "", rot: -7 },
+    { id: "freelance_paid", g: "Rencana", n: "Pembayaran pertama diterima", how: "Catat satu pembayaran freelance yang sudah diterima.", img: "coin_paid", date: "", rot: 5, hidden: 1 }
+  ];
+  var S = { book: "part", hid: 1, earned: {}, unseen: {}, cel: true, less: false, newIds: [] };
+  function reduced() { return S.less || (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches); }
+  function baseEarned(mode) {
+    var e = {};
+    if (mode === "part") ["wallet_first", "record_first", "period_tidy", "backup_first"].forEach(function (k) { e[k] = 1; });
+    if (mode === "all") CAT.forEach(function (c) { e[c.id] = 1; });
+    return e;
+  }
+  function sealHtml(c, cls) { var e = S.earned[c.id]; return '<span class="seal ' + (e ? "earned" : "locked") + (cls || "") + '" style="--rot:' + c.rot + 'deg"><img src="' + IMG[c.img] + '" alt=""></span>'; }
+  function visible(c) { if (S.book === "all") return true; return !(c.hidden && S.hid && !S.earned[c.id]); }
+
+  /* ---- Buku Stempel ---- */
+  function renderBook() {
+    var el = $("#bookScroll"), mode = S.book;
+    if (mode === "load") { el.innerHTML = '<div class="card intro"><span class="tn"><img src="' + IMG.tanuki_mascot + '" alt=""></span><p>Stempel kecil untuk hal yang berhasil kamu lakukan. Tidak ada yang hilang.</p></div><div class="sk"><i></i><i></i><i></i><i></i></div>'; return; }
+    var any = CAT.some(function (c) { return S.earned[c.id]; });
+    var h = '<div class="card intro"><span class="tn"><img src="' + IMG.tanuki_mascot + '" alt=""></span><p>Stempel kecil untuk hal yang berhasil kamu lakukan. Tidak ada yang hilang.</p></div>';
+    if (!any) {
+      h += '<div class="emptyb"><span class="tn"><img src="' + IMG.tanuki_sleeping + '" alt=""></span><b>Belum ada stempel</b><p>Buat dompet pertamamu dan stempel pertama akan masuk ke sini.</p></div>';
+    } else {
+      ["Mulai", "Rapi", "Aman", "Rencana"].forEach(function (g) {
+        var items = CAT.filter(function (c) { return c.g === g && visible(c); }); if (!items.length) return;
+        h += '<div class="grp"><h3>' + g + '</h3><div class="card list">' + items.map(function (c) {
+          var e = S.earned[c.id], u = S.unseen[c.id];
+          return '<button type="button" class="st' + (e ? "" : " lk") + '" data-c="' + c.id + '">' + sealHtml(c, u ? " new" : "") + '<span class="m"><span class="n">' + c.n + '</span><span class="s">' + (e ? "Diraih " + (c.date || "14 Nov") : c.how) + '</span></span>' + (u ? '<span class="dotnew"></span>' : '<span class="icon chev">chevron_right</span>') + '</button>';
+        }).join("") + "</div></div>";
+      });
+      if (mode === "all") h += '<div class="alldone">Semua stempel yang ada sudah kamu raih. Yang baru datang bersama fitur baru.</div>';
+    }
+    el.innerHTML = h;
+    $$(".st", el).forEach(function (b) { b.onclick = function () { openDetail(b.getAttribute("data-c")); }; });
+    updateDots();
+  }
+  function openDetail(id) {
+    var c = CAT.filter(function (x) { return x.id === id; })[0], e = S.earned[id], isNew = S.unseen[id];
+    $("#dtSeal").innerHTML = sealHtml(c, " lg" + (isNew && e && !reduced() ? " press" : ""));
+    $("#dtT").textContent = c.n;
+    $("#dtP").textContent = e ? "Diraih " + (c.date || "14 Nov") + ". " + c.how.replace(/^(\w)/, function (m) { return "Syaratnya: " + m.toLowerCase(); }) : c.how + " Stempelnya masuk sendiri begitu syaratnya terpenuhi.";
+    $("#scrim2").classList.add("on"); $("#detail").classList.add("on");
+    if (isNew) { delete S.unseen[id]; setTimeout(renderBook, 300); }
+  }
+  function closeDetail() { $("#scrim2").classList.remove("on"); $("#detail").classList.remove("on"); }
+  $("#dtOk").onclick = closeDetail; $("#scrim2").onclick = closeDetail;
+  function updateDots() {
+    var n = Object.keys(S.unseen).length > 0;
+    $("#rowDot").hidden = !(n && S.cel); $("#avDot").hidden = !(S.waiting && n && S.cel);
+  }
+
+  /* ---- Beranda dan perayaan ---- */
+  var snackT;
+  function showSnack(ids) {
+    clearTimeout(snackT); var sn = $("#snack"), cs = ids.map(function (i) { return CAT.filter(function (c) { return c.id === i; })[0]; });
+    $("#snackSeals").innerHTML = '<span class="pair">' + cs.map(function (c) { return sealHtml(c, " sm" + (reduced() ? "" : " press")); }).join("") + "</span>";
+    $("#snackTx").textContent = cs.length === 1 ? "Stempel baru: " + cs[0].n : cs.length + " stempel baru";
+    sn.classList.add("on"); snackT = setTimeout(function () { sn.classList.remove("on"); }, 5200);
+  }
+  function addEarned(ids) { ids.forEach(function (i) { S.earned[i] = 1; S.unseen[i] = 1; var c = CAT.filter(function (x) { return x.id === i; })[0]; if (!c.date) c.date = "14 Nov"; S.newIds = ids; }); }
+  function nextIds(n) { return CAT.filter(function (c) { return !S.earned[c.id] && !(c.hidden && S.hid); }).slice(0, n).map(function (c) { return c.id; }); }
+  function stage(html) { $("#stage1").innerHTML = html; hydrate($("#stage1")); }
+  function fx(kind) {
+    S.waiting = false; $("#avDot").hidden = true; stage("");
+    $("#firstSheet").classList.remove("on"); $("#scrim1").classList.remove("on"); $("#snack").classList.remove("on");
+    if (!S.cel) { $("#cap1").textContent = "Perayaan stempel mati: tidak ada snackbar atau lembar. Stempel tetap masuk diam-diam (G-8)."; return; }
+    if (kind === "one" || kind === "many") {
+      if (S.book === "all") S.book = "part"; if (S.book === "empty") S.book = "part";
+      var ids = nextIds(kind === "one" ? 1 : 2); if (!ids.length) { ids = kind === "one" ? ["recurring_clear"] : ["recurring_clear", "budget_first"]; delete S.earned.recurring_clear; delete S.earned.budget_first; }
+      addEarned(ids); renderBook(); showSnack(ids); updateDots();
+      $("#cap1").textContent = kind === "one" ? "Satu stempel: satu kalimat dan Lihat. Snackbar hilang sendiri; menutupnya tidak mengubah apa pun." : "Dua stempel digabung jadi satu snackbar (G-4), bukan dua.";
+    } else if (kind === "first") {
+      S.book = "part"; S.earned = {}; S.unseen = {}; addEarned(["wallet_first"]); renderBook();
+      var f = $("#fsSeal"); f.classList.remove("press"); void f.offsetWidth; if (!reduced()) f.classList.add("press");
+      $("#scrim1").classList.add("on"); $("#firstSheet").classList.add("on");
+      $("#cap1").textContent = "Stempel pertama sepanjang masa: satu lembar pendek yang menjelaskan Buku Stempel dan sakelarnya, sekali saja.";
+    } else if (kind === "legacy") {
+      S.book = "part"; S.earned = baseEarned("part"); S.unseen = {}; renderBook();
+      stage('<div class="banner" id="lgBanner"><span class="tile"><span class="icon">verified</span></span><span class="tx"><span class="ey">Buku Stempel</span><b>Buku Stempel baru. Yang sudah kamu capai sudah ada di sini.</b></span><button class="btn compact" id="lgGo" type="button">Lihat</button><button class="xbtn" id="lgX" type="button" aria-label="Tutup"><span class="icon" style="font-size:18px">close</span></button></div>');
+      $("#lgGo").onclick = function () { stage(""); go("#s2"); }; $("#lgX").onclick = function () { stage(""); };
+      $("#cap1").textContent = "Pengguna lama: stempel yang sudah memenuhi syarat masuk diam-diam (G-6), lalu satu banner sekali. Tanpa perayaan satu per satu.";
+    } else if (kind === "wait") {
+      if (S.book === "empty" || S.book === "all") S.book = "part";
+      var w = nextIds(1); addEarned(w.length ? w : ["recurring_clear"]); S.waiting = true; renderBook();
+      stage('<div class="banner info"><span class="icon">system_update</span><span><b>Versi baru tersedia.</b> Pasang dari Akun kapan saja.</span></div>'); updateDots();
+      $("#cap1").textContent = "Banner pembaruan didahulukan, jadi perayaan menunggu. Hanya titik kecil di ikon Akun dan di Buku Stempel; tidak ada snackbar.";
+    }
+  }
+  function lihat() { $("#snack").classList.remove("on"); go("#s2"); var u = Object.keys(S.unseen)[0]; if (u) setTimeout(function () { var b = $('.st[data-c="' + u + '"]'); if (b) { b.scrollIntoView({ block: "center" }); } }, 500); }
+  $("#snackGo").onclick = lihat;
+  $("#fsOk").onclick = function () { $("#scrim1").classList.remove("on"); $("#firstSheet").classList.remove("on"); $("#cap1").textContent = "Lembar ditutup. Stempel tetap diraih; lembar ini tidak tampil lagi."; };
+  $("#fsSet").onclick = function () { $("#scrim1").classList.remove("on"); $("#firstSheet").classList.remove("on"); go("#s3"); flash("#rowSw"); };
+  $("#avatar").onclick = function () { go("#s2"); };
+  function go(id) { $(id).scrollIntoView({ behavior: reduced() ? "auto" : "smooth", block: "center", inline: "center" }); }
+  function flash(sel) { var e = $(sel); e.classList.remove("hl"); void e.offsetWidth; e.classList.add("hl"); }
+
+  /* ---- Akun ---- */
+  $("#swCel").onchange = function () { S.cel = this.checked; $("#rowBook").classList.toggle("gone", !S.cel); $("#accNote").textContent = S.cel ? "Mematikan perayaan menyembunyikan Buku Stempel. Stempel tetap diraih diam-diam dan semuanya muncul lagi saat kamu menyalakannya." : "Perayaan mati. Stempel tetap diraih diam-diam; nyalakan lagi untuk melihat semuanya, tanpa perayaan ulang."; updateDots(); };
+  $("#rowBook").onclick = function () { go("#s2"); };
+
+  function seg(attr, fn) { $$("[" + attr + "]").forEach(function (b) { b.addEventListener("click", function () { if (attr !== "data-fx") $$("[" + attr + "]").forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); }); fn(b.getAttribute(attr)); }); }); }
+  seg("data-book", function (v) { S.book = v; S.earned = baseEarned(v); S.unseen = {}; renderBook(); });
+  seg("data-hid", function (v) { S.hid = +v; renderBook(); });
+  seg("data-fx", function (v) { fx(v); });
+  seg("data-motion", function (v) { S.less = v === "less"; $("#wrap").classList.toggle("reduce", S.less); });
+  seg("data-theme-set", function (v) { document.documentElement.setAttribute("data-theme", v); });
+  var dark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  $('[data-theme-set="' + (dark ? "dark" : "light") + '"]').setAttribute("aria-pressed", "true");
+  $("#reset").onclick = function () { S.book = "part"; S.earned = baseEarned("part"); S.unseen = {}; S.waiting = false; CAT.forEach(function (c) { if (["recurring_clear", "budget_first"].indexOf(c.id) >= 0) c.date = ""; }); $$("[data-book]").forEach(function (b) { b.setAttribute("aria-pressed", b.getAttribute("data-book") === "part" ? "true" : "false"); }); $("#swCel").checked = true; $("#swCel").onchange(); stage(""); $("#snack").classList.remove("on"); $("#cap1").textContent = 'Pilih "Picu perayaan" di atas. Perayaan yang muncul sendiri paling banyak satu per pembukaan aplikasi (G-4).'; renderBook(); };
+  S.earned = baseEarned("part"); renderBook();
+})();
+</script>

@@ -7001,8 +7001,10 @@ L lebih dari seminggu.
       penyempurnaan.
 - [ ] **T-28.4** (M) Perayaan (snackbar v2, lembar pengenalan, banner pengguna
       lama) dan aturan G-4/G-6. Butuh T-28.2, rupa.
+      Rupa (14 Nov 2026, menunggu persetujuan pemilik): `docs/03-design/proposals/buku-stempel/` (HANDOFF.md + prototipe).
 - [ ] **T-28.5** (M) Buku Stempel dan baris/sakelar di Akun. Butuh T-28.2, rupa
-      dari ui-ux-designer.
+      dari ui-ux-designer. Rupa (14 Nov 2026, menunggu persetujuan pemilik):
+      `docs/03-design/proposals/buku-stempel/` (HANDOFF.md + prototipe).
 - [ ] **T-28.6** (S) Analitik §10 dan saklar jarak jauh `stamps_enabled`
       (tanpa uji A/B). Butuh T-28.4, T-28.5.
 - [ ] **T-28.7** (S) Teks id/en, glosarium, dokumen rilis. Butuh T-28.5.

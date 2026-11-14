@@ -267,7 +267,7 @@ masing-masing saat ada (§11).
 | BP-10 | Sesudah Plus berakhir, buku yang **pernah dibuka** tetap bisa dibuka (dan dibagikan di R2); buku yang belum dibuka terkunci (sampul diburamkan di pratinjau kartu). Kartu Periode tetap tersedia (BP-15). Ini menepati "rapor yang sudah dibuat tetap bisa dibuka" (FREEMIUM_PAYWALL §10). |
 | BP-11 | Uji coba: Plus tetap aktif sampai buku periode uji coba dibuka atau paling lama 1 hari sesudah periode berakhir (FREEMIUM_PAYWALL §8.2). |
 | BP-12 | Nominal disembunyikan bila pengguna menyembunyikan nominal; persen dan kalimat tanpa nominal tetap tampil. |
-| BP-13 | Ajakan dan rapor tidak tampil di Catat, lembar lain, onboarding, atau tur. Perayaan stempel periode dilipat ke sampul bila ritual atau rapor dibuka pada pembukaan yang sama (GAMIFICATION G-4: satu perayaan per pembukaan). |
+| BP-13 | Ajakan dan rapor tidak tampil di Catat, lembar lain, onboarding, atau tur. **Perayaan tanpa diminta** (muncul sendiri saat aplikasi dibuka) mengikuti GAMIFICATION G-4: satu per pembukaan, dan stempel periode dilipat ke sampul bila ritual atau rapor dibuka pada pembukaan yang sama. **Revisi 14 Nov 2026 (versi permainan):** gerak dan perayaan yang **dipicu tindakan pengguna di dalam layar buku atau kartu** (menyalakan stiker, mencap stempel, menutup buku, membagikan) boleh tampil, karena pengguna sendiri yang memintanya; syaratnya tetap bisa dimatikan lewat sakelar perayaan (G-8) dan dikurangi lewat Gerak dikurangi. Larangan di Catat, lembar lain, onboarding, dan tur tidak berubah. |
 | BP-14 | Pengguna Plus bisa mematikan **Ajakan akhir periode**; rapor dan Rak Buku tetap bisa dibuka manual. |
 | BP-15 | **Kartu Periode** tersedia untuk semua pengguna (Gratis, Plus, uji coba): satu kartu bertema tetap per periode yang berakhir, hanya satu templat dan satu ukuran. Plus mendapat varian dan kartu geser di R2. |
 | BP-16 | Kartu hanya memuat fakta yang **dipilih pengguna** di pratinjau: jumlah catatan, rutin beres, stempel, kategori bawaan terbesar dengan persen, dan **nominal** Pemasukan, Pengeluaran, Selisih periode itu (keputusan pemilik 12 Nov 2026: nominal boleh ditampilkan dan dibagikan). Nominal dan kategori terbesar **mati secara bawaan**. Kartu tidak pernah memuat nama dompet, saldo dompet, nama kategori buatan pengguna (tampil "kategori buatanmu"), nama pedagang, nominal per transaksi, atau catatan transaksi. |
@@ -478,11 +478,26 @@ menaikkan B-95 ke fase):
 | T-n.8 | Analitik §10, teks id/en, glosarium | S | T-n.7 |
 | T-n.9 | Verifikasi perangkat S1–S7 | S | semua |
 
+Pemetaan ke TASK_LIST (Fase 27, 14 Nov 2026): T-n.1 → T-27.1, T-n.2 → T-27.2,
+T-n.3 → T-27.3, T-n.4 → T-27.4, T-n.5 → T-27.5, T-n.6 → T-27.6, T-n.7 →
+T-27.7, T-n.7a → T-27.8, T-n.8 → T-27.10, T-n.9 → T-27.11; **T-27.9 baru:**
+aset pose Tanuki.
+
 Perlu rupa dari ui-ux-designer: Kartu Periode (rasio gambar, tata letak
 dengan nominal opsional, pose Tanuki) dan pratinjaunya, kartu Beranda, lembar ritual,
 sampul, halaman rapor, ekspresi Tanuki, dan Rak Buku.
 
 ## 16. Pertanyaan untuk pemilik
+
+**Diputuskan pemilik 14 Nov 2026:** seluruh rekomendasi di bawah disetujui
+(KT-BP1, 3–14), dengan tambahan: **versi rupa permainan** (bukan tenang;
+BP-13 dan GAMIFICATION G-4 direvisi), **Rak Buku segmen ketiga Riwayat**
+(KT-BP5), gambar kartu **4:5**, teks penjelas D2 memakai "Nominal mati secara
+bawaan dan hanya ikut kalau kamu menyalakannya", stempel **diraih otomatis**
+(cap di sampul hanya gerak), kilap dan rak stempel **hanya efek layar** (tidak
+masuk model kartu), angka contoh D6 diabaikan, dan **aset pose Tanuki baru
+dibuat** (T-27.9; sampai siap, kode memakai aset clay yang ada dengan nama
+berkas tetap). Daftar di bawah dibiarkan sebagai catatan alasan.
 
 - **KT-BP1 — Stempel B-94 tetap gratis?** Rekomendasi: **ya.** Stempel adalah
   satu-satunya mekanik retensi untuk pengguna Gratis sesudah rapor ringkas

@@ -64,6 +64,7 @@ berarti membangun ringkasan untuk data yang belum ada.
 | 24 | Fondasi Plus | Hak Plus, uji coba, RevenueCat, paywall, dan gerbang fitur ([ADR-041](../02-architecture/adr/0041-monetisasi-hak-plus-dan-uji-coba.md)); kode selesai, sisa verifikasi perangkat T-24.18 |
 | 25 | Design system baru dan preset tema | Design system v2 dan preset warna matcha/pink ([ADR-043](../02-architecture/adr/0043-design-system-v2-dan-preset-tema.md), Proposed); sebagian besar fitur sudah dipindah, sisa `freelance` dan layar Catat dari notifikasi |
 | 26 | Catat dari notifikasi v2 | Kartu tiga jenis, satu ketuk, notifikasi bertombol lewat mesin tanpa layar, ingatan pedagang, saran pos, dan catat otomatis per bentuk ([ADR-044](../02-architecture/adr/0044-catat-dari-notifikasi-v2.md), Proposed); kode selesai 5 Nov 2026, menunggu uji perangkat nyata |
+| 27 | Buku Periode dan Kartu Periode | Kartu Periode gratis yang bisa dibagikan (nominal opsional, bawaan mati), buku periode Plus (ritual Tutup buku, rapor, sampul + stempel, Rak Buku), versi rupa permainan, aset pose Tanuki baru ([ADR-045](../02-architecture/adr/0045-buku-periode-dan-kartu-periode.md), Proposed); dimulai 14 Nov 2026 |
 
 Fase 0 sampai 6 membentuk MVP. Fase 7 dikerjakan setelahnya. Fase 8 dan 9
 lahir dari pemakaian nyata dan persiapan rilis, bukan dari rencana awal.

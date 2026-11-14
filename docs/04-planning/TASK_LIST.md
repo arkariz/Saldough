@@ -91,6 +91,7 @@ Terakhir diperbarui: 29 Oktober 2026 (penyelarasan dokumen dengan `main` di `0.1
 | 24 — Fondasi Plus ([ADR-041](../02-architecture/adr/0041-monetisasi-hak-plus-dan-uji-coba.md), [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md)) | 24 | 23 | Dijadwalkan 23 Okt 2026 (dari B-41); T-24.1 (ADR-041 revisi 2), T-24.2 (fondasi murni), T-24.3 (`AppUser.createdAt`), T-24.4 (penyimpanan hak), T-24.5 (batas dari Remote Config), T-24.6 (`Entitlements` lokal), T-24.7 (pengganti paket uji), T-24.8 (paywall sementara), T-24.9 (gerbang R3), T-24.10 (gerbang notifikasi), T-24.11 (kuota tafsir), T-24.12 (gerbang Analisis), T-24.13 (gerbang template dan proyek), dan T-24.14 (adaptor RevenueCat, uji palsu), dan T-24.15 (kebijakan offering, beli/pulihkan), dan T-24.16 (analitik dan dokumen rilis) selesai; T-24.17a (paywall berparameter, PlanCard, keadaan) T-24.17b (PlusLocked, lencana Plus), dan T-24.17c (status Plus di Akun, halaman fitur), T-24.17d (hadiah uji coba), T-24.17e (layar turun, kartu Plus, momen), dan T-24.17f (perbaikan temuan uji sandbox 25 Okt) selesai, jadi T-24.17 selesai; berikutnya T-24.18 (rupa sudah ada, PR #65) dan T-24.18. Uji nyata T-24.14 menunggu akun dan kunci RevenueCat; rilis build bergerbang menunggu penguji bisa masuk akun |
 | 25 — Design system baru dan preset tema ([ADR-043](../02-architecture/adr/0043-design-system-v2-dan-preset-tema.md), Proposed) | 6 | 4 | Berjalan sejak 29 Okt 2026 -- T-25.1 fondasi selesai (spek Tanukonomy Matcha); KT-DS1–KT-DS4 diputuskan; T-25.2 widget komponen dan T-25.5 animasi selesai (animasi belum dinilai di perangkat); T-25.3 terpasang; T-25.4 berjalan: hampir semua fitur sudah memakai v2 (sisa: `freelance` sama sekali, layar Catat dari notifikasi, dan satu-dua berkas lama di Analisis/Anggaran/Rencana, B-90); T-25.6 (ikon tanah liat) belum |
 | 26 — Catat dari notifikasi v2 ([ADR-044](../02-architecture/adr/0044-catat-dari-notifikasi-v2.md), Proposed; [NOTIFICATION_CAPTURE_V2.md](../01-product/features/NOTIFICATION_CAPTURE_V2.md)) | 27 | 25 | Dimulai 4 Nov 2026; tanpa saklar build, jalur internal test. Kode T-26.1–T-26.25 selesai 5 Nov 2026 (T-26.28 6 Nov) di branch `claude/rombak-design-system-theming-5747b4` (125 komit di depan `main`, belum jadi PR): fondasi, MVP dalam aplikasi, notifikasi bertindak lewat mesin tanpa layar, E1–E3, pola buatan dicabut (T-26.23), snackbar v2 satu slot. **Sisa:** T-26.26 uji perangkat nyata (gerbang Accepted; baru 1 emulator dan perangkat pemilik) dan T-26.27 kebijakan privasi situs; antrean B-88–B-92 |
+| 27 — Buku Periode dan Kartu Periode ([BUKU_PERIODE.md](../01-product/features/BUKU_PERIODE.md), [ADR-045](../02-architecture/adr/0045-buku-periode-dan-kartu-periode.md), Proposed) | 11 | 0 | Dimulai 14 Nov 2026 (dari B-95). Pemilik menyetujui KT-BP1, 3–14, versi rupa **permainan**, dan aset pose Tanuki baru. T-27.1 (revisi dokumen + ADR) selesai; berikutnya T-27.2 |
 | Antrean (`B-n`, belum dijadwalkan) | 75 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
 
 ## Keputusan terbuka
@@ -105,7 +106,7 @@ diputuskan, dan catat keputusannya di tugas atau ADR yang mengerjakannya.
   §3.3 poin 4. (Ganti akun sudah diputuskan: data diganti dengan peringatan,
   tanpa penggabungan.)
 
-- **KT-BP1–KT-BP14** Buku Periode (B-95, Plus, dengan satu Kartu Periode
+- ~~**KT-BP1–KT-BP14**~~ **Diputuskan 14 Nov 2026** (semua rekomendasi disetujui; lihat BUKU_PERIODE §16 dan Fase 27). Buku Periode (B-95, Plus, dengan satu Kartu Periode
   gratis): stempel B-94 tetap gratis, Kartu Periode yang bisa dibagikan untuk
   Gratis (fakta bawaan, tautan toko dengan penanda sumber, kartu untuk Plus), kilas balik tinjau awal
   bulan tetap gratis, rapor dihitung langsung (bukan snapshot), Rak Buku
@@ -6956,6 +6957,58 @@ tugas lama yang menyebutnya adalah riwayat, bukan keadaan sekarang.
 Enhancement: E1–E3 selesai (B-85–B-87). Sisa di Antrean: E4 (B-88), E5 (B-89),
 dan lanjutan hasil Fase 26 (B-90–B-92).
 
+## Fase 27: Buku Periode dan Kartu Periode
+
+Dari B-95, keputusan pemilik 14 Nov 2026.
+[BUKU_PERIODE.md](../01-product/features/BUKU_PERIODE.md),
+[ADR-045](../02-architecture/adr/0045-buku-periode-dan-kartu-periode.md)
+(Proposed), rupa di
+[HANDOFF.md](../03-design/proposals/kartu-periode/HANDOFF.md) (versi
+**permainan**; selisih dari prototipe dicatat di entri tugas). Ukuran usaha:
+S sehari, M beberapa hari, L lebih dari seminggu. Rilis bertahap: Kartu Periode
+(T-27.8) boleh keluar lebih dulu daripada buku.
+
+- [x] **T-27.1** (S) Revisi dokumen dan ADR teknis (dari B-95). BP-13 dan
+      GAMIFICATION G-4 direvisi untuk versi permainan; KT-BP dicatat; B-95
+      dinaikkan jadi fase; ADR-045 ditulis (gerbang Plus, sumber angka,
+      penyedia halaman, templat, ingatan + `BackupRegistry`, fakta "periode
+      tertutup", slot Beranda).
+      Selesai 14 Nov 2026. Verifikasi: ADR memakai batasan BP-1–BP-14.
+      Memenuhi FR-BKP-001.
+- [ ] **T-27.2** (M) Gerbang `PlusFeature` buku, fakta "periode tertutup" untuk
+      mesin B-94, ingatan (buku dibuka, langkah ritual, kartu ditutup,
+      sakelar) dan pendaftaran `BackupRegistry`. Butuh T-27.1, mesin B-94.
+      ⚠ Gerbang BP-10 diperiksa di rute, bukan hanya di UI.
+      Verifikasi: uji registri, uji gerbang (Plus, tenggang, berakhir).
+- [ ] **T-27.3** (M) Model baca buku halaman 1–4 dari sumber Analisis, Arus,
+      Rencana; `financialPeriodOf`/`periodDateOf`.
+      Verifikasi: uji kecocokan total (B-3, B-15) dengan data uji emas.
+- [ ] **T-27.4** (M) Mesin templat Tanuki dan halaman 5 (id/en, jamak),
+      dijaga `translations_test.dart`. Butuh T-27.3.
+- [ ] **T-27.5** (M) Ritual Tutup buku (D4) dan slot kartu Beranda (D3),
+      urutan terhadap banner pembaruan dan kotak masuk (BP-13). Butuh T-27.2.
+- [ ] **T-27.6** (L) Rapor (D6) dan sampul + stempel (D5), gerak permainan
+      lewat `DsMotion.reduced`. Butuh T-27.3, T-27.4.
+- [ ] **T-27.7** (M) Rak Buku sebagai segmen ketiga Riwayat (D7), sakelar di
+      Akun. Butuh T-27.2.
+- [ ] **T-27.8** (M) Kartu Periode (D1, D2): model kartu terbatas (BP-16),
+      perender gambar 4:5 di perangkat, lembar bagikan sistem, tautan toko
+      `utm_source=period_card`, ajakan Plus satu baris. Gratis untuk semua.
+      ⚠ Model tanpa field nama dompet, saldo, pedagang, nominal per transaksi,
+      catatan. Kilap dan rak stempel hanya efek layar, tidak ada di gambar
+      ekspor.
+      Verifikasi: uji struktur (hanya fakta terpilih), nominal bawaan mati dan
+      ikut sembunyikan nominal.
+- [ ] **T-27.9** (M) **Aset pose Tanuki baru** (D8): empat pose (biasa, senang,
+      menulis, tenang), satu set untuk kartu dan buku. Pemilik / ui-ux-designer
+      membuat; kode memakai `tanuki_mascot`, `tanuki_sleeping`, `note_pencil`
+      sebagai pengganti sementara dengan nama berkas tetap, jadi aset diganti
+      per berkas tanpa ubah kode. Tidak ada pose sedih atau kecewa.
+- [ ] **T-27.10** (S) Analitik tanpa nominal (HANDOFF §8), teks `book.*`
+      id/en, glosarium. Butuh T-27.7.
+- [ ] **T-27.11** (S) Verifikasi perangkat S1–S7, termasuk kilap dan konfeti di
+      Android kelas bawah, Gerak dikurangi, 360dp, terang/gelap/preset.
+
 ## Antrean (belum dijadwalkan)
 
 Hal yang sudah diketahui perlu dikerjakan tapi belum masuk fase. Cara
@@ -7039,7 +7092,6 @@ menambah dan memindahkannya ada di
 | B-92 | **Poles snackbar dan tawaran**: `showAppSnackBar` belum punya prioritas (galat bisa tertimpa pesan biasa; yang terakhir menang); tawaran catat otomatis hanya hidup selama halaman Kotak masuk terbuka (hilang bila keluar sebelum menjawab, muncul lagi pada catatan berikutnya); tawaran belum ada untuk tombol Catat di notifikasi (aplikasi tertutup). | agen | T-26.25, T-26.22 |
 | B-93 | **Peristiwa aktivasi dan baris Beri nilai (pembaruan kecil Shorebird `1.0.0+23` patch 1, 9 Nov 2026)**: `wallet_created`, `transaction_recorded` (`type`: income/expense/transfer, tanpa nominal) lewat `ActivationEvents`, dan baris Akun › Aplikasi › Beri nilai di Play Store (Android; `market://` lalu `https://`, peristiwa `rate_app_tapped`), untuk mengukur aktivasi pengguna baru dan mengajak ulasan tanpa kode native. **Belum:** lembar ulasan di dalam aplikasi (`in_app_review` punya kode native, hanya lewat rilis toko berikutnya); ajakan di momen senang. Uji perangkat (baris membuka Play Store, peristiwa muncul di DebugView) dan `flutter analyze`/`flutter test` belum dijalankan: SDK tidak ada di sandbox pembuat. | agen, pemilik (uji perangkat) | [THREADS_CONTENT_PLAN.md](../03-release/THREADS_CONTENT_PLAN.md), [APP_UPDATE.md](../01-product/features/APP_UPDATE.md) |
 | B-94 | **Mesin tonggak + Buku Stempel R1** (gratis): satu mesin kecil untuk tonggak (ketepatan dan kemampuan, tanpa streak/poin/level), delapan stempel dari fakta yang sudah ada, Buku Stempel di Akun, perayaan satu per pembukaan, sakelar, saklar jarak jauh, uji A/B; titik perluasan untuk B-82 (musiman, Plus, bagikan) dan B-81 (Kamar Tanuki). Draf rancangan, menunggu KT-G1–KT-G7. Stempel tetap gratis dan menjadi sampul Buku Periode (B-95) bagi Plus. | agen (ADR dari engineer), ui-ux-designer untuk rupa | [GAMIFICATION.md](../01-product/features/GAMIFICATION.md), FR-STP-001–004 |
-| B-95 | **Buku Periode R1 (seluruhnya Plus)**: tiap periode yang berakhir punya satu buku; ajakan Tutup buku (ritual tiga langkah yang boleh dilewati, tidak mengunci data), rapor dengan sampul + stempel, halaman Arus/Ke mana uang pergi/Dibanding biasanya/Rutin dan rencana/Kata Tanuki (templat lokal), Rak Buku di Riwayat, **Kartu Periode gratis yang bisa dibagikan (nominal opsional atas pilihan pengguna, bawaan mati)** (jalur pertumbuhan, pratinjau dengan ajakan Plus), gerbang `PlusFeature`. Satuan perluasan: penyedia halaman (Target, Penjaga, Freelance, Rapor Tahunan B-53). Draf rancangan, menunggu KT-BP1–KT-BP14. | agen (ADR dari engineer), ui-ux-designer untuk rupa | [BUKU_PERIODE.md](../01-product/features/BUKU_PERIODE.md), FR-BKP-001–005 |
 | B-39 | **Pengumuman pembaruan R2**: pembaruan wajib/versi minimum untuk perbaikan kritis (KT-U1), pembaruan untuk iOS (App Store) sesudah iOS dirilis, dan pilihan jalur uji untuk penguji. | agen + pemilik | [APP_UPDATE.md](../01-product/features/APP_UPDATE.md) §14 |
 | B-35 | Uji di perangkat yang belum dilakukan QA PR #43: lebar 360dp (butuh izin mengubah setelan ponsel), Freelance, perekaman suara sungguhan, dan jalur Gemini secara terpisah. | pemilik | QA PR #43 (di luar PR) |
 | B-14 | **Catat lewat Suara**: STT sistem (`speech_to_text`) + parser aturan + Gemma lokal mulai dari model termurah, 270M → 1B → Gemma 4 E2B (unduhan opt-in dari Hugging Face) → form CATAT terisi draf; adaptor Firebase AI sebagai jalur pivot. ADR-027. Riset & rencana di [VOICE_INPUT_RESEARCH.md](../01-product/features/VOICE_INPUT_RESEARCH.md). | dijadwalkan: T-11.2–T-11.9 | riset 30 Sep 2026 |

@@ -1,0 +1,109 @@
+import 'dart:async';
+
+import 'package:dependencies/dependencies.dart';
+import 'package:failures/failures.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:saldough/app/milestone/milestone_coordinator.dart';
+import 'package:saldough/features/milestone/domain/entities/milestone_def.dart';
+import 'package:saldough/features/milestone/domain/entities/milestone_ledger.dart';
+import 'package:saldough/features/milestone/domain/repositories/milestone_ports.dart';
+import 'package:saldough/features/milestone/domain/services/celebration_policy.dart';
+import 'package:saldough/features/milestone/domain/usecases/evaluate_milestones.dart';
+
+final class _Store implements MilestoneStore {
+  _Store(this.ledger);
+  MilestoneLedger ledger;
+
+  @override
+  Future<Either<Failure, MilestoneLedger>> load() async => Right(ledger);
+
+  @override
+  Future<Either<Failure, Unit>> save(MilestoneLedger value) async {
+    ledger = value;
+    return const Right(unit);
+  }
+}
+
+final class _Facts implements MilestoneFactsSource {
+  Set<MilestoneFact> facts = {};
+
+  @override
+  Future<Either<Failure, Set<MilestoneFact>>> read() async => Right(facts);
+}
+
+void main() {
+  late _Store store;
+  late _Facts facts;
+  late StreamController<void> signals;
+  late MilestoneCoordinator coordinator;
+  late List<CelebrationPlan> plans;
+
+  setUp(() {
+    store = _Store(const MilestoneLedger(seeded: true, introShown: true));
+    facts = _Facts();
+    signals = StreamController<void>.broadcast();
+    coordinator = MilestoneCoordinator(
+      evaluate: EvaluateMilestones(store: store, facts: facts, now: () => DateTime(2026, 11, 14)),
+      store: store,
+      signals: signals.stream,
+      debounce: Duration.zero,
+    );
+    plans = [];
+    coordinator.celebrations.listen(plans.add);
+  });
+
+  tearDown(() async {
+    await coordinator.stop();
+    await signals.close();
+  });
+
+  test('stempel baru dan boleh dirayakan: snackbar, dan catatan terbarui', () async {
+    coordinator.canCelebrate = () => true;
+    facts.facts = {MilestoneFact.walletExists};
+    await coordinator.start();
+    await Future<void>.delayed(Duration.zero);
+    expect(plans, [const CelebrationPlan(CelebrationKind.snackbar, ['wallet_first'])]);
+    expect(coordinator.ledger.value.has('wallet_first'), isTrue);
+  });
+
+  test('terhalang: stempel tetap diraih tetapi tidak ada perayaan menunggu (G-4)', () async {
+    facts.facts = {MilestoneFact.walletExists};
+    await coordinator.start();
+    await Future<void>.delayed(Duration.zero);
+    expect(plans, isEmpty);
+    expect(coordinator.ledger.value.has('wallet_first'), isTrue);
+    expect(hasUnseenStamps(coordinator.ledger.value), isTrue);
+  });
+
+  test('sinyal memicu evaluasi (digabung)', () async {
+    coordinator.canCelebrate = () => true;
+    await coordinator.start();
+    facts.facts = {MilestoneFact.recordExists};
+    signals
+      ..add(null)
+      ..add(null);
+    await Future<void>.delayed(const Duration(milliseconds: 20));
+    expect(plans, hasLength(1));
+    expect(plans.single.ids, ['record_first']);
+  });
+
+  test('markAllSeen menghapus titik; markIntroShown dan sakelar disimpan', () async {
+    facts.facts = {MilestoneFact.walletExists};
+    await coordinator.start();
+    await coordinator.markAllSeen();
+    expect(hasUnseenStamps(coordinator.ledger.value), isFalse);
+    await coordinator.setCelebrationEnabled(enabled: false);
+    expect(store.ledger.celebrationEnabled, isFalse);
+    await coordinator.setCelebrationEnabled(enabled: true);
+    expect(store.ledger.has('wallet_first'), isTrue, reason: 'menyalakan lagi tidak mengubah stempel (G-8)');
+  });
+
+  test('pengguna lama: banner berbasis keadaan sampai pengenalan ditandai', () async {
+    store.ledger = MilestoneLedger.empty;
+    facts.facts = {MilestoneFact.walletExists, MilestoneFact.recordExists};
+    await coordinator.start();
+    expect(legacyBannerVisible(coordinator.ledger.value), isTrue);
+    await coordinator.markIntroShown();
+    expect(legacyBannerVisible(coordinator.ledger.value), isFalse);
+  });
+}

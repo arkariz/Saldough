@@ -11,6 +11,7 @@ import 'package:saldough/app/app.dart';
 import 'package:saldough/app/data_portability/app_reboot.dart';
 import 'package:saldough/app/data_portability/restore_recovery.dart';
 import 'package:saldough/app/di/di.dart';
+import 'package:saldough/app/milestone/milestone_wiring.dart';
 import 'package:saldough/app/premium/premium_wiring.dart';
 import 'package:saldough/app/startup/startup_intro.dart';
 import 'package:saldough/core/appearance/appearance.dart';
@@ -133,6 +134,9 @@ Future<void> bootstrapApp() async {
       );
     }
   }
+
+  // ADR-046: mesin tonggak jalan di belakang; tidak menunda layar pertama.
+  unawaited(startMilestones(rootGetIt));
 
   // ADR-044 Revisi 11: pola buatan pengguna sudah dicabut; sisa dari versi lama
   // (atau cadangan lama yang baru dipulihkan) dibuang. Gagal tidak menghalangi.

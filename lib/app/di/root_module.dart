@@ -10,6 +10,7 @@ import 'package:saldough/app/data_portability/restore_reboot.dart';
 import 'package:saldough/app/data_portability/restore_recovery.dart';
 import 'package:saldough/app/dev_seed/dev_seed_page.dart';
 import 'package:saldough/app/discovery/app_feature_statuses.dart';
+import 'package:saldough/app/milestone/milestone_wiring.dart';
 import 'package:saldough/app/premium/debug_plan_page.dart';
 import 'package:saldough/app/premium/premium_wiring.dart';
 import 'package:saldough/app/shell/account_data_section.dart';
@@ -142,6 +143,8 @@ abstract final class RootModule {
     registerEntitlements(container);
     final registry = _registerRouteRegistry(container);
     await _registerRouter(container, registry);
+    // Mesin tonggak (ADR-046); sesudah fitur terdaftar karena membaca kotak masuk Catat.
+    registerMilestone(container);
   }
 
   static Future<void> _registerStorage(GetIt container) async {

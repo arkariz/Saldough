@@ -21,20 +21,24 @@ bool inboxDroppedToZero({required int? previous, required int current}) =>
 /// dan tidak ikut cadangan (ia hanya pemicu; stempelnya yang ikut).
 final class InboxClearTracker {
   /// Membuat [InboxClearTracker].
-  InboxClearTracker({required this._storage, required this._store, required this._changes});
+  ///
+  /// [store] dan [changes] `null` (platform tanpa catat dari notifikasi): tidak
+  /// mengamati apa pun, [isCleared] tetap salah.
+  InboxClearTracker({required this._storage, this._store, this._changes});
 
   final KeyValueStorage _storage;
-  final NotificationCaptureStore _store;
-  final CaptureInboxChanges _changes;
+  final NotificationCaptureStore? _store;
+  final CaptureInboxChanges? _changes;
 
   StreamSubscription<void>? _subscription;
   int? _lastCount;
 
   /// Mulai mengamati. Aman dipanggil berulang.
   Future<void> start() async {
-    if (_subscription != null) return;
+    final changes = _changes;
+    if (_subscription != null || changes == null) return;
     _lastCount = await _count();
-    _subscription = _changes.stream.listen((_) => unawaited(_onChanged()));
+    _subscription = changes.stream.listen((_) => unawaited(_onChanged()));
   }
 
   /// Berhenti mengamati.
@@ -52,7 +56,7 @@ final class InboxClearTracker {
     }
   }
 
-  Future<int?> _count() async => (await _store.loadInbox()).fold((_) => null, (entries) => entries.length);
+  Future<int?> _count() async => (await _store?.loadInbox())?.fold((_) => null, (entries) => entries.length);
 
   Future<void> _onChanged() async {
     final current = await _count();

@@ -91,7 +91,7 @@ Terakhir diperbarui: 29 Oktober 2026 (penyelarasan dokumen dengan `main` di `0.1
 | 24 — Fondasi Plus ([ADR-041](../02-architecture/adr/0041-monetisasi-hak-plus-dan-uji-coba.md), [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md)) | 24 | 23 | Dijadwalkan 23 Okt 2026 (dari B-41); T-24.1 (ADR-041 revisi 2), T-24.2 (fondasi murni), T-24.3 (`AppUser.createdAt`), T-24.4 (penyimpanan hak), T-24.5 (batas dari Remote Config), T-24.6 (`Entitlements` lokal), T-24.7 (pengganti paket uji), T-24.8 (paywall sementara), T-24.9 (gerbang R3), T-24.10 (gerbang notifikasi), T-24.11 (kuota tafsir), T-24.12 (gerbang Analisis), T-24.13 (gerbang template dan proyek), dan T-24.14 (adaptor RevenueCat, uji palsu), dan T-24.15 (kebijakan offering, beli/pulihkan), dan T-24.16 (analitik dan dokumen rilis) selesai; T-24.17a (paywall berparameter, PlanCard, keadaan) T-24.17b (PlusLocked, lencana Plus), dan T-24.17c (status Plus di Akun, halaman fitur), T-24.17d (hadiah uji coba), T-24.17e (layar turun, kartu Plus, momen), dan T-24.17f (perbaikan temuan uji sandbox 25 Okt) selesai, jadi T-24.17 selesai; berikutnya T-24.18 (rupa sudah ada, PR #65) dan T-24.18. Uji nyata T-24.14 menunggu akun dan kunci RevenueCat; rilis build bergerbang menunggu penguji bisa masuk akun |
 | 25 — Design system baru dan preset tema ([ADR-043](../02-architecture/adr/0043-design-system-v2-dan-preset-tema.md), Proposed) | 6 | 4 | Berjalan sejak 29 Okt 2026 -- T-25.1 fondasi selesai (spek Tanukonomy Matcha); KT-DS1–KT-DS4 diputuskan; T-25.2 widget komponen dan T-25.5 animasi selesai (animasi belum dinilai di perangkat); T-25.3 terpasang; T-25.4 berjalan: hampir semua fitur sudah memakai v2 (sisa: `freelance` sama sekali, layar Catat dari notifikasi, dan satu-dua berkas lama di Analisis/Anggaran/Rencana, B-90); T-25.6 (ikon tanah liat) belum |
 | 26 — Catat dari notifikasi v2 ([ADR-044](../02-architecture/adr/0044-catat-dari-notifikasi-v2.md), Proposed; [NOTIFICATION_CAPTURE_V2.md](../01-product/features/NOTIFICATION_CAPTURE_V2.md)) | 27 | 25 | Dimulai 4 Nov 2026; tanpa saklar build, jalur internal test. Kode T-26.1–T-26.25 selesai 5 Nov 2026 (T-26.28 6 Nov) di branch `claude/rombak-design-system-theming-5747b4` (125 komit di depan `main`, belum jadi PR): fondasi, MVP dalam aplikasi, notifikasi bertindak lewat mesin tanpa layar, E1–E3, pola buatan dicabut (T-26.23), snackbar v2 satu slot. **Sisa:** T-26.26 uji perangkat nyata (gerbang Accepted; baru 1 emulator dan perangkat pemilik) dan T-26.27 kebijakan privasi situs; antrean B-88–B-92 |
-| 27 — Buku Periode dan Kartu Periode ([BUKU_PERIODE.md](../01-product/features/BUKU_PERIODE.md), [ADR-045](../02-architecture/adr/0045-buku-periode-dan-kartu-periode.md), Proposed) | 11 | 0 | Dimulai 14 Nov 2026 (dari B-95). Pemilik menyetujui KT-BP1, 3–14, versi rupa **permainan**, dan aset pose Tanuki baru. T-27.1 (revisi dokumen + ADR) selesai; berikutnya T-27.2 |
+| 27 — Buku Periode dan Kartu Periode ([BUKU_PERIODE.md](../01-product/features/BUKU_PERIODE.md), [ADR-045](../02-architecture/adr/0045-buku-periode-dan-kartu-periode.md), Proposed) | 11 | 2 | Dimulai 14 Nov 2026 (dari B-95). Pemilik menyetujui KT-BP1, 3–14, versi rupa **permainan**, dan aset pose Tanuki baru. T-27.1 (revisi dokumen + ADR) selesai; berikutnya T-27.2 |
 | 28 — Mesin tonggak + Buku Stempel ([GAMIFICATION.md](../01-product/features/GAMIFICATION.md), [ADR-046](../02-architecture/adr/0046-mesin-tonggak-dan-buku-stempel.md), Proposed) | 8 | 2 | Dimulai 14 Nov 2026 (dari B-94), dikerjakan sebelum Fase 27. Pemilik menyetujui KT-G1–G7 tanpa uji A/B |
 | Antrean (`B-n`, belum dijadwalkan) | 75 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
 
@@ -7102,17 +7102,30 @@ S sehari, M beberapa hari, L lebih dari seminggu. Rilis bertahap: Kartu Periode
       tertutup", slot Beranda).
       Selesai 14 Nov 2026. Verifikasi: ADR memakai batasan BP-1–BP-14.
       Memenuhi FR-BKP-001.
-- [ ] **T-27.2** (M) Gerbang `PlusFeature` buku, fakta "periode tertutup" untuk
+- [x] **T-27.2** (M) Gerbang `PlusFeature` buku, fakta "periode tertutup" untuk
       mesin B-94, ingatan (buku dibuka, langkah ritual, kartu ditutup,
       sakelar) dan pendaftaran `BackupRegistry`. Butuh T-27.1, mesin B-94.
       ⚠ Gerbang BP-10 diperiksa di rute, bukan hanya di UI.
       Verifikasi: uji registri, uji gerbang (Plus, tenggang, berakhir).
-      **Selesai sebagian 14 Nov 2026:** `PlusFeature.periodBook`, aturan murni
-      `bookAccessOf` (BP-1, BP-10), `PeriodBookMemory` + store
-      (`features/period_book`) dan entri `period_book_memory` di
-      `BackupRegistry`; uji lulus, `flutter analyze` bersih. **Belum:** fakta
-      "periode tertutup" untuk mesin B-94: mesin tonggak itu belum ada di
-      `lib/` (B-94 masih draf), jadi bagian ini fakta sudah tersedia dari Fase 28 (T-28.3: `milestoneFactsFrom`); tinggal dipakai T-27.5/T-27.6. Pemeriksaan di rute menunggu rutenya (T-27.5/T-27.6).
+      **Selesai 15 Nov 2026.** Sebelumnya (14 Nov): `PlusFeature.periodBook`,
+      `bookAccessOf`, `PeriodBookMemory` + store, `BackupRegistry`. Sekarang
+      ditambah: `closedPeriodsOf` (periode tertutup ≥1 transaksi, `periodDateOf` +
+      `financialPeriodOf`, periode peralihan jadi periodenya sendiri, id = tanggal
+      awal `YYYY-MM-DD`), `previousPeriodOf`, `shelfOf` (Rak: Dibuka/Belum
+      dibuka/Terkunci, BP-9, BP-10), `invitationFor` (ajakan Beranda: periode tepat
+      sebelum berjalan, ≥3 transaksi, "Nanti", sakelar BP-14, buku untuk Plus dan
+      kartu untuk Gratis), dan `PeriodBookGate` di `lib/app/period_book/` terdaftar
+      di DI (`accessOf` untuk gerbang rute, `markOpened`, `dismissCard`,
+      `setInviteEnabled`, `shelf`, `invitation`). Uji: 27 kasus murni dan gerbang
+      (semua lulus; `test/app` dan arsitektur lulus; analyze bersih). Fakta stempel
+      Periode rapi/Rutin tak terlewat dari B-94 tersedia di Fase 28
+      (`milestoneFactsFrom`) dan belum memakai `closedPeriodsOf`; penyatuan jadi
+      refaktor kecil bila diperlukan.
+      ⚠ Belum: BP-11 (uji coba: Plus tetap aktif sampai buku periode uji coba
+      dibuka atau 1 hari sesudah periode berakhir) bergantung pada rancangan
+      masa tenggang ADR-041 §3.8 yang belum dibaca; ditunda ke T-27.5.
+      Pemeriksaan di rute menunggu rutenya (T-27.5/T-27.6).
+
 - [ ] **T-27.3** (M) Model baca buku halaman 1–4 dari sumber Analisis, Arus,
       Rencana; `financialPeriodOf`/`periodDateOf`.
       Verifikasi: uji kecocokan total (B-3, B-15) dengan data uji emas.

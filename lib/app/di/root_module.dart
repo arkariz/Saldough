@@ -12,6 +12,7 @@ import 'package:saldough/app/dev_seed/dev_seed_page.dart';
 import 'package:saldough/app/discovery/app_feature_statuses.dart';
 import 'package:saldough/app/milestone/backup_recorded_gateway.dart';
 import 'package:saldough/app/milestone/milestone_wiring.dart';
+import 'package:saldough/app/period_book/period_book_wiring.dart';
 import 'package:saldough/app/premium/debug_plan_page.dart';
 import 'package:saldough/app/premium/premium_wiring.dart';
 import 'package:saldough/app/shell/account_app_entries.dart';
@@ -150,6 +151,8 @@ abstract final class RootModule {
     await _registerRouter(container, registry);
     // Mesin tonggak (ADR-046); sesudah fitur terdaftar karena membaca kotak masuk Catat.
     registerMilestone(container);
+    // Buku Periode (ADR-045): ingatan dan gerbang; UI menyusul (Fase 27).
+    registerPeriodBook(container);
   }
 
   static Future<void> _registerStorage(GetIt container) async {

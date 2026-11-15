@@ -7,6 +7,7 @@ import 'package:saldough/app/milestone/app_milestone_facts_source.dart';
 import 'package:saldough/app/milestone/backup_recorded_gateway.dart';
 import 'package:saldough/app/milestone/inbox_clear_tracker.dart';
 import 'package:saldough/app/milestone/milestone_coordinator.dart';
+import 'package:saldough/app/milestone/stamp_remote_switch.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/features/data_portability/domain/backup_gateway.dart';
 import 'package:saldough/features/milestone/data/milestone_store_impl.dart';
@@ -62,6 +63,7 @@ void registerMilestone(GetIt container) {
         evaluate: container<EvaluateMilestones>(),
         store: container<MilestoneStore>(),
         signals: _signals(container, captureChanges),
+        disabledIds: firebaseStampDisabledIds,
       ),
     );
 }

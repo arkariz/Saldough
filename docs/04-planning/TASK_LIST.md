@@ -7051,8 +7051,22 @@ L lebih dari seminggu.
       dipakai") dan Tanuki tidak berkomentar saat itu; (4) keterangan sakelar
       berubah saat mati, tanpa catatan terpisah; (5) tidak ada keadaan memuat;
       (6) kinerja kilap dan konfeti belum diukur di Android kelas bawah (T-28.8).
-- [ ] **T-28.6** (S) Analitik §10 dan saklar jarak jauh `stamps_enabled`
+- [x] **T-28.6** (S) Analitik §10 dan saklar jarak jauh `stamps_enabled`
       (tanpa uji A/B). Butuh T-28.4, T-28.5.
+      Selesai 15 Nov 2026: `MilestoneEvents` (`milestone_earned` {id, quiet},
+      `stamp_book_viewed` {source: account|celebration|intro},
+      `celebration_setting_changed` {enabled}, `milestone_celebration_shown`
+      {count}; id hanya delapan kosakata tetap, tanpa nominal/tanggal/teks);
+      rute Buku Stempel memakai `StampBookInput(source)`. Saklar jarak jauh:
+      Remote Config `stamps_enabled` (false/0 mematikan seluruh katalog) dan
+      `stamps_disabled_ids` (id dipisah koma); hanya menahan stempel **baru**,
+      yang sudah diraih tidak dicabut (G-1); `firebaseStampDisabledIds` membaca
+      nilai aktif tanpa mengambil sendiri (pengambilan oleh gateway `app_update`
+      dan hak Plus yang berbagi singleton); bawaan menyala. Uji: peristiwa,
+      parser saklar, koordinator (saklar dan analitik).
+      ⚠ Kunci Remote Config baru ini harus didaftarkan pemilik di konsol Firebase
+      (dua kunci, bawaan `true` dan kosong) dan dicatat di `PLAY_DATA_SAFETY.md`
+      bila ada perubahan data (tidak ada data baru: hanya id stempel).
 - [ ] **T-28.7** (S) Teks id/en, glosarium, dokumen rilis. Butuh T-28.5.
 - [ ] **T-28.8** (S) Verifikasi perangkat S1–S8.
 

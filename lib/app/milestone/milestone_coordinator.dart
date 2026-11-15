@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/features/milestone/domain/entities/milestone_ledger.dart';
 import 'package:saldough/features/milestone/domain/repositories/milestone_ports.dart';
 import 'package:saldough/features/milestone/domain/services/celebration_policy.dart';
@@ -91,6 +92,9 @@ class MilestoneCoordinator implements MilestoneBookAccess {
         final result = await _evaluate(disabledIds: _disabledIds());
         result.fold((_) {}, (evaluation) {
           _ledger.value = evaluation.ledger;
+          for (final id in evaluation.newlyEarned) {
+            AppAnalytics.log(MilestoneEvents.earned(id: id, quiet: evaluation.quiet));
+          }
           final plan = planCelebration(
             evaluation: evaluation,
             blocked: !canCelebrate(),

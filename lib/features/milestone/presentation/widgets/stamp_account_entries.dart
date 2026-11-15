@@ -1,6 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:navigation/navigation.dart';
 import 'package:saldough/core/design_system/design_system.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/features/milestone/domain/entities/milestone_ledger.dart';
@@ -61,7 +63,7 @@ class _BookEntry extends StatelessWidget {
             ),
         ],
       ),
-      onTap: () => context.pushRoute(MilestoneRouteKeys.book, const EmptyInput()),
+      onTap: () => context.pushRoute(MilestoneRouteKeys.book, const StampBookInput()),
     );
   }
 }
@@ -80,7 +82,10 @@ class _SwitchEntry extends StatelessWidget {
         title: texts.switchTitle,
         subtitle: ledger.celebrationEnabled ? texts.switchHintOn : texts.switchHintOff,
         value: ledger.celebrationEnabled,
-        onChanged: (enabled) => access.setCelebrationEnabled(enabled: enabled),
+        onChanged: (enabled) {
+          AppAnalytics.log(MilestoneEvents.settingChanged(enabled: enabled));
+          unawaited(access.setCelebrationEnabled(enabled: enabled));
+        },
       ),
     );
   }

@@ -4,6 +4,7 @@ import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saldough/app/milestone/milestone_coordinator.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/features/milestone/domain/entities/milestone_def.dart';
 import 'package:saldough/features/milestone/domain/entities/milestone_ledger.dart';
 import 'package:saldough/features/milestone/domain/repositories/milestone_ports.dart';
@@ -105,5 +106,37 @@ void main() {
     expect(legacyBannerVisible(coordinator.ledger.value), isTrue);
     await coordinator.markIntroShown();
     expect(legacyBannerVisible(coordinator.ledger.value), isFalse);
+  });
+
+  test('saklar jarak jauh menahan stempel baru tetapi tidak mencabut yang ada', () async {
+    facts.facts = {MilestoneFact.walletExists};
+    store.ledger = MilestoneLedger(
+      earned: {'record_first': EarnedMilestone(id: 'record_first', earnedAt: DateTime(2026))},
+      seeded: true,
+      introShown: true,
+    );
+    final held = MilestoneCoordinator(
+      evaluate: EvaluateMilestones(store: store, facts: facts),
+      store: store,
+      signals: const Stream<void>.empty(),
+      disabledIds: () => {'wallet_first'},
+    );
+    await held.start();
+    expect(held.ledger.value.has('wallet_first'), isFalse);
+    expect(held.ledger.value.has('record_first'), isTrue);
+    await held.stop();
+  });
+
+  test('analitik: milestone_earned per stempel, quiet untuk pemasukan pengguna lama', () async {
+    final logged = <AnalyticsEvent>[];
+    AppAnalytics.debugSink = logged.add;
+    addTearDown(() => AppAnalytics.debugSink = null);
+    store.ledger = MilestoneLedger.empty;
+    facts.facts = {MilestoneFact.walletExists};
+    await coordinator.start();
+    expect(logged, [MilestoneEvents.earned(id: 'wallet_first', quiet: true)]);
+    facts.facts = {MilestoneFact.walletExists, MilestoneFact.recordExists};
+    await coordinator.evaluate();
+    expect(logged.last, MilestoneEvents.earned(id: 'record_first', quiet: false));
   });
 }

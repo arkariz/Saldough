@@ -13,20 +13,21 @@ final class MilestoneRouteModule extends FeatureRouteModule {
 
   @override
   List<RouteNode> get routes => [
-    RouteNode.typed<EmptyInput>(
+    RouteNode.typed<StampBookInput>(
       key: MilestoneRouteKeys.book,
-      defaultInput: () => const EmptyInput(),
-      builder: (context, _) => StampBookPage(access: ScopeProvider.of(context)<MilestoneBookAccess>()),
+      defaultInput: () => const StampBookInput(),
+      builder: (context, input) =>
+          StampBookPage(access: ScopeProvider.of(context)<MilestoneBookAccess>(), source: input.source.name),
     ),
   ];
 
   @override
   List<DevEntry> get devEntries => [
-    DevEntry.typed<EmptyInput>(
+    DevEntry.typed<StampBookInput>(
       label: 'Buku Stempel',
       category: 'milestone',
       key: MilestoneRouteKeys.book,
-      inputFactory: () => const EmptyInput(),
+      inputFactory: () => const StampBookInput(),
     ),
   ];
 }

@@ -318,6 +318,38 @@ abstract final class UpdateEvents {
       AnalyticsEvent('whats_new_viewed', {'build': build, 'patch': patch, 'source': source});
 }
 
+/// Peristiwa stempel (GAMIFICATION §10, ADR-046): id hanya dari kosakata tetap
+/// delapan tonggak; tanpa nominal, tanggal, atau teks pengguna.
+abstract final class MilestoneEvents {
+  MilestoneEvents._();
+
+  /// Kosakata id tonggak yang boleh dikirim (GAMIFICATION §5).
+  static const ids = {
+    'wallet_first',
+    'record_first',
+    'period_tidy',
+    'recurring_clear',
+    'inbox_clear',
+    'backup_first',
+    'budget_first',
+    'freelance_paid',
+  };
+
+  /// Stempel diraih. [quiet] = pemasukan diam-diam pengguna lama (G-6).
+  static AnalyticsEvent earned({required String id, required bool quiet}) =>
+      AnalyticsEvent('milestone_earned', {'id': ids.contains(id) ? id : 'unknown', 'quiet': quiet ? 'true' : 'false'});
+
+  /// Buku Stempel dibuka. [source] `account`, `celebration`, atau `intro`.
+  static AnalyticsEvent bookViewed(String source) => AnalyticsEvent('stamp_book_viewed', {'source': source});
+
+  /// Sakelar Perayaan stempel diubah.
+  static AnalyticsEvent settingChanged({required bool enabled}) =>
+      AnalyticsEvent('celebration_setting_changed', {'enabled': enabled ? 'true' : 'false'});
+
+  /// Perayaan tampil; [count] 1 atau lebih bila digabung (G-4).
+  static AnalyticsEvent celebrationShown(int count) => AnalyticsEvent('milestone_celebration_shown', {'count': count});
+}
+
 /// Peristiwa penemuan fitur (FEATURE_DISCOVERY §9, Fase 21): jawaban langkah
 /// onboarding, fitur yang dinyalakan, dan pemakaian pintu permanen. Tanpa
 /// nominal, nama kategori buatan, nama aplikasi, atau isi notifikasi

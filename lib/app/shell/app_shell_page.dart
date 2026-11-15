@@ -206,7 +206,10 @@ class _AppShellPageState extends State<AppShellPage> {
               container: parentContainer,
               active: _activeTab == _homeTabIndex,
               board: _statusBoard,
-              onOpenBook: () => context.pushRoute(MilestoneRouteKeys.book, const EmptyInput()),
+              onOpenBook: ({required celebration}) => context.pushRoute(
+                MilestoneRouteKeys.book,
+                StampBookInput(source: celebration ? StampBookSource.celebration : StampBookSource.intro),
+              ),
               onOpenSettings: () => context.pushRoute(AccountRouteKeys.page, const EmptyInput()),
             ),
           ],

@@ -4,6 +4,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:saldough/core/design_system/design_system.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/clay_icons.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
@@ -25,10 +26,13 @@ import 'package:saldough/features/milestone/presentation/widgets/stamp_visuals.d
 /// supaya titik "baru" masih terlihat selama kunjungan.
 class StampBookPage extends StatefulWidget {
   /// Membuat [StampBookPage].
-  const StampBookPage({required this.access, super.key});
+  const StampBookPage({required this.access, this.source = 'account', super.key});
 
   /// Pintu ke keadaan stempel.
   final MilestoneBookAccess access;
+
+  /// Asal pembukaan (`StampBookSource.name`), untuk analitik.
+  final String source;
 
   @override
   State<StampBookPage> createState() => _StampBookPageState();
@@ -36,6 +40,12 @@ class StampBookPage extends StatefulWidget {
 
 class _StampBookPageState extends State<StampBookPage> with SingleTickerProviderStateMixin {
   int _cheer = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    AppAnalytics.log(MilestoneEvents.bookViewed(widget.source));
+  }
   String? _message;
   late final AnimationController _shake = AnimationController(vsync: this, duration: const Duration(milliseconds: 420));
 

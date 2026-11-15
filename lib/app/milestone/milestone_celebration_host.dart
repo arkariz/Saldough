@@ -4,6 +4,7 @@ import 'package:di/di.dart';
 import 'package:flutter/material.dart';
 import 'package:saldough/app/milestone/milestone_coordinator.dart';
 import 'package:saldough/core/design_system/design_system.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/app_action_snack_bar.dart';
 import 'package:saldough/features/app_update/presentation/bloc/app_update_bloc.dart';
@@ -40,8 +41,9 @@ class MilestoneCelebrationHost extends StatefulWidget {
   /// Papan status Beranda tujuan slide banner.
   final DsStatusBoard board;
 
-  /// Membuka Buku Stempel (sementara layar Akun sampai T-28.5).
-  final VoidCallback onOpenBook;
+  /// Membuka Buku Stempel; `true` bila dari aksi Lihat di snackbar perayaan,
+  /// `false` dari banner pengguna lama (analitik `source`).
+  final void Function({required bool celebration}) onOpenBook;
 
   /// Membuka pengaturan Perayaan stempel di Akun.
   final VoidCallback onOpenSettings;
@@ -83,10 +85,13 @@ class _MilestoneCelebrationHostState extends State<MilestoneCelebrationHost> {
   void _show(CelebrationPlan plan) {
     final coordinator = _coordinator;
     if (!mounted || coordinator == null || !_canCelebrate()) return;
+    if (plan.kind == CelebrationKind.snackbar || plan.kind == CelebrationKind.firstSheet) {
+      AppAnalytics.log(MilestoneEvents.celebrationShown(plan.ids.length));
+    }
     switch (plan.kind) {
       case CelebrationKind.snackbar:
         ScaffoldMessenger.of(context).showAppSnackBar(
-          stampSnackBar(context, ids: plan.ids, onSee: widget.onOpenBook),
+          stampSnackBar(context, ids: plan.ids, onSee: () => widget.onOpenBook(celebration: true)),
         );
       case CelebrationKind.firstSheet:
         _sheetOpen = true;
@@ -122,7 +127,7 @@ class _MilestoneCelebrationHostState extends State<MilestoneCelebrationHost> {
             ? legacyBannerSlide(
                 onSee: () {
                   unawaited(coordinator.markIntroShown());
-                  widget.onOpenBook();
+                  widget.onOpenBook(celebration: false);
                 },
                 onDismiss: () => unawaited(coordinator.markIntroShown()),
               )

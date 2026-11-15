@@ -35,7 +35,7 @@ class PeriodInvitationHost extends StatefulWidget {
   final DsStatusBoard board;
 
   /// Membuka ritual Tutup buku untuk periode [periodId].
-  final void Function(String periodId) onOpenRitual;
+  final Future<void> Function(String periodId) onOpenRitual;
 
   @override
   State<PeriodInvitationHost> createState() => _PeriodInvitationHostState();
@@ -93,7 +93,8 @@ class _PeriodInvitationHostState extends State<PeriodInvitationHost> {
             title: texts.title(period: invitation.period.period.name),
             subtitle: texts.subtitle,
             actionLabel: texts.close,
-            onAction: () => widget.onOpenRitual(invitation.period.id),
+            // Sesudah ritual ditutup, periksa ulang: buku yang sudah dibuka tidak diajak lagi (BP-14).
+            onAction: () => unawaited(widget.onOpenRitual(invitation.period.id).then((_) => _refresh())),
             dismissLabel: texts.later,
             onDismiss: () async {
               await _gate?.dismissCard(invitation.period.id);

@@ -7170,6 +7170,36 @@ S sehari, M beberapa hari, L lebih dari seminggu. Rilis bertahap: Kartu Periode
 
 - [ ] **T-27.5** (M) Ritual Tutup buku (D4) dan slot kartu Beranda (D3),
       urutan terhadap banner pembaruan dan kotak masuk (BP-13). Butuh T-27.2.
+      **Selesai 15 Nov 2026** (Plus; kartu Gratis menunggu T-27.8). Ritual
+      `RitualPage` (rute `periodBook.ritual`, tiga langkah dengan keadaan rapi,
+      daftar ringkas dua transaksi tanpa kategori di wadah hangat, Beri kategori
+      membuka penyunting CATAT lalu langkah memuat ulang, Lihat rutin menutup
+      ritual dan memindahkan shell ke Rencana › Rutin lewat `ShellRequests`,
+      kilas balik dua ubin atau baris "belum punya anggaran", baris "Data tetap
+      bisa kamu ubah kapan saja", Lewati tidak menandai langkah dan Lanjut
+      menandai, melanjutkan di langkah tersimpan, penutup menandai buku dibuka
+      dan konfeti 40). Gerbang dicek di akar (`AppRitualAccess`: terkunci bila
+      bukan Plus dan belum pernah dibuka). Ajakan Beranda: `PeriodInvitationHost`
+      melapor satu slide ke papan status (order 4), hanya bila `invitationFor`
+      memberi buku, tidak dirender bila banner pembaruan atau Apa yang baru
+      tampil (BP-13), "Nanti" menutup untuk periode itu, diperiksa ulang sesudah
+      ritual ditutup. Teks `book.card.*` dan `book.ritual.*` id/en. Uji: logika
+      lanjut, halaman ritual (6), akses di akar (5), `ritualFor`; `test/app`,
+      arsitektur, i18n lulus; analyze bersih. Emulator (paket Plus via
+      `PLAN_OVERRIDE`, data demo): kartu "Buku Oktober siap ditutup", ritual tiga
+      langkah, buku tercatat dibuka dan kartu hilang.
+      ⚠ Selisih dan sisa: (1) **BP-11** (uji coba: Plus tetap aktif sampai buku
+      periode uji coba dibuka atau 1 hari sesudah periode berakhir) **tidak
+      dikerjakan**; mengubah mesin hak/uji coba (ADR-041) jadi butuh keputusan
+      dan tugas sendiri; (2) ajakan Gratis (Kartu Periode) menunggu T-27.8;
+      (3) ajakan memakai slide papan status, bukan kartu mini 68x86 dengan buku
+      berayun seperti D3; (4) ritual tanpa balon Tanuki mengetik dan getar layar
+      (Tanuki statis di kepala); (5) sesudah menutup buku belum pindah ke sampul
+      dan cetak stempel (T-27.6); (6) langkah 1 hanya memberi kategori pada
+      transaksi pertama dalam daftar lalu memuat ulang; (7) lembar di atas
+      Beranda (BP-13: tidak di Catat/onboarding/tur) dijaga hanya oleh letaknya di
+      papan status Beranda.
+
 - [ ] **T-27.6** (L) Rapor (D6) dan sampul + stempel (D5), gerak permainan
       lewat `DsMotion.reduced`. Butuh T-27.3, T-27.4.
 - [ ] **T-27.7** (M) Rak Buku sebagai segmen ketiga Riwayat (D7), sakelar di

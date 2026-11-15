@@ -7210,6 +7210,37 @@ S sehari, M beberapa hari, L lebih dari seminggu. Rilis bertahap: Kartu Periode
 
 - [ ] **T-27.6** (L) Rapor (D6) dan sampul + stempel (D5), gerak permainan
       lewat `DsMotion.reduced`. Butuh T-27.3, T-27.4.
+      **Selesai 15 Nov 2026.** Sampul `BookCoverPage` (rute `periodBook.cover`:
+      `BookCover` 232x320 gradasi hijau dengan token segel, bingkai emas, punggung
+      gelap, Tanuki, buku melayang miring `FloatingBook`; stempel periode dicap satu
+      per satu mulai 500 ms selang 900 ms dengan konfeti 22; nol stempel tanpa
+      tulisan "belum ada"; Buka rapor) dan rapor `BookReportPage` (rute
+      `periodBook.report`: PageView dengan Arus + hitung naik, Ke mana uang pergi
+      dengan batang 900 ms dan "<1%", Dibanding biasanya dengan ubin netral dan
+      tanda +/-, Rutin dan rencana dengan `DsSegmentMeter`, Kata Tanuki dengan
+      balon mengetik; halaman kosong dilewati, titik halaman, catatan netral tanpa
+      kategori dengan Beri kategori). Membuka buku (`AppBookAccess.open`): gerbang
+      di akar (BP-10), buku ditandai dibuka, **stempel periode (`period_tidy`,
+      `recurring_clear`) tercetak permanen** ke sampul (`PeriodBookMemory.stamps`,
+      G-1) dan **dilipat tanpa perayaan terpisah** (`MilestoneCoordinator.
+      absorbIntoCover`, BP-13). Tutup buku di ritual kini berlanjut ke sampul.
+      Refaktor: `stamp_visuals` ke `core/presentation/widgets`, `TanukiBubble`
+      jadi widget bersama. Uji: stempel periode, sampul (3), rapor (7), akses di
+      akar (4), absorb koordinator; `test/app`, `test/features/period_book`,
+      arsitektur, i18n lulus (203); analyze bersih. Emulator (Plus, data demo,
+      lewat menu pengembang): ritual → sampul → rapor, tiga halaman untuk data
+      demo (Arus, Ke mana uang pergi, Kata Tanuki; tanpa pembanding dan rutin),
+      nominal dan kalimat benar, tanpa galat Flutter.
+      ⚠ Selisih dan sisa: (1) tampilan sampul **tidak diperiksa mata** (tangkapan
+      layar emulator tidak dapat dibaca agen; dua tangkapan terkirim ke pemilik
+      belum tentu sampul); (2) ikon kategori di halaman 2 memakai ikon generik
+      (bukan ikon clay kategori); (3) angka "Halaman n dari N" hanya untuk
+      pembaca layar; (4) tanpa kilat menyapu di tombol Buka rapor, tanpa getar
+      layar saat cap, tanpa buku "membuka" sebelum rapor; (5) halaman 5 memakai satu
+      balon dengan kalimat digabung; (6) sampul untuk periode yang bukunya sudah
+      dibuka bisa dibuka dari menu pengembang saja sampai Rak Buku ada (T-27.7);
+      (7) kontras `onHero`/emas dan preset Pink belum diperiksa.
+
 - [ ] **T-27.7** (M) Rak Buku sebagai segmen ketiga Riwayat (D7), sakelar di
       Akun. Butuh T-27.2.
 - [ ] **T-27.8** (M) Kartu Periode (D1, D2): model kartu terbatas (BP-16),

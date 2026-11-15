@@ -75,7 +75,7 @@ class _StampDetailState extends State<_StampDetail> with SingleTickerProviderSta
         if (!mounted) return;
         final box = _sealKey.currentContext?.findRenderObject() as RenderBox?;
         if (box != null && box.hasSize) {
-          DsCelebration.burst(context, origin: box.localToGlobal(box.size.center(Offset.zero)), count: 36);
+          DsShapeConfetti.burst(context, origin: box.localToGlobal(box.size.center(Offset.zero)), count: 36);
         }
         widget.onCelebrate?.call();
       });

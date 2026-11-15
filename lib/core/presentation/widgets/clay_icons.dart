@@ -16,6 +16,42 @@ abstract final class ClayIcons {
   /// Maskot tanuki tidur (keadaan awal Beranda).
   static const String mascotSleeping = 'assets/icons_clay/tanuki_sleeping.svg';
 
+  /// Tanuki senang: mata tersenyum, tangan terangkat, kilau (kartu dan buku periode, D8).
+  static const String mascotHappy = 'assets/icons_clay/tanuki_happy.svg';
+
+  /// Tanuki menulis: menunduk memegang pensil di atas catatan (ritual Tutup buku, D8).
+  static const String mascotWriting = 'assets/icons_clay/tanuki_writing.svg';
+
+  /// Tanuki tenang: mata terpejam, senyum, secangkir teh (halaman Kata Tanuki, D8).
+  static const String mascotCalm = 'assets/icons_clay/tanuki_calm.svg';
+
+  /// Buku periode tertutup: sampul hijau, bingkai emas, pita.
+  static const String bookPeriod = 'assets/icons_clay/book_period.svg';
+
+  /// Buku terbuka dengan pita (rapor).
+  static const String bookOpen = 'assets/icons_clay/book_open.svg';
+
+  /// Rak berisi beberapa buku (Rak Buku).
+  static const String shelfBooks = 'assets/icons_clay/shelf_books.svg';
+
+  /// Kartu periode yang bisa dibagikan.
+  static const String cardPeriod = 'assets/icons_clay/card_period.svg';
+
+  /// Cap karet (stempel periode dicap).
+  static const String stampTool = 'assets/icons_clay/stamp_tool.svg';
+
+  /// Buku Stempel: buku dengan segel emas.
+  static const String stampBook = 'assets/icons_clay/stamp_book.svg';
+
+  /// Serpihan konfeti: daun.
+  static const String confettiLeaf = 'assets/icons_clay/confetti_leaf.svg';
+
+  /// Serpihan konfeti: bintang emas.
+  static const String confettiStar = 'assets/icons_clay/confetti_star.svg';
+
+  /// Kilau emas empat sudut.
+  static const String sparkle = 'assets/icons_clay/sparkle.svg';
+
   /// Koin lencana level.
   static const String tierCoin = 'assets/icons_clay/tier_coin.svg';
 
@@ -197,6 +233,18 @@ abstract final class ClayIcons {
   static const List<String> all = [
     mascot,
     mascotSleeping,
+    mascotHappy,
+    mascotWriting,
+    mascotCalm,
+    bookPeriod,
+    bookOpen,
+    shelfBooks,
+    cardPeriod,
+    stampTool,
+    stampBook,
+    confettiLeaf,
+    confettiStar,
+    sparkle,
     tierCoin,
     scan,
     transfer,

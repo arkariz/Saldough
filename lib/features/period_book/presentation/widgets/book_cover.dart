@@ -21,6 +21,7 @@ class BookCover extends StatelessWidget {
     this.subtitle,
     this.seals = const [],
     this.width = 232,
+    this.mascot,
     super.key,
   });
 
@@ -41,6 +42,9 @@ class BookCover extends StatelessWidget {
 
   /// Lebar; tinggi mengikuti 232:320.
   final double width;
+
+  /// Pembuat Tanuki di kanan bawah (menerima sisi gambar); bawaan maskot biasa.
+  final Widget Function(double size)? mascot;
 
   @override
   Widget build(BuildContext context) {
@@ -126,7 +130,7 @@ class BookCover extends StatelessWidget {
                 Positioned(
                   right: 22 * k,
                   bottom: 78 * k,
-                  child: SvgPicture.asset(ClayIcons.mascot, width: 74 * k, height: 74 * k),
+                  child: mascot?.call(74 * k) ?? SvgPicture.asset(ClayIcons.mascot, width: 74 * k, height: 74 * k),
                 ),
                 if (seals.isNotEmpty)
                   Positioned(
@@ -148,10 +152,14 @@ class BookCover extends StatelessWidget {
 /// −12°, 4 dtk, bolak-balik). Diam saat gerak dikurangi.
 class FloatingBook extends StatefulWidget {
   /// Membuat [FloatingBook].
-  const FloatingBook({required this.child, super.key});
+  const FloatingBook({required this.child, this.open = 0, super.key});
 
   /// Buku.
   final Widget child;
+
+  /// 0 = melayang miring, 1 = terbuka menghadap lurus dan sedikit membesar
+  /// (rupa D5, sesaat sebelum rapor).
+  final double open;
 
   @override
   State<FloatingBook> createState() => _FloatingBookState();
@@ -182,13 +190,17 @@ class _FloatingBookState extends State<FloatingBook> with SingleTickerProviderSt
     return AnimatedBuilder(
       animation: _c,
       builder: (context, child) {
-        final angle = (reduced ? -15 : -18 + 6 * Curves.easeInOut.transform(_c.value)) * math.pi / 180;
-        return Transform(
+        final floating = (reduced ? -15 : -18 + 6 * Curves.easeInOut.transform(_c.value)) * math.pi / 180;
+        final angle = floating * (1 - widget.open);
+        return Transform.scale(
+          scale: 1 + 0.06 * widget.open,
+          child: Transform(
           alignment: Alignment.center,
           transform: Matrix4.identity()
             ..setEntry(3, 2, 0.0012)
             ..rotateY(angle),
           child: child,
+          ),
         );
       },
       child: widget.child,

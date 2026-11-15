@@ -38,20 +38,19 @@ class StampBookPage extends StatefulWidget {
   State<StampBookPage> createState() => _StampBookPageState();
 }
 
-class _StampBookPageState extends State<StampBookPage> with SingleTickerProviderStateMixin {
+class _StampBookPageState extends State<StampBookPage> {
   int _cheer = 0;
+  String? _message;
+  int _shake = 0;
 
   @override
   void initState() {
     super.initState();
     AppAnalytics.log(MilestoneEvents.bookViewed(widget.source));
   }
-  String? _message;
-  late final AnimationController _shake = AnimationController(vsync: this, duration: const Duration(milliseconds: 420));
 
   @override
   void dispose() {
-    _shake.dispose();
     unawaited(widget.access.markAllSeen());
     super.dispose();
   }
@@ -71,7 +70,7 @@ class _StampBookPageState extends State<StampBookPage> with SingleTickerProvider
         isNew: isNew,
         body: body,
         onCelebrate: () {
-          if (!DsMotion.reduced(context)) _shake.forward(from: 0);
+          if (mounted) setState(() => _shake++);
         },
       ),
     );
@@ -83,13 +82,8 @@ class _StampBookPageState extends State<StampBookPage> with SingleTickerProvider
     return Scaffold(
       appBar: AppBar(title: Text(t.stamps.screen.title, style: ds.typography.headlineMd)),
       body: SafeArea(
-        child: AnimatedBuilder(
-          animation: _shake,
-          // Getar layar 420 ms (±5 dp), hanya saat stempel baru dibuka (rupa §9).
-          builder: (context, child) => Transform.translate(
-            offset: Offset(math.sin(_shake.value * math.pi * 6) * 5 * (1 - _shake.value), 0),
-            child: child,
-          ),
+        child: DsShake(
+          trigger: _shake,
           child: ValueListenableBuilder<MilestoneLedger>(
             valueListenable: widget.access.ledger,
             builder: (context, ledger, _) => _Body(

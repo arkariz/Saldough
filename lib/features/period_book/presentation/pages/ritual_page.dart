@@ -1,10 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
-import 'package:saldough/core/presentation/widgets/clay_icons.dart';
+import 'package:saldough/core/presentation/widgets/tanuki_pose.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/period_book/domain/entities/ritual_info.dart';
@@ -68,7 +67,7 @@ class _RitualPageState extends State<RitualPage> {
     if (!mounted) return;
     final box = context.findRenderObject() as RenderBox?;
     if (box != null && box.hasSize) {
-      DsCelebration.burst(context, origin: box.localToGlobal(box.size.center(Offset.zero)), count: 40);
+      DsShapeConfetti.burst(context, origin: box.localToGlobal(box.size.center(Offset.zero)), count: 40);
     }
     Navigator.of(context).pop(true);
   }
@@ -106,7 +105,7 @@ class _RitualPageState extends State<RitualPage> {
               const SizedBox(height: 16),
               Row(
                 children: [
-                  SvgPicture.asset(ClayIcons.mascot, width: 64, height: 64),
+                  const TanukiPose(pose: TanukiPoseKind.writing, size: 72),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
@@ -117,11 +116,25 @@ class _RitualPageState extends State<RitualPage> {
                 ],
               ),
               const SizedBox(height: 16),
-              switch (_step) {
-                RitualStep.uncategorized => _Uncategorized(info: info, access: widget.access, onChanged: _reload),
-                RitualStep.routines => _Routines(info: info, access: widget.access),
-                RitualStep.review => _Review(info: info),
-              },
+              AnimatedSwitcher(
+                duration: DsMotion.reduced(context) ? Duration.zero : const Duration(milliseconds: 320),
+                switchInCurve: Curves.easeOutCubic,
+                transitionBuilder: (child, animation) => FadeTransition(
+                  opacity: animation,
+                  child: SlideTransition(
+                    position: Tween(begin: const Offset(0.08, 0), end: Offset.zero).animate(animation),
+                    child: child,
+                  ),
+                ),
+                child: KeyedSubtree(
+                  key: ValueKey(_step),
+                  child: switch (_step) {
+                    RitualStep.uncategorized => _Uncategorized(info: info, access: widget.access, onChanged: _reload),
+                    RitualStep.routines => _Routines(info: info, access: widget.access),
+                    RitualStep.review => _Review(info: info),
+                  },
+                ),
+              ),
             ],
           ),
         ),
@@ -196,11 +209,13 @@ class _Uncategorized extends StatelessWidget {
     if (info.untagged.isEmpty) {
       return Row(
         children: [
-          Container(
-            width: 30,
-            height: 30,
-            decoration: BoxDecoration(color: c.actionPrimary, shape: BoxShape.circle),
-            child: Icon(Icons.check, size: 18, color: c.onActionPrimary),
+          _Pop(
+            child: Container(
+              width: 30,
+              height: 30,
+              decoration: BoxDecoration(color: c.actionPrimary, shape: BoxShape.circle),
+              child: Icon(Icons.check, size: 18, color: c.onActionPrimary),
+            ),
           ),
           const SizedBox(width: 12),
           Expanded(child: Text(t.book.ritual.uncategorized.none, style: ds.typography.headlineSm)),
@@ -323,6 +338,25 @@ class _Review extends StatelessWidget {
           message: t.book.ritual.note,
         ),
       ],
+    );
+  }
+}
+
+/// Lingkaran centang muncul dengan pantulan kecil (rupa D4, `pop`).
+class _Pop extends StatelessWidget {
+  const _Pop({required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    if (DsMotion.reduced(context)) return child;
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0, end: 1),
+      duration: const Duration(milliseconds: 520),
+      curve: Curves.elasticOut,
+      builder: (context, t, child) => Transform.scale(scale: t, child: child),
+      child: child,
     );
   }
 }

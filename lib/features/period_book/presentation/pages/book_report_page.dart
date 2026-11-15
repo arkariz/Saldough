@@ -6,11 +6,14 @@ import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/clay_icons.dart';
 import 'package:saldough/core/presentation/widgets/tanuki_bubble.dart';
+import 'package:saldough/core/presentation/widgets/tanuki_pose.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/period_book/domain/entities/period_book_content.dart';
 import 'package:saldough/features/period_book/domain/services/tanuki_lines.dart';
+import 'package:saldough/features/period_book/presentation/category_clay.dart';
 import 'package:saldough/features/period_book/presentation/period_book_read_access.dart';
 import 'package:saldough/features/period_book/presentation/tanuki_sentences.dart';
+import 'package:saldough/features/period_book/presentation/widgets/stagger_in.dart';
 
 /// Rapor lima halaman (rupa D6, T-27.6): Arus, Ke mana uang pergi, Dibanding
 /// biasanya, Rutin dan rencana, Kata Tanuki. Halaman dengan data kosong
@@ -20,7 +23,11 @@ import 'package:saldough/features/period_book/presentation/tanuki_sentences.dart
 /// Sembunyikan nominal lewat `AppMoneyFormatter`.
 class BookReportPage extends StatefulWidget {
   /// Membuat [BookReportPage].
-  const BookReportPage({required this.access, required this.periodId, super.key});
+  const BookReportPage({
+    required this.access,
+    required this.periodId,
+    super.key,
+  });
 
   /// Pintu ke data.
   final PeriodBookReadAccess access;
@@ -42,9 +49,11 @@ class _BookReportPageState extends State<BookReportPage> {
   @override
   void initState() {
     super.initState();
-    unawaited(widget.access.open(widget.periodId).then((load) {
-      if (mounted) setState(() => _load = load);
-    }));
+    unawaited(
+      widget.access.open(widget.periodId).then((load) {
+        if (mounted) setState(() => _load = load);
+      }),
+    );
   }
 
   @override
@@ -93,15 +102,24 @@ class _BookReportPageState extends State<BookReportPage> {
                 _ReportPage.flow => _FlowPage(
                   content: content,
                   showNote: content.spending == null,
-                  onFix: () => widget.access.categorizeFirstUntagged(context, widget.periodId),
+                  onFix: () => widget.access.categorizeFirstUntagged(
+                    context,
+                    widget.periodId,
+                  ),
                 ),
                 _ReportPage.where => _WherePage(
                   content: content,
-                  onFix: () => widget.access.categorizeFirstUntagged(context, widget.periodId),
+                  onFix: () => widget.access.categorizeFirstUntagged(
+                    context,
+                    widget.periodId,
+                  ),
                 ),
                 _ReportPage.compare => _ComparePage(compare: content.compare!),
                 _ReportPage.plan => _PlanPage(plan: content.plan!),
-                _ReportPage.tanuki => _TanukiPage(content: content, active: _index == i),
+                _ReportPage.tanuki => _TanukiPage(
+                  content: content,
+                  active: _index == i,
+                ),
               },
             ),
           ),
@@ -147,14 +165,32 @@ class _Dots extends StatelessWidget {
 }
 
 class _Heading extends StatelessWidget {
-  const _Heading(this.text);
+  const _Heading(this.text, {this.asset});
 
   final String text;
+
+  /// Ikon clay dekoratif di sisi kiri judul (rupa D6).
+  final String? asset;
 
   @override
   Widget build(BuildContext context) => Padding(
     padding: const EdgeInsets.only(bottom: 12),
-    child: Semantics(header: true, child: Text(text, style: context.ds.typography.headlineSm)),
+    child: Row(
+      children: [
+        if (asset != null) ...[
+          ExcludeSemantics(
+            child: SvgPicture.asset(asset!, width: 30, height: 30),
+          ),
+          const SizedBox(width: 10),
+        ],
+        Expanded(
+          child: Semantics(
+            header: true,
+            child: Text(text, style: context.ds.typography.headlineSm),
+          ),
+        ),
+      ],
+    ),
   );
 }
 
@@ -186,7 +222,11 @@ class _Note extends StatelessWidget {
 }
 
 class _FlowPage extends StatelessWidget {
-  const _FlowPage({required this.content, required this.showNote, required this.onFix});
+  const _FlowPage({
+    required this.content,
+    required this.showNote,
+    required this.onFix,
+  });
 
   final PeriodBookContent content;
   final bool showNote;
@@ -201,9 +241,20 @@ class _FlowPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(label.toUpperCase(), style: ds.typography.pixelLabel.copyWith(color: ds.colors.textMuted)),
+            Text(
+              label.toUpperCase(),
+              style: ds.typography.pixelLabel.copyWith(
+                color: ds.colors.textMuted,
+              ),
+            ),
             const SizedBox(height: 4),
-            DsCountUp(value: value, builder: (_, v) => Text(AppMoneyFormatter.format(v), style: ds.typography.headlineSm)),
+            DsCountUp(
+              value: value,
+              builder: (_, v) => Text(
+                AppMoneyFormatter.format(v),
+                style: ds.typography.headlineSm,
+              ),
+            ),
           ],
         ),
       ),
@@ -211,24 +262,48 @@ class _FlowPage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _Heading(flow.net >= 0 ? t.book.report.flowPositive : t.book.report.flowNegative),
-        Row(children: [tile(t.book.report.income, flow.income), const SizedBox(width: 12), tile(t.book.report.expense, flow.expense)]),
-        const SizedBox(height: 12),
-        DsCard(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+        _Heading(
+          flow.net >= 0 ? t.book.report.flowPositive : t.book.report.flowNegative,
+          asset: ClayIcons.bookOpen,
+        ),
+        StaggerIn(
+          index: 0,
+          child: Row(
             children: [
-              Text(t.book.report.net.toUpperCase(), style: ds.typography.pixelLabel.copyWith(color: ds.colors.textMuted)),
-              const SizedBox(height: 4),
-              // Selisih negatif tanpa warna peringatan (rupa D6): teks utama biasa.
-              DsCountUp(
-                value: flow.net,
-                builder: (_, v) => Text(
-                  AppMoneyFormatter.format(v),
-                  style: ds.typography.headlineLg.copyWith(fontSize: 32, height: 38 / 32, fontWeight: FontWeight.w800),
-                ),
-              ),
+              tile(t.book.report.income, flow.income),
+              const SizedBox(width: 12),
+              tile(t.book.report.expense, flow.expense),
             ],
+          ),
+        ),
+        const SizedBox(height: 12),
+        StaggerIn(
+          index: 2,
+          child: DsCard(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  t.book.report.net.toUpperCase(),
+                  style: ds.typography.pixelLabel.copyWith(
+                    color: ds.colors.textMuted,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                // Selisih negatif tanpa warna peringatan (rupa D6): teks utama biasa.
+                DsCountUp(
+                  value: flow.net,
+                  builder: (_, v) => Text(
+                    AppMoneyFormatter.format(v),
+                    style: ds.typography.headlineLg.copyWith(
+                      fontSize: 32,
+                      height: 38 / 32,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         if (showNote) _Note(count: content.uncategorizedCount, onFix: onFix),
@@ -259,43 +334,74 @@ class _WherePage extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _Heading(t.book.page.where),
-        for (final row in spending.rows)
-          Padding(
-            padding: const EdgeInsets.only(bottom: 14),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: 34,
-                  height: 34,
-                  decoration: BoxDecoration(color: c.surfaceSunken, shape: BoxShape.circle),
-                  child: Icon(
-                    row.kind == BookRowKind.uncategorized ? Icons.help_outline : Icons.label_outline,
-                    size: 18,
-                    color: c.textSecondary,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(child: Text(_name(row), style: ds.typography.bodyMd.copyWith(fontWeight: FontWeight.w700))),
-                          Text(
-                            row.belowOne ? t.book.report.belowOne : '${row.percent}%',
-                            style: ds.typography.pixelLabel.copyWith(color: c.textSecondary),
-                          ),
-                        ],
+        for (final (i, row) in spending.rows.indexed)
+          StaggerIn(
+            index: i,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 14),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 38,
+                    height: 38,
+                    decoration: BoxDecoration(
+                      color: c.surfaceSunken,
+                      shape: BoxShape.circle,
+                    ),
+                    alignment: Alignment.center,
+                    child: ExcludeSemantics(
+                      child: SvgPicture.asset(
+                        row.kind == BookRowKind.freelance
+                            ? categoryClayAsset('freelance')
+                            : categoryClayAsset(
+                                row.kind == BookRowKind.category
+                                    ? row.builtInKey
+                                    : (row.kind == BookRowKind.others ? 'expenseOther' : 'tag_none'),
+                              ),
+                        width: 24,
+                        height: 24,
                       ),
-                      Text(AppMoneyFormatter.format(row.amount), style: ds.typography.bodySm.copyWith(color: c.textMuted)),
-                      const SizedBox(height: 6),
-                      _Bar(fraction: spending.total == 0 ? 0 : (row.amount / spending.total).clamp(0.0, 1.0)),
-                    ],
+                    ),
                   ),
-                ),
-              ],
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                _name(row),
+                                style: ds.typography.bodyMd.copyWith(
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                            Text(
+                              row.belowOne ? t.book.report.belowOne : '${row.percent}%',
+                              style: ds.typography.pixelLabel.copyWith(
+                                color: c.textSecondary,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Text(
+                          AppMoneyFormatter.format(row.amount),
+                          style: ds.typography.bodySm.copyWith(
+                            color: c.textMuted,
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        _Bar(
+                          fraction: spending.total == 0 ? 0 : (row.amount / spending.total).clamp(0.0, 1.0),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         _Note(count: content.uncategorizedCount, onFix: onFix),
@@ -316,13 +422,30 @@ class _Bar extends StatelessWidget {
     final c = context.ds.colors;
     return LayoutBuilder(
       builder: (context, box) => TweenAnimationBuilder<double>(
-        tween: Tween(begin: DsMotion.reduced(context) ? fraction : 0, end: fraction),
+        tween: Tween(
+          begin: DsMotion.reduced(context) ? fraction : 0,
+          end: fraction,
+        ),
         duration: const Duration(milliseconds: 900),
         curve: DsMotion.easeOutExpo,
         builder: (context, v, _) => Stack(
           children: [
-            Container(height: 8, width: box.maxWidth, decoration: BoxDecoration(color: c.surfaceSunken, borderRadius: BorderRadius.circular(4))),
-            Container(height: 8, width: box.maxWidth * v, decoration: BoxDecoration(color: c.actionPrimary, borderRadius: BorderRadius.circular(4))),
+            Container(
+              height: 8,
+              width: box.maxWidth,
+              decoration: BoxDecoration(
+                color: c.surfaceSunken,
+                borderRadius: BorderRadius.circular(4),
+              ),
+            ),
+            Container(
+              height: 8,
+              width: box.maxWidth * v,
+              decoration: BoxDecoration(
+                color: c.actionPrimary,
+                borderRadius: BorderRadius.circular(4),
+              ),
+            ),
           ],
         ),
       ),
@@ -346,7 +469,10 @@ class _ComparePage extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(bottom: 12),
           child: Text(
-            t.book.report.compareIntro(n: compare.months, count: compare.months),
+            t.book.report.compareIntro(
+              n: compare.months,
+              count: compare.months,
+            ),
             style: ds.typography.bodyMd.copyWith(color: c.textSecondary),
           ),
         ),
@@ -355,7 +481,10 @@ class _ComparePage extends StatelessWidget {
             margin: const EdgeInsets.only(bottom: 10),
             padding: const EdgeInsets.all(14),
             // Ubin netral: tanpa warna peringatan, tanpa penilaian (BP-7).
-            decoration: BoxDecoration(color: c.surfaceSunken, borderRadius: BorderRadius.circular(14)),
+            decoration: BoxDecoration(
+              color: c.surfaceSunken,
+              borderRadius: BorderRadius.circular(14),
+            ),
             child: Row(
               children: [
                 Expanded(
@@ -364,19 +493,25 @@ class _ComparePage extends StatelessWidget {
                     children: [
                       Text(
                         h.kind == BookRowKind.freelance ? t.book.report.freelance : (h.categoryName ?? ''),
-                        style: ds.typography.bodyMd.copyWith(fontWeight: FontWeight.w700),
+                        style: ds.typography.bodyMd.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                       const SizedBox(height: 2),
                       Text(
                         '${t.book.report.usual} ${AppMoneyFormatter.format(h.average)} · ${t.book.report.thisPeriod} ${AppMoneyFormatter.format(h.amount)}',
-                        style: ds.typography.bodySm.copyWith(color: c.textMuted),
+                        style: ds.typography.bodySm.copyWith(
+                          color: c.textMuted,
+                        ),
                       ),
                     ],
                   ),
                 ),
                 Text(
                   '${h.isHigher ? '+' : '−'}${h.percent}%',
-                  style: ds.typography.pixelLabel.copyWith(color: c.textPrimary),
+                  style: ds.typography.pixelLabel.copyWith(
+                    color: c.textPrimary,
+                  ),
                 ),
               ],
             ),
@@ -401,7 +536,10 @@ class _PlanPage extends StatelessWidget {
         child: Row(
           children: [
             Expanded(child: Text(label, style: ds.typography.bodyMd)),
-            Text('$count', style: ds.typography.pixelLabel.copyWith(color: c.textPrimary)),
+            Text(
+              '$count',
+              style: ds.typography.pixelLabel.copyWith(color: c.textPrimary),
+            ),
           ],
         ),
       ),
@@ -416,7 +554,10 @@ class _PlanPage extends StatelessWidget {
         ],
         if (plan.hasBudget) ...[
           const SizedBox(height: 8),
-          Text(t.book.report.planVsReal, style: ds.typography.bodyMd.copyWith(fontWeight: FontWeight.w700)),
+          Text(
+            t.book.report.planVsReal,
+            style: ds.typography.bodyMd.copyWith(fontWeight: FontWeight.w700),
+          ),
           const SizedBox(height: 8),
           DsCard(
             child: Column(
@@ -458,7 +599,7 @@ class _TanukiPage extends StatelessWidget {
         Row(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            SvgPicture.asset(ClayIcons.mascot, width: 96, height: 96),
+            TanukiPose(pose: content.flow.net >= 0 ? TanukiPoseKind.happy : TanukiPoseKind.calm, size: 96, cheer: active ? 1 : 0),
             const SizedBox(width: 10),
             Expanded(child: TanukiBubble(message: active ? sentences : '')),
           ],

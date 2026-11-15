@@ -1,10 +1,17 @@
 import 'package:api_storage/api_storage.dart';
 import 'package:di/di.dart';
+import 'package:saldough/app/period_book/app_period_book_source.dart';
 import 'package:saldough/app/period_book/period_book_gate.dart';
+import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/foundation/entitlement/entitlement.dart';
+import 'package:saldough/features/analysis/domain/period_comparison.dart';
 import 'package:saldough/features/period_book/data/period_book_memory_store_impl.dart';
 import 'package:saldough/features/period_book/domain/repositories/period_book_memory_store.dart';
+import 'package:saldough/features/period_book/domain/repositories/period_book_source.dart';
+import 'package:saldough/features/plan/domain/plan_sources.dart';
+import 'package:saldough/shared/category/category.dart';
+import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 
 /// Mendaftarkan ingatan dan gerbang Buku Periode di akar (ADR-045 §3.1, §3.5).
@@ -13,6 +20,16 @@ void registerPeriodBook(GetIt container) {
   container
     ..registerLazySingleton<PeriodBookMemoryStore>(
       () => PeriodBookMemoryStoreImpl(storage: container<KeyValueStorage>()),
+    )
+    ..registerLazySingleton<PeriodBookSource>(
+      () => AppPeriodBookSource(
+        transactions: container<TransactionRepository>(),
+        categories: container<CategoryRepository>(),
+        schedule: container<FinancialMonthPreferenceRepository>(),
+        rules: container<RecurringRuleRepository>(),
+        budgets: container<PlanBudgetSource>(),
+        highlightMinSen: () => highlightMinSenOf(ActiveCurrency.value),
+      ),
     )
     ..registerLazySingleton<PeriodBookGate>(
       () => PeriodBookGate(

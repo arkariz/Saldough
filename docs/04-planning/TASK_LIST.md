@@ -7129,6 +7129,26 @@ S sehari, M beberapa hari, L lebih dari seminggu. Rilis bertahap: Kartu Periode
 - [ ] **T-27.3** (M) Model baca buku halaman 1–4 dari sumber Analisis, Arus,
       Rencana; `financialPeriodOf`/`periodDateOf`.
       Verifikasi: uji kecocokan total (B-3, B-15) dengan data uji emas.
+      **Selesai 15 Nov 2026.** Model halaman di `features/period_book/domain`
+      (`PeriodBookContent`: `BookFlow`, `BookSpending`/`BookSpendRow`,
+      `BookCompare`/`BookHighlight`, `BookPlan`) dan port `PeriodBookSource`;
+      adapter `AppPeriodBookSource` di `lib/app/period_book/` **tanpa aturan
+      hitung sendiri**: halaman 1 dari `CalculateCashFlow.inPeriod`, halaman 2-3
+      dari `summarizePeriod`, `comparisonPeriods`, `comparePeriod`, `highlightsOf`
+      (pembanding dan batas sorotan sama dengan Analisis; mata uang aktif),
+      halaman 4 dari `occurrenceStatusesOf` dan `PlanBudgetSource` (kilas balik
+      Rencana). Terdaftar di DI. Uji kecocokan total (B-3, B-15): arus = Arus
+      Beranda dan hitungan tangan; total halaman 2 = Analisis = pengeluaran
+      halaman 1; baris menjumlah total; persen = aturan Analisis (tidak dipaksa
+      100); freelance dan transfer tidak masuk pengeluaran; sorotan = perbandingan
+      Analisis; halaman 3 hilang tanpa pembanding; halaman 4 hilang tanpa rutin
+      atau anggaran; hasil sama dua kali baca; jadwal tanggal 25. 12 uji lulus,
+      `test/app` dan arsitektur lulus, analyze bersih.
+      ⚠ Belum: data uji emas B-3/B-15 yang sama dengan uji Analisis (uji ini
+      memakai data sintetis sendiri); nominal hanya sen (penampilan lewat
+      `AppMoneyFormatter` di T-27.6); penyamaran "kategori buatanmu" hanya untuk
+      kartu (T-27.8), halaman buku memakai nama asli.
+
 - [ ] **T-27.4** (M) Mesin templat Tanuki dan halaman 5 (id/en, jamak),
       dijaga `translations_test.dart`. Butuh T-27.3.
 - [ ] **T-27.5** (M) Ritual Tutup buku (D4) dan slot kartu Beranda (D3),

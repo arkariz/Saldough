@@ -5,6 +5,7 @@ import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/features/milestone/domain/entities/milestone_ledger.dart';
 import 'package:saldough/features/milestone/domain/repositories/milestone_ports.dart';
 import 'package:saldough/features/milestone/domain/services/celebration_policy.dart';
+import 'package:saldough/features/milestone/domain/services/milestone_engine.dart';
 import 'package:saldough/features/milestone/domain/usecases/evaluate_milestones.dart';
 import 'package:saldough/features/milestone/presentation/stamp_book_access.dart';
 
@@ -37,6 +38,7 @@ class MilestoneCoordinator implements MilestoneBookAccess {
 
   final _ledger = ValueNotifier<MilestoneLedger>(MilestoneLedger.empty);
   final _unseen = ValueNotifier<bool>(false);
+  final _pending = ValueNotifier<List<String>>(const []);
   final _celebrations = StreamController<CelebrationPlan>.broadcast();
   StreamSubscription<void>? _subscription;
   Timer? _timer;
@@ -51,6 +53,12 @@ class MilestoneCoordinator implements MilestoneBookAccess {
   /// Catatan terkini, untuk titik, banner, dan Buku Stempel.
   @override
   ValueListenable<MilestoneLedger> get ledger => _ledger;
+
+  /// Stempel baru yang perayaannya terhalang dan **menunggu satu kali** sampai
+  /// Beranda bebas halangan (keputusan pemilik 15 Nov 2026, F28-1). Beberapa
+  /// stempel digabung menjadi satu perayaan (G-4); tidak disimpan ke disk, jadi
+  /// pembukaan aplikasi berikutnya hanya meninggalkan titik "belum dilihat".
+  ValueListenable<List<String>> get pending => _pending;
 
   /// Ada stempel belum dilihat dan perayaan menyala: titik kecil di ikon Akun.
   ValueListenable<bool> get hasUnseen => _unseen;
@@ -99,7 +107,14 @@ class MilestoneCoordinator implements MilestoneBookAccess {
             evaluation: evaluation,
             blocked: !canCelebrate(),
           );
-          if (plan.kind != CelebrationKind.none) _celebrations.add(plan);
+          if (plan.kind != CelebrationKind.none) {
+            _celebrations.add(plan);
+          } else if (!evaluation.quiet &&
+              evaluation.newlyEarned.isNotEmpty &&
+              evaluation.ledger.celebrationEnabled) {
+            // Terhalang: tahan satu perayaan gabungan sampai bebas halangan.
+            _pending.value = [..._pending.value, ...evaluation.newlyEarned];
+          }
         });
       } while (_again);
     } finally {
@@ -107,9 +122,41 @@ class MilestoneCoordinator implements MilestoneBookAccess {
     }
   }
 
-  /// Buku Stempel dibuka: semua stempel dianggap dilihat (titik hilang).
+  /// Menampilkan perayaan yang tertahan bila sekarang bebas halangan. Dipanggil
+  /// tuan rumah tiap keadaan halangan mungkin berubah. Murah bila tidak ada
+  /// yang tertahan.
+  void retryPending() {
+    final ids = _pending.value;
+    if (ids.isEmpty) {
+      return;
+    }
+    final ledger = _ledger.value;
+    if (!ledger.celebrationEnabled) {
+      _pending.value = const [];
+      return;
+    }
+    if (!canCelebrate()) {
+      return;
+    }
+    _pending.value = const [];
+    final plan = planCelebration(
+      evaluation: MilestoneEvaluation(ledger: ledger, newlyEarned: ids),
+      blocked: false,
+    );
+    if (plan.kind != CelebrationKind.none) {
+      _celebrations.add(plan);
+    }
+  }
+
+  /// Buku Stempel dibuka: semua stempel dianggap dilihat (titik hilang), dan
+  /// perayaan yang tertahan dibatalkan karena stempelnya sudah terlihat.
   @override
-  Future<void> markAllSeen() => _update(
+  Future<void> markAllSeen() {
+    _pending.value = const [];
+    return _markAllSeen();
+  }
+
+  Future<void> _markAllSeen() => _update(
     (l) => l.earned.values.every((e) => e.seen)
         ? l
         : l.copyWith(
@@ -124,11 +171,16 @@ class MilestoneCoordinator implements MilestoneBookAccess {
   /// Sakelar Perayaan stempel (G-8). Evaluasi dan penyimpanan tetap jalan;
   /// menyalakan lagi tidak merayakan ulang yang sudah ada.
   @override
-  Future<void> setCelebrationEnabled({required bool enabled}) => _update(
-    (l) => l.celebrationEnabled == enabled
-        ? l
-        : l.copyWith(celebrationEnabled: enabled),
-  );
+  Future<void> setCelebrationEnabled({required bool enabled}) {
+    if (!enabled) {
+      _pending.value = const [];
+    }
+    return _update(
+      (l) => l.celebrationEnabled == enabled
+          ? l
+          : l.copyWith(celebrationEnabled: enabled),
+    );
+  }
 
   Future<void> _update(MilestoneLedger Function(MilestoneLedger) change) async {
     final loaded = await _store.load();

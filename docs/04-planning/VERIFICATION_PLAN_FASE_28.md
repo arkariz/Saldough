@@ -23,7 +23,7 @@ instal baru dan pemulihan `demo_id.tkbak` (cadangan 9 Nov, sebelum fitur ada:
 
 | # | Skenario | Hasil | Catatan |
 |---|---|---|---|
-| S1 | Mulai: dompet pertama lalu catatan pertama | **Tidak sesuai tulisan skenario** | Pada instal baru, dompet dan catatan pertama terjadi saat tur Beranda tampil, jadi **tidak ada perayaan** (G-4: perayaan terhalang tidak menunggu). Hanya titik di Akun. Skenario menulis snackbar dan "menunggu lalu tampil sekali di Beranda". Lihat F28-1 |
+| S1 | Mulai: dompet pertama lalu catatan pertama | **Lulus sesudah perbaikan F28-1** (awalnya tidak sesuai) | Pada instal baru, dompet dan catatan pertama terjadi saat tur Beranda tampil, jadi **tidak ada perayaan** (G-4: perayaan terhalang tidak menunggu). Hanya titik di Akun. Skenario menulis snackbar dan "menunggu lalu tampil sekali di Beranda". Lihat F28-1 |
 | S2 | Periode rapi | **Lulus** | Pemulihan data Oktober (berkategori) menghasilkan Periode rapi; fakta dihitung dari data nyata |
 | S3 | Rutin tak terlewat | Tidak teruji di perangkat | Data uji punya rutin yang masih menunggu, jadi stempel memang tidak diraih (benar). Kasus lulus/dilewati/dijeda hanya di uji otomatis |
 | S4 | Dua stempel sekaligus | Tidak teruji di perangkat | Hanya uji otomatis (`planCelebration`: satu snackbar digabung) |
@@ -48,9 +48,9 @@ instal baru dan pemulihan `demo_id.tkbak` (cadangan 9 Nov, sebelum fitur ada:
 
 | # | Sev. | Temuan | Rekomendasi |
 |---|---|---|---|
-| F28-1 | S2 (keputusan) | Pengguna baru nyaris tidak pernah melihat perayaan stempel pertama: dompet dan catatan pertama jatuh saat onboarding atau tur masih tampil, dan perayaan terhalang **tidak menunggu** (G-4, rupa §4.4). Skenario S1 di GAMIFICATION menulis hal berbeda (menunggu lalu tampil sekali) | Pilih: (a) terima, ubah S1 jadi "titik di Akun"; atau (b) izinkan **satu** perayaan tertunda yang tampil begitu Beranda aktif dan bebas halangan |
+| F28-1 | S2 (keputusan, **diperbaiki 15 Nov 2026**) | Pengguna baru nyaris tidak pernah melihat perayaan stempel pertama: dompet dan catatan pertama jatuh saat onboarding atau tur masih tampil, dan perayaan terhalang **tidak menunggu** (G-4, rupa §4.4). Skenario S1 di GAMIFICATION menulis hal berbeda (menunggu lalu tampil sekali) | Pemilik memilih (b): satu perayaan tertunda yang tampil begitu Beranda aktif dan bebas halangan. **Diverifikasi di emulator:** instal baru, dompet dibuat saat tur tampil, lembar pengenalan "Dompet pertama" muncul sesudah tur dilewati |
 | F28-2 | S3 (belum pasti) | Sesudah pemulihan (boot ulang dalam proses), banner pengguna lama belum terlihat di papan status; baru terlihat setelah aplikasi dibuka ulang | Selidiki apakah koordinator di container baru memuat catatan tepat waktu; ulangi di perangkat nyata |
-| F28-3 | S3 | Perayaan hanya bisa tampil bila stempel diraih saat Beranda aktif. Stempel dari tab lain, Akun, atau evaluasi saat aplikasi dibuka tidak pernah dirayakan (hanya titik). Praktis snackbar hanya muncul sesudah Catat (kembali ke Beranda) | Tambahkan ke keputusan F28-1; atau terima |
+| F28-3 | S3 | Perayaan hanya bisa tampil bila stempel diraih saat Beranda aktif. Stempel dari tab lain, Akun, atau evaluasi saat aplikasi dibuka tidak pernah dirayakan (hanya titik). Praktis snackbar hanya muncul sesudah Catat (kembali ke Beranda) | Sebagian teratasi oleh F28-1: stempel dari tab lain atau saat dibuka kini menunggu satu perayaan di Beranda |
 | F28-4 | S3 | Tonggak tersembunyi (Kotak masuk bersih, Pembayaran pertama diterima) tampil hanya bila diraih (belum ada pelacak "fitur dipakai", KT-G3) | Tinjau bila KT-G3 dianggap kurang |
 
 ## Yang belum diverifikasi

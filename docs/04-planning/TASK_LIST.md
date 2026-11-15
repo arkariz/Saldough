@@ -7078,8 +7078,8 @@ L lebih dari seminggu.
 - [ ] **T-28.8** (S) Verifikasi perangkat S1–S8.
       **Diverifikasi sebagian 15 Nov 2026** di emulator, hasil di
       [VERIFICATION_PLAN_FASE_28.md](VERIFICATION_PLAN_FASE_28.md): S2, S6, S7,
-      S8 lulus; S1 tidak sesuai tulisan (F28-1, keputusan pemilik); S3–S5 hanya
-      uji otomatis. **Belum:** perangkat nyata/kelas bawah (kinerja kilap dan
+      S8 lulus; S1 lulus sesudah F28-1 diperbaiki (satu perayaan tertunda, 15 Nov);
+      S3–S5 hanya uji otomatis. **Belum:** perangkat nyata/kelas bawah (kinerja kilap dan
       konfeti), snackbar secara visual, tema gelap/preset, 360dp/teks 200%. T-28.8
       tetap terbuka sampai itu dan F28-1 diputuskan.
 

@@ -57,6 +57,7 @@ class _MilestoneCelebrationHostState extends State<MilestoneCelebrationHost> {
   StreamSubscription<CelebrationPlan>? _plans;
   SpotlightController? _tour;
   bool _sheetOpen = false;
+  Timer? _retry;
 
   @override
   void initState() {
@@ -64,12 +65,48 @@ class _MilestoneCelebrationHostState extends State<MilestoneCelebrationHost> {
     if (!widget.container.isRegistered<MilestoneCoordinator>()) return;
     final coordinator = _coordinator = widget.container<MilestoneCoordinator>()..canCelebrate = _canCelebrate;
     _plans = coordinator.celebrations.listen(_show);
+    coordinator.pending.addListener(_onPending);
+    widget.board.addListener(_retryNow);
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _tour = SpotlightHost.maybeOf(context, listen: false);
+    final tour = SpotlightHost.maybeOf(context, listen: false);
+    if (tour == _tour) {
+      return;
+    }
+    _tour?.removeListener(_retryNow);
+    _tour = tour?..addListener(_retryNow);
+  }
+
+  @override
+  void didUpdateWidget(MilestoneCelebrationHost oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.active != oldWidget.active) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _retryNow());
+    }
+  }
+
+  /// Perayaan tertahan (satu, digabung): coba tiap detik selama masih ada,
+  /// karena sebagian halangan (layar lain di atas Beranda) tidak punya sinyal.
+  void _onPending() {
+    final coordinator = _coordinator;
+    if (coordinator == null) {
+      return;
+    }
+    if (coordinator.pending.value.isEmpty) {
+      _retry?.cancel();
+      _retry = null;
+    } else {
+      _retry ??= Timer.periodic(const Duration(seconds: 1), (_) => _retryNow());
+    }
+  }
+
+  void _retryNow() {
+    if (mounted) {
+      _coordinator?.retryPending();
+    }
   }
 
   bool _canCelebrate() {
@@ -109,7 +146,13 @@ class _MilestoneCelebrationHostState extends State<MilestoneCelebrationHost> {
   @override
   void dispose() {
     final coordinator = _coordinator;
-    if (coordinator != null) coordinator.canCelebrate = () => false;
+    if (coordinator != null) {
+      coordinator.canCelebrate = () => false;
+      coordinator.pending.removeListener(_onPending);
+    }
+    widget.board.removeListener(_retryNow);
+    _tour?.removeListener(_retryNow);
+    _retry?.cancel();
     unawaited(_plans?.cancel());
     super.dispose();
   }

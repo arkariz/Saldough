@@ -67,13 +67,67 @@ void main() {
     expect(coordinator.ledger.value.has('wallet_first'), isTrue);
   });
 
-  test('terhalang: stempel tetap diraih tetapi tidak ada perayaan menunggu (G-4)', () async {
+  test('terhalang: stempel tetap diraih dan satu perayaan menunggu, tampil begitu bebas halangan', () async {
     facts.facts = {MilestoneFact.walletExists};
     await coordinator.start();
     await Future<void>.delayed(Duration.zero);
     expect(plans, isEmpty);
     expect(coordinator.ledger.value.has('wallet_first'), isTrue);
     expect(hasUnseenStamps(coordinator.ledger.value), isTrue);
+    expect(coordinator.pending.value, ['wallet_first']);
+
+    coordinator.retryPending();
+    expect(plans, isEmpty, reason: 'masih terhalang');
+
+    coordinator
+      ..canCelebrate = (() => true)
+      ..retryPending();
+    await Future<void>.delayed(Duration.zero);
+    expect(plans, [const CelebrationPlan(CelebrationKind.snackbar, ['wallet_first'])]);
+    expect(coordinator.pending.value, isEmpty);
+    coordinator.retryPending();
+    await Future<void>.delayed(Duration.zero);
+    expect(plans, hasLength(1), reason: 'sekali saja');
+  });
+
+  test('beberapa stempel tertahan digabung menjadi satu perayaan (G-4)', () async {
+    facts.facts = {MilestoneFact.walletExists};
+    await coordinator.start();
+    facts.facts = {MilestoneFact.walletExists, MilestoneFact.recordExists};
+    await coordinator.evaluate();
+    expect(coordinator.pending.value, ['wallet_first', 'record_first']);
+    coordinator
+      ..canCelebrate = (() => true)
+      ..retryPending();
+    await Future<void>.delayed(Duration.zero);
+    expect(plans.single.kind, CelebrationKind.snackbar);
+    expect(plans.single.ids, ['wallet_first', 'record_first']);
+  });
+
+  test('membuka Buku Stempel atau mematikan perayaan membatalkan yang tertahan', () async {
+    facts.facts = {MilestoneFact.walletExists};
+    await coordinator.start();
+    expect(coordinator.pending.value, isNotEmpty);
+    await coordinator.markAllSeen();
+    expect(coordinator.pending.value, isEmpty);
+
+    facts.facts = {MilestoneFact.walletExists, MilestoneFact.recordExists};
+    await coordinator.evaluate();
+    expect(coordinator.pending.value, ['record_first']);
+    await coordinator.setCelebrationEnabled(enabled: false);
+    expect(coordinator.pending.value, isEmpty);
+    coordinator
+      ..canCelebrate = (() => true)
+      ..retryPending();
+    await Future<void>.delayed(Duration.zero);
+    expect(plans, isEmpty);
+  });
+
+  test('pemasukan pengguna lama (quiet) tidak pernah menjadi perayaan tertahan', () async {
+    store.ledger = MilestoneLedger.empty;
+    facts.facts = {MilestoneFact.walletExists, MilestoneFact.recordExists};
+    await coordinator.start();
+    expect(coordinator.pending.value, isEmpty);
   });
 
   test('sinyal memicu evaluasi (digabung)', () async {

@@ -7231,6 +7231,16 @@ S sehari, M beberapa hari, L lebih dari seminggu. Rilis bertahap: Kartu Periode
       lewat menu pengembang): ritual → sampul → rapor, tiga halaman untuk data
       demo (Arus, Ke mana uang pergi, Kata Tanuki; tanpa pembanding dan rutin),
       nominal dan kalimat benar, tanpa galat Flutter.
+      **Pengayaan rupa 15 Nov 2026** (atas permintaan pemilik): ikon clay kategori
+      di halaman 2 (`categoryClayAsset`), kilat menyapu di tombol Buka rapor
+      (`DsSheen`), getar layar saat cap (`DsShake`, dipakai juga Buku Stempel),
+      konfeti daun/koin/bintang (`DsShapeConfetti`, <=44 partikel, menggantikan
+      `DsCelebration` di buku), buku jatuh masuk dengan pantulan, kilau emas
+      (`BookSparkles`), segel dicap dengan skala/putar, buku membuka menghadap
+      lurus sebelum rapor, perpindahan langkah ritual (`AnimatedSwitcher`),
+      centang memantul, baris dan ubin rapor muncul berurutan (`StaggerIn`).
+      Semua mati lewat `DsMotion.reduced`. Uji 583 lulus; emulator tanpa galat
+      Flutter. Kinerja gerak di Android kelas bawah belum diukur.
       ⚠ Selisih dan sisa: (1) tampilan sampul **tidak diperiksa mata** (tangkapan
       layar emulator tidak dapat dibaca agen; dua tangkapan terkirim ke pemilik
       belum tentu sampul); (2) ikon kategori di halaman 2 memakai ikon generik
@@ -7251,11 +7261,23 @@ S sehari, M beberapa hari, L lebih dari seminggu. Rilis bertahap: Kartu Periode
       ekspor.
       Verifikasi: uji struktur (hanya fakta terpilih), nominal bawaan mati dan
       ikut sembunyikan nominal.
-- [ ] **T-27.9** (M) **Aset pose Tanuki baru** (D8): empat pose (biasa, senang,
-      menulis, tenang), satu set untuk kartu dan buku. Pemilik / ui-ux-designer
+- [x] **T-27.9** (M) **Aset pose Tanuki baru** (D8): empat pose (biasa, senang, menulis, tenang), satu set untuk kartu dan buku. Pemilik / ui-ux-designer
       membuat; kode memakai `tanuki_mascot`, `tanuki_sleeping`, `note_pencil`
       sebagai pengganti sementara dengan nama berkas tetap, jadi aset diganti
       per berkas tanpa ubah kode. Tidak ada pose sedih atau kecewa.
+      **Dikerjakan agen 15 Nov 2026 atas permintaan pemilik** ("buat ikon dan
+      aset baru"): `tanuki_happy`, `tanuki_writing`, `tanuki_calm` (gaya clay
+      sama dengan `tanuki_mascot`; biasa = maskot yang ada) dan sembilan aset
+      pendukung (`book_period`, `book_open`, `shelf_books`, `card_period`,
+      `stamp_tool`, `stamp_book`, `confetti_leaf`, `confetti_star`, `sparkle`),
+      didaftarkan di `ClayIcons.all`; uji memastikan berkas ada, valid XML, tanpa
+      `<filter>`, dan dirender `flutter_svg`. `TanukiPoseKind` + `TanukiPose`
+      (gerak diam per pose, lompat cheer, mati bila gerak dikurangi) dipakai di
+      sampul (senang saat stempel dicap), ritual (menulis), dan halaman Kata Tanuki
+      (senang bila selisih ≥ 0, tenang bila negatif). Aset digambar tangan sebagai
+      SVG dan **belum ditinjau mata agen**; pemilik boleh mengganti per berkas
+      dengan nama yang sama. Pratinjau: berkas HTML sementara di scratchpad sesi.
+
 - [ ] **T-27.10** (S) Analitik tanpa nominal (HANDOFF §8), teks `book.*`
       id/en, glosarium. Butuh T-27.7.
 - [ ] **T-27.11** (S) Verifikasi perangkat S1–S7, termasuk kilap dan konfeti di

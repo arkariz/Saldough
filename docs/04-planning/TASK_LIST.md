@@ -107,6 +107,14 @@ diputuskan, dan catat keputusannya di tugas atau ADR yang mengerjakannya.
   §3.3 poin 4. (Ganti akun sudah diputuskan: data diganti dengan peringatan,
   tanpa penggabungan.)
 
+- **KT-BP15** BP-11, tenggang buku bagi Plus uji coba (T-27.12): (a) berlaku
+  hanya untuk **uji coba**, bukan Plus berbayar yang berakhir? Rekomendasi: ya,
+  sesuai FREEMIUM_PAYWALL §8.2; (b) tenggang paling lama **1 hari** sesudah
+  periode berakhir, atau sampai buku dibuka tanpa batas hari? Rekomendasi: 1 hari
+  (periode berikutnya sudah berjalan; buku yang terlewat tetap di Rak dan terbuka
+  bila pengguna berlangganan); (c) sesudah buku dibuka, layar turun langsung atau
+  menunggu sesi berikutnya? Rekomendasi: langsung sesudah buku ditutup.
+
 - ~~**KT-BP1–KT-BP14**~~ **Diputuskan 14 Nov 2026** (semua rekomendasi disetujui; lihat BUKU_PERIODE §16 dan Fase 27). Buku Periode (B-95, Plus, dengan satu Kartu Periode
   gratis): stempel B-94 tetap gratis, Kartu Periode yang bisa dibagikan untuk
   Gratis (fakta bawaan, tautan toko dengan penanda sumber, kartu untuk Plus), kilas balik tinjau awal
@@ -7221,6 +7229,31 @@ S sehari, M beberapa hari, L lebih dari seminggu. Rilis bertahap: Kartu Periode
       id/en, glosarium. Butuh T-27.7.
 - [ ] **T-27.11** (S) Verifikasi perangkat S1–S7, termasuk kilap dan konfeti di
       Android kelas bawah, Gerak dikurangi, 360dp, terang/gelap/preset.
+- [ ] **T-27.12** (M) **BP-11: Plus uji coba tetap aktif sampai buku periode uji
+      coba dibuka** (dari T-27.5, 15 Nov 2026). Aturan: Plus uji coba tidak
+      berakhir di `endsOn` (hari terakhir periode) selama buku periode itu belum
+      dibuka, dan paling lama sampai **1 hari sesudah periode berakhir**; sesudah
+      itu layar turun (FREEMIUM_PAYWALL §8.2, BUKU_PERIODE BP-11). Tujuannya:
+      rapor pertama tidak terpotong oleh akhir uji coba.
+      Mengubah mesin hak (ADR-041 §3.8: `resolvePlan`, `trialEndsOn`,
+      `TrialPlan`), jadi bukan perubahan di fitur buku. Sketsa: `resolvePlan`
+      menerima penanda "buku periode uji coba sudah dibuka" (dibaca dari
+      `PeriodBookMemory` lewat `LocalEntitlements`, bukan dari `core`); bila uji
+      coba lewat `endsOn`, hari ini ≤ `endsOn` + 1 hari, dan buku periode
+      `endsOn` belum dibuka, keadaan tetap `TrialPlan` (mungkin dengan penanda
+      `bookGrace` untuk teks). Layar turun dan rekap H-3 menyesuaikan.
+      ⚠ Jebakan: `core/foundation/entitlement/` harus tetap murni (tanpa fitur
+      lain, dijaga uji arsitektur); jam dan jadwal periode harus bisa dipalsukan
+      untuk uji; periode peralihan membuat `endsOn` bukan akhir bulan kalender;
+      uji coba yang dimulai sesudah periodenya berakhir; perangkat tanpa
+      jaringan (cache hak) dan `PlanOverride.trial` (build uji).
+      Butuh keputusan **KT-BP15** dan revisi ADR-041. Sebelum ini selesai,
+      uji coba berakhir tepat di `endsOn` dan buku periode uji coba terkunci
+      bagi yang belum membukanya (konsisten dengan BP-10, tanpa tenggang).
+      Verifikasi: uji `resolvePlan` per batas hari (tepat `endsOn`, +1 hari,
+      +2 hari, buku dibuka sebelum dan sesudah), pengguna Plus berbayar tidak
+      terpengaruh, uji arsitektur entitlement murni lulus.
+      Memenuhi FR-BKP-004.
 
 ## Antrean (belum dijadwalkan)
 

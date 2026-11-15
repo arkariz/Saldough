@@ -7151,6 +7151,23 @@ S sehari, M beberapa hari, L lebih dari seminggu. Rilis bertahap: Kartu Periode
 
 - [ ] **T-27.4** (M) Mesin templat Tanuki dan halaman 5 (id/en, jamak),
       dijaga `translations_test.dart`. Butuh T-27.3.
+      **Selesai 15 Nov 2026.** `tanukiLinesOf` (murni, `features/period_book/domain`)
+      memilih 2-4 kalimat sebagai **fakta** (`TanukiRecords`, `TanukiFlow`,
+      `TanukiTopCategory`, `TanukiRecurringClear`, `TanukiTidy`) dengan aturan
+      tetap: arus dan catatan selalu; kategori terbesar bila ada pengeluaran
+      berkategori; rutin hanya bila semuanya beres (`BookPlan.open == 0`, kolom
+      baru dari adapter); tertib bila tidak ada yang tanpa kategori; bila lima
+      berlaku, kalimat catatan dibuang. `tanukiSentences` merakit teks dari
+      `book.tanuki.*` (id/en, jamak slang, nominal lewat `AppMoneyFormatter` jadi
+      ikut Sembunyikan nominal, selisih negatif memakai "selisihnya" bukan
+      "sisanya"). Tanpa jaringan dan tanpa model bahasa (BP-8). Uji: pemilihan
+      (Rani, tanpa rutin, rutin belum beres, tanpa kategori, selalu 2-4,
+      deterministik), perakitan id/en, jamak, dan tidak ada kata terlarang
+      (boros, hemat, terlalu, kurang, sayang, hati-hati, tanda seru, Anda) di teks
+      yang dirakit maupun berkas i18n. Teks `book.*` lain di BUKU_PERIODE §13
+      menyusul bersama layarnya (T-27.5-T-27.8). Layar halaman 5 (balon, ketik per
+      huruf) di T-27.6.
+
 - [ ] **T-27.5** (M) Ritual Tutup buku (D4) dan slot kartu Beranda (D3),
       urutan terhadap banner pembaruan dan kotak masuk (BP-13). Butuh T-27.2.
 - [ ] **T-27.6** (L) Rapor (D6) dan sampul + stempel (D5), gerak permainan

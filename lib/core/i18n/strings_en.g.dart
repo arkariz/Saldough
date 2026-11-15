@@ -65,6 +65,7 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$analysis$en analysis = _Translations$analysis$en._(_root);
 	@override late final _Translations$premium$en premium = _Translations$premium$en._(_root);
 	@override late final _Translations$stamps$en stamps = _Translations$stamps$en._(_root);
+	@override late final _Translations$book$en book = _Translations$book$en._(_root);
 }
 
 // Path: app
@@ -1713,6 +1714,17 @@ class _Translations$stamps$en extends Translations$stamps$id {
 	@override late final _Translations$stamps$legacyBanner$en legacyBanner = _Translations$stamps$legacyBanner$en._(_root);
 }
 
+// Path: book
+class _Translations$book$en extends Translations$book$id {
+	_Translations$book$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override late final _Translations$book$page$en page = _Translations$book$page$en._(_root);
+	@override late final _Translations$book$tanuki$en tanuki = _Translations$book$tanuki$en._(_root);
+}
+
 // Path: record.draftIssue
 class _Translations$record$draftIssue$en extends Translations$record$draftIssue$id {
 	_Translations$record$draftIssue$en._(TranslationsEn root) : this._root = root, super.internal(root);
@@ -2529,6 +2541,34 @@ class _Translations$stamps$legacyBanner$en extends Translations$stamps$legacyBan
 	@override String get body => 'A new Stamp Book. What you have already done is here.';
 	@override String get action => 'See';
 	@override String get dismiss => 'Close';
+}
+
+// Path: book.page
+class _Translations$book$page$en extends Translations$book$page$id {
+	_Translations$book$page$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get tanuki => 'Tanuki says';
+}
+
+// Path: book.tanuki
+class _Translations$book$tanuki$en extends Translations$book$tanuki$id {
+	_Translations$book$tanuki$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String records({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
+		one: 'This period you recorded ${count} transaction.',
+		other: 'This period you recorded ${count} transactions.',
+	);
+	@override String flow({required Object income, required Object expense, required Object net}) => 'Income ${income}, spending ${expense}, ${net} left.';
+	@override String flowNegative({required Object income, required Object expense, required Object net}) => 'Income ${income}, spending ${expense}, a difference of ${net}.';
+	@override String topCategory({required Object name, required Object percent}) => '${name} was the biggest category, ${percent}% of spending.';
+	@override String recurringClear({required Object recorded, required Object skipped}) => 'Every recurring item is done: ${recorded} recorded, ${skipped} skipped.';
+	@override String get tidy => 'Every transaction has a category, so the numbers are accurate.';
 }
 
 // Path: record.voice.failure
@@ -4471,6 +4511,13 @@ extension on TranslationsEn {
 			'stamps.legacyBanner.body' => 'A new Stamp Book. What you have already done is here.',
 			'stamps.legacyBanner.action' => 'See',
 			'stamps.legacyBanner.dismiss' => 'Close',
+			'book.page.tanuki' => 'Tanuki says',
+			'book.tanuki.records' => ({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: 'This period you recorded ${count} transaction.', other: 'This period you recorded ${count} transactions.', ), 
+			'book.tanuki.flow' => ({required Object income, required Object expense, required Object net}) => 'Income ${income}, spending ${expense}, ${net} left.',
+			'book.tanuki.flowNegative' => ({required Object income, required Object expense, required Object net}) => 'Income ${income}, spending ${expense}, a difference of ${net}.',
+			'book.tanuki.topCategory' => ({required Object name, required Object percent}) => '${name} was the biggest category, ${percent}% of spending.',
+			'book.tanuki.recurringClear' => ({required Object recorded, required Object skipped}) => 'Every recurring item is done: ${recorded} recorded, ${skipped} skipped.',
+			'book.tanuki.tidy' => 'Every transaction has a category, so the numbers are accurate.',
 			_ => null,
 		};
 	}

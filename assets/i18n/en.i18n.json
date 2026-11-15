@@ -1932,5 +1932,21 @@
       "action": "See",
       "dismiss": "Close"
     }
+  },
+  "book": {
+    "page": {
+      "tanuki": "Tanuki says"
+    },
+    "tanuki": {
+      "records": {
+        "one": "This period you recorded $count transaction.",
+        "other": "This period you recorded $count transactions."
+      },
+      "flow": "Income $income, spending $expense, $net left.",
+      "flowNegative": "Income $income, spending $expense, a difference of $net.",
+      "topCategory": "$name was the biggest category, $percent% of spending.",
+      "recurringClear": "Every recurring item is done: $recorded recorded, $skipped skipped.",
+      "tidy": "Every transaction has a category, so the numbers are accurate."
+    }
   }
 }

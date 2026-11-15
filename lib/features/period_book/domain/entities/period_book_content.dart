@@ -155,13 +155,17 @@ final class BookCompare extends Equatable {
 /// Halaman 4, Rutin dan rencana.
 final class BookPlan extends Equatable {
   /// Membuat [BookPlan].
-  const BookPlan({this.recorded = 0, this.skipped = 0, this.planned, this.spent});
+  const BookPlan({this.recorded = 0, this.skipped = 0, this.open = 0, this.planned, this.spent});
 
   /// Kemunculan rutin yang tercatat atau tertaut di periode ini.
   final int recorded;
 
   /// Kemunculan rutin yang dilewati.
   final int skipped;
+
+  /// Kemunculan rutin yang belum beres (Menunggu atau Terlewat) di periode ini.
+  /// Nol berarti semua rutin sudah beres (Rutin tak terlewat).
+  final int open;
 
   /// Total rencana anggaran periode ini, sen; `null` bila tidak ada anggaran.
   final int? planned;
@@ -170,13 +174,13 @@ final class BookPlan extends Equatable {
   final int? spent;
 
   /// Ada rutin yang dihitung.
-  bool get hasRoutine => recorded + skipped > 0;
+  bool get hasRoutine => recorded + skipped + open > 0;
 
   /// Ada anggaran.
   bool get hasBudget => planned != null;
 
   @override
-  List<Object?> get props => [recorded, skipped, planned, spent];
+  List<Object?> get props => [recorded, skipped, open, planned, spent];
 }
 
 /// Isi buku satu periode (halaman 1–4; BUKU_PERIODE §7). Halaman bersyarat

@@ -248,6 +248,7 @@ void main() {
     );
     expect(withPlan.plan!.recorded, 1);
     expect(withPlan.plan!.skipped, 1);
+    expect(withPlan.plan!.open, 0, reason: 'semua rutin beres');
     expect(withPlan.plan!.planned, 500000000);
     expect(withPlan.plan!.spent, 184000000);
 

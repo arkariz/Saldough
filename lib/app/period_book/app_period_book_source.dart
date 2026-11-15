@@ -167,6 +167,7 @@ final class AppPeriodBookSource implements PeriodBookSource {
   ) {
     var recorded = 0;
     var skipped = 0;
+    var open = 0;
     for (final rule in rules) {
       for (final o in occurrenceStatusesOf(
         rule,
@@ -177,12 +178,14 @@ final class AppPeriodBookSource implements PeriodBookSource {
       )) {
         if (o.status == OccurrenceStatus.recorded) recorded++;
         if (o.status == OccurrenceStatus.skipped) skipped++;
+        if (o.status == OccurrenceStatus.pending || o.status == OccurrenceStatus.missed) open++;
       }
     }
     final lines = [for (final b in budgets) ...b.lines];
     final plan = BookPlan(
       recorded: recorded,
       skipped: skipped,
+      open: open,
       planned: lines.isEmpty ? null : lines.fold<int>(0, (sum, l) => sum + l.planned),
       spent: lines.isEmpty ? null : lines.fold<int>(0, (sum, l) => sum + l.spent),
     );

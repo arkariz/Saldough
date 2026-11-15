@@ -67,6 +67,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$analysis$id analysis = Translations$analysis$id.internal(_root);
 	late final Translations$premium$id premium = Translations$premium$id.internal(_root);
 	late final Translations$stamps$id stamps = Translations$stamps$id.internal(_root);
+	late final Translations$book$id book = Translations$book$id.internal(_root);
 }
 
 // Path: app
@@ -4314,6 +4315,17 @@ class Translations$stamps$id {
 	late final Translations$stamps$legacyBanner$id legacyBanner = Translations$stamps$legacyBanner$id.internal(_root);
 }
 
+// Path: book
+class Translations$book$id {
+	Translations$book$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+	late final Translations$book$page$id page = Translations$book$page$id.internal(_root);
+	late final Translations$book$tanuki$id tanuki = Translations$book$tanuki$id.internal(_root);
+}
+
 // Path: record.draftIssue
 class Translations$record$draftIssue$id {
 	Translations$record$draftIssue$id.internal(this._root);
@@ -5869,6 +5881,48 @@ class Translations$stamps$legacyBanner$id {
 
 	/// id: 'Tutup'
 	String get dismiss => 'Tutup';
+}
+
+// Path: book.page
+class Translations$book$page$id {
+	Translations$book$page$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Kata Tanuki'
+	String get tanuki => 'Kata Tanuki';
+}
+
+// Path: book.tanuki
+class Translations$book$tanuki$id {
+	Translations$book$tanuki$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: '(one) {Periode ini kamu mencatat $count transaksi.} (other) {Periode ini kamu mencatat $count transaksi.}'
+	String records({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n,
+		one: 'Periode ini kamu mencatat ${count} transaksi.',
+		other: 'Periode ini kamu mencatat ${count} transaksi.',
+	);
+
+	/// id: 'Pemasukan $income, pengeluaran $expense, sisanya $net.'
+	String flow({required Object income, required Object expense, required Object net}) => 'Pemasukan ${income}, pengeluaran ${expense}, sisanya ${net}.';
+
+	/// id: 'Pemasukan $income, pengeluaran $expense, selisihnya $net.'
+	String flowNegative({required Object income, required Object expense, required Object net}) => 'Pemasukan ${income}, pengeluaran ${expense}, selisihnya ${net}.';
+
+	/// id: '$name jadi kategori terbesar, $percent% dari pengeluaran.'
+	String topCategory({required Object name, required Object percent}) => '${name} jadi kategori terbesar, ${percent}% dari pengeluaran.';
+
+	/// id: 'Semua rutin sudah beres: $recorded tercatat, $skipped dilewati.'
+	String recurringClear({required Object recorded, required Object skipped}) => 'Semua rutin sudah beres: ${recorded} tercatat, ${skipped} dilewati.';
+
+	/// id: 'Semua transaksi punya kategori, jadi angkanya tepat.'
+	String get tidy => 'Semua transaksi punya kategori, jadi angkanya tepat.';
 }
 
 // Path: record.voice.failure
@@ -7885,6 +7939,13 @@ extension on Translations {
 			'stamps.legacyBanner.body' => 'Buku Stempel baru. Yang sudah kamu capai sudah ada di sini.',
 			'stamps.legacyBanner.action' => 'Lihat',
 			'stamps.legacyBanner.dismiss' => 'Tutup',
+			'book.page.tanuki' => 'Kata Tanuki',
+			'book.tanuki.records' => ({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n, one: 'Periode ini kamu mencatat ${count} transaksi.', other: 'Periode ini kamu mencatat ${count} transaksi.', ), 
+			'book.tanuki.flow' => ({required Object income, required Object expense, required Object net}) => 'Pemasukan ${income}, pengeluaran ${expense}, sisanya ${net}.',
+			'book.tanuki.flowNegative' => ({required Object income, required Object expense, required Object net}) => 'Pemasukan ${income}, pengeluaran ${expense}, selisihnya ${net}.',
+			'book.tanuki.topCategory' => ({required Object name, required Object percent}) => '${name} jadi kategori terbesar, ${percent}% dari pengeluaran.',
+			'book.tanuki.recurringClear' => ({required Object recorded, required Object skipped}) => 'Semua rutin sudah beres: ${recorded} tercatat, ${skipped} dilewati.',
+			'book.tanuki.tidy' => 'Semua transaksi punya kategori, jadi angkanya tepat.',
 			_ => null,
 		};
 	}

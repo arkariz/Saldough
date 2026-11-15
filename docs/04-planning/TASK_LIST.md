@@ -7076,6 +7076,13 @@ L lebih dari seminggu.
       rilis di [RELEASE_NOTES_DRAFT_FASE_28.md](../03-release/RELEASE_NOTES_DRAFT_FASE_28.md)
       (belum disetujui, tidak di `release_notes/`).
 - [ ] **T-28.8** (S) Verifikasi perangkat S1–S8.
+      **Diverifikasi sebagian 15 Nov 2026** di emulator, hasil di
+      [VERIFICATION_PLAN_FASE_28.md](VERIFICATION_PLAN_FASE_28.md): S2, S6, S7,
+      S8 lulus; S1 tidak sesuai tulisan (F28-1, keputusan pemilik); S3–S5 hanya
+      uji otomatis. **Belum:** perangkat nyata/kelas bawah (kinerja kilap dan
+      konfeti), snackbar secara visual, tema gelap/preset, 360dp/teks 200%. T-28.8
+      tetap terbuka sampai itu dan F28-1 diputuskan.
+
 
 ## Fase 27: Buku Periode dan Kartu Periode
 

@@ -17,6 +17,7 @@ void main() {
       'budget.financialMonth',
       'freelance.overview',
       'milestone.book',
+      'periodBook.ritual',
       'record.sheet',
       'record.edit',
       'recurring.detail',

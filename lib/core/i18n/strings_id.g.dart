@@ -4322,6 +4322,8 @@ class Translations$book$id {
 	final Translations _root; // ignore: unused_field
 
 	// Translations
+	late final Translations$book$card$id card = Translations$book$card$id.internal(_root);
+	late final Translations$book$ritual$id ritual = Translations$book$ritual$id.internal(_root);
 	late final Translations$book$page$id page = Translations$book$page$id.internal(_root);
 	late final Translations$book$tanuki$id tanuki = Translations$book$tanuki$id.internal(_root);
 }
@@ -5883,6 +5885,75 @@ class Translations$stamps$legacyBanner$id {
 	String get dismiss => 'Tutup';
 }
 
+// Path: book.card
+class Translations$book$card$id {
+	Translations$book$card$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Buku $period siap ditutup'
+	String title({required Object period}) => 'Buku ${period} siap ditutup';
+
+	/// id: 'Tiga langkah, semuanya boleh dilewati.'
+	String get subtitle => 'Tiga langkah, semuanya boleh dilewati.';
+
+	/// id: 'Tutup buku'
+	String get close => 'Tutup buku';
+
+	/// id: 'Nanti'
+	String get later => 'Nanti';
+}
+
+// Path: book.ritual
+class Translations$book$ritual$id {
+	Translations$book$ritual$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Tutup buku $period'
+	String title({required Object period}) => 'Tutup buku ${period}';
+
+	/// id: 'Lanjut'
+	String get next => 'Lanjut';
+
+	/// id: 'Lewati'
+	String get skip => 'Lewati';
+
+	/// id: 'Tutup buku'
+	String get finish => 'Tutup buku';
+
+	/// id: 'Beri kategori'
+	String get fix => 'Beri kategori';
+
+	/// id: 'Lihat rutin'
+	String get seeRoutines => 'Lihat rutin';
+
+	/// id: 'Data tetap bisa kamu ubah kapan saja.'
+	String get note => 'Data tetap bisa kamu ubah kapan saja.';
+
+	/// id: 'Anggaran'
+	String get planned => 'Anggaran';
+
+	/// id: 'Terpakai'
+	String get spent => 'Terpakai';
+
+	/// id: 'Periode ini belum punya anggaran.'
+	String get noPlan => 'Periode ini belum punya anggaran.';
+
+	/// id: 'Lihat rencana dan kenyataan periode ini.'
+	String get review => 'Lihat rencana dan kenyataan periode ini.';
+
+	/// id: 'Langkah $current dari $total'
+	String step({required Object current, required Object total}) => 'Langkah ${current} dari ${total}';
+
+	late final Translations$book$ritual$uncategorized$id uncategorized = Translations$book$ritual$uncategorized$id.internal(_root);
+	late final Translations$book$ritual$recurring$id recurring = Translations$book$ritual$recurring$id.internal(_root);
+}
+
 // Path: book.page
 class Translations$book$page$id {
 	Translations$book$page$id.internal(this._root);
@@ -6075,6 +6146,42 @@ class Translations$premium$paywall$benefits$id {
 
 	/// id: 'Tanya, rencanakan, dan lapor'
 	String get ask => 'Tanya, rencanakan, dan lapor';
+}
+
+// Path: book.ritual.uncategorized
+class Translations$book$ritual$uncategorized$id {
+	Translations$book$ritual$uncategorized$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: '(one) {$count transaksi belum berkategori. Beri kategori supaya ceritanya tepat.} (other) {$count transaksi belum berkategori. Beri kategori supaya ceritanya tepat.}'
+	String some({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n,
+		one: '${count} transaksi belum berkategori. Beri kategori supaya ceritanya tepat.',
+		other: '${count} transaksi belum berkategori. Beri kategori supaya ceritanya tepat.',
+	);
+
+	/// id: 'Semua transaksi sudah berkategori.'
+	String get none => 'Semua transaksi sudah berkategori.';
+}
+
+// Path: book.ritual.recurring
+class Translations$book$ritual$recurring$id {
+	Translations$book$ritual$recurring$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: '(one) {$count rutin masih menunggu.} (other) {$count rutin masih menunggu.}'
+	String some({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n,
+		one: '${count} rutin masih menunggu.',
+		other: '${count} rutin masih menunggu.',
+	);
+
+	/// id: 'Semua rutin sudah selesai.'
+	String get none => 'Semua rutin sudah selesai.';
 }
 
 // Path: premium.paywall.messages.general
@@ -7939,6 +8046,26 @@ extension on Translations {
 			'stamps.legacyBanner.body' => 'Buku Stempel baru. Yang sudah kamu capai sudah ada di sini.',
 			'stamps.legacyBanner.action' => 'Lihat',
 			'stamps.legacyBanner.dismiss' => 'Tutup',
+			'book.card.title' => ({required Object period}) => 'Buku ${period} siap ditutup',
+			'book.card.subtitle' => 'Tiga langkah, semuanya boleh dilewati.',
+			'book.card.close' => 'Tutup buku',
+			'book.card.later' => 'Nanti',
+			'book.ritual.title' => ({required Object period}) => 'Tutup buku ${period}',
+			'book.ritual.next' => 'Lanjut',
+			'book.ritual.skip' => 'Lewati',
+			'book.ritual.finish' => 'Tutup buku',
+			'book.ritual.fix' => 'Beri kategori',
+			'book.ritual.seeRoutines' => 'Lihat rutin',
+			'book.ritual.note' => 'Data tetap bisa kamu ubah kapan saja.',
+			'book.ritual.planned' => 'Anggaran',
+			'book.ritual.spent' => 'Terpakai',
+			'book.ritual.noPlan' => 'Periode ini belum punya anggaran.',
+			'book.ritual.review' => 'Lihat rencana dan kenyataan periode ini.',
+			'book.ritual.step' => ({required Object current, required Object total}) => 'Langkah ${current} dari ${total}',
+			'book.ritual.uncategorized.some' => ({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n, one: '${count} transaksi belum berkategori. Beri kategori supaya ceritanya tepat.', other: '${count} transaksi belum berkategori. Beri kategori supaya ceritanya tepat.', ), 
+			'book.ritual.uncategorized.none' => 'Semua transaksi sudah berkategori.',
+			'book.ritual.recurring.some' => ({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n, one: '${count} rutin masih menunggu.', other: '${count} rutin masih menunggu.', ), 
+			'book.ritual.recurring.none' => 'Semua rutin sudah selesai.',
 			'book.page.tanuki' => 'Kata Tanuki',
 			'book.tanuki.records' => ({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n, one: 'Periode ini kamu mencatat ${count} transaksi.', other: 'Periode ini kamu mencatat ${count} transaksi.', ), 
 			'book.tanuki.flow' => ({required Object income, required Object expense, required Object net}) => 'Pemasukan ${income}, pengeluaran ${expense}, sisanya ${net}.',

@@ -1721,6 +1721,8 @@ class _Translations$book$en extends Translations$book$id {
 	final TranslationsEn _root; // ignore: unused_field
 
 	// Translations
+	@override late final _Translations$book$card$en card = _Translations$book$card$en._(_root);
+	@override late final _Translations$book$ritual$en ritual = _Translations$book$ritual$en._(_root);
 	@override late final _Translations$book$page$en page = _Translations$book$page$en._(_root);
 	@override late final _Translations$book$tanuki$en tanuki = _Translations$book$tanuki$en._(_root);
 }
@@ -2543,6 +2545,42 @@ class _Translations$stamps$legacyBanner$en extends Translations$stamps$legacyBan
 	@override String get dismiss => 'Close';
 }
 
+// Path: book.card
+class _Translations$book$card$en extends Translations$book$card$id {
+	_Translations$book$card$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String title({required Object period}) => 'The ${period} book is ready to close';
+	@override String get subtitle => 'Three steps, all of them skippable.';
+	@override String get close => 'Close the book';
+	@override String get later => 'Later';
+}
+
+// Path: book.ritual
+class _Translations$book$ritual$en extends Translations$book$ritual$id {
+	_Translations$book$ritual$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String title({required Object period}) => 'Close the ${period} book';
+	@override String get next => 'Next';
+	@override String get skip => 'Skip';
+	@override String get finish => 'Close the book';
+	@override String get fix => 'Add categories';
+	@override String get seeRoutines => 'See recurring';
+	@override String get note => 'You can still change your data anytime.';
+	@override String get planned => 'Budget';
+	@override String get spent => 'Spent';
+	@override String get noPlan => 'This period had no budget.';
+	@override String get review => 'See this period\'s plan and what happened.';
+	@override String step({required Object current, required Object total}) => 'Step ${current} of ${total}';
+	@override late final _Translations$book$ritual$uncategorized$en uncategorized = _Translations$book$ritual$uncategorized$en._(_root);
+	@override late final _Translations$book$ritual$recurring$en recurring = _Translations$book$ritual$recurring$en._(_root);
+}
+
 // Path: book.page
 class _Translations$book$page$en extends Translations$book$page$id {
 	_Translations$book$page$en._(TranslationsEn root) : this._root = root, super.internal(root);
@@ -2679,6 +2717,34 @@ class _Translations$premium$paywall$benefits$en extends Translations$premium$pay
 	@override String get photo => 'Record from photos and every bank notification';
 	@override String get warn => 'Warnings before a budget runs out';
 	@override String get ask => 'Ask, plan, and get reports';
+}
+
+// Path: book.ritual.uncategorized
+class _Translations$book$ritual$uncategorized$en extends Translations$book$ritual$uncategorized$id {
+	_Translations$book$ritual$uncategorized$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String some({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
+		one: '${count} transaction has no category. Add one so the story is accurate.',
+		other: '${count} transactions have no category. Add one so the story is accurate.',
+	);
+	@override String get none => 'Every transaction has a category.';
+}
+
+// Path: book.ritual.recurring
+class _Translations$book$ritual$recurring$en extends Translations$book$ritual$recurring$id {
+	_Translations$book$ritual$recurring$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String some({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
+		one: '${count} recurring item is still waiting.',
+		other: '${count} recurring items are still waiting.',
+	);
+	@override String get none => 'Every recurring item is done.';
 }
 
 // Path: premium.paywall.messages.general
@@ -4511,6 +4577,26 @@ extension on TranslationsEn {
 			'stamps.legacyBanner.body' => 'A new Stamp Book. What you have already done is here.',
 			'stamps.legacyBanner.action' => 'See',
 			'stamps.legacyBanner.dismiss' => 'Close',
+			'book.card.title' => ({required Object period}) => 'The ${period} book is ready to close',
+			'book.card.subtitle' => 'Three steps, all of them skippable.',
+			'book.card.close' => 'Close the book',
+			'book.card.later' => 'Later',
+			'book.ritual.title' => ({required Object period}) => 'Close the ${period} book',
+			'book.ritual.next' => 'Next',
+			'book.ritual.skip' => 'Skip',
+			'book.ritual.finish' => 'Close the book',
+			'book.ritual.fix' => 'Add categories',
+			'book.ritual.seeRoutines' => 'See recurring',
+			'book.ritual.note' => 'You can still change your data anytime.',
+			'book.ritual.planned' => 'Budget',
+			'book.ritual.spent' => 'Spent',
+			'book.ritual.noPlan' => 'This period had no budget.',
+			'book.ritual.review' => 'See this period\'s plan and what happened.',
+			'book.ritual.step' => ({required Object current, required Object total}) => 'Step ${current} of ${total}',
+			'book.ritual.uncategorized.some' => ({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '${count} transaction has no category. Add one so the story is accurate.', other: '${count} transactions have no category. Add one so the story is accurate.', ), 
+			'book.ritual.uncategorized.none' => 'Every transaction has a category.',
+			'book.ritual.recurring.some' => ({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '${count} recurring item is still waiting.', other: '${count} recurring items are still waiting.', ), 
+			'book.ritual.recurring.none' => 'Every recurring item is done.',
 			'book.page.tanuki' => 'Tanuki says',
 			'book.tanuki.records' => ({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: 'This period you recorded ${count} transaction.', other: 'This period you recorded ${count} transactions.', ), 
 			'book.tanuki.flow' => ({required Object income, required Object expense, required Object net}) => 'Income ${income}, spending ${expense}, ${net} left.',

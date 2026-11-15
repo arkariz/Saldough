@@ -1931,6 +1931,40 @@
     }
   },
   "book": {
+  "card": {
+      "title": "Buku $period siap ditutup",
+      "subtitle": "Tiga langkah, semuanya boleh dilewati.",
+      "close": "Tutup buku",
+      "later": "Nanti"
+    },
+    "ritual": {
+      "title": "Tutup buku $period",
+      "next": "Lanjut",
+      "skip": "Lewati",
+      "finish": "Tutup buku",
+      "fix": "Beri kategori",
+      "seeRoutines": "Lihat rutin",
+      "note": "Data tetap bisa kamu ubah kapan saja.",
+      "planned": "Anggaran",
+      "spent": "Terpakai",
+      "noPlan": "Periode ini belum punya anggaran.",
+      "review": "Lihat rencana dan kenyataan periode ini.",
+      "step": "Langkah $current dari $total",
+      "uncategorized": {
+        "some": {
+          "one": "$count transaksi belum berkategori. Beri kategori supaya ceritanya tepat.",
+          "other": "$count transaksi belum berkategori. Beri kategori supaya ceritanya tepat."
+        },
+        "none": "Semua transaksi sudah berkategori."
+      },
+      "recurring": {
+        "some": {
+          "one": "$count rutin masih menunggu.",
+          "other": "$count rutin masih menunggu."
+        },
+        "none": "Semua rutin sudah selesai."
+      }
+    },
     "page": {
       "tanuki": "Kata Tanuki"
     },

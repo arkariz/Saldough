@@ -5,7 +5,9 @@ import 'package:navigation/navigation.dart';
 import 'package:saldough/app/data_portability/app_reboot.dart';
 import 'package:saldough/app/milestone/milestone_celebration_host.dart';
 import 'package:saldough/app/milestone/milestone_coordinator.dart';
+import 'package:saldough/app/period_book/period_invitation_host.dart';
 import 'package:saldough/app/shell/appearance_quick_action.dart';
+import 'package:saldough/app/shell/shell_request_host.dart';
 import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/foundation/review/review_service.dart';
@@ -31,6 +33,7 @@ import 'package:saldough/features/notification_capture/domain/repositories/notif
 import 'package:saldough/features/notification_capture/presentation/host/notification_capture_host.dart';
 import 'package:saldough/features/notification_capture/presentation/widgets/capture_inbox_banner.dart';
 import 'package:saldough/features/notification_capture/presentation/widgets/notification_quick_action.dart';
+import 'package:saldough/features/period_book/presentation/navigation/period_book_route_keys.dart';
 import 'package:saldough/features/plan/presentation/funding_loader.dart';
 import 'package:saldough/features/plan/presentation/pages/plan_month_page.dart';
 import 'package:saldough/features/plan/presentation/pages/plan_page.dart';
@@ -201,6 +204,20 @@ class _AppShellPageState extends State<AppShellPage> {
             TrialGiftHost(container: parentContainer, active: _activeTab == _homeTabIndex),
             AppUpdateBanner(container: parentContainer, board: _statusBoard),
             PlusHomeCard(container: parentContainer),
+            // Ajakan Tutup buku akhir periode (ADR-045, BP-2/BP-13): satu slide di papan
+            // status, hanya Plus; tidak dirender bila pembaruan tampil.
+            PeriodInvitationHost(
+              container: parentContainer,
+              board: _statusBoard,
+              onOpenRitual: (periodId) => context.pushRoute(
+                PeriodBookRouteKeys.ritual,
+                RitualInput(periodId: periodId),
+              ),
+            ),
+            ShellRequestHost(
+              container: parentContainer,
+              onShowPlanRecurring: () => _showPlan(context, PlanSegment.recurring),
+            ),
             // Perayaan stempel (ADR-046, T-28.4); "Lihat" membuka Buku Stempel (T-28.5).
             MilestoneCelebrationHost(
               container: parentContainer,

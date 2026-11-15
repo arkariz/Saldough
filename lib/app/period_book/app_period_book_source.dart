@@ -6,6 +6,7 @@ import 'package:saldough/features/analysis/domain/period_summary.dart';
 import 'package:saldough/features/analysis/domain/summarize_period.dart';
 import 'package:saldough/features/period_book/domain/entities/closed_period.dart';
 import 'package:saldough/features/period_book/domain/entities/period_book_content.dart';
+import 'package:saldough/features/period_book/domain/entities/ritual_info.dart';
 import 'package:saldough/features/period_book/domain/repositories/period_book_source.dart';
 import 'package:saldough/features/plan/domain/plan_sources.dart';
 import 'package:saldough/shared/category/category.dart';
@@ -66,6 +67,46 @@ final class AppPeriodBookSource implements PeriodBookSource {
         schedule: schedule.getOrElse((_) => FinancialMonthSchedule.initial),
         rules: rules,
         budgets: budgets.getOrElse((_) => const []),
+      ),
+    );
+  }
+
+  @override
+  Future<Either<Failure, RitualInfo>> ritualFor(ClosedPeriod closed) async {
+    final all = await _transactions.listAllTransactions();
+    final categories = await _categories.listCategories();
+    for (final failure in [all.swap().toNullable(), categories.swap().toNullable()]) {
+      if (failure != null) return Left(failure);
+    }
+    final transactions = all.getOrElse((_) => const []);
+    final known = {for (final c in categories.getOrElse((_) => const [])) c.id};
+    final period = closed.period;
+    final untagged = [
+      for (final t in transactions)
+        if (!periodDateOf(t).isBefore(period.start) && periodDateOf(t).isBefore(period.end))
+          ...switch (t) {
+            // Sama dengan Analisis: tanpa kategori bila id kosong atau tidak dikenal;
+            // pemasukan freelance tanpa kategori bukan "tanpa kategori".
+            IncomeTransaction(:final categoryId) when (categoryId == null && !t.isFreelancePayment) ||
+                (categoryId != null && !known.contains(categoryId)) => [
+              RitualUntagged(transactionId: t.id, date: t.date, amount: t.amount, note: t.note, isIncome: true),
+            ],
+            ExpenseTransaction(:final categoryId) when categoryId == null || !known.contains(categoryId) => [
+              RitualUntagged(transactionId: t.id, date: t.date, amount: t.amount, note: t.note, isIncome: false),
+            ],
+            _ => const <RitualUntagged>[],
+          },
+    ]..sort((a, b) => a.date.compareTo(b.date));
+    final rules = (await _rules.listRules()).getOrElse((_) => const []);
+    final budgets = (await _budgets.budgetsStartingIn(period.start, period.end)).getOrElse((_) => const []);
+    final plan = _plan(period, transactions, rules, budgets);
+    return Right(
+      RitualInfo(
+        period: closed,
+        untagged: untagged,
+        openRoutines: plan?.open ?? 0,
+        planned: plan?.planned,
+        spent: plan?.spent,
       ),
     );
   }

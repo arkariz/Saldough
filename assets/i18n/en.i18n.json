@@ -1934,6 +1934,40 @@
     }
   },
   "book": {
+  "card": {
+      "title": "The $period book is ready to close",
+      "subtitle": "Three steps, all of them skippable.",
+      "close": "Close the book",
+      "later": "Later"
+    },
+    "ritual": {
+      "title": "Close the $period book",
+      "next": "Next",
+      "skip": "Skip",
+      "finish": "Close the book",
+      "fix": "Add categories",
+      "seeRoutines": "See recurring",
+      "note": "You can still change your data anytime.",
+      "planned": "Budget",
+      "spent": "Spent",
+      "noPlan": "This period had no budget.",
+      "review": "See this period's plan and what happened.",
+      "step": "Step $current of $total",
+      "uncategorized": {
+        "some": {
+          "one": "$count transaction has no category. Add one so the story is accurate.",
+          "other": "$count transactions have no category. Add one so the story is accurate."
+        },
+        "none": "Every transaction has a category."
+      },
+      "recurring": {
+        "some": {
+          "one": "$count recurring item is still waiting.",
+          "other": "$count recurring items are still waiting."
+        },
+        "none": "Every recurring item is done."
+      }
+    },
     "page": {
       "tanuki": "Tanuki says"
     },

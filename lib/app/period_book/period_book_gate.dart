@@ -78,6 +78,13 @@ class PeriodBookGate {
     return _memory.save(memory.withOpened(periodId, _now()));
   }
 
+  /// Ingatan buku sekarang (untuk melanjutkan ritual, BP-6).
+  Future<PeriodBookMemory> memory() => _loadMemory();
+
+  /// Menandai langkah ritual [step] selesai untuk [periodId] (BP-6).
+  Future<Either<Failure, Unit>> markStepDone(String periodId, int step) async =>
+      _memory.save((await _loadMemory()).withStepDone(periodId, step));
+
   /// "Nanti" pada kartu Beranda: tidak muncul lagi untuk periode itu (BP-2).
   Future<Either<Failure, Unit>> dismissCard(String periodId) async =>
       _memory.save((await _loadMemory()).withCardDismissed(periodId));

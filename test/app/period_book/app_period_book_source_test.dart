@@ -193,6 +193,17 @@ void main() {
     expect(content.uncategorizedCount, 2);
   });
 
+  test('ritual: transaksi tanpa kategori sama dengan hitungan buku; freelance tanpa kategori bukan "tanpa kategori"', () async {
+    final txs = data();
+    final closed = october(schedule, txs);
+    final ritual = (await source().ritualFor(closed)).getOrElse((f) => throw StateError('$f'));
+    final content = contentOf(await source().contentFor(closed));
+    expect(ritual.untagged.length, content.uncategorizedCount);
+    expect(ritual.untagged.map((u) => u.transactionId).toSet(), {'u', 'lain'});
+    expect(ritual.untagged.map((u) => u.date).toList(), [...ritual.untagged.map((u) => u.date)]..sort());
+    expect(ritual.openRoutines, 0);
+  });
+
   test('halaman 3: sorotan sama dengan perbandingan Analisis; tanda dan persen netral', () async {
     final txs = data();
     final content = contentOf(await source().contentFor(october(schedule, txs)));

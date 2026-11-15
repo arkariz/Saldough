@@ -79,6 +79,7 @@ import 'package:saldough/features/notification_capture/domain/repositories/notif
 import 'package:saldough/features/notification_capture/presentation/navigation/notification_capture_route_module.dart';
 import 'package:saldough/features/onboarding/presentation/onboarding_route.dart';
 import 'package:saldough/features/onboarding/presentation/pages/onboarding_page.dart' show OnboardingOutcome;
+import 'package:saldough/features/period_book/presentation/navigation/period_book_route_module.dart';
 import 'package:saldough/features/plan/data/month_review_repository_impl.dart';
 import 'package:saldough/features/plan/domain/month_review.dart';
 import 'package:saldough/features/plan/domain/plan_sources.dart';
@@ -132,6 +133,7 @@ abstract final class RootModule {
     PremiumRouteModule(),
     FreelanceRouteModule(),
     MilestoneRouteModule(),
+    PeriodBookRouteModule(),
     NotificationCaptureRouteModule(),
     RecordRouteModule(),
     RecurringRouteModule(),

@@ -2554,6 +2554,16 @@ class _Translations$book$cover$en extends Translations$book$cover$id {
 	final TranslationsEn _root; // ignore: unused_field
 
 	// Translations
+	@override String get caption => 'Your story this period';
+	@override String records({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
+		one: '${count} record',
+		other: '${count} records',
+	);
+	@override String routines({required Object count}) => '${count} recurring done';
+	@override String days({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
+		one: '${count} day',
+		other: '${count} days',
+	);
 	@override String get eyebrow => 'Period book';
 	@override String transition({required Object days}) => 'Transition period · ${days} days';
 	@override String get openReport => 'Open the report';
@@ -2567,6 +2577,10 @@ class _Translations$book$report$en extends Translations$book$report$id {
 	final TranslationsEn _root; // ignore: unused_field
 
 	// Translations
+	@override String get stampsTitle => 'Stamps this period';
+	@override String get stampsNone => 'No stamps this period. That is fine, the book is still whole.';
+	@override String get savedRatio => 'Left compared to income';
+	@override String get closing => 'This period\'s book is saved on the Book Shelf.';
 	@override String get flowPositive => 'More money came in than went out.';
 	@override String get flowNegative => 'More money went out than came in this period.';
 	@override String get income => 'Income';
@@ -2611,6 +2625,11 @@ class _Translations$book$ritual$en extends Translations$book$ritual$id {
 	final TranslationsEn _root; // ignore: unused_field
 
 	// Translations
+	@override String get hero => 'Tidy up first, then your book is ready to read.';
+	@override late final _Translations$book$ritual$stepTitle$en stepTitle = _Translations$book$ritual$stepTitle$en._(_root);
+	@override late final _Translations$book$ritual$status$en status = _Translations$book$ritual$status$en._(_root);
+	@override String get summaryTidy => 'All tidy';
+	@override String get summaryReview => 'Plan and what happened';
 	@override String title({required Object period}) => 'Close the ${period} book';
 	@override String get next => 'Next';
 	@override String get skip => 'Skip';
@@ -2768,6 +2787,30 @@ class _Translations$premium$paywall$benefits$en extends Translations$premium$pay
 	@override String get photo => 'Record from photos and every bank notification';
 	@override String get warn => 'Warnings before a budget runs out';
 	@override String get ask => 'Ask, plan, and get reports';
+}
+
+// Path: book.ritual.stepTitle
+class _Translations$book$ritual$stepTitle$en extends Translations$book$ritual$stepTitle$id {
+	_Translations$book$ritual$stepTitle$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get uncategorized => 'Transactions without a category';
+	@override String get routines => 'Recurring';
+	@override String get review => 'Look back';
+}
+
+// Path: book.ritual.status
+class _Translations$book$ritual$status$en extends Translations$book$ritual$status$id {
+	_Translations$book$ritual$status$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get done => 'Done';
+	@override String get current => 'Now';
+	@override String get next => 'Next';
 }
 
 // Path: book.ritual.uncategorized
@@ -4628,10 +4671,18 @@ extension on TranslationsEn {
 			'stamps.legacyBanner.body' => 'A new Stamp Book. What you have already done is here.',
 			'stamps.legacyBanner.action' => 'See',
 			'stamps.legacyBanner.dismiss' => 'Close',
+			'book.cover.caption' => 'Your story this period',
+			'book.cover.records' => ({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '${count} record', other: '${count} records', ), 
+			'book.cover.routines' => ({required Object count}) => '${count} recurring done',
+			'book.cover.days' => ({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '${count} day', other: '${count} days', ), 
 			'book.cover.eyebrow' => 'Period book',
 			'book.cover.transition' => ({required Object days}) => 'Transition period · ${days} days',
 			'book.cover.openReport' => 'Open the report',
 			'book.cover.semantic' => ({required Object period}) => '${period} book',
+			'book.report.stampsTitle' => 'Stamps this period',
+			'book.report.stampsNone' => 'No stamps this period. That is fine, the book is still whole.',
+			'book.report.savedRatio' => 'Left compared to income',
+			'book.report.closing' => 'This period\'s book is saved on the Book Shelf.',
 			'book.report.flowPositive' => 'More money came in than went out.',
 			'book.report.flowNegative' => 'More money went out than came in this period.',
 			'book.report.income' => 'Income',
@@ -4652,6 +4703,15 @@ extension on TranslationsEn {
 			'book.card.subtitle' => 'Three steps, all of them skippable.',
 			'book.card.close' => 'Close the book',
 			'book.card.later' => 'Later',
+			'book.ritual.hero' => 'Tidy up first, then your book is ready to read.',
+			'book.ritual.stepTitle.uncategorized' => 'Transactions without a category',
+			'book.ritual.stepTitle.routines' => 'Recurring',
+			'book.ritual.stepTitle.review' => 'Look back',
+			'book.ritual.status.done' => 'Done',
+			'book.ritual.status.current' => 'Now',
+			'book.ritual.status.next' => 'Next',
+			'book.ritual.summaryTidy' => 'All tidy',
+			'book.ritual.summaryReview' => 'Plan and what happened',
 			'book.ritual.title' => ({required Object period}) => 'Close the ${period} book',
 			'book.ritual.next' => 'Next',
 			'book.ritual.skip' => 'Skip',

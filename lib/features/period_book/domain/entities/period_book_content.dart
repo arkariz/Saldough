@@ -109,6 +109,7 @@ final class BookHighlight extends Equatable {
     required this.isHigher,
     this.categoryId,
     this.categoryName,
+    this.builtInKey,
   });
 
   /// `category` atau `freelance`.
@@ -132,8 +133,11 @@ final class BookHighlight extends Equatable {
   /// Nama kategori.
   final String? categoryName;
 
+  /// Kunci kategori bawaan (untuk ikon); `null` = buatan pengguna.
+  final String? builtInKey;
+
   @override
-  List<Object?> get props => [kind, amount, average, percent, isHigher, categoryId, categoryName];
+  List<Object?> get props => [kind, amount, average, percent, isHigher, categoryId, categoryName, builtInKey];
 }
 
 /// Halaman 3, Dibanding biasanya: paling banyak tiga sorotan. Hanya ada bila

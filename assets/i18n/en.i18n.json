@@ -1935,12 +1935,26 @@
   },
   "book": {
     "cover": {
+  "caption": "Your story this period",
+    "records": {
+      "one": "$count record",
+      "other": "$count records"
+    },
+    "routines": "$count recurring done",
+    "days": {
+      "one": "$count day",
+      "other": "$count days"
+    },
       "eyebrow": "Period book",
       "transition": "Transition period · $days days",
       "openReport": "Open the report",
       "semantic": "$period book"
     },
     "report": {
+  "stampsTitle": "Stamps this period",
+    "stampsNone": "No stamps this period. That is fine, the book is still whole.",
+    "savedRatio": "Left compared to income",
+    "closing": "This period's book is saved on the Book Shelf.",
       "flowPositive": "More money came in than went out.",
       "flowNegative": "More money went out than came in this period.",
       "income": "Income",
@@ -1971,6 +1985,19 @@
       "later": "Later"
     },
     "ritual": {
+  "hero": "Tidy up first, then your book is ready to read.",
+    "stepTitle": {
+      "uncategorized": "Transactions without a category",
+      "routines": "Recurring",
+      "review": "Look back"
+    },
+    "status": {
+      "done": "Done",
+      "current": "Now",
+      "next": "Next"
+    },
+    "summaryTidy": "All tidy",
+    "summaryReview": "Plan and what happened",
       "title": "Close the $period book",
       "next": "Next",
       "skip": "Skip",

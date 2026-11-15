@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/tanuki_pose.dart';
@@ -8,6 +9,7 @@ import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/period_book/domain/entities/ritual_info.dart';
 import 'package:saldough/features/period_book/presentation/period_book_ritual_access.dart';
+import 'package:saldough/features/period_book/presentation/widgets/book_visuals.dart';
 
 /// Ritual Tutup buku (rupa D4, BP-5, BP-6): tiga langkah (tanpa kategori, rutin
 /// menunggu, kilas balik) yang **semuanya boleh dilewati**. Tidak mengunci atau
@@ -35,6 +37,9 @@ class _RitualPageState extends State<RitualPage> {
   RitualStep _step = RitualStep.uncategorized;
   bool _closing = false;
 
+  /// Langkah yang sudah selesai (ditandai Lanjut), untuk lencana di linimasa.
+  final Set<RitualStep> _done = {};
+
   @override
   void initState() {
     super.initState();
@@ -48,7 +53,10 @@ class _RitualPageState extends State<RitualPage> {
       _load = load;
       if (load is RitualReady) {
         _info = load.info;
-        if (first) _step = load.resume;
+        if (first) {
+          _step = load.resume;
+          _done.addAll(RitualStep.values.where((st) => st.index < load.resume.index));
+        }
       }
     });
   }
@@ -56,7 +64,10 @@ class _RitualPageState extends State<RitualPage> {
   Future<void> _next({required bool done}) async {
     if (done) await widget.access.markStepDone(widget.periodId, _step);
     if (!mounted) return;
-    setState(() => _step = RitualStep.values[_step.index + 1]);
+    setState(() {
+      if (done) _done.add(_step);
+      _step = RitualStep.values[_step.index + 1];
+    });
   }
 
   Future<void> _finish() async {
@@ -93,7 +104,6 @@ class _RitualPageState extends State<RitualPage> {
   }
 
   Widget _content(BuildContext context, RitualInfo info) {
-    final ds = context.ds;
     final last = _step == RitualStep.review;
     return Column(
       children: [
@@ -101,47 +111,32 @@ class _RitualPageState extends State<RitualPage> {
           child: ListView(
             padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
             children: [
-              _StepBar(current: _step.index),
+              _Hero(period: info.period.period.name),
               const SizedBox(height: 16),
-              Row(
-                children: [
-                  const TanukiPose(pose: TanukiPoseKind.writing, size: 72),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      info.period.period.name,
-                      style: ds.typography.pixelLabel.copyWith(color: ds.colors.textMuted),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              AnimatedSwitcher(
-                duration: DsMotion.reduced(context) ? Duration.zero : const Duration(milliseconds: 320),
-                switchInCurve: Curves.easeOutCubic,
-                transitionBuilder: (child, animation) => FadeTransition(
-                  opacity: animation,
-                  child: SlideTransition(
-                    position: Tween(begin: const Offset(0.08, 0), end: Offset.zero).animate(animation),
-                    child: child,
-                  ),
-                ),
-                child: KeyedSubtree(
-                  key: ValueKey(_step),
-                  child: switch (_step) {
+              for (final step in RitualStep.values) ...[
+                _StepCard(
+                  step: step,
+                  state: step == _step
+                      ? _StepState.current
+                      : (_done.contains(step) ? _StepState.done : (step.index < _step.index ? _StepState.passed : _StepState.next)),
+                  info: info,
+                  child: switch (step) {
                     RitualStep.uncategorized => _Uncategorized(info: info, access: widget.access, onChanged: _reload),
                     RitualStep.routines => _Routines(info: info, access: widget.access),
                     RitualStep.review => _Review(info: info),
                   },
                 ),
-              ),
+                if (step != RitualStep.review) const SizedBox(height: 10),
+              ],
             ],
           ),
         ),
         Padding(
           padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
           child: last
-              ? DsButton(label: t.book.ritual.finish, onPressed: _closing ? null : () => unawaited(_finish()), expand: true)
+              ? DsSheen(
+                  child: DsButton(label: t.book.ritual.finish, onPressed: _closing ? null : () => unawaited(_finish()), expand: true),
+                )
               : Row(
                   children: [
                     Expanded(
@@ -163,33 +158,142 @@ class _RitualPageState extends State<RitualPage> {
   }
 }
 
-class _StepBar extends StatelessWidget {
-  const _StepBar({required this.current});
+/// Kepala ritual: adegan dengan Tanuki menulis dan kalimat pembuka.
+class _Hero extends StatelessWidget {
+  const _Hero({required this.period});
 
-  final int current;
+  final String period;
 
   @override
   Widget build(BuildContext context) {
-    final c = context.ds.colors;
-    return Semantics(
-      label: t.book.ritual.step(current: current + 1, total: RitualStep.values.length),
-      excludeSemantics: true,
-      child: Row(
-        children: [
-          for (final step in RitualStep.values) ...[
+    final ds = context.ds;
+    return BookScene(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
+        child: Row(
+          children: [
+            const TanukiPose(pose: TanukiPoseKind.writing, size: 104),
+            const SizedBox(width: 12),
             Expanded(
-              child: AnimatedContainer(
-                duration: DsMotion.reduced(context) ? Duration.zero : const Duration(milliseconds: 250),
-                height: 6,
-                decoration: BoxDecoration(
-                  color: step.index <= current ? c.actionPrimary : c.outlineSubtle,
-                  borderRadius: BorderRadius.circular(3),
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(period.toUpperCase(), style: ds.typography.pixelLabel.copyWith(color: ds.colors.actionPrimary)),
+                  const SizedBox(height: 4),
+                  Text(t.book.ritual.hero, style: ds.typography.headlineSm),
+                ],
               ),
             ),
-            if (step != RitualStep.values.last) const SizedBox(width: 6),
           ],
-        ],
+        ),
+      ),
+    );
+  }
+}
+
+enum _StepState { done, current, passed, next }
+
+/// Satu kartu langkah di linimasa ritual: ikon clay dengan lencana, judul, dan
+/// ringkasan; kartu langkah sekarang terbuka dan memuat isinya.
+class _StepCard extends StatelessWidget {
+  const _StepCard({required this.step, required this.state, required this.info, required this.child});
+
+  final RitualStep step;
+  final _StepState state;
+  final RitualInfo info;
+  final Widget child;
+
+  String get _asset => switch (step) {
+    RitualStep.uncategorized => 'assets/icons_clay/tag_category.svg',
+    RitualStep.routines => 'assets/icons_clay/repeat_loop.svg',
+    RitualStep.review => 'assets/icons_clay/report_bars.svg',
+  };
+
+  String get _title => switch (step) {
+    RitualStep.uncategorized => t.book.ritual.stepTitle.uncategorized,
+    RitualStep.routines => t.book.ritual.stepTitle.routines,
+    RitualStep.review => t.book.ritual.stepTitle.review,
+  };
+
+  String get _summary => switch (step) {
+    RitualStep.uncategorized =>
+      info.untagged.isEmpty ? t.book.ritual.summaryTidy : t.book.ritual.uncategorized.some(n: info.untagged.length, count: info.untagged.length),
+    RitualStep.routines =>
+      info.openRoutines == 0 ? t.book.ritual.recurring.none : t.book.ritual.recurring.some(n: info.openRoutines, count: info.openRoutines),
+    RitualStep.review => info.hasReview ? t.book.ritual.summaryReview : t.book.ritual.noPlan,
+  };
+
+  @override
+  Widget build(BuildContext context) {
+    final ds = context.ds;
+    final c = ds.colors;
+    final current = state == _StepState.current;
+    final done = state == _StepState.done;
+    final status = switch (state) {
+      _StepState.done => t.book.ritual.status.done,
+      _StepState.current => t.book.ritual.status.current,
+      _StepState.next => t.book.ritual.status.next,
+      _StepState.passed => null,
+    };
+    return AnimatedContainer(
+      duration: DsMotion.reduced(context) ? Duration.zero : const Duration(milliseconds: 300),
+      curve: Curves.easeOutCubic,
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: current
+            ? c.surfaceCard
+            : (done ? Color.alphaBlend(c.actionPrimary.withValues(alpha: 0.07), c.surfaceCard) : c.surfaceSunken),
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: current ? c.actionPrimary : c.outlineSubtle, width: current ? 1.6 : 1),
+        boxShadow: current ? [BoxShadow(color: c.actionPrimary.withValues(alpha: 0.12), blurRadius: 18, offset: const Offset(0, 6))] : null,
+      ),
+      child: _MaybeAnimatedSize(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    Container(
+                      width: 46,
+                      height: 46,
+                      decoration: BoxDecoration(color: c.surfaceCard, shape: BoxShape.circle, border: Border.all(color: c.outlineSubtle)),
+                      alignment: Alignment.center,
+                      child: ExcludeSemantics(child: SvgPicture.asset(_asset, width: 28, height: 28)),
+                    ),
+                    if (done)
+                      Positioned(
+                        right: -2,
+                        bottom: -2,
+                        child: _Pop(
+                          child: Container(
+                            width: 20,
+                            height: 20,
+                            decoration: BoxDecoration(color: c.actionPrimary, shape: BoxShape.circle, border: Border.all(color: c.surfaceCard, width: 2)),
+                            child: Icon(Icons.check, size: 12, color: c.onActionPrimary),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(_title, style: ds.typography.bodyMd.copyWith(fontWeight: FontWeight.w700)),
+                      if (!current) Text(_summary, style: ds.typography.bodySm.copyWith(color: c.textMuted)),
+                    ],
+                  ),
+                ),
+                if (status != null) DsBadge(label: status.toUpperCase(), tone: current ? DsBadgeTone.income : DsBadgeTone.neutral),
+              ],
+            ),
+            if (current) ...[const SizedBox(height: 14), child],
+          ],
+        ),
       ),
     );
   }
@@ -358,5 +462,19 @@ class _Pop extends StatelessWidget {
       builder: (context, t, child) => Transform.scale(scale: t, child: child),
       child: child,
     );
+  }
+}
+
+/// `AnimatedSize` bila gerak penuh; anak apa adanya bila dikurangi (durasi nol
+/// melanggar pernyataan layout Flutter).
+class _MaybeAnimatedSize extends StatelessWidget {
+  const _MaybeAnimatedSize({required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    if (DsMotion.reduced(context)) return child;
+    return AnimatedSize(duration: const Duration(milliseconds: 300), curve: Curves.easeOutCubic, alignment: Alignment.topCenter, child: child);
   }
 }

@@ -1932,12 +1932,26 @@
   },
   "book": {
     "cover": {
+  "caption": "Ceritamu periode ini",
+    "records": {
+      "one": "$count catatan",
+      "other": "$count catatan"
+    },
+    "routines": "$count rutin beres",
+    "days": {
+      "one": "$count hari",
+      "other": "$count hari"
+    },
       "eyebrow": "Buku periode",
       "transition": "Periode peralihan · $days hari",
       "openReport": "Buka rapor",
       "semantic": "Buku $period"
     },
     "report": {
+  "stampsTitle": "Stempel periode ini",
+    "stampsNone": "Belum ada stempel periode ini. Tidak apa-apa, bukunya tetap utuh.",
+    "savedRatio": "Sisa dibanding pemasukan",
+    "closing": "Buku periode ini sudah tersimpan di Rak Buku.",
       "flowPositive": "Uang masuk lebih besar dari uang keluar.",
       "flowNegative": "Uang keluar lebih besar dari uang masuk periode ini.",
       "income": "Pemasukan",
@@ -1968,6 +1982,19 @@
       "later": "Nanti"
     },
     "ritual": {
+  "hero": "Rapikan dulu, lalu bukumu siap dibaca.",
+    "stepTitle": {
+      "uncategorized": "Transaksi tanpa kategori",
+      "routines": "Rutin",
+      "review": "Kilas balik"
+    },
+    "status": {
+      "done": "Selesai",
+      "current": "Sekarang",
+      "next": "Berikutnya"
+    },
+    "summaryTidy": "Semua rapi",
+    "summaryReview": "Rencana dan kenyataan",
       "title": "Tutup buku $period",
       "next": "Lanjut",
       "skip": "Lewati",

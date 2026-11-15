@@ -187,6 +187,7 @@ final class AppPeriodBookSource implements PeriodBookSource {
             isHigher: h.comparison.isHigher,
             categoryId: h.group.category?.id,
             categoryName: h.group.category?.name,
+            builtInKey: h.group.category?.builtInKey,
           ),
       ],
     );

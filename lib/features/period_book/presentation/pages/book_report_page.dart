@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/clay_icons.dart';
+import 'package:saldough/core/presentation/widgets/stamp_visuals.dart';
 import 'package:saldough/core/presentation/widgets/tanuki_bubble.dart';
 import 'package:saldough/core/presentation/widgets/tanuki_pose.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
@@ -13,6 +14,7 @@ import 'package:saldough/features/period_book/domain/services/tanuki_lines.dart'
 import 'package:saldough/features/period_book/presentation/category_clay.dart';
 import 'package:saldough/features/period_book/presentation/period_book_read_access.dart';
 import 'package:saldough/features/period_book/presentation/tanuki_sentences.dart';
+import 'package:saldough/features/period_book/presentation/widgets/book_visuals.dart';
 import 'package:saldough/features/period_book/presentation/widgets/stagger_in.dart';
 
 /// Rapor lima halaman (rupa D6, T-27.6): Arus, Ke mana uang pergi, Dibanding
@@ -81,13 +83,13 @@ class _BookReportPageState extends State<BookReportPage> {
         child: switch (load) {
           null => const Center(child: CircularProgressIndicator()),
           BookLocked() || BookFailed() => const SizedBox.shrink(),
-          BookReady() => _body(context, load.content),
+          BookReady() => _body(context, load.content, load.stamps),
         },
       ),
     );
   }
 
-  Widget _body(BuildContext context, PeriodBookContent content) {
+  Widget _body(BuildContext context, PeriodBookContent content, List<String> stamps) {
     final pages = _pagesOf(content);
     return Column(
       children: [
@@ -116,10 +118,7 @@ class _BookReportPageState extends State<BookReportPage> {
                 ),
                 _ReportPage.compare => _ComparePage(compare: content.compare!),
                 _ReportPage.plan => _PlanPage(plan: content.plan!),
-                _ReportPage.tanuki => _TanukiPage(
-                  content: content,
-                  active: _index == i,
-                ),
+                _ReportPage.tanuki => _TanukiPage(content: content, stamps: stamps, active: _index == i),
               },
             ),
           ),
@@ -222,11 +221,7 @@ class _Note extends StatelessWidget {
 }
 
 class _FlowPage extends StatelessWidget {
-  const _FlowPage({
-    required this.content,
-    required this.showNote,
-    required this.onFix,
-  });
+  const _FlowPage({required this.content, required this.showNote, required this.onFix});
 
   final PeriodBookContent content;
   final bool showNote;
@@ -235,25 +230,26 @@ class _FlowPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ds = context.ds;
+    final c = ds.colors;
     final flow = content.flow;
-    Widget tile(String label, int value) => Expanded(
+    Widget tile(String asset, String label, int value) => Expanded(
       child: DsCard(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              label.toUpperCase(),
-              style: ds.typography.pixelLabel.copyWith(
-                color: ds.colors.textMuted,
-              ),
+            Row(
+              children: [
+                ExcludeSemantics(child: SvgPicture.asset(asset, width: 26, height: 26)),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(label.toUpperCase(), style: ds.typography.pixelLabel.copyWith(color: c.textMuted)),
+                ),
+              ],
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 8),
             DsCountUp(
               value: value,
-              builder: (_, v) => Text(
-                AppMoneyFormatter.format(v),
-                style: ds.typography.headlineSm,
-              ),
+              builder: (_, v) => Text(AppMoneyFormatter.format(v), style: ds.typography.headlineSm),
             ),
           ],
         ),
@@ -262,48 +258,60 @@ class _FlowPage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _Heading(
-          flow.net >= 0 ? t.book.report.flowPositive : t.book.report.flowNegative,
-          asset: ClayIcons.bookOpen,
-        ),
+        _Heading(flow.net >= 0 ? t.book.report.flowPositive : t.book.report.flowNegative, asset: ClayIcons.bookOpen),
         StaggerIn(
           index: 0,
-          child: Row(
-            children: [
-              tile(t.book.report.income, flow.income),
-              const SizedBox(width: 12),
-              tile(t.book.report.expense, flow.expense),
-            ],
-          ),
-        ),
-        const SizedBox(height: 12),
-        StaggerIn(
-          index: 2,
-          child: DsCard(
+          // Selisih negatif tanpa warna peringatan (rupa D6): hero hijau yang sama.
+          child: BookHero(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  t.book.report.net.toUpperCase(),
-                  style: ds.typography.pixelLabel.copyWith(
-                    color: ds.colors.textMuted,
-                  ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        t.book.report.net.toUpperCase(),
+                        style: ds.typography.pixelLabel.copyWith(color: c.onHeroMuted),
+                      ),
+                    ),
+                    ExcludeSemantics(child: SvgPicture.asset(ClayIcons.mascotHappy, width: 44, height: 44)),
+                  ],
                 ),
-                const SizedBox(height: 4),
-                // Selisih negatif tanpa warna peringatan (rupa D6): teks utama biasa.
                 DsCountUp(
                   value: flow.net,
                   builder: (_, v) => Text(
                     AppMoneyFormatter.format(v),
                     style: ds.typography.headlineLg.copyWith(
-                      fontSize: 32,
-                      height: 38 / 32,
+                      fontSize: 34,
+                      height: 40 / 34,
                       fontWeight: FontWeight.w800,
+                      color: c.onHero,
                     ),
                   ),
                 ),
+                const SizedBox(height: 16),
+                PairBars(
+                  onDark: true,
+                  labelA: t.book.report.income,
+                  valueA: flow.income,
+                  textA: AppMoneyFormatter.format(flow.income),
+                  labelB: t.book.report.expense,
+                  valueB: flow.expense,
+                  textB: AppMoneyFormatter.format(flow.expense),
+                ),
               ],
             ),
+          ),
+        ),
+        const SizedBox(height: 12),
+        StaggerIn(
+          index: 2,
+          child: Row(
+            children: [
+              tile('assets/icons_clay/income_arrow.svg', t.book.report.income, flow.income),
+              const SizedBox(width: 12),
+              tile('assets/icons_clay/expense_arrow.svg', t.book.report.expense, flow.expense),
+            ],
           ),
         ),
         if (showNote) _Note(count: content.uncategorizedCount, onFix: onFix),
@@ -325,44 +333,72 @@ class _WherePage extends StatelessWidget {
     BookRowKind.others => t.book.report.others,
   };
 
+  String _asset(BookSpendRow r) => switch (r.kind) {
+    BookRowKind.freelance => categoryClayAsset('freelance'),
+    BookRowKind.category => categoryClayAsset(r.builtInKey),
+    BookRowKind.others => categoryClayAsset('expenseOther'),
+    BookRowKind.uncategorized => 'assets/icons_clay/hourglass_pending.svg',
+  };
+
   @override
   Widget build(BuildContext context) {
     final ds = context.ds;
     final c = ds.colors;
     final spending = content.spending!;
+    final palette = bookPalette(context);
+    final total = spending.total == 0 ? 1 : spending.total;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _Heading(t.book.page.where),
+        _Heading(t.book.page.where, asset: 'assets/icons_clay/chart_investment.svg'),
+        StaggerIn(
+          index: 0,
+          child: DsCard(
+            child: Center(
+              child: DonutChart(
+                size: 210,
+                fractions: [for (final r in spending.rows) r.amount / total],
+                colors: [for (var i = 0; i < spending.rows.length; i++) palette[i % palette.length]],
+                center: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      t.book.report.expense.toUpperCase(),
+                      style: ds.typography.pixelCaption.copyWith(color: c.textMuted),
+                    ),
+                    const SizedBox(height: 2),
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        AppMoneyFormatter.format(spending.total),
+                        style: ds.typography.headlineSm.copyWith(fontWeight: FontWeight.w800),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 16),
         for (final (i, row) in spending.rows.indexed)
           StaggerIn(
-            index: i,
+            index: i + 1,
             child: Padding(
               padding: const EdgeInsets.only(bottom: 14),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    width: 38,
-                    height: 38,
+                    width: 42,
+                    height: 42,
                     decoration: BoxDecoration(
-                      color: c.surfaceSunken,
+                      color: palette[i % palette.length].withValues(alpha: 0.16),
                       shape: BoxShape.circle,
+                      border: Border.all(color: palette[i % palette.length], width: 1.5),
                     ),
                     alignment: Alignment.center,
-                    child: ExcludeSemantics(
-                      child: SvgPicture.asset(
-                        row.kind == BookRowKind.freelance
-                            ? categoryClayAsset('freelance')
-                            : categoryClayAsset(
-                                row.kind == BookRowKind.category
-                                    ? row.builtInKey
-                                    : (row.kind == BookRowKind.others ? 'expenseOther' : 'tag_none'),
-                              ),
-                        width: 24,
-                        height: 24,
-                      ),
-                    ),
+                    child: ExcludeSemantics(child: SvgPicture.asset(_asset(row), width: 26, height: 26)),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
@@ -374,28 +410,23 @@ class _WherePage extends StatelessWidget {
                             Expanded(
                               child: Text(
                                 _name(row),
-                                style: ds.typography.bodyMd.copyWith(
-                                  fontWeight: FontWeight.w700,
-                                ),
+                                style: ds.typography.bodyMd.copyWith(fontWeight: FontWeight.w700),
                               ),
                             ),
                             Text(
                               row.belowOne ? t.book.report.belowOne : '${row.percent}%',
-                              style: ds.typography.pixelLabel.copyWith(
-                                color: c.textSecondary,
-                              ),
+                              style: ds.typography.pixelLabel.copyWith(color: c.textSecondary),
                             ),
                           ],
                         ),
                         Text(
                           AppMoneyFormatter.format(row.amount),
-                          style: ds.typography.bodySm.copyWith(
-                            color: c.textMuted,
-                          ),
+                          style: ds.typography.bodySm.copyWith(color: c.textMuted),
                         ),
                         const SizedBox(height: 6),
                         _Bar(
                           fraction: spending.total == 0 ? 0 : (row.amount / spending.total).clamp(0.0, 1.0),
+                          color: palette[i % palette.length],
                         ),
                       ],
                     ),
@@ -413,19 +444,17 @@ class _WherePage extends StatelessWidget {
 /// Batang yang memanjang 900 ms `easeOutExpo` (rupa D6); langsung penuh bila
 /// gerak dikurangi.
 class _Bar extends StatelessWidget {
-  const _Bar({required this.fraction});
+  const _Bar({required this.fraction, required this.color});
 
   final double fraction;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
     final c = context.ds.colors;
     return LayoutBuilder(
       builder: (context, box) => TweenAnimationBuilder<double>(
-        tween: Tween(
-          begin: DsMotion.reduced(context) ? fraction : 0,
-          end: fraction,
-        ),
+        tween: Tween(begin: DsMotion.reduced(context) ? fraction : 0, end: fraction),
         duration: const Duration(milliseconds: 900),
         curve: DsMotion.easeOutExpo,
         builder: (context, v, _) => Stack(
@@ -433,18 +462,12 @@ class _Bar extends StatelessWidget {
             Container(
               height: 8,
               width: box.maxWidth,
-              decoration: BoxDecoration(
-                color: c.surfaceSunken,
-                borderRadius: BorderRadius.circular(4),
-              ),
+              decoration: BoxDecoration(color: c.surfaceSunken, borderRadius: BorderRadius.circular(4)),
             ),
             Container(
               height: 8,
               width: box.maxWidth * v,
-              decoration: BoxDecoration(
-                color: c.actionPrimary,
-                borderRadius: BorderRadius.circular(4),
-              ),
+              decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(4)),
             ),
           ],
         ),
@@ -465,55 +488,76 @@ class _ComparePage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _Heading(t.book.page.compare),
+        _Heading(t.book.page.compare, asset: 'assets/icons_clay/report_bars.svg'),
         Padding(
           padding: const EdgeInsets.only(bottom: 12),
           child: Text(
-            t.book.report.compareIntro(
-              n: compare.months,
-              count: compare.months,
-            ),
+            t.book.report.compareIntro(n: compare.months, count: compare.months),
             style: ds.typography.bodyMd.copyWith(color: c.textSecondary),
           ),
         ),
-        for (final h in compare.highlights)
-          Container(
-            margin: const EdgeInsets.only(bottom: 10),
-            padding: const EdgeInsets.all(14),
-            // Ubin netral: tanpa warna peringatan, tanpa penilaian (BP-7).
-            decoration: BoxDecoration(
-              color: c.surfaceSunken,
-              borderRadius: BorderRadius.circular(14),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+        for (final (i, h) in compare.highlights.indexed)
+          StaggerIn(
+            index: i,
+            child: Container(
+              margin: const EdgeInsets.only(bottom: 12),
+              padding: const EdgeInsets.all(16),
+              // Kartu netral: tanpa warna peringatan, tanpa penilaian (BP-7).
+              decoration: BoxDecoration(
+                color: c.surfaceCard,
+                borderRadius: BorderRadius.circular(18),
+                border: Border.all(color: c.outlineSubtle),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
                     children: [
-                      Text(
-                        h.kind == BookRowKind.freelance ? t.book.report.freelance : (h.categoryName ?? ''),
-                        style: ds.typography.bodyMd.copyWith(
-                          fontWeight: FontWeight.w700,
+                      Container(
+                        width: 42,
+                        height: 42,
+                        decoration: BoxDecoration(color: c.surfaceSunken, shape: BoxShape.circle),
+                        alignment: Alignment.center,
+                        child: ExcludeSemantics(
+                          child: SvgPicture.asset(
+                            h.kind == BookRowKind.freelance
+                                ? categoryClayAsset('freelance')
+                                : categoryClayAsset(h.builtInKey),
+                            width: 26,
+                            height: 26,
+                          ),
                         ),
                       ),
-                      const SizedBox(height: 2),
-                      Text(
-                        '${t.book.report.usual} ${AppMoneyFormatter.format(h.average)} · ${t.book.report.thisPeriod} ${AppMoneyFormatter.format(h.amount)}',
-                        style: ds.typography.bodySm.copyWith(
-                          color: c.textMuted,
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          h.kind == BookRowKind.freelance ? t.book.report.freelance : (h.categoryName ?? ''),
+                          style: ds.typography.bodyMd.copyWith(fontWeight: FontWeight.w700),
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        decoration: BoxDecoration(color: c.surfaceSunken, borderRadius: BorderRadius.circular(999)),
+                        child: Text(
+                          '${h.isHigher ? '+' : '−'}${h.percent}%',
+                          style: ds.typography.pixelLabel.copyWith(color: c.textPrimary),
                         ),
                       ),
                     ],
                   ),
-                ),
-                Text(
-                  '${h.isHigher ? '+' : '−'}${h.percent}%',
-                  style: ds.typography.pixelLabel.copyWith(
-                    color: c.textPrimary,
+                  const SizedBox(height: 14),
+                  PairBars(
+                    labelA: t.book.report.usual,
+                    valueA: h.average,
+                    textA: AppMoneyFormatter.format(h.average),
+                    labelB: t.book.report.thisPeriod,
+                    valueB: h.amount,
+                    textB: AppMoneyFormatter.format(h.amount),
+                    colorA: c.outlineStrong,
+                    colorB: c.actionPrimary,
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
       ],
@@ -530,15 +574,21 @@ class _PlanPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final ds = context.ds;
     final c = ds.colors;
-    Widget row(String label, int count) => Padding(
-      padding: const EdgeInsets.only(bottom: 10),
+    Widget stat(String asset, String label, int count) => Expanded(
       child: DsCard(
-        child: Row(
+        child: Column(
           children: [
-            Expanded(child: Text(label, style: ds.typography.bodyMd)),
+            ExcludeSemantics(child: SvgPicture.asset(asset, width: 40, height: 40)),
+            const SizedBox(height: 8),
+            DsCountUp(
+              value: count,
+              builder: (_, v) => Text('$v', style: ds.typography.headlineLg.copyWith(fontWeight: FontWeight.w800)),
+            ),
+            const SizedBox(height: 2),
             Text(
-              '$count',
-              style: ds.typography.pixelLabel.copyWith(color: c.textPrimary),
+              label,
+              textAlign: TextAlign.center,
+              style: ds.typography.bodySm.copyWith(color: c.textMuted),
             ),
           ],
         ),
@@ -547,32 +597,52 @@ class _PlanPage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _Heading(t.book.page.recurring),
-        if (plan.hasRoutine) ...[
-          row(t.book.report.routineRecorded, plan.recorded),
-          row(t.book.report.routineSkipped, plan.skipped),
-        ],
-        if (plan.hasBudget) ...[
-          const SizedBox(height: 8),
-          Text(
-            t.book.report.planVsReal,
-            style: ds.typography.bodyMd.copyWith(fontWeight: FontWeight.w700),
-          ),
-          const SizedBox(height: 8),
-          DsCard(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+        _Heading(t.book.page.recurring, asset: ClayIcons.shelfBooks),
+        if (plan.hasRoutine)
+          StaggerIn(
+            index: 0,
+            child: Row(
               children: [
-                DsSegmentMeter(
-                  value: plan.planned! == 0 ? 0 : ((plan.spent ?? 0) / plan.planned!).clamp(0.0, 1.0),
-                  semanticLabel: t.book.report.planVsReal,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  '${t.book.ritual.planned} ${AppMoneyFormatter.format(plan.planned!)} · ${t.book.ritual.spent} ${AppMoneyFormatter.format(plan.spent ?? 0)}',
-                  style: ds.typography.bodySm.copyWith(color: c.textMuted),
-                ),
+                stat('assets/icons_clay/repeat_loop.svg', t.book.report.routineRecorded, plan.recorded),
+                const SizedBox(width: 12),
+                stat('assets/icons_clay/check_completed.svg', t.book.report.routineSkipped, plan.skipped),
               ],
+            ),
+          ),
+        if (plan.hasBudget) ...[
+          const SizedBox(height: 16),
+          StaggerIn(
+            index: 2,
+            child: BookHero(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      ExcludeSemantics(
+                        child: SvgPicture.asset('assets/icons_clay/coins_currency.svg', width: 34, height: 34),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          t.book.report.planVsReal.toUpperCase(),
+                          style: ds.typography.pixelLabel.copyWith(color: c.onHeroMuted),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 14),
+                  PairBars(
+                    onDark: true,
+                    labelA: t.book.ritual.planned,
+                    valueA: plan.planned!,
+                    textA: AppMoneyFormatter.format(plan.planned!),
+                    labelB: t.book.ritual.spent,
+                    valueB: plan.spent ?? 0,
+                    textB: AppMoneyFormatter.format(plan.spent ?? 0),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
@@ -582,27 +652,106 @@ class _PlanPage extends StatelessWidget {
 }
 
 class _TanukiPage extends StatelessWidget {
-  const _TanukiPage({required this.content, required this.active});
+  const _TanukiPage({required this.content, required this.stamps, required this.active});
 
   final PeriodBookContent content;
+  final List<String> stamps;
 
   /// Halaman ini yang tampil: balon baru mulai mengetik (rupa D6).
   final bool active;
 
   @override
   Widget build(BuildContext context) {
+    final ds = context.ds;
+    final c = ds.colors;
     final sentences = tanukiSentences(tanukiLinesOf(content)).join(' ');
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _Heading(t.book.page.tanuki),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            TanukiPose(pose: content.flow.net >= 0 ? TanukiPoseKind.happy : TanukiPoseKind.calm, size: 96, cheer: active ? 1 : 0),
-            const SizedBox(width: 10),
-            Expanded(child: TanukiBubble(message: active ? sentences : '')),
-          ],
+        StaggerIn(
+          index: 0,
+          child: BookScene(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 18, 16, 18),
+              child: Column(
+                children: [
+                  TanukiPose(
+                    pose: content.flow.net >= 0 ? TanukiPoseKind.happy : TanukiPoseKind.calm,
+                    size: 150,
+                    cheer: active ? 1 : 0,
+                  ),
+                  const SizedBox(height: 12),
+                  TanukiBubble(message: active ? sentences : ''),
+                ],
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 16),
+        StaggerIn(
+          index: 2,
+          child: DsCard(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    ExcludeSemantics(child: SvgPicture.asset(ClayIcons.stampBook, width: 30, height: 30)),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        t.book.report.stampsTitle,
+                        style: ds.typography.bodyMd.copyWith(fontWeight: FontWeight.w700),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                if (stamps.isEmpty)
+                  Text(t.book.report.stampsNone, style: ds.typography.bodySm.copyWith(color: c.textMuted))
+                else
+                  Wrap(
+                    spacing: 12,
+                    runSpacing: 12,
+                    children: [
+                      for (final id in stamps)
+                        Column(
+                          children: [
+                            DsStampSeal(
+                              asset: stampAsset(id),
+                              semanticLabel: stampName(id),
+                              rotation: stampRotation(id),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(stampName(id), style: ds.typography.bodySm.copyWith(color: c.textSecondary)),
+                          ],
+                        ),
+                    ],
+                  ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 12),
+        StaggerIn(
+          index: 3,
+          child: Container(
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: Color.alphaBlend(c.actionPrimary.withValues(alpha: 0.08), c.surfaceCard),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Row(
+              children: [
+                ExcludeSemantics(child: SvgPicture.asset(ClayIcons.shelfBooks, width: 34, height: 34)),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(t.book.report.closing, style: ds.typography.bodySm.copyWith(color: c.textSecondary)),
+                ),
+              ],
+            ),
+          ),
         ),
       ],
     );

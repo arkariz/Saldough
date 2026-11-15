@@ -5895,6 +5895,24 @@ class Translations$book$cover$id {
 
 	// Translations
 
+	/// id: 'Ceritamu periode ini'
+	String get caption => 'Ceritamu periode ini';
+
+	/// id: '(one) {$count catatan} (other) {$count catatan}'
+	String records({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n,
+		one: '${count} catatan',
+		other: '${count} catatan',
+	);
+
+	/// id: '$count rutin beres'
+	String routines({required Object count}) => '${count} rutin beres';
+
+	/// id: '(one) {$count hari} (other) {$count hari}'
+	String days({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n,
+		one: '${count} hari',
+		other: '${count} hari',
+	);
+
 	/// id: 'Buku periode'
 	String get eyebrow => 'Buku periode';
 
@@ -5915,6 +5933,18 @@ class Translations$book$report$id {
 	final Translations _root; // ignore: unused_field
 
 	// Translations
+
+	/// id: 'Stempel periode ini'
+	String get stampsTitle => 'Stempel periode ini';
+
+	/// id: 'Belum ada stempel periode ini. Tidak apa-apa, bukunya tetap utuh.'
+	String get stampsNone => 'Belum ada stempel periode ini. Tidak apa-apa, bukunya tetap utuh.';
+
+	/// id: 'Sisa dibanding pemasukan'
+	String get savedRatio => 'Sisa dibanding pemasukan';
+
+	/// id: 'Buku periode ini sudah tersimpan di Rak Buku.'
+	String get closing => 'Buku periode ini sudah tersimpan di Rak Buku.';
 
 	/// id: 'Uang masuk lebih besar dari uang keluar.'
 	String get flowPositive => 'Uang masuk lebih besar dari uang keluar.';
@@ -5999,6 +6029,18 @@ class Translations$book$ritual$id {
 	final Translations _root; // ignore: unused_field
 
 	// Translations
+
+	/// id: 'Rapikan dulu, lalu bukumu siap dibaca.'
+	String get hero => 'Rapikan dulu, lalu bukumu siap dibaca.';
+
+	late final Translations$book$ritual$stepTitle$id stepTitle = Translations$book$ritual$stepTitle$id.internal(_root);
+	late final Translations$book$ritual$status$id status = Translations$book$ritual$status$id.internal(_root);
+
+	/// id: 'Semua rapi'
+	String get summaryTidy => 'Semua rapi';
+
+	/// id: 'Rencana dan kenyataan'
+	String get summaryReview => 'Rencana dan kenyataan';
 
 	/// id: 'Tutup buku $period'
 	String title({required Object period}) => 'Tutup buku ${period}';
@@ -6247,6 +6289,42 @@ class Translations$premium$paywall$benefits$id {
 
 	/// id: 'Tanya, rencanakan, dan lapor'
 	String get ask => 'Tanya, rencanakan, dan lapor';
+}
+
+// Path: book.ritual.stepTitle
+class Translations$book$ritual$stepTitle$id {
+	Translations$book$ritual$stepTitle$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Transaksi tanpa kategori'
+	String get uncategorized => 'Transaksi tanpa kategori';
+
+	/// id: 'Rutin'
+	String get routines => 'Rutin';
+
+	/// id: 'Kilas balik'
+	String get review => 'Kilas balik';
+}
+
+// Path: book.ritual.status
+class Translations$book$ritual$status$id {
+	Translations$book$ritual$status$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Selesai'
+	String get done => 'Selesai';
+
+	/// id: 'Sekarang'
+	String get current => 'Sekarang';
+
+	/// id: 'Berikutnya'
+	String get next => 'Berikutnya';
 }
 
 // Path: book.ritual.uncategorized
@@ -8147,10 +8225,18 @@ extension on Translations {
 			'stamps.legacyBanner.body' => 'Buku Stempel baru. Yang sudah kamu capai sudah ada di sini.',
 			'stamps.legacyBanner.action' => 'Lihat',
 			'stamps.legacyBanner.dismiss' => 'Tutup',
+			'book.cover.caption' => 'Ceritamu periode ini',
+			'book.cover.records' => ({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n, one: '${count} catatan', other: '${count} catatan', ), 
+			'book.cover.routines' => ({required Object count}) => '${count} rutin beres',
+			'book.cover.days' => ({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n, one: '${count} hari', other: '${count} hari', ), 
 			'book.cover.eyebrow' => 'Buku periode',
 			'book.cover.transition' => ({required Object days}) => 'Periode peralihan · ${days} hari',
 			'book.cover.openReport' => 'Buka rapor',
 			'book.cover.semantic' => ({required Object period}) => 'Buku ${period}',
+			'book.report.stampsTitle' => 'Stempel periode ini',
+			'book.report.stampsNone' => 'Belum ada stempel periode ini. Tidak apa-apa, bukunya tetap utuh.',
+			'book.report.savedRatio' => 'Sisa dibanding pemasukan',
+			'book.report.closing' => 'Buku periode ini sudah tersimpan di Rak Buku.',
 			'book.report.flowPositive' => 'Uang masuk lebih besar dari uang keluar.',
 			'book.report.flowNegative' => 'Uang keluar lebih besar dari uang masuk periode ini.',
 			'book.report.income' => 'Pemasukan',
@@ -8171,6 +8257,15 @@ extension on Translations {
 			'book.card.subtitle' => 'Tiga langkah, semuanya boleh dilewati.',
 			'book.card.close' => 'Tutup buku',
 			'book.card.later' => 'Nanti',
+			'book.ritual.hero' => 'Rapikan dulu, lalu bukumu siap dibaca.',
+			'book.ritual.stepTitle.uncategorized' => 'Transaksi tanpa kategori',
+			'book.ritual.stepTitle.routines' => 'Rutin',
+			'book.ritual.stepTitle.review' => 'Kilas balik',
+			'book.ritual.status.done' => 'Selesai',
+			'book.ritual.status.current' => 'Sekarang',
+			'book.ritual.status.next' => 'Berikutnya',
+			'book.ritual.summaryTidy' => 'Semua rapi',
+			'book.ritual.summaryReview' => 'Rencana dan kenyataan',
 			'book.ritual.title' => ({required Object period}) => 'Tutup buku ${period}',
 			'book.ritual.next' => 'Lanjut',
 			'book.ritual.skip' => 'Lewati',

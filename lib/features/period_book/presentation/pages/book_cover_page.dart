@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/widgets/clay_icons.dart';
 import 'package:saldough/core/presentation/widgets/stamp_visuals.dart';
 import 'package:saldough/core/presentation/widgets/tanuki_pose.dart';
 import 'package:saldough/features/period_book/domain/entities/period_book_content.dart';
@@ -11,6 +12,7 @@ import 'package:saldough/features/period_book/presentation/navigation/period_boo
 import 'package:saldough/features/period_book/presentation/period_book_read_access.dart';
 import 'package:saldough/features/period_book/presentation/widgets/book_cover.dart';
 import 'package:saldough/features/period_book/presentation/widgets/book_sparkles.dart';
+import 'package:saldough/features/period_book/presentation/widgets/book_visuals.dart';
 
 /// Sampul buku (rupa D5, T-27.6): buku melayang, stempel periode dicap satu per
 /// satu (permainan, dipicu pengguna membuka buku sehingga boleh ramai, BP-13
@@ -101,51 +103,66 @@ class _BookCoverPageState extends State<BookCoverPage> with SingleTickerProvider
             trigger: _shake,
             child: Column(
               children: [
+                _CoverHeader(content: load.content),
                 Expanded(
-                  child: Stack(
-                    children: [
-                      const Positioned.fill(child: BookSparkles()),
-                      Center(
-                        child: _Entrance(
-                          child: AnimatedBuilder(
-                            animation: _opening,
-                            builder: (context, child) => FloatingBook(open: Curves.easeOutCubic.transform(_opening.value), child: child!),
-                            child: KeyedSubtree(
-                              key: _bookKey,
-                              child: BookCover(
-                                eyebrow: t.book.cover.eyebrow,
-                                title: load.content.period.period.name,
-                                subtitle: _subtitle(load.content),
-                                semanticLabel: [
-                                  t.book.cover.semantic(period: load.content.period.period.name),
-                                  for (final id in load.stamps.take(_printed)) stampName(id),
-                                ].join('. '),
-                                mascot: (size) => TanukiPose(
-                                  pose: _printed > 0 ? TanukiPoseKind.happy : TanukiPoseKind.neutral,
-                                  size: size,
-                                  cheer: _shake,
-                                ),
-                                seals: [
-                                  for (final (i, id) in load.stamps.indexed)
-                                    if (i < _printed)
-                                      _StampIn(
-                                        child: DsStampSeal(
-                                          asset: stampAsset(id),
-                                          semanticLabel: stampName(id),
-                                          rotation: stampRotation(id),
-                                        ),
-                                      ),
-                                ],
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: BookScene(
+                      child: Stack(
+                        children: [
+                          const Positioned.fill(child: BookSparkles()),
+                          // Bayangan lantai di bawah buku.
+                          Align(
+                            alignment: const Alignment(0, 0.78),
+                            child: Container(
+                              width: 190,
+                              height: 20,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(100),
+                                boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.22), blurRadius: 22, spreadRadius: 2)],
                               ),
                             ),
                           ),
-                        ),
+                          Center(
+                            child: _Entrance(
+                              child: AnimatedBuilder(
+                                animation: _opening,
+                                builder: (context, child) => FloatingBook(open: Curves.easeOutCubic.transform(_opening.value), child: child!),
+                                child: KeyedSubtree(
+                                  key: _bookKey,
+                                  child: BookCover(
+                                    eyebrow: t.book.cover.eyebrow,
+                                    title: load.content.period.period.name,
+                                    subtitle: _subtitle(load.content),
+                                    semanticLabel: [
+                                      t.book.cover.semantic(period: load.content.period.period.name),
+                                      for (final id in load.stamps.take(_printed)) stampName(id),
+                                    ].join('. '),
+                                    mascot: (size) => TanukiPose(
+                                      pose: _printed > 0 ? TanukiPoseKind.happy : TanukiPoseKind.neutral,
+                                      size: size,
+                                      cheer: _shake,
+                                    ),
+                                    seals: [
+                                      for (final (i, id) in load.stamps.indexed)
+                                        if (i < _printed)
+                                          _StampIn(
+                                            child: DsStampSeal(asset: stampAsset(id), semanticLabel: stampName(id), rotation: stampRotation(id)),
+                                          ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
+                _CoverChips(content: load.content),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
+                  padding: const EdgeInsets.fromLTRB(20, 4, 20, 20),
                   child: DsSheen(
                     child: DsButton(label: t.book.cover.openReport, expand: true, onPressed: () => unawaited(_openReport())),
                   ),
@@ -208,6 +225,61 @@ class _StampIn extends StatelessWidget {
         return Opacity(opacity: (t * 4).clamp(0.0, 1.0), child: Transform.rotate(angle: turn, child: Transform.scale(scale: scale, child: child)));
       },
       child: child,
+    );
+  }
+}
+
+/// Kepala sampul: kalimat pembuka dan rentang periode (rupa D5, layar tidak kosong).
+class _CoverHeader extends StatelessWidget {
+  const _CoverHeader({required this.content});
+
+  final PeriodBookContent content;
+
+  @override
+  Widget build(BuildContext context) {
+    final ds = context.ds;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
+      child: Column(
+        children: [
+          Text(t.book.cover.caption, style: ds.typography.headlineSm, textAlign: TextAlign.center),
+          const SizedBox(height: 4),
+          Text(
+            content.period.period.rangeLabel.toUpperCase(),
+            style: ds.typography.pixelLabel.copyWith(color: ds.colors.textMuted),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Chip ringkas di bawah buku: jumlah catatan, hari, dan rutin beres. Hanya
+/// fakta yang sudah ada di buku, tanpa nominal dan tanpa penilaian.
+class _CoverChips extends StatelessWidget {
+  const _CoverChips({required this.content});
+
+  final PeriodBookContent content;
+
+  @override
+  Widget build(BuildContext context) {
+    final records = content.period.transactionCount;
+    final days = content.period.period.days;
+    final plan = content.plan;
+    final routines = plan == null ? 0 : plan.recorded + plan.skipped;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 14, 20, 12),
+      child: Wrap(
+        alignment: WrapAlignment.center,
+        spacing: 8,
+        runSpacing: 8,
+        children: [
+          BookChip(asset: ClayIcons.bookOpen, label: t.book.cover.records(n: records, count: records)),
+          BookChip(asset: 'assets/icons_clay/calendar_date.svg', label: t.book.cover.days(n: days, count: days)),
+          if (routines > 0 && plan!.open == 0)
+            BookChip(asset: 'assets/icons_clay/repeat_loop.svg', label: t.book.cover.routines(count: routines)),
+        ],
+      ),
     );
   }
 }

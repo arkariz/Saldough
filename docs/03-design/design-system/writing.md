@@ -38,6 +38,8 @@ Teks Tanukonomy ditulis seperti teman yang rapi mencatat: hangat, pendek, dan te
 | Tanpa kategori | lain-lain, uncategorized | Transaksi yang belum diberi kategori; bukan "Lainnya" |
 | Lainnya ({n} kategori) | sisanya, dll. | Gabungan kategori di luar lima teratas di Analisis |
 | Nyalakan | aktifkan, hidupkan | Tombol fitur yang mati; "Tidak sekarang" (bukan Lewati atau Nanti) untuk menolak di onboarding |
+| Stempel, Buku Stempel | badge, lencana, trofi, poin, koleksi, galeri prestasi | Tanda kecil untuk satu hal nyata yang berhasil dilakukan; diraih sekali, tidak pernah hilang. Di antarmuka cukup "stempel", bukan "tonggak" |
+| Perayaan stempel | notifikasi pencapaian | Kabar kecil saat stempel diraih; sakelar di Akun › Aplikasi. Tanpa "n dari N", peringkat, atau hitung mundur |
 | Izinkan | beri akses | Tombol bila izin sistem hilang |
 | Nyala / Mati / Izin belum diberikan | aktif, nonaktif, ditolak | Status fitur di Akun dan onboarding |
 | Versi baru | update, upgrade | Rilis dari toko aplikasi, dipasang dari dalam aplikasi |

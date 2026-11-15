@@ -7067,7 +7067,14 @@ L lebih dari seminggu.
       ⚠ Kunci Remote Config baru ini harus didaftarkan pemilik di konsol Firebase
       (dua kunci, bawaan `true` dan kosong) dan dicatat di `PLAY_DATA_SAFETY.md`
       bila ada perubahan data (tidak ada data baru: hanya id stempel).
-- [ ] **T-28.7** (S) Teks id/en, glosarium, dokumen rilis. Butuh T-28.5.
+- [x] **T-28.7** (S) Teks id/en, glosarium, dokumen rilis. Butuh T-28.5.
+      Selesai 15 Nov 2026: teks `stamps.*` (nama, cara mendapatkan, perayaan,
+      lembar, banner, Akun, Kaya) id/en lulus `translations_test` (istilah
+      terlarang, tanpa tanda seru, "kamu"); baris Stempel/Buku Stempel/Perayaan
+      stempel di `writing.md` (glosarium proyek sudah ada sejak 11 Nov); status
+      FR-STP di PRD; baris Analytics stempel di `PLAY_DATA_SAFETY.md`; draf catatan
+      rilis di [RELEASE_NOTES_DRAFT_FASE_28.md](../03-release/RELEASE_NOTES_DRAFT_FASE_28.md)
+      (belum disetujui, tidak di `release_notes/`).
 - [ ] **T-28.8** (S) Verifikasi perangkat S1–S8.
 
 ## Fase 27: Buku Periode dan Kartu Periode

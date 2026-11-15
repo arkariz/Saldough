@@ -974,8 +974,10 @@ masih menunggu (B-67).
 Gamifikasi ringan dari B-81/B-82 (FREEMIUM_PAYWALL §16): pengakuan kecil
 untuk ketepatan dan kemampuan, tanpa streak, poin, level, atau skor. Perilaku,
 aturan G-1–G-11, daftar tonggak, dan teksnya di
-[GAMIFICATION.md](features/GAMIFICATION.md). Menunggu keputusan pemilik
-(KT-G1–KT-G7) dan belum dijadwalkan (B-94).
+[GAMIFICATION.md](features/GAMIFICATION.md). KT-G1–KT-G7 diputuskan pemilik
+14 Nov 2026 (tanpa uji A/B); dijadwalkan sebagai Fase 28. **Kode selesai
+15 Nov 2026** (T-28.1–T-28.7); kotak di bawah dicentang setelah verifikasi
+perangkat T-28.8.
 
 **FR-STP-001 — Tonggak dan Buku Stempel (R1)**
 - [ ] Tonggak nyata (dompet pertama, catatan pertama, periode rapi, rutin tak

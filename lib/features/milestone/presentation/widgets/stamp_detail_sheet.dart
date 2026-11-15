@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/full_screen_sheet.dart';
-import 'package:saldough/features/milestone/presentation/widgets/stamp_visuals.dart';
+import 'package:saldough/core/presentation/widgets/stamp_visuals.dart';
 
 /// Lembar detail stempel (rupa buku-stempel §4.5 dan §9, gaya Kaya): segel besar
 /// dengan sinar emas berputar di belakangnya yang **miring 3D mengikuti jari**

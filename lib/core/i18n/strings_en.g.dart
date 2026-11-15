@@ -1721,6 +1721,8 @@ class _Translations$book$en extends Translations$book$id {
 	final TranslationsEn _root; // ignore: unused_field
 
 	// Translations
+	@override late final _Translations$book$cover$en cover = _Translations$book$cover$en._(_root);
+	@override late final _Translations$book$report$en report = _Translations$book$report$en._(_root);
 	@override late final _Translations$book$card$en card = _Translations$book$card$en._(_root);
 	@override late final _Translations$book$ritual$en ritual = _Translations$book$ritual$en._(_root);
 	@override late final _Translations$book$page$en page = _Translations$book$page$en._(_root);
@@ -2545,6 +2547,50 @@ class _Translations$stamps$legacyBanner$en extends Translations$stamps$legacyBan
 	@override String get dismiss => 'Close';
 }
 
+// Path: book.cover
+class _Translations$book$cover$en extends Translations$book$cover$id {
+	_Translations$book$cover$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get eyebrow => 'Period book';
+	@override String transition({required Object days}) => 'Transition period · ${days} days';
+	@override String get openReport => 'Open the report';
+	@override String semantic({required Object period}) => '${period} book';
+}
+
+// Path: book.report
+class _Translations$book$report$en extends Translations$book$report$id {
+	_Translations$book$report$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get flowPositive => 'More money came in than went out.';
+	@override String get flowNegative => 'More money went out than came in this period.';
+	@override String get income => 'Income';
+	@override String get expense => 'Spending';
+	@override String get net => 'Difference';
+	@override String get uncategorized => 'No category';
+	@override String get others => 'Others';
+	@override String get freelance => 'Freelance';
+	@override String get belowOne => '<1%';
+	@override String get usual => 'Usual';
+	@override String get thisPeriod => 'This period';
+	@override String compareIntro({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
+		one: 'Compared to the average of the previous ${count} period.',
+		other: 'Compared to the average of the previous ${count} periods.',
+	);
+	@override String get routineRecorded => 'Recurring recorded';
+	@override String get routineSkipped => 'Recurring skipped';
+	@override String get planVsReal => 'Plan and what happened';
+	@override String noteUncategorized({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
+		one: '${count} transaction has no category, so the split is not complete.',
+		other: '${count} transactions have no category, so the split is not complete.',
+	);
+}
+
 // Path: book.card
 class _Translations$book$card$en extends Translations$book$card$id {
 	_Translations$book$card$en._(TranslationsEn root) : this._root = root, super.internal(root);
@@ -2588,6 +2634,11 @@ class _Translations$book$page$en extends Translations$book$page$id {
 	final TranslationsEn _root; // ignore: unused_field
 
 	// Translations
+	@override String get flow => 'Period flow';
+	@override String get where => 'Where the money went';
+	@override String get compare => 'Compared to usual';
+	@override String get recurring => 'Recurring and plans';
+	@override String label({required Object current, required Object total}) => 'Page ${current} of ${total}';
 	@override String get tanuki => 'Tanuki says';
 }
 
@@ -4577,6 +4628,26 @@ extension on TranslationsEn {
 			'stamps.legacyBanner.body' => 'A new Stamp Book. What you have already done is here.',
 			'stamps.legacyBanner.action' => 'See',
 			'stamps.legacyBanner.dismiss' => 'Close',
+			'book.cover.eyebrow' => 'Period book',
+			'book.cover.transition' => ({required Object days}) => 'Transition period · ${days} days',
+			'book.cover.openReport' => 'Open the report',
+			'book.cover.semantic' => ({required Object period}) => '${period} book',
+			'book.report.flowPositive' => 'More money came in than went out.',
+			'book.report.flowNegative' => 'More money went out than came in this period.',
+			'book.report.income' => 'Income',
+			'book.report.expense' => 'Spending',
+			'book.report.net' => 'Difference',
+			'book.report.uncategorized' => 'No category',
+			'book.report.others' => 'Others',
+			'book.report.freelance' => 'Freelance',
+			'book.report.belowOne' => '<1%',
+			'book.report.usual' => 'Usual',
+			'book.report.thisPeriod' => 'This period',
+			'book.report.compareIntro' => ({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: 'Compared to the average of the previous ${count} period.', other: 'Compared to the average of the previous ${count} periods.', ), 
+			'book.report.routineRecorded' => 'Recurring recorded',
+			'book.report.routineSkipped' => 'Recurring skipped',
+			'book.report.planVsReal' => 'Plan and what happened',
+			'book.report.noteUncategorized' => ({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '${count} transaction has no category, so the split is not complete.', other: '${count} transactions have no category, so the split is not complete.', ), 
 			'book.card.title' => ({required Object period}) => 'The ${period} book is ready to close',
 			'book.card.subtitle' => 'Three steps, all of them skippable.',
 			'book.card.close' => 'Close the book',
@@ -4597,6 +4668,11 @@ extension on TranslationsEn {
 			'book.ritual.uncategorized.none' => 'Every transaction has a category.',
 			'book.ritual.recurring.some' => ({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '${count} recurring item is still waiting.', other: '${count} recurring items are still waiting.', ), 
 			'book.ritual.recurring.none' => 'Every recurring item is done.',
+			'book.page.flow' => 'Period flow',
+			'book.page.where' => 'Where the money went',
+			'book.page.compare' => 'Compared to usual',
+			'book.page.recurring' => 'Recurring and plans',
+			'book.page.label' => ({required Object current, required Object total}) => 'Page ${current} of ${total}',
 			'book.page.tanuki' => 'Tanuki says',
 			'book.tanuki.records' => ({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: 'This period you recorded ${count} transaction.', other: 'This period you recorded ${count} transactions.', ), 
 			'book.tanuki.flow' => ({required Object income, required Object expense, required Object net}) => 'Income ${income}, spending ${expense}, ${net} left.',

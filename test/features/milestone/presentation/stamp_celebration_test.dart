@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/widgets/stamp_visuals.dart';
 import 'package:saldough/features/milestone/presentation/widgets/legacy_banner_slide.dart';
 import 'package:saldough/features/milestone/presentation/widgets/stamp_celebration.dart';
-import 'package:saldough/features/milestone/presentation/widgets/stamp_visuals.dart';
 
 import '../../../helpers/reduced_motion.dart';
 

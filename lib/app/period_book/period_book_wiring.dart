@@ -1,5 +1,9 @@
+import 'dart:async';
+
 import 'package:api_storage/api_storage.dart';
 import 'package:di/di.dart';
+import 'package:saldough/app/milestone/milestone_coordinator.dart';
+import 'package:saldough/app/period_book/app_book_access.dart';
 import 'package:saldough/app/period_book/app_period_book_source.dart';
 import 'package:saldough/app/period_book/app_ritual_access.dart';
 import 'package:saldough/app/period_book/period_book_gate.dart';
@@ -11,6 +15,7 @@ import 'package:saldough/features/analysis/domain/period_comparison.dart';
 import 'package:saldough/features/period_book/data/period_book_memory_store_impl.dart';
 import 'package:saldough/features/period_book/domain/repositories/period_book_memory_store.dart';
 import 'package:saldough/features/period_book/domain/repositories/period_book_source.dart';
+import 'package:saldough/features/period_book/presentation/period_book_read_access.dart';
 import 'package:saldough/features/period_book/presentation/period_book_ritual_access.dart';
 import 'package:saldough/features/plan/domain/plan_sources.dart';
 import 'package:saldough/shared/category/category.dart';
@@ -43,6 +48,20 @@ void registerPeriodBook(GetIt container) {
         transactions: container<TransactionRepository>(),
         wallets: container<WalletRepository>(),
         shell: container<ShellRequests>(),
+      ),
+    )
+    ..registerLazySingleton<PeriodBookReadAccess>(
+      () => AppBookAccess(
+        gate: container<PeriodBookGate>(),
+        source: container<PeriodBookSource>(),
+        transactions: container<TransactionRepository>(),
+        wallets: container<WalletRepository>(),
+        absorbStamps: (ids) {
+          // Stempel periode tampil di sampul; tanpa perayaan terpisah (BP-13).
+          if (container.isRegistered<MilestoneCoordinator>()) {
+            unawaited(container<MilestoneCoordinator>().absorbIntoCover(ids));
+          }
+        },
       ),
     )
     ..registerLazySingleton<PeriodBookGate>(

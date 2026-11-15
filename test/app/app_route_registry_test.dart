@@ -18,6 +18,8 @@ void main() {
       'freelance.overview',
       'milestone.book',
       'periodBook.ritual',
+      'periodBook.cover',
+      'periodBook.report',
       'record.sheet',
       'record.edit',
       'recurring.detail',

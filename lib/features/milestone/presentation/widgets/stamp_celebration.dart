@@ -3,7 +3,7 @@ import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/app_action_snack_bar.dart';
 import 'package:saldough/core/presentation/widgets/full_screen_sheet.dart';
-import 'package:saldough/features/milestone/presentation/widgets/stamp_visuals.dart';
+import 'package:saldough/core/presentation/widgets/stamp_visuals.dart';
 
 /// Snackbar perayaan (rupa buku-stempel §4.1, G-4): satu kalimat, segel kecil,
 /// aksi Lihat. Satu stempel: "Stempel baru: nama"; beberapa digabung menjadi

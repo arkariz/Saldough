@@ -45,6 +45,12 @@ final class PeriodBookMemoryStoreImpl with RepositoryGuard implements PeriodBook
         if (value is List) steps[key] = {for (final v in value) if (v is int) v};
       }
     }
+    final stamps = <String, Set<String>>{};
+    if (json['stamps'] case final Map<String, dynamic> map) {
+      for (final MapEntry(:key, :value) in map.entries) {
+        if (value is List) stamps[key] = {for (final v in value) if (v is String) v};
+      }
+    }
     Set<String> strings(Object? raw) => {
       if (raw is List) for (final v in raw) if (v is String) v,
     };
@@ -54,6 +60,7 @@ final class PeriodBookMemoryStoreImpl with RepositoryGuard implements PeriodBook
       cardDismissed: strings(json['cardDismissed']),
       cardFacts: strings(json['cardFacts']),
       inviteEnabled: json['inviteEnabled'] as bool? ?? true,
+      stamps: stamps,
     );
   }
 
@@ -64,5 +71,6 @@ final class PeriodBookMemoryStoreImpl with RepositoryGuard implements PeriodBook
     'cardDismissed': m.cardDismissed.toList()..sort(),
     'cardFacts': m.cardFacts.toList()..sort(),
     'inviteEnabled': m.inviteEnabled,
+    'stamps': {for (final e in m.stamps.entries) e.key: (e.value.toList()..sort())},
   };
 }

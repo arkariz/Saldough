@@ -148,6 +148,23 @@ class MilestoneCoordinator implements MilestoneBookAccess {
     }
   }
 
+  /// Stempel [ids] sudah tampil di sampul Buku Periode: dilipat ke sana, tanpa
+  /// perayaan terpisah (BUKU_PERIODE BP-13, G-4). Dibuang dari perayaan yang
+  /// tertahan dan dianggap sudah dilihat.
+  Future<void> absorbIntoCover(Set<String> ids) {
+    _pending.value = [
+      for (final id in _pending.value)
+        if (!ids.contains(id)) id,
+    ];
+    return _update(
+      (l) => l.copyWith(
+        earned: {
+          for (final e in l.earned.values) e.id: ids.contains(e.id) ? e.markSeen() : e,
+        },
+      ),
+    );
+  }
+
   /// Buku Stempel dibuka: semua stempel dianggap dilihat (titik hilang), dan
   /// perayaan yang tertahan dibatalkan karena stempelnya sudah terlihat.
   @override

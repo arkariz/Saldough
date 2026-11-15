@@ -193,4 +193,14 @@ void main() {
     await coordinator.evaluate();
     expect(logged.last, MilestoneEvents.earned(id: 'record_first', quiet: false));
   });
+
+  test('absorbIntoCover: stempel periode dilipat ke sampul, dibuang dari perayaan tertahan dan dianggap dilihat (BP-13)', () async {
+    facts.facts = {MilestoneFact.walletExists, MilestoneFact.tidyPeriodClosed};
+    await coordinator.start();
+    expect(coordinator.pending.value, ['wallet_first', 'period_tidy']);
+    await coordinator.absorbIntoCover({'period_tidy'});
+    expect(coordinator.pending.value, ['wallet_first']);
+    expect(coordinator.ledger.value.earned['period_tidy']!.seen, isTrue);
+    expect(coordinator.ledger.value.earned['wallet_first']!.seen, isFalse);
+  });
 }

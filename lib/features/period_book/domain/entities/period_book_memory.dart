@@ -15,6 +15,7 @@ final class PeriodBookMemory extends Equatable {
     this.cardDismissed = const {},
     this.cardFacts = const {},
     this.inviteEnabled = true,
+    this.stamps = const {},
   });
 
   /// Kosong: belum ada buku dibuka, ajakan menyala.
@@ -35,6 +36,13 @@ final class PeriodBookMemory extends Equatable {
 
   /// Sakelar Ajakan akhir periode (BP-14).
   final bool inviteEnabled;
+
+  /// Id periode → id stempel yang **tercetak di sampulnya**. Sekali tercetak tidak
+  /// dicabut walau datanya berubah (G-1); tidak ada angka keuangan.
+  final Map<String, Set<String>> stamps;
+
+  /// Stempel tercetak di sampul [periodId].
+  Set<String> stampsOf(String periodId) => stamps[periodId] ?? const {};
 
   /// Buku periode [periodId] pernah dibuka.
   bool isOpened(String periodId) => opened.containsKey(periodId);
@@ -60,20 +68,26 @@ final class PeriodBookMemory extends Equatable {
   /// Mengganti sakelar ajakan.
   PeriodBookMemory withInviteEnabled({required bool enabled}) => _copy(inviteEnabled: enabled);
 
+  /// Mencetak [ids] ke sampul [periodId] (gabungan; tidak ada yang dicabut).
+  PeriodBookMemory withStamps(String periodId, Set<String> ids) =>
+      _copy(stamps: {...stamps, periodId: {...stampsOf(periodId), ...ids}});
+
   PeriodBookMemory _copy({
     Map<String, DateTime>? opened,
     Map<String, Set<int>>? ritualSteps,
     Set<String>? cardDismissed,
     Set<String>? cardFacts,
     bool? inviteEnabled,
+    Map<String, Set<String>>? stamps,
   }) => PeriodBookMemory(
     opened: opened ?? this.opened,
     ritualSteps: ritualSteps ?? this.ritualSteps,
     cardDismissed: cardDismissed ?? this.cardDismissed,
     cardFacts: cardFacts ?? this.cardFacts,
     inviteEnabled: inviteEnabled ?? this.inviteEnabled,
+    stamps: stamps ?? this.stamps,
   );
 
   @override
-  List<Object?> get props => [opened, ritualSteps, cardDismissed, cardFacts, inviteEnabled];
+  List<Object?> get props => [opened, ritualSteps, cardDismissed, cardFacts, inviteEnabled, stamps];
 }

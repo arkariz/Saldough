@@ -21,4 +21,10 @@ void main() {
     expect(m.stepsOf('q'), {1});
     expect(m.stepsOf('x'), isEmpty);
   });
+
+  test('stempel tercetak digabung dan tidak pernah dicabut (G-1)', () {
+    final m = PeriodBookMemory.empty.withStamps('p', {'period_tidy'}).withStamps('p', {'recurring_clear'});
+    expect(m.stampsOf('p'), {'period_tidy', 'recurring_clear'});
+    expect(m.stampsOf('q'), isEmpty);
+  });
 }

@@ -17,6 +17,7 @@ void main() {
         .withStepDone('2026-10-25', 1)
         .withCardDismissed('2026-10-25')
         .withCardFacts({'noteCount', 'stamp'})
+        .withStamps('2026-10-01', {'period_tidy'})
         .withInviteEnabled(enabled: false);
     await store.save(memory);
     expect((await store.load()).getOrElse((_) => throw StateError('gagal')), memory);

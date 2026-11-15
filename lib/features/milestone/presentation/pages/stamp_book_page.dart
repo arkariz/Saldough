@@ -7,6 +7,7 @@ import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/clay_icons.dart';
+import 'package:saldough/core/presentation/widgets/stamp_visuals.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/features/milestone/domain/entities/milestone_catalog.dart';
 import 'package:saldough/features/milestone/domain/entities/milestone_def.dart';
@@ -14,7 +15,6 @@ import 'package:saldough/features/milestone/domain/entities/milestone_ledger.dar
 import 'package:saldough/features/milestone/presentation/stamp_book_access.dart';
 import 'package:saldough/features/milestone/presentation/widgets/stamp_detail_sheet.dart';
 import 'package:saldough/features/milestone/presentation/widgets/stamp_scene.dart';
-import 'package:saldough/features/milestone/presentation/widgets/stamp_visuals.dart';
 
 /// Buku Stempel (rupa buku-stempel §4.5, T-28.5): stempel per kelompok, yang
 /// diraih berwarna dan yang belum samar dengan satu baris cara mendapatkannya.

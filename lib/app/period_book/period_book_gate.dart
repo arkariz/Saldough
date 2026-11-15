@@ -85,6 +85,15 @@ class PeriodBookGate {
   Future<Either<Failure, Unit>> markStepDone(String periodId, int step) async =>
       _memory.save((await _loadMemory()).withStepDone(periodId, step));
 
+  /// Mencetak [ids] ke sampul buku [periodId] (gabungan; tidak ada yang dicabut, G-1).
+  Future<Either<Failure, Unit>> printStamps(String periodId, Set<String> ids) async {
+    final memory = await _loadMemory();
+    if (memory.stampsOf(periodId).containsAll(ids)) {
+      return const Right(unit);
+    }
+    return _memory.save(memory.withStamps(periodId, ids));
+  }
+
   /// "Nanti" pada kartu Beranda: tidak muncul lagi untuk periode itu (BP-2).
   Future<Either<Failure, Unit>> dismissCard(String periodId) async =>
       _memory.save((await _loadMemory()).withCardDismissed(periodId));

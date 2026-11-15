@@ -1931,6 +1931,36 @@
     }
   },
   "book": {
+    "cover": {
+      "eyebrow": "Buku periode",
+      "transition": "Periode peralihan · $days hari",
+      "openReport": "Buka rapor",
+      "semantic": "Buku $period"
+    },
+    "report": {
+      "flowPositive": "Uang masuk lebih besar dari uang keluar.",
+      "flowNegative": "Uang keluar lebih besar dari uang masuk periode ini.",
+      "income": "Pemasukan",
+      "expense": "Pengeluaran",
+      "net": "Selisih",
+      "uncategorized": "Tanpa kategori",
+      "others": "Lainnya",
+      "freelance": "Freelance",
+      "belowOne": "<1%",
+      "usual": "Biasanya",
+      "thisPeriod": "Periode ini",
+      "compareIntro": {
+        "one": "Dibanding rata-rata $count periode sebelumnya.",
+        "other": "Dibanding rata-rata $count periode sebelumnya."
+      },
+      "routineRecorded": "Rutin tercatat",
+      "routineSkipped": "Rutin dilewati",
+      "planVsReal": "Rencana dan kenyataan",
+      "noteUncategorized": {
+        "one": "$count transaksi belum berkategori, jadi pembagian kategori belum penuh.",
+        "other": "$count transaksi belum berkategori, jadi pembagian kategori belum penuh."
+      }
+    },
   "card": {
       "title": "Buku $period siap ditutup",
       "subtitle": "Tiga langkah, semuanya boleh dilewati.",
@@ -1966,6 +1996,11 @@
       }
     },
     "page": {
+      "flow": "Arus periode",
+      "where": "Ke mana uang pergi",
+      "compare": "Dibanding biasanya",
+      "recurring": "Rutin dan rencana",
+      "label": "Halaman $current dari $total",
       "tanuki": "Kata Tanuki"
     },
     "tanuki": {

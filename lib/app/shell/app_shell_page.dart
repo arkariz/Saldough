@@ -209,10 +209,16 @@ class _AppShellPageState extends State<AppShellPage> {
             PeriodInvitationHost(
               container: parentContainer,
               board: _statusBoard,
-              onOpenRitual: (periodId) => context.pushRoute(
-                PeriodBookRouteKeys.ritual,
-                RitualInput(periodId: periodId),
-              ),
+              onOpenRitual: (periodId) async {
+                // Sesudah Tutup buku (hasil `true`), buku terbuka di sampulnya (D5).
+                final closed = await context.pushRoute<RitualInput, bool>(
+                  PeriodBookRouteKeys.ritual,
+                  RitualInput(periodId: periodId),
+                );
+                if (closed == true && context.mounted) {
+                  await context.pushRoute(PeriodBookRouteKeys.cover, BookInput(periodId: periodId));
+                }
+              },
             ),
             ShellRequestHost(
               container: parentContainer,

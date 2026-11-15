@@ -1934,6 +1934,36 @@
     }
   },
   "book": {
+    "cover": {
+      "eyebrow": "Period book",
+      "transition": "Transition period · $days days",
+      "openReport": "Open the report",
+      "semantic": "$period book"
+    },
+    "report": {
+      "flowPositive": "More money came in than went out.",
+      "flowNegative": "More money went out than came in this period.",
+      "income": "Income",
+      "expense": "Spending",
+      "net": "Difference",
+      "uncategorized": "No category",
+      "others": "Others",
+      "freelance": "Freelance",
+      "belowOne": "<1%",
+      "usual": "Usual",
+      "thisPeriod": "This period",
+      "compareIntro": {
+        "one": "Compared to the average of the previous $count period.",
+        "other": "Compared to the average of the previous $count periods."
+      },
+      "routineRecorded": "Recurring recorded",
+      "routineSkipped": "Recurring skipped",
+      "planVsReal": "Plan and what happened",
+      "noteUncategorized": {
+        "one": "$count transaction has no category, so the split is not complete.",
+        "other": "$count transactions have no category, so the split is not complete."
+      }
+    },
   "card": {
       "title": "The $period book is ready to close",
       "subtitle": "Three steps, all of them skippable.",
@@ -1969,6 +1999,11 @@
       }
     },
     "page": {
+      "flow": "Period flow",
+      "where": "Where the money went",
+      "compare": "Compared to usual",
+      "recurring": "Recurring and plans",
+      "label": "Page $current of $total",
       "tanuki": "Tanuki says"
     },
     "tanuki": {

@@ -4288,6 +4288,7 @@ class Translations$stamps$id {
 	final Translations _root; // ignore: unused_field
 
 	// Translations
+	late final Translations$stamps$kaya$id kaya = Translations$stamps$kaya$id.internal(_root);
 	late final Translations$stamps$screen$id screen = Translations$stamps$screen$id.internal(_root);
 
 	/// id: 'Stempel kecil untuk hal yang berhasil kamu lakukan. Tidak ada yang hilang.'
@@ -5613,6 +5614,30 @@ class Translations$premium$paywall$id {
 
 	/// id: 'Berlangganan Plus belum tersedia. Mencatat tetap gratis.'
 	String get notSellingBody => 'Berlangganan Plus belum tersedia. Mencatat tetap gratis.';
+}
+
+// Path: stamps.kaya
+class Translations$stamps$kaya$id {
+	Translations$stamps$kaya$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Tanuki'
+	String get mascot => 'Tanuki';
+
+	/// id: 'Stempel-stempelmu ada di sini. Ketuk satu untuk melihatnya.'
+	String get idle => 'Stempel-stempelmu ada di sini. Ketuk satu untuk melihatnya.';
+
+	/// id: '$name sudah kamu raih. Stempel ini tidak akan hilang.'
+	String tapEarned({required Object name}) => '${name} sudah kamu raih. Stempel ini tidak akan hilang.';
+
+	/// id: '$name masuk sendiri begitu syaratnya terpenuhi. Tidak perlu buru-buru.'
+	String tapLocked({required Object name}) => '${name} masuk sendiri begitu syaratnya terpenuhi. Tidak perlu buru-buru.';
+
+	/// id: 'Satu stempel baru terbuka di buku.'
+	String get revealed => 'Satu stempel baru terbuka di buku.';
 }
 
 // Path: stamps.screen
@@ -7808,6 +7833,11 @@ extension on Translations {
 			'premium.paywall.done' => 'Selesai',
 			'premium.paywall.notSellingTitle' => 'Plus belum dijual',
 			'premium.paywall.notSellingBody' => 'Berlangganan Plus belum tersedia. Mencatat tetap gratis.',
+			'stamps.kaya.mascot' => 'Tanuki',
+			'stamps.kaya.idle' => 'Stempel-stempelmu ada di sini. Ketuk satu untuk melihatnya.',
+			'stamps.kaya.tapEarned' => ({required Object name}) => '${name} sudah kamu raih. Stempel ini tidak akan hilang.',
+			'stamps.kaya.tapLocked' => ({required Object name}) => '${name} masuk sendiri begitu syaratnya terpenuhi. Tidak perlu buru-buru.',
+			'stamps.kaya.revealed' => 'Satu stempel baru terbuka di buku.',
 			'stamps.screen.title' => 'Buku Stempel',
 			'stamps.intro' => 'Stempel kecil untuk hal yang berhasil kamu lakukan. Tidak ada yang hilang.',
 			'stamps.groups.start' => 'Mulai',

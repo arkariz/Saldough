@@ -7035,12 +7035,22 @@ L lebih dari seminggu.
       kini membuka Buku Stempel. Perbaikan terkait: evaluasi dipicu sesudah
       cadangan tersimpan (`BackupRecordedGateway`). Uji widget halaman dan entri
       Akun; uji app/milestone lulus, analyze bersih.
-      ⚠ Selisih dari rupa: (1) Kaya hanya sebagian (segel dicap berurutan, cincin
-      baru); belum ada adegan daun, Tanuki melompat, balon ketik, kilap, sinar
-      dan segel miring 3D di detail, konfeti, getar layar; (2) tonggak tersembunyi
-      tampil hanya bila diraih (belum ada pelacak "fitur sudah dipakai"); (3)
-      keterangan sakelar berubah saat mati, catatan terpisah di bawah kartu tidak
-      ada; (4) keadaan memuat tidak ada (catatan dibaca sinkron dari koordinator).
+      **Gaya Kaya dilengkapi 15 Nov 2026** (hanya di Buku Stempel dan lembar
+      detailnya, G-4): adegan `StampScene` (daun melayang dan dua kilau satu
+      `Ticker`, Tanuki bernapas dan melompat saat stempel diketuk, balon mengetik
+      per huruf `liveRegion`), kilap holografik tiap 4,5 dtk di segel diraih
+      (`DsStampSeal.shine`), lembar detail dengan sinar emas berputar, segel miring
+      3D mengikuti jari, konfeti 36 partikel (`DsCelebration.burst`) dan getar
+      layar 420 ms untuk stempel baru, balik 3D untuk tonggak tersembunyi yang
+      baru terbuka, garis emas di judul kelompok; tanpa "Cap lagi" (G-3). Semua mati
+      lewat `DsMotion.reduced`. Diuji: uji widget (gerak dikurangi dan gerak
+      penuh tanpa galat) dan emulator Android (tanpa galat Flutter).
+      ⚠ Selisih dari rupa: (1) konfeti memakai `DsCelebration` yang ada (bukan
+      daun/koin/bintang khusus); (2) tint emas di latar daftar tidak ada; (3)
+      tonggak tersembunyi tampil hanya bila diraih (belum ada pelacak "fitur sudah
+      dipakai") dan Tanuki tidak berkomentar saat itu; (4) keterangan sakelar
+      berubah saat mati, tanpa catatan terpisah; (5) tidak ada keadaan memuat;
+      (6) kinerja kilap dan konfeti belum diukur di Android kelas bawah (T-28.8).
 - [ ] **T-28.6** (S) Analitik §10 dan saklar jarak jauh `stamps_enabled`
       (tanpa uji A/B). Butuh T-28.4, T-28.5.
 - [ ] **T-28.7** (S) Teks id/en, glosarium, dokumen rilis. Butuh T-28.5.

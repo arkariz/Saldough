@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -42,6 +43,8 @@ class DsStampSeal extends StatefulWidget {
     this.isNew = false,
     this.size = DsStampSealSize.md,
     this.rotation = -6,
+    this.shine = false,
+    this.shineDelay = Duration.zero,
     super.key,
   });
 
@@ -63,12 +66,23 @@ class DsStampSeal extends StatefulWidget {
   /// Sudut miring tetap, derajat.
   final double rotation;
 
+  /// Kilap holografik yang menyapu segel diraih tiap 4,5 detik (gaya Kaya, hanya
+  /// di dalam Buku Stempel). Diam saat gerak dikurangi.
+  final bool shine;
+
+  /// Jeda awal kilap supaya segel tidak berkilap serempak.
+  final Duration shineDelay;
+
   @override
   State<DsStampSeal> createState() => _DsStampSealState();
 }
 
-class _DsStampSealState extends State<DsStampSeal> with SingleTickerProviderStateMixin {
+class _DsStampSealState extends State<DsStampSeal> with TickerProviderStateMixin {
   AnimationController? _ring;
+  AnimationController? _sheen;
+  Timer? _sheenStart;
+
+  bool get _shines => widget.earned && widget.shine && !DsMotion.reduced(context);
 
   bool get _animates => widget.earned && widget.isNew && !DsMotion.reduced(context);
 
@@ -85,6 +99,18 @@ class _DsStampSealState extends State<DsStampSeal> with SingleTickerProviderStat
   }
 
   void _sync() {
+    if (_shines) {
+      _sheen ??= AnimationController(vsync: this, duration: const Duration(milliseconds: 4500));
+      if (!_sheen!.isAnimating && _sheenStart == null) {
+        _sheenStart = Timer(widget.shineDelay, () {
+          if (mounted) _sheen?.repeat();
+        });
+      }
+    } else {
+      _sheenStart?.cancel();
+      _sheenStart = null;
+      _sheen?.stop();
+    }
     if (_animates) {
       _ring ??= AnimationController(vsync: this, duration: const Duration(milliseconds: 2600));
       if (!_ring!.isAnimating) _ring!.repeat();
@@ -95,6 +121,8 @@ class _DsStampSealState extends State<DsStampSeal> with SingleTickerProviderStat
 
   @override
   void dispose() {
+    _sheenStart?.cancel();
+    _sheen?.dispose();
     _ring?.dispose();
     super.dispose();
   }
@@ -184,10 +212,65 @@ class _DsStampSealState extends State<DsStampSeal> with SingleTickerProviderStat
                   },
                 ),
               face,
+              if (_sheen case final sheen? when _shines)
+                IgnorePointer(
+                  child: ClipOval(
+                    child: SizedBox(
+                      width: d,
+                      height: d,
+                      child: AnimatedBuilder(
+                        animation: sheen,
+                        builder: (context, _) => CustomPaint(painter: _SheenPainter(sheen.value, c.stampGold)),
+                      ),
+                    ),
+                  ),
+                ),
             ],
           ),
         ),
       ),
     );
   }
+}
+
+/// Kilap holografik: pita diagonal terang yang menyapu dari kanan ke kiri pada
+/// 45% akhir siklus, memakai `BlendMode.overlay` (acuan `sheen`).
+class _SheenPainter extends CustomPainter {
+  const _SheenPainter(this.t, this.gold);
+
+  final double t;
+  final Color gold;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (t < 0.55) return;
+    final k = (t - 0.55) / 0.45; // 0..1
+    final dx = size.width * (1.5 - 2.1 * k); // +150% -> -60%
+    final rect = Offset.zero & size;
+    final shader = LinearGradient(
+      begin: const Alignment(-1, -0.4),
+      end: const Alignment(1, 0.4),
+      colors: [
+        Colors.transparent,
+        Colors.white.withValues(alpha: 0.45),
+        gold.withValues(alpha: 0.5),
+        Colors.transparent,
+      ],
+      stops: const [0.3, 0.48, 0.54, 0.7],
+      transform: _Slide(dx),
+    ).createShader(rect);
+    canvas.drawRect(rect, Paint()..shader = shader..blendMode = BlendMode.overlay);
+  }
+
+  @override
+  bool shouldRepaint(_SheenPainter old) => old.t != t || old.gold != gold;
+}
+
+class _Slide extends GradientTransform {
+  const _Slide(this.dx);
+
+  final double dx;
+
+  @override
+  Matrix4? transform(Rect bounds, {TextDirection? textDirection}) => Matrix4.translationValues(dx - bounds.width * 0.5, 0, 0);
 }

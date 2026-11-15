@@ -1853,6 +1853,13 @@
     }
   },
   "stamps": {
+  "kaya": {
+      "mascot": "Tanuki",
+      "idle": "Stempel-stempelmu ada di sini. Ketuk satu untuk melihatnya.",
+      "tapEarned": "$name sudah kamu raih. Stempel ini tidak akan hilang.",
+      "tapLocked": "$name masuk sendiri begitu syaratnya terpenuhi. Tidak perlu buru-buru.",
+      "revealed": "Satu stempel baru terbuka di buku."
+    },
   "screen": {
       "title": "Buku Stempel"
     },

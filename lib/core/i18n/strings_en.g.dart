@@ -1696,6 +1696,7 @@ class _Translations$stamps$en extends Translations$stamps$id {
 	final TranslationsEn _root; // ignore: unused_field
 
 	// Translations
+	@override late final _Translations$stamps$kaya$en kaya = _Translations$stamps$kaya$en._(_root);
 	@override late final _Translations$stamps$screen$en screen = _Translations$stamps$screen$en._(_root);
 	@override String get intro => 'Small stamps for things you got done. Nothing ever goes away.';
 	@override late final _Translations$stamps$groups$en groups = _Translations$stamps$groups$en._(_root);
@@ -2371,6 +2372,20 @@ class _Translations$premium$paywall$en extends Translations$premium$paywall$id {
 	@override String get done => 'Done';
 	@override String get notSellingTitle => 'Plus is not on sale yet';
 	@override String get notSellingBody => 'Subscribing to Plus is not available yet. Recording stays free.';
+}
+
+// Path: stamps.kaya
+class _Translations$stamps$kaya$en extends Translations$stamps$kaya$id {
+	_Translations$stamps$kaya$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get mascot => 'Tanuki';
+	@override String get idle => 'Your stamps are right here. Tap one to take a look.';
+	@override String tapEarned({required Object name}) => 'You already earned ${name}. This stamp will not go away.';
+	@override String tapLocked({required Object name}) => '${name} lands on its own once you meet the requirement. No rush.';
+	@override String get revealed => 'A new stamp just opened in the book.';
 }
 
 // Path: stamps.screen
@@ -4404,6 +4419,11 @@ extension on TranslationsEn {
 			'premium.paywall.done' => 'Done',
 			'premium.paywall.notSellingTitle' => 'Plus is not on sale yet',
 			'premium.paywall.notSellingBody' => 'Subscribing to Plus is not available yet. Recording stays free.',
+			'stamps.kaya.mascot' => 'Tanuki',
+			'stamps.kaya.idle' => 'Your stamps are right here. Tap one to take a look.',
+			'stamps.kaya.tapEarned' => ({required Object name}) => 'You already earned ${name}. This stamp will not go away.',
+			'stamps.kaya.tapLocked' => ({required Object name}) => '${name} lands on its own once you meet the requirement. No rush.',
+			'stamps.kaya.revealed' => 'A new stamp just opened in the book.',
 			'stamps.screen.title' => 'Stamp Book',
 			'stamps.intro' => 'Small stamps for things you got done. Nothing ever goes away.',
 			'stamps.groups.start' => 'Start',

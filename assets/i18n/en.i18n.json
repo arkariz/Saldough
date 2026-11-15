@@ -1856,6 +1856,13 @@
     }
   },
   "stamps": {
+  "kaya": {
+      "mascot": "Tanuki",
+      "idle": "Your stamps are right here. Tap one to take a look.",
+      "tapEarned": "You already earned $name. This stamp will not go away.",
+      "tapLocked": "$name lands on its own once you meet the requirement. No rush.",
+      "revealed": "A new stamp just opened in the book."
+    },
   "screen": {
       "title": "Stamp Book"
     },

@@ -36,6 +36,7 @@ Widget _host(Widget child) => MaterialApp(theme: DsTheme.light, builder: reduced
 
 void main() {
   setUp(() => LocaleSettings.setLocaleSync(AppLocale.id));
+  _kayaMain();
 
   testWidgets('kosong: Tanuki tidur dan ajakan lembut, tanpa daftar', (tester) async {
     await tester.pumpWidget(_host(StampBookPage(access: _Access(MilestoneLedger.empty))));
@@ -101,5 +102,56 @@ void main() {
     await tester.tap(find.byType(Switch));
     await tester.pumpAndSettle();
     expect(find.text(t.stamps.account.entryTitle), findsOneWidget);
+  });
+}
+
+void _kayaMain() {
+  testWidgets('Kaya: balon Tanuki berbicara dan berkomentar saat stempel diketuk', (tester) async {
+    LocaleSettings.setLocaleSync(AppLocale.id);
+    await tester.pumpWidget(_host(StampBookPage(access: _Access(_ledger(['wallet_first'])))));
+    expect(find.text(t.stamps.kaya.idle), findsOneWidget);
+    await tester.tap(find.text(t.stamps.names.wallet_first));
+    await tester.pumpAndSettle();
+    expect(find.text(t.stamps.kaya.tapEarned(name: t.stamps.names.wallet_first)), findsOneWidget);
+    expect(find.text(t.stamps.detail.close), findsOneWidget);
+    expect(find.textContaining('Cap lagi'), findsNothing, reason: 'tanpa "Cap lagi" (G-3)');
+  });
+
+  testWidgets('Kaya: stempel belum diraih dikomentari tanpa menekan', (tester) async {
+    LocaleSettings.setLocaleSync(AppLocale.id);
+    await tester.pumpWidget(_host(StampBookPage(access: _Access(_ledger(['wallet_first'])))));
+    await tester.scrollUntilVisible(find.text(t.stamps.names.backup_first), 200);
+    await tester.tap(find.text(t.stamps.names.backup_first));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(t.stamps.detail.close));
+    await tester.pumpAndSettle();
+    await tester.drag(find.byType(ListView), const Offset(0, 2000));
+    await tester.pumpAndSettle();
+    expect(find.text(t.stamps.kaya.tapLocked(name: t.stamps.names.backup_first)), findsOneWidget);
+  });
+
+  testWidgets('Kaya gerak penuh: daun, kilap, napas, miring 3D, konfeti tanpa galat; bersih saat ditutup', (tester) async {
+    LocaleSettings.setLocaleSync(AppLocale.id);
+    await tester.pumpWidget(
+      MaterialApp(theme: DsTheme.light, home: StampBookPage(access: _Access(_ledger(['wallet_first', 'record_first'])))),
+    );
+    for (var i = 0; i < 12; i++) {
+      await tester.pump(const Duration(milliseconds: 400));
+    }
+    await tester.tap(find.text(t.stamps.names.wallet_first));
+    for (var i = 0; i < 6; i++) {
+      await tester.pump(const Duration(milliseconds: 200));
+    }
+    // Geser di atas segel besar: miring 3D lalu kembali.
+    final gesture = await tester.startGesture(tester.getCenter(find.text(t.stamps.detail.close)) - const Offset(0, 200));
+    await gesture.moveBy(const Offset(30, 10));
+    await tester.pump(const Duration(milliseconds: 100));
+    await gesture.up();
+    await tester.pump(const Duration(milliseconds: 400));
+    await tester.tap(find.text(t.stamps.detail.close));
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pumpWidget(const SizedBox());
+    await tester.pump(const Duration(seconds: 2));
+    expect(tester.takeException(), isNull);
   });
 }

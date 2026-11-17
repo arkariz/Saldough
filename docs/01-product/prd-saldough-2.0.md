@@ -1044,7 +1044,7 @@ gratis di FREEMIUM_PAYWALL §6.5 (lihat §16.4).
 - [ ] Pratinjau memuat paling banyak satu ajakan Plus tanpa hambatan
       membagikan.
 
-### 7.14 Aset, tabungan, dan investasi (rencana, ditambahkan 17 November 2026)
+### 7.15 Aset, tabungan, dan investasi (rencana, ditambahkan 17 November 2026)
 
 Kebutuhan ini lahir dari konsep "Financial Assets & Wealth Management" pemilik,
 divalidasi dan dirapikan menjadi

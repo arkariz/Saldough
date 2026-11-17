@@ -160,7 +160,7 @@ Yang **sengaja tidak** ada di R1:
 
 - "Saldo cocok" dan sejenisnya: fitur cocokkan saldo belum ada
   (KT-P16, ditunda).
-- "Target tercapai": domain Target belum ada (B-47).
+- "Tujuan tercapai": domain Tujuan tabungan belum ada (B-96, menggantikan B-47; [WEALTH_ASSETS.md](WEALTH_ASSETS.md)).
 - Apa pun yang berbunyi hemat, di bawah anggaran, atau tanpa pengeluaran:
   menilai belanja pengguna.
 - Apa pun berbasis hari berturut-turut atau jumlah catatan harian.
@@ -265,7 +265,7 @@ flowchart LR
 | Stempel biasa baru | Satu baris katalog + teks id/en | Penyimpanan, mesin |
 | Edisi musiman (Ramadan, 17 Agustus, Tahun Baru; B-82) | Baris katalog dengan jendela tanggal; jendela dan saklar dari Remote Config | Penyimpanan; stempel lama |
 | Stempel khusus Plus (B-56) | Penanda tier di baris katalog; digerbang lewat `Entitlements` yang ada | Aturan G-1..G-11 |
-| Jenis syarat baru (mis. "target tercapai" saat B-47 ada, "saldo cocok" saat KT-P16 dibuka) | Satu jenis syarat dan satu fakta baru | Katalog lama, penyimpanan |
+| Jenis syarat baru (mis. "tujuan tercapai" saat B-96 ada, "saldo cocok" saat KT-P16 dibuka) | Satu jenis syarat dan satu fakta baru | Katalog lama, penyimpanan |
 | Hadiah baru (barang Kamar Tanuki, kostum; B-81) | Lapisan hadiah yang membaca daftar diraih | Penyimpanan; tidak perlu migrasi |
 | Bagikan stempel (R2) | Perender gambar tanpa nominal (G-9) | Mesin, katalog |
 | Matikan satu tonggak yang bermasalah | Saklar jarak jauh | Rilis aplikasi |

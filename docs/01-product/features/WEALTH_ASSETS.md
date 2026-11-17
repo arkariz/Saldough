@@ -222,6 +222,12 @@ kemajuan tabungan, dan janji ADR-038. Perilaku baru:
 6. Kasus yang ditemukan di KT-W1 ikut diperbaiki: saldo negatif dan saldo
    berpecahan sen tidak boleh tampil sebagai kolom kosong.
 7. Penyesuaian harus bisa disaring dari Riwayat supaya tidak ramai.
+7a. **Semua pembaca Arus mengecualikan Penyesuaian saldo:** kartu Arus Beranda,
+   Analisis, Rencana, Daftar Riwayat, dan **Buku Periode dan Kartu Periode**
+   (Pemasukan, Pengeluaran, dan Selisih periode tidak memuatnya; uji
+   kecocokan total buku tetap berlaku). Karena tanggalnya hari ini, penyesuaian
+   **tidak mengubah buku yang sudah ditutup**, berbeda dari perilaku lama yang
+   menggeser saldo periode lampau.
 8. Perilaku yang sudah terkirim di `0.11.0+17` tidak dimigrasi; data lama
    tetap apa adanya, hanya perilaku ke depan yang berubah.
 
@@ -303,6 +309,29 @@ Mengikuti ADR-023: tanpa nominal, nama instrumen, atau nama tujuan.
 (`type`, `via`: `existing`/`buy`), `valuation_updated`,
 `wealth_overview_viewed`, `wealth_history_viewed` (`periods_bucket`),
 `balance_adjusted` (tanpa nominal), `paywall_shown` untuk P11 dan P12.
+
+## 12a. Hubungan dengan Buku Periode (Fase 27) dan Buku Stempel (Fase 28)
+
+Dua fitur gamifikasi dan rapor di branch `claude/buku-periode-fase-27`
+([BUKU_PERIODE.md](BUKU_PERIODE.md), [GAMIFICATION.md](GAMIFICATION.md), ADR-045,
+ADR-046) memakai titik sambung yang disiapkan untuk domain ini. Penyelarasannya:
+
+- **Penyedia halaman Buku Periode (ADR-045):** buku adalah Plus, tetapi halaman
+  yang bisa ditambah dari domain ini memuat data gratis. Calon halaman:
+  **Tujuan tabungan** (B-96) dan **Total aset** (B-98). Dipilih saat butir itu
+  dikerjakan; nominal di Kartu Periode tetap mengikuti BP-16 (hanya fakta yang
+  dipilih pengguna, nominal opsional dan bawaan mati), jadi Total aset tidak
+  masuk kartu bagikan kecuali pemilik memutuskan.
+- **Syarat tonggak baru (GAMIFICATION §catalog, "jenis syarat baru"):**
+  "**tujuan tercapai**" (status Completed, B-96) dan "**investasi pertama
+  dicatat**" (B-97) adalah satu fakta baru masing-masing. Tonggak tidak menilai
+  besar tabungan atau untung investasi, tanpa nominal, tanpa streak, sejalan
+  non-tujuan GAMIFICATION. "Sisih tabungan teratur" atau "untung" **tidak**
+  menjadi tonggak.
+- **Arus periode:** Penyesuaian saldo dikecualikan (§6 butir 7a). Buku yang
+  sudah ditutup tidak berubah.
+- **Nomor:** Fase 27 dan 28 sudah dipakai; butir kekayaan memakai B-96–B-100 dan
+  belum diberi nomor fase. PRD §7.15 (bukan §7.14, yang dipakai Buku Periode).
 
 ## 13. Urutan kerja (belum dijadwalkan; tiap butir ADR domain dulu)
 

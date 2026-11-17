@@ -7134,7 +7134,7 @@ S sehari, M beberapa hari, L lebih dari seminggu. Rilis bertahap: Kartu Periode
       masa tenggang ADR-041 §3.8 yang belum dibaca; ditunda ke T-27.5.
       Pemeriksaan di rute menunggu rutenya (T-27.5/T-27.6).
 
-- [ ] **T-27.3** (M) Model baca buku halaman 1–4 dari sumber Analisis, Arus,
+- [x] **T-27.3** (M) Model baca buku halaman 1–4 dari sumber Analisis, Arus,
       Rencana; `financialPeriodOf`/`periodDateOf`.
       Verifikasi: uji kecocokan total (B-3, B-15) dengan data uji emas.
       **Selesai 15 Nov 2026.** Model halaman di `features/period_book/domain`
@@ -7157,7 +7157,7 @@ S sehari, M beberapa hari, L lebih dari seminggu. Rilis bertahap: Kartu Periode
       `AppMoneyFormatter` di T-27.6); penyamaran "kategori buatanmu" hanya untuk
       kartu (T-27.8), halaman buku memakai nama asli.
 
-- [ ] **T-27.4** (M) Mesin templat Tanuki dan halaman 5 (id/en, jamak),
+- [x] **T-27.4** (M) Mesin templat Tanuki dan halaman 5 (id/en, jamak),
       dijaga `translations_test.dart`. Butuh T-27.3.
       **Selesai 15 Nov 2026.** `tanukiLinesOf` (murni, `features/period_book/domain`)
       memilih 2-4 kalimat sebagai **fakta** (`TanukiRecords`, `TanukiFlow`,
@@ -7176,7 +7176,7 @@ S sehari, M beberapa hari, L lebih dari seminggu. Rilis bertahap: Kartu Periode
       menyusul bersama layarnya (T-27.5-T-27.8). Layar halaman 5 (balon, ketik per
       huruf) di T-27.6.
 
-- [ ] **T-27.5** (M) Ritual Tutup buku (D4) dan slot kartu Beranda (D3),
+- [x] **T-27.5** (M) Ritual Tutup buku (D4) dan slot kartu Beranda (D3),
       urutan terhadap banner pembaruan dan kotak masuk (BP-13). Butuh T-27.2.
       **Selesai 15 Nov 2026** (Plus; kartu Gratis menunggu T-27.8). Ritual
       `RitualPage` (rute `periodBook.ritual`, tiga langkah dengan keadaan rapi,
@@ -7208,7 +7208,7 @@ S sehari, M beberapa hari, L lebih dari seminggu. Rilis bertahap: Kartu Periode
       Beranda (BP-13: tidak di Catat/onboarding/tur) dijaga hanya oleh letaknya di
       papan status Beranda.
 
-- [ ] **T-27.6** (L) Rapor (D6) dan sampul + stempel (D5), gerak permainan
+- [x] **T-27.6** (L) Rapor (D6) dan sampul + stempel (D5), gerak permainan
       lewat `DsMotion.reduced`. Butuh T-27.3, T-27.4.
       **Selesai 15 Nov 2026.** Sampul `BookCoverPage` (rute `periodBook.cover`:
       `BookCover` 232x320 gradasi hijau dengan token segel, bingkai emas, punggung

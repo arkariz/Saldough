@@ -25,7 +25,7 @@ antarmuka harus mencerminkannya: "Catat Transfer", bukan "Transfer Sekarang".
 | **Istilah** | `docs/00-foundation/PROJECT_GLOSSARY.md` |
 | **Kebutuhan produk** | `docs/01-product/prd-saldough-2.0.md` |
 | **Tugas, progres, antrean, dan cara menambah tugas baru** | `docs/04-planning/TASK_LIST.md` (bagian "Menambah tugas baru" dan "Antrean"); pelacak yang sudah ditutup di `docs/04-planning/done/` (mis. `UX_REVIEW_FIXES.md`) |
-| **Desain dan riset per fitur** | `docs/01-product/features/` — `ONBOARDING_PLAN.md` (onboarding dan tur spotlight), `VOICE_INPUT_RESEARCH.md` (Catat lewat Suara dan sistem kategori), `RECURRING_AND_FORECAST.md` (transaksi rutin, uang nganggur, perkiraan), `PLAN_TAB_LAYOUT.md` (tata letak tab Rencana), `RECURRING_COMPETITIVE_ANALYSIS.md`, `FINANCIAL_ANALYSIS.md` (analisis keuangan, Fase 19), `FINANCIAL_PERIOD.md` (periode keuangan, Fase 18), `APP_UPDATE.md` (pengumuman pembaruan Play Store dan Shorebird, Fase 20, keputusan teknis di ADR-039), `FEATURE_DISCOVERY.md` (penemuan fitur: Catat dari notifikasi, pengingat rutin, awal bulan keuangan, Fase 21), `FREEMIUM_PAYWALL.md` (freemium/paywall Tanukonomy Plus, diputuskan pemilik 18 dan 23 Okt 2026, antrean B-41–B-62 dan B-68–B-82), `EXPORT_BACKUP.md` (ekspor ke spreadsheet, cadangkan dan pulihkan manual, Fase 22), `GAMIFICATION.md` (tonggak dan Buku Stempel, gamifikasi ringan tanpa streak, draf, B-94), `BUKU_PERIODE.md` (Buku Periode seluruhnya Plus: tutup buku, rapor bercerita, Rak Buku, draf, B-95), `NOTIFICATION_CAPTURE_V2.md` (Catat dari notifikasi v2: penentu bersama, bentuk dipelajari, notifikasi bertindak, Fase 26, ADR-044 Proposed) |
+| **Desain dan riset per fitur** | `docs/01-product/features/` — `ONBOARDING_PLAN.md` (onboarding dan tur spotlight), `VOICE_INPUT_RESEARCH.md` (Catat lewat Suara dan sistem kategori), `RECURRING_AND_FORECAST.md` (transaksi rutin, uang nganggur, perkiraan), `PLAN_TAB_LAYOUT.md` (tata letak tab Rencana), `RECURRING_COMPETITIVE_ANALYSIS.md`, `FINANCIAL_ANALYSIS.md` (analisis keuangan, Fase 19), `FINANCIAL_PERIOD.md` (periode keuangan, Fase 18), `APP_UPDATE.md` (pengumuman pembaruan Play Store dan Shorebird, Fase 20, keputusan teknis di ADR-039), `FEATURE_DISCOVERY.md` (penemuan fitur: Catat dari notifikasi, pengingat rutin, awal bulan keuangan, Fase 21), `FREEMIUM_PAYWALL.md` (freemium/paywall Tanukonomy Plus, diputuskan pemilik 18 dan 23 Okt 2026, antrean B-41–B-62 dan B-68–B-82), `EXPORT_BACKUP.md` (ekspor ke spreadsheet, cadangkan dan pulihkan manual, Fase 22), `WEALTH_ASSETS.md` (aset, tujuan tabungan, investasi manual, Total aset, penyesuaian saldo; keputusan pemilik 17 Nov 2026, B-96–B-100), `GAMIFICATION.md` (tonggak dan Buku Stempel, gamifikasi ringan tanpa streak, draf, B-94), `BUKU_PERIODE.md` (Buku Periode seluruhnya Plus: tutup buku, rapor bercerita, Rak Buku, draf, B-95), `NOTIFICATION_CAPTURE_V2.md` (Catat dari notifikasi v2: penentu bersama, bentuk dipelajari, notifikasi bertindak, Fase 26, ADR-044 Proposed) |
 | **Toko dan rilis** | `docs/03-release/` — `PLAY_DATA_SAFETY.md` (formulir Keamanan Data), `RELEASE_NOTES.md` (catatan "Apa yang baru": berkas `release_notes/`, persetujuan, langkah rilis), `PLAY_STORE_LISTING.md` (setelan toko dan listing, ASO), `ASO_NAME_RESEARCH.md` (riset nama), `THREADS_CONTENT_PLAN.md` (rencana dan naskah Threads 4 minggu pertama sesudah rilis) |
 | **Keputusan arsitektur** | `docs/02-architecture/adr/` |
 | **Situs web (landing, kebijakan privasi, uji coba)** | Repo `arkariz/tanukonomy-web`, progres di `docs/TASKS.md` repo itu |
@@ -100,12 +100,12 @@ alasan); uji kelengkapan registri gagal bila terlewat. Kolom Awal periode di
 ekspor memakai `periodDateOf`, jadi aturan periode keuangan tidak boleh
 disalin di tempat lain. Rincian di `docs/01-product/features/EXPORT_BACKUP.md`.
 
-**Ubah saldo dompet (sejak `0.11.0+17`, 27 Okt 2026, KT-W1 terbuka):**
+**Ubah saldo dompet (sejak `0.11.0+17`, 27 Okt 2026; KT-W1 diputuskan 17 Nov 2026 = B, belum dikerjakan, B-99):**
 kolom saldo di Ubah dompet berarti **saldo saat ini**; `WalletBloc` menggeser
 `initialBalance` (= angka diisi − netto transaksi) tanpa membuat transaksi,
 lalu `RecomputeWalletBalances`. Akibatnya saldo historis periode lampau ikut
 bergeser. Perubahan ini dibuat tanpa tugas atau ADR; jangan membangun di
-atasnya sebelum pemilik memutuskan KT-W1 di TASK_LIST.
+atasnya: perilaku yang diputuskan (selisih dicatat sebagai transaksi Penyesuaian saldo, saldo lampau tidak bergeser) menggantikannya di B-99 dengan ADR domain dulu.
 
 **Periode keuangan (Fase 18, ADR-038, selesai 15 Okt 2026):** "bulan" di
 aplikasi adalah **periode keuangan** yang dimulai di tanggal pilihan pengguna

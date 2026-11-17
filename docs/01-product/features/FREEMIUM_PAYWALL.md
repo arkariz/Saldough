@@ -41,7 +41,8 @@ dan harga**. Rupa diserahkan ke design system dan prototipe pemilik (skill
    versi gratis yang sedikit lebih cepat.
 3. **Gratis tetap mulus untuk inti.** CATAT, Riwayat, Dompet, Anggaran,
    Rutin, Rencana bulan ini, Analisis 6 periode, dan ekspor data gratis
-   tanpa batas. Yang dikurangi dari versi gratis hanya hal yang memang
+   tanpa batas. Fitur kekayaan (tujuan tabungan dan investasi manual) gratis
+   dengan batas 2 aktif masing-masing (17 Nov 2026), bukan bagian inti MVP. Yang dikurangi dari versi gratis hanya hal yang memang
    berupa otomasi (§4.3).
 4. **Model "cicip", bukan kunci mati.** Setiap pilar Plus punya jatah kecil
    gratis per periode keuangan: 1 peringatan Penjaga, 3 pertanyaan Tanya
@@ -270,17 +271,19 @@ singkat, kepatuhan terhadap aturan proyek, biaya, dan ketergantungan.
   12 bulan ke depan **dengan dan tanpa** skenario itu, berdampingan.
   Skenario bisa disimpan, dibandingkan, dan dibuang. Tidak pernah menjadi
   transaksi atau rutin sungguhan kecuali pengguna memilih "Jadikan rutin".
-- **Target:** "Dana darurat Rp15 jt", "Liburan Rp6 jt Juni". Aplikasi
-  memperkirakan tanggal tercapai dari uang nganggur rata-rata, dan
-  memberi tahu bila meleset. Target adalah **rencana**, bukan pemesanan
-  uang (sejalan aturan 5): tidak mengubah saldo dompet mana pun; kemajuan
-  dibaca dari saldo dompet yang ditandai untuk target itu atau dari
-  pencatatan sisihkan yang berupa transfer.
+- **Tujuan tabungan** (dulu "Target"; diubah 17 Nov 2026,
+  [WEALTH_ASSETS.md](WEALTH_ASSETS.md)): "Dana darurat Rp15 jt", "Liburan Rp6 jt
+  Juni". Tujuan **terhubung ke dompet** dan kemajuannya dibaca dari saldo dompet
+  itu (uang yang benar-benar ada); menabung lewat transfer yang sudah ada.
+  Rencana, bukan pemesanan uang (aturan 5). **Gratis: 2 tujuan aktif**; Plus:
+  tanpa batas, **perkiraan tanggal tercapai** dari uang nganggur rata-rata, dan
+  peringatan bila meleset lewat Penjaga.
 - **Kenapa premium:** keputusan besar (cicilan, resign, beli barang mahal)
   adalah saat orang paling butuh kepastian dan paling mau membayar.
 - **Cara kerja:** di atas `projectCashflow` yang sudah ada (ADR-035/036).
-  Target butuh entitas baru → ADR (Target tidak ada sejak pivot; 1.0 punya
-  `shared/goal` yang sudah dihapus). **Masuk produk (KT-P10)**, B-47.
+  Tujuan butuh entitas baru → ADR (tidak ada sejak pivot; 1.0 punya
+  `shared/goal` yang sudah dihapus). **Masuk produk (KT-P10)**, dikerjakan di
+  B-96 (menggantikan B-47).
 - **Biaya:** 0.
 
 ### 6.5 Rapor, Rekap SPT, dan Freelance Pro (pilar ⑤)
@@ -436,6 +439,8 @@ itu diam 30 hari; selalu memakai angka milik pengguna; nada mengikuti
 | P8 | 30 hari atau 200 transaksi tanpa cadangan | "200 catatanmu hanya ada di ponsel ini. Cadangkan sekarang (gratis), atau biarkan Plus mencadangkan tiap hari." | ⑥ |
 | P9 | Desember dan Januari | "Tahun Tanuki-mu sudah siap" dan "Rekap SPT 2026-mu sudah bisa disusun" | ⑤ |
 | P10 | Layar Akun | Baris tetap "Tanukonomy Plus" | — |
+| P11 | Mencoba membuat tujuan tabungan ke-3 (gratis maks. 2 aktif) | "Kamu sudah punya 2 tujuan aktif. Dengan Plus, tujuan berapa pun, plus perkiraan kapan tercapai." Tombol Nanti saja | ④ |
+| P12 | Mencoba mencatat investasi ke-3 (gratis maks. 2 aktif) | "Kamu sudah mencatat 2 investasi aktif. Dengan Plus, instrumen berapa pun." Tombol Nanti saja | ④ |
 
 Isi layar paywall: judul sesuai pemicu, enam pilar dengan pilar pemicu di
 atas, Tahunan terpilih bawaan ("setara Rp14.900/bulan"), Bulanan di
@@ -452,7 +457,8 @@ berhenti."
 |---|---|
 | Notifikasi semua aplikasi, tingkat otomatis | Kembali ke 1 aplikasi pilihan pengguna dan tinjau semua; transaksi yang sudah tercatat tetap ada; pola buatan sendiri tetap dipakai |
 | Catat dari foto, Tanya Tanuki, Penjaga | Kembali ke jatah cicip |
-| Skenario dan Target | Tetap bisa dilihat; tidak diperbarui dan tidak bisa dibuat yang baru |
+| Skenario | Tetap bisa dilihat; tidak diperbarui dan tidak bisa dibuat yang baru |
+| Tujuan tabungan dan investasi di atas 2 aktif | Tetap bisa dilihat dan diedit; tidak ada yang diarsipkan otomatis; tidak bisa membuat yang baru sampai di bawah batas; perkiraan tanggal tercapai dan peringatan meleset berhenti |
 | Rapor, Rekap SPT, invoice yang sudah dibuat | Tetap bisa dibuka dan dibagikan |
 | Status tagihan freelance | Tetap tampil; pembayaran tetap dicatat lewat CATAT |
 | Analisis di luar 6 periode | Tampilannya terkunci; Riwayat tetap penuh |
@@ -626,7 +632,7 @@ satu fase penuh dengan ADR.
 | C3 | B-46 | **Bagaimana kalau** (④) | `projectCashflow`, horizon 12 bulan dari B2 | Kejadian khayalan, simpan dan bandingkan skenario | M | Ketiga. Biaya 0; menjawab momen keputusan besar (cicilan, resign) yang paling mudah dijual. Melengkapi syarat "tiga pilar terasa" |
 | C4 | B-41 | Reverse trial, momen terjadwal, rekap nilai, layar turun, pemicu paywall P1–P5 dan P8 | Tur spotlight (ADR-021), Analytics | Penjadwal momen, rekap pemakaian lokal | S–M | **Peluncuran Plus (M1).** Ditaruh terakhir supaya rekap hari ke-11 punya isi nyata dari C1–C3 |
 | **D. Domain baru (KT-P10)** | | | | | | |
-| D1 | B-47 | ADR + **Target** (④): entitas, perkiraan tanggal tercapai, kemajuan dari dompet yang ditandai atau transfer sisihkan, peringatan meleset lewat Penjaga | `projectCashflow`, Penjaga, Rencana | Entitas `Goal`, layar Target, hubungan ke dompet | M–L | Sesudah peluncuran karena menyentuh aturan 5 (rencana, bukan pemesanan uang) dan butuh ADR. Memperkuat pilar ④ dan memberi Penjaga sinyal baru |
+| D1 | B-96 (menggantikan B-47) | ADR + **Tujuan tabungan** (④): tujuan terhubung ke dompet, kemajuan dari saldo dompet; gratis 2 aktif; Plus perkiraan tanggal dan peringatan meleset lewat Penjaga. Lihat [WEALTH_ASSETS.md](WEALTH_ASSETS.md) | `projectCashflow`, Penjaga, Rencana, tab Dompet | Entitas `Goal`, hubungan ke dompet | M | Menyentuh aturan 5 dan butuh ADR; B-97 investasi, B-98 Total aset, B-99 penyesuaian saldo, B-100 riwayat kekayaan menyusul |
 | D2 | B-48 | ADR + **Utang-piutang**: dasar gratis (catat pinjam/pinjamkan, sisa, lunas), Plus: pengingat tagih dengan pesan siap kirim, jadwal cicilan | CATAT, dompet, pengingat lokal | Entitas utang/piutang, aturan saldo dan Analisis | L | Paling dalam menyentuh buku besar: meminjamkan uang mengurangi saldo dompet tapi **bukan pengeluaran**, dibayar kembali menambah saldo tapi **bukan pemasukan** (sejalan aturan 7). Bagian dasarnya memperbaiki versi gratis; prasyarat patungan (G1) dan bagian utang Rekap SPT (F2) |
 | **E. Melengkapi pilar ③⑤⑥** | | | | | | |
 | E1 | B-49 | **Rapor bulanan bercerita** + ekspor laporan PDF/Excel (⑤) | Analisis R1, katalog wawasan §7B | Templat kalimat, pembuat PDF (`pdf`) | M | Biaya 0; membangun mesin PDF yang dipakai E2, F1, F2 |
@@ -671,7 +677,7 @@ butirnya ke Now (aturan ROADMAP).
 |---|---|---|
 | B-57 | Patungan dari struk | B-45 dan B-48 |
 | B-58 | Kartu kredit dan paylater sebagai dompet tagihan (gratis dasar, peringatan jatuh tempo di Penjaga) | ADR; PRD §6 |
-| B-59 | Kekayaan bersih (aset dicatat manual dikurangi utang) | B-48 |
+| B-59 | Kekayaan bersih (Total aset B-98 dikurangi utang) | B-48, B-98 |
 | B-60 | Dompet Bersama dan Plus Keluarga | Sinkronisasi B-7 |
 | B-7 | Sinkronisasi antar perangkat (Plus) | ADR sendiri, KT-2 |
 | B-61 | Rapor kuartal freelance; Tanya Tanuki R2 (kueri gabungan, antar tahun) | B-50, B-52 terukur |
@@ -704,7 +710,7 @@ butirnya ke Now (aturan ROADMAP).
 | KT-P7 | Ekspor dan cadangan manual serta kunci aplikasi (B-42/B-43) dikerjakan **sebelum rilis publik** |
 | KT-P8 | Catat dari notifikasi gratis **1 aplikasi sumber** (§4.3) |
 | KT-P9 | Peta kerja dan urutan §13: **Penjaga dibangun pertama**; Plus dijual sesudah Penjaga, Catat dari foto, dan Bagaimana kalau |
-| KT-P10 | **Target dan utang-piutang masuk produk** (§7); ADR domain di B-47 dan B-48 |
+| KT-P10 | **Target dan utang-piutang masuk produk** (§7); ADR domain di B-96 (Target, menggantikan B-47) dan B-48 |
 | KT-P11 | **Seluruh otomasi rutin R3** (Fase 17, ADR-037) dan tingkat otomatis catat dari notifikasi menjadi **Plus**; gratis tetap punya rutin dasar R1/R2 (§4.3) |
 
 Keputusan teknis (struktur kode, penyimpanan hak, perhitungan tanggal
@@ -759,6 +765,7 @@ retensi versi gratis; Plus menjual kosmetiknya (B-56) dan Rapor lengkap.
 | KT-P16 | **Tunda** Cocokkan saldo dan Tebak saldo | Fitur cocokkan saldo belum ada di aplikasi; ditinjau lagi setelah Buku Stempel (B-82) berjalan |
 | KT-P17 | **Tipe tanuki ikut desain Rapor** | Masuk B-49 dan B-53; menggambarkan cara mencatat, tidak menilai belanja |
 | KT-P18 | **Ajak teman dan afiliasi kreator ditunda** | Ditinjau di gerbang 90 hari sesudah Plus dijual |
+| KT-P20 | **Tujuan tabungan dan investasi manual: gratis dengan batas 2 aktif masing-masing**, Plus tanpa batas; riwayat kekayaan 6 periode gratis, seluruhnya Plus (17 Nov 2026, [WEALTH_ASSETS.md](WEALTH_ASSETS.md) §10) |
 
 ### 16.4 Revisi 4: Buku Periode seluruhnya Plus (12 Nov 2026)
 

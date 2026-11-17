@@ -109,6 +109,18 @@ abstract final class ActivationEvents {
   static const rateAppTapped = AnalyticsEvent('rate_app_tapped');
 }
 
+/// Peristiwa aset dan kekayaan (WEALTH_ASSETS §12), tanpa nominal, nama
+/// tujuan, atau nama instrumen.
+abstract final class WealthEvents {
+  WealthEvents._();
+
+  /// Saldo dompet dikoreksi lewat Ubah dompet dan selisihnya dicatat sebagai
+  /// penyesuaian saldo (ADR-047 §3.9). [direction]: `increase` atau
+  /// `decrease`.
+  static AnalyticsEvent balanceAdjusted(String direction) =>
+      AnalyticsEvent('balance_adjusted', {'direction': direction});
+}
+
 /// Peristiwa rutin R1 (ADR-035 §7) dan R3 (ADR-037 §3.5), tanpa nominal.
 abstract final class RecurringEvents {
   RecurringEvents._();

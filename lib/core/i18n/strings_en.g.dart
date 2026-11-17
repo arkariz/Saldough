@@ -64,6 +64,7 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$appUpdate$en appUpdate = _Translations$appUpdate$en._(_root);
 	@override late final _Translations$analysis$en analysis = _Translations$analysis$en._(_root);
 	@override late final _Translations$premium$en premium = _Translations$premium$en._(_root);
+	@override late final _Translations$assets$en assets = _Translations$assets$en._(_root);
 }
 
 // Path: app
@@ -304,7 +305,7 @@ class _Translations$wallet$en extends Translations$wallet$id {
 	@override String get initialBalanceLabel => 'Starting balance';
 	@override String get initialBalanceHelp => 'Enter the money in this wallet right now. Every transaction after that is counted from here.';
 	@override String get currentBalanceLabel => 'Current balance';
-	@override String get editBalanceNote => 'Enter the money in this wallet right now. The balance is set to this amount; your transaction history stays as it is and no new transaction is added.';
+	@override String get editBalanceNote => 'Enter the money in this wallet right now. The difference is recorded as a balance adjustment today; balances on earlier days stay the same.';
 	@override String get activeSwitchLabel => 'Wallet is active';
 	@override String get activeSwitchHelp => 'Inactive wallets don\'t appear in wallet pickers. Their transactions stay saved and counted.';
 	@override String get saveAddAction => 'Save wallet';
@@ -1688,6 +1689,16 @@ class _Translations$premium$en extends Translations$premium$id {
 	@override late final _Translations$premium$paywall$en paywall = _Translations$premium$paywall$en._(_root);
 }
 
+// Path: assets
+class _Translations$assets$en extends Translations$assets$id {
+	_Translations$assets$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override late final _Translations$assets$adjust$en adjust = _Translations$assets$adjust$en._(_root);
+}
+
 // Path: record.draftIssue
 class _Translations$record$draftIssue$en extends Translations$record$draftIssue$id {
 	_Translations$record$draftIssue$en._(TranslationsEn root) : this._root = root, super.internal(root);
@@ -1830,6 +1841,8 @@ class _Translations$dataPortability$types$en extends Translations$dataPortabilit
 	@override String get income => 'Income';
 	@override String get expense => 'Expense';
 	@override String get transfer => 'Transfer';
+	@override String get adjustmentIncrease => 'Balance adjustment (increase)';
+	@override String get adjustmentDecrease => 'Balance adjustment (decrease)';
 }
 
 // Path: home.preview
@@ -2349,6 +2362,23 @@ class _Translations$premium$paywall$en extends Translations$premium$paywall$id {
 	@override String get notSellingBody => 'Subscribing to Plus is not available yet. Recording stays free.';
 }
 
+// Path: assets.adjust
+class _Translations$assets$adjust$en extends Translations$assets$adjust$id {
+	_Translations$assets$adjust$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get walletLabel => 'Wallet';
+	@override String get title => 'Balance adjustment';
+	@override String get detailNote => 'The difference recorded when the wallet balance was changed in Edit wallet. Not income or expense. Delete it to restore the previous balance.';
+	@override String preview({required Object amount}) => 'A difference of ${amount} is recorded as a balance adjustment today.';
+	@override String get previewHint => 'Know which transaction is wrong? Edit that transaction instead.';
+	@override String savedMessage({required Object amount}) => 'A difference of ${amount} was recorded as a balance adjustment.';
+	@override String filterLabel({required Object count}) => 'Adjustments ${count}';
+	@override String get signToggle => 'Switch between plus and minus';
+}
+
 // Path: record.voice.failure
 class _Translations$record$voice$failure$en extends Translations$record$voice$failure$id {
 	_Translations$record$voice$failure$en._(TranslationsEn root) : this._root = root, super.internal(root);
@@ -2809,7 +2839,7 @@ extension on TranslationsEn {
 			'wallet.initialBalanceLabel' => 'Starting balance',
 			'wallet.initialBalanceHelp' => 'Enter the money in this wallet right now. Every transaction after that is counted from here.',
 			'wallet.currentBalanceLabel' => 'Current balance',
-			'wallet.editBalanceNote' => 'Enter the money in this wallet right now. The balance is set to this amount; your transaction history stays as it is and no new transaction is added.',
+			'wallet.editBalanceNote' => 'Enter the money in this wallet right now. The difference is recorded as a balance adjustment today; balances on earlier days stay the same.',
 			'wallet.activeSwitchLabel' => 'Wallet is active',
 			'wallet.activeSwitchHelp' => 'Inactive wallets don\'t appear in wallet pickers. Their transactions stay saved and counted.',
 			'wallet.saveAddAction' => 'Save wallet',
@@ -2958,6 +2988,8 @@ extension on TranslationsEn {
 			'dataPortability.types.income' => 'Income',
 			'dataPortability.types.expense' => 'Expense',
 			'dataPortability.types.transfer' => 'Transfer',
+			'dataPortability.types.adjustmentIncrease' => 'Balance adjustment (increase)',
+			'dataPortability.types.adjustmentDecrease' => 'Balance adjustment (decrease)',
 			'budget.activeBadge' => ({required Object count}) => '${count} active',
 			'budget.plannedLabel' => 'Planned',
 			'budget.spentLabel' => 'Spent',
@@ -3065,10 +3097,10 @@ extension on TranslationsEn {
 			'budget.templateAddAction' => 'Create template',
 			'budget.templatesFooter' => 'Templates can be edited any time without changing budgets already created from them.',
 			'budget.templatesEmptyBadge' => 'No templates yet',
-			'budget.templatesEmptyTitle' => 'No templates yet',
-			'budget.templatesEmptyBody' => 'Save item sets you use often, such as monthly groceries, so your next budget is one tap away.',
 			_ => null,
 		} ?? switch (path) {
+			'budget.templatesEmptyTitle' => 'No templates yet',
+			'budget.templatesEmptyBody' => 'Save item sets you use often, such as monthly groceries, so your next budget is one tap away.',
 			'budget.templateNeedsWallet' => 'Create an active wallet first to use a template.',
 			'budget.templatesLoadError' => 'Couldn\'t load templates',
 			'budget.templateAddTitle' => 'Create template',
@@ -3579,10 +3611,10 @@ extension on TranslationsEn {
 			'discovery.quickStart.plusTeaser' => 'Track many banks and e-wallets at once?',
 			'discovery.quickStart.plusInfo' => 'About Plus',
 			'discovery.quickStart.privacyLine' => 'Notification access is only used to read the apps you choose.',
-			'discovery.quickStart.turnOn' => 'Turn on',
-			'discovery.quickStart.walletHint' => 'Pick a wallet for each app',
 			_ => null,
 		} ?? switch (path) {
+			'discovery.quickStart.turnOn' => 'Turn on',
+			'discovery.quickStart.walletHint' => 'Pick a wallet for each app',
 			'discovery.quickStart.pickHint' => 'Pick at least one app',
 			'discovery.quickStart.pickedCount' => ({required Object n}) => '${n} apps selected',
 			'discovery.quickStart.freeLimit' => ({required Object n}) => 'Free limit: ${n} apps',
@@ -4093,10 +4125,10 @@ extension on TranslationsEn {
 			'analysis.trend.toDate' => ({required Object date}) => 'through ${date}',
 			'analysis.trend.days' => ({required Object n}) => '${n} days',
 			'analysis.trend.seePeriod' => ({required Object period}) => 'See ${period} analysis',
-			'analysis.trend.column' => ({required Object period, required Object income, required Object expense, required Object net}) => '${period}, income ${income}, expenses ${expense}, net ${net}',
-			'analysis.category.frequency' => ({required Object count, required Object amount}) => '${count} transactions · ${amount} average each',
 			_ => null,
 		} ?? switch (path) {
+			'analysis.trend.column' => ({required Object period, required Object income, required Object expense, required Object net}) => '${period}, income ${income}, expenses ${expense}, net ${net}',
+			'analysis.category.frequency' => ({required Object count, required Object amount}) => '${count} transactions · ${amount} average each',
 			'analysis.category.frequencyOne' => ({required Object count, required Object amount}) => '${count} transaction · ${amount} average each',
 			'analysis.category.frequencyUsual' => ({required Object count, required Object amount}) => 'usually ${count} transactions · ${amount}',
 			'analysis.category.seeAll' => 'See all transactions',
@@ -4237,6 +4269,14 @@ extension on TranslationsEn {
 			'premium.paywall.done' => 'Done',
 			'premium.paywall.notSellingTitle' => 'Plus is not on sale yet',
 			'premium.paywall.notSellingBody' => 'Subscribing to Plus is not available yet. Recording stays free.',
+			'assets.adjust.walletLabel' => 'Wallet',
+			'assets.adjust.title' => 'Balance adjustment',
+			'assets.adjust.detailNote' => 'The difference recorded when the wallet balance was changed in Edit wallet. Not income or expense. Delete it to restore the previous balance.',
+			'assets.adjust.preview' => ({required Object amount}) => 'A difference of ${amount} is recorded as a balance adjustment today.',
+			'assets.adjust.previewHint' => 'Know which transaction is wrong? Edit that transaction instead.',
+			'assets.adjust.savedMessage' => ({required Object amount}) => 'A difference of ${amount} was recorded as a balance adjustment.',
+			'assets.adjust.filterLabel' => ({required Object count}) => 'Adjustments ${count}',
+			'assets.adjust.signToggle' => 'Switch between plus and minus',
 			_ => null,
 		};
 	}

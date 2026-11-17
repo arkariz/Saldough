@@ -37,9 +37,13 @@ void main() {
     ledgerChanges: ledgerChanges,
     walletRepository: walletRepository,
     transactionRepository: transactionRepository,
-    recomputeWalletBalances: RecomputeWalletBalances(
-      walletRepository: walletRepository,
+    recordTransaction: RecordTransaction(
+      ledgerChanges: ledgerChanges,
       transactionRepository: transactionRepository,
+      recomputeWalletBalances: RecomputeWalletBalances(
+        walletRepository: walletRepository,
+        transactionRepository: transactionRepository,
+      ),
     ),
   );
 
@@ -257,55 +261,124 @@ void main() {
       },
     );
 
-    blocTest<WalletBloc, WalletState>(
-      'mengganti saldo saat ini menggeser saldo awal supaya saldo tercatat persis sama dengan angka itu',
-      setUp: () {
-        // Pemasukan 10.000.000 sudah ada; target 50.000.000 -> saldo awal 40.000.000.
-        when(
-          () => walletRepository.saveWallet(any()),
-        ).thenAnswer((_) async => const Right(unit));
+    // ADR-047 §3.2 (KT-W1 = B): selisih dicatat sebagai penyesuaian saldo
+    // bertanggal hari ini; saldo awal tidak pernah digeser.
+    group('penyesuaian saldo (ADR-047)', () {
+      final income = IncomeTransaction(
+        id: 'i1',
+        date: DateTime(2026, 9, 5),
+        amount: 10000000,
+        note: '',
+        walletId: 'a',
+      );
+
+      void stubLedger({Either<Failure, Unit> save = const Right(unit)}) {
+        when(() => walletRepository.saveWallet(any())).thenAnswer((_) async => const Right(unit));
         when(
           () => walletRepository.listWallets(),
-        ).thenAnswer(
-          (_) async =>
-              Right([wallet('a', initial: 40000000, current: 50000000)]),
-        );
-        when(() => transactionRepository.listAllTransactions()).thenAnswer(
-          (_) async => Right([
-            IncomeTransaction(
-              id: 'i1',
-              date: DateTime(2026, 9, 5),
-              amount: 10000000,
-              note: '',
-              walletId: 'a',
-            ),
-          ]),
-        );
-      },
-      build: buildBloc,
-      act: (bloc) => bloc.add(
-        WalletEdited(
-          original: wallet('a', current: 10000000),
-          name: 'BCA',
-          iconKey: 'walletBank',
-          isActive: true,
-          currentBalance: 50000000,
+        ).thenAnswer((_) async => Right([wallet('a', current: 10000000)]));
+        when(() => transactionRepository.listAllTransactions()).thenAnswer((_) async => Right([income]));
+        when(
+          () => transactionRepository.saveTransaction(any(), previousDate: any(named: 'previousDate')),
+        ).thenAnswer((_) async => save);
+      }
+
+      BalanceAdjustmentTransaction savedAdjustment() =>
+          verify(
+                () => transactionRepository.saveTransaction(captureAny(), previousDate: any(named: 'previousDate')),
+              ).captured.single
+              as BalanceAdjustmentTransaction;
+
+      blocTest<WalletBloc, WalletState>(
+        'menaikkan saldo mencatat satu penyesuaian "increase" sebesar selisihnya, saldo awal tetap',
+        setUp: stubLedger,
+        build: buildBloc,
+        act: (bloc) => bloc.add(
+          WalletEdited(
+            original: wallet('a', current: 10000000),
+            name: 'BCA',
+            iconKey: 'walletBank',
+            isActive: true,
+            currentBalance: 10050000,
+          ),
         ),
-      ),
-      verify: (bloc) {
-        final captured = verify(
-          () => walletRepository.saveWallet(captureAny()),
-        ).captured;
-        expect(
-          captured,
-          hasLength(2),
-          reason: 'sekali dari sunting, sekali dari recompute',
-        );
-        final recomputed = captured.last as Wallet;
-        expect(recomputed.initialBalance, 40000000);
-        expect(recomputed.currentBalance, 50000000);
-      },
-    );
+        verify: (bloc) {
+          final adjustment = savedAdjustment();
+          expect(adjustment.walletId, 'a');
+          expect(adjustment.direction, AdjustmentDirection.increase);
+          expect(adjustment.amount, 50000);
+          expect(adjustment.categoryId, isNull);
+          expect(adjustment.recurrence, isNull);
+          final today = DateTime.now();
+          expect(DateTime(adjustment.date.year, adjustment.date.month, adjustment.date.day), DateTime(today.year, today.month, today.day));
+          final edited = verify(() => walletRepository.saveWallet(captureAny())).captured.first as Wallet;
+          expect(edited.initialBalance, 0, reason: 'saldo awal tidak digeser lagi');
+          expect(messageOf(bloc.state), t.assets.adjust.savedMessage(amount: '+Rp500'));
+        },
+      );
+
+      blocTest<WalletBloc, WalletState>(
+        'menurunkan saldo (sampai negatif) mencatat penyesuaian "decrease"',
+        setUp: stubLedger,
+        build: buildBloc,
+        act: (bloc) => bloc.add(
+          WalletEdited(
+            original: wallet('a', current: 10000000),
+            name: 'BCA',
+            iconKey: 'walletBank',
+            isActive: true,
+            currentBalance: -2500,
+          ),
+        ),
+        verify: (_) {
+          final adjustment = savedAdjustment();
+          expect(adjustment.direction, AdjustmentDirection.decrease);
+          expect(adjustment.amount, 10002500);
+        },
+      );
+
+      blocTest<WalletBloc, WalletState>(
+        'selisih dihitung dari transaksi, bukan dari cache saldo yang basi',
+        setUp: stubLedger,
+        build: buildBloc,
+        act: (bloc) => bloc.add(
+          WalletEdited(
+            // Cache bilang 9.000.000, padahal transaksinya 10.000.000.
+            original: wallet('a', current: 9000000),
+            name: 'BCA',
+            iconKey: 'walletBank',
+            isActive: true,
+            currentBalance: 10000000,
+          ),
+        ),
+        verify: (_) {
+          verify(() => transactionRepository.listAllTransactions()).called(greaterThanOrEqualTo(1));
+          verifyNever(
+            () => transactionRepository.saveTransaction(any(), previousDate: any(named: 'previousDate')),
+          );
+        },
+      );
+
+      blocTest<WalletBloc, WalletState>(
+        'gagal mencatat penyesuaian: nama tetap tersimpan, galat ditampilkan',
+        setUp: () => stubLedger(save: const Left(_forcedFailure)),
+        build: buildBloc,
+        act: (bloc) => bloc.add(
+          WalletEdited(
+            original: wallet('a', current: 10000000),
+            name: 'BCA Baru',
+            iconKey: 'walletBank',
+            isActive: true,
+            currentBalance: 20000000,
+          ),
+        ),
+        verify: (bloc) {
+          final edited = verify(() => walletRepository.saveWallet(captureAny())).captured.first as Wallet;
+          expect(edited.name, 'BCA Baru');
+          expect(messageOf(bloc.state), isNot(t.wallet.updatedMessage));
+        },
+      );
+    });
 
     blocTest<WalletBloc, WalletState>(
       'saldo saat ini yang sama dengan saldo tercatat tidak mengubah apa pun',

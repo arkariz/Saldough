@@ -39,6 +39,29 @@ void main() {
     expect(flow, const CashFlow(income: 0, expense: 0));
   });
 
+  test('penyesuaian saldo tidak dihitung sebagai pemasukan maupun pengeluaran (ADR-047 §3.4)', () {
+    final flow = calculate([
+      BalanceAdjustmentTransaction(
+        id: 'naik',
+        date: DateTime(2026, 9, 5),
+        amount: 100000000,
+        note: '',
+        walletId: 'bca',
+        direction: AdjustmentDirection.increase,
+      ),
+      BalanceAdjustmentTransaction(
+        id: 'turun',
+        date: DateTime(2026, 9, 6),
+        amount: 3000,
+        note: '',
+        walletId: 'bca',
+        direction: AdjustmentDirection.decrease,
+      ),
+    ], month: september);
+
+    expect(flow, const CashFlow(income: 0, expense: 0));
+  });
+
   test('transaksi di luar bulan itu diabaikan, termasuk tahun lain dengan bulan sama', () {
     final flow = calculate([
       IncomeTransaction(id: 'agustus', date: DateTime(2026, 8, 31, 23, 59), amount: 100, note: '', walletId: 'bca'),

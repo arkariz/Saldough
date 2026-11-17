@@ -7,8 +7,8 @@ import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
-/// Baris chip jenis transaksi (Semua/Pemasukan/Pengeluaran/Transfer) yang
-/// bisa digeser mendatar. Tiap chip memuat label dan jumlahnya ("Semua 42");
+/// Baris chip jenis transaksi (Semua/Pemasukan/Pengeluaran/Transfer, dan
+/// Penyesuaian bila ada; rupa B-99) yang bisa digeser mendatar. Tiap chip memuat label dan jumlahnya ("Semua 42");
 /// yang terpilih berisi warna utama.
 class TransactionTypeFilterRow extends StatelessWidget {
   /// Membuat [TransactionTypeFilterRow].
@@ -41,8 +41,14 @@ class TransactionTypeFilterRow extends StatelessWidget {
       TransactionTypeFilter.transfer => t.transaction.transferFilterLabel(
         count: count,
       ),
+      TransactionTypeFilter.adjustment => t.assets.adjust.filterLabel(count: count),
     };
   }
+
+  /// Chip Penyesuaian hanya tampil bila ada penyesuaian atau sedang terpilih
+  /// (rupa B-99): penyesuaian jarang, jadi chipnya tidak memenuhi baris.
+  bool _visible(TransactionTypeFilter filter) =>
+      filter != TransactionTypeFilter.adjustment || typeFilter == filter || (typeCounts[filter] ?? 0) > 0;
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +57,7 @@ class TransactionTypeFilterRow extends StatelessWidget {
       clipBehavior: Clip.none,
       child: Row(
         children: [
-          for (final filter in TransactionTypeFilter.values) ...[
+          for (final filter in TransactionTypeFilter.values.where(_visible)) ...[
             if (filter != TransactionTypeFilter.values.first) const SizedBox(width: 8),
             DsFilterChip(
               key: ValueKey('type-filter-${filter.name}'),

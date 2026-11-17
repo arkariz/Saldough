@@ -34,6 +34,8 @@ final class RecordDefaults extends Equatable {
             from = fromWalletId;
             to = toWalletId;
           }
+        case BalanceAdjustmentTransaction():
+          break;
       }
     }
     return RecordDefaults(

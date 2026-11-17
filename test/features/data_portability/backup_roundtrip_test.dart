@@ -76,6 +76,14 @@ void main() {
         fromWalletId: 'bca',
         toWalletId: 'tunai',
       ),
+      BalanceAdjustmentTransaction(
+        id: 'koreksi',
+        date: DateTime(2026, 10, 2),
+        amount: 7500,
+        note: '',
+        walletId: 'tunai',
+        direction: AdjustmentDirection.decrease,
+      ),
     ]) {
       await transactions.saveTransaction(t);
     }
@@ -133,7 +141,7 @@ void main() {
     expect(walletsB, walletsA);
     // 5.000.000 + 8.500.000 − 100.000 (transfer keluar) dalam sen.
     expect(walletsB.firstWhere((w) => w.id == 'bca').currentBalance, 5000000 + 850000000 - 10000000);
-    expect(walletsB.firstWhere((w) => w.id == 'tunai').currentBalance, 200000 - 4500000 + 10000000);
+    expect(walletsB.firstWhere((w) => w.id == 'tunai').currentBalance, 200000 - 4500000 + 10000000 - 7500);
 
     expect(
       await unwrap<List<Transaction>>(b.$2.listAllTransactions()),
@@ -182,6 +190,6 @@ void main() {
     await seedSource();
     final docs = await BackupScope.collect(source, appBackupRegistry);
     final summary = BackupValidator.summarize(docs, appBackupRegistry);
-    expect((summary.transactions, summary.wallets, summary.firstDate, summary.currency), (3, 2, '2026-08-25', 'IDR'));
+    expect((summary.transactions, summary.wallets, summary.firstDate, summary.currency), (4, 2, '2026-08-25', 'IDR'));
   });
 }

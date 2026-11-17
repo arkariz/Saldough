@@ -6,6 +6,7 @@ import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/features/wallet/presentation/bloc/wallet_state.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
+import 'package:saldough/shared/transaction/transaction_presentation.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 import 'package:state_management/state_management.dart';
 
@@ -27,7 +28,7 @@ final class WalletBloc extends Bloc<WalletEvent, WalletState> {
   WalletBloc({
     required this._walletRepository,
     required this._transactionRepository,
-    required this._recomputeWalletBalances,
+    required this._recordTransaction,
     required this._ledgerChanges,
   }) : super(WalletState.initial()) {
     on<WalletStarted>(_onStarted);
@@ -45,7 +46,8 @@ final class WalletBloc extends Bloc<WalletEvent, WalletState> {
   late final StreamSubscription<void> _ledgerSubscription;
   final WalletRepository _walletRepository;
   final TransactionRepository _transactionRepository;
-  final RecomputeWalletBalances _recomputeWalletBalances;
+  /// Mencatat penyesuaian saldo saat saldo dompet diubah (ADR-047 §3.2).
+  final RecordTransaction _recordTransaction;
 
   Future<void> _onStarted(WalletStarted event, Emitter<WalletState> emit) async {
     emit(state.copyWith(isLoading: true, loadFailed: false));
@@ -79,31 +81,49 @@ final class WalletBloc extends Bloc<WalletEvent, WalletState> {
     await _afterWrite(result, t.wallet.savedMessage, emit);
   }
 
+  /// Menyimpan nama, ikon, dan status aktif. Bila saldo diisi dan berbeda
+  /// dari saldo terhitung, selisihnya dicatat sebagai satu
+  /// [BalanceAdjustmentTransaction] bertanggal hari ini; `initialBalance`
+  /// tidak pernah digeser (ADR-047 §3.2, KT-W1 = B).
   Future<void> _onEdited(WalletEdited event, Emitter<WalletState> emit) async {
     final target = event.currentBalance;
-    int? newInitial;
+    var difference = 0;
+    // Angka yang sama dengan yang ditampilkan berarti saldo tidak diubah.
     if (target != null && target != event.original.currentBalance) {
       switch (await _transactionRepository.listAllTransactions()) {
         case Left(value: final failure):
           emit(state.copyWith(effect: _effectError(failure)));
           return;
         case Right(value: final transactions):
-          final net = const CalculateWalletBalance()(event.original.copyWith(initialBalance: 0), transactions);
-          newInitial = target - net;
+          // Dari transaksi, bukan cache `currentBalance` yang bisa basi.
+          difference = target - const CalculateWalletBalance()(event.original, transactions);
       }
     }
     final updated = event.original.copyWith(
       name: event.name.trim(),
       iconKey: event.iconKey,
       isActive: event.isActive,
-      initialBalance: newInitial,
     );
     var result = await _walletRepository.saveWallet(updated);
-    // Saldo tercatat berubah HANYA kalau saldo awalnya digeser.
-    if (result.isRight() && newInitial != null && newInitial != event.original.initialBalance) {
-      result = await _recomputeWalletBalances.forWallets({updated.id});
+    if (result.isRight() && difference != 0) {
+      final direction = difference > 0 ? AdjustmentDirection.increase : AdjustmentDirection.decrease;
+      result = await _recordTransaction(
+        BalanceAdjustmentTransaction(
+          id: DateTime.now().microsecondsSinceEpoch.toString(),
+          date: DateTime.now(),
+          amount: difference.abs(),
+          note: '',
+          walletId: updated.id,
+          direction: direction,
+        ),
+        source: this,
+      );
+      if (result.isRight()) AppAnalytics.log(WealthEvents.balanceAdjusted(direction.name));
     }
-    await _afterWrite(result, t.wallet.updatedMessage, emit);
+    final message = difference == 0
+        ? t.wallet.updatedMessage
+        : t.assets.adjust.savedMessage(amount: signedAdjustmentText(difference));
+    await _afterWrite(result, message, emit);
   }
 
   Future<void> _onDeleted(WalletDeleted event, Emitter<WalletState> emit) async {

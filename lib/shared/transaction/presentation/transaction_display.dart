@@ -1,4 +1,5 @@
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 
@@ -15,8 +16,14 @@ String transactionTitle(Transaction transaction) {
     ExpenseTransaction() => t.record.kindExpense,
     IncomeTransaction() => t.record.kindIncome,
     TransferTransaction() => t.record.kindTransfer,
+    BalanceAdjustmentTransaction() => t.assets.adjust.title,
   };
 }
+
+/// Selisih penyesuaian saldo bertanda, mis. `+Rp500` atau `−Rp500`
+/// (rupa B-99): dipakai pratinjau Ubah dompet dan pesan sesudah simpan.
+String signedAdjustmentText(int signedSen) =>
+    '${signedSen >= 0 ? '+' : '−'}${AppMoneyFormatter.format(signedSen.abs())}';
 
 /// Jam bertitik `HH.mm` dari [date] (design system bagian Konten).
 String transactionTime(DateTime date) =>

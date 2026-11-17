@@ -144,7 +144,10 @@ gejala yang kelihatan**.
 - Menyimpan `spent`, `remaining`, `progress`, atau status pos sebagai field.
 - Membuat entitas "ringkasan bulanan". Ringkasan adalah hasil query.
 - Membuat transaksi penyeimbang untuk membetulkan catatan yang salah. Sunting
-  atau hapus transaksinya, lalu hitung ulang saldo.
+  atau hapus transaksinya, lalu hitung ulang saldo. Satu-satunya pengecualian:
+  `BalanceAdjustmentTransaction` dari Ubah dompet, untuk menyamakan catatan
+  dengan uang nyata saat sumber selisihnya tidak diketahui (ADR-047 §3.8).
+  Kode lain tidak boleh membuatnya.
 - Memperlakukan `initialBalance` sebagai transaksi pemasukan.
 - Membuat formulir pencatatan transaksi di luar alur CATAT.
 - Menghitung transfer sebagai pemasukan atau pengeluaran.

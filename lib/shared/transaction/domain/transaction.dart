@@ -1,7 +1,7 @@
 import 'package:dependencies/dependencies.dart';
 
 /// Peristiwa yang benar-benar terjadi pada uang pemilik — tipe tertutup
-/// dengan tiga anggota. Tertutup karena menambah jenis baru mengubah aturan
+/// dengan empat anggota. Tertutup karena menambah jenis baru mengubah aturan
 /// perhitungan saldo, jadi harus dipikirkan dan diuji, bukan diketik
 /// pemilik. Lihat DOMAIN_MODEL.md bagian "Transaksi".
 sealed class Transaction extends Equatable {
@@ -214,6 +214,49 @@ final class TransferTransaction extends Transaction {
   List<Object?> get props => [id, date, amount, note, fromWalletId, toWalletId, budgetItemId, sourceIconId, recurrence];
 }
 
+/// Arah [BalanceAdjustmentTransaction].
+enum AdjustmentDirection {
+  /// Saldo dompet bertambah.
+  increase,
+
+  /// Saldo dompet berkurang.
+  decrease,
+}
+
+/// Selisih saat pemilik menyamakan saldo dompet dengan uang nyata lewat Ubah
+/// dompet (ADR-047). Mengubah saldo [walletId] sebesar [amount] ke arah
+/// [direction], tetapi **bukan pemasukan dan bukan pengeluaran**: bernilai 0
+/// di setiap hitungan Arus, Analisis, anggaran, dan Buku Periode.
+///
+/// Tanpa kategori, pos anggaran, rutin, atau ikon sumber. Hanya lahir dari
+/// Ubah dompet, bertanggal hari ini, dan tidak pernah disunting nominalnya
+/// (hapus lalu sesuaikan ulang).
+final class BalanceAdjustmentTransaction extends Transaction {
+  /// Membuat [BalanceAdjustmentTransaction].
+  const BalanceAdjustmentTransaction({
+    required super.id,
+    required super.date,
+    required super.amount,
+    required super.note,
+    required this.walletId,
+    required this.direction,
+  });
+
+  /// Dompet yang saldonya disesuaikan.
+  final String walletId;
+
+  /// Bertambah atau berkurang.
+  final AdjustmentDirection direction;
+
+  /// Pengaruh penyesuaian ke saldo [walletId], dalam sen: positif bila
+  /// [AdjustmentDirection.increase], negatif bila
+  /// [AdjustmentDirection.decrease].
+  int get signedAmount => direction == AdjustmentDirection.increase ? amount : -amount;
+
+  @override
+  List<Object?> get props => [id, date, amount, note, walletId, direction];
+}
+
 /// Siapa yang menautkan transaksi ke kemunculan rutin.
 enum RecurrenceLinkedBy {
   /// Dicatat dari rutin, atau ditautkan pemilik.
@@ -286,5 +329,7 @@ extension TransactionRecurrence on Transaction {
       sourceIconId: t.sourceIconId,
       recurrence: link,
     ),
+    // Penyesuaian saldo tidak pernah menautkan rutin (ADR-047 §3.1).
+    final BalanceAdjustmentTransaction t => t,
   };
 }

@@ -149,7 +149,7 @@ final class BudgetState extends UiState<BudgetState> {
     return transactions.where((transaction) {
       final itemId = switch (transaction) {
         ExpenseTransaction(:final budgetItemId) || TransferTransaction(:final budgetItemId) => budgetItemId,
-        IncomeTransaction() => null,
+        IncomeTransaction() || BalanceAdjustmentTransaction() => null,
       };
       final item = itemsById[itemId];
       return item != null && countsTowardBudgetItem(budget, item, transaction);

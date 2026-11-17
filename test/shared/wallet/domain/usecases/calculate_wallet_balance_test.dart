@@ -44,6 +44,36 @@ void main() {
       expect(calculate(tabungan, [transfer]), 100000000);
     });
 
+    test('penyesuaian saldo menambah atau mengurangi saldo dompetnya saja (ADR-047 §3.3)', () {
+      final transactions = [
+        BalanceAdjustmentTransaction(
+          id: 'a1',
+          date: DateTime(2026, 11, 17),
+          amount: 50000,
+          note: '',
+          walletId: 'bca',
+          direction: AdjustmentDirection.increase,
+        ),
+        BalanceAdjustmentTransaction(
+          id: 'a2',
+          date: DateTime(2026, 11, 18),
+          amount: 20000,
+          note: '',
+          walletId: 'bca',
+          direction: AdjustmentDirection.decrease,
+        ),
+        BalanceAdjustmentTransaction(
+          id: 'a3',
+          date: DateTime(2026, 11, 18),
+          amount: 99999,
+          note: '',
+          walletId: 'gopay',
+          direction: AdjustmentDirection.increase,
+        ),
+      ];
+      expect(calculate(wallet, transactions), 500000000 + 50000 - 20000);
+    });
+
     test('transaksi milik dompet lain diabaikan', () {
       final other = ExpenseTransaction(id: 't1', date: DateTime(2026, 9), amount: 50000, note: 'kopi', walletId: 'gopay');
       expect(calculate(wallet, [other]), wallet.initialBalance);

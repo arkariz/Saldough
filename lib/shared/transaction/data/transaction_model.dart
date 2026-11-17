@@ -3,7 +3,7 @@ import 'package:saldough/shared/transaction/domain/transaction.dart';
 /// Model serialisasi [Transaction], terpisah dari entitas domain (tanpa
 /// `freezed`, mengikuti konvensi monorepo — lihat ARCHITECTURE_OVERVIEW.md).
 ///
-/// [Transaction] adalah tipe tertutup dengan tiga bentuk field yang
+/// [Transaction] adalah tipe tertutup dengan empat bentuk field yang
 /// berbeda; model ini meratakannya jadi satu bentuk JSON beranotasi [type],
 /// dengan field yang tidak relevan untuk jenis itu dibiarkan `null`.
 final class TransactionModel {
@@ -23,6 +23,7 @@ final class TransactionModel {
     this.freelancePaymentId,
     this.sourceIconId,
     this.recurrence,
+    this.direction,
   });
 
   /// Membaca [TransactionModel] dari JSON.
@@ -41,6 +42,7 @@ final class TransactionModel {
         freelancePaymentId: json['freelancePaymentId'] as String?,
         sourceIconId: json['sourceIconId'] as String?,
         recurrence: _recurrenceFromJson(json['recurrence'] as Map<String, dynamic>?),
+        direction: json['direction'] as String?,
       );
 
   /// Membuat [TransactionModel] dari entitas domain [Transaction].
@@ -81,16 +83,29 @@ final class TransactionModel {
             toWalletId: transaction.toWalletId,
             budgetItemId: transaction.budgetItemId,
           ),
+        BalanceAdjustmentTransaction() => TransactionModel(
+            id: transaction.id,
+            type: _typeAdjustment,
+            date: transaction.date,
+            amount: transaction.amount,
+            note: transaction.note,
+            walletId: transaction.walletId,
+            direction: transaction.direction.name,
+          ),
       };
 
   static const _typeIncome = 'income';
   static const _typeExpense = 'expense';
   static const _typeTransfer = 'transfer';
+  static const _typeAdjustment = 'adjustment';
 
   /// Versi skema dokumen ini. Naikkan kalau bentuk field berubah.
   ///
   /// Versi 2 (ADR-026): `categoryKey` teks bebas diganti `categoryId`.
-  static const schemaVersion = 2;
+  /// Versi 3 (ADR-047): jenis `'adjustment'` dengan field `direction`
+  /// (`'increase'`/`'decrease'`). Hanya menambah; dokumen versi 2 terbaca
+  /// apa adanya.
+  static const schemaVersion = 3;
 
   /// Identitas transaksi.
   final String id;
@@ -140,6 +155,10 @@ final class TransactionModel {
   /// kalau terisi, jadi dokumen lama tidak berubah bentuk.
   final RecurrenceLink? recurrence;
 
+  /// Arah penyesuaian saldo (`'increase'`/`'decrease'`), hanya untuk jenis
+  /// `'adjustment'` (ADR-047).
+  final String? direction;
+
   static RecurrenceLink? _recurrenceFromJson(Map<String, dynamic>? json) => json == null
       ? null
       : RecurrenceLink(
@@ -156,7 +175,7 @@ final class TransactionModel {
         date: date,
         amount: amount,
         note: note,
-        categoryId: type == _typeTransfer ? null : (this.categoryId ?? categoryId),
+        categoryId: isTransfer || isAdjustment ? null : (this.categoryId ?? categoryId),
         walletId: walletId,
         budgetItemId: budgetItemId,
         fromWalletId: fromWalletId,
@@ -164,13 +183,14 @@ final class TransactionModel {
         freelancePaymentId: freelancePaymentId,
         sourceIconId: sourceIconId,
         recurrence: recurrence,
+        direction: direction,
       );
 
   /// Salinan yang membawa [legacyCategoryKey] milik [previous] — dipakai saat
   /// menimpa dokumen skema 1 yang belum dimigrasi, supaya labelnya tidak
   /// hilang karena entitas domain tidak mengenalnya.
   TransactionModel keepingLegacyCategoryOf(TransactionModel previous) =>
-      categoryId != null || previous.legacyCategoryKey == null || isTransfer
+      categoryId != null || previous.legacyCategoryKey == null || isTransfer || isAdjustment
           ? this
           : TransactionModel(
               id: id,
@@ -191,6 +211,9 @@ final class TransactionModel {
   /// `true` untuk transfer (tidak berkategori).
   bool get isTransfer => type == _typeTransfer;
 
+  /// Apakah ini penyesuaian saldo (ADR-047).
+  bool get isAdjustment => type == _typeAdjustment;
+
   /// `true` untuk pemasukan.
   bool get isIncome => type == _typeIncome;
 
@@ -209,6 +232,7 @@ final class TransactionModel {
         'toWalletId': toWalletId,
         if (freelancePaymentId != null) 'freelancePaymentId': freelancePaymentId,
         if (sourceIconId != null) 'sourceIconId': sourceIconId,
+        if (direction != null) 'direction': direction,
         if (recurrence case final link?)
           'recurrence': {
             'ruleId': link.ruleId,
@@ -255,6 +279,18 @@ final class TransactionModel {
             fromWalletId: fromWalletId ?? (throw FormatException('TransactionModel transfer tanpa fromWalletId: $id')),
             toWalletId: toWalletId ?? (throw FormatException('TransactionModel transfer tanpa toWalletId: $id')),
             budgetItemId: budgetItemId,
+          ),
+        _typeAdjustment => BalanceAdjustmentTransaction(
+            id: id,
+            date: date,
+            amount: amount,
+            note: note,
+            walletId: walletId ?? (throw FormatException('TransactionModel adjustment tanpa walletId: $id')),
+            direction: switch (direction) {
+              'increase' => AdjustmentDirection.increase,
+              'decrease' => AdjustmentDirection.decrease,
+              _ => throw FormatException('TransactionModel adjustment dengan direction tidak dikenal: $direction ($id)'),
+            },
           ),
         _ => throw FormatException('Jenis transaksi tidak dikenal: $type ($id)'),
       };

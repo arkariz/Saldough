@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
@@ -143,7 +144,9 @@ class TransactionRow extends StatelessWidget {
     return switch (transaction) {
       TransferTransaction(:final fromWalletId, :final toWalletId) =>
         '${_walletName(fromWalletId)} → ${_walletName(toWalletId)} · $time',
-      IncomeTransaction(:final walletId) || ExpenseTransaction(:final walletId) => '${_walletName(walletId)} · $time',
+      IncomeTransaction(:final walletId) ||
+      ExpenseTransaction(:final walletId) ||
+      BalanceAdjustmentTransaction(:final walletId) => '${_walletName(walletId)} · $time',
     };
   }
 
@@ -152,13 +155,15 @@ class TransactionRow extends StatelessWidget {
     final kind = switch (transaction) {
       IncomeTransaction() => MoneyKind.income,
       ExpenseTransaction() => MoneyKind.expense,
-      TransferTransaction() => MoneyKind.transfer,
+      TransferTransaction() || BalanceAdjustmentTransaction() => MoneyKind.transfer,
     };
     return AppListRow(
-      leading: TransactionIcon.of(
-        transaction,
-        ringColor: context.appColors.surface,
-      ),
+      leading: transaction is BalanceAdjustmentTransaction
+          ? const DsIconTile(icon: Symbols.balance_rounded)
+          : TransactionIcon.of(
+              transaction,
+              ringColor: context.appColors.surface,
+            ),
       title: transactionTitle(transaction),
       subtitle: _subtitle,
       trailing: AppMoneyText(transaction.amount, kind: kind),

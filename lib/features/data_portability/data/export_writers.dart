@@ -13,6 +13,8 @@ abstract final class ExportWriters {
     ExportKind.income => labels.income,
     ExportKind.expense => labels.expense,
     ExportKind.transfer => labels.transfer,
+    ExportKind.adjustmentIncrease => labels.adjustmentIncrease,
+    ExportKind.adjustmentDecrease => labels.adjustmentDecrease,
   };
 
   static String _day(DateTime d) =>

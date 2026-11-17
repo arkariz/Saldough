@@ -13,7 +13,7 @@ bool isUncategorizedTransaction(Transaction transaction, {required bool Function
       IncomeTransaction(:final categoryId, :final isFreelancePayment) =>
         categoryId == null ? !isFreelancePayment : !isKnownCategory(categoryId),
       ExpenseTransaction(:final categoryId) => categoryId == null || !isKnownCategory(categoryId),
-      TransferTransaction() => false,
+      TransferTransaction() || BalanceAdjustmentTransaction() => false,
     };
 
 /// Saringan satu periode keuangan untuk Daftar tersaring yang dibuka dari

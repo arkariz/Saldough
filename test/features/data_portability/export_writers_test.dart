@@ -130,6 +130,8 @@ void main() {
         income: '',
         expense: '',
         transfer: '',
+        adjustmentIncrease: '',
+        adjustmentDecrease: '',
       );
       final data = sampleExportData(transactions: const []);
       final workbook = part(unzip(ExportWriters.xlsx(data, const [], labels)), 'xl/workbook.xml');

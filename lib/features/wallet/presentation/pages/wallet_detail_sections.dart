@@ -54,6 +54,9 @@ class _MonthTotals {
         case TransferTransaction(:final fromWalletId, :final toWalletId):
           if (toWalletId == walletId) transferIn += transaction.amount;
           if (fromWalletId == walletId) transferOut += transaction.amount;
+        // Penyesuaian saldo bukan pemasukan, pengeluaran, atau transfer (ADR-047).
+        case BalanceAdjustmentTransaction():
+          break;
       }
     }
     return _MonthTotals(income: income, expense: expense, transferIn: transferIn, transferOut: transferOut);

@@ -181,7 +181,8 @@ MonthPlan monthPlan(
         unplannedOut += t.amount;
       case IncomeTransaction():
         unplannedIn += t.amount;
-      case ExpenseTransaction() || TransferTransaction():
+      // Penyesuaian saldo bukan rencana maupun di luar rencana (ADR-047 §3.4).
+      case ExpenseTransaction() || TransferTransaction() || BalanceAdjustmentTransaction():
         break;
     }
   }

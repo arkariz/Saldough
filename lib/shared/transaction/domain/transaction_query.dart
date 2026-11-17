@@ -21,6 +21,9 @@ enum TransactionTypeFilter {
 
   /// Hanya `TransferTransaction`.
   transfer,
+
+  /// Hanya `BalanceAdjustmentTransaction` (ADR-047 §3.5).
+  adjustment,
 }
 
 /// Satu kelompok transaksi pada tanggal [date] yang sama, sudah tersaring
@@ -54,6 +57,7 @@ Set<String> walletIdsOf(Transaction transaction) => switch (transaction) {
   IncomeTransaction(:final walletId) => {walletId},
   ExpenseTransaction(:final walletId) => {walletId},
   TransferTransaction(:final fromWalletId, :final toWalletId) => {fromWalletId, toWalletId},
+  BalanceAdjustmentTransaction(:final walletId) => {walletId},
 };
 
 /// Apakah [transaction] termasuk jenis [filter].
@@ -62,6 +66,7 @@ bool matchesTransactionType(Transaction transaction, TransactionTypeFilter filte
   TransactionTypeFilter.income => transaction is IncomeTransaction,
   TransactionTypeFilter.expense => transaction is ExpenseTransaction,
   TransactionTypeFilter.transfer => transaction is TransferTransaction,
+  TransactionTypeFilter.adjustment => transaction is BalanceAdjustmentTransaction,
 };
 
 /// Menyaring [transactions] dengan dompet, kategori, kata kunci, dan jenis.
@@ -127,7 +132,8 @@ int netSenOf(Iterable<Transaction> transactions) {
         net += amount;
       case ExpenseTransaction(:final amount):
         net -= amount;
-      case TransferTransaction():
+      // Penyesuaian saldo juga tidak (ADR-047 §3.4).
+      case TransferTransaction() || BalanceAdjustmentTransaction():
         break;
     }
   }

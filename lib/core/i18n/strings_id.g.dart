@@ -66,6 +66,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$appUpdate$id appUpdate = Translations$appUpdate$id.internal(_root);
 	late final Translations$analysis$id analysis = Translations$analysis$id.internal(_root);
 	late final Translations$premium$id premium = Translations$premium$id.internal(_root);
+	late final Translations$assets$id assets = Translations$assets$id.internal(_root);
 }
 
 // Path: app
@@ -664,11 +665,11 @@ class Translations$wallet$id {
 	/// id: 'Isi dengan jumlah uang di dompet ini sekarang. Setiap transaksi berikutnya dihitung dari angka ini.'
 	String get initialBalanceHelp => 'Isi dengan jumlah uang di dompet ini sekarang. Setiap transaksi berikutnya dihitung dari angka ini.';
 
-	/// id: 'Saldo saat ini'
-	String get currentBalanceLabel => 'Saldo saat ini';
+	/// id: 'Saldo sekarang'
+	String get currentBalanceLabel => 'Saldo sekarang';
 
-	/// id: 'Isi dengan jumlah uang di dompet ini sekarang. Saldo diganti sesuai angka ini; riwayat transaksi tidak berubah dan tidak ada transaksi baru.'
-	String get editBalanceNote => 'Isi dengan jumlah uang di dompet ini sekarang. Saldo diganti sesuai angka ini; riwayat transaksi tidak berubah dan tidak ada transaksi baru.';
+	/// id: 'Isi dengan jumlah uang di dompet ini sekarang. Selisihnya dicatat sebagai penyesuaian saldo hari ini; saldo hari-hari sebelumnya tidak berubah.'
+	String get editBalanceNote => 'Isi dengan jumlah uang di dompet ini sekarang. Selisihnya dicatat sebagai penyesuaian saldo hari ini; saldo hari-hari sebelumnya tidak berubah.';
 
 	/// id: 'Dompet aktif'
 	String get activeSwitchLabel => 'Dompet aktif';
@@ -4280,6 +4281,16 @@ class Translations$premium$id {
 	late final Translations$premium$paywall$id paywall = Translations$premium$paywall$id.internal(_root);
 }
 
+// Path: assets
+class Translations$assets$id {
+	Translations$assets$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+	late final Translations$assets$adjust$id adjust = Translations$assets$adjust$id.internal(_root);
+}
+
 // Path: record.draftIssue
 class Translations$record$draftIssue$id {
 	Translations$record$draftIssue$id.internal(this._root);
@@ -4601,6 +4612,12 @@ class Translations$dataPortability$types$id {
 
 	/// id: 'Transfer'
 	String get transfer => 'Transfer';
+
+	/// id: 'Penyesuaian saldo (tambah)'
+	String get adjustmentIncrease => 'Penyesuaian saldo (tambah)';
+
+	/// id: 'Penyesuaian saldo (kurang)'
+	String get adjustmentDecrease => 'Penyesuaian saldo (kurang)';
 }
 
 // Path: home.preview
@@ -5582,6 +5599,39 @@ class Translations$premium$paywall$id {
 	String get notSellingBody => 'Berlangganan Plus belum tersedia. Mencatat tetap gratis.';
 }
 
+// Path: assets.adjust
+class Translations$assets$adjust$id {
+	Translations$assets$adjust$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Dompet'
+	String get walletLabel => 'Dompet';
+
+	/// id: 'Penyesuaian saldo'
+	String get title => 'Penyesuaian saldo';
+
+	/// id: 'Selisih saat saldo dompet diubah di Ubah dompet. Bukan pemasukan atau pengeluaran. Hapus untuk mengembalikan saldo seperti sebelumnya.'
+	String get detailNote => 'Selisih saat saldo dompet diubah di Ubah dompet. Bukan pemasukan atau pengeluaran. Hapus untuk mengembalikan saldo seperti sebelumnya.';
+
+	/// id: 'Selisih $amount dicatat sebagai penyesuaian saldo hari ini.'
+	String preview({required Object amount}) => 'Selisih ${amount} dicatat sebagai penyesuaian saldo hari ini.';
+
+	/// id: 'Tahu transaksi mana yang salah? Sunting transaksinya saja.'
+	String get previewHint => 'Tahu transaksi mana yang salah? Sunting transaksinya saja.';
+
+	/// id: 'Selisih $amount dicatat sebagai penyesuaian saldo.'
+	String savedMessage({required Object amount}) => 'Selisih ${amount} dicatat sebagai penyesuaian saldo.';
+
+	/// id: 'Penyesuaian $count'
+	String filterLabel({required Object count}) => 'Penyesuaian ${count}';
+
+	/// id: 'Ganti tanda plus atau minus'
+	String get signToggle => 'Ganti tanda plus atau minus';
+}
+
 // Path: record.voice.failure
 class Translations$record$voice$failure$id {
 	Translations$record$voice$failure$id.internal(this._root);
@@ -6115,8 +6165,8 @@ extension on Translations {
 			'wallet.iconLabel' => 'Pilih ikon',
 			'wallet.initialBalanceLabel' => 'Saldo awal',
 			'wallet.initialBalanceHelp' => 'Isi dengan jumlah uang di dompet ini sekarang. Setiap transaksi berikutnya dihitung dari angka ini.',
-			'wallet.currentBalanceLabel' => 'Saldo saat ini',
-			'wallet.editBalanceNote' => 'Isi dengan jumlah uang di dompet ini sekarang. Saldo diganti sesuai angka ini; riwayat transaksi tidak berubah dan tidak ada transaksi baru.',
+			'wallet.currentBalanceLabel' => 'Saldo sekarang',
+			'wallet.editBalanceNote' => 'Isi dengan jumlah uang di dompet ini sekarang. Selisihnya dicatat sebagai penyesuaian saldo hari ini; saldo hari-hari sebelumnya tidak berubah.',
 			'wallet.activeSwitchLabel' => 'Dompet aktif',
 			'wallet.activeSwitchHelp' => 'Dompet nonaktif tidak muncul di pemilih dompet. Transaksinya tetap tersimpan dan dihitung.',
 			'wallet.saveAddAction' => 'Simpan dompet',
@@ -6265,6 +6315,8 @@ extension on Translations {
 			'dataPortability.types.income' => 'Pemasukan',
 			'dataPortability.types.expense' => 'Pengeluaran',
 			'dataPortability.types.transfer' => 'Transfer',
+			'dataPortability.types.adjustmentIncrease' => 'Penyesuaian saldo (tambah)',
+			'dataPortability.types.adjustmentDecrease' => 'Penyesuaian saldo (kurang)',
 			'budget.activeBadge' => ({required Object count}) => '${count} aktif',
 			'budget.plannedLabel' => 'Rencana',
 			'budget.spentLabel' => 'Terpakai',
@@ -6372,10 +6424,10 @@ extension on Translations {
 			'budget.templateAddAction' => 'Buat template',
 			'budget.templatesFooter' => 'Template bisa disunting kapan saja tanpa mengubah anggaran yang sudah dibuat darinya.',
 			'budget.templatesEmptyBadge' => 'Belum ada template',
-			'budget.templatesEmptyTitle' => 'Belum ada template',
-			'budget.templatesEmptyBody' => 'Simpan susunan pos yang sering dipakai, misalnya belanja bulanan, supaya anggaran berikutnya tinggal dipakai.',
 			_ => null,
 		} ?? switch (path) {
+			'budget.templatesEmptyTitle' => 'Belum ada template',
+			'budget.templatesEmptyBody' => 'Simpan susunan pos yang sering dipakai, misalnya belanja bulanan, supaya anggaran berikutnya tinggal dipakai.',
 			'budget.templateNeedsWallet' => 'Buat dompet aktif dulu untuk memakai template.',
 			'budget.templatesLoadError' => 'Template gagal dimuat',
 			'budget.templateAddTitle' => 'Buat template',
@@ -6886,10 +6938,10 @@ extension on Translations {
 			'discovery.quickStart.plusTeaser' => 'Pantau banyak bank dan e-wallet sekaligus?',
 			'discovery.quickStart.plusInfo' => 'Info Plus',
 			'discovery.quickStart.privacyLine' => 'Izin akses notifikasi hanya dipakai membaca aplikasi yang kamu pilih.',
-			'discovery.quickStart.turnOn' => 'Nyalakan',
-			'discovery.quickStart.walletHint' => 'Pilih dompet untuk tiap aplikasi',
 			_ => null,
 		} ?? switch (path) {
+			'discovery.quickStart.turnOn' => 'Nyalakan',
+			'discovery.quickStart.walletHint' => 'Pilih dompet untuk tiap aplikasi',
 			'discovery.quickStart.pickHint' => 'Pilih minimal satu aplikasi',
 			'discovery.quickStart.pickedCount' => ({required Object n}) => '${n} aplikasi dipilih',
 			'discovery.quickStart.freeLimit' => ({required Object n}) => 'Batas Gratis: ${n} aplikasi',
@@ -7400,10 +7452,10 @@ extension on Translations {
 			'analysis.trend.toDate' => ({required Object date}) => 's.d. ${date}',
 			'analysis.trend.days' => ({required Object n}) => '${n} hari',
 			'analysis.trend.seePeriod' => ({required Object period}) => 'Lihat analisis ${period}',
-			'analysis.trend.column' => ({required Object period, required Object income, required Object expense, required Object net}) => '${period}, pemasukan ${income}, pengeluaran ${expense}, selisih ${net}',
-			'analysis.category.frequency' => ({required Object count, required Object amount}) => '${count} transaksi · rata-rata ${amount} per transaksi',
 			_ => null,
 		} ?? switch (path) {
+			'analysis.trend.column' => ({required Object period, required Object income, required Object expense, required Object net}) => '${period}, pemasukan ${income}, pengeluaran ${expense}, selisih ${net}',
+			'analysis.category.frequency' => ({required Object count, required Object amount}) => '${count} transaksi · rata-rata ${amount} per transaksi',
 			'analysis.category.frequencyOne' => ({required Object count, required Object amount}) => '${count} transaksi · rata-rata ${amount} per transaksi',
 			'analysis.category.frequencyUsual' => ({required Object count, required Object amount}) => 'biasanya ${count} transaksi · ${amount}',
 			'analysis.category.seeAll' => 'Lihat semua transaksi',
@@ -7544,6 +7596,14 @@ extension on Translations {
 			'premium.paywall.done' => 'Selesai',
 			'premium.paywall.notSellingTitle' => 'Plus belum dijual',
 			'premium.paywall.notSellingBody' => 'Berlangganan Plus belum tersedia. Mencatat tetap gratis.',
+			'assets.adjust.walletLabel' => 'Dompet',
+			'assets.adjust.title' => 'Penyesuaian saldo',
+			'assets.adjust.detailNote' => 'Selisih saat saldo dompet diubah di Ubah dompet. Bukan pemasukan atau pengeluaran. Hapus untuk mengembalikan saldo seperti sebelumnya.',
+			'assets.adjust.preview' => ({required Object amount}) => 'Selisih ${amount} dicatat sebagai penyesuaian saldo hari ini.',
+			'assets.adjust.previewHint' => 'Tahu transaksi mana yang salah? Sunting transaksinya saja.',
+			'assets.adjust.savedMessage' => ({required Object amount}) => 'Selisih ${amount} dicatat sebagai penyesuaian saldo.',
+			'assets.adjust.filterLabel' => ({required Object count}) => 'Penyesuaian ${count}',
+			'assets.adjust.signToggle' => 'Ganti tanda plus atau minus',
 			_ => null,
 		};
 	}

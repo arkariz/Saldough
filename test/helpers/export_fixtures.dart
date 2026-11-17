@@ -89,4 +89,6 @@ const idLabels = ExportLabels(
   income: 'Pemasukan',
   expense: 'Pengeluaran',
   transfer: 'Transfer',
+  adjustmentIncrease: 'Penyesuaian saldo (tambah)',
+  adjustmentDecrease: 'Penyesuaian saldo (kurang)',
 );

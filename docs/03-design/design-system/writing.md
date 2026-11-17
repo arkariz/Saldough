@@ -25,6 +25,8 @@ Teks Tanukonomy ditulis seperti teman yang rapi mencatat: hangat, pendek, dan te
 | Transaksi | log, entri, catatan kas | Pemasukan, pengeluaran, atau transfer |
 | Pemasukan / Pengeluaran | uang masuk / uang keluar, masuk / keluar (di judul) | "Masuk" dan "Keluar" boleh di ruang sempit seperti badge |
 | Transfer | mutasi, mutasi internal | Uang pindah antardompet; tidak mengubah total saldo |
+| Penyesuaian saldo | koreksi saldo, saldo penyeimbang, rekonsiliasi | Selisih saat saldo dompet diubah di Ubah dompet; bukan pemasukan atau pengeluaran (ADR-047). "Penyesuaian" saja boleh di chip filter |
+| Saldo sekarang | saldo saat ini (di kolom Ubah dompet) | Label kolom saldo di Ubah dompet; Dompet baru memakai "Saldo awal" |
 | Selisih | arus bersih, netto | Pemasukan dikurangi pengeluaran |
 | Riwayat | daftar transaksi, log bulan ini | Nama tab |
 | Anggaran, pos anggaran | slot rencana, kuota | Anggaran berisi beberapa pos |

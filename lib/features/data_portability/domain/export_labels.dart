@@ -12,6 +12,8 @@ final class ExportLabels {
     required this.income,
     required this.expense,
     required this.transfer,
+    required this.adjustmentIncrease,
+    required this.adjustmentDecrease,
   });
 
   /// Kata di nama berkas: `ekspor` atau `export`
@@ -40,4 +42,10 @@ final class ExportLabels {
 
   /// Teks jenis Transfer.
   final String transfer;
+
+  /// Teks jenis penyesuaian saldo yang menambah saldo (ADR-047 §3.7).
+  final String adjustmentIncrease;
+
+  /// Teks jenis penyesuaian saldo yang mengurangi saldo (ADR-047 §3.7).
+  final String adjustmentDecrease;
 }

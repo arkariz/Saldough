@@ -89,7 +89,8 @@ PeriodSummary summarizePeriod(
           uncategorized += amount;
           uncategorizedCount++;
         }
-      case IncomeTransaction() || ExpenseTransaction():
+      // Penyesuaian saldo bukan pemasukan maupun pengeluaran (ADR-047 §3.4).
+      case IncomeTransaction() || ExpenseTransaction() || BalanceAdjustmentTransaction():
         break;
     }
   }

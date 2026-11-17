@@ -100,12 +100,18 @@ alasan); uji kelengkapan registri gagal bila terlewat. Kolom Awal periode di
 ekspor memakai `periodDateOf`, jadi aturan periode keuangan tidak boleh
 disalin di tempat lain. Rincian di `docs/01-product/features/EXPORT_BACKUP.md`.
 
-**Ubah saldo dompet (sejak `0.11.0+17`, 27 Okt 2026; KT-W1 diputuskan 17 Nov 2026 = B, belum dikerjakan, B-99):**
-kolom saldo di Ubah dompet berarti **saldo saat ini**; `WalletBloc` menggeser
-`initialBalance` (= angka diisi − netto transaksi) tanpa membuat transaksi,
-lalu `RecomputeWalletBalances`. Akibatnya saldo historis periode lampau ikut
-bergeser. Perubahan ini dibuat tanpa tugas atau ADR; jangan membangun di
-atasnya: perilaku yang diputuskan (selisih dicatat sebagai transaksi Penyesuaian saldo, saldo lampau tidak bergeser) menggantikannya di B-99 dengan ADR domain dulu.
+**Penyesuaian saldo (Fase 29, ADR-047 Accepted 17 Nov 2026, KT-W1 = B; kode
+selesai 17 Nov 2026 di branch `claude/penyesuaian-saldo-fase-29`, QA lulus menurut pemilik):**
+kolom saldo di Ubah dompet berarti **saldo saat ini**; bila diubah, `WalletBloc`
+mencatat satu `BalanceAdjustmentTransaction` (anggota keempat `Transaction`,
+`walletId` + `direction`, nominal tetap positif) bertanggal hari ini lewat
+`RecordTransaction`. `initialBalance` hanya diisi saat membuat dompet dan tidak
+pernah digeser lagi. Penyesuaian ikut saldo dompet tetapi **0 di semua
+hitungan Arus** (pemasukan, pengeluaran, Analisis, anggaran, Rencana, Buku
+Periode); bisa dihapus, tidak bisa disunting. Switch pada `Transaction` tidak
+boleh memakai `default`/`_`. Perilaku lama `0.11.0+17` (menggeser
+`initialBalance`) tidak dimigrasi. Rangkaian aset Fase 29–33 di bawah branch
+induk `claude/aset-kekayaan` (WEALTH_ASSETS.md).
 
 **Periode keuangan (Fase 18, ADR-038, selesai 15 Okt 2026):** "bulan" di
 aplikasi adalah **periode keuangan** yang dimulai di tanggal pilihan pengguna
@@ -348,7 +354,10 @@ Empat aturan domain, baru di Saldough 2.0 dan paling sering salah:
    `RecordTransaction`, tanpa formulir; draf yang perlu ditinjau selalu
    membuka CATAT. Pengecualian kedua (ADR-035 §3.3): kemunculan rutin
    bernominal **tetap** yang dikonfirmasi pengguna satu ketuk; nominal
-   kira-kira selalu membuka CATAT.
+   kira-kira selalu membuka CATAT. Pengecualian penyesuaian saldo
+   (ADR-047 §3.8): selisih saat saldo dompet diubah dicatat dari Ubah dompet,
+   bukan CATAT, dan tidak pernah dibuat kode lain. Nomor urutnya ditetapkan
+   bersama ADR-044.
 
 Aturan selengkapnya ada di `.claude/AGENT_CONTEXT.md`.
 

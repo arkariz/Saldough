@@ -58,7 +58,9 @@ final class CalculateCashFlow {
           income += transaction.amount;
         case ExpenseTransaction():
           expense += transaction.amount;
-        case TransferTransaction():
+        // Transfer dan penyesuaian saldo bukan pemasukan maupun pengeluaran
+        // (aturan 7, ADR-047 §3.4).
+        case TransferTransaction() || BalanceAdjustmentTransaction():
           break;
       }
     }

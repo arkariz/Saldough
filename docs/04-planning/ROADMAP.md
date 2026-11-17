@@ -100,7 +100,7 @@ baru:
 | B-5, B-35, B-40 | Verifikasi perangkat yang tertunda: Akun, mata uang, Freelance, suara, lebar 360dp, keadaan kosong Analisis | pemilik |
 | Audit TASK_LIST | Kotak lama yang kemungkinan sudah selesai di kode tapi belum dicentang (T-11.17–11.20, T-15.9, T-15.14, T-15.19, dan B-13/B-14 yang usang) | agen |
 | B-83 | Tindak lanjut QA Fase 23: keputusan F23-2 dan F23-6, perbaikan F23-5, pengungkapan contoh notifikasi di Keamanan Data dan situs, uji perangkat dengan notifikasi bank asli | pemilik + agen |
-| B-99 (dari KT-W1) | Penyesuaian saldo: KT-W1 diputuskan **B** 17 Nov 2026 (selisih dicatat sebagai transaksi, saldo periode lampau tidak bergeser); ADR domain lalu kode, memperbaiki perilaku sejak `0.11.0+17` ([WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §6) | agen |
+| Fase 29 (dari B-99, KT-W1) | Penyesuaian saldo: KT-W1 diputuskan **B** 17 Nov 2026 (selisih dicatat sebagai transaksi, saldo periode lampau tidak bergeser); [ADR-047](../02-architecture/adr/0047-penyesuaian-saldo.md) Accepted, lalu kode, branch `claude/penyesuaian-saldo-fase-29` di bawah induk `claude/aset-kekayaan`, memperbaiki perilaku sejak `0.11.0+17` ([WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §6) | agen |
 | Fase 24 (B-41) | **Fondasi Plus** dijadwalkan 23 Okt 2026 ([ADR-041](../02-architecture/adr/0041-monetisasi-hak-plus-dan-uji-coba.md)): hak, uji coba, gerbang fitur lama, RevenueCat. Pra-peluncuran: masuk akun = Plus | agen, pemilik (RevenueCat, Play Console) |
 | Fase 26 (T-26.26, T-26.27) | **Gerbang Catat dari notifikasi v2**: uji di dua atau tiga perangkat nyata dari vendor berbeda (satu yang agresif mematikan layanan), build rilis R8 dijalankan, dan kebijakan privasi situs memuat pemrosesan latar serta penyimpanan lokal baru; ADR-044 baru Accepted sesudahnya. Kode T-26.1–T-26.25 sudah selesai di branch kerja (belum jadi PR) | pemilik + agen |
 | B-43 | Kunci aplikasi sidik jari/PIN (gratis); prasyarat Plus. Pasangannya, ekspor dan cadangan/pulihkan manual (Fase 22, dari B-42), **selesai 23 Okt 2026**; sisa uji perangkatnya di B-67 | agen, pemilik (B-67) |
@@ -132,7 +132,7 @@ sejak …?" (tanpa streak, KT-R13). Paling langsung menjawab ukuran keberhasilan
 | B-30 | Horizon perkiraan sampai 12 bulan (KT-R8) | R2 memakai +2 tetap; tunggu kebutuhan nyata |
 | B-11, B-21 | Indeks pencarian riwayat panjang; satu sinyal per putaran notifikasi | Tunggu keluhan atau data nyata, jangan dikerjakan spekulatif |
 | B-16, B-19 | Temuan kecil verifikasi M1; `dismissKeyboardOnTapOutside` di formulir lain | Poles; kerjakan bersama tugas yang menyentuh berkasnya |
-| B-96, B-97, B-98, B-100 | **Tujuan tabungan**, **investasi manual**, **gambaran aset** (Total aset), dan **riwayat kekayaan** ([WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md); B-96 menggantikan B-47). Gratis 2 tujuan dan 2 investasi aktif, Plus tanpa batas | B-99 selesai; ADR domain per butir; sesudah Plus dijual |
+| B-96, B-97, B-98, B-100, B-101 (rencana Fase 30–33) | **Tujuan tabungan**, **investasi manual**, **gambaran aset** (Total aset), **riwayat kekayaan**, dan **ambil nilai dari Google Sheet pengguna** ([WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md); B-96 menggantikan B-47). Gratis 2 tujuan dan 2 investasi aktif, Plus tanpa batas | B-99 selesai; ADR domain per butir; sesudah Plus dijual |
 | B-48 | **Utang-piutang** (masuk produk, KT-P10) | ADR domain; sesudah Plus dijual |
 | B-49, B-50, B-51 | Rapor bulanan bercerita + ekspor PDF, Freelance Pro, cadangan otomatis Drive | Sesudah Plus dijual; B-51 sesudah B-42 |
 | B-52 | Tanya Tanuki R1 | Sesudah B-47/B-48 supaya bisa menjawab tentang target dan utang; mutu diuji dengan katalog kueri sempit |
@@ -160,6 +160,7 @@ C. Tiga pilar → dijual    B-44 Penjaga + B-68 Titik terendah ─► B-45 Catat
         │                 ─► B-46 Bagaimana kalau + B-70 Cek sebelum beli
         │                 ─► B-41 reverse trial (Plus mulai dijual, judul tiga janji)
 D. Domain baru            B-99 penyesuaian saldo ─► B-96 tujuan tabungan, B-97 investasi ─► B-98 Total aset ─► B-100 riwayat kekayaan;
+                          B-97 investasi ─► B-101 nilai dari Google Sheet pengguna;
                           B-48 utang-piutang ─► B-59 kekayaan bersih (ADR dulu)
         │
 E. Melengkapi pilar       B-49 rapor + PDF ─► B-50 Freelance Pro + B-71/72/73,

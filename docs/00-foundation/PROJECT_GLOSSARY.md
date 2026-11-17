@@ -47,10 +47,11 @@ terjadi padanya.
 | Saldo awal | `initialBalance` | Nominal yang dinyatakan pemilik saat dompet dibuat. Bukan transaksi setoran. |
 | Saldo tercatat | `currentBalance` | Saldo dompet saat ini menurut catatan aplikasi. |
 | Total saldo | `totalBalance` | Jumlah saldo seluruh dompet aktif. Angka utama di Beranda. |
-| Transaksi | `Transaction` | Satu peristiwa keuangan yang benar-benar terjadi. Punya tanggal. Tiga jenis di bawah ini. |
+| Transaksi | `Transaction` | Satu peristiwa keuangan yang benar-benar terjadi. Punya tanggal. Empat jenis di bawah ini. |
 | Pemasukan | `IncomeTransaction` | Menambah saldo satu dompet. |
 | Pengeluaran | `ExpenseTransaction` | Mengurangi saldo satu dompet. Boleh ditautkan ke satu pos anggaran. |
 | Transfer | `TransferTransaction` | Memindahkan catatan uang dari satu dompet ke dompet lain. Total saldo tidak berubah, hanya tempatnya. Boleh ditautkan ke satu pos anggaran, untuk pos yang berupa rencana pemindahan seperti setoran tabungan. |
+| Penyesuaian saldo | `BalanceAdjustmentTransaction` | Selisih yang dicatat saat pemilik mengubah saldo dompet di Ubah dompet, bertanggal hari itu (ADR-047). Mengubah saldo satu dompet tetapi bukan pemasukan dan bukan pengeluaran: 0 di Arus, Analisis, dan anggaran. Hanya dari Ubah dompet; bisa dihapus, tidak bisa disunting. |
 | Kategori | `Category` / `categoryId` | Pengelompokan pemasukan atau pengeluaran, misalnya Makan & Minum. Daftar bawaan yang bisa diubah (ADR-026); transfer tidak berkategori. |
 | Catat | `record` | Satu-satunya titik masuk pembuatan transaksi manual. Lihat bagian berikutnya. |
 | Riwayat / History | `TransactionListPage` | Nama tab dan judul layar daftar transaksi (sebelumnya "Transaksi", diganti 29 Sep 2026 karena label terbungkus di 360dp). Kunci i18n masih `appShell.transactionsTabLabel`. ADR dan catatan lama yang menyebut "tab Transaksi" merujuk layar yang sama. |

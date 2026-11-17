@@ -276,8 +276,8 @@
     "iconLabel": "Pilih ikon",
     "initialBalanceLabel": "Saldo awal",
     "initialBalanceHelp": "Isi dengan jumlah uang di dompet ini sekarang. Setiap transaksi berikutnya dihitung dari angka ini.",
-    "currentBalanceLabel": "Saldo saat ini",
-    "editBalanceNote": "Isi dengan jumlah uang di dompet ini sekarang. Saldo diganti sesuai angka ini; riwayat transaksi tidak berubah dan tidak ada transaksi baru.",
+    "currentBalanceLabel": "Saldo sekarang",
+    "editBalanceNote": "Isi dengan jumlah uang di dompet ini sekarang. Selisihnya dicatat sebagai penyesuaian saldo hari ini; saldo hari-hari sebelumnya tidak berubah.",
     "activeSwitchLabel": "Dompet aktif",
     "activeSwitchHelp": "Dompet nonaktif tidak muncul di pemilih dompet. Transaksinya tetap tersimpan dan dihitung.",
     "saveAddAction": "Simpan dompet",
@@ -437,7 +437,9 @@
     "types": {
       "income": "Pemasukan",
       "expense": "Pengeluaran",
-      "transfer": "Transfer"
+      "transfer": "Transfer",
+      "adjustmentIncrease": "Penyesuaian saldo (tambah)",
+      "adjustmentDecrease": "Penyesuaian saldo (kurang)"
     }
   },
   "budget": {
@@ -1850,6 +1852,18 @@
       "done": "Selesai",
       "notSellingTitle": "Plus belum dijual",
       "notSellingBody": "Berlangganan Plus belum tersedia. Mencatat tetap gratis."
+    }
+  },
+  "assets": {
+    "adjust": {
+      "walletLabel": "Dompet",
+      "title": "Penyesuaian saldo",
+      "detailNote": "Selisih saat saldo dompet diubah di Ubah dompet. Bukan pemasukan atau pengeluaran. Hapus untuk mengembalikan saldo seperti sebelumnya.",
+      "preview": "Selisih $amount dicatat sebagai penyesuaian saldo hari ini.",
+      "previewHint": "Tahu transaksi mana yang salah? Sunting transaksinya saja.",
+      "savedMessage": "Selisih $amount dicatat sebagai penyesuaian saldo.",
+      "filterLabel": "Penyesuaian $count",
+      "signToggle": "Ganti tanda plus atau minus"
     }
   }
 }

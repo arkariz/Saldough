@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/shared/category/category.dart';
@@ -30,7 +31,9 @@ class TransactionLedgerRow extends StatelessWidget {
     return switch (transaction) {
       TransferTransaction(:final fromWalletId, :final toWalletId) =>
         '${_walletName(fromWalletId)} → ${_walletName(toWalletId)} · $time',
-      IncomeTransaction(:final walletId) || ExpenseTransaction(:final walletId) => '${_walletName(walletId)} · $time',
+      IncomeTransaction(:final walletId) ||
+      ExpenseTransaction(:final walletId) ||
+      BalanceAdjustmentTransaction(:final walletId) => '${_walletName(walletId)} · $time',
     };
   }
 
@@ -40,6 +43,8 @@ class TransactionLedgerRow extends StatelessWidget {
       IncomeTransaction() => (MoneyKind.income, DsLedgerKind.income, TransactionKind.income),
       ExpenseTransaction() => (MoneyKind.expense, DsLedgerKind.expense, TransactionKind.expense),
       TransferTransaction() => (MoneyKind.transfer, DsLedgerKind.transfer, TransactionKind.transfer),
+      // Netral: bukan pemasukan atau pengeluaran (ADR-047 §3.5).
+      BalanceAdjustmentTransaction() => (MoneyKind.transfer, DsLedgerKind.transfer, TransactionKind.transfer),
     };
     final iconKey = TransactionIcon.iconKeyFor(
       kind: txKind,
@@ -49,7 +54,9 @@ class TransactionLedgerRow extends StatelessWidget {
     final clay = transaction.sourceIconId == null ? ClayIcons.forIcon(iconKey) : null;
     final category = txKind == TransactionKind.transfer ? null : ActiveCategories.byId(transaction.categoryId);
     return DsLedgerRow(
-      leading: clay != null
+      leading: transaction is BalanceAdjustmentTransaction
+          ? const DsIconTile(icon: Symbols.balance_rounded)
+          : clay != null
           ? DsIconTile.asset(
               asset: clay,
               tone: txKind == TransactionKind.income ? DsIconTileTone.income : DsIconTileTone.neutral,
@@ -59,7 +66,11 @@ class TransactionLedgerRow extends StatelessWidget {
               child: Center(child: TransactionIcon.of(transaction, ringColor: context.ds.colors.surfaceCard)),
             ),
       title: transactionTitle(transaction),
-      amount: AppMoneyText.format(transaction.amount, moneyKind),
+      amount: switch (transaction) {
+        BalanceAdjustmentTransaction(:final direction) =>
+          '${direction == AdjustmentDirection.increase ? '+' : '−'}${AppMoneyText.format(transaction.amount, moneyKind)}',
+        _ => AppMoneyText.format(transaction.amount, moneyKind),
+      },
       subtitle: _subtitle,
       badge: category == null
           ? null

@@ -29,9 +29,13 @@ final class WalletScope extends IsolatedScope {
           ledgerChanges: c<LedgerChanges>(),
           walletRepository: c<WalletRepository>(),
           transactionRepository: c<TransactionRepository>(),
-          recomputeWalletBalances: RecomputeWalletBalances(
-            walletRepository: c<WalletRepository>(),
+          recordTransaction: RecordTransaction(
+            ledgerChanges: c<LedgerChanges>(),
             transactionRepository: c<TransactionRepository>(),
+            recomputeWalletBalances: RecomputeWalletBalances(
+              walletRepository: c<WalletRepository>(),
+              transactionRepository: c<TransactionRepository>(),
+            ),
           ),
         ),
         dispose: (bloc) => bloc.close(),

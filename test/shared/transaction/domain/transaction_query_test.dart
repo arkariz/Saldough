@@ -107,7 +107,25 @@ void main() {
       TransactionTypeFilter.income: 1,
       TransactionTypeFilter.expense: 2,
       TransactionTypeFilter.transfer: 1,
+      TransactionTypeFilter.adjustment: 0,
     });
+  });
+
+  test('filter Penyesuaian hanya memuat penyesuaian saldo; Semua juga memuatnya (ADR-047 §3.5)', () {
+    final adjustment = BalanceAdjustmentTransaction(
+      id: 'adj',
+      date: DateTime(2026, 9, 28),
+      amount: 5000,
+      note: '',
+      walletId: 'bca',
+      direction: AdjustmentDirection.increase,
+    );
+    expect(matchesTransactionType(adjustment, TransactionTypeFilter.adjustment), isTrue);
+    expect(matchesTransactionType(adjustment, TransactionTypeFilter.all), isTrue);
+    for (final other in [TransactionTypeFilter.income, TransactionTypeFilter.expense, TransactionTypeFilter.transfer]) {
+      expect(matchesTransactionType(adjustment, other), isFalse);
+    }
+    expect(countTransactionsByType([...all, adjustment])[TransactionTypeFilter.adjustment], 1);
   });
 
   test('distinctCategoryIds tanpa duplikat, urut nama; id tak dikenal pakai id-nya', () {

@@ -11,6 +11,12 @@ enum ExportKind {
 
   /// Transfer.
   transfer,
+
+  /// Penyesuaian saldo yang menambah saldo (ADR-047 §3.7).
+  adjustmentIncrease,
+
+  /// Penyesuaian saldo yang mengurangi saldo (ADR-047 §3.7).
+  adjustmentDecrease,
 }
 
 /// Satu baris lembar Transaksi (EXPORT_BACKUP §5.2). Nominal tetap `int` sen;
@@ -78,12 +84,12 @@ final class ExportRow {
 }
 
 /// Arus sebuah transaksi untuk kolom Arus: pemasukan `+nominal`, pengeluaran
-/// `−nominal`, transfer `0`. Satu-satunya tempat aturan ini ditulis untuk
+/// `−nominal`, transfer dan penyesuaian saldo `0`. Satu-satunya tempat aturan ini ditulis untuk
 /// ekspor; jumlah kolom ini per periode harus sama dengan kartu Arus (aturan 7).
 int flowOf(ExportKind kind, int amount) => switch (kind) {
   ExportKind.income => amount,
   ExportKind.expense => -amount,
-  ExportKind.transfer => 0,
+  ExportKind.transfer || ExportKind.adjustmentIncrease || ExportKind.adjustmentDecrease => 0,
 };
 
 /// Menyusun baris lembar Transaksi dari [data], terurut tanggal naik lalu id.
@@ -97,6 +103,13 @@ List<ExportRow> buildExportRows(ExportData data) {
       IncomeTransaction() => (ExportKind.income, t.walletId, null, t.categoryId, null),
       ExpenseTransaction() => (ExportKind.expense, t.walletId, null, t.categoryId, t.budgetItemId),
       TransferTransaction() => (ExportKind.transfer, t.fromWalletId, t.toWalletId, null, t.budgetItemId),
+      BalanceAdjustmentTransaction() => (
+        t.direction == AdjustmentDirection.increase ? ExportKind.adjustmentIncrease : ExportKind.adjustmentDecrease,
+        t.walletId,
+        null,
+        null,
+        null,
+      ),
     };
     final periodDate = periodDateOf(t);
     rows.add(

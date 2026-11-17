@@ -490,6 +490,7 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
         IncomeTransaction() => 'income',
         ExpenseTransaction() => 'expense',
         TransferTransaction() => 'transfer',
+        BalanceAdjustmentTransaction() => 'adjustment',
       }),
     );
   }
@@ -563,4 +564,5 @@ RecurringRule ruleFrom(Transaction transaction, RecurringPattern repeat, {requir
     note: transaction.note,
     anchorDate: transaction.date,
   ),
+  BalanceAdjustmentTransaction() => throw ArgumentError.value(transaction, 'transaction', 'Penyesuaian saldo tidak bisa dijadikan rutin (ADR-047).'),
 };

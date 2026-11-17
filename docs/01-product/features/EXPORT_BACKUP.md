@@ -117,9 +117,9 @@ aplikasi; kolom ID selalu ada di ujung agar baris bisa ditelusuri.
 |---|---|---|
 | Tanggal | `YYYY-MM-DD` | `date` transaksi |
 | Awal periode | `YYYY-MM-DD` | Tanggal awal periode keuangan tempat transaksi dihitung, lewat `periodDateOf` (gajian maju ≤ 7 hari ikut periode kemunculannya, FINANCIAL_PERIOD). Dipakai untuk pivot per periode; bisa berbeda dari Tanggal, sengaja. |
-| Jenis | Pemasukan / Pengeluaran / Transfer | |
+| Jenis | Pemasukan / Pengeluaran / Transfer / Penyesuaian saldo (tambah) / Penyesuaian saldo (kurang) | Penyesuaian saldo sejak ADR-047 |
 | Nominal | Angka positif dalam satuan utama, tanpa pemisah ribuan | Dari `int` sen; desimal hanya bila mata uangnya berdesimal (ADR-025). Di xlsx bertipe angka. |
-| Arus | Pemasukan `+Nominal`, Pengeluaran `−Nominal`, Transfer `0` | Jumlah kolom ini per periode = Arus di aplikasi (aturan 7). |
+| Arus | Pemasukan `+Nominal`, Pengeluaran `−Nominal`, Transfer dan Penyesuaian saldo `0` | Jumlah kolom ini per periode = Arus di aplikasi (aturan 7, ADR-047 §3.7). |
 | Mata uang | Kode, mis. `IDR` | |
 | Dompet | Nama dompet | Transfer: dompet asal |
 | Dompet tujuan | Nama dompet | Hanya transfer |

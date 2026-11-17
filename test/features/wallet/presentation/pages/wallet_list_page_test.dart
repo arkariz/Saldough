@@ -1,3 +1,4 @@
+import 'package:dependencies/dependencies.dart';
 import 'package:di/di.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -350,7 +351,7 @@ void main() {
     });
 
     testWidgets(
-      'mengganti saldo awal menghitung ulang saldo tercatat dari transaksi yang ada',
+      'mengubah saldo mencatat selisihnya sebagai penyesuaian saldo, saldo awal tetap (ADR-047)',
       (tester) async {
         tallViewport(tester);
         await seed('a', 'BCA', current: 10000000);
@@ -374,9 +375,16 @@ void main() {
         await tester.pumpAndSettle();
 
         final wallet = (await stored()).single;
-        expect(wallet.initialBalance, 100000000);
+        expect(wallet.initialBalance, 0);
         expect(wallet.currentBalance, 110000000);
         expect(find.text('Rp1.100.000'), findsWidgets);
+        final adjustments = switch (await transactionRepository.listAllTransactions()) {
+          Right(value: final all) => all.whereType<BalanceAdjustmentTransaction>().toList(),
+          Left() => fail('gagal membaca transaksi'),
+        };
+        expect(adjustments, hasLength(1));
+        expect(adjustments.single.amount, 100000000);
+        expect(adjustments.single.direction, AdjustmentDirection.increase);
       },
     );
 

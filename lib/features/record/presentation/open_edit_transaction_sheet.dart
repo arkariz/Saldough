@@ -40,6 +40,8 @@ Future<Transaction?> openEditTransactionSheet(
   List<BudgetItemOption> budgetItems = const [],
   Future<Category?> Function(CategoryKind kind, String name, {String? iconKey})? onCreateCategory,
 }) async {
+  // Penyesuaian saldo hanya bisa dihapus, tidak disunting (ADR-047 §3.5).
+  if (transaction is BalanceAdjustmentTransaction) return null;
   final baseWallets = _withoutEffectOf(transaction, wallets);
   final result = await showFullScreenSheet<Object>(
     context,
@@ -60,6 +62,7 @@ Future<Transaction?> openEditTransactionSheet(
             : (name, iconKey) => onCreateCategory(CategoryKind.expense, name, iconKey: iconKey),
       ),
       TransferTransaction() => TransferFormSheet(wallets: baseWallets, initial: transaction, budgetItems: budgetItems),
+      BalanceAdjustmentTransaction() => throw StateError('Penyesuaian saldo tidak pernah lewat CATAT (ADR-047 §3.5).'),
     },
   );
 
@@ -141,4 +144,5 @@ int _effectOn(Transaction transaction, String walletId) => switch (transaction) 
   ExpenseTransaction(walletId: final id, :final amount) => id == walletId ? -amount : 0,
   TransferTransaction(:final fromWalletId, :final toWalletId, :final amount) =>
     (fromWalletId == walletId ? -amount : 0) + (toWalletId == walletId ? amount : 0),
+  BalanceAdjustmentTransaction(walletId: final id, :final signedAmount) => id == walletId ? signedAmount : 0,
 };

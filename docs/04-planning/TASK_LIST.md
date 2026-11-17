@@ -91,6 +91,7 @@ Terakhir diperbarui: 29 Oktober 2026 (penyelarasan dokumen dengan `main` di `0.1
 | 24 — Fondasi Plus ([ADR-041](../02-architecture/adr/0041-monetisasi-hak-plus-dan-uji-coba.md), [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md)) | 24 | 23 | Dijadwalkan 23 Okt 2026 (dari B-41); T-24.1 (ADR-041 revisi 2), T-24.2 (fondasi murni), T-24.3 (`AppUser.createdAt`), T-24.4 (penyimpanan hak), T-24.5 (batas dari Remote Config), T-24.6 (`Entitlements` lokal), T-24.7 (pengganti paket uji), T-24.8 (paywall sementara), T-24.9 (gerbang R3), T-24.10 (gerbang notifikasi), T-24.11 (kuota tafsir), T-24.12 (gerbang Analisis), T-24.13 (gerbang template dan proyek), dan T-24.14 (adaptor RevenueCat, uji palsu), dan T-24.15 (kebijakan offering, beli/pulihkan), dan T-24.16 (analitik dan dokumen rilis) selesai; T-24.17a (paywall berparameter, PlanCard, keadaan) T-24.17b (PlusLocked, lencana Plus), dan T-24.17c (status Plus di Akun, halaman fitur), T-24.17d (hadiah uji coba), T-24.17e (layar turun, kartu Plus, momen), dan T-24.17f (perbaikan temuan uji sandbox 25 Okt) selesai, jadi T-24.17 selesai; berikutnya T-24.18 (rupa sudah ada, PR #65) dan T-24.18. Uji nyata T-24.14 menunggu akun dan kunci RevenueCat; rilis build bergerbang menunggu penguji bisa masuk akun |
 | 25 — Design system baru dan preset tema ([ADR-043](../02-architecture/adr/0043-design-system-v2-dan-preset-tema.md), Proposed) | 6 | 4 | Berjalan sejak 29 Okt 2026 -- T-25.1 fondasi selesai (spek Tanukonomy Matcha); KT-DS1–KT-DS4 diputuskan; T-25.2 widget komponen dan T-25.5 animasi selesai (animasi belum dinilai di perangkat); T-25.3 terpasang; T-25.4 berjalan: hampir semua fitur sudah memakai v2 (sisa: `freelance` sama sekali, layar Catat dari notifikasi, dan satu-dua berkas lama di Analisis/Anggaran/Rencana, B-90); T-25.6 (ikon tanah liat) belum |
 | 26 — Catat dari notifikasi v2 ([ADR-044](../02-architecture/adr/0044-catat-dari-notifikasi-v2.md), Proposed; [NOTIFICATION_CAPTURE_V2.md](../01-product/features/NOTIFICATION_CAPTURE_V2.md)) | 27 | 25 | Dimulai 4 Nov 2026; tanpa saklar build, jalur internal test. Kode T-26.1–T-26.25 selesai 5 Nov 2026 (T-26.28 6 Nov) di branch `claude/rombak-design-system-theming-5747b4` (125 komit di depan `main`, belum jadi PR): fondasi, MVP dalam aplikasi, notifikasi bertindak lewat mesin tanpa layar, E1–E3, pola buatan dicabut (T-26.23), snackbar v2 satu slot. **Sisa:** T-26.26 uji perangkat nyata (gerbang Accepted; baru 1 emulator dan perangkat pemilik) dan T-26.27 kebijakan privasi situs; antrean B-88–B-92 |
+| 29 — Penyesuaian saldo ([ADR-047](../02-architecture/adr/0047-penyesuaian-saldo.md), Accepted; [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §6) | 9 | 9 | **Selesai 17 Nov 2026** (dari B-99): ADR-047 Accepted; T-29.1–T-29.7 (rupa dan UI oleh agen atas permintaan pemilik; 2.831 uji lulus, `flutter analyze` 3 info lama); QA T-29.8 lulus menurut pemeriksaan pemilik di emulator dan perangkat. Branch `claude/penyesuaian-saldo-fase-29`, belum digabung ke induk `claude/aset-kekayaan`. Fase pertama rangkaian aset (Fase 29–33, branch induk `claude/aset-kekayaan`) |
 | Antrean (`B-n`, belum dijadwalkan) | 75 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
 
 ## Keputusan terbuka
@@ -133,6 +134,9 @@ diputuskan, dan catat keputusannya di tugas atau ADR yang mengerjakannya.
   hak yang diterima pengguna.
   **Diputuskan pemilik 7 Nov 2026: opsi (b)**, dikerjakan di T-24.21.
 
+- **KT-A4** Ambil nilai dari Google Sheet (B-101): Gratis atau Plus? Ditanyakan
+  ke PO sebelum ADR-051.
+
 KT-DS5–KT-DS8 (ikon clay, Fase 25) diputuskan 30 Okt 2026: clay menggantikan
 semua ikon piksel, tile datar dengan hanya tombol Catat bertimbul, ikon tetap
 dan tile ikut tema, Scan Struk tetap dan Kirim Daun jadi Catat Transfer;
@@ -155,6 +159,17 @@ Simpan ke… dan Bagikan, cadangan pengaman sampai pemulihan berikutnya (maks.
 KT-D1 (arti "wajib" di onboarding Fase 21) diputuskan 18 Okt 2026: wajib
 dijawab (Nyalakan atau Tidak sekarang), bukan wajib menyala; dicatat di
 FEATURE_DISCOVERY §2 dan §9.
+
+KT-A1, KT-A2, dan tiga keputusan aset lain diputuskan pemilik 17 Nov 2026:
+biaya yang dijual memakai **rata-rata tertimbang**; satuan per jenis mengikuti
+usul PO (saham lot = 100 lembar, reksa dana unit, emas gram, obligasi nominal,
+lainnya unit); Penyesuaian saldo **bisa dihapus, nominalnya tidak bisa
+disunting**; dompet **tidak punya jenis** ("ikon murni": ikon hanya tampilan,
+peran dompet tabungan hanya dari tautan tujuan); harga investasi tanpa API
+berbayar lewat **Google Sheet milik pengguna** yang dibuatkan aplikasi (B-101).
+Rangkaian dikerjakan satu fase per butir (Fase 29–33) di bawah branch induk
+`claude/aset-kekayaan`. Dicatat di
+[WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §15 dan ADR-047.
 
 KT-W1 (arti mengubah saldo dompet) diputuskan 17 Nov 2026: **B**, selisih dicatat
 sebagai transaksi **Penyesuaian saldo** bertanggal hari ini (bukan pemasukan atau
@@ -6950,6 +6965,112 @@ tugas lama yang menyebutnya adalah riwayat, bukan keadaan sekarang.
 Enhancement: E1–E3 selesai (B-85–B-87). Sisa di Antrean: E4 (B-88), E5 (B-89),
 dan lanjutan hasil Fase 26 (B-90–B-92).
 
+## Fase 29: Penyesuaian saldo
+
+Dijadwalkan 17 Nov 2026 (dari B-99), fase pertama rangkaian aset dan kekayaan
+([WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md); urutan
+Fase 29 B-99 › Fase 30 B-96 › Fase 31 B-97 › Fase 32 B-98 + B-100 › Fase 33
+B-101). Keputusan: [ADR-047](../02-architecture/adr/0047-penyesuaian-saldo.md)
+(Accepted 17 Nov 2026). Branch `claude/penyesuaian-saldo-fase-29` dari branch induk
+`claude/aset-kekayaan`; tiap fase rangkaian ini masuk induk lewat PR fase →
+induk, lalu satu PR induk → `main` (keputusan pemilik 17 Nov 2026). Serah
+terima per peran: artefak pemilik "Serah terima B-99".
+
+- [x] **T-29.0** (S, pemilik) Setujui ADR-047. Kode baru dimulai sesudahnya.
+      Hasil: disetujui pemilik 17 Nov 2026; ADR-047 Accepted.
+      Memenuhi FR-AST-004.
+- [x] **T-29.1** (M) Domain: `BalanceAdjustmentTransaction` (`walletId`,
+      `direction`), `TransactionModel` `type: 'adjustment'` skema 3,
+      `transactionSchema` 3 di `app_backup_registry.dart`, `walletIdsOf`,
+      `CalculateWalletBalance`, `withRecurrence` (ADR-047 §3.1, §3.3, §3.6).
+      ⚠ Jangan menambah `default`/`_` di switch `Transaction`; biarkan
+      kompilator menunjukkan setiap pembaca.
+      Verifikasi: uji model bolak-balik, saldo = angka diisi, cache = hitung
+      ulang penuh, data skema 2 terbaca.
+      Memenuhi FR-AST-004.
+      Hasil (17 Nov 2026): entitas, `TransactionModel` skema 3 (`type:
+      'adjustment'`, `direction`), `transactionSchema` 3, saldo dompet dan
+      `walletIdsOf`; uji repositori bolak-balik dan `CalculateWalletBalance`.
+- [x] **T-29.2** (M) Sapuan pembaca: semua switch `Transaction` (Arus,
+      Analisis, anggaran, Rencana, Riwayat, pencocokan rutin, catat
+      notifikasi, ikon/baris/tampilan transaksi) memutuskan penyesuaian secara
+      eksplisit (ADR-047 §3.4).
+      ⚠ Buku Periode (Fase 27) belum di `main`; catat di PR bahwa branch yang
+      digabung belakangan memperbaiki switch-nya dengan aturan yang sama.
+      Verifikasi: uji Arus/Analisis/terpakai pos/Rencana identik sebelum dan
+      sesudah sebuah penyesuaian.
+      Memenuhi FR-AST-004.
+      Hasil (17 Nov 2026): 37 switch diputuskan eksplisit tanpa `default`.
+      Di luar Arus: `CalculateCashFlow`, `netSenOf`, Analisis, anggaran
+      (terpakai, kelahiran rutin), `monthPlan`, saran rutin, kepala periode
+      Riwayat, ringkasan bulan rincian dompet. Ikut saldo: `balanceBefore`
+      (Rencana), efek sunting CATAT. Tidak pernah lewat CATAT/rutin:
+      `matchOccurrences`, `ruleFrom`, `draftFromTransaction`, sunting
+      (`openEditTransactionSheet` mengembalikan `null`). Rincian transaksi
+      hanya menawarkan Hapus. Tampilan sementara netral (ikon dan warna
+      transfer, tanda +/−, judul `assets.adjust.title`) sampai rupa T-29.5.
+      Uji: Arus dan `balanceBefore` (saldo sebelum tanggal penyesuaian tidak
+      berubah). Buku Periode (Fase 27) belum di `main`: branch yang digabung
+      belakangan wajib mengecualikan penyesuaian dari Pemasukan/Pengeluaran.
+- [x] **T-29.3** (M) `WalletBloc._onEdited` mencatat penyesuaian lewat
+      `RecordTransaction` alih-alih menggeser `initialBalance` (ADR-047 §3.2).
+      ⚠ Selisih dihitung dari transaksi, bukan dari cache `currentBalance`.
+      Verifikasi: uji bloc (naik, turun, nama saja, gagal mencatat), saldo
+      periode lampau tidak berubah.
+      Memenuhi FR-AST-004.
+      Hasil (17 Nov 2026): `WalletBloc` memakai `RecordTransaction` (DI di
+      `WalletScope`), `RecomputeWalletBalances` tidak lagi dipakai bloc;
+      angka sama dengan saldo yang ditampilkan tidak membuat catatan.
+      Analitik `balance_adjusted` (`direction`, `WealthEvents`). Uji bloc
+      naik/turun-negatif/cache basi/gagal, dan uji widget Ubah dompet.
+- [x] **T-29.4** (S) Ekspor `adjustmentIncrease`/`adjustmentDecrease`, Arus 0;
+      uji bolak-balik cadangan dengan penyesuaian (ADR-047 §3.6, §3.7).
+      Verifikasi: jumlah Arus per Awal periode = kartu Arus; cadangan pulih
+      identik; build skema lama menolak cadangan baru.
+      Memenuhi FR-AST-004.
+      Hasil (17 Nov 2026): `ExportKind.adjustmentIncrease/Decrease`, label
+      i18n "Penyesuaian saldo (tambah/kurang)", Arus 0; uji `buildExportRows`
+      dan cadangan bolak-balik dengan penyesuaian (saldo pulih identik).
+      Penolakan build lama mengikuti `supportedSchema` (`transactionSchema`
+      3) yang sudah diuji `app_backup_registry_schema_test`.
+- [x] **T-29.5** (designer) Rupa B-99: kolom Saldo sekarang dengan pratinjau
+      selisih dan arahan "sunting transaksinya bila tahu yang salah", saldo
+      negatif/sen, pesan sesudah simpan, baris dan filter di Riwayat, detail
+      hapus saja. Brief: artefak "Serah terima B-99" tab Designer.
+      Hasil (17 Nov 2026): dikerjakan agen engineer atas permintaan pemilik,
+      tanpa papan prototipe; spek di
+      [b99-penyesuaian-saldo.md](../03-design/proposals/b99-penyesuaian-saldo.md),
+      tanpa token atau komponen baru. Selisih disengaja dari brief: tidak ada
+      chip "Sembunyikan penyesuaian" terpisah (chip Penyesuaian hanya tampil
+      bila ada); hapus memakai pola UX-8 (Urungkan), bukan dialog.
+- [x] **T-29.6** (M, sesudah T-29.5) UI: formulir Ubah dompet, Riwayat (baris,
+      filter), detail penyesuaian, teks `assets.adjust.*` id/en, analitik
+      `balance_adjusted` (`direction`).
+      Verifikasi: uji widget semua keadaan, `translations_test`, 360dp
+      terang/gelap.
+      Memenuhi FR-AST-004.
+      Hasil (17 Nov 2026): Ubah dompet berlabel Saldo sekarang, tombol ±
+      (saldo negatif, juga Dompet baru), saldo bersen pecahan tampil bagian
+      utuhnya, pratinjau selisih + arahan sunting transaksi; snackbar
+      `assets.adjust.savedMessage`; baris Riwayat dan rincian dengan tile
+      `Symbols.balance_rounded` netral; `TransactionTypeFilter.adjustment`
+      dengan chip yang hanya tampil bila ada; rincian hanya Hapus. Uji widget
+      formulir (pratinjau, ±, negatif, sen), Riwayat (baris, chip, rincian,
+      hapus mengembalikan saldo), kueri filter. 2.831 uji lulus, `flutter
+      analyze` 3 info lama. Tampilan diperiksa pemilik di T-29.8.
+- [x] **T-29.7** (S) Dokumen: DOMAIN_MODEL (anggota keempat), PROJECT_GLOSSARY,
+      `writing.md`, `AGENT_CONTEXT.md` dan `.claude/CLAUDE.md` (aturan 8,
+      larangan penyeimbang, paragraf "Ubah saldo dompet"), EXPORT_BACKUP.
+      Hasil (17 Nov 2026): DOMAIN_MODEL, PROJECT_GLOSSARY, `writing.md`
+      (Penyesuaian saldo, Saldo sekarang), EXPORT_BACKUP (Jenis, Arus),
+      `AGENT_CONTEXT.md` (larangan penyeimbang), `.claude/CLAUDE.md`
+      (paragraf status dan aturan 8).
+- [x] **T-29.8** (QA) 20 skenario artefak "Serah terima B-99" tab QA di
+      emulator Android dan iOS; tanpa Gagal S1/S2.
+      Hasil (17 Nov 2026): diperiksa pemilik di emulator dan perangkat,
+      tampilan dan skenario QA dilaporkan sesuai (lulus). Termasuk
+      pemeriksaan tampilan yang dibawa dari T-29.6.
+
 ## Antrean (belum dijadwalkan)
 
 Hal yang sudah diketahui perlu dikerjakan tapi belum masuk fase. Cara
@@ -6998,11 +7119,11 @@ menambah dan memindahkannya ada di
 | B-57 | **Patungan dari struk** (Plus): pilih barang per orang dari foto struk → piutang tercatat. | agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §7, butuh B-45 + B-48 |
 | B-58 | Kartu kredit dan paylater sebagai **dompet tagihan** (tagihan berjalan, jatuh tempo); gratis dasar, peringatan jatuh tempo di Penjaga (Plus). Butuh ADR. | agen + pemilik | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §7, PRD §6 |
 | B-59 | **Kekayaan bersih** (Plus): Total aset (B-98) dikurangi utang dan kewajiban; memakai nama Kekayaan bersih hanya sesudah utang tercatat. Bukan koneksi broker. | agen + pemilik | [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §9, butuh B-48 dan B-98 |
-| B-96 | **Tujuan tabungan** (menggantikan B-47): tab Dompet › Tujuan; tujuan terhubung ke dompet (satu tujuan banyak dompet, satu dompet satu tujuan), kemajuan = saldo dompet tertaut, menabung lewat transfer yang ada, status Active/Completed/Archived. **Gratis 2 Active**, Plus tanpa batas, perkiraan tanggal tercapai dan peringatan meleset Plus (pemicu P11). ADR domain dulu (rencana, aturan 5). | agen + pemilik | [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §4, §10 |
-| B-97 | **Investasi manual**: instrumen (saham, reksa dana, obligasi, emas, lainnya), kepemilikan yang sudah ada, beli/jual dari dompet lewat CATAT (jenis catatan baru, bukan pemasukan/pengeluaran, pengecualian aturan 8), dividen/kupon sebagai pemasukan, nilai perolehan termasuk biaya, valuasi manual dengan histori, penanda 30 hari. **Gratis 2 Active** per instrumen (pemicu P12). ADR domain dulu; sentuh `BackupRegistry`, ekspor. Tanpa harga otomatis. | agen + pemilik | [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §5, KT-A1, KT-A2 |
-| B-98 | **Gambaran aset** di tab Dompet: Total aset (dompet harian + dompet tabungan + nilai pasar investasi), sebaran tiga bagian, perubahan dipecah transaksi/valuasi/penyesuaian. Butuh B-96 dan B-97. | agen | [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §7 |
-| B-99 | **Penyesuaian saldo** (KT-W1 = B): mengubah saldo dompet mencatat selisih sebagai transaksi Penyesuaian saldo bertanggal hari ini (bukan pemasukan/pengeluaran, Arus 0, bisa disaring, jenis di ekspor), `initialBalance` tidak digeser; perbaiki saldo negatif/berpecahan sen. ADR domain dulu, pengecualian ketiga aturan 8. Prasyarat B-100. | agen | [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §6, KT-W1 |
-| B-100 | **Riwayat kekayaan**: grafik Total aset per periode; gratis 6 periode, Plus seluruhnya. Butuh B-99 dan B-98. | agen | [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §8 |
+| B-96 | **Tujuan tabungan** (rencana Fase 30, ADR-048) (menggantikan B-47): tab Dompet › Tujuan; tujuan terhubung ke dompet (satu tujuan banyak dompet, satu dompet satu tujuan), kemajuan = saldo dompet tertaut, menabung lewat transfer yang ada, status Active/Completed/Archived. **Gratis 2 Active**, Plus tanpa batas, perkiraan tanggal tercapai dan peringatan meleset Plus (pemicu P11). ADR domain dulu (rencana, aturan 5). Diawali perapian "ikon murni" (T-30.0): dompet tidak punya jenis, lencana jenis dari ikon dihapus, peran dompet tabungan hanya dari tautan tujuan (keputusan pemilik 17 Nov 2026). Completed tetap Completed walau saldo turun (usul engineer, konfirmasi PO). Peringatan meleset menunggu Penjaga (B-44). | agen + pemilik | [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §4, §10 |
+| B-97 | **Investasi manual** (rencana Fase 31, ADR-049): instrumen (saham, reksa dana, obligasi, emas, lainnya), kepemilikan yang sudah ada, beli/jual dari dompet lewat CATAT (jenis catatan baru, bukan pemasukan/pengeluaran, pengecualian aturan 8), dividen/kupon sebagai pemasukan, nilai perolehan termasuk biaya, valuasi manual dengan histori, penanda 30 hari. **Gratis 2 Active** per instrumen (pemicu P12). ADR domain dulu; sentuh `BackupRegistry`, ekspor. Tanpa harga otomatis; termasuk layar **Perbarui massal** (juga pratinjau B-101). KT-A1 = rata-rata tertimbang, KT-A2 = satuan usul PO (diputuskan 17 Nov 2026). | agen + pemilik | [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §5, KT-A1, KT-A2 |
+| B-98 | **Gambaran aset** (rencana Fase 32 bersama B-100, ADR-050) di tab Dompet: Total aset (dompet harian + dompet tabungan + nilai pasar investasi), sebaran tiga bagian, perubahan dipecah transaksi/valuasi/penyesuaian. Butuh B-96 dan B-97. ADR-050 memutuskan `Wallet.createdAt` dan golongan "pencatatan awal" (saldo awal dompet baru, kepemilikan yang sudah ada) di pecahan perubahan. | agen | [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §7 |
+| B-100 | **Riwayat kekayaan** (rencana Fase 32): grafik Total aset per periode; gratis 6 periode, Plus seluruhnya. Butuh B-99 dan B-98. | agen | [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §8 |
+| B-101 | **Ambil nilai investasi dari Google Sheet pengguna** (rencana Fase 33, ADR-051; keputusan pemilik 17 Nov 2026, opsi E riset harga tanpa API berbayar): pengguna yang masuk dengan Google memberi izin `drive.file`; aplikasi membuatkan Sheet privat berisi kode dan `GOOGLEFINANCE(...;"price")` (tanpa jumlah/nominal), membaca harga lewat Sheets API, lalu membuka Perbarui massal sebagai pratinjau yang disetujui pengguna. Tanpa server, tanpa API berbayar, tanpa scraping. Spike T-33.0 dulu (nilai terbaca lewat API, cakupan emas/reksa dana, alur izin). Gratis/Plus di KT-A4. Butuh B-97. | agen + pemilik | [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §5.4 |
 | B-60 | **Dompet Bersama / Plus Keluarga** (tingkat kedua, 2–5 orang). Butuh sinkronisasi B-7. Pemilik memutuskan bersaing di sini (KT-P13, 23 Okt 2026); prioritas sesudah Plus dijual. | pemilik memutuskan, lalu agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §7 |
 | B-61 | Rapor kuartal freelance; Tanya Tanuki R2 (kueri gabungan, perbandingan antar tahun). | agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §7, sesudah B-50 dan B-52 terukur |
 | B-62 | Catat dari email (struk e-commerce, tagihan). Izin Gmail sensitif; dipertimbangkan paling akhir. | pemilik memutuskan | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §7 |

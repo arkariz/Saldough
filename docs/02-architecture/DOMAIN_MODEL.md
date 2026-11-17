@@ -109,11 +109,11 @@ warna `expense` beserta tanda minus U+2212.
 
 ## Transaksi
 
-`Transaction` adalah tipe tertutup (`sealed`) dengan tiga anggota. Ia tertutup
+`Transaction` adalah tipe tertutup (`sealed`) dengan empat anggota. Ia tertutup
 karena menambah jenis baru mengubah aturan perhitungan saldo, jadi harus
 dipikirkan dan diuji, bukan diketik pemilik.
 
-Field yang dimiliki ketiganya:
+Field yang dimiliki keempatnya:
 
 | Field | Tipe | Keterangan |
 |---|---|---|
@@ -188,6 +188,23 @@ Transfer tidak pernah dihitung sebagai pemasukan maupun pengeluaran di ringkasan
 mana pun. Kalau ia ikut dihitung, satu pemindahan Rp1.000.000 dari BCA ke GoPay
 akan tampil sebagai pemasukan Rp1.000.000 sekaligus pengeluaran Rp1.000.000 —
 dua angka yang sama-sama tidak benar.
+
+### Penyesuaian saldo
+
+`BalanceAdjustmentTransaction` mencatat selisih saat pemilik mengubah saldo
+dompet di Ubah dompet ([ADR-047](adr/0047-penyesuaian-saldo.md)). Ia mengubah
+saldo satu dompet, tetapi **bukan pemasukan dan bukan pengeluaran**: bernilai 0
+di setiap hitungan Arus, Analisis, anggaran, Rencana, dan Buku Periode.
+
+| Field | Tipe | Keterangan |
+|---|---|---|
+| `walletId` | `String` | Dompet yang saldonya disesuaikan. |
+| `direction` | `AdjustmentDirection` | `increase` menambah saldo, `decrease` menguranginya. `amount` tetap positif. |
+
+Tanpa kategori, pos anggaran, rutin, atau ikon sumber. Tanggalnya selalu hari
+pencatatan, jadi saldo hari-hari sebelumnya tidak bergeser. Hanya lahir dari
+Ubah dompet; bisa dihapus (saldo kembali), tidak bisa disunting. Saldo awal
+(`initialBalance`) hanya diisi saat dompet dibuat.
 
 ## Anggaran
 

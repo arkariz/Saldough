@@ -27,10 +27,12 @@ class _TopBar extends StatelessWidget {
 /// Ubin ikon transaksi: ikon clay kategori bila sudah digambar, ikon piksel
 /// lama (dengan lencana notifikasi asal) di tile datar bila belum (KT-DS5).
 Widget _transactionTile(BuildContext context, Transaction transaction, {DsIconTileSize size = DsIconTileSize.md}) {
+  // Penyesuaian saldo: tile netral bertimbangan (rupa B-99).
+  if (transaction is BalanceAdjustmentTransaction) return DsIconTile(icon: Symbols.balance_rounded, size: size);
   final txKind = switch (transaction) {
     IncomeTransaction() => TransactionKind.income,
     ExpenseTransaction() => TransactionKind.expense,
-    TransferTransaction() => TransactionKind.transfer,
+    TransferTransaction() || BalanceAdjustmentTransaction() => TransactionKind.transfer,
   };
   final iconKey = TransactionIcon.iconKeyFor(
     kind: txKind,
@@ -79,6 +81,12 @@ class _HeroCard extends StatelessWidget {
         t.transaction.detailTransferTitle,
         DsBadgeTone.neutral,
         AppMoneyFormatter.format(transaction.amount),
+        c.textSecondary,
+      ),
+      BalanceAdjustmentTransaction(:final direction) => (
+        t.assets.adjust.title,
+        DsBadgeTone.neutral,
+        '${direction == AdjustmentDirection.increase ? '+' : '−'}${AppMoneyFormatter.format(transaction.amount)}',
         c.textSecondary,
       ),
     };
@@ -138,6 +146,7 @@ class _DetailsCard extends StatelessWidget {
       IncomeTransaction() => t.transaction.detailIncomeType,
       ExpenseTransaction() => t.transaction.detailExpenseType,
       TransferTransaction() => t.transaction.detailTransferType,
+      BalanceAdjustmentTransaction() => t.assets.adjust.title,
     };
     final category = ActiveCategories.byId(tx.categoryId);
     final money = AppMoneyFormatter.format(tx.amount);
@@ -161,6 +170,9 @@ class _DetailsCard extends StatelessWidget {
             _walletRow(t.transaction.detailFromLabel, walletsById[fromWalletId], delta: '−$money'),
             _walletRow(t.transaction.detailToLabel, walletsById[toWalletId], delta: '+$money', deltaIncome: true),
             _InfoRow(label: t.transaction.detailAmountLabel, value: money),
+          ],
+          BalanceAdjustmentTransaction(:final walletId) => [
+            _walletRow(t.assets.adjust.walletLabel, walletsById[walletId]),
           ],
         },
         if (budgetItem case final item?)

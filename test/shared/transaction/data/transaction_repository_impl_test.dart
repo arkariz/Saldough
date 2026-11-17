@@ -66,6 +66,30 @@ void main() {
       expect(read.firstWhere((t) => t.id == 'lama').recurrence, isNull);
     });
 
+    test('penyesuaian saldo (ADR-047) tersimpan dan terbaca kembali dengan arahnya', () async {
+      final up = BalanceAdjustmentTransaction(
+        id: 'adj-up',
+        date: DateTime(2026, 11, 17, 9, 30),
+        amount: 50000,
+        note: '',
+        walletId: 'w1',
+        direction: AdjustmentDirection.increase,
+      );
+      final down = BalanceAdjustmentTransaction(
+        id: 'adj-down',
+        date: DateTime(2026, 11, 17, 10),
+        amount: 1250,
+        note: 'selisih kas',
+        walletId: 'w2',
+        direction: AdjustmentDirection.decrease,
+      );
+      await repository.saveTransaction(up);
+      await repository.saveTransaction(down);
+
+      final result = await repository.listTransactionsInMonth(DateTime(2026, 11));
+      expect(result.getOrElse((_) => throw StateError('expected Right')), unorderedEquals([up, down]));
+    });
+
     test('ikon notifikasi asal (sourceIconId) tersimpan dan terbaca kembali', () async {
       final expense = ExpenseTransaction(
         id: 'n1',

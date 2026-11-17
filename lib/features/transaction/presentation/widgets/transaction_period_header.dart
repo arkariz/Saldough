@@ -44,7 +44,7 @@ class TransactionPeriodHeader extends StatelessWidget {
           income += transaction.amount;
         case ExpenseTransaction():
           expense += transaction.amount;
-        case TransferTransaction():
+        case TransferTransaction() || BalanceAdjustmentTransaction():
           break;
       }
     }

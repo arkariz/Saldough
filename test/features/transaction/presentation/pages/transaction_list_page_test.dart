@@ -377,6 +377,42 @@ void main() {
       expect(widths.first, 800 - 2 * 16);
     });
 
+    testWidgets('penyesuaian saldo (rupa B-99): baris netral bertanda, chip filter muncul, rincian hanya Hapus', (
+      tester,
+    ) async {
+      useTallViewport(tester);
+      await seedWallet('bca', 'BCA');
+      await transactionRepository.saveTransaction(
+        BalanceAdjustmentTransaction(
+          id: 'adj',
+          date: DateTime.now(),
+          amount: 5000000,
+          note: '',
+          walletId: 'bca',
+          direction: AdjustmentDirection.decrease,
+        ),
+      );
+      await recompute({'bca'});
+      expect(await balanceOf('bca'), 95000000);
+      await openTransactionsTab(tester);
+
+      expect(find.text(t.assets.adjust.title), findsOneWidget);
+      expect(find.text('−Rp50.000'), findsOneWidget);
+      expect(find.text(t.assets.adjust.filterLabel(count: 1)), findsOneWidget);
+
+      await tester.tap(find.text(t.assets.adjust.title));
+      await tester.pumpAndSettle();
+      expect(find.text(t.assets.adjust.detailNote), findsOneWidget);
+      expect(find.text(t.transaction.editAction), findsNothing, reason: 'nominal tidak bisa disunting (ADR-047)');
+      expect(find.text(t.transaction.recordAgainAction), findsNothing);
+      expect(find.text(t.transaction.makeRecurringAction), findsNothing);
+
+      await tester.tap(find.text(t.transaction.deleteAction));
+      await tester.pumpAndSettle();
+      expect(await balanceOf('bca'), 100000000, reason: 'menghapus mengembalikan saldo');
+      expect(find.text(t.assets.adjust.filterLabel(count: 0)), findsNothing, reason: 'chip hilang tanpa penyesuaian');
+    });
+
     testWidgets('transfer memakai judul "Transfer tercatat" dan Dari / Ke / Jumlah, tanpa kosakata terlarang', (
       tester,
     ) async {

@@ -30,5 +30,7 @@ ExportLabels exportLabelsFromI18n() {
     income: t.dataPortability.types.income,
     expense: t.dataPortability.types.expense,
     transfer: t.dataPortability.types.transfer,
+    adjustmentIncrease: t.dataPortability.types.adjustmentIncrease,
+    adjustmentDecrease: t.dataPortability.types.adjustmentDecrease,
   );
 }

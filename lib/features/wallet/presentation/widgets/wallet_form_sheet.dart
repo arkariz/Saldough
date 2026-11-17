@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/utils/formatters/money_input.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_type.dart';
+import 'package:saldough/shared/transaction/transaction_presentation.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
 /// Panjang nama dompet maksimum (rujukan visual: "Maks. 24 karakter").
@@ -56,9 +58,10 @@ final class WalletFormDeleted extends WalletFormResult {
 /// sakelar aktif, serta hapus.
 ///
 /// ⚠ Saldo awal adalah pernyataan keadaan, bukan setoran: ia tidak pernah
-/// menjadi transaksi. Saat menyunting, kolom saldo berarti saldo SAAT INI;
-/// menggesernya dari saldo awal dikerjakan `WalletBloc`, bukan formulir ini.
-/// Menyunting nama/ikon/status TIDAK mengubah saldo tercatat.
+/// menjadi transaksi. Saat menyunting, kolom saldo berarti saldo SEKARANG;
+/// selisihnya dicatat `WalletBloc` sebagai penyesuaian saldo (ADR-047), dan
+/// formulir ini hanya menampilkan pratinjaunya (rupa B-99). Saldo boleh
+/// negatif lewat tombol ±. Menyunting nama/ikon/status TIDAK mengubah saldo.
 ///
 /// ⚠ Bagian rujukan yang sengaja tidak dibangun: "Tipe kategori" (sama dengan
 /// pilihan ikon, jenis diturunkan dari ikon), "Catatan tambahan" dan subjudul
@@ -82,6 +85,9 @@ class _WalletFormSheetState extends State<WalletFormSheet> {
   bool _isActive = true;
   bool _balanceTouched = false;
 
+  /// Tanda kolom saldo; besarannya ada di [_balanceController].
+  bool _negative = false;
+
   bool get _editing => widget.initial != null;
 
   @override
@@ -92,11 +98,13 @@ class _WalletFormSheetState extends State<WalletFormSheet> {
     _nameController.text = wallet.name;
     _iconKey = wallet.iconKey;
     _isActive = wallet.isActive;
-    // Hanya saldo yang bisa ditulis utuh di kolom yang diisi; yang lain
-    // dibiarkan kosong dan tidak akan dikirim kecuali disentuh.
-    if (wallet.currentBalance >= 0 && isMoneyInputExact(wallet.currentBalance)) {
-      _balanceController.text = wallet.currentBalance == 0 ? '' : formatMoneyInput(wallet.currentBalance);
-    }
+    // Saldo negatif dan bersen pecahan tetap tampil (rupa B-99): tanda lewat
+    // [_negative], dan mata uang tanpa desimal menampilkan bagian utuhnya.
+    // Kolom yang tidak disentuh tidak pernah dikirim, jadi tidak mengubah
+    // saldo tersimpan.
+    _negative = wallet.currentBalance < 0;
+    final magnitude = wallet.currentBalance.abs();
+    _balanceController.text = magnitude == 0 ? '' : formatMoneyInput(magnitude);
   }
 
   @override
@@ -108,10 +116,29 @@ class _WalletFormSheetState extends State<WalletFormSheet> {
 
   bool get _canSave => _nameController.text.trim().isNotEmpty;
 
-  void _setBalance(int sen) {
+  /// Saldo yang diisi, bertanda, dalam sen.
+  int get _targetSen {
+    final magnitude = parseMoneyInput(_balanceController.text) ?? 0;
+    return _negative ? -magnitude : magnitude;
+  }
+
+  /// Selisih terhadap saldo tercatat bila kolom sudah diubah, selain itu 0.
+  int get _difference {
+    final wallet = widget.initial;
+    if (wallet == null || !_balanceTouched) return 0;
+    return _targetSen - wallet.currentBalance;
+  }
+
+  void _toggleSign() => setState(() {
+    _negative = !_negative;
+    _balanceTouched = true;
+  });
+
+  void _setBalance(int sen, {bool resetSign = false}) {
     final text = sen <= 0 ? '' : formatMoneyInput(sen);
     setState(() {
       _balanceTouched = true;
+      if (resetSign) _negative = false;
       _balanceController.value = TextEditingValue(
         text: text,
         selection: TextSelection.collapsed(offset: text.length),
@@ -121,13 +148,12 @@ class _WalletFormSheetState extends State<WalletFormSheet> {
 
   void _save() {
     if (!_canSave) return;
-    final sen = parseMoneyInput(_balanceController.text) ?? 0;
     Navigator.of(context).pop(
       WalletFormSaved(
         name: _nameController.text.trim(),
         iconKey: _iconKey,
         isActive: _isActive,
-        balance: _editing && !_balanceTouched ? null : sen,
+        balance: _editing && !_balanceTouched ? null : _targetSen,
       ),
     );
   }
@@ -232,8 +258,10 @@ class _WalletFormSheetState extends State<WalletFormSheet> {
                       decoration: BoxDecoration(color: c.surfaceSunken, borderRadius: DsRadius.mdAll),
                       child: Row(
                         children: [
+                          _SignToggle(negative: _negative, onTap: _toggleSign),
+                          const SizedBox(width: 4),
                           Text(
-                            ActiveCurrency.value.symbol,
+                            '${_negative ? '−' : ''}${ActiveCurrency.value.symbol}',
                             style: ds.typography.headlineSm.copyWith(color: c.actionPrimary),
                           ),
                           const SizedBox(width: 8),
@@ -261,10 +289,22 @@ class _WalletFormSheetState extends State<WalletFormSheet> {
                       ),
                     ),
                     const SizedBox(height: 8),
-                    Text(
-                      _editing ? t.wallet.editBalanceNote : t.wallet.initialBalanceHelp,
-                      style: ds.typography.bodySm.copyWith(color: c.textSecondary),
-                    ),
+                    if (_difference != 0) ...[
+                      Text(
+                        t.assets.adjust.preview(amount: signedAdjustmentText(_difference)),
+                        key: const ValueKey('wallet-adjust-preview'),
+                        style: ds.typography.bodyMd.copyWith(fontWeight: FontWeight.w700, color: c.textPrimary),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        t.assets.adjust.previewHint,
+                        style: ds.typography.bodySm.copyWith(color: c.textSecondary),
+                      ),
+                    ] else
+                      Text(
+                        _editing ? t.wallet.editBalanceNote : t.wallet.initialBalanceHelp,
+                        style: ds.typography.bodySm.copyWith(color: c.textSecondary),
+                      ),
                   ],
                 ),
               ),
@@ -278,7 +318,7 @@ class _WalletFormSheetState extends State<WalletFormSheet> {
                         label: formatQuickAmount(amount),
                         onTap: () => _setBalance((parseMoneyInput(_balanceController.text) ?? 0) + amount),
                       ),
-                    _QuickChip(label: t.record.clearAmountAction, onTap: () => _setBalance(0)),
+                    _QuickChip(label: t.record.clearAmountAction, onTap: () => _setBalance(0, resetSign: true)),
                   ];
                   return Row(
                     children: [
@@ -370,6 +410,47 @@ class _FieldLabel extends StatelessWidget {
 }
 
 /// Chip penambah saldo awal (+, Hapus).
+/// Tombol ± di kiri simbol mata uang (rupa B-99): membalik tanda saldo.
+/// Saldo negatif bukan kesalahan (FR-WAL-003), jadi tanpa warna bahaya.
+class _SignToggle extends StatelessWidget {
+  const _SignToggle({required this.negative, required this.onTap});
+
+  final bool negative;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final ds = context.ds;
+    final c = ds.colors;
+    return Semantics(
+      button: true,
+      toggled: negative,
+      label: t.assets.adjust.signToggle,
+      excludeSemantics: true,
+      child: DsPressable(
+        onPressed: onTap,
+        pressedScale: 0.92,
+        builder: (context, _) => SizedBox.square(
+          dimension: 48,
+          child: Center(
+            child: Container(
+              key: const ValueKey('wallet-sign-toggle'),
+              width: 32,
+              height: 32,
+              decoration: BoxDecoration(
+                color: negative ? c.surfaceCard : Colors.transparent,
+                shape: BoxShape.circle,
+                border: Border.all(color: c.outlineSubtle),
+              ),
+              child: Icon(Symbols.exposure_rounded, size: 18, color: c.textPrimary),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class _QuickChip extends StatelessWidget {
   const _QuickChip({required this.label, required this.onTap});
 

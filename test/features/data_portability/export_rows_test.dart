@@ -39,6 +39,8 @@ void main() {
       expect(flowOf(ExportKind.income, 500), 500);
       expect(flowOf(ExportKind.expense, 500), -500);
       expect(flowOf(ExportKind.transfer, 500), 0);
+      expect(flowOf(ExportKind.adjustmentIncrease, 500), 0);
+      expect(flowOf(ExportKind.adjustmentDecrease, 500), 0);
     });
   });
 
@@ -62,6 +64,28 @@ void main() {
       expect((transfer.wallet, transfer.toWallet, transfer.category), ('BCA', 'GoPay', ''));
       expect(transfer.flow, 0);
       expect(transfer.amount, 100000000);
+    });
+
+    test('penyesuaian saldo: jenis menurut arah, dompetnya, tanpa kategori, arus 0 (ADR-047 §3.7)', () {
+      final rows = buildExportRows(
+        sampleExportData(
+          transactions: [
+            BalanceAdjustmentTransaction(
+              id: 'adj',
+              date: DateTime(2026, 9, 26),
+              amount: 50000,
+              note: '',
+              walletId: 'bca',
+              direction: AdjustmentDirection.decrease,
+            ),
+          ],
+        ),
+      );
+      final row = rows.single;
+      expect(row.kind, ExportKind.adjustmentDecrease);
+      expect((row.wallet, row.toWallet, row.category, row.budget), ('BCA', '', '', ''));
+      expect(row.amount, 50000);
+      expect(row.flow, 0);
     });
 
     test('Awal periode: gaji maju 2 hari ikut periode kemunculannya, bukan periode tanggal catat', () {

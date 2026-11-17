@@ -194,18 +194,45 @@ void main() {
       expect((results.single! as WalletFormSaved).balance, 180000000);
     });
 
-    testWidgets('saldo awal negatif tidak terwakili kolom: kolom kosong dan tidak dikirim kecuali disentuh', (
-      tester,
-    ) async {
-      final results = await open(
-        tester,
-        initial: existing.copyWith(currentBalance: -5000000),
-      );
-      expect(find.text('50.000'), findsNothing, reason: 'tanda minus tidak boleh hilang diam-diam');
+    testWidgets('saldo yang diubah menampilkan pratinjau selisih penyesuaian (rupa B-99)', (tester) async {
+      await open(tester, initial: existing);
+      expect(find.byKey(const ValueKey('wallet-adjust-preview')), findsNothing);
+      expect(find.text(t.wallet.editBalanceNote), findsOneWidget);
+
+      await tester.tap(find.text('+500rb'));
+      await tester.pump();
+
+      expect(find.text(t.assets.adjust.preview(amount: '+Rp500.000')), findsOneWidget);
+      expect(find.text(t.assets.adjust.previewHint), findsOneWidget);
+    });
+
+    testWidgets('saldo negatif tampil dengan tanda minus dan tidak dikirim kecuali disentuh', (tester) async {
+      final results = await open(tester, initial: existing.copyWith(currentBalance: -5000000));
+      expect(find.text('50.000'), findsOneWidget, reason: 'kolom tidak lagi kosong');
+      expect(find.text('−Rp'), findsOneWidget, reason: 'tanda minus tidak boleh hilang diam-diam');
 
       await save(tester, t.transaction.saveChangesAction);
 
       expect((results.single! as WalletFormSaved).balance, isNull);
+    });
+
+    testWidgets('tombol ± membalik tanda: saldo dikirim negatif dan pratinjau menyebut selisihnya', (tester) async {
+      final results = await open(tester, initial: existing);
+
+      await tester.tap(find.byKey(const ValueKey('wallet-sign-toggle')));
+      await tester.pump();
+      expect(find.text(t.assets.adjust.preview(amount: '−Rp2.600.000')), findsOneWidget);
+      await save(tester, t.transaction.saveChangesAction);
+
+      expect((results.single! as WalletFormSaved).balance, -130000000);
+    });
+
+    testWidgets('saldo bersen pecahan pada mata uang tanpa desimal menampilkan bagian utuhnya', (tester) async {
+      final results = await open(tester, initial: existing.copyWith(currentBalance: 130000050));
+      expect(find.text('1.300.000'), findsOneWidget);
+
+      await save(tester, t.transaction.saveChangesAction);
+      expect((results.single! as WalletFormSaved).balance, isNull, reason: 'tidak disentuh, tidak mengubah apa pun');
     });
 
     testWidgets('sakelar aktif menonaktifkan dompet', (tester) async {

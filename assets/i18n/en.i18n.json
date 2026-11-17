@@ -277,7 +277,7 @@
     "initialBalanceLabel": "Starting balance",
     "initialBalanceHelp": "Enter the money in this wallet right now. Every transaction after that is counted from here.",
     "currentBalanceLabel": "Current balance",
-    "editBalanceNote": "Enter the money in this wallet right now. The balance is set to this amount; your transaction history stays as it is and no new transaction is added.",
+    "editBalanceNote": "Enter the money in this wallet right now. The difference is recorded as a balance adjustment today; balances on earlier days stay the same.",
     "activeSwitchLabel": "Wallet is active",
     "activeSwitchHelp": "Inactive wallets don't appear in wallet pickers. Their transactions stay saved and counted.",
     "saveAddAction": "Save wallet",
@@ -437,7 +437,9 @@
     "types": {
       "income": "Income",
       "expense": "Expense",
-      "transfer": "Transfer"
+      "transfer": "Transfer",
+      "adjustmentIncrease": "Balance adjustment (increase)",
+      "adjustmentDecrease": "Balance adjustment (decrease)"
     }
   },
   "budget": {
@@ -1853,6 +1855,18 @@
       "done": "Done",
       "notSellingTitle": "Plus is not on sale yet",
       "notSellingBody": "Subscribing to Plus is not available yet. Recording stays free."
+    }
+  },
+  "assets": {
+    "adjust": {
+      "walletLabel": "Wallet",
+      "title": "Balance adjustment",
+      "detailNote": "The difference recorded when the wallet balance was changed in Edit wallet. Not income or expense. Delete it to restore the previous balance.",
+      "preview": "A difference of $amount is recorded as a balance adjustment today.",
+      "previewHint": "Know which transaction is wrong? Edit that transaction instead.",
+      "savedMessage": "A difference of $amount was recorded as a balance adjustment.",
+      "filterLabel": "Adjustments $count",
+      "signToggle": "Switch between plus and minus"
     }
   }
 }

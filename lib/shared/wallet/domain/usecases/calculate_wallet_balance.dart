@@ -28,6 +28,8 @@ final class CalculateWalletBalance {
         case TransferTransaction(fromWalletId: final from, toWalletId: final to, amount: final amount):
           if (to == wallet.id) balance += amount;
           if (from == wallet.id) balance -= amount;
+        case BalanceAdjustmentTransaction(:final walletId, :final signedAmount):
+          if (walletId == wallet.id) balance += signedAmount;
       }
     }
     return balance;

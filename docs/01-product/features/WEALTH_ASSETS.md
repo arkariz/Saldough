@@ -1,9 +1,11 @@
 # Aset, tabungan, dan investasi: kekayaan dalam satu buku
 
 **Tanggal:** 17 November 2026.
-**Status:** Spek produk, keputusan pemilik 17 Nov 2026 (§2). Belum ada ADR dan
-belum ada kode. Urutan kerjanya B-99 › B-96 › B-97 › B-98 › B-100 (§13);
-kekayaan bersih (B-59) menunggu utang-piutang (B-48).
+**Status:** Spek produk, keputusan pemilik 17 Nov 2026 (§2). ADR-047
+(penyesuaian saldo, Fase 29) Accepted; kode berjalan. Urutan kerjanya Fase 29
+B-99 › Fase 30 B-96 › Fase 31 B-97 › Fase 32 B-98 + B-100 › Fase 33 B-101
+(§13), di bawah branch induk `claude/aset-kekayaan`; kekayaan bersih (B-59)
+menunggu utang-piutang (B-48).
 **Sumber:** dokumen "Product & Business Requirements: Financial Assets &
 Wealth Management" dari pemilik (konsep tiga lapisan), divalidasi PO terhadap
 aturan domain dan keputusan yang sudah ada, lalu dirapikan bersama pemilik.
@@ -53,6 +55,9 @@ riwayat kekayaan bisa dipercaya.
 | 8 | Sebelum utang-piutang (B-48) ada, angka teratas bernama **Total aset**. Nama **Kekayaan bersih** baru dipakai sesudah utang tercatat. |
 | 9 | **KT-W1 = B**: mengubah saldo dompet mencatat selisihnya sebagai **Penyesuaian saldo** bertanggal hari ini (§6). Saldo periode lampau tidak bergeser. |
 | 10 | Nilai investasi yang lebih dari **30 hari** belum diperbarui ditandai ("Diperbarui 32 hari lalu"), tidak ditampilkan seolah harga terkini. |
+| 11 | **Dompet tidak punya jenis ("ikon murni").** Bank/Tunai/E-wallet/Tabungan/Kartu hanya ikon tampilan, tanpa kemampuan. Lencana jenis dari ikon dihapus. Peran *dompet tabungan* hanya berasal dari tautan ke tujuan; dompet berikon celengan tanpa tujuan adalah dompet harian. |
+| 12 | **Harga investasi tanpa API berbayar lewat Google Sheet milik pengguna** (B-101, §5.4): aplikasi membuatkan Sheet privat berisi kode dan `GOOGLEFINANCE`, pengguna menyetujui nilai yang diambil. Bukan scraping, bukan API pihak ketiga. |
+| 13 | Penyesuaian saldo **bisa dihapus**, nominalnya **tidak bisa disunting**. |
 
 Perbandingan dengan dokumen sumber, supaya tidak dibuka ulang: mata uang per
 aset dihapus (ADR-025: satu mata uang per aplikasi); klasifikasi aset tidak
@@ -180,10 +185,22 @@ pemasukan atau pengeluaran dan tidak masuk Arus (keputusan 6).
   terakhir, dengan satu baris catatan bila ada instrumen yang kedaluwarsa.
 - Pengingat memperbarui nilai **tidak** dikerjakan di fase ini (menambah
   tekanan; dibahas bila ada data pemakaian).
-- Harga otomatis **tidak ada**. Sumber data harga belum punya syarat pemakaian
-  yang cocok untuk aplikasi publik (Yahoo Finance melarang pemakaian komersial
-  dan akses otomatis, syarat goapi.io belum terbaca); keputusannya menunggu
-  vendor berlisensi (§14).
+- Harga otomatis dari vendor **tidak ada**. Redistribusi data harga BEI
+  memerlukan lisensi data IDX, dan sumber gratis pihak ketiga (Yahoo Finance,
+  Invezgo, Stockbit lewat perantara, scraper `logammulia.com`, Bareksa) syarat
+  komersialnya tidak jelas atau melarang.
+- **Perbarui massal** (B-97): satu layar berisi semua instrumen untuk mengisi
+  nilai baru sekaligus.
+- **Ambil dari Google Sheet** (B-101, keputusan 12): pengguna yang masuk dengan
+  Google memberi izin `drive.file` (hanya berkas buatan aplikasi). Aplikasi
+  membuat Sheet privat di Drive pengguna berisi kode instrumen dan
+  `GOOGLEFINANCE(kode;"price")`, tanpa jumlah atau nominal kepemilikan. Tombol
+  "Ambil harga" membaca nilainya lewat Sheets API dan membuka Perbarui massal
+  sebagai pratinjau; nilai baru disimpan hanya sesudah pengguna menyetujui.
+  Tanpa server Tanukonomy, dan aplikasi tidak mendistribusikan ulang harga.
+  Reksa dana dan emas yang tidak tercakup bisa diisi pengguna sendiri di
+  Sheet. Data GOOGLEFINANCE bisa tertunda dan hanya untuk informasi, jadi
+  penanda kesegaran tetap memakai tanggal valuasi. Spike dulu (T-33.0).
 
 ### 5.5 Batas gratis
 
@@ -228,6 +245,8 @@ kemajuan tabungan, dan janji ADR-038. Perilaku baru:
    kecocokan total buku tetap berlaku). Karena tanggalnya hari ini, penyesuaian
    **tidak mengubah buku yang sudah ditutup**, berbeda dari perilaku lama yang
    menggeser saldo periode lampau.
+7b. Penyesuaian **bisa dihapus** dari detailnya (saldo kembali seperti sebelum
+   penyesuaian), tetapi **nominalnya tidak bisa disunting** (keputusan 13).
 8. Perilaku yang sudah terkirim di `0.11.0+17` tidak dimigrasi; data lama
    tetap apa adanya, hanya perilaku ke depan yang berubah.
 
@@ -342,7 +361,8 @@ ADR-046) memakai titik sambung yang disiapkan untuk domain ini. Penyelarasannya:
 | 3 | **B-97** | Investasi: instrumen, beli/jual lewat CATAT, valuasi manual | Jenis catatan baru, `BackupRegistry`, ekspor; batas gratis 2 |
 | 4 | **B-98** | Gambaran aset (Total aset) di tab Dompet | Butuh B-96 dan B-97 supaya ada isi |
 | 5 | **B-100** | Riwayat kekayaan | Butuh B-99; 6 periode gratis, seluruhnya Plus |
-| 6 | **B-59** | Kekayaan bersih | Butuh B-48 (utang-piutang) |
+| 6 | **B-101** | Ambil nilai dari Google Sheet pengguna | Fase 33, butuh B-97; spike dulu; Gratis/Plus di KT-A4 |
+| 7 | **B-59** | Kekayaan bersih | Butuh B-48 (utang-piutang) |
 
 Setiap fase menambah entitas yang wajib didaftarkan di `BackupRegistry`, kolom
 di ekspor, uji bolak-balik cadangan, dan peristiwa analitik §12.
@@ -351,21 +371,23 @@ di ekspor, uji bolak-balik cadangan, dan peristiwa analitik §12.
 
 - Trading, rekomendasi jual atau beli, nasihat investasi, dan proyeksi imbal
   hasil.
-- Koneksi ke broker atau bank, dan harga pasar otomatis. Sumber harga
-  menunggu vendor yang syaratnya jelas untuk aplikasi publik; sumber tak
-  resmi seperti Yahoo Finance dan paket `yahoo_finance` **tidak dipakai**.
+- Koneksi ke broker atau bank, dan harga pasar dari vendor. Sumber tak resmi
+  seperti Yahoo Finance, paket `yahoo_finance`, dan scraping **tidak dipakai**.
+  Satu-satunya jalan otomatis adalah Sheet milik pengguna (B-101), dipicu dan
+  disetujui pengguna.
 - Alokasi virtual lintas dompet dan konsep "saldo bebas" (ditinggalkan di
   keputusan 2).
 - Pajak investasi dan risiko tingkat lanjut.
 - Portofolio bersama (menunggu B-7 dan B-60).
 - Mata uang per aset (ADR-025).
 
-## 15. Keputusan terbuka (KT-A1–KT-A2), untuk ADR dan pemilik
+## 15. Keputusan terbuka (KT-A1–KT-A4), untuk ADR dan pemilik
 
 | # | Pertanyaan | Rekomendasi PO |
 |---|---|---|
-| KT-A1 | Cara menghitung biaya yang dijual: biaya rata-rata tertimbang atau FIFO | **Rata-rata tertimbang** (sama seperti yang biasa ditampilkan broker, lebih mudah dijelaskan) |
-| KT-A2 | Satuan jumlah per jenis | Saham dalam **lot** (1 lot = 100 lembar), reksa dana dalam **unit**, emas dalam **gram**, obligasi dalam **nominal**, lainnya **unit** |
+| KT-A1 (dijawab 17 Nov 2026) | Cara menghitung biaya yang dijual | **Rata-rata tertimbang** |
+| KT-A2 (dijawab 17 Nov 2026) | Satuan jumlah per jenis | Saham **lot** (1 lot = 100 lembar), reksa dana **unit**, emas **gram**, obligasi **nominal**, lainnya **unit** |
+| KT-A4 (terbuka) | Ambil nilai dari Google Sheet (B-101): Gratis atau Plus? | Ditanyakan sebelum ADR-051 |
 | KT-A3 (sudah dijawab, tercatat) | KT-W1 | **B** (keputusan 9) |
 
 ## 16. Risiko

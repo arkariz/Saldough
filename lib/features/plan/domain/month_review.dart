@@ -115,6 +115,9 @@ int balanceBefore(
       ExpenseTransaction(:final walletId, :final amount) => walletIds.contains(walletId) ? -amount : 0,
       TransferTransaction(:final fromWalletId, :final toWalletId, :final amount) =>
         (walletIds.contains(toWalletId) ? amount : 0) - (walletIds.contains(fromWalletId) ? amount : 0),
+      // Saldo pada tanggal ikut penyesuaian sesudahnya (ADR-047 §3.3).
+      BalanceAdjustmentTransaction(:final walletId, :final signedAmount) =>
+        walletIds.contains(walletId) ? signedAmount : 0,
     };
   }
   return currentBalance - after;

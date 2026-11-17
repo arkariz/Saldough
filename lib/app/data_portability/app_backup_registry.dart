@@ -85,7 +85,7 @@ final appBackupRegistry = BackupRegistry(
   transactionIndexKey: 'transaction__index',
   transactionPartitionKey: (month) => 'transaction_$month',
   transactionPartitionPrefix: 'transaction_',
-  transactionSchema: 2,
+  transactionSchema: 3,
   sourceIconKey: (id) => 'source_icon_$id',
   sourceIconPrefix: 'source_icon_',
   references: const [

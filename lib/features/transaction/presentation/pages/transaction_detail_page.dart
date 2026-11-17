@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
@@ -52,6 +53,7 @@ class TransactionDetailPage extends StatelessWidget {
     IncomeTransaction(:final walletId) => {walletId},
     ExpenseTransaction(:final walletId) => {walletId},
     TransferTransaction(:final fromWalletId, :final toWalletId) => {fromWalletId, toWalletId},
+    BalanceAdjustmentTransaction(:final walletId) => {walletId},
   };
 
   Future<void> _edit(BuildContext context, TransactionState state) async {
@@ -136,7 +138,7 @@ class TransactionDetailPage extends StatelessWidget {
             final walletsById = {for (final wallet in state.wallets) wallet.id: wallet};
             final budgetItem = state.budgetItemOf(switch (transaction) {
               ExpenseTransaction(:final budgetItemId) || TransferTransaction(:final budgetItemId) => budgetItemId,
-              IncomeTransaction() => null,
+              IncomeTransaction() || BalanceAdjustmentTransaction() => null,
             });
             // Pemasukan milik pembayaran freelance hanya diubah lewat
             // pembayarannya (ADR-019): tanpa sunting dan hapus di sini.
@@ -160,7 +162,12 @@ class TransactionDetailPage extends StatelessWidget {
                 const SizedBox(height: 16),
                 if (ownedByFreelance)
                   _ManualNote(text: t.transaction.detailFreelanceNote)
-                else ...[
+                // Penyesuaian saldo hanya bisa dihapus (ADR-047 §3.5).
+                else if (transaction is BalanceAdjustmentTransaction) ...[
+                  _ManualNote(text: t.assets.adjust.detailNote),
+                  const SizedBox(height: 16),
+                  DsButton.danger(label: t.transaction.deleteAction, expand: true, onPressed: () => _delete(context)),
+                ] else ...[
                   _ManualNote(text: t.transaction.detailManualNote),
                   const SizedBox(height: 16),
                   DsButton(label: t.transaction.editAction, expand: true, onPressed: () => _edit(context, state)),

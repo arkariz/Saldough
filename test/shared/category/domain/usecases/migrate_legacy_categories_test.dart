@@ -6,6 +6,7 @@ import 'package:failures/failures.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
 import 'package:saldough/shared/category/category.dart';
+import 'package:saldough/shared/transaction/data/transaction_model.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 
 /// Port label lama yang selalu gagal dibaca (regresi F6 verifikasi M1).
@@ -111,7 +112,7 @@ void main() {
 
     final raw = await storage.read(const StorageKey(namespace: 'transaction', name: '2026-09').value);
     expect(raw, isNot(contains('categoryKey')));
-    expect(raw, contains('"schemaVersion":2'));
+    expect(raw, contains('"schemaVersion":${TransactionModel.schemaVersion}'));
   });
 
   test('aman diulang: penanda sudah ada berarti tidak ada yang disentuh', () async {

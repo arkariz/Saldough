@@ -4322,6 +4322,8 @@ class Translations$book$id {
 	final Translations _root; // ignore: unused_field
 
 	// Translations
+	late final Translations$book$shelf$id shelf = Translations$book$shelf$id.internal(_root);
+	late final Translations$book$setting$id setting = Translations$book$setting$id.internal(_root);
 	late final Translations$book$cover$id cover = Translations$book$cover$id.internal(_root);
 	late final Translations$book$report$id report = Translations$book$report$id.internal(_root);
 	late final Translations$book$card$id card = Translations$book$card$id.internal(_root);
@@ -5885,6 +5887,60 @@ class Translations$stamps$legacyBanner$id {
 
 	/// id: 'Tutup'
 	String get dismiss => 'Tutup';
+}
+
+// Path: book.shelf
+class Translations$book$shelf$id {
+	Translations$book$shelf$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Buku'
+	String get segment => 'Buku';
+
+	/// id: 'Rak Buku'
+	String get title => 'Rak Buku';
+
+	/// id: 'Belum ada buku'
+	String get empty => 'Belum ada buku';
+
+	/// id: 'Buku pertama siap saat periodemu berakhir.'
+	String get emptyHint => 'Buku pertama siap saat periodemu berakhir.';
+
+	/// id: 'Belum dibuka'
+	String get unopened => 'Belum dibuka';
+
+	/// id: 'Sudah dibuka'
+	String get opened => 'Sudah dibuka';
+
+	/// id: 'Dibuka dengan Plus'
+	String get locked => 'Dibuka dengan Plus';
+
+	/// id: 'Buku ini dibuka dengan Plus. Kartu periodenya tetap bisa kamu bagikan.'
+	String get lockedToast => 'Buku ini dibuka dengan Plus. Kartu periodenya tetap bisa kamu bagikan.';
+
+	/// id: 'Baru'
+	String get fresh => 'Baru';
+
+	/// id: '$period, $status'
+	String semantic({required Object period, required Object status}) => '${period}, ${status}';
+}
+
+// Path: book.setting
+class Translations$book$setting$id {
+	Translations$book$setting$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Ajakan akhir periode'
+	String get label => 'Ajakan akhir periode';
+
+	/// id: 'Tampilkan ajakan menutup buku saat periode berakhir.'
+	String get hint => 'Tampilkan ajakan menutup buku saat periode berakhir.';
 }
 
 // Path: book.cover
@@ -8225,6 +8281,18 @@ extension on Translations {
 			'stamps.legacyBanner.body' => 'Buku Stempel baru. Yang sudah kamu capai sudah ada di sini.',
 			'stamps.legacyBanner.action' => 'Lihat',
 			'stamps.legacyBanner.dismiss' => 'Tutup',
+			'book.shelf.segment' => 'Buku',
+			'book.shelf.title' => 'Rak Buku',
+			'book.shelf.empty' => 'Belum ada buku',
+			'book.shelf.emptyHint' => 'Buku pertama siap saat periodemu berakhir.',
+			'book.shelf.unopened' => 'Belum dibuka',
+			'book.shelf.opened' => 'Sudah dibuka',
+			'book.shelf.locked' => 'Dibuka dengan Plus',
+			'book.shelf.lockedToast' => 'Buku ini dibuka dengan Plus. Kartu periodenya tetap bisa kamu bagikan.',
+			'book.shelf.fresh' => 'Baru',
+			'book.shelf.semantic' => ({required Object period, required Object status}) => '${period}, ${status}',
+			'book.setting.label' => 'Ajakan akhir periode',
+			'book.setting.hint' => 'Tampilkan ajakan menutup buku saat periode berakhir.',
 			'book.cover.caption' => 'Ceritamu periode ini',
 			'book.cover.records' => ({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n, one: '${count} catatan', other: '${count} catatan', ), 
 			'book.cover.routines' => ({required Object count}) => '${count} rutin beres',

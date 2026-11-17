@@ -1931,6 +1931,22 @@
     }
   },
   "book": {
+    "shelf": {
+      "segment": "Buku",
+      "title": "Rak Buku",
+      "empty": "Belum ada buku",
+      "emptyHint": "Buku pertama siap saat periodemu berakhir.",
+      "unopened": "Belum dibuka",
+      "opened": "Sudah dibuka",
+      "locked": "Dibuka dengan Plus",
+      "lockedToast": "Buku ini dibuka dengan Plus. Kartu periodenya tetap bisa kamu bagikan.",
+      "fresh": "Baru",
+      "semantic": "$period, $status"
+    },
+    "setting": {
+      "label": "Ajakan akhir periode",
+      "hint": "Tampilkan ajakan menutup buku saat periode berakhir."
+    },
     "cover": {
   "caption": "Ceritamu periode ini",
     "records": {

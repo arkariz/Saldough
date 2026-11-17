@@ -6,6 +6,8 @@ import 'package:saldough/app/milestone/milestone_coordinator.dart';
 import 'package:saldough/app/period_book/app_book_access.dart';
 import 'package:saldough/app/period_book/app_period_book_source.dart';
 import 'package:saldough/app/period_book/app_ritual_access.dart';
+import 'package:saldough/app/period_book/app_settings_access.dart';
+import 'package:saldough/app/period_book/app_shelf_access.dart';
 import 'package:saldough/app/period_book/period_book_gate.dart';
 import 'package:saldough/app/shell/shell_requests.dart';
 import 'package:saldough/core/currency/currency.dart';
@@ -17,6 +19,8 @@ import 'package:saldough/features/period_book/domain/repositories/period_book_me
 import 'package:saldough/features/period_book/domain/repositories/period_book_source.dart';
 import 'package:saldough/features/period_book/presentation/period_book_read_access.dart';
 import 'package:saldough/features/period_book/presentation/period_book_ritual_access.dart';
+import 'package:saldough/features/period_book/presentation/period_book_settings_access.dart';
+import 'package:saldough/features/period_book/presentation/period_book_shelf_access.dart';
 import 'package:saldough/features/plan/domain/plan_sources.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
@@ -64,6 +68,8 @@ void registerPeriodBook(GetIt container) {
         },
       ),
     )
+    ..registerLazySingleton<PeriodBookShelfAccess>(() => AppShelfAccess(container<PeriodBookGate>()))
+    ..registerLazySingleton<PeriodBookSettingsAccess>(() => AppSettingsAccess(container<PeriodBookGate>()))
     ..registerLazySingleton<PeriodBookGate>(
       () => PeriodBookGate(
         entitlements: container<Entitlements>(),

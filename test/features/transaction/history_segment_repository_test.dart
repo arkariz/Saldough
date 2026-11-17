@@ -35,4 +35,9 @@ void main() {
     await storage.write(key.value, '{"schemaVersion":1,"segment":"tahun"}');
     expect(read(await repository.load()), HistorySegment.list);
   });
+
+  test('segmen Buku (Rak Buku) tersimpan dan terbaca ulang', () async {
+    await repository.save(HistorySegment.books);
+    expect(read(await repository.load()), HistorySegment.books);
+  });
 }

@@ -17,7 +17,7 @@ final class HistorySegmentRepositoryImpl with RepositoryGuard implements History
 
   StoredValue<HistorySegment> get _store => StoredValue<HistorySegment>.json(
     key: _key,
-    fromJson: (json) => json['segment'] == HistorySegment.analysis.name ? HistorySegment.analysis : HistorySegment.list,
+    fromJson: (json) => HistorySegment.values.where((s) => s.name == json['segment']).firstOrNull ?? HistorySegment.list,
     toJson: (segment) => {'schemaVersion': 1, 'segment': segment.name},
     storage: _storage,
   );

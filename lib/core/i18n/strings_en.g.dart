@@ -1721,6 +1721,8 @@ class _Translations$book$en extends Translations$book$id {
 	final TranslationsEn _root; // ignore: unused_field
 
 	// Translations
+	@override late final _Translations$book$shelf$en shelf = _Translations$book$shelf$en._(_root);
+	@override late final _Translations$book$setting$en setting = _Translations$book$setting$en._(_root);
 	@override late final _Translations$book$cover$en cover = _Translations$book$cover$en._(_root);
 	@override late final _Translations$book$report$en report = _Translations$book$report$en._(_root);
 	@override late final _Translations$book$card$en card = _Translations$book$card$en._(_root);
@@ -2545,6 +2547,36 @@ class _Translations$stamps$legacyBanner$en extends Translations$stamps$legacyBan
 	@override String get body => 'A new Stamp Book. What you have already done is here.';
 	@override String get action => 'See';
 	@override String get dismiss => 'Close';
+}
+
+// Path: book.shelf
+class _Translations$book$shelf$en extends Translations$book$shelf$id {
+	_Translations$book$shelf$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get segment => 'Books';
+	@override String get title => 'Book Shelf';
+	@override String get empty => 'No books yet';
+	@override String get emptyHint => 'The first one is ready when your period ends.';
+	@override String get unopened => 'Not opened yet';
+	@override String get opened => 'Opened';
+	@override String get locked => 'Opens with Plus';
+	@override String get lockedToast => 'This book opens with Plus. You can still share its period card.';
+	@override String get fresh => 'New';
+	@override String semantic({required Object period, required Object status}) => '${period}, ${status}';
+}
+
+// Path: book.setting
+class _Translations$book$setting$en extends Translations$book$setting$id {
+	_Translations$book$setting$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get label => 'End-of-period invitation';
+	@override String get hint => 'Show an invitation to close the book when a period ends.';
 }
 
 // Path: book.cover
@@ -4671,6 +4703,18 @@ extension on TranslationsEn {
 			'stamps.legacyBanner.body' => 'A new Stamp Book. What you have already done is here.',
 			'stamps.legacyBanner.action' => 'See',
 			'stamps.legacyBanner.dismiss' => 'Close',
+			'book.shelf.segment' => 'Books',
+			'book.shelf.title' => 'Book Shelf',
+			'book.shelf.empty' => 'No books yet',
+			'book.shelf.emptyHint' => 'The first one is ready when your period ends.',
+			'book.shelf.unopened' => 'Not opened yet',
+			'book.shelf.opened' => 'Opened',
+			'book.shelf.locked' => 'Opens with Plus',
+			'book.shelf.lockedToast' => 'This book opens with Plus. You can still share its period card.',
+			'book.shelf.fresh' => 'New',
+			'book.shelf.semantic' => ({required Object period, required Object status}) => '${period}, ${status}',
+			'book.setting.label' => 'End-of-period invitation',
+			'book.setting.hint' => 'Show an invitation to close the book when a period ends.',
 			'book.cover.caption' => 'Your story this period',
 			'book.cover.records' => ({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '${count} record', other: '${count} records', ), 
 			'book.cover.routines' => ({required Object count}) => '${count} recurring done',

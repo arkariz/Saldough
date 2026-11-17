@@ -33,7 +33,7 @@ import 'package:state_management/state_management.dart';
 /// tempat sunting dan hapus (T-2.6).
 class TransactionListPage extends StatefulWidget {
   /// Membuat [TransactionListPage].
-  const TransactionListPage({this.notice, this.analysis, this.segmentRepository, super.key});
+  const TransactionListPage({this.notice, this.analysis, this.books, this.segmentRepository, super.key});
 
   /// Banner kotak masuk notifikasi, disisipkan akar komposisi (prototipe
   /// `Riwayat.dc.html`); `null` = tidak ada.
@@ -42,6 +42,10 @@ class TransactionListPage extends StatefulWidget {
   /// Isi segmen Analisis, disisipkan akar komposisi (ADR-030: `transaction` tidak
   /// mengimpor `analysis`). `null` = tanpa segmen, hanya daftar.
   final Widget? analysis;
+
+  /// Isi segmen Buku (Rak Buku), disisipkan akar komposisi (ADR-030: `transaction`
+  /// tidak mengimpor `period_book`). `null` = tanpa segmen Buku.
+  final Widget? books;
 
   /// Pengingat segmen terakhir; `null` = selalu mulai di Daftar.
   final HistorySegmentRepository? segmentRepository;
@@ -69,7 +73,7 @@ class _TransactionListPageState extends State<TransactionListPage> {
 
   Future<void> _restoreSegment(HistorySegmentRepository repository) async {
     final saved = (await repository.load()).getOrElse((_) => HistorySegment.list);
-    if (mounted) setState(() => _segment = saved);
+    if (mounted) setState(() => _segment = saved == HistorySegment.books && widget.books == null ? HistorySegment.list : saved);
   }
 
   void _selectSegment(HistorySegment segment) {
@@ -120,6 +124,12 @@ class _TransactionListPageState extends State<TransactionListPage> {
                         label: t.analysis.segment,
                         asset: ClayIcons.report,
                       ),
+                      if (widget.books != null)
+                        DsSegment(
+                          value: HistorySegment.books,
+                          label: t.book.shelf.segment,
+                          asset: ClayIcons.shelfBooks,
+                        ),
                     ],
                     selected: _segment!,
                     onChanged: _selectSegment,
@@ -138,6 +148,8 @@ class _TransactionListPageState extends State<TransactionListPage> {
         ? const AppSkeletonPage()
         : _segment == HistorySegment.analysis
         ? widget.analysis!
+        : _segment == HistorySegment.books && widget.books != null
+        ? widget.books!
         : BlocBuilder<TransactionBloc, TransactionState>(
           builder: (context, state) {
             if (state.isLoading) return const AppSkeletonPage();

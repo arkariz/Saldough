@@ -8,6 +8,9 @@ enum HistorySegment {
 
   /// Analisis per kategori.
   analysis,
+
+  /// Rak Buku (Buku Periode, ADR-045 KT-BP5).
+  books,
 }
 
 /// Segmen Riwayat yang terakhir dibuka, diingat per perangkat. Preferensi

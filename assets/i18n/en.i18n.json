@@ -1934,6 +1934,22 @@
     }
   },
   "book": {
+    "shelf": {
+      "segment": "Books",
+      "title": "Book Shelf",
+      "empty": "No books yet",
+      "emptyHint": "The first one is ready when your period ends.",
+      "unopened": "Not opened yet",
+      "opened": "Opened",
+      "locked": "Opens with Plus",
+      "lockedToast": "This book opens with Plus. You can still share its period card.",
+      "fresh": "New",
+      "semantic": "$period, $status"
+    },
+    "setting": {
+      "label": "End-of-period invitation",
+      "hint": "Show an invitation to close the book when a period ends."
+    },
     "cover": {
   "caption": "Your story this period",
     "records": {

@@ -34,6 +34,8 @@ import 'package:saldough/features/notification_capture/presentation/host/notific
 import 'package:saldough/features/notification_capture/presentation/widgets/capture_inbox_banner.dart';
 import 'package:saldough/features/notification_capture/presentation/widgets/notification_quick_action.dart';
 import 'package:saldough/features/period_book/presentation/navigation/period_book_route_keys.dart';
+import 'package:saldough/features/period_book/presentation/period_book_shelf_access.dart';
+import 'package:saldough/features/period_book/presentation/widgets/book_shelf_view.dart';
 import 'package:saldough/features/plan/presentation/funding_loader.dart';
 import 'package:saldough/features/plan/presentation/pages/plan_month_page.dart';
 import 'package:saldough/features/plan/presentation/pages/plan_page.dart';
@@ -262,6 +264,13 @@ class _AppShellPageState extends State<AppShellPage> {
       TransactionListPage(
         notice: CaptureInboxBanner(container: parentContainer),
         analysis: AnalysisSegment(container: parentContainer),
+        // Rak Buku (Buku Periode, KT-BP5): segmen ketiga Riwayat.
+        books: parentContainer.isRegistered<PeriodBookShelfAccess>()
+            ? BookShelfView(
+                access: parentContainer<PeriodBookShelfAccess>(),
+                onOpenBook: (periodId) => context.pushRoute(PeriodBookRouteKeys.cover, BookInput(periodId: periodId)),
+              )
+            : null,
         segmentRepository: parentContainer.isRegistered<HistorySegmentRepository>()
             ? parentContainer<HistorySegmentRepository>()
             : null,

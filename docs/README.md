@@ -101,6 +101,7 @@ docs/
 │       ├── FINANCIAL_ANALYSIS.md      # analisis keuangan (Fase 19)
 │       ├── APP_UPDATE.md              # pengumuman pembaruan Play Store dan Shorebird (Fase 20)
 │       ├── EXPORT_BACKUP.md           # ekspor ke spreadsheet, cadangkan dan pulihkan manual (Fase 22)
+│       ├── WEALTH_ASSETS.md           # aset, tujuan tabungan, investasi manual, Total aset (B-96–B-100)
 │       ├── GAMIFICATION.md            # tonggak dan Buku Stempel, gamifikasi ringan (draf, B-94)
 │       ├── BUKU_PERIODE.md            # Buku Periode: tutup buku, rapor bercerita, Rak Buku; seluruhnya Plus (draf, B-95)
 │       └── FEATURE_DISCOVERY.md       # penemuan fitur: notifikasi, pengingat rutin, awal bulan (Fase 21)

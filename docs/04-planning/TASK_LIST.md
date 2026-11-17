@@ -123,18 +123,6 @@ diputuskan, dan catat keputusannya di tugas atau ADR yang mengerjakannya.
   keberhasilan E1 (ditunda pemilik 4 Nov 2026). Pagar nominal besar sudah
   dijawab 5 Nov 2026 (10× median, T-26.20).
 
-- **KT-W1** Arti mengubah saldo dompet. Sejak `0.11.0+17` (commit
-  `dd18320`, 27 Okt 2026, dikerjakan tanpa tugas T-n.n), kolom di Ubah
-  dompet berarti **saldo saat ini**: angka yang diisi langsung menjadi saldo,
-  dan `WalletBloc` diam-diam menggeser `initialBalance` (= angka diisi −
-  netto transaksi dompet). Ini masih memenuhi FR-WAL-002, tetapi
-  (a) selisih antara catatan dan uang nyata hilang tanpa jejak, (b) saldo
-  historis seluruh periode lampau ikut bergeser (Analisis, saldo terendah,
-  perkiraan), padahal ADR-038 menjaga periode lampau tidak dipotong ulang,
-  dan (c) saldo negatif atau bersen pecahan tampil sebagai kolom kosong.
-  Pilihan: pertahankan dan tulis ADR-nya, atau catat selisih sebagai
-  transaksi penyesuaian bertanggal hari ini (ADR domain baru, menyentuh
-  aturan 8). Keputusan teknis menyusul sebagai ADR.
 - **KT-P19** Uji coba menutupi langganan yang ditahan (temuan T1, S3). Urutan
   `resolvePlan`: cache Plus valid, pra-peluncuran, uji coba, ditahan, Gratis.
   Pengguna yang membeli saat uji coba lalu gagal bayar tampak "Uji coba" tanpa
@@ -167,6 +155,12 @@ Simpan ke… dan Bagikan, cadangan pengaman sampai pemulihan berikutnya (maks.
 KT-D1 (arti "wajib" di onboarding Fase 21) diputuskan 18 Okt 2026: wajib
 dijawab (Nyalakan atau Tidak sekarang), bukan wajib menyala; dicatat di
 FEATURE_DISCOVERY §2 dan §9.
+
+KT-W1 (arti mengubah saldo dompet) diputuskan 17 Nov 2026: **B**, selisih dicatat
+sebagai transaksi **Penyesuaian saldo** bertanggal hari ini (bukan pemasukan atau
+pengeluaran), saldo periode lampau tidak bergeser; dikerjakan di B-99 dengan ADR
+domain dulu (pengecualian ketiga aturan 8). Rincian di
+[WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §6.
 
 KT-4 (nominal di Catat kembali ke Rp0 saat jenis diganti) diputuskan
 10 Okt 2026: tetap kosong, perilaku sekarang dipertahankan (catatan
@@ -6991,7 +6985,7 @@ menambah dan memindahkannya ada di
 | B-44 | **Penjaga + Ringkasan Senin** (Plus, cicip 1 per periode): prediksi anggaran habis, uang nganggur menipis, pengeluaran tak biasa, tagihan pekan depan, sinyal R3 sebagai notifikasi; dihitung lokal. Usulan dibangun pertama (KT-P9). Pertanyaan ADR: hitung di latar atau saat dibuka. | agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §6.2, §13 C1 |
 | B-45 | **Catat dari foto** (Plus; gratis berbagi kuota 30 tafsir cerdas per periode, KT-P14): struk, bukti transfer, tangkapan layar QRIS/e-wallet → draf CATAT lewat `shared/capture/` dan Gemini multimodal; terima bagi dari aplikasi lain. Butuh Blaze (T-11.8) dan pembaruan Keamanan Data/B-20. | agen + pemilik | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §6.1, §13 C2 |
 | B-46 | **Bagaimana kalau** (Plus): kejadian khayalan di atas `projectCashflow` 12 bulan (bersama B-30), simpan dan bandingkan skenario, tidak pernah menjadi transaksi. | agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §6.4, §13 C3 |
-| B-47 | **Target** (KT-P10 masuk produk): ADR domain dulu (rencana, bukan pemesanan uang, aturan 5), lalu entitas, perkiraan tanggal tercapai, kemajuan dari dompet ditandai atau transfer sisihkan, peringatan meleset lewat Penjaga. Pembagian Gratis/Plus diputuskan di ADR. | agen + pemilik | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §6.4, §13 D1 |
+| B-47 | ~~Target~~ **Digantikan B-96** (17 Nov 2026): tujuan tabungan dengan model dompet yang terhubung ke tujuan, bukan alokasi virtual. Pembagian Gratis/Plus sudah diputuskan (batas gratis 2 aktif). | agen + pemilik | [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §4, §10 |
 | B-48 | **Utang-piutang** (KT-P10 masuk produk): ADR domain dulu (pinjamkan mengurangi saldo tapi bukan pengeluaran, dibayar kembali bukan pemasukan, sejalan aturan 7; Analisis mengecualikannya). Dasar gratis (catat, sisa, lunas); Plus: pengingat tagih dengan pesan siap kirim, jadwal cicilan. Prasyarat B-54, B-57, B-59. | agen + pemilik | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §7, §13 D2 |
 | B-49 | **Buku Periode R2 (Plus)**: tipe tanuki di sampul, bagikan tanpa nominal, ekspor PDF/Excel, di atas buku B-95. Semula "Rapor bulanan bercerita + ekspor (gratis: rapor ringkas)"; **tidak ada versi gratis** (keputusan pemilik 12 Nov 2026). Mesin PDF dipakai B-50, B-53, B-54. | agen | [BUKU_PERIODE.md](../01-product/features/BUKU_PERIODE.md), [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §6.5, §16.4 |
 | B-50 | **Freelance Pro** (Plus): invoice PDF dari worklog, status jatuh tempo dan lewat jatuh tempo (pertanyaan terbuka PRD §13), pengingat tagih, penghasilan per klien dan tarif efektif. Pembayaran tetap lewat CATAT. | agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §6.5, §13 E2 |
@@ -7003,7 +6997,12 @@ menambah dan memindahkannya ada di
 | B-56 | Kosmetik Plus: tema warna tambahan, kostum tanuki, ikon aplikasi alternatif, lencana Pendiri. Kode kecil, menunggu aset. | pemilik menyerahkan aset, lalu agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §13 K1 |
 | B-57 | **Patungan dari struk** (Plus): pilih barang per orang dari foto struk → piutang tercatat. | agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §7, butuh B-45 + B-48 |
 | B-58 | Kartu kredit dan paylater sebagai **dompet tagihan** (tagihan berjalan, jatuh tempo); gratis dasar, peringatan jatuh tempo di Penjaga (Plus). Butuh ADR. | agen + pemilik | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §7, PRD §6 |
-| B-59 | **Kekayaan bersih** (Plus): aset dicatat manual (emas, reksa dana, kendaraan) dikurangi utang; bukan koneksi broker. | agen + pemilik | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §7, butuh B-48 |
+| B-59 | **Kekayaan bersih** (Plus): Total aset (B-98) dikurangi utang dan kewajiban; memakai nama Kekayaan bersih hanya sesudah utang tercatat. Bukan koneksi broker. | agen + pemilik | [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §9, butuh B-48 dan B-98 |
+| B-96 | **Tujuan tabungan** (menggantikan B-47): tab Dompet › Tujuan; tujuan terhubung ke dompet (satu tujuan banyak dompet, satu dompet satu tujuan), kemajuan = saldo dompet tertaut, menabung lewat transfer yang ada, status Active/Completed/Archived. **Gratis 2 Active**, Plus tanpa batas, perkiraan tanggal tercapai dan peringatan meleset Plus (pemicu P11). ADR domain dulu (rencana, aturan 5). | agen + pemilik | [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §4, §10 |
+| B-97 | **Investasi manual**: instrumen (saham, reksa dana, obligasi, emas, lainnya), kepemilikan yang sudah ada, beli/jual dari dompet lewat CATAT (jenis catatan baru, bukan pemasukan/pengeluaran, pengecualian aturan 8), dividen/kupon sebagai pemasukan, nilai perolehan termasuk biaya, valuasi manual dengan histori, penanda 30 hari. **Gratis 2 Active** per instrumen (pemicu P12). ADR domain dulu; sentuh `BackupRegistry`, ekspor. Tanpa harga otomatis. | agen + pemilik | [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §5, KT-A1, KT-A2 |
+| B-98 | **Gambaran aset** di tab Dompet: Total aset (dompet harian + dompet tabungan + nilai pasar investasi), sebaran tiga bagian, perubahan dipecah transaksi/valuasi/penyesuaian. Butuh B-96 dan B-97. | agen | [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §7 |
+| B-99 | **Penyesuaian saldo** (KT-W1 = B): mengubah saldo dompet mencatat selisih sebagai transaksi Penyesuaian saldo bertanggal hari ini (bukan pemasukan/pengeluaran, Arus 0, bisa disaring, jenis di ekspor), `initialBalance` tidak digeser; perbaiki saldo negatif/berpecahan sen. ADR domain dulu, pengecualian ketiga aturan 8. Prasyarat B-100. | agen | [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §6, KT-W1 |
+| B-100 | **Riwayat kekayaan**: grafik Total aset per periode; gratis 6 periode, Plus seluruhnya. Butuh B-99 dan B-98. | agen | [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §8 |
 | B-60 | **Dompet Bersama / Plus Keluarga** (tingkat kedua, 2–5 orang). Butuh sinkronisasi B-7. Pemilik memutuskan bersaing di sini (KT-P13, 23 Okt 2026); prioritas sesudah Plus dijual. | pemilik memutuskan, lalu agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §7 |
 | B-61 | Rapor kuartal freelance; Tanya Tanuki R2 (kueri gabungan, perbandingan antar tahun). | agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §7, sesudah B-50 dan B-52 terukur |
 | B-62 | Catat dari email (struk e-commerce, tagihan). Izin Gmail sensitif; dipertimbangkan paling akhir. | pemilik memutuskan | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §7 |

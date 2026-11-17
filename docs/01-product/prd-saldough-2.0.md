@@ -1044,6 +1044,40 @@ gratis di FREEMIUM_PAYWALL §6.5 (lihat §16.4).
 - [ ] Pratinjau memuat paling banyak satu ajakan Plus tanpa hambatan
       membagikan.
 
+### 7.15 Aset, tabungan, dan investasi (rencana, ditambahkan 17 November 2026)
+
+Kebutuhan ini lahir dari konsep "Financial Assets & Wealth Management" pemilik,
+divalidasi dan dirapikan menjadi
+[WEALTH_ASSETS.md](features/WEALTH_ASSETS.md) (keputusan pemilik 17 Nov 2026).
+Belum ada kode; tiap butir butuh ADR domain dulu. Batas produk tetap:
+mencatat, tidak membeli atau menjual, tidak tersambung ke broker.
+
+**FR-AST-001 — Tujuan tabungan (B-96)**
+- [ ] Pengguna membuat tujuan dengan target nominal dan menghubungkan satu atau
+      lebih dompet; kemajuan = jumlah saldo dompet tertaut. Satu dompet hanya
+      untuk satu tujuan.
+- [ ] Versi gratis dibatasi 2 tujuan Active; tujuan Completed dan Archived tidak
+      dihitung; Plus tanpa batas.
+
+**FR-AST-002 — Investasi manual (B-97)**
+- [ ] Pengguna mencatat instrumen dengan nilai perolehan dan nilai pasar manual,
+      beserta histori valuasi; nilai ≥ 30 hari ditandai.
+- [ ] Beli dan jual dari dompet lewat CATAT tidak dihitung sebagai pemasukan
+      atau pengeluaran; untung/rugi terwujud dan belum terwujud terpisah.
+- [ ] Versi gratis dibatasi 2 investasi aktif per instrumen.
+
+**FR-AST-003 — Gambaran aset (B-98)**
+- [ ] Tab Dompet menampilkan Total aset dari dompet harian, dompet tabungan, dan
+      nilai pasar investasi tanpa hitung ganda.
+
+**FR-AST-004 — Penyesuaian saldo (B-99)**
+- [ ] Mengubah saldo dompet mencatat selisih sebagai Penyesuaian saldo
+      bertanggal hari ini (Arus 0); saldo periode lampau tidak berubah.
+
+**FR-AST-005 — Riwayat kekayaan (B-100)**
+- [ ] Grafik Total aset per periode; 6 periode untuk gratis, seluruhnya untuk
+      Plus.
+
 ## 8. Kebutuhan non-fungsional
 
 ### 8.1 Ketepatan

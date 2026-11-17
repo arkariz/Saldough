@@ -329,7 +329,7 @@ satu halaman bila datanya ada, dengan posisi tetap di katalog.
 
 | Mau menambah | Yang berubah | Yang tidak berubah |
 |---|---|---|
-| Halaman Target (B-47), Utang (B-48), Penjaga (B-44: peringatan periode ini), Freelance (penghasilan per klien) | Satu penyedia halaman + teks | Alur ritual, Rak Buku, gerbang |
+| Halaman Tujuan tabungan (B-96, menggantikan B-47) dan Total aset (B-98), Utang (B-48), Penjaga (B-44: peringatan periode ini), Freelance (penghasilan per klien) | Satu penyedia halaman + teks | Alur ritual, Rak Buku, gerbang |
 | Tipe tanuki di sampul (R2) | Aturan pemilih tipe dari kebiasaan mencatat, bukan nominal | Angka dan halaman |
 | Bagikan, PDF, Excel (R2; B-49) | Perender dan pengekspor | Isi buku |
 | Rapor Tahunan (B-53) | Layar rak 12 buku → kartu geser | Buku bulanan |

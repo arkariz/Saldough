@@ -7251,8 +7251,31 @@ S sehari, M beberapa hari, L lebih dari seminggu. Rilis bertahap: Kartu Periode
       dibuka bisa dibuka dari menu pengembang saja sampai Rak Buku ada (T-27.7);
       (7) kontras `onHero`/emas dan preset Pink belum diperiksa.
 
-- [ ] **T-27.7** (M) Rak Buku sebagai segmen ketiga Riwayat (D7), sakelar di
+- [x] **T-27.7** (M) Rak Buku sebagai segmen ketiga Riwayat (D7), sakelar di
       Akun. Butuh T-27.2.
+      **Selesai 15 Nov 2026.** `HistorySegment.books` dan segmen ketiga di
+      Riwayat (Daftar | Analisis | Buku; `TransactionListPage.books` disisipkan
+      akar komposisi, segmen tersimpan dan jatuh ke Daftar bila Rak tidak ada).
+      `BookShelfView` (rupa D7): kisi dua kolom sampul kecil terbaru di atas,
+      garis rak, pita "Baru" berayun untuk yang belum dibuka (Plus), sampul pudar
+      untuk yang sudah dibuka, gembok dan sampul diredam untuk yang terkunci
+      (ketuk = pesan lembut, bukan paywall, tanpa membuka rute), baris status
+      "Periode peralihan · n hari", keadaan kosong (Tanuki, tanpa tombol), tanpa
+      hitungan "n buku menunggu"; buku dibuka lewat rute sampul lalu rak dimuat
+      ulang. `AppShelfAccess` lewat `PeriodBookGate.shelf` (BP-9, BP-10).
+      Sakelar **Ajakan akhir periode** di Akun (`InviteSwitchEntry`, BP-14) lewat
+      `AppSettingsAccess`. Teks `book.shelf.*` dan `book.setting.*` id/en. Uji:
+      rak (6: kosong, tiga keadaan, ketuk buka, ketuk terkunci, peralihan,
+      sakelar) dan repositori segmen; `test/features`, `test/app`, arsitektur,
+      i18n lulus (400); analyze bersih. Emulator (Plus, data demo): segmen Buku,
+      Oktober "Sudah dibuka", ketuk membuka sampul dan rapor, kembali ke Rak.
+      ⚠ Selisih dan sisa: (1) ketuk buku Belum dibuka (Plus) membuka sampul
+      langsung, bukan ritual; (2) hanya satu buku di data demo, jadi pita Baru,
+      gembok, dan baris kedua belum terlihat di perangkat (hanya uji widget);
+      (3) sakelar ajakan tidak langsung menyegarkan kartu Beranda (diperiksa
+      ulang pada pemicu berikutnya); (4) sakelar tampil juga untuk Gratis padahal
+      hanya bermakna bagi Plus; (5) pemicu "Buku" belum masuk tur spotlight.
+
 - [ ] **T-27.8** (M) Kartu Periode (D1, D2): model kartu terbatas (BP-16),
       perender gambar 4:5 di perangkat, lembar bagikan sistem, tautan toko
       `utm_source=period_card`, ajakan Plus satu baris. Gratis untuk semua.

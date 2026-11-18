@@ -2,6 +2,7 @@ import 'package:di/di.dart';
 import 'package:saldough/features/home/domain/budget_overview_source.dart';
 import 'package:saldough/features/home/domain/freelance_overview_source.dart';
 import 'package:saldough/features/home/presentation/bloc/home_bloc.dart';
+import 'package:saldough/shared/investment/investment.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
@@ -34,6 +35,7 @@ final class HomeScope extends IsolatedScope {
         transferOnlyWallets: parent.isRegistered<TransferOnlyWallets>()
             ? parent<TransferOnlyWallets>()
             : const NoTransferOnlyWallets(),
+        investmentRepository: parent.isRegistered<InvestmentRepository>() ? parent<InvestmentRepository>() : null,
       ),
       dispose: (bloc) => bloc.close(),
     );

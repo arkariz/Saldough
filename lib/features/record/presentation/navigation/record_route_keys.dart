@@ -19,6 +19,9 @@ enum RecordChoice {
 
   /// Catat transfer antar dompet.
   transfer,
+
+  /// Catat pembelian atau penjualan investasi (ADR-049 §3.3, rupa B-97 §4).
+  investment,
 }
 
 /// Input alur CATAT (FR-REC-001/002). Semua isian opsional; tanpa isian,
@@ -39,6 +42,8 @@ final class RecordSheetInput extends RouteInput {
     this.occurrenceRule,
     this.occurrenceDate,
     this.splitToGoals = false,
+    this.investmentSide,
+    this.initialInstrumentId,
     this.onSaved,
   });
 
@@ -87,6 +92,12 @@ final class RecordSheetInput extends RouteInput {
   /// Transfer dibuka dalam mode **Bagi ke beberapa tujuan** (tombol Menabung
   /// di segmen Tabungan, ADR-048 §9.3); diabaikan bila tujuan Active < 2.
   final bool splitToGoals;
+
+  /// Sisi awal jenis Investasi (Pembelian/Penjualan); bawaannya Pembelian.
+  final InvestmentSide? investmentSide;
+
+  /// Instrumen awal jenis Investasi (dari Rincian instrumen).
+  final String? initialInstrumentId;
 
   /// Dipanggil sekali sesudah transaksi benar-benar tersimpan, dengan kategori,
   /// catatan, dompet, dan pos akhirnya (kategori `null` bila kosong atau transfer). Dipakai

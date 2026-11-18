@@ -93,7 +93,7 @@ Terakhir diperbarui: 29 Oktober 2026 (penyelarasan dokumen dengan `main` di `0.1
 | 26 — Catat dari notifikasi v2 ([ADR-044](../02-architecture/adr/0044-catat-dari-notifikasi-v2.md), Proposed; [NOTIFICATION_CAPTURE_V2.md](../01-product/features/NOTIFICATION_CAPTURE_V2.md)) | 27 | 25 | Dimulai 4 Nov 2026; tanpa saklar build, jalur internal test. Kode T-26.1–T-26.25 selesai 5 Nov 2026 (T-26.28 6 Nov) di branch `claude/rombak-design-system-theming-5747b4` (125 komit di depan `main`, belum jadi PR): fondasi, MVP dalam aplikasi, notifikasi bertindak lewat mesin tanpa layar, E1–E3, pola buatan dicabut (T-26.23), snackbar v2 satu slot. **Sisa:** T-26.26 uji perangkat nyata (gerbang Accepted; baru 1 emulator dan perangkat pemilik) dan T-26.27 kebijakan privasi situs; antrean B-88–B-92 |
 | 29 — Penyesuaian saldo ([ADR-047](../02-architecture/adr/0047-penyesuaian-saldo.md), Accepted; [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §6) | 9 | 9 | **Selesai 17 Nov 2026** (dari B-99): ADR-047 Accepted; T-29.1–T-29.7 (rupa dan UI oleh agen atas permintaan pemilik; 2.831 uji lulus, `flutter analyze` 3 info lama); QA T-29.8 lulus menurut pemeriksaan pemilik di emulator dan perangkat. Branch `claude/penyesuaian-saldo-fase-29`, belum digabung ke induk `claude/aset-kekayaan`. Fase pertama rangkaian aset (Fase 29–33, branch induk `claude/aset-kekayaan`) |
 | 30 — Tujuan tabungan ([ADR-048](../02-architecture/adr/0048-tujuan-tabungan.md), Accepted; [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §4) | 19 | 18 | Dijadwalkan 17 Nov 2026 (dari B-96); T-30.0–T-30.6, T-30.10 (dompet milik tujuan, hanya transfer), T-30.11 (hero Total aset berlapis, ADR-050), dan T-30.12 (rombak tab Dompet: Sebaran aset dan segmen) selesai 17 Nov 2026 (2.849 uji lulus); T-30.15 (sebaran ringkas, warna kartu) 17 Nov, T-30.7 (perkiraan Plus), T-30.8 (dokumen), dan T-30.16 (audit tur) 18 Nov 2026 selesai (2.866 uji lulus); sisa T-30.9 (QA: Android selesai 18 Nov 2026, tinggal iOS) ; T-30.17 (menabung ke beberapa tujuan) selesai 18 Nov 2026 |
-| 31 — Investasi manual ([ADR-049](../02-architecture/adr/0049-investasi-manual.md), Accepted; [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §5) | 12 | 5 | Dijadwalkan 18 Nov 2026 (dari B-97); ADR-049 disetujui 18 Nov 2026 (T-31.0); domain, transaksi investasi, data, dan batas (T-31.2–T-31.5) selesai 18 Nov 2026 (2.913 uji lulus); sisa rupa T-31.1 lalu layar |
+| 31 — Investasi manual ([ADR-049](../02-architecture/adr/0049-investasi-manual.md), Accepted; [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §5) | 12 | 8 | Dijadwalkan 18 Nov 2026 (dari B-97); ADR-049 disetujui 18 Nov 2026 (T-31.0); domain, transaksi investasi, data, dan batas (T-31.2–T-31.5) selesai 18 Nov 2026; rupa T-31.1 dan layar T-31.6/T-31.7 selesai 18 Nov 2026 (2.919 uji lulus); sisa T-31.8–T-31.11 |
 | Antrean (`B-n`, belum dijadwalkan) | 75 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
 
 ## Keputusan terbuka
@@ -7375,11 +7375,20 @@ Dijadwalkan 18 Nov 2026 (dari B-97), fase ketiga rangkaian aset
       Memenuhi FR-AST-002.
       Hasil (18 Nov 2026): disetujui, kelima pertanyaan mengikuti usul
       engineer.
-- [ ] **T-31.1** (M, designer) Rupa: segmen Investasi di tab Dompet, rincian
+- [x] **T-31.1** (M, designer) Rupa: segmen Investasi di tab Dompet, rincian
       instrumen (posisi, untung/rugi, histori valuasi), formulir Tambah
       investasi, jenis Investasi di CATAT (Catat pembelian/penjualan, instrumen
       baru di dalam formulir), Perbarui massal, penanda kesegaran, keadaan
       kosong/Selesai. `context.ds`; layar UI menunggu rupa disetujui.
+      Hasil (18 Nov 2026): spek oleh agen (keputusan pemilik),
+      [b97-investasi.md](../03-design/proposals/b97-investasi.md), tanpa
+      token atau komponen design system baru (perluasan
+      `AppFormQuantityField`, `RecordFormFrame.keypadDecimal`,
+      `RecordAmountField.caption`, pengalih jenis empat segmen). Pemilik
+      (18 Nov 2026): §12 mengikuti rekomendasi (empat segmen tanpa ikon, label
+      pendek hanya bila terpotong; jumlah tetap tampil saat Sembunyikan
+      nominal; tanpa tur baru), dan rugi memakai pil merah. Urutan kerja §11:
+      T-31.7a/b/c lalu T-31.6.
 - [x] **T-31.2** (M) Domain `shared/investment`: `Instrument`,
       `InstrumentType` + satuan, jumlah berskala ×10.000, `InstrumentValuation`
       (harga per satuan, obligasi basis poin), `InstrumentPosition.replay`
@@ -7420,14 +7429,68 @@ Dijadwalkan 18 Nov 2026 (dari B-97), fase ketiga rangkaian aset
       Hasil (18 Nov 2026): domain dan teks P12 selesai; draf disimpan
       `InstrumentDraftStore` (di luar cadangan). Pemakaian di layar menyusul
       T-31.6/T-31.7. 2.913 uji lulus.
-- [ ] **T-31.6** (M) CATAT jenis Investasi: formulir beli/jual (dompet,
+- [x] **T-31.6** (M) CATAT jenis Investasi: formulir beli/jual (dompet,
       instrumen atau instrumen baru, jumlah dengan satuan, total
       dibayar/hasil bersih), event bloc, sunting (ADR-049 §3.3, §3.7). Sesudah
       T-31.1.
-- [ ] **T-31.7** (L) `features/investment`: segmen Investasi di tab Dompet,
+      Hasil (18 Nov 2026): `investment_form_sheet.dart` (sisi, dompet bukan
+      milik tujuan, pemilih instrumen atau Instrumen baru di tempat, kotak
+      Jumlah diisi papan angka lewat `onKeyOverride` dengan tombol desimal
+      `RecordFormFrame.keypadDecimal`, status harga per satuan / dimiliki /
+      melebihi), `InvestmentRecorded` → `RecordInvestment`; pengalih jenis
+      empat segmen tanpa ikon; sunting dari detail transaksi (sisi terkunci).
+      Selisih dari rupa: P12 di CATAT membuka paywall dan **isian tetap di
+      formulir** alih-alih disimpan sebagai draf CATAT (tidak ada yang hilang;
+      draf lintas sesi menyusul bila diminta); keterangan nominal ditaruh di
+      bawah `RecordAmountField`, bukan parameter baru.
+- [x] **T-31.7** (L) `features/investment`: segmen Investasi di tab Dompet,
       rincian instrumen, formulir Tambah investasi, Perbarui massal, lapis
       Investasi di hero dan Beranda (`WealthLayers`), baris catatan
       kedaluwarsa, tur bila perlu (ADR-049 §3.10–§3.11). Sesudah T-31.1.
+      Hasil (18 Nov 2026): segmen Investasi (sebaran, tindakan, kartu Aktif
+      dan Selesai, kosong, galat), catatan kedaluwarsa di bawah hero, lapis
+      Investasi di `WalletBloc` dan keterangan Beranda (`layerAmount`,
+      menggantikan `homeLayers`); `features/investment` (bloc, scope, rute
+      `investment.detail/form/values`): rincian (posisi, catatan beli/jual dan
+      kepemilikan awal, riwayat nilai dengan Urungkan, hapus ditolak bila
+      bercatatan), formulir Tambah/Ubah (jenis terkunci, Sudah punya, draf
+      P12), Perbarui nilai (satu tanggal, isi harga atau nilai total,
+      "Menggantikan nilai …"). Selisih dari rupa: dialog hapus-ditolak hanya
+      punya Tutup (catatannya sudah terdaftar lengkap di rincian, tanpa
+      batas 20), dan tombol rincian memakai `DsInlineActions`.
+      Uji asap emulator (18 Nov 2026): beli 12 lot BBCA Rp11,1 jt lewat
+      Instrumen baru (Total aset tetap, Arus 0, saldo dompet turun), Perbarui
+      nilai Rp9.875 (nilai pasar Rp11.850.000, +Rp750.000 · +6,8%), rincian,
+      jual 15 lot ditolak di formulir. Diperbaiki saat uji: baris Jumlah
+      tanpa judul memicu assertion `DsFieldRow`; angka Total aset Beranda
+      masih memakai jumlah saldo dompet (kini `layers.total`); tombol Tambah
+      investasi ganda saat kosong; warna kontrol Pembelian/Penjualan; label
+      "Simpan 0 nilai". Catatan: teks tur Total aset di tab Dompet masih
+      menyebut "Dompet dan Tabungan" saja.
+      Tambahan (permintaan pemilik 18 Nov 2026): CATAT › Investasi menyarankan
+      harga dari valuasi terakhir instrumen ("Harga terakhir … · tanggal") dan
+      tombol "Pakai Rp…" yang mengisi nominal = jumlah × harga terakhir (belum
+      termasuk biaya; pengguna menyesuaikan). Sumbernya `InstrumentSummary.valuation`,
+      jadi harga dari Google Sheet (B-101, `ValuationSource.sheet`) otomatis ikut
+      begitu tersimpan sebagai valuasi.
+      Poles UI (permintaan pemilik 18 Nov 2026): lima ikon clay baru
+      (`stock_candle`, `pie_fund`, `gold_bar`, `bond_paper`, `price_refresh`;
+      `ClayIcons.stock/fund/gold/bond/priceRefresh`) dipakai ubin jenis,
+      kartu, Riwayat, dan rincian. Rincian instrumen memakai `DsSummaryHero`
+      (nilai pasar berhitung naik, ilustrasi clay, kotak Nilai perolehan dan
+      Untung/rugi), bagian Posisi berikon, dan muncul berurutan (`DsReveal`).
+      Formulir Tambah/Ubah: pratinjau clay yang bergoyang saat jenis berganti,
+      pemilih jenis berupa ubin clay, bagian "Sudah punya" meluas beranimasi.
+      Perbarui nilai: kepala clay melayang, baris harga sebelumnya, pratinjau
+      nilai pasar meluas. CATAT › Investasi: arti nominal sebagai pil, kartu
+      **Ringkasan** (Dimiliki, Harga terakhir, Saran nominal + Pakai,
+      Perkiraan harga), dirombak lagi atas umpan balik pemilik: dua kotak
+      sama lebar (Dimiliki, Harga terakhir: label, angka besar yang mengecil
+      sendiri bila tidak muat, tanggal), kotak Saran nominal dengan tombol
+      Pakai, lalu satu baris Perkiraan harga. Status bawah kini hanya galat
+      jual berlebih.
+      Selisih dari rupa B-97: rincian memakai kartu ringkasan gelap (rupa
+      awal menghindari hero), atas permintaan pemilik.
 - [ ] **T-31.8** (S) Kategori bawaan pemasukan **Investasi** (dividen, kupon),
       termasuk pengguna lama (ADR-049 §3.8).
 - [ ] **T-31.9** (S) Cadangan dan ekspor: kunci baru + referensi di

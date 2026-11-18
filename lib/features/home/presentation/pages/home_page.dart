@@ -167,7 +167,7 @@ class _HomePageState extends State<HomePage> {
                 Icon(Icons.spa_outlined, size: 14, color: c.actionPrimary),
                 const SizedBox(width: 6),
                 Text(
-                  AppMoneyFormatter.format(state.totalBalance),
+                  AppMoneyFormatter.format(state.layers.total),
                   style: ds.typography.pixelLabel.copyWith(fontSize: 13, color: c.actionPrimary),
                 ),
               ],
@@ -212,7 +212,7 @@ class _HomePageState extends State<HomePage> {
             SpotlightTarget(
               spotlightKey: SpotlightKey.homeBalance,
               child: HomeBalanceCard(
-                total: state.totalBalance,
+                total: state.layers.total,
                 walletCount: state.activeWallets.length,
                 cashFlow: state.hasTransactions ? state.cashFlow : null,
                 footer: widget.forecast,

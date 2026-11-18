@@ -100,6 +100,21 @@ abstract final class ClayIcons {
   /// Grafik naik, investasi.
   static const String chart = 'assets/icons_clay/chart_investment.svg';
 
+  /// Lilin naik dan turun, saham (B-97).
+  static const String stock = 'assets/icons_clay/stock_candle.svg';
+
+  /// Diagram lingkaran, reksa dana (B-97).
+  static const String fund = 'assets/icons_clay/pie_fund.svg';
+
+  /// Batang emas, emas (B-97).
+  static const String gold = 'assets/icons_clay/gold_bar.svg';
+
+  /// Surat berstempel, obligasi (B-97).
+  static const String bond = 'assets/icons_clay/bond_paper.svg';
+
+  /// Label harga diperbarui, Perbarui nilai (B-97).
+  static const String priceRefresh = 'assets/icons_clay/price_refresh.svg';
+
   /// Jejak kaki, hewan peliharaan.
   static const String paw = 'assets/icons_clay/paw_pets.svg';
 
@@ -195,6 +210,11 @@ abstract final class ClayIcons {
 
   /// Seluruh aset, untuk uji dan pemeriksaan manifest.
   static const List<String> all = [
+    stock,
+    fund,
+    gold,
+    bond,
+    priceRefresh,
     mascot,
     mascotSleeping,
     tierCoin,

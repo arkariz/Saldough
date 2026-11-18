@@ -35,6 +35,7 @@ class RecordFormFrame extends StatelessWidget {
     this.onAmountChanged,
     this.onKeyOverride,
     this.bottomStatus,
+    this.keypadDecimal = false,
     super.key,
   });
 
@@ -78,6 +79,10 @@ class RecordFormFrame extends StatelessWidget {
   /// persen mode bagi), selalu terlihat walau isi formulir panjang.
   final Widget? bottomStatus;
 
+  /// Tombol `000` diganti tombol desimal (rupa B-97 §4.4): papan angka sedang
+  /// mengisi jumlah investasi berpecahan.
+  final bool keypadDecimal;
+
   /// Kunci yang diteruskan ke [onKeyOverride] saat hapus semua.
   static const frameClearKey = 'clear';
 
@@ -94,8 +99,8 @@ class RecordFormFrame extends StatelessWidget {
 
   /// Susunan papan angka: 3 kolom angka dan kolom operator kalkulator
   /// (T-8.18), dengan `000` (atau pemisah desimal) dan hapus di baris bawah.
-  static List<List<DsKeypadKey>> get _keypadRows {
-    final decimal = ActiveCurrency.value.fractionDigits > 0;
+  static List<List<DsKeypadKey>> _keypadRows({bool forceDecimal = false}) {
+    final decimal = forceDecimal || ActiveCurrency.value.fractionDigits > 0;
     final operators = moneyOperatorSymbols.keys.toList();
     DsKeypadKey op(int i) => DsKeypadKey(
       value: operators[i],
@@ -172,7 +177,7 @@ class RecordFormFrame extends StatelessWidget {
                       if (bottomStatus case final status?) ...[status, const SizedBox(height: DsSpacing.xs)],
                       if (amountController != null && !keyboardOpen) ...[
                         DsKeypad(
-                          rows: _keypadRows,
+                          rows: _keypadRows(forceDecimal: keypadDecimal),
                           onKey: _onKey,
                           onClear: _onClear,
                           clearValue: moneyKeyBackspace,

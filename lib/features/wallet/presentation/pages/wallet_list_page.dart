@@ -12,6 +12,7 @@ import 'package:saldough/features/wallet/presentation/bloc/wallet_state.dart';
 import 'package:saldough/features/wallet/presentation/navigation/wallet_route_keys.dart';
 import 'package:saldough/features/wallet/presentation/wallet_shares.dart';
 import 'package:saldough/features/wallet/presentation/widgets/asset_layer.dart';
+import 'package:saldough/features/wallet/presentation/widgets/investment_section.dart';
 import 'package:saldough/features/wallet/presentation/widgets/savings_goal_section.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_card.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_empty_states.dart';
@@ -174,6 +175,9 @@ class _WalletListPageState extends State<WalletListPage> {
             ];
             final goalShares = walletShares(goalWallets);
             final goalCount = state.goals.length;
+            final activeInstruments = state.activeInstruments;
+            final today = DateTime.now();
+            final staleCount = activeInstruments.where((i) => i.isStale(today)).length;
             // TR-WALLET (ADR-021 §3.4): Total aset, segmen, dompet pertama,
             // tambah; tujuan disorot saat segmen Tabungan pertama dibuka.
             return TourTrigger(
@@ -195,6 +199,8 @@ class _WalletListPageState extends State<WalletListPage> {
                             child: WalletHeroCard(layers: state.layers, selected: segment, onLayerSelected: _select),
                           ),
                         ),
+                        // Catatan nilai kedaluwarsa (rupa B-97 §1.1), sebelum segmen.
+                        if (staleCount > 0) InvestmentStaleNote(count: staleCount),
                       ],
                     ),
                   ),
@@ -209,6 +215,11 @@ class _WalletListPageState extends State<WalletListPage> {
                           segments: [
                             DsSegment(value: AssetLayer.wallets, label: t.assets.layerOperational, count: active.length),
                             DsSegment(value: AssetLayer.savings, label: t.assets.layerSavings, count: goalCount),
+                            DsSegment(
+                              value: AssetLayer.investments,
+                              label: t.assets.layerInvestment,
+                              count: activeInstruments.length,
+                            ),
                           ],
                           selected: segment,
                           onChanged: _select,
@@ -225,7 +236,13 @@ class _WalletListPageState extends State<WalletListPage> {
                     ),
                     sliver: SliverList.list(
                       children: [
-                        if (segment == AssetLayer.savings) ...[
+                        if (segment == AssetLayer.investments)
+                          InvestmentSection(
+                            active: activeInstruments,
+                            closed: state.closedInstruments,
+                            failed: state.investmentsFailed,
+                          )
+                        else if (segment == AssetLayer.savings) ...[
                           if (goalShares.length > 1) ...[
                             WalletSpreadCard(
                               wallets: goalWallets,

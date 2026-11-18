@@ -3,6 +3,7 @@ import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/shared/category/category.dart';
+import 'package:saldough/shared/investment/investment.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/savings_goal/savings_goal.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
@@ -43,6 +44,10 @@ final class RecordScope extends IsolatedScope {
     if (parent.isRegistered<GoalSplitMemory>()) {
       c.registerSingleton<GoalSplitMemory>(parent<GoalSplitMemory>());
     }
+    // Jenis Investasi (ADR-049); sebagian uji tidak menyediakannya.
+    if (parent.isRegistered<InvestmentRepository>()) {
+      c.registerSingleton<InvestmentRepository>(parent<InvestmentRepository>());
+    }
   }
 
   @override
@@ -64,6 +69,7 @@ final class RecordScope extends IsolatedScope {
         splitMemory: c.isRegistered<GoalSplitMemory>()
             ? c<GoalSplitMemory>()
             : null,
+        investments: c.isRegistered<InvestmentRepository>() ? c<InvestmentRepository>() : null,
         recordTransaction: RecordTransaction(
           transferOnlyWallets: parent.isRegistered<TransferOnlyWallets>() ? parent<TransferOnlyWallets>() : const NoTransferOnlyWallets(),
           investmentGuard: parent.isRegistered<InvestmentLedgerGuard>()

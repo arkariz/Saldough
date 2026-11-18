@@ -307,6 +307,9 @@ class Translations$record$id {
 	/// id: 'Transfer'
 	String get kindTransfer => 'Transfer';
 
+	/// id: 'Investasi'
+	String get kindInvestment => 'Investasi';
+
 	/// id: 'Tambah kategori'
 	String get categoryAddLabel => 'Tambah kategori';
 
@@ -4335,8 +4338,8 @@ class Translations$assets$id {
 	/// id: '$wallets dompet · $goals tujuan'
 	String heroCaption({required Object wallets, required Object goals}) => '${wallets} dompet · ${goals} tujuan';
 
-	/// id: 'Dompet $operational · Tabungan $savings'
-	String homeLayers({required Object operational, required Object savings}) => 'Dompet ${operational} · Tabungan ${savings}';
+	/// id: '$label $amount'
+	String layerAmount({required Object label, required Object amount}) => '${label} ${amount}';
 
 	late final Translations$assets$goal$id goal = Translations$assets$goal$id.internal(_root);
 	late final Translations$assets$adjust$id adjust = Translations$assets$adjust$id.internal(_root);
@@ -5936,6 +5939,312 @@ class Translations$assets$invest$id {
 
 	/// id: 'Investasi $count'
 	String filterLabel({required Object count}) => 'Investasi ${count}';
+
+	/// id: 'Investasi aktif'
+	String get activeHeading => 'Investasi aktif';
+
+	/// id: 'Selesai'
+	String get doneHeading => 'Selesai';
+
+	/// id: 'Sebaran investasi'
+	String get spreadTitle => 'Sebaran investasi';
+
+	/// id: '$n investasi'
+	String count({required Object n}) => '${n} investasi';
+
+	/// id: 'Tambah investasi'
+	String get add => 'Tambah investasi';
+
+	/// id: 'Catat pembelian'
+	String get recordBuy => 'Catat pembelian';
+
+	/// id: 'Catat penjualan'
+	String get recordSell => 'Catat penjualan';
+
+	/// id: 'Perbarui nilai'
+	String get updateValues => 'Perbarui nilai';
+
+	/// id: 'Perbarui'
+	String get update => 'Perbarui';
+
+	/// id: 'Catat investasimu'
+	String get emptyTitle => 'Catat investasimu';
+
+	/// id: 'Saham, reksa dana, emas, atau obligasi. Nilainya kamu perbarui sendiri dan tidak dihitung sebagai pemasukan atau pengeluaran.'
+	String get emptyBody => 'Saham, reksa dana, emas, atau obligasi. Nilainya kamu perbarui sendiri dan tidak dihitung sebagai pemasukan atau pengeluaran.';
+
+	/// id: 'Tambah investasi untuk yang sudah kamu punya; Catat pembelian bila uangnya keluar dari dompet.'
+	String get emptyHint => 'Tambah investasi untuk yang sudah kamu punya; Catat pembelian bila uangnya keluar dari dompet.';
+
+	/// id: 'Investasi tidak bisa dimuat.'
+	String get loadError => 'Investasi tidak bisa dimuat.';
+
+	/// id: 'Investasi ini tidak bisa dimuat.'
+	String get detailLoadError => 'Investasi ini tidak bisa dimuat.';
+
+	/// id: 'Investasi ini sudah tidak ada.'
+	String get notFound => 'Investasi ini sudah tidak ada.';
+
+	/// id: 'Nilai $n investasi sudah lebih dari 30 hari.'
+	String staleNote({required Object n}) => 'Nilai ${n} investasi sudah lebih dari 30 hari.';
+
+	/// id: 'Diperbarui $n hari lalu'
+	String staleValue({required Object n}) => 'Diperbarui ${n} hari lalu';
+
+	/// id: 'Diperbarui hari ini'
+	String get updatedToday => 'Diperbarui hari ini';
+
+	/// id: 'Belum pernah diperbarui'
+	String get neverUpdated => 'Belum pernah diperbarui';
+
+	/// id: 'Nilai pasar'
+	String get marketValue => 'Nilai pasar';
+
+	/// id: 'Nilai perolehan'
+	String get cost => 'Nilai perolehan';
+
+	/// id: 'Harga rata-rata'
+	String get avgPrice => 'Harga rata-rata';
+
+	/// id: 'Harga terakhir'
+	String get lastPrice => 'Harga terakhir';
+
+	/// id: 'Jumlah'
+	String get quantity => 'Jumlah';
+
+	/// id: 'Nominal'
+	String get nominal => 'Nominal';
+
+	/// id: 'Untung/rugi belum terwujud'
+	String get unrealized => 'Untung/rugi belum terwujud';
+
+	/// id: 'Untung/rugi terwujud'
+	String get realized => 'Untung/rugi terwujud';
+
+	/// id: 'Untung terwujud'
+	String get realizedGain => 'Untung terwujud';
+
+	/// id: 'Rugi terwujud'
+	String get realizedLoss => 'Rugi terwujud';
+
+	/// id: 'Terjual habis'
+	String get soldOut => 'Terjual habis';
+
+	/// id: 'Selesai'
+	String get closedBadge => 'Selesai';
+
+	/// id: 'Nilai perolehan termasuk biaya dan pajak. Untung/rugi tidak dihitung sebagai pemasukan atau pengeluaran.'
+	String get positionNote => 'Nilai perolehan termasuk biaya dan pajak. Untung/rugi tidak dihitung sebagai pemasukan atau pengeluaran.';
+
+	/// id: 'Posisi'
+	String get positionHeading => 'Posisi';
+
+	/// id: 'Ringkasan'
+	String get summaryHeading => 'Ringkasan';
+
+	/// id: 'Dimiliki'
+	String get ownedLabel => 'Dimiliki';
+
+	/// id: 'Perkiraan harga'
+	String get estPrice => 'Perkiraan harga';
+
+	/// id: 'Dari nominal ÷ jumlah, termasuk biaya'
+	String get estPriceBuyCaption => 'Dari nominal ÷ jumlah, termasuk biaya';
+
+	/// id: 'Dari nominal ÷ jumlah, sesudah biaya'
+	String get estPriceSellCaption => 'Dari nominal ÷ jumlah, sesudah biaya';
+
+	/// id: 'Saran nominal'
+	String get suggestTotal => 'Saran nominal';
+
+	/// id: 'Jumlah × harga terakhir, belum termasuk biaya'
+	String get suggestCaption => 'Jumlah × harga terakhir, belum termasuk biaya';
+
+	/// id: 'Pakai'
+	String get use => 'Pakai';
+
+	/// id: 'Catatan beli dan jual'
+	String get recordsHeading => 'Catatan beli dan jual';
+
+	/// id: 'Belum ada catatan beli atau jual.'
+	String get recordsEmpty => 'Belum ada catatan beli atau jual.';
+
+	/// id: 'Lihat semua di Riwayat'
+	String get seeInHistory => 'Lihat semua di Riwayat';
+
+	/// id: 'Sudah punya sebelumnya'
+	String get openingRow => 'Sudah punya sebelumnya';
+
+	/// id: 'Riwayat nilai'
+	String get valuesHeading => 'Riwayat nilai';
+
+	/// id: 'Belum pernah diperbarui. Nilai pasar memakai nilai perolehan.'
+	String get valuesEmpty => 'Belum pernah diperbarui. Nilai pasar memakai nilai perolehan.';
+
+	/// id: 'Tampilkan semua'
+	String get showAll => 'Tampilkan semua';
+
+	/// id: 'Hapus nilai $date'
+	String deleteValueLabel({required Object date}) => 'Hapus nilai ${date}';
+
+	/// id: 'Nilai $date dihapus.'
+	String valueDeleted({required Object date}) => 'Nilai ${date} dihapus.';
+
+	/// id: 'Urungkan'
+	String get undo => 'Urungkan';
+
+	/// id: 'Ubah'
+	String get edit => 'Ubah';
+
+	/// id: 'Hapus investasi'
+	String get delete => 'Hapus investasi';
+
+	/// id: 'Investasi ini masih punya catatan'
+	String get deleteBlockedTitle => 'Investasi ini masih punya catatan';
+
+	/// id: 'Ada $n catatan beli atau jual untuk $name. Hapus catatannya dulu di Riwayat; saldo dompetnya kembali seperti sebelum dicatat.'
+	String deleteBlockedBody({required Object n, required Object name}) => 'Ada ${n} catatan beli atau jual untuk ${name}. Hapus catatannya dulu di Riwayat; saldo dompetnya kembali seperti sebelum dicatat.';
+
+	/// id: 'Lihat di Riwayat'
+	String get seeHistory => 'Lihat di Riwayat';
+
+	/// id: 'Tutup'
+	String get close => 'Tutup';
+
+	/// id: 'Hapus investasi ini?'
+	String get deleteConfirmTitle => 'Hapus investasi ini?';
+
+	/// id: 'Investasi dan riwayat nilainya dihapus. Saldo dompet tidak berubah. Tidak bisa dibatalkan.'
+	String get deleteConfirmBody => 'Investasi dan riwayat nilainya dihapus. Saldo dompet tidak berubah. Tidak bisa dibatalkan.';
+
+	/// id: 'Investasi dihapus.'
+	String get deleted => 'Investasi dihapus.';
+
+	/// id: 'Tambah investasi'
+	String get formTitleNew => 'Tambah investasi';
+
+	/// id: 'Ubah investasi'
+	String get formTitleEdit => 'Ubah investasi';
+
+	/// id: 'Nama'
+	String get nameLabel => 'Nama';
+
+	/// id: 'Mis. BBCA, Reksa dana pasar uang, Emas Antam'
+	String get nameHint => 'Mis. BBCA, Reksa dana pasar uang, Emas Antam';
+
+	/// id: 'Jenis'
+	String get typeLabel => 'Jenis';
+
+	late final Translations$assets$invest$type$id type = Translations$assets$invest$type$id.internal(_root);
+	late final Translations$assets$invest$typeHelp$id typeHelp = Translations$assets$invest$typeHelp$id.internal(_root);
+
+	/// id: 'Jenis tidak bisa diubah karena sudah ada catatan atau riwayat nilai.'
+	String get typeLocked => 'Jenis tidak bisa diubah karena sudah ada catatan atau riwayat nilai.';
+
+	/// id: 'Kode (opsional)'
+	String get codeLabel => 'Kode (opsional)';
+
+	/// id: 'Mis. BBCA'
+	String get codeHint => 'Mis. BBCA';
+
+	/// id: 'Sudah punya sebelumnya'
+	String get ownedToggle => 'Sudah punya sebelumnya';
+
+	/// id: 'Catat yang sudah kamu miliki tanpa mengubah saldo dompet.'
+	String get ownedToggleBody => 'Catat yang sudah kamu miliki tanpa mengubah saldo dompet.';
+
+	/// id: 'Sejak'
+	String get sinceLabel => 'Sejak';
+
+	/// id: 'Uang yang kamu keluarkan, termasuk biaya dan pajak.'
+	String get costHelp => 'Uang yang kamu keluarkan, termasuk biaya dan pajak.';
+
+	/// id: 'Isi jumlah dan nilai perolehan, atau matikan Sudah punya.'
+	String get ownedMissing => 'Isi jumlah dan nilai perolehan, atau matikan Sudah punya.';
+
+	/// id: 'Terlalu kecil: sudah ada penjualan sesudah tanggal ini.'
+	String get openingTooSmall => 'Terlalu kecil: sudah ada penjualan sesudah tanggal ini.';
+
+	/// id: 'Simpan investasi'
+	String get save => 'Simpan investasi';
+
+	/// id: 'Investasi tersimpan.'
+	String get saved => 'Investasi tersimpan.';
+
+	/// id: 'Melanjutkan isian yang belum tersimpan.'
+	String get draftResumed => 'Melanjutkan isian yang belum tersimpan.';
+
+	/// id: 'Buang draf'
+	String get discardDraft => 'Buang draf';
+
+	late final Translations$assets$invest$unit$id unit = Translations$assets$invest$unit$id.internal(_root);
+
+	/// id: '= $n lembar'
+	String shares({required Object n}) => '= ${n} lembar';
+
+	late final Translations$assets$invest$price$id price = Translations$assets$invest$price$id.internal(_root);
+
+	/// id: 'Pembelian'
+	String get sideBuy => 'Pembelian';
+
+	/// id: 'Penjualan'
+	String get sideSell => 'Penjualan';
+
+	/// id: 'Hasil bersih, sesudah biaya dan pajak'
+	String get amountSellCaption => 'Hasil bersih, sesudah biaya dan pajak';
+
+	/// id: 'Dari dompet'
+	String get fromWallet => 'Dari dompet';
+
+	/// id: 'Ke dompet'
+	String get toWallet => 'Ke dompet';
+
+	/// id: 'Belum ada dompet aktif untuk investasi.'
+	String get noWallet => 'Belum ada dompet aktif untuk investasi.';
+
+	/// id: '$qty dimiliki'
+	String ownedHint({required Object qty}) => '${qty} dimiliki';
+
+	/// id: 'Instrumen baru'
+	String get newInstrument => 'Instrumen baru';
+
+	/// id: 'Pilih yang sudah ada'
+	String get pickExisting => 'Pilih yang sudah ada';
+
+	/// id: 'Nama instrumen'
+	String get newNameLabel => 'Nama instrumen';
+
+	/// id: 'Pilih instrumen'
+	String get pickTitle => 'Pilih instrumen';
+
+	/// id: 'Belum ada investasi untuk dicatat penjualannya.'
+	String get noneToSell => 'Belum ada investasi untuk dicatat penjualannya.';
+
+	/// id: 'Ganti ke Pembelian'
+	String get switchToBuy => 'Ganti ke Pembelian';
+
+	/// id: 'Melebihi yang dimiliki pada $date ($qty).'
+	String statusOverSell({required Object date, required Object qty}) => 'Melebihi yang dimiliki pada ${date} (${qty}).';
+
+	/// id: 'Untuk mengganti pembelian menjadi penjualan, hapus catatan ini lalu catat lagi.'
+	String get sideLocked => 'Untuk mengganti pembelian menjadi penjualan, hapus catatan ini lalu catat lagi.';
+
+	/// id: 'Perubahan ini membuat jumlah investasi kurang dari yang sudah dijual sesudahnya.'
+	String get editNegative => 'Perubahan ini membuat jumlah investasi kurang dari yang sudah dijual sesudahnya.';
+
+	/// id: 'Pembelian $name dicatat.'
+	String buyRecorded({required Object name}) => 'Pembelian ${name} dicatat.';
+
+	/// id: 'Penjualan $name dicatat.'
+	String sellRecorded({required Object name}) => 'Penjualan ${name} dicatat.';
+
+	/// id: 'Papan angka mengisi jumlah'
+	String get qtyActive => 'Papan angka mengisi jumlah';
+
+	/// id: 'Papan angka mengisi nominal'
+	String get amountActive => 'Papan angka mengisi nominal';
+
+	late final Translations$assets$invest$bulk$id bulk = Translations$assets$invest$bulk$id.internal(_root);
 }
 
 // Path: record.voice.failure
@@ -6136,6 +6445,147 @@ class Translations$assets$goal$estimate$id {
 
 	/// id: 'Lihat kapan tujuan ini tercapai dari laju menabungmu.'
 	String get lockedBody => 'Lihat kapan tujuan ini tercapai dari laju menabungmu.';
+}
+
+// Path: assets.invest.type
+class Translations$assets$invest$type$id {
+	Translations$assets$invest$type$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Saham'
+	String get stock => 'Saham';
+
+	/// id: 'Reksa dana'
+	String get mutualFund => 'Reksa dana';
+
+	/// id: 'Obligasi'
+	String get bond => 'Obligasi';
+
+	/// id: 'Emas'
+	String get gold => 'Emas';
+
+	/// id: 'Lainnya'
+	String get other => 'Lainnya';
+}
+
+// Path: assets.invest.typeHelp
+class Translations$assets$invest$typeHelp$id {
+	Translations$assets$invest$typeHelp$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Jumlah dalam lot. 1 lot = 100 lembar.'
+	String get stock => 'Jumlah dalam lot. 1 lot = 100 lembar.';
+
+	/// id: 'Jumlah dalam unit penyertaan.'
+	String get mutualFund => 'Jumlah dalam unit penyertaan.';
+
+	/// id: 'Jumlah adalah nominal obligasi; harganya dalam persen dari nominal.'
+	String get bond => 'Jumlah adalah nominal obligasi; harganya dalam persen dari nominal.';
+
+	/// id: 'Jumlah dalam gram.'
+	String get gold => 'Jumlah dalam gram.';
+
+	/// id: 'Jumlah dalam unit.'
+	String get other => 'Jumlah dalam unit.';
+}
+
+// Path: assets.invest.unit
+class Translations$assets$invest$unit$id {
+	Translations$assets$invest$unit$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'lot'
+	String get lot => 'lot';
+
+	/// id: 'unit'
+	String get unit => 'unit';
+
+	/// id: 'gram'
+	String get gram => 'gram';
+}
+
+// Path: assets.invest.price
+class Translations$assets$invest$price$id {
+	Translations$assets$invest$price$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'per lembar'
+	String get perShare => 'per lembar';
+
+	/// id: 'per unit'
+	String get perUnit => 'per unit';
+
+	/// id: 'per gram'
+	String get perGram => 'per gram';
+
+	/// id: '% dari nominal'
+	String get bondPercent => '% dari nominal';
+}
+
+// Path: assets.invest.bulk
+class Translations$assets$invest$bulk$id {
+	Translations$assets$invest$bulk$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Perbarui nilai'
+	String get title => 'Perbarui nilai';
+
+	/// id: 'Tanggal nilai'
+	String get dateLabel => 'Tanggal nilai';
+
+	/// id: 'Isi harga terbaru dari aplikasi sekuritas atau situs resminya. Yang dikosongkan tidak berubah.'
+	String get intro => 'Isi harga terbaru dari aplikasi sekuritas atau situs resminya. Yang dikosongkan tidak berubah.';
+
+	/// id: 'Menggantikan nilai'
+	String get replacesLabel => 'Menggantikan nilai';
+
+	/// id: 'Menggantikan nilai $date ($price)'
+	String replaces({required Object date, required Object price}) => 'Menggantikan nilai ${date} (${price})';
+
+	/// id: 'Isi nilai total'
+	String get fillTotal => 'Isi nilai total';
+
+	/// id: 'Isi harga'
+	String get fillPrice => 'Isi harga';
+
+	/// id: 'Nilai total'
+	String get totalLabel => 'Nilai total';
+
+	/// id: 'Harga'
+	String get priceLabel => 'Harga';
+
+	/// id: 'Simpan $n nilai'
+	String save({required Object n}) => 'Simpan ${n} nilai';
+
+	/// id: 'Simpan nilai'
+	String get saveOne => 'Simpan nilai';
+
+	/// id: 'Isi minimal satu harga.'
+	String get needOne => 'Isi minimal satu harga.';
+
+	/// id: '$n nilai diperbarui.'
+	String saved({required Object n}) => '${n} nilai diperbarui.';
+
+	/// id: 'Nilai diperbarui.'
+	String get savedOne => 'Nilai diperbarui.';
+
+	/// id: 'Nilai belum tersimpan. Coba lagi.'
+	String get saveError => 'Nilai belum tersimpan. Coba lagi.';
 }
 
 // Path: premium.paywall.messages.general
@@ -6390,6 +6840,7 @@ extension on Translations {
 			'record.kindExpense' => 'Pengeluaran',
 			'record.kindIncome' => 'Pemasukan',
 			'record.kindTransfer' => 'Transfer',
+			'record.kindInvestment' => 'Investasi',
 			'record.categoryAddLabel' => 'Tambah kategori',
 			'record.draftCheckTitle' => 'Periksa sebelum mencatat',
 			'record.draftIssue.amountMissing' => 'Nominal belum terbaca. Isi sendiri.',
@@ -6822,9 +7273,9 @@ extension on Translations {
 			'budget.detailHowTitle' => 'Cara kerja pos anggaran',
 			'budget.unknownWallet' => 'Dompet tidak ditemukan',
 			'budget.totalPlannedLabel' => 'Total rencana',
-			'budget.itemsRequiredHint' => 'Tambahkan minimal satu pos. Pengeluaran dihitung per pos, jadi anggaran tanpa pos tidak bisa memantau pengeluaran.',
 			_ => null,
 		} ?? switch (path) {
+			'budget.itemsRequiredHint' => 'Tambahkan minimal satu pos. Pengeluaran dihitung per pos, jadi anggaran tanpa pos tidak bisa memantau pengeluaran.',
 			'budget.walletUnchangedNote' => ({required Object wallet}) => 'Saldo ${wallet} tidak berubah',
 			'budget.itemKindLabel' => 'Jenis pos',
 			'budget.itemKindExpense' => 'Pengeluaran',
@@ -7336,9 +7787,9 @@ extension on Translations {
 			'appearance.presets.matcha' => 'Matcha',
 			'appearance.presets.pink' => 'Pink',
 			'appearance.presets.taro' => 'Taro',
-			'appearance.presets.tanuki' => 'Tanuki',
 			_ => null,
 		} ?? switch (path) {
+			'appearance.presets.tanuki' => 'Tanuki',
 			'appearance.presets.laut' => 'Laut',
 			'discovery.payday.title' => ({required Object d}) => 'Gajian tanggal ${d}?',
 			'discovery.payday.body' => ({required Object d}) => 'Mulai bulan keuangan dari tanggal ${d}, supaya Rencana dan Analisis mengikuti gajianmu.',
@@ -7850,9 +8301,9 @@ extension on Translations {
 			'analysis.kind.income' => 'Pemasukan',
 			'analysis.empty.title' => 'Belum ada yang bisa dianalisis',
 			'analysis.empty.body' => 'Catat transaksi untuk melihat alur pengeluaranmu.',
-			'analysis.empty.cta' => 'Catat transaksi',
 			_ => null,
 		} ?? switch (path) {
+			'analysis.empty.cta' => 'Catat transaksi',
 			'analysis.emptyMonth' => ({required Object period}) => 'Belum ada pengeluaran di ${period}.',
 			'analysis.error' => 'Analisis gagal dimuat. Tarik ke bawah untuk mencoba lagi.',
 			'analysis.donutSemantics' => ({required Object kind, required Object period, required Object parts}) => '${kind} ${period}: ${parts}',
@@ -8038,7 +8489,7 @@ extension on Translations {
 			'assets.layerSavings' => 'Tabungan',
 			'assets.layerInvestment' => 'Investasi',
 			'assets.heroCaption' => ({required Object wallets, required Object goals}) => '${wallets} dompet · ${goals} tujuan',
-			'assets.homeLayers' => ({required Object operational, required Object savings}) => 'Dompet ${operational} · Tabungan ${savings}',
+			'assets.layerAmount' => ({required Object label, required Object amount}) => '${label} ${amount}',
 			'assets.goal.title' => 'Tujuan',
 			'assets.goal.create' => 'Buat tujuan',
 			'assets.goal.saveMoney' => 'Menabung',
@@ -8108,6 +8559,137 @@ extension on Translations {
 			'assets.invest.walletLabel' => 'Dompet',
 			'assets.invest.detailNote' => 'Uang berpindah antara dompet dan investasi. Bukan pemasukan atau pengeluaran. Hapus untuk mengembalikan saldo dompet.',
 			'assets.invest.filterLabel' => ({required Object count}) => 'Investasi ${count}',
+			'assets.invest.activeHeading' => 'Investasi aktif',
+			'assets.invest.doneHeading' => 'Selesai',
+			'assets.invest.spreadTitle' => 'Sebaran investasi',
+			'assets.invest.count' => ({required Object n}) => '${n} investasi',
+			'assets.invest.add' => 'Tambah investasi',
+			'assets.invest.recordBuy' => 'Catat pembelian',
+			'assets.invest.recordSell' => 'Catat penjualan',
+			'assets.invest.updateValues' => 'Perbarui nilai',
+			'assets.invest.update' => 'Perbarui',
+			'assets.invest.emptyTitle' => 'Catat investasimu',
+			'assets.invest.emptyBody' => 'Saham, reksa dana, emas, atau obligasi. Nilainya kamu perbarui sendiri dan tidak dihitung sebagai pemasukan atau pengeluaran.',
+			'assets.invest.emptyHint' => 'Tambah investasi untuk yang sudah kamu punya; Catat pembelian bila uangnya keluar dari dompet.',
+			'assets.invest.loadError' => 'Investasi tidak bisa dimuat.',
+			'assets.invest.detailLoadError' => 'Investasi ini tidak bisa dimuat.',
+			'assets.invest.notFound' => 'Investasi ini sudah tidak ada.',
+			'assets.invest.staleNote' => ({required Object n}) => 'Nilai ${n} investasi sudah lebih dari 30 hari.',
+			'assets.invest.staleValue' => ({required Object n}) => 'Diperbarui ${n} hari lalu',
+			'assets.invest.updatedToday' => 'Diperbarui hari ini',
+			'assets.invest.neverUpdated' => 'Belum pernah diperbarui',
+			'assets.invest.marketValue' => 'Nilai pasar',
+			'assets.invest.cost' => 'Nilai perolehan',
+			'assets.invest.avgPrice' => 'Harga rata-rata',
+			'assets.invest.lastPrice' => 'Harga terakhir',
+			'assets.invest.quantity' => 'Jumlah',
+			'assets.invest.nominal' => 'Nominal',
+			'assets.invest.unrealized' => 'Untung/rugi belum terwujud',
+			'assets.invest.realized' => 'Untung/rugi terwujud',
+			'assets.invest.realizedGain' => 'Untung terwujud',
+			'assets.invest.realizedLoss' => 'Rugi terwujud',
+			'assets.invest.soldOut' => 'Terjual habis',
+			'assets.invest.closedBadge' => 'Selesai',
+			'assets.invest.positionNote' => 'Nilai perolehan termasuk biaya dan pajak. Untung/rugi tidak dihitung sebagai pemasukan atau pengeluaran.',
+			'assets.invest.positionHeading' => 'Posisi',
+			'assets.invest.summaryHeading' => 'Ringkasan',
+			'assets.invest.ownedLabel' => 'Dimiliki',
+			'assets.invest.estPrice' => 'Perkiraan harga',
+			'assets.invest.estPriceBuyCaption' => 'Dari nominal ÷ jumlah, termasuk biaya',
+			'assets.invest.estPriceSellCaption' => 'Dari nominal ÷ jumlah, sesudah biaya',
+			'assets.invest.suggestTotal' => 'Saran nominal',
+			'assets.invest.suggestCaption' => 'Jumlah × harga terakhir, belum termasuk biaya',
+			'assets.invest.use' => 'Pakai',
+			'assets.invest.recordsHeading' => 'Catatan beli dan jual',
+			'assets.invest.recordsEmpty' => 'Belum ada catatan beli atau jual.',
+			'assets.invest.seeInHistory' => 'Lihat semua di Riwayat',
+			'assets.invest.openingRow' => 'Sudah punya sebelumnya',
+			'assets.invest.valuesHeading' => 'Riwayat nilai',
+			'assets.invest.valuesEmpty' => 'Belum pernah diperbarui. Nilai pasar memakai nilai perolehan.',
+			'assets.invest.showAll' => 'Tampilkan semua',
+			'assets.invest.deleteValueLabel' => ({required Object date}) => 'Hapus nilai ${date}',
+			'assets.invest.valueDeleted' => ({required Object date}) => 'Nilai ${date} dihapus.',
+			'assets.invest.undo' => 'Urungkan',
+			'assets.invest.edit' => 'Ubah',
+			'assets.invest.delete' => 'Hapus investasi',
+			'assets.invest.deleteBlockedTitle' => 'Investasi ini masih punya catatan',
+			'assets.invest.deleteBlockedBody' => ({required Object n, required Object name}) => 'Ada ${n} catatan beli atau jual untuk ${name}. Hapus catatannya dulu di Riwayat; saldo dompetnya kembali seperti sebelum dicatat.',
+			'assets.invest.seeHistory' => 'Lihat di Riwayat',
+			'assets.invest.close' => 'Tutup',
+			'assets.invest.deleteConfirmTitle' => 'Hapus investasi ini?',
+			'assets.invest.deleteConfirmBody' => 'Investasi dan riwayat nilainya dihapus. Saldo dompet tidak berubah. Tidak bisa dibatalkan.',
+			'assets.invest.deleted' => 'Investasi dihapus.',
+			'assets.invest.formTitleNew' => 'Tambah investasi',
+			'assets.invest.formTitleEdit' => 'Ubah investasi',
+			'assets.invest.nameLabel' => 'Nama',
+			'assets.invest.nameHint' => 'Mis. BBCA, Reksa dana pasar uang, Emas Antam',
+			'assets.invest.typeLabel' => 'Jenis',
+			'assets.invest.type.stock' => 'Saham',
+			'assets.invest.type.mutualFund' => 'Reksa dana',
+			'assets.invest.type.bond' => 'Obligasi',
+			'assets.invest.type.gold' => 'Emas',
+			'assets.invest.type.other' => 'Lainnya',
+			'assets.invest.typeHelp.stock' => 'Jumlah dalam lot. 1 lot = 100 lembar.',
+			'assets.invest.typeHelp.mutualFund' => 'Jumlah dalam unit penyertaan.',
+			'assets.invest.typeHelp.bond' => 'Jumlah adalah nominal obligasi; harganya dalam persen dari nominal.',
+			'assets.invest.typeHelp.gold' => 'Jumlah dalam gram.',
+			'assets.invest.typeHelp.other' => 'Jumlah dalam unit.',
+			'assets.invest.typeLocked' => 'Jenis tidak bisa diubah karena sudah ada catatan atau riwayat nilai.',
+			'assets.invest.codeLabel' => 'Kode (opsional)',
+			'assets.invest.codeHint' => 'Mis. BBCA',
+			'assets.invest.ownedToggle' => 'Sudah punya sebelumnya',
+			'assets.invest.ownedToggleBody' => 'Catat yang sudah kamu miliki tanpa mengubah saldo dompet.',
+			'assets.invest.sinceLabel' => 'Sejak',
+			'assets.invest.costHelp' => 'Uang yang kamu keluarkan, termasuk biaya dan pajak.',
+			'assets.invest.ownedMissing' => 'Isi jumlah dan nilai perolehan, atau matikan Sudah punya.',
+			'assets.invest.openingTooSmall' => 'Terlalu kecil: sudah ada penjualan sesudah tanggal ini.',
+			'assets.invest.save' => 'Simpan investasi',
+			'assets.invest.saved' => 'Investasi tersimpan.',
+			'assets.invest.draftResumed' => 'Melanjutkan isian yang belum tersimpan.',
+			'assets.invest.discardDraft' => 'Buang draf',
+			'assets.invest.unit.lot' => 'lot',
+			'assets.invest.unit.unit' => 'unit',
+			'assets.invest.unit.gram' => 'gram',
+			'assets.invest.shares' => ({required Object n}) => '= ${n} lembar',
+			'assets.invest.price.perShare' => 'per lembar',
+			'assets.invest.price.perUnit' => 'per unit',
+			'assets.invest.price.perGram' => 'per gram',
+			'assets.invest.price.bondPercent' => '% dari nominal',
+			'assets.invest.sideBuy' => 'Pembelian',
+			'assets.invest.sideSell' => 'Penjualan',
+			'assets.invest.amountSellCaption' => 'Hasil bersih, sesudah biaya dan pajak',
+			'assets.invest.fromWallet' => 'Dari dompet',
+			'assets.invest.toWallet' => 'Ke dompet',
+			'assets.invest.noWallet' => 'Belum ada dompet aktif untuk investasi.',
+			'assets.invest.ownedHint' => ({required Object qty}) => '${qty} dimiliki',
+			'assets.invest.newInstrument' => 'Instrumen baru',
+			'assets.invest.pickExisting' => 'Pilih yang sudah ada',
+			'assets.invest.newNameLabel' => 'Nama instrumen',
+			'assets.invest.pickTitle' => 'Pilih instrumen',
+			'assets.invest.noneToSell' => 'Belum ada investasi untuk dicatat penjualannya.',
+			'assets.invest.switchToBuy' => 'Ganti ke Pembelian',
+			'assets.invest.statusOverSell' => ({required Object date, required Object qty}) => 'Melebihi yang dimiliki pada ${date} (${qty}).',
+			'assets.invest.sideLocked' => 'Untuk mengganti pembelian menjadi penjualan, hapus catatan ini lalu catat lagi.',
+			'assets.invest.editNegative' => 'Perubahan ini membuat jumlah investasi kurang dari yang sudah dijual sesudahnya.',
+			'assets.invest.buyRecorded' => ({required Object name}) => 'Pembelian ${name} dicatat.',
+			'assets.invest.sellRecorded' => ({required Object name}) => 'Penjualan ${name} dicatat.',
+			'assets.invest.qtyActive' => 'Papan angka mengisi jumlah',
+			'assets.invest.amountActive' => 'Papan angka mengisi nominal',
+			'assets.invest.bulk.title' => 'Perbarui nilai',
+			'assets.invest.bulk.dateLabel' => 'Tanggal nilai',
+			'assets.invest.bulk.intro' => 'Isi harga terbaru dari aplikasi sekuritas atau situs resminya. Yang dikosongkan tidak berubah.',
+			'assets.invest.bulk.replacesLabel' => 'Menggantikan nilai',
+			'assets.invest.bulk.replaces' => ({required Object date, required Object price}) => 'Menggantikan nilai ${date} (${price})',
+			'assets.invest.bulk.fillTotal' => 'Isi nilai total',
+			'assets.invest.bulk.fillPrice' => 'Isi harga',
+			'assets.invest.bulk.totalLabel' => 'Nilai total',
+			'assets.invest.bulk.priceLabel' => 'Harga',
+			'assets.invest.bulk.save' => ({required Object n}) => 'Simpan ${n} nilai',
+			'assets.invest.bulk.saveOne' => 'Simpan nilai',
+			'assets.invest.bulk.needOne' => 'Isi minimal satu harga.',
+			'assets.invest.bulk.saved' => ({required Object n}) => '${n} nilai diperbarui.',
+			'assets.invest.bulk.savedOne' => 'Nilai diperbarui.',
+			'assets.invest.bulk.saveError' => 'Nilai belum tersimpan. Coba lagi.',
 			_ => null,
 		};
 	}

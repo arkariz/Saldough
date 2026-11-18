@@ -220,6 +220,14 @@ harga baru, satu tanggal valuasi untuk semua (bawaan hari ini). Simpan membuat
 satu valuasi untuk setiap baris yang diisi; baris kosong tidak berubah. Layar
 yang sama dipakai B-101 sebagai pratinjau (kolom terisi dari Sheet).
 
+### 3.11a Saran harga di CATAT
+
+Catat pembelian/penjualan menampilkan harga dari valuasi terakhir instrumen
+dan menawarkan nominal = jumlah × harga itu (dibulatkan ke sen, belum termasuk
+biaya). Hanya saran: tidak disimpan dan tidak mengubah valuasi. Sumbernya
+selalu valuasi tersimpan, jadi harga dari Google Sheet (B-101) ikut tanpa
+jalur baru. (Permintaan pemilik 18 Nov 2026.)
+
 ### 3.12 Batas Gratis (P12)
 
 `EntitlementLimits.freeInstruments = 2` (Remote Config `free_instruments`),
@@ -279,4 +287,4 @@ divaluasi (keputusan 4c).
 ## 7. Revisi
 
 - 2026-11-18: dibuat (Proposed), lalu disetujui pemilik (Accepted) dengan
-  semua usul §6.
+  semua usul §6. §3.11a (saran harga) ditambahkan atas permintaan pemilik.

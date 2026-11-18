@@ -11,6 +11,7 @@ import 'package:saldough/core/presentation/widgets/app_action_snack_bar.dart';
 import 'package:saldough/features/transaction/presentation/bloc/transaction_state.dart';
 import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/shared/category/category.dart';
+import 'package:saldough/shared/investment/investment_presentation.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 import 'package:state_management/state_management.dart';

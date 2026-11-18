@@ -68,10 +68,20 @@ class HomeBalanceCard extends StatelessWidget {
         toggleLabel: AmountVisibility.hidden ? t.home.showAmounts : t.home.hideAmounts,
         onToggleHidden: AmountVisibility.toggle,
         caption: switch (layers) {
-          final l? when l.hasSavings => t.assets.homeLayers(
-            operational: AppMoneyText.format(l.operational, MoneyKind.balance),
-            savings: AppMoneyText.format(l.savings, MoneyKind.balance),
-          ),
+          // Lapis yang berisi, dipisah " · " (rupa B-97 §1.4).
+          final l? when l.hasSavings || l.investment != 0 => [
+            t.assets.layerAmount(
+              label: t.assets.layerOperational,
+              amount: AppMoneyText.format(l.operational, MoneyKind.balance),
+            ),
+            if (l.hasSavings)
+              t.assets.layerAmount(label: t.assets.layerSavings, amount: AppMoneyText.format(l.savings, MoneyKind.balance)),
+            if (l.investment != 0)
+              t.assets.layerAmount(
+                label: t.assets.layerInvestment,
+                amount: AppMoneyText.format(l.investment, MoneyKind.balance),
+              ),
+          ].join(' · '),
           _ => walletCount == 0 ? null : t.home.walletLink(count: walletCount),
         },
         stats: flow == null

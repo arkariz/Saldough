@@ -30,7 +30,7 @@ Widget _transactionTile(BuildContext context, Transaction transaction, {DsIconTi
   // Penyesuaian saldo: tile netral bertimbangan (rupa B-99).
   if (transaction is BalanceAdjustmentTransaction) return DsIconTile(icon: Symbols.balance_rounded, size: size);
   // Investasi: tile netral bergrafik (ADR-049 §3.3).
-  if (transaction is InvestmentTransaction) return DsIconTile(icon: Symbols.show_chart_rounded, size: size);
+  if (transaction is InvestmentTransaction) return DsIconTile.asset(asset: ClayIcons.chart, size: size);
   final txKind = switch (transaction) {
     IncomeTransaction() => TransactionKind.income,
     ExpenseTransaction() => TransactionKind.expense,

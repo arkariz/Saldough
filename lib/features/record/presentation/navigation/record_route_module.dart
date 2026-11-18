@@ -42,6 +42,8 @@ final class RecordRouteModule extends FeatureRouteModule {
           occurrenceRule: input.occurrenceRule,
           occurrenceDate: input.occurrenceDate,
           splitToGoals: input.splitToGoals,
+          investmentSide: input.investmentSide,
+          initialInstrumentId: input.initialInstrumentId,
           onSaved: input.onSaved,
         ),
       ),

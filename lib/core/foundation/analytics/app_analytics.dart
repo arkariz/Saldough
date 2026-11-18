@@ -130,6 +130,21 @@ abstract final class WealthEvents {
   /// Satu kali menabung dibagi ke beberapa tujuan (ADR-048 §9). [goals]:
   /// banyaknya tujuan yang ikut, tanpa nama atau nominal.
   static AnalyticsEvent goalSplitRecorded(int goals) => AnalyticsEvent('goal_split_recorded', {'goals': goals});
+
+  /// Instrumen baru (ADR-049 §3.13). [type]: jenis instrumen; [via]:
+  /// `existing` (Tambah investasi) atau `buy` (Instrumen baru di CATAT).
+  static AnalyticsEvent instrumentAdded(String type, String via) =>
+      AnalyticsEvent('instrument_added', {'type': type, 'via': via});
+
+  /// Beli atau jual investasi dicatat. [side]: `buy` atau `sell`.
+  static AnalyticsEvent investmentRecorded(String side) => AnalyticsEvent('investment_recorded', {'side': side});
+
+  /// Nilai investasi diperbarui. [via]: `single` atau `bulk`; [count] dikelompokkan
+  /// (`1`, `2-5`, `6+`), tanpa nama atau nominal.
+  static AnalyticsEvent valuationUpdated(int count, String via) => AnalyticsEvent('valuation_updated', {
+    'count_bucket': count <= 1 ? '1' : (count <= 5 ? '2-5' : '6+'),
+    'via': via,
+  });
 }
 
 /// Peristiwa rutin R1 (ADR-035 §7) dan R3 (ADR-037 §3.5), tanpa nominal.

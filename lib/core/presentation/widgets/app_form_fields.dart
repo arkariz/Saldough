@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/core/utils/formatters/money_input.dart';
 
 // Bidang formulir bersama lembar Anggaran dan Freelance (ADR-030 §3.5);
@@ -167,13 +168,30 @@ class AppFormMoneyField extends StatelessWidget {
 /// Kolom bilangan bulat positif (jumlah barang).
 class AppFormQuantityField extends StatelessWidget {
   /// Membuat [AppFormQuantityField].
-  const AppFormQuantityField({required this.controller, required this.onChanged, super.key});
+  const AppFormQuantityField({
+    required this.controller,
+    required this.onChanged,
+    this.decimals = 0,
+    this.unit,
+    this.hint = '1',
+    super.key,
+  });
 
   /// Pengendali teks.
   final TextEditingController controller;
 
   /// Dipanggil tiap teks berubah.
   final ValueChanged<String> onChanged;
+
+  /// Banyak angka desimal yang boleh diketik (rupa B-97 §9.1); 0 = bilangan
+  /// bulat empat digit seperti sebelumnya. Pemisah desimal mengikuti locale.
+  final int decimals;
+
+  /// Akhiran satuan, mis. "lot", "gram", atau "% dari nominal".
+  final String? unit;
+
+  /// Petunjuk saat kosong.
+  final String hint;
 
   /// Jumlah dari isi [controller], atau `null` kalau kosong/nol.
   static int? valueOf(TextEditingController controller) {
@@ -187,8 +205,10 @@ class AppFormQuantityField extends StatelessWidget {
     return AppFieldBox(
       child: TextField(
         controller: controller,
-        keyboardType: TextInputType.number,
-        inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(4)],
+        keyboardType: decimals > 0 ? const TextInputType.numberWithOptions(decimal: true) : TextInputType.number,
+        inputFormatters: decimals > 0
+            ? [_DecimalInputFormatter(decimals)]
+            : [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(4)],
         cursorColor: ds.colors.actionPrimary,
         style: ds.typography.amount.copyWith(color: ds.colors.textPrimary),
         onChanged: onChanged,
@@ -199,11 +219,30 @@ class AppFormQuantityField extends StatelessWidget {
           focusedBorder: InputBorder.none,
           isDense: true,
           contentPadding: const EdgeInsets.symmetric(vertical: 4),
-          hintText: '1',
+          hintText: hint,
           hintStyle: ds.typography.amount.copyWith(color: ds.colors.textMuted),
+          suffixText: unit,
+          suffixStyle: ds.typography.bodyMd.copyWith(color: ds.colors.textMuted),
         ),
       ),
     );
+  }
+}
+
+/// Angka dengan satu pemisah desimal locale dan paling banyak [decimals]
+/// angka di belakangnya; titik dan koma diterima sebagai pemisah desimal.
+class _DecimalInputFormatter extends TextInputFormatter {
+  _DecimalInputFormatter(this.decimals);
+
+  final int decimals;
+
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    final sep = MoneySeparators.decimal;
+    final text = newValue.text.replaceAll(RegExp('[.,]'), sep);
+    final pattern = RegExp('^\\d{0,12}(${RegExp.escape(sep)}\\d{0,$decimals})?\$');
+    if (!pattern.hasMatch(text)) return oldValue;
+    return newValue.copyWith(text: text);
   }
 }
 

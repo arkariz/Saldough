@@ -20,6 +20,7 @@ final class HomeState extends UiState<HomeState> {
     required this.isLoading,
     this.loadFailed = false,
     this.goalWalletIds = const {},
+    this.investmentValue = 0,
     super.effect,
   });
 
@@ -78,8 +79,11 @@ final class HomeState extends UiState<HomeState> {
   /// Dompet milik tujuan tabungan: lapis Tabungan (ADR-050).
   final Set<String> goalWalletIds;
 
+  /// Lapis Investasi: Σ nilai pasar instrumen Aktif (ADR-049 §3.10).
+  final int investmentValue;
+
   /// Total aset per lapis (ADR-050 §3.4).
-  WealthLayers get layers => WealthLayers.of(wallets, goalWalletIds: goalWalletIds);
+  WealthLayers get layers => WealthLayers.of(wallets, goalWalletIds: goalWalletIds, investment: investmentValue);
 
   /// Peta `id` → dompet, untuk baris transaksi.
   Map<String, Wallet> get walletsById => {for (final w in wallets) w.id: w};
@@ -96,6 +100,7 @@ final class HomeState extends UiState<HomeState> {
     isLoading: isLoading ?? this.isLoading,
     loadFailed: loadFailed ?? this.loadFailed,
     goalWalletIds: goalWalletIds,
+    investmentValue: investmentValue,
     effect: effect,
   );
 
@@ -111,5 +116,6 @@ final class HomeState extends UiState<HomeState> {
     isLoading,
     loadFailed,
     goalWalletIds,
+    investmentValue,
   ];
 }

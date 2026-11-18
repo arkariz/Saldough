@@ -169,6 +169,7 @@ class _Translations$record$en extends Translations$record$id {
 	@override String get kindExpense => 'Expense';
 	@override String get kindIncome => 'Income';
 	@override String get kindTransfer => 'Transfer';
+	@override String get kindInvestment => 'Investment';
 	@override String get categoryAddLabel => 'Add category';
 	@override String get draftCheckTitle => 'Check before recording';
 	@override late final _Translations$record$draftIssue$en draftIssue = _Translations$record$draftIssue$en._(_root);
@@ -1712,7 +1713,7 @@ class _Translations$assets$en extends Translations$assets$id {
 	@override String get layerSavings => 'Savings';
 	@override String get layerInvestment => 'Investments';
 	@override String heroCaption({required Object wallets, required Object goals}) => '${wallets} wallets · ${goals} goals';
-	@override String homeLayers({required Object operational, required Object savings}) => 'Wallets ${operational} · Savings ${savings}';
+	@override String layerAmount({required Object label, required Object amount}) => '${label} ${amount}';
 	@override late final _Translations$assets$goal$en goal = _Translations$assets$goal$en._(_root);
 	@override late final _Translations$assets$adjust$en adjust = _Translations$assets$adjust$en._(_root);
 	@override late final _Translations$assets$invest$en invest = _Translations$assets$invest$en._(_root);
@@ -2505,6 +2506,110 @@ class _Translations$assets$invest$en extends Translations$assets$invest$id {
 	@override String get walletLabel => 'Wallet';
 	@override String get detailNote => 'Money moved between a wallet and an investment. Not income or expense. Delete it to restore the wallet balance.';
 	@override String filterLabel({required Object count}) => 'Investments ${count}';
+	@override String get activeHeading => 'Active investments';
+	@override String get doneHeading => 'Closed';
+	@override String get spreadTitle => 'Investment spread';
+	@override String count({required Object n}) => '${n} investments';
+	@override String get add => 'Add investment';
+	@override String get recordBuy => 'Record purchase';
+	@override String get recordSell => 'Record sale';
+	@override String get updateValues => 'Update values';
+	@override String get update => 'Update';
+	@override String get emptyTitle => 'Track your investments';
+	@override String get emptyBody => 'Stocks, mutual funds, gold, or bonds. You update their value yourself, and they never count as income or expense.';
+	@override String get emptyHint => 'Use Add investment for what you already own; Record purchase when the money leaves a wallet.';
+	@override String get loadError => 'Investments couldn\'t be loaded.';
+	@override String get detailLoadError => 'This investment couldn\'t be loaded.';
+	@override String get notFound => 'This investment no longer exists.';
+	@override String staleNote({required Object n}) => '${n} investment values are over 30 days old.';
+	@override String staleValue({required Object n}) => 'Updated ${n} days ago';
+	@override String get updatedToday => 'Updated today';
+	@override String get neverUpdated => 'Never updated';
+	@override String get marketValue => 'Market value';
+	@override String get cost => 'Cost';
+	@override String get avgPrice => 'Average price';
+	@override String get lastPrice => 'Last price';
+	@override String get quantity => 'Quantity';
+	@override String get nominal => 'Face value';
+	@override String get unrealized => 'Unrealized gain/loss';
+	@override String get realized => 'Realized gain/loss';
+	@override String get realizedGain => 'Realized gain';
+	@override String get realizedLoss => 'Realized loss';
+	@override String get soldOut => 'Sold out';
+	@override String get closedBadge => 'Closed';
+	@override String get positionNote => 'Cost includes fees and taxes. Gains and losses never count as income or expense.';
+	@override String get positionHeading => 'Position';
+	@override String get summaryHeading => 'Summary';
+	@override String get ownedLabel => 'Owned';
+	@override String get estPrice => 'Estimated price';
+	@override String get estPriceBuyCaption => 'Amount ÷ quantity, fees included';
+	@override String get estPriceSellCaption => 'Amount ÷ quantity, after fees';
+	@override String get suggestTotal => 'Suggested amount';
+	@override String get suggestCaption => 'Quantity × last price, before fees';
+	@override String get use => 'Use';
+	@override String get recordsHeading => 'Purchases and sales';
+	@override String get recordsEmpty => 'No purchases or sales yet.';
+	@override String get seeInHistory => 'See all in History';
+	@override String get openingRow => 'Owned before';
+	@override String get valuesHeading => 'Value history';
+	@override String get valuesEmpty => 'Never updated. Market value uses the cost.';
+	@override String get showAll => 'Show all';
+	@override String deleteValueLabel({required Object date}) => 'Delete value of ${date}';
+	@override String valueDeleted({required Object date}) => 'Value of ${date} deleted.';
+	@override String get undo => 'Undo';
+	@override String get edit => 'Edit';
+	@override String get delete => 'Delete investment';
+	@override String get deleteBlockedTitle => 'This investment still has records';
+	@override String deleteBlockedBody({required Object name, required Object n}) => '${name} has ${n} purchase or sale records. Delete them in History first; the wallet balances go back to how they were.';
+	@override String get seeHistory => 'See in History';
+	@override String get close => 'Close';
+	@override String get deleteConfirmTitle => 'Delete this investment?';
+	@override String get deleteConfirmBody => 'The investment and its value history are deleted. Wallet balances don\'t change. This can\'t be undone.';
+	@override String get deleted => 'Investment deleted.';
+	@override String get formTitleNew => 'Add investment';
+	@override String get formTitleEdit => 'Edit investment';
+	@override String get nameLabel => 'Name';
+	@override String get nameHint => 'E.g. BBCA, Money market fund, Gold bar';
+	@override String get typeLabel => 'Type';
+	@override late final _Translations$assets$invest$type$en type = _Translations$assets$invest$type$en._(_root);
+	@override late final _Translations$assets$invest$typeHelp$en typeHelp = _Translations$assets$invest$typeHelp$en._(_root);
+	@override String get typeLocked => 'The type can\'t change once there are records or values.';
+	@override String get codeLabel => 'Ticker (optional)';
+	@override String get codeHint => 'E.g. BBCA';
+	@override String get ownedToggle => 'Already own it';
+	@override String get ownedToggleBody => 'Record what you own without changing any wallet balance.';
+	@override String get sinceLabel => 'Since';
+	@override String get costHelp => 'What you paid, including fees and taxes.';
+	@override String get ownedMissing => 'Fill in quantity and cost, or turn off Already own it.';
+	@override String get openingTooSmall => 'Too small: there were sales after this date.';
+	@override String get save => 'Save investment';
+	@override String get saved => 'Investment saved.';
+	@override String get draftResumed => 'Continuing your unsaved entry.';
+	@override String get discardDraft => 'Discard draft';
+	@override late final _Translations$assets$invest$unit$en unit = _Translations$assets$invest$unit$en._(_root);
+	@override String shares({required Object n}) => '= ${n} shares';
+	@override late final _Translations$assets$invest$price$en price = _Translations$assets$invest$price$en._(_root);
+	@override String get sideBuy => 'Purchase';
+	@override String get sideSell => 'Sale';
+	@override String get amountSellCaption => 'Net proceeds, after fees and taxes';
+	@override String get fromWallet => 'From wallet';
+	@override String get toWallet => 'To wallet';
+	@override String get noWallet => 'No active wallet for investments yet.';
+	@override String ownedHint({required Object qty}) => '${qty} owned';
+	@override String get newInstrument => 'New instrument';
+	@override String get pickExisting => 'Pick an existing one';
+	@override String get newNameLabel => 'Instrument name';
+	@override String get pickTitle => 'Choose instrument';
+	@override String get noneToSell => 'No investment to record a sale for yet.';
+	@override String get switchToBuy => 'Switch to Purchase';
+	@override String statusOverSell({required Object date, required Object qty}) => 'More than you owned on ${date} (${qty}).';
+	@override String get sideLocked => 'To turn a purchase into a sale, delete this record and record it again.';
+	@override String get editNegative => 'This change leaves the investment with less than was sold afterwards.';
+	@override String buyRecorded({required Object name}) => 'Purchase of ${name} recorded.';
+	@override String sellRecorded({required Object name}) => 'Sale of ${name} recorded.';
+	@override String get qtyActive => 'Keypad fills the quantity';
+	@override String get amountActive => 'Keypad fills the amount';
+	@override late final _Translations$assets$invest$bulk$en bulk = _Translations$assets$invest$bulk$en._(_root);
 }
 
 // Path: record.voice.failure
@@ -2639,6 +2744,83 @@ class _Translations$assets$goal$estimate$en extends Translations$assets$goal$est
 	@override String get footnote => 'From the average of the last 3 months. An estimate, not a promise.';
 	@override String get lockedTitle => 'See when it\'s reached';
 	@override String get lockedBody => 'Estimate when this goal is reached at your saving pace.';
+}
+
+// Path: assets.invest.type
+class _Translations$assets$invest$type$en extends Translations$assets$invest$type$id {
+	_Translations$assets$invest$type$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get stock => 'Stock';
+	@override String get mutualFund => 'Mutual fund';
+	@override String get bond => 'Bond';
+	@override String get gold => 'Gold';
+	@override String get other => 'Other';
+}
+
+// Path: assets.invest.typeHelp
+class _Translations$assets$invest$typeHelp$en extends Translations$assets$invest$typeHelp$id {
+	_Translations$assets$invest$typeHelp$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get stock => 'Quantity in lots. 1 lot = 100 shares.';
+	@override String get mutualFund => 'Quantity in fund units.';
+	@override String get bond => 'Quantity is the face value; the price is a percentage of it.';
+	@override String get gold => 'Quantity in grams.';
+	@override String get other => 'Quantity in units.';
+}
+
+// Path: assets.invest.unit
+class _Translations$assets$invest$unit$en extends Translations$assets$invest$unit$id {
+	_Translations$assets$invest$unit$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get lot => 'lot';
+	@override String get unit => 'units';
+	@override String get gram => 'g';
+}
+
+// Path: assets.invest.price
+class _Translations$assets$invest$price$en extends Translations$assets$invest$price$id {
+	_Translations$assets$invest$price$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get perShare => 'per share';
+	@override String get perUnit => 'per unit';
+	@override String get perGram => 'per gram';
+	@override String get bondPercent => '% of face value';
+}
+
+// Path: assets.invest.bulk
+class _Translations$assets$invest$bulk$en extends Translations$assets$invest$bulk$id {
+	_Translations$assets$invest$bulk$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Update values';
+	@override String get dateLabel => 'Value date';
+	@override String get intro => 'Enter the latest prices from your broker app or official site. Empty rows stay the same.';
+	@override String get replacesLabel => 'Replaces the value';
+	@override String replaces({required Object date, required Object price}) => 'Replaces the value of ${date} (${price})';
+	@override String get fillTotal => 'Enter total value';
+	@override String get fillPrice => 'Enter price';
+	@override String get totalLabel => 'Total value';
+	@override String get priceLabel => 'Price';
+	@override String save({required Object n}) => 'Save ${n} values';
+	@override String get saveOne => 'Save value';
+	@override String get needOne => 'Enter at least one price.';
+	@override String saved({required Object n}) => '${n} values updated.';
+	@override String get savedOne => 'Value updated.';
+	@override String get saveError => 'Values weren\'t saved. Try again.';
 }
 
 // Path: premium.paywall.messages.general
@@ -2849,6 +3031,7 @@ extension on TranslationsEn {
 			'record.kindExpense' => 'Expense',
 			'record.kindIncome' => 'Income',
 			'record.kindTransfer' => 'Transfer',
+			'record.kindInvestment' => 'Investment',
 			'record.categoryAddLabel' => 'Add category',
 			'record.draftCheckTitle' => 'Check before recording',
 			'record.draftIssue.amountMissing' => 'Couldn\'t read the amount. Enter it manually.',
@@ -3281,9 +3464,9 @@ extension on TranslationsEn {
 			'budget.detailHowTitle' => 'How budget items work',
 			'budget.unknownWallet' => 'Wallet not found',
 			'budget.totalPlannedLabel' => 'Planned total',
-			'budget.itemsRequiredHint' => 'Add at least one item. Spending is tracked per item, so a budget without items can\'t track anything.',
 			_ => null,
 		} ?? switch (path) {
+			'budget.itemsRequiredHint' => 'Add at least one item. Spending is tracked per item, so a budget without items can\'t track anything.',
 			'budget.walletUnchangedNote' => ({required Object wallet}) => '${wallet} balance unchanged',
 			'budget.itemKindLabel' => 'Item type',
 			'budget.itemKindExpense' => 'Expense',
@@ -3795,9 +3978,9 @@ extension on TranslationsEn {
 			'appearance.presets.matcha' => 'Matcha',
 			'appearance.presets.pink' => 'Pink',
 			'appearance.presets.taro' => 'Taro',
-			'appearance.presets.tanuki' => 'Tanuki',
 			_ => null,
 		} ?? switch (path) {
+			'appearance.presets.tanuki' => 'Tanuki',
 			'appearance.presets.laut' => 'Sea',
 			'discovery.payday.title' => ({required Object d}) => 'Payday on the ${d}?',
 			'discovery.payday.body' => ({required Object d}) => 'Start your financial month on day ${d} so Plan and Analysis follow your payday.',
@@ -4309,9 +4492,9 @@ extension on TranslationsEn {
 			'analysis.kind.income' => 'Income',
 			'analysis.empty.title' => 'Nothing to analyze yet',
 			'analysis.empty.body' => 'Record transactions to see where your money goes.',
-			'analysis.empty.cta' => 'Record a transaction',
 			_ => null,
 		} ?? switch (path) {
+			'analysis.empty.cta' => 'Record a transaction',
 			'analysis.emptyMonth' => ({required Object period}) => 'No expenses in ${period} yet.',
 			'analysis.error' => 'Couldn\'t load analysis. Pull down to try again.',
 			'analysis.donutSemantics' => ({required Object kind, required Object period, required Object parts}) => '${kind} ${period}: ${parts}',
@@ -4497,7 +4680,7 @@ extension on TranslationsEn {
 			'assets.layerSavings' => 'Savings',
 			'assets.layerInvestment' => 'Investments',
 			'assets.heroCaption' => ({required Object wallets, required Object goals}) => '${wallets} wallets · ${goals} goals',
-			'assets.homeLayers' => ({required Object operational, required Object savings}) => 'Wallets ${operational} · Savings ${savings}',
+			'assets.layerAmount' => ({required Object label, required Object amount}) => '${label} ${amount}',
 			'assets.goal.title' => 'Goals',
 			'assets.goal.create' => 'Create goal',
 			'assets.goal.saveMoney' => 'Add savings',
@@ -4567,6 +4750,137 @@ extension on TranslationsEn {
 			'assets.invest.walletLabel' => 'Wallet',
 			'assets.invest.detailNote' => 'Money moved between a wallet and an investment. Not income or expense. Delete it to restore the wallet balance.',
 			'assets.invest.filterLabel' => ({required Object count}) => 'Investments ${count}',
+			'assets.invest.activeHeading' => 'Active investments',
+			'assets.invest.doneHeading' => 'Closed',
+			'assets.invest.spreadTitle' => 'Investment spread',
+			'assets.invest.count' => ({required Object n}) => '${n} investments',
+			'assets.invest.add' => 'Add investment',
+			'assets.invest.recordBuy' => 'Record purchase',
+			'assets.invest.recordSell' => 'Record sale',
+			'assets.invest.updateValues' => 'Update values',
+			'assets.invest.update' => 'Update',
+			'assets.invest.emptyTitle' => 'Track your investments',
+			'assets.invest.emptyBody' => 'Stocks, mutual funds, gold, or bonds. You update their value yourself, and they never count as income or expense.',
+			'assets.invest.emptyHint' => 'Use Add investment for what you already own; Record purchase when the money leaves a wallet.',
+			'assets.invest.loadError' => 'Investments couldn\'t be loaded.',
+			'assets.invest.detailLoadError' => 'This investment couldn\'t be loaded.',
+			'assets.invest.notFound' => 'This investment no longer exists.',
+			'assets.invest.staleNote' => ({required Object n}) => '${n} investment values are over 30 days old.',
+			'assets.invest.staleValue' => ({required Object n}) => 'Updated ${n} days ago',
+			'assets.invest.updatedToday' => 'Updated today',
+			'assets.invest.neverUpdated' => 'Never updated',
+			'assets.invest.marketValue' => 'Market value',
+			'assets.invest.cost' => 'Cost',
+			'assets.invest.avgPrice' => 'Average price',
+			'assets.invest.lastPrice' => 'Last price',
+			'assets.invest.quantity' => 'Quantity',
+			'assets.invest.nominal' => 'Face value',
+			'assets.invest.unrealized' => 'Unrealized gain/loss',
+			'assets.invest.realized' => 'Realized gain/loss',
+			'assets.invest.realizedGain' => 'Realized gain',
+			'assets.invest.realizedLoss' => 'Realized loss',
+			'assets.invest.soldOut' => 'Sold out',
+			'assets.invest.closedBadge' => 'Closed',
+			'assets.invest.positionNote' => 'Cost includes fees and taxes. Gains and losses never count as income or expense.',
+			'assets.invest.positionHeading' => 'Position',
+			'assets.invest.summaryHeading' => 'Summary',
+			'assets.invest.ownedLabel' => 'Owned',
+			'assets.invest.estPrice' => 'Estimated price',
+			'assets.invest.estPriceBuyCaption' => 'Amount ÷ quantity, fees included',
+			'assets.invest.estPriceSellCaption' => 'Amount ÷ quantity, after fees',
+			'assets.invest.suggestTotal' => 'Suggested amount',
+			'assets.invest.suggestCaption' => 'Quantity × last price, before fees',
+			'assets.invest.use' => 'Use',
+			'assets.invest.recordsHeading' => 'Purchases and sales',
+			'assets.invest.recordsEmpty' => 'No purchases or sales yet.',
+			'assets.invest.seeInHistory' => 'See all in History',
+			'assets.invest.openingRow' => 'Owned before',
+			'assets.invest.valuesHeading' => 'Value history',
+			'assets.invest.valuesEmpty' => 'Never updated. Market value uses the cost.',
+			'assets.invest.showAll' => 'Show all',
+			'assets.invest.deleteValueLabel' => ({required Object date}) => 'Delete value of ${date}',
+			'assets.invest.valueDeleted' => ({required Object date}) => 'Value of ${date} deleted.',
+			'assets.invest.undo' => 'Undo',
+			'assets.invest.edit' => 'Edit',
+			'assets.invest.delete' => 'Delete investment',
+			'assets.invest.deleteBlockedTitle' => 'This investment still has records',
+			'assets.invest.deleteBlockedBody' => ({required Object name, required Object n}) => '${name} has ${n} purchase or sale records. Delete them in History first; the wallet balances go back to how they were.',
+			'assets.invest.seeHistory' => 'See in History',
+			'assets.invest.close' => 'Close',
+			'assets.invest.deleteConfirmTitle' => 'Delete this investment?',
+			'assets.invest.deleteConfirmBody' => 'The investment and its value history are deleted. Wallet balances don\'t change. This can\'t be undone.',
+			'assets.invest.deleted' => 'Investment deleted.',
+			'assets.invest.formTitleNew' => 'Add investment',
+			'assets.invest.formTitleEdit' => 'Edit investment',
+			'assets.invest.nameLabel' => 'Name',
+			'assets.invest.nameHint' => 'E.g. BBCA, Money market fund, Gold bar',
+			'assets.invest.typeLabel' => 'Type',
+			'assets.invest.type.stock' => 'Stock',
+			'assets.invest.type.mutualFund' => 'Mutual fund',
+			'assets.invest.type.bond' => 'Bond',
+			'assets.invest.type.gold' => 'Gold',
+			'assets.invest.type.other' => 'Other',
+			'assets.invest.typeHelp.stock' => 'Quantity in lots. 1 lot = 100 shares.',
+			'assets.invest.typeHelp.mutualFund' => 'Quantity in fund units.',
+			'assets.invest.typeHelp.bond' => 'Quantity is the face value; the price is a percentage of it.',
+			'assets.invest.typeHelp.gold' => 'Quantity in grams.',
+			'assets.invest.typeHelp.other' => 'Quantity in units.',
+			'assets.invest.typeLocked' => 'The type can\'t change once there are records or values.',
+			'assets.invest.codeLabel' => 'Ticker (optional)',
+			'assets.invest.codeHint' => 'E.g. BBCA',
+			'assets.invest.ownedToggle' => 'Already own it',
+			'assets.invest.ownedToggleBody' => 'Record what you own without changing any wallet balance.',
+			'assets.invest.sinceLabel' => 'Since',
+			'assets.invest.costHelp' => 'What you paid, including fees and taxes.',
+			'assets.invest.ownedMissing' => 'Fill in quantity and cost, or turn off Already own it.',
+			'assets.invest.openingTooSmall' => 'Too small: there were sales after this date.',
+			'assets.invest.save' => 'Save investment',
+			'assets.invest.saved' => 'Investment saved.',
+			'assets.invest.draftResumed' => 'Continuing your unsaved entry.',
+			'assets.invest.discardDraft' => 'Discard draft',
+			'assets.invest.unit.lot' => 'lot',
+			'assets.invest.unit.unit' => 'units',
+			'assets.invest.unit.gram' => 'g',
+			'assets.invest.shares' => ({required Object n}) => '= ${n} shares',
+			'assets.invest.price.perShare' => 'per share',
+			'assets.invest.price.perUnit' => 'per unit',
+			'assets.invest.price.perGram' => 'per gram',
+			'assets.invest.price.bondPercent' => '% of face value',
+			'assets.invest.sideBuy' => 'Purchase',
+			'assets.invest.sideSell' => 'Sale',
+			'assets.invest.amountSellCaption' => 'Net proceeds, after fees and taxes',
+			'assets.invest.fromWallet' => 'From wallet',
+			'assets.invest.toWallet' => 'To wallet',
+			'assets.invest.noWallet' => 'No active wallet for investments yet.',
+			'assets.invest.ownedHint' => ({required Object qty}) => '${qty} owned',
+			'assets.invest.newInstrument' => 'New instrument',
+			'assets.invest.pickExisting' => 'Pick an existing one',
+			'assets.invest.newNameLabel' => 'Instrument name',
+			'assets.invest.pickTitle' => 'Choose instrument',
+			'assets.invest.noneToSell' => 'No investment to record a sale for yet.',
+			'assets.invest.switchToBuy' => 'Switch to Purchase',
+			'assets.invest.statusOverSell' => ({required Object date, required Object qty}) => 'More than you owned on ${date} (${qty}).',
+			'assets.invest.sideLocked' => 'To turn a purchase into a sale, delete this record and record it again.',
+			'assets.invest.editNegative' => 'This change leaves the investment with less than was sold afterwards.',
+			'assets.invest.buyRecorded' => ({required Object name}) => 'Purchase of ${name} recorded.',
+			'assets.invest.sellRecorded' => ({required Object name}) => 'Sale of ${name} recorded.',
+			'assets.invest.qtyActive' => 'Keypad fills the quantity',
+			'assets.invest.amountActive' => 'Keypad fills the amount',
+			'assets.invest.bulk.title' => 'Update values',
+			'assets.invest.bulk.dateLabel' => 'Value date',
+			'assets.invest.bulk.intro' => 'Enter the latest prices from your broker app or official site. Empty rows stay the same.',
+			'assets.invest.bulk.replacesLabel' => 'Replaces the value',
+			'assets.invest.bulk.replaces' => ({required Object date, required Object price}) => 'Replaces the value of ${date} (${price})',
+			'assets.invest.bulk.fillTotal' => 'Enter total value',
+			'assets.invest.bulk.fillPrice' => 'Enter price',
+			'assets.invest.bulk.totalLabel' => 'Total value',
+			'assets.invest.bulk.priceLabel' => 'Price',
+			'assets.invest.bulk.save' => ({required Object n}) => 'Save ${n} values',
+			'assets.invest.bulk.saveOne' => 'Save value',
+			'assets.invest.bulk.needOne' => 'Enter at least one price.',
+			'assets.invest.bulk.saved' => ({required Object n}) => '${n} values updated.',
+			'assets.invest.bulk.savedOne' => 'Value updated.',
+			'assets.invest.bulk.saveError' => 'Values weren\'t saved. Try again.',
 			_ => null,
 		};
 	}

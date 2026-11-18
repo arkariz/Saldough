@@ -161,6 +161,55 @@ final class SplitTransferRecorded extends RecordEvent {
   final String note;
 }
 
+/// Catat pembelian atau penjualan investasi (ADR-049 §3.3, §3.7). Tanpa
+/// [instrumentId], instrumen baru [newInstrumentName]/[newInstrumentType]
+/// dibuat bersama transaksinya. [activeLimit] `null` = Plus.
+final class InvestmentRecorded extends RecordEvent {
+  /// Membuat [InvestmentRecorded].
+  const InvestmentRecorded({
+    required this.walletId,
+    required this.side,
+    required this.quantity,
+    required this.amount,
+    required this.date,
+    required this.note,
+    this.instrumentId,
+    this.newInstrumentName,
+    this.newInstrumentType,
+    this.activeLimit,
+  });
+
+  /// Dompet sumber (beli) atau tujuan (jual).
+  final String walletId;
+
+  /// Beli atau jual.
+  final InvestmentSide side;
+
+  /// Jumlah berskala, atau nominal obligasi.
+  final int quantity;
+
+  /// Total dibayar atau hasil bersih, sen.
+  final int amount;
+
+  /// Tanggal catatan.
+  final DateTime date;
+
+  /// Catatan.
+  final String note;
+
+  /// Instrumen yang sudah ada, atau `null` untuk instrumen baru.
+  final String? instrumentId;
+
+  /// Nama instrumen baru.
+  final String? newInstrumentName;
+
+  /// Jenis instrumen baru.
+  final InstrumentType? newInstrumentType;
+
+  /// Batas instrumen Aktif Gratis.
+  final int? activeLimit;
+}
+
 /// **Jadikan Rutin** (T-15.3, J2): rutin baru dari isian [recorded] yang
 /// menautkan [source] sebagai kemunculan pertamanya. Tidak ada transaksi
 /// baru, sehingga tidak ada yang tercatat dua kali.

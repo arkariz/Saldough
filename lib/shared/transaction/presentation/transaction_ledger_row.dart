@@ -62,7 +62,7 @@ class TransactionLedgerRow extends StatelessWidget {
       leading: transaction is BalanceAdjustmentTransaction
           ? const DsIconTile(icon: Symbols.balance_rounded)
           : transaction is InvestmentTransaction
-          ? const DsIconTile(icon: Symbols.show_chart_rounded)
+          ? DsIconTile.asset(asset: ClayIcons.chart)
           : clay != null
           ? DsIconTile.asset(
               asset: clay,

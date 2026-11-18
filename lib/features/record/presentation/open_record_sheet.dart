@@ -8,6 +8,7 @@ import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/features/record/presentation/navigation/record_route_keys.dart';
 import 'package:saldough/features/record/presentation/widgets/expense_form_sheet.dart';
 import 'package:saldough/features/record/presentation/widgets/income_form_sheet.dart';
+import 'package:saldough/features/record/presentation/widgets/investment_form_sheet.dart';
 import 'package:saldough/features/record/presentation/widgets/record_choice.dart';
 import 'package:saldough/features/record/presentation/widgets/record_form_host.dart';
 import 'package:saldough/features/record/presentation/widgets/record_saving_dialog.dart';
@@ -95,6 +96,8 @@ Future<bool> openRecordSheet(
   RecurringRule? occurrenceRule,
   DateTime? occurrenceDate,
   bool splitToGoals = false,
+  InvestmentSide? investmentSide,
+  String? initialInstrumentId,
   void Function(RecordSavedInfo info)? onSaved,
 }) async {
   final recordDraft = switch ((makeRecurringFrom, editRule)) {
@@ -208,6 +211,15 @@ Future<bool> openRecordSheet(
             goalWalletIds: bloc.state.transferOnlyWalletIds,
             rememberedSplit: bloc.state.rememberedSplit,
             startInSplit: splitToGoals,
+          ),
+          RecordChoice.investment => InvestmentFormSheet(
+            wallets: bloc.state.incomeExpenseWallets,
+            instruments: bloc.state.instruments,
+            trades: bloc.state.investmentTrades,
+            kindSwitcher: kindSwitcher,
+            initialSide: investmentSide,
+            initialInstrumentId: initialInstrumentId,
+            initialWalletId: initialWalletId,
           ),
         };
       },

@@ -49,7 +49,7 @@ class _RecordFormHostState extends State<RecordFormHost> {
   }
 }
 
-/// Pengalih tiga segmen Keluar | Masuk | Transfer — pengganti lembar pilihan
+/// Pengalih empat segmen Keluar | Masuk | Transfer | Investasi — pengganti lembar pilihan
 /// CATAT (UX-1). Keluar lebih dulu karena paling sering dicatat.
 class RecordKindSwitcher extends StatelessWidget {
   /// Membuat [RecordKindSwitcher].
@@ -70,9 +70,11 @@ class RecordKindSwitcher extends StatelessWidget {
         label: t.record.kindSwitcherLabel,
         child: DsSegmentedPill<RecordChoice>(
           segments: [
-            DsSegment(value: RecordChoice.expense, label: t.record.kindExpense, icon: Icons.arrow_outward),
-            DsSegment(value: RecordChoice.income, label: t.record.kindIncome, icon: Icons.south_west),
-            DsSegment(value: RecordChoice.transfer, label: t.record.kindTransfer, icon: Icons.sync_alt),
+            // Empat segmen tanpa ikon supaya label muat di 360dp (rupa B-97 §4.1).
+            DsSegment(value: RecordChoice.expense, label: t.record.kindExpense),
+            DsSegment(value: RecordChoice.income, label: t.record.kindIncome),
+            DsSegment(value: RecordChoice.transfer, label: t.record.kindTransfer),
+            DsSegment(value: RecordChoice.investment, label: t.record.kindInvestment),
           ],
           selected: selected,
           onChanged: onChanged,

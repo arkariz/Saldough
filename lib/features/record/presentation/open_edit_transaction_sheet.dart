@@ -3,11 +3,13 @@ import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/features/record/presentation/widgets/expense_form_sheet.dart';
 import 'package:saldough/features/record/presentation/widgets/income_form_sheet.dart';
+import 'package:saldough/features/record/presentation/widgets/investment_form_sheet.dart';
 import 'package:saldough/features/record/presentation/widgets/transfer_form_sheet.dart';
 import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
+import 'package:state_management/state_management.dart';
 
 /// Membuka formulir CATAT yang SAMA dengan mode sunting untuk [transaction]
 /// (FR-TXN-005) dan mengembalikan transaksi hasil sunting, atau `null` kalau
@@ -42,8 +44,8 @@ Future<Transaction?> openEditTransactionSheet(
 }) async {
   // Penyesuaian saldo hanya bisa dihapus, tidak disunting (ADR-047 §3.5).
   if (transaction is BalanceAdjustmentTransaction) return null;
-  // Investasi disunting lewat formulirnya sendiri (T-31.6), belum di sini.
-  if (transaction is InvestmentTransaction) return null;
+  // Investasi memakai formulir CATAT jenis Investasi (rupa B-97 §4.6).
+  if (transaction is InvestmentTransaction) return _editInvestment(context, transaction, wallets);
   final baseWallets = _withoutEffectOf(transaction, wallets);
   final result = await showFullScreenSheet<Object>(
     context,
@@ -150,3 +152,39 @@ int _effectOn(Transaction transaction, String walletId) => switch (transaction) 
   BalanceAdjustmentTransaction(walletId: final id, :final signedAmount) => id == walletId ? signedAmount : 0,
   InvestmentTransaction(walletId: final id, :final signedAmount) => id == walletId ? signedAmount : 0,
 };
+
+/// Sunting catatan investasi: sisi terkunci, tanpa instrumen baru; hasilnya
+/// mempertahankan `id` asal. Penjaga posisi di `RecordTransaction` menolak
+/// perubahan yang membuat jumlah negatif (ADR-049 §3.6).
+Future<Transaction?> _editInvestment(
+  BuildContext context,
+  InvestmentTransaction transaction,
+  List<Wallet> wallets,
+) async {
+  final bloc = context.read<RecordBloc>()..add(const RecordWalletsLoaded());
+  await bloc.stream.firstWhere((s) => !s.isLoading);
+  if (!context.mounted) return null;
+  final result = await showFullScreenSheet<Object>(
+    context,
+    builder: (_) => InvestmentFormSheet(
+      wallets: _withoutEffectOf(transaction, wallets),
+      instruments: bloc.state.instruments,
+      trades: bloc.state.investmentTrades,
+      initial: transaction,
+    ),
+  );
+  return switch (result) {
+    InvestmentRecorded(:final walletId, :final quantity, :final amount, :final date, :final note, :final instrumentId?) =>
+      InvestmentTransaction(
+        id: transaction.id,
+        date: date,
+        amount: amount,
+        note: note,
+        walletId: walletId,
+        instrumentId: instrumentId,
+        side: transaction.side,
+        quantity: quantity,
+      ),
+    _ => null,
+  };
+}

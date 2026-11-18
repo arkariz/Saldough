@@ -7,6 +7,7 @@ import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/features/home/domain/budget_overview_source.dart';
 import 'package:saldough/features/home/domain/freelance_overview_source.dart';
 import 'package:saldough/features/home/presentation/bloc/home_state.dart';
+import 'package:saldough/shared/investment/investment.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 import 'package:state_management/state_management.dart';
@@ -35,6 +36,7 @@ final class HomeBloc extends Bloc<HomeEvent, HomeState> {
     required LedgerChanges ledgerChanges,
     DateTime Function()? now,
     this._transferOnlyWallets = const NoTransferOnlyWallets(),
+    this._investmentRepository,
   }) : _now = now ?? DateTime.now,
        super(HomeState.initial()) {
     on<HomeStarted>(_onStarted);
@@ -63,6 +65,17 @@ final class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   /// Dompet milik tujuan tabungan, untuk lapis Total aset (ADR-050 §3.4).
   final TransferOnlyWallets _transferOnlyWallets;
+
+  /// Instrumen untuk lapis Investasi (ADR-049 §3.10); `null` di uji lama.
+  final InvestmentRepository? _investmentRepository;
+
+  /// Lapis Investasi, 0 bila tidak tersedia atau gagal dibaca.
+  Future<int> _investmentValue() async {
+    final repository = _investmentRepository;
+    if (repository == null) return 0;
+    final result = await LoadInstrumentSummaries(investments: repository, transactions: _transactionRepository)();
+    return investmentLayerValue(result.getOrElse((_) => const []));
+  }
 
   Future<void> _onStarted(HomeStarted event, Emitter<HomeState> emit) async {
     emit(state.copyWith(isLoading: true, loadFailed: false));
@@ -100,6 +113,7 @@ final class HomeBloc extends Bloc<HomeEvent, HomeState> {
             freelance: freelance,
             isLoading: false,
             goalWalletIds: await _transferOnlyWallets.walletIds(),
+            investmentValue: await _investmentValue(),
           ),
         );
       default:

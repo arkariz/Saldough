@@ -68,6 +68,7 @@ import 'package:saldough/features/freelance/domain/repositories/freelance_reposi
 import 'package:saldough/features/freelance/presentation/navigation/freelance_route_module.dart';
 import 'package:saldough/features/home/domain/budget_overview_source.dart';
 import 'package:saldough/features/home/domain/freelance_overview_source.dart';
+import 'package:saldough/features/investment/presentation/navigation/investment_route_module.dart';
 import 'package:saldough/features/notification_capture/di/notification_capture_module.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_gateway.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_store.dart';
@@ -133,6 +134,7 @@ abstract final class RootModule {
     RecordRouteModule(),
     RecurringRouteModule(),
     SavingsGoalRouteModule(),
+    InvestmentRouteModule(),
     TransactionRouteModule(),
     VoiceCaptureRouteModule(),
     WalletRouteModule(),

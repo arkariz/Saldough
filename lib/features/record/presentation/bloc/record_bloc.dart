@@ -15,6 +15,8 @@ import 'package:saldough/features/record/domain/record_defaults.dart';
 import 'package:saldough/features/record/presentation/bloc/record_state.dart';
 import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/shared/category/category.dart';
+import 'package:saldough/shared/investment/investment.dart';
+import 'package:saldough/shared/investment/investment_presentation.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/savings_goal/savings_goal.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
@@ -42,6 +44,7 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
     this._financialMonth,
     this._savingsGoals,
     this._splitMemory,
+    this._investments,
     this._now = DateTime.now,
   }) : super(RecordState.initial()) {
     on<RecordWalletsLoaded>(_onWalletsLoaded);
@@ -49,6 +52,7 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
     on<ExpenseRecorded>(_onExpenseRecorded);
     on<TransferRecorded>(_onTransferRecorded);
     on<SplitTransferRecorded>(_onSplitTransferRecorded);
+    on<InvestmentRecorded>(_onInvestmentRecorded);
     on<RecordMadeRecurring>(_onMadeRecurring);
     on<RecordRuleEdited>(_onRuleEdited);
     on<RecordOccurrenceRecorded>(_onOccurrenceRecorded);
@@ -71,6 +75,23 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
 
   /// Persen pembagian terakhir (ADR-048 §9.3).
   final GoalSplitMemory? _splitMemory;
+
+  /// Instrumen untuk jenis Investasi (ADR-049); `null` di lingkup tanpanya.
+  final InvestmentRepository? _investments;
+
+  /// Instrumen dan transaksi investasi. Riwayat penuh hanya dibaca bila
+  /// sudah ada instrumen (NFR-PERF-002).
+  Future<({List<InstrumentSummary> instruments, List<InvestmentTransaction> trades})> _loadInvestments() async {
+    final repository = _investments;
+    const none = (instruments: <InstrumentSummary>[], trades: <InvestmentTransaction>[]);
+    if (repository == null) return none;
+    final listed = (await repository.listInstruments()).getOrElse((_) => const []);
+    if (listed.isEmpty) return none;
+    final valuations = (await repository.listValuations()).getOrElse((_) => const []);
+    final ledger = (await _transactionRepository.listAllTransactions()).getOrElse((_) => const []);
+    final trades = [for (final t in ledger) if (t is InvestmentTransaction) t];
+    return (instruments: [for (final i in listed) InstrumentSummary.of(i, trades, valuations)], trades: trades);
+  }
   final DateTime Function() _now;
 
   /// Jumlah transaksi terbaru yang dibaca untuk isian bawaan.
@@ -96,6 +117,7 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
         final activeIds = {for (final w in active) w.id};
         final goals = (await _savingsGoals?.listGoals())?.getOrElse((_) => const []) ?? const <SavingsGoal>[];
         final remembered = (await _splitMemory?.read())?.getOrElse((_) => const {}) ?? const <String, int>{};
+        final investments = await _loadInvestments();
         emit(
           state.copyWith(
             transferOnlyWalletIds: transferOnly,
@@ -104,6 +126,8 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
                 if (g.status == SavingsGoalStatus.active && activeIds.contains(g.walletId)) g,
             ],
             rememberedSplit: remembered,
+            instruments: investments.instruments,
+            investmentTrades: investments.trades,
             wallets: active,
             budgetItems: budgetItems,
             defaults: RecordDefaults.from(recent, activeWalletIds: {for (final w in active) w.id}),
@@ -195,6 +219,68 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
             saveCount: state.saveCount + 1,
             rememberedSplit: remembered,
             effect: _effectSaved(t.record.splitSavedMessage(n: transfers.length)),
+          ),
+        );
+    }
+  }
+
+  Future<void> _onInvestmentRecorded(InvestmentRecorded event, Emitter<RecordState> emit) async {
+    final repository = _investments;
+    if (repository == null) return;
+    final id = _newId();
+    final newInstrument = event.instrumentId == null
+        ? Instrument(
+            id: '$id-i',
+            name: event.newInstrumentName ?? '',
+            type: event.newInstrumentType ?? InstrumentType.other,
+            createdAt: _now(),
+          )
+        : null;
+    final instrumentId = event.instrumentId ?? newInstrument!.id;
+    final transaction = InvestmentTransaction(
+      id: id,
+      date: event.date,
+      amount: event.amount,
+      note: event.note,
+      walletId: event.walletId,
+      instrumentId: instrumentId,
+      side: event.side,
+      quantity: event.quantity,
+    );
+    final summaries = LoadInstrumentSummaries(investments: repository, transactions: _transactionRepository);
+    final record = RecordInvestment(
+      recordTransaction: _recordTransaction,
+      create: CreateInstrument(investments: repository, summaries: summaries),
+      summaries: summaries,
+    );
+    emit(state.copyWith(isSaving: true));
+    switch (await record(transaction, newInstrument: newInstrument, activeLimit: event.activeLimit)) {
+      case Left(value: final failure):
+        final message = investmentFailureMessage(failure);
+        emit(
+          state.copyWith(
+            isSaving: false,
+            effect: message == null ? _effectError(failure) : ShowSnackBarEffect(message: message, severity: .error),
+          ),
+        );
+      case Right():
+        if (newInstrument != null) {
+          AppAnalytics.log(WealthEvents.instrumentAdded(newInstrument.type.name, 'buy'));
+        }
+        AppAnalytics.log(WealthEvents.investmentRecorded(event.side.name));
+        final name =
+            newInstrument?.name ??
+            state.instruments.where((s) => s.instrument.id == instrumentId).firstOrNull?.instrument.name ??
+            '';
+        emit(
+          state.copyWith(
+            isSaving: false,
+            saveCount: state.saveCount + 1,
+            effect: _effectSaved(
+              event.side == InvestmentSide.buy
+                  ? t.assets.invest.buyRecorded(name: name)
+                  : t.assets.invest.sellRecorded(name: name),
+            ),
           ),
         );
     }

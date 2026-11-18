@@ -1,3 +1,4 @@
+import 'package:saldough/shared/investment/investment.dart';
 import 'package:saldough/shared/savings_goal/savings_goal.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 import 'package:saldough/shared/wealth/wealth.dart';
@@ -11,6 +12,8 @@ final class WalletState extends UiState<WalletState> {
     required this.isLoading,
     this.loadFailed = false,
     this.goals = const [],
+    this.instruments = const [],
+    this.investmentsFailed = false,
     super.effect,
   });
 
@@ -31,12 +34,30 @@ final class WalletState extends UiState<WalletState> {
   /// Tujuan tabungan (ADR-048), untuk bagian Tujuan dan lencana dompet.
   final List<SavingsGoal> goals;
 
+  /// Ringkasan instrumen investasi (ADR-049 §3.10), urut dibuat.
+  final List<InstrumentSummary> instruments;
+
+  /// Pembacaan investasi terakhir gagal: segmen Investasi menampilkan galat
+  /// dan lapis Investasi tidak dihitung (rupa B-97 §1.3).
+  final bool investmentsFailed;
+
+  /// Instrumen Aktif, nilai pasar terbesar dulu (rupa B-97 §1.2).
+  List<InstrumentSummary> get activeInstruments =>
+      instruments.where((s) => s.position.isActive).toList()..sort((a, b) => b.marketValue.compareTo(a.marketValue));
+
+  /// Instrumen Selesai.
+  List<InstrumentSummary> get closedInstruments => instruments.where((s) => !s.position.isActive).toList();
+
   /// Id dompet milik tujuan (ADR-048 §8.3): tidak tampil di grid dompet dan
   /// daftar nonaktif.
   Set<String> get goalWallets => goalWalletIds(goals);
 
   /// Total aset per lapis (ADR-050).
-  WealthLayers get layers => WealthLayers.of(wallets, goalWalletIds: goalWallets);
+  WealthLayers get layers => WealthLayers.of(
+    wallets,
+    goalWalletIds: goalWallets,
+    investment: investmentsFailed ? 0 : investmentLayerValue(instruments),
+  );
 
   /// Dompet aktif yang bukan milik tujuan: lapis Dana operasional (ADR-050).
   List<Wallet> get operationalWallets =>
@@ -59,6 +80,8 @@ final class WalletState extends UiState<WalletState> {
     bool? isLoading,
     bool? loadFailed,
     List<SavingsGoal>? goals,
+    List<InstrumentSummary>? instruments,
+    bool? investmentsFailed,
     UiEffect? effect,
   }) {
     return WalletState(
@@ -66,10 +89,12 @@ final class WalletState extends UiState<WalletState> {
       isLoading: isLoading ?? this.isLoading,
       loadFailed: loadFailed ?? this.loadFailed,
       goals: goals ?? this.goals,
+      instruments: instruments ?? this.instruments,
+      investmentsFailed: investmentsFailed ?? this.investmentsFailed,
       effect: effect,
     );
   }
 
   @override
-  List<Object?> get props => [wallets, isLoading, loadFailed, goals];
+  List<Object?> get props => [wallets, isLoading, loadFailed, goals, instruments, investmentsFailed];
 }

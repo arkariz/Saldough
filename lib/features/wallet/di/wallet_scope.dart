@@ -1,6 +1,7 @@
 import 'package:di/di.dart';
 import 'package:saldough/features/wallet/presentation/bloc/wallet_activity_bloc.dart';
 import 'package:saldough/features/wallet/presentation/bloc/wallet_bloc.dart';
+import 'package:saldough/shared/investment/investment.dart';
 import 'package:saldough/shared/savings_goal/savings_goal.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
@@ -21,6 +22,10 @@ final class WalletScope extends IsolatedScope {
       ..registerSingleton<TransactionRepository>(parent<TransactionRepository>())
       ..registerSingleton<LedgerChanges>(parent<LedgerChanges>())
       ..registerSingleton<SavingsGoalRepository>(parent<SavingsGoalRepository>());
+    // Investasi (ADR-049); sebagian uji tidak menyediakannya.
+    if (parent.isRegistered<InvestmentRepository>()) {
+      c.registerSingleton<InvestmentRepository>(parent<InvestmentRepository>());
+    }
   }
 
   @override
@@ -32,6 +37,7 @@ final class WalletScope extends IsolatedScope {
           walletRepository: c<WalletRepository>(),
           transactionRepository: c<TransactionRepository>(),
           goalRepository: c<SavingsGoalRepository>(),
+          investmentRepository: c.isRegistered<InvestmentRepository>() ? c<InvestmentRepository>() : null,
           recordTransaction: RecordTransaction(
             transferOnlyWallets: parent.isRegistered<TransferOnlyWallets>() ? parent<TransferOnlyWallets>() : const NoTransferOnlyWallets(),
             ledgerChanges: c<LedgerChanges>(),

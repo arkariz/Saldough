@@ -168,10 +168,13 @@ class TransactionDetailPage extends StatelessWidget {
                   const SizedBox(height: 16),
                   DsButton.danger(label: t.transaction.deleteAction, expand: true, onPressed: () => _delete(context)),
                 ]
-                // Investasi: sunting lewat CATAT menyusul (T-31.6); kini hapus saja.
+                // Investasi: Ubah lewat CATAT jenis Investasi (rupa B-97 §4.6),
+                // tanpa Catat lagi atau Jadikan rutin.
                 else if (transaction is InvestmentTransaction) ...[
                   _ManualNote(text: t.assets.invest.detailNote),
                   const SizedBox(height: 16),
+                  DsButton(label: t.transaction.editAction, expand: true, onPressed: () => _edit(context, state)),
+                  const SizedBox(height: 8),
                   DsButton.danger(label: t.transaction.deleteAction, expand: true, onPressed: () => _delete(context)),
                 ] else ...[
                   _ManualNote(text: t.transaction.detailManualNote),

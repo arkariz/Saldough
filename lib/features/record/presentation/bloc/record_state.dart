@@ -1,6 +1,8 @@
 import 'package:saldough/features/record/domain/record_defaults.dart';
 import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
+import 'package:saldough/shared/investment/investment.dart';
 import 'package:saldough/shared/savings_goal/savings_goal.dart';
+import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 import 'package:state_management/state_management.dart';
 
@@ -18,6 +20,8 @@ final class RecordState extends UiState<RecordState> {
     this.transferOnlyWalletIds = const {},
     this.activeGoals = const [],
     this.rememberedSplit = const {},
+    this.instruments = const [],
+    this.investmentTrades = const [],
     super.effect,
   });
 
@@ -68,6 +72,13 @@ final class RecordState extends UiState<RecordState> {
   /// Persen pembagian terakhir (`goalId` → persen, ADR-048 §9.3).
   final Map<String, int> rememberedSplit;
 
+  /// Ringkasan instrumen untuk jenis Investasi (ADR-049 §3.7).
+  final List<InstrumentSummary> instruments;
+
+  /// Semua transaksi investasi, untuk "Dimiliki n pada tanggal" (rupa B-97
+  /// §4.5).
+  final List<InvestmentTransaction> investmentTrades;
+
   @override
   RecordState copyWith({
     List<Wallet>? wallets,
@@ -80,6 +91,8 @@ final class RecordState extends UiState<RecordState> {
     Set<String>? transferOnlyWalletIds,
     List<SavingsGoal>? activeGoals,
     Map<String, int>? rememberedSplit,
+    List<InstrumentSummary>? instruments,
+    List<InvestmentTransaction>? investmentTrades,
     UiEffect? effect,
   }) {
     return RecordState(
@@ -93,6 +106,8 @@ final class RecordState extends UiState<RecordState> {
       transferOnlyWalletIds: transferOnlyWalletIds ?? this.transferOnlyWalletIds,
       activeGoals: activeGoals ?? this.activeGoals,
       rememberedSplit: rememberedSplit ?? this.rememberedSplit,
+      instruments: instruments ?? this.instruments,
+      investmentTrades: investmentTrades ?? this.investmentTrades,
       effect: effect,
     );
   }
@@ -109,5 +124,7 @@ final class RecordState extends UiState<RecordState> {
     transferOnlyWalletIds,
     activeGoals,
     rememberedSplit,
+    instruments,
+    investmentTrades,
   ];
 }

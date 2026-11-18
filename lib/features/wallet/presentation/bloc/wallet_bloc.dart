@@ -5,6 +5,7 @@ import 'package:failures/failures.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/features/wallet/presentation/bloc/wallet_state.dart';
+import 'package:saldough/shared/investment/investment.dart';
 import 'package:saldough/shared/savings_goal/savings_goal.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/transaction/transaction_presentation.dart';
@@ -32,6 +33,7 @@ final class WalletBloc extends Bloc<WalletEvent, WalletState> {
     required this._recordTransaction,
     required this._goalRepository,
     required this._ledgerChanges,
+    this._investmentRepository,
   }) : super(WalletState.initial()) {
     on<WalletStarted>(_onStarted);
     on<WalletRefreshed>(_onRefreshed);
@@ -58,13 +60,38 @@ final class WalletBloc extends Bloc<WalletEvent, WalletState> {
   /// Tujuan terbaru, `const []` bila gagal dibaca (bagian Tujuan bukan inti).
   Future<List<SavingsGoal>> _loadGoals() async => (await _goalRepository.listGoals()).getOrElse((_) => const []);
 
+  /// Instrumen dan valuasi (ADR-049 §3.10); `null` di lingkup tanpa investasi.
+  final InvestmentRepository? _investmentRepository;
+
+  /// Ringkasan instrumen; gagal dibaca → `failed` (lapis Investasi tidak
+  /// ditebak 0, rupa B-97 §1.3).
+  Future<({List<InstrumentSummary> items, bool failed})> _loadInstruments() async {
+    final repository = _investmentRepository;
+    if (repository == null) return (items: const <InstrumentSummary>[], failed: false);
+    final result = await LoadInstrumentSummaries(investments: repository, transactions: _transactionRepository)();
+    return switch (result) {
+      Left() => (items: state.instruments, failed: true),
+      Right(value: final items) => (items: items, failed: false),
+    };
+  }
+
   Future<void> _onStarted(WalletStarted event, Emitter<WalletState> emit) async {
     emit(state.copyWith(isLoading: true, loadFailed: false));
     switch (await _walletRepository.listWallets()) {
       case Left(value: final failure):
         emit(state.copyWith(isLoading: false, loadFailed: true, effect: _effectError(failure)));
       case Right(value: final wallets):
-        emit(state.copyWith(wallets: wallets, goals: await _loadGoals(), isLoading: false, loadFailed: false));
+        final investments = await _loadInstruments();
+        emit(
+          state.copyWith(
+            wallets: wallets,
+            goals: await _loadGoals(),
+            instruments: investments.items,
+            investmentsFailed: investments.failed,
+            isLoading: false,
+            loadFailed: false,
+          ),
+        );
     }
   }
 
@@ -80,10 +107,13 @@ final class WalletBloc extends Bloc<WalletEvent, WalletState> {
       case Left(value: final failure):
         emit(state.copyWith(effect: _effectError(failure)));
       case Right(value: final wallets):
+        final investments = await _loadInstruments();
         emit(
           state.copyWith(
             wallets: wallets,
             goals: await _loadGoals(),
+            instruments: investments.items,
+            investmentsFailed: investments.failed,
             isLoading: false,
             loadFailed: false,
             effect: reached.isEmpty ? null : _effectSaved(t.assets.goal.reachedMessage(name: reached.first.name)),

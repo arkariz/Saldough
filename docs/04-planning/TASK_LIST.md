@@ -94,7 +94,7 @@ Terakhir diperbarui: 29 Oktober 2026 (penyelarasan dokumen dengan `main` di `0.1
 | 29 — Penyesuaian saldo ([ADR-047](../02-architecture/adr/0047-penyesuaian-saldo.md), Accepted; [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §6) | 9 | 9 | **Selesai 17 Nov 2026** (dari B-99): ADR-047 Accepted; T-29.1–T-29.7 (rupa dan UI oleh agen atas permintaan pemilik; 2.831 uji lulus, `flutter analyze` 3 info lama); QA T-29.8 lulus menurut pemeriksaan pemilik di emulator dan perangkat. Branch `claude/penyesuaian-saldo-fase-29`, belum digabung ke induk `claude/aset-kekayaan`. Fase pertama rangkaian aset (Fase 29–33, branch induk `claude/aset-kekayaan`) |
 | 30 — Tujuan tabungan ([ADR-048](../02-architecture/adr/0048-tujuan-tabungan.md), Accepted; [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §4) | 19 | 18 | Dijadwalkan 17 Nov 2026 (dari B-96); T-30.0–T-30.6, T-30.10 (dompet milik tujuan, hanya transfer), T-30.11 (hero Total aset berlapis, ADR-050), dan T-30.12 (rombak tab Dompet: Sebaran aset dan segmen) selesai 17 Nov 2026 (2.849 uji lulus); T-30.15 (sebaran ringkas, warna kartu) 17 Nov, T-30.7 (perkiraan Plus), T-30.8 (dokumen), dan T-30.16 (audit tur) 18 Nov 2026 selesai (2.866 uji lulus); sisa T-30.9 (QA: Android selesai 18 Nov 2026, tinggal iOS) ; T-30.17 (menabung ke beberapa tujuan) selesai 18 Nov 2026 |
 | 31 — Investasi manual ([ADR-049](../02-architecture/adr/0049-investasi-manual.md), Accepted; [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §5) | 12 | 12 | Dijadwalkan 18 Nov 2026 (dari B-97); ADR-049 disetujui 18 Nov 2026 (T-31.0); domain, transaksi investasi, data, dan batas (T-31.2–T-31.5) selesai 18 Nov 2026; rupa T-31.1 dan layar T-31.6/T-31.7 selesai 18 Nov 2026 (2.919 uji lulus); T-31.8–T-31.11 selesai 18 Nov 2026 (QA Android tanpa Gagal S1/S2; sisa jalur Plus dan iOS) |
-| 33 — Harga investasi dari Google Sheet (ADR-051 belum ditulis; [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §5.4) | 3 | 3 | Dijadwalkan 18 Nov 2026 (dari B-101); KT-A4 = Plus; spike lulus untuk saham; ADR-051 Accepted 18 Nov 2026; tugas implementasi menyusul |
+| 33 — Harga investasi dari Google Sheet (ADR-051 belum ditulis; [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §5.4) | 8 | 3 | Dijadwalkan 18 Nov 2026 (dari B-101); KT-A4 = Plus; spike lulus untuk saham; ADR-051 Accepted 18 Nov 2026; implementasi T-33.3–T-33.7 |
 | Antrean (`B-n`, belum dijadwalkan) | 75 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
 
 ## Keputusan terbuka
@@ -7615,6 +7615,30 @@ Riset awal (18 Nov 2026, untuk spike):
       saat layar investasi dibuka (tanpa pratinjau, isian manual hari itu
       menang); emas memakai perkiraan GLD × USDIDR ÷ ons per lembar, ditandai
       "perkiraan"; reksa dana/obligasi/lainnya diisi pengguna di Sheet.
+- [ ] **T-33.3** (M) Data Sheet: klien Sheets API lewat token
+      `authorizationClient` (`drive.file`), buat Sheet (`en_US`), sinkron
+      baris `id/Nama/Kode/Harga` (saham `IDX:<KODE>`, emas perkiraan GLD ×
+      USDIDR, lainnya kosong), baca kolom Harga dengan coba ulang; kunci
+      `investment_sheet_link` (+ waktu ambil terakhir) di `BackupRegistry`;
+      `ValuationSource.sheetEstimate`; `goldOuncesPerGldShare` di Remote Config
+      (ADR-051 §3.1–§3.3). Uji dengan klien HTTP tiruan. Termasuk uji
+      pembacaan Sheet yang sehari tidak dibuka (§6.3).
+- [ ] **T-33.4** (M) Ambil otomatis (ADR-051 §3.4): saat segmen Investasi,
+      rincian, atau CATAT › Investasi dibuka bila > 15 menit, dan Segarkan;
+      simpan valuasi Sheet hari ini tanpa menimpa isian manual hari itu;
+      penanda kesegaran "Dari Google Sheet · jam" / "Perkiraan dari harga emas
+      dunia"; saran nominal CATAT ikut segar.
+- [ ] **T-33.5** (S) Plus dan pintu: `PlusFeature.sheetPrices`,
+      `PaywallTrigger.sheetPrices`; pintu Hubungkan Google Sheet di segmen
+      Investasi (hanya akun Google), alur izin, keadaan galat/luring/izin
+      dicabut, periksa ulang tautan sesudah pulihkan atau ganti akun
+      (ADR-051 §3.2, §3.5, §3.6). Rupa oleh agen.
+- [ ] **T-33.6** (S) Analitik `sheet_linked`, `valuation_sheet_synced`;
+      dokumen: PLAY_DATA_SAFETY, EXPORT_BACKUP, glosarium; catatan untuk
+      kebijakan privasi situs (repo `tanukonomy-web`). Hapus layar uji spike.
+- [ ] **T-33.7** (M) QA di ponsel dengan akun Google (Plus lewat
+      `PLAN_OVERRIDE=plus`): hubungkan, ambil otomatis, perkiraan emas,
+      isian manual menang, luring, izin dicabut, Gratis melihat paywall.
 
 ## Antrean (belum dijadwalkan)
 

@@ -76,6 +76,8 @@ class _InvestmentFormPageState extends State<InvestmentFormPage> {
     if (draft == null || !mounted) return;
     setState(() {
       _fill(draft);
+      // Draf menyimpan pilihan Sudah punya lewat ada-tidaknya kepemilikan awal.
+      _owned = draft.opening != null;
       _fromDraft = true;
     });
   }

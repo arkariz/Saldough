@@ -332,6 +332,17 @@ class _InvestmentFormSheetState extends State<InvestmentFormSheet> {
             onChanged: () => setState(() {}),
           ),
         ),
+        // Arti nominal, menempel di bawah angkanya (poles B-97).
+        Center(
+          child: AnimatedSwitcher(
+            duration: DsMotion.reduced(context) ? Duration.zero : const Duration(milliseconds: 200),
+            child: DsPill(
+              key: ValueKey(_side),
+              icon: buying ? Symbols.shopping_bag_rounded : Symbols.savings_rounded,
+              label: buying ? s.amountBuyCaption : s.amountSellCaption,
+            ),
+          ),
+        ),
         DsFieldGroup(
           children: [
             if (widget.wallets.isEmpty)

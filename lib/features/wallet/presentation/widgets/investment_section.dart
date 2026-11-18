@@ -130,28 +130,34 @@ class InvestmentSection extends StatelessWidget {
             ),
             const SizedBox(height: 16),
           ],
-          Row(
-            children: [
-              Expanded(
-                child: DsButton(
-                  key: const ValueKey('investment-buy'),
-                  label: s.recordBuy,
-                  icon: Symbols.add_rounded,
-                  expand: true,
-                  onPressed: () => _buy(context),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: DsButton.secondary(
-                  key: const ValueKey('investment-update-values'),
-                  label: s.updateValues,
-                  icon: Symbols.update_rounded,
-                  expand: true,
-                  onPressed: () => openInvestmentValues(context),
-                ),
-              ),
-            ],
+          // Berdampingan bila muat; di layar sempit atau teks besar menumpuk
+          // (rupa B-97 §1.2), supaya label tidak terpotong.
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final buy = DsButton(
+                key: const ValueKey('investment-buy'),
+                label: s.recordBuy,
+                icon: Symbols.add_rounded,
+                expand: true,
+                onPressed: () => _buy(context),
+              );
+              final update = DsButton.secondary(
+                key: const ValueKey('investment-update-values'),
+                label: s.updateValues,
+                icon: Symbols.update_rounded,
+                expand: true,
+                onPressed: () => openInvestmentValues(context),
+              );
+              final wide = constraints.maxWidth >= 360 && MediaQuery.textScalerOf(context).scale(14) <= 16;
+              if (!wide) return Column(children: [buy, const SizedBox(height: 8), update]);
+              return Row(
+                children: [
+                  Expanded(child: buy),
+                  const SizedBox(width: 8),
+                  Expanded(child: update),
+                ],
+              );
+            },
           ),
           const SizedBox(height: 16),
           DsSectionHeader(title: s.activeHeading),

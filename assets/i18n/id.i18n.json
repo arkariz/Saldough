@@ -88,6 +88,8 @@
     "kindIncome": "Pemasukan",
     "kindTransfer": "Transfer",
     "kindInvestment": "Investasi",
+    "kindExpenseShort": "Keluar",
+    "kindIncomeShort": "Masuk",
     "categoryAddLabel": "Tambah kategori",
     "draftCheckTitle": "Periksa sebelum mencatat",
     "draftIssue": {
@@ -2120,6 +2122,7 @@
       },
       "sideBuy": "Pembelian",
       "sideSell": "Penjualan",
+      "amountBuyCaption": "Total dibayar, termasuk biaya dan pajak",
       "amountSellCaption": "Hasil bersih, sesudah biaya dan pajak",
       "fromWallet": "Dari dompet",
       "toWallet": "Ke dompet",

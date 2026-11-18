@@ -352,16 +352,18 @@ class _InvestmentDetailPageState extends State<InvestmentDetailPage> {
                                     ],
                                   ),
                                 ),
-                                Text(
-                                  AppMoneyText.format(
-                                    marketValueOf(
-                                      type,
-                                      InstrumentPosition.replay(instrument, trades, asOf: v.date).quantity,
-                                      v.unitPrice,
-                                    ),
-                                    MoneyKind.balance,
-                                  ),
-                                  style: ds.typography.bodyMd,
+                                // Nilai pasar pada tanggal itu; tanpa angka bila saat itu
+                                // tidak ada yang dipegang (mis. sesudah jual habis).
+                                Builder(
+                                  builder: (context) {
+                                    final held = InstrumentPosition.replay(instrument, trades, asOf: v.date).quantity;
+                                    return Text(
+                                      held == 0
+                                          ? '—'
+                                          : AppMoneyText.format(marketValueOf(type, held, v.unitPrice), MoneyKind.balance),
+                                      style: ds.typography.bodyMd,
+                                    );
+                                  },
                                 ),
                                 DsIconButton(
                                   icon: Icons.delete_outline,

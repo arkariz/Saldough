@@ -68,16 +68,25 @@ class RecordKindSwitcher extends StatelessWidget {
       child: Semantics(
         container: true,
         label: t.record.kindSwitcherLabel,
-        child: DsSegmentedPill<RecordChoice>(
-          segments: [
-            // Empat segmen tanpa ikon supaya label muat di 360dp (rupa B-97 §4.1).
-            DsSegment(value: RecordChoice.expense, label: t.record.kindExpense),
-            DsSegment(value: RecordChoice.income, label: t.record.kindIncome),
-            DsSegment(value: RecordChoice.transfer, label: t.record.kindTransfer),
-            DsSegment(value: RecordChoice.investment, label: t.record.kindInvestment),
-          ],
-          selected: selected,
-          onChanged: onChanged,
+        // Empat segmen tanpa ikon (rupa B-97 §4.1). Bila sempit, label pendek
+        // Keluar/Masuk supaya tidak terpotong (keputusan pemilik 18 Nov 2026).
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final short = constraints.maxWidth / MediaQuery.textScalerOf(context).scale(1) < 380;
+            return DsSegmentedPill<RecordChoice>(
+              segments: [
+                DsSegment(
+                  value: RecordChoice.expense,
+                  label: short ? t.record.kindExpenseShort : t.record.kindExpense,
+                ),
+                DsSegment(value: RecordChoice.income, label: short ? t.record.kindIncomeShort : t.record.kindIncome),
+                DsSegment(value: RecordChoice.transfer, label: t.record.kindTransfer),
+                DsSegment(value: RecordChoice.investment, label: t.record.kindInvestment),
+              ],
+              selected: selected,
+              onChanged: onChanged,
+            );
+          },
         ),
       ),
     );

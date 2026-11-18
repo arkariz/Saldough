@@ -170,6 +170,8 @@ class _Translations$record$en extends Translations$record$id {
 	@override String get kindIncome => 'Income';
 	@override String get kindTransfer => 'Transfer';
 	@override String get kindInvestment => 'Investment';
+	@override String get kindExpenseShort => 'Out';
+	@override String get kindIncomeShort => 'In';
 	@override String get categoryAddLabel => 'Add category';
 	@override String get draftCheckTitle => 'Check before recording';
 	@override late final _Translations$record$draftIssue$en draftIssue = _Translations$record$draftIssue$en._(_root);
@@ -2635,6 +2637,7 @@ class _Translations$assets$invest$en extends Translations$assets$invest$id {
 	@override late final _Translations$assets$invest$price$en price = _Translations$assets$invest$price$en._(_root);
 	@override String get sideBuy => 'Purchase';
 	@override String get sideSell => 'Sale';
+	@override String get amountBuyCaption => 'Total paid, including fees and taxes';
 	@override String get amountSellCaption => 'Net proceeds, after fees and taxes';
 	@override String get fromWallet => 'From wallet';
 	@override String get toWallet => 'To wallet';
@@ -3076,6 +3079,8 @@ extension on TranslationsEn {
 			'record.kindIncome' => 'Income',
 			'record.kindTransfer' => 'Transfer',
 			'record.kindInvestment' => 'Investment',
+			'record.kindExpenseShort' => 'Out',
+			'record.kindIncomeShort' => 'In',
 			'record.categoryAddLabel' => 'Add category',
 			'record.draftCheckTitle' => 'Check before recording',
 			'record.draftIssue.amountMissing' => 'Couldn\'t read the amount. Enter it manually.',
@@ -3506,10 +3511,10 @@ extension on TranslationsEn {
 			'budget.archiveHelp' => 'Inactive budgets are hidden from the active list. Linked transactions stay recorded.',
 			'budget.deleteAction' => 'Delete budget',
 			'budget.deleteConfirmTitle' => 'Delete budget?',
-			'budget.deleteConfirmMessage' => ({required Object name}) => 'Budget "${name}" and its items will be deleted. Linked transactions stay recorded and wallet balances do not change.',
-			'budget.itemAddTitle' => 'Add item',
 			_ => null,
 		} ?? switch (path) {
+			'budget.deleteConfirmMessage' => ({required Object name}) => 'Budget "${name}" and its items will be deleted. Linked transactions stay recorded and wallet balances do not change.',
+			'budget.itemAddTitle' => 'Add item',
 			'budget.itemEditTitle' => 'Edit item',
 			'budget.itemNameLabel' => 'Item name',
 			'budget.itemNameHint' => 'Example: Rice',
@@ -4020,10 +4025,10 @@ extension on TranslationsEn {
 			'category.incomeTab' => 'Income',
 			'category.addAction' => 'Add category',
 			'category.addTitle' => 'New category',
-			'category.renameTitle' => 'Edit category',
-			'category.iconLabel' => 'Icon',
 			_ => null,
 		} ?? switch (path) {
+			'category.renameTitle' => 'Edit category',
+			'category.iconLabel' => 'Icon',
 			'category.iconOption' => ({required Object n}) => 'Icon ${n}',
 			'category.nameHint' => 'Category name',
 			'category.archiveAction' => 'Archive',
@@ -4534,10 +4539,10 @@ extension on TranslationsEn {
 			'appUpdate.action.update' => 'Update',
 			'appUpdate.action.install' => 'Install now',
 			'appUpdate.action.later' => 'Later',
-			'appUpdate.action.ok' => 'OK',
-			'appUpdate.whatsNew.title' => ({required Object version}) => 'What\'s new in version ${version}',
 			_ => null,
 		} ?? switch (path) {
+			'appUpdate.action.ok' => 'OK',
+			'appUpdate.whatsNew.title' => ({required Object version}) => 'What\'s new in version ${version}',
 			'appUpdate.whatsNew.titlePatch' => 'What\'s new',
 			'appUpdate.whatsNew.empty' => 'No update notes yet.',
 			'appUpdate.whatsNew.close' => 'Close',
@@ -4916,6 +4921,7 @@ extension on TranslationsEn {
 			'assets.invest.price.bondPercent' => '% of face value',
 			'assets.invest.sideBuy' => 'Purchase',
 			'assets.invest.sideSell' => 'Sale',
+			'assets.invest.amountBuyCaption' => 'Total paid, including fees and taxes',
 			'assets.invest.amountSellCaption' => 'Net proceeds, after fees and taxes',
 			'assets.invest.fromWallet' => 'From wallet',
 			'assets.invest.toWallet' => 'To wallet',

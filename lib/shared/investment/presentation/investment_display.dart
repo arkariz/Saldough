@@ -270,7 +270,8 @@ class InstrumentTypeChips extends StatelessWidget {
                           const SizedBox(height: 6),
                           Text(
                             instrumentTypeLabel(type),
-                            maxLines: 1,
+                            // "Reksa dana" boleh dua baris di ubin sempit.
+                            maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             textAlign: TextAlign.center,
                             style: ds.typography.labelMd.copyWith(

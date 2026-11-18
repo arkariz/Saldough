@@ -310,6 +310,12 @@ class Translations$record$id {
 	/// id: 'Investasi'
 	String get kindInvestment => 'Investasi';
 
+	/// id: 'Keluar'
+	String get kindExpenseShort => 'Keluar';
+
+	/// id: 'Masuk'
+	String get kindIncomeShort => 'Masuk';
+
 	/// id: 'Tambah kategori'
 	String get categoryAddLabel => 'Tambah kategori';
 
@@ -6280,6 +6286,9 @@ class Translations$assets$invest$id {
 	/// id: 'Penjualan'
 	String get sideSell => 'Penjualan';
 
+	/// id: 'Total dibayar, termasuk biaya dan pajak'
+	String get amountBuyCaption => 'Total dibayar, termasuk biaya dan pajak';
+
 	/// id: 'Hasil bersih, sesudah biaya dan pajak'
 	String get amountSellCaption => 'Hasil bersih, sesudah biaya dan pajak';
 
@@ -6931,6 +6940,8 @@ extension on Translations {
 			'record.kindIncome' => 'Pemasukan',
 			'record.kindTransfer' => 'Transfer',
 			'record.kindInvestment' => 'Investasi',
+			'record.kindExpenseShort' => 'Keluar',
+			'record.kindIncomeShort' => 'Masuk',
 			'record.categoryAddLabel' => 'Tambah kategori',
 			'record.draftCheckTitle' => 'Periksa sebelum mencatat',
 			'record.draftIssue.amountMissing' => 'Nominal belum terbaca. Isi sendiri.',
@@ -7361,10 +7372,10 @@ extension on Translations {
 			'budget.archiveHelp' => 'Anggaran nonaktif disembunyikan dari daftar aktif. Transaksi yang tertaut tetap tercatat.',
 			'budget.deleteAction' => 'Hapus anggaran',
 			'budget.deleteConfirmTitle' => 'Hapus anggaran?',
-			'budget.deleteConfirmMessage' => ({required Object name}) => 'Anggaran "${name}" beserta posnya akan dihapus. Transaksi yang tertaut tetap tercatat dan saldo dompet tidak berubah.',
-			'budget.itemAddTitle' => 'Tambah pos',
 			_ => null,
 		} ?? switch (path) {
+			'budget.deleteConfirmMessage' => ({required Object name}) => 'Anggaran "${name}" beserta posnya akan dihapus. Transaksi yang tertaut tetap tercatat dan saldo dompet tidak berubah.',
+			'budget.itemAddTitle' => 'Tambah pos',
 			'budget.itemEditTitle' => 'Ubah pos',
 			'budget.itemNameLabel' => 'Nama pos',
 			'budget.itemNameHint' => 'Contoh: Beras',
@@ -7875,10 +7886,10 @@ extension on Translations {
 			'category.incomeTab' => 'Pemasukan',
 			'category.addAction' => 'Tambah kategori',
 			'category.addTitle' => 'Kategori baru',
-			'category.renameTitle' => 'Ubah kategori',
-			'category.iconLabel' => 'Ikon',
 			_ => null,
 		} ?? switch (path) {
+			'category.renameTitle' => 'Ubah kategori',
+			'category.iconLabel' => 'Ikon',
 			'category.iconOption' => ({required Object n}) => 'Ikon ${n}',
 			'category.nameHint' => 'Nama kategori',
 			'category.archiveAction' => 'Arsipkan',
@@ -8389,10 +8400,10 @@ extension on Translations {
 			'appUpdate.action.update' => 'Perbarui',
 			'appUpdate.action.install' => 'Pasang sekarang',
 			'appUpdate.action.later' => 'Nanti',
-			'appUpdate.action.ok' => 'Oke',
-			'appUpdate.whatsNew.title' => ({required Object version}) => 'Apa yang baru di versi ${version}',
 			_ => null,
 		} ?? switch (path) {
+			'appUpdate.action.ok' => 'Oke',
+			'appUpdate.whatsNew.title' => ({required Object version}) => 'Apa yang baru di versi ${version}',
 			'appUpdate.whatsNew.titlePatch' => 'Apa yang baru',
 			'appUpdate.whatsNew.empty' => 'Belum ada catatan pembaruan.',
 			'appUpdate.whatsNew.close' => 'Tutup',
@@ -8771,6 +8782,7 @@ extension on Translations {
 			'assets.invest.price.bondPercent' => '% dari nominal',
 			'assets.invest.sideBuy' => 'Pembelian',
 			'assets.invest.sideSell' => 'Penjualan',
+			'assets.invest.amountBuyCaption' => 'Total dibayar, termasuk biaya dan pajak',
 			'assets.invest.amountSellCaption' => 'Hasil bersih, sesudah biaya dan pajak',
 			'assets.invest.fromWallet' => 'Dari dompet',
 			'assets.invest.toWallet' => 'Ke dompet',

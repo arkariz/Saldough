@@ -71,7 +71,8 @@ class TransactionDetailPage extends StatelessWidget {
     );
     if (updated == null || updated == transaction) return;
     bloc.add(TransactionUpdated(original: transaction, updated: updated));
-    await bloc.stream.firstWhere((s) => s.effect != null);
+    final next = await bloc.stream.firstWhere((s) => s.effect != null);
+    if (_failed(next.effect)) return;
     navigator.pop();
   }
 
@@ -106,11 +107,15 @@ class TransactionDetailPage extends StatelessWidget {
   /// pemilik, UX_REVIEW_FIXES.md UX-8) -- transaksi TIDAK bisa dibatalkan
   /// tak bisa dibalik, karena Urungkan menyimpannya kembali persis (id
   /// sama, saldo dihitung ulang).
+  static bool _failed(UiEffect? effect) => effect is ShowSnackBarEffect && effect.severity == .error;
+
   Future<void> _delete(BuildContext context) async {
     final bloc = context.read<TransactionBloc>();
     final navigator = Navigator.of(context);
     bloc.add(TransactionDeleted(transaction));
-    await bloc.stream.firstWhere((s) => s.effect != null);
+    final next = await bloc.stream.firstWhere((s) => s.effect != null);
+    // Ditolak (mis. posisi investasi jadi negatif, ADR-049 §3.6): tetap di sini.
+    if (_failed(next.effect)) return;
     navigator.pop();
   }
 

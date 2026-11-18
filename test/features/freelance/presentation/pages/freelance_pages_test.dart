@@ -148,7 +148,9 @@ void main() {
   Future<void> openFreelanceThroughRecord(WidgetTester tester) async {
     await tester.tap(find.byKey(const ValueKey('nav-catat')));
     await tester.pumpAndSettle();
-    await tester.tap(find.text(t.record.kindIncome));
+    // Di layar sempit pengalih jenis memakai label pendek (rupa B-97 §4.1).
+    final income = find.text(t.record.kindIncome);
+    await tester.tap(income.evaluate().isEmpty ? find.text(t.record.kindIncomeShort) : income);
     await tester.pumpAndSettle();
     await tester.ensureVisible(find.textContaining(t.record.freelanceCalloutTitle));
     await tester.tap(find.textContaining(t.record.freelanceCalloutTitle));

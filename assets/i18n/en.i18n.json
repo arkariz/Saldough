@@ -88,6 +88,8 @@
     "kindIncome": "Income",
     "kindTransfer": "Transfer",
     "kindInvestment": "Investment",
+    "kindExpenseShort": "Out",
+    "kindIncomeShort": "In",
     "categoryAddLabel": "Add category",
     "draftCheckTitle": "Check before recording",
     "draftIssue": {
@@ -2123,6 +2125,7 @@
       },
       "sideBuy": "Purchase",
       "sideSell": "Sale",
+      "amountBuyCaption": "Total paid, including fees and taxes",
       "amountSellCaption": "Net proceeds, after fees and taxes",
       "fromWallet": "From wallet",
       "toWallet": "To wallet",

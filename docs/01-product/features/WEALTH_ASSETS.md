@@ -304,6 +304,7 @@ yang ditampilkan adalah Total aset.
 | Tujuan tabungan: buat, hubungkan dompet, kemajuan, riwayat | 2 Active | Tanpa batas |
 | Perkiraan tanggal tercapai, peringatan meleset | | Ya |
 | Investasi: instrumen, nilai perolehan, valuasi manual, histori, untung/rugi, komposisi | 2 Active | Tanpa batas |
+| Ambil harga investasi dari Google Sheet (B-101, KT-A4) | | Ya |
 | Total aset dan gambaran di tab Dompet | Ya | Ya |
 | Riwayat kekayaan | 6 periode | Seluruhnya |
 | Kekayaan bersih dengan utang | | Ya |
@@ -397,7 +398,7 @@ di ekspor, uji bolak-balik cadangan, dan peristiwa analitik §12.
 |---|---|---|
 | KT-A1 (dijawab 17 Nov 2026) | Cara menghitung biaya yang dijual | **Rata-rata tertimbang** |
 | KT-A2 (dijawab 17 Nov 2026) | Satuan jumlah per jenis | Saham **lot** (1 lot = 100 lembar), reksa dana **unit**, emas **gram**, obligasi **nominal**, lainnya **unit** |
-| KT-A4 (terbuka) | Ambil nilai dari Google Sheet (B-101): Gratis atau Plus? | Ditanyakan sebelum ADR-051 |
+| KT-A4 (dijawab 18 Nov 2026) | Ambil nilai dari Google Sheet (B-101): Gratis atau Plus? | **Plus** seluruhnya; Perbarui nilai manual tetap Gratis |
 | KT-A3 (sudah dijawab, tercatat) | KT-W1 | **B** (keputusan 9) |
 
 ## 16. Risiko

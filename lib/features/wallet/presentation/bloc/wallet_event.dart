@@ -20,6 +20,17 @@ final class WalletRefreshed extends WalletEvent {
   const WalletRefreshed();
 }
 
+/// Ambil harga investasi dari Google Sheet pengguna (ADR-051 §3.4): saat
+/// segmen Investasi tampil (paling cepat tiap 15 menit) atau dari tombol
+/// Segarkan ([force]). Hanya Plus dan hanya bila Sheet sudah terhubung.
+final class InvestmentPricesRefreshed extends WalletEvent {
+  /// Membuat [InvestmentPricesRefreshed].
+  const InvestmentPricesRefreshed({this.force = false});
+
+  /// Abaikan jeda 15 menit.
+  final bool force;
+}
+
 /// Menambah dompet baru (FR-WAL-001). [initialBalance] dalam sen; saldo
 /// tercatat awalnya sama dengan itu.
 final class WalletAdded extends WalletEvent {

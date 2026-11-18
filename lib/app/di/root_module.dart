@@ -254,6 +254,28 @@ abstract final class RootModule {
       // Instrumen investasi dan valuasinya (ADR-049).
       ..registerLazySingleton<InvestmentRepository>(() => InvestmentRepositoryImpl(storage: container<KeyValueStorage>()))
       ..registerLazySingleton<InstrumentDraftStore>(() => InstrumentDraftStore(storage: container<KeyValueStorage>()))
+      // Harga dari Google Sheet pengguna (ADR-051): tautan, izin drive.file
+      // tanpa layar untuk pengambilan otomatis, Sheets API, Remote Config emas.
+      ..registerLazySingleton<PriceSheetLinkStore>(() => PriceSheetLinkStoreImpl(storage: container<KeyValueStorage>()))
+      ..registerLazySingleton<GoogleDriveAuthorizer>(GoogleDriveAuthorizer.new)
+      ..registerLazySingleton<PriceSheetGateway>(
+        () => GoogleSheetsPriceGateway(accessToken: container<GoogleDriveAuthorizer>().silentToken),
+      )
+      ..registerLazySingleton<PriceSheetConfigSource>(FirebasePriceSheetConfig.new)
+      ..registerLazySingleton<RefreshSheetPrices>(
+        () => RefreshSheetPrices(
+          sync: SyncPriceSheet(
+            gateway: container<PriceSheetGateway>(),
+            links: container<PriceSheetLinkStore>(),
+            investments: container<InvestmentRepository>(),
+            transactions: container<TransactionRepository>(),
+            configSource: container<PriceSheetConfigSource>(),
+          ),
+          read: ReadSheetPrices(gateway: container<PriceSheetGateway>(), investments: container<InvestmentRepository>()),
+          links: container<PriceSheetLinkStore>(),
+          investments: container<InvestmentRepository>(),
+        ),
+      )
       // Penolak beli/jual yang membuat posisi negatif (ADR-049 §3.6), dibaca
       // RecordTransaction di lingkup Catat dan Riwayat.
       ..registerLazySingleton<InvestmentLedgerGuard>(

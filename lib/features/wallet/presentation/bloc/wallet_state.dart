@@ -14,6 +14,9 @@ final class WalletState extends UiState<WalletState> {
     this.goals = const [],
     this.instruments = const [],
     this.investmentsFailed = false,
+    this.sheetLinked = false,
+    this.sheetFetchedAt,
+    this.sheetRefreshing = false,
     super.effect,
   });
 
@@ -40,6 +43,15 @@ final class WalletState extends UiState<WalletState> {
   /// Pembacaan investasi terakhir gagal: segmen Investasi menampilkan galat
   /// dan lapis Investasi tidak dihitung (rupa B-97 §1.3).
   final bool investmentsFailed;
+
+  /// Sheet harga sudah terhubung (ADR-051).
+  final bool sheetLinked;
+
+  /// Kapan harga terakhir diambil dari Sheet, untuk penanda "· 19.25".
+  final DateTime? sheetFetchedAt;
+
+  /// Pengambilan harga sedang berjalan.
+  final bool sheetRefreshing;
 
   /// Instrumen Aktif, nilai pasar terbesar dulu (rupa B-97 §1.2).
   List<InstrumentSummary> get activeInstruments =>
@@ -82,6 +94,9 @@ final class WalletState extends UiState<WalletState> {
     List<SavingsGoal>? goals,
     List<InstrumentSummary>? instruments,
     bool? investmentsFailed,
+    bool? sheetLinked,
+    DateTime? Function()? sheetFetchedAt,
+    bool? sheetRefreshing,
     UiEffect? effect,
   }) {
     return WalletState(
@@ -91,10 +106,23 @@ final class WalletState extends UiState<WalletState> {
       goals: goals ?? this.goals,
       instruments: instruments ?? this.instruments,
       investmentsFailed: investmentsFailed ?? this.investmentsFailed,
+      sheetLinked: sheetLinked ?? this.sheetLinked,
+      sheetFetchedAt: sheetFetchedAt == null ? this.sheetFetchedAt : sheetFetchedAt(),
+      sheetRefreshing: sheetRefreshing ?? this.sheetRefreshing,
       effect: effect,
     );
   }
 
   @override
-  List<Object?> get props => [wallets, isLoading, loadFailed, goals, instruments, investmentsFailed];
+  List<Object?> get props => [
+    wallets,
+    isLoading,
+    loadFailed,
+    goals,
+    instruments,
+    investmentsFailed,
+    sheetLinked,
+    sheetFetchedAt,
+    sheetRefreshing,
+  ];
 }

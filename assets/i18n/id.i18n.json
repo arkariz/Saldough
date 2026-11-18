@@ -2142,7 +2142,13 @@
       "sellRecorded": "Penjualan $name dicatat.",
       "qtyActive": "Papan angka mengisi jumlah",
       "amountActive": "Papan angka mengisi nominal",
-      "bulk": {
+      "sheet": {
+      "refresh": "Segarkan",
+      "refreshFailed": "Harga dari Google Sheet belum bisa diambil. Coba lagi nanti.",
+      "fromSheet": "Dari Google Sheet · $time",
+      "estimate": "Perkiraan dari harga emas dunia · $time"
+    },
+    "bulk": {
         "title": "Perbarui nilai",
         "dateLabel": "Tanggal nilai",
         "intro": "Isi harga terbaru dari aplikasi sekuritas atau situs resminya. Yang dikosongkan tidak berubah.",

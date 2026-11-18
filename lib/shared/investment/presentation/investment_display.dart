@@ -142,7 +142,7 @@ class InvestmentGainPill extends StatelessWidget {
 /// kuning bila kedaluwarsa, pil netral bila belum pernah diperbarui.
 class InvestmentFreshness extends StatelessWidget {
   /// Membuat [InvestmentFreshness].
-  const InvestmentFreshness({required this.summary, required this.today, super.key});
+  const InvestmentFreshness({required this.summary, required this.today, this.sheetFetchedAt, super.key});
 
   /// Ringkasan instrumen.
   final InstrumentSummary summary;
@@ -150,11 +150,36 @@ class InvestmentFreshness extends StatelessWidget {
   /// Hari ini.
   final DateTime today;
 
+  /// Kapan harga terakhir diambil dari Google Sheet (ADR-051 §3.4), untuk
+  /// "Dari Google Sheet · 19.25".
+  final DateTime? sheetFetchedAt;
+
   @override
   Widget build(BuildContext context) {
     final s = t.assets.invest;
     final age = summary.ageInDays(today);
     if (age == null) return DsPill(label: s.neverUpdated);
+    final valuation = summary.valuation!;
+    final fetched = sheetFetchedAt;
+    if (age <= 0 && fetched != null && valuation.source != ValuationSource.manual) {
+      final time = formatClock(fetched);
+      final ds = context.ds;
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          DsIconTile.asset(asset: ClayIcons.priceRefresh, size: DsIconTileSize.xs),
+          const SizedBox(width: 6),
+          Flexible(
+            child: Text(
+              valuation.source == ValuationSource.sheetEstimate
+                  ? s.sheet.estimate(time: time)
+                  : s.sheet.fromSheet(time: time),
+              style: ds.typography.bodySm.copyWith(color: ds.colors.textMuted),
+            ),
+          ),
+        ],
+      );
+    }
     final label = age <= 0 ? s.updatedToday : s.staleValue(n: age);
     if (summary.isStale(today)) {
       return DsPill(label: label, tone: DsPillTone.warning, icon: Symbols.schedule_rounded);
@@ -399,3 +424,9 @@ String? investmentFailureMessage(Failure failure) => switch (failure.code) {
   InvestmentFailures.limitReached => t.premium.paywall.messages.instrument.title,
   _ => null,
 };
+
+/// Jam dan menit sesuai bahasa: "19.25" (id) atau "19:25" (en).
+String formatClock(DateTime time) {
+  final separator = LocaleSettings.currentLocale == AppLocale.en ? ':' : '.';
+  return '${time.hour.toString().padLeft(2, '0')}$separator${time.minute.toString().padLeft(2, '0')}';
+}

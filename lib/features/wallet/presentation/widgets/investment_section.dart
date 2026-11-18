@@ -63,7 +63,15 @@ class InvestmentStaleNote extends StatelessWidget {
 /// Isi segmen Investasi di tab Dompet (rupa B-97 §1.2–§1.3, ADR-049 §3.10).
 class InvestmentSection extends StatelessWidget {
   /// Membuat [InvestmentSection].
-  const InvestmentSection({required this.active, required this.closed, required this.failed, super.key});
+  const InvestmentSection({
+    required this.active,
+    required this.closed,
+    required this.failed,
+    this.sheetFetchedAt,
+    this.onRefreshSheet,
+    this.refreshing = false,
+    super.key,
+  });
 
   /// Instrumen Aktif, nilai pasar terbesar dulu.
   final List<InstrumentSummary> active;
@@ -73,6 +81,15 @@ class InvestmentSection extends StatelessWidget {
 
   /// Pembacaan investasi gagal.
   final bool failed;
+
+  /// Kapan harga terakhir diambil dari Google Sheet.
+  final DateTime? sheetFetchedAt;
+
+  /// Segarkan harga dari Google Sheet; `null` = belum terhubung atau bukan Plus.
+  final VoidCallback? onRefreshSheet;
+
+  /// Pengambilan harga sedang berjalan.
+  final bool refreshing;
 
   void _buy(BuildContext context) => _open(
     context,
@@ -160,7 +177,12 @@ class InvestmentSection extends StatelessWidget {
             },
           ),
           const SizedBox(height: 16),
-          DsSectionHeader(title: s.activeHeading),
+          // Segarkan harga dari Google Sheet (ADR-051 §3.4), bila terhubung.
+          DsSectionHeader(
+            title: s.activeHeading,
+            actionLabel: onRefreshSheet == null ? null : (refreshing ? '…' : s.sheet.refresh),
+            onAction: refreshing ? null : onRefreshSheet,
+          ),
           const SizedBox(height: 8),
           for (final i in active)
             Padding(
@@ -169,6 +191,7 @@ class InvestmentSection extends StatelessWidget {
                 key: ValueKey('instrument-card-${i.instrument.id}'),
                 summary: i,
                 today: today,
+                sheetFetchedAt: sheetFetchedAt,
                 onTap: () => _detail(context, i.instrument.id),
               ),
             ),
@@ -208,13 +231,16 @@ class InvestmentSection extends StatelessWidget {
 /// terwujud.
 class InstrumentCard extends StatelessWidget {
   /// Membuat [InstrumentCard].
-  const InstrumentCard({required this.summary, required this.today, this.onTap, super.key});
+  const InstrumentCard({required this.summary, required this.today, this.sheetFetchedAt, this.onTap, super.key});
 
   /// Ringkasan instrumen.
   final InstrumentSummary summary;
 
   /// Hari ini, untuk kesegaran.
   final DateTime today;
+
+  /// Kapan harga terakhir diambil dari Google Sheet.
+  final DateTime? sheetFetchedAt;
 
   /// Membuka rincian.
   final VoidCallback? onTap;
@@ -261,9 +287,14 @@ class InstrumentCard extends StatelessWidget {
                           ),
                           const SizedBox(width: 8),
                           if (active)
-                            Text(
-                              AppMoneyText.format(summary.marketValue, MoneyKind.balance),
-                              style: ds.typography.titleMd.copyWith(fontSize: 15),
+                            // Nilai baru dari Sheet masuk dengan hitung naik (ADR-051 §3.4).
+                            DsCountUp(
+                              value: summary.marketValue,
+                              fromZero: false,
+                              builder: (context, value) => Text(
+                                AppMoneyText.format(value, MoneyKind.balance),
+                                style: ds.typography.titleMd.copyWith(fontSize: 15),
+                              ),
                             )
                           else
                             Text(s.soldOut, style: ds.typography.bodySm.copyWith(color: c.textSecondary)),
@@ -280,7 +311,7 @@ class InstrumentCard extends StatelessWidget {
                           ],
                         ),
                         const SizedBox(height: 6),
-                        InvestmentFreshness(summary: summary, today: today),
+                        InvestmentFreshness(summary: summary, today: today, sheetFetchedAt: sheetFetchedAt),
                       ] else
                         Row(
                           children: [

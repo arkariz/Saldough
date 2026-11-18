@@ -3,6 +3,7 @@ import 'package:navigation/navigation.dart';
 import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/plan/active_plan.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
@@ -75,10 +76,14 @@ class _WalletListPageState extends State<WalletListPage> {
   /// Segmen terpilih (Dompet atau Tabungan); tidak disimpan.
   AssetLayer _segment = AssetLayer.wallets;
 
-  void _select(AssetLayer layer) => setState(() {
-    _segment = layer;
-    _linked = null;
-  });
+  void _select(AssetLayer layer) {
+    setState(() {
+      _segment = layer;
+      _linked = null;
+    });
+    // Harga dari Google Sheet diambil saat segmen Investasi dibuka (ADR-051 §3.4).
+    if (layer == AssetLayer.investments) context.read<WalletBloc>().add(const InvestmentPricesRefreshed());
+  }
 
   @override
   void initState() {
@@ -241,6 +246,11 @@ class _WalletListPageState extends State<WalletListPage> {
                             active: activeInstruments,
                             closed: state.closedInstruments,
                             failed: state.investmentsFailed,
+                            sheetFetchedAt: state.sheetFetchedAt,
+                            refreshing: state.sheetRefreshing,
+                            onRefreshSheet: state.sheetLinked && ActivePlan.isPlus
+                                ? () => context.read<WalletBloc>().add(const InvestmentPricesRefreshed(force: true))
+                                : null,
                           )
                         else if (segment == AssetLayer.savings) ...[
                           if (goalShares.length > 1) ...[

@@ -45,7 +45,13 @@ final class InvestmentRouteModule extends FeatureRouteModule {
         return BlocProvider.value(
           value: bloc,
           child: EffectListener<InvestmentBloc, InvestmentState>(
-            child: RunOnce(action: () => bloc.add(const InvestmentStarted()), child: page(scope)),
+            child: RunOnce(
+              action: () => bloc
+                ..add(const InvestmentStarted())
+                // Harga Sheet diambil saat layar investasi dibuka (ADR-051 §3.4).
+                ..add(const InvestmentSheetRefreshed()),
+              child: page(scope),
+            ),
           ),
         );
       },

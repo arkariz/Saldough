@@ -34,7 +34,12 @@ final class WalletBloc extends Bloc<WalletEvent, WalletState> {
     required this._goalRepository,
     required this._ledgerChanges,
     this._investmentRepository,
-  }) : super(WalletState.initial()) {
+    this._sheetPrices,
+    this._sheetLinks,
+    bool Function()? isPlus,
+  }) : _isPlus = isPlus ?? (() => false),
+       super(WalletState.initial()) {
+    on<InvestmentPricesRefreshed>(_onPricesRefreshed);
     on<WalletStarted>(_onStarted);
     on<WalletRefreshed>(_onRefreshed);
     // ADR-030 §3.4: transaksi/saldo berubah di layar lain -> muat ulang
@@ -63,6 +68,38 @@ final class WalletBloc extends Bloc<WalletEvent, WalletState> {
   /// Instrumen dan valuasi (ADR-049 §3.10); `null` di lingkup tanpa investasi.
   final InvestmentRepository? _investmentRepository;
 
+  /// Pengambil harga Sheet (ADR-051 §3.4); `null` di lingkup tanpanya.
+  final RefreshSheetPrices? _sheetPrices;
+
+  /// Tautan Sheet, untuk penanda dan tombol Segarkan.
+  final PriceSheetLinkStore? _sheetLinks;
+
+  /// Paket Plus aktif (fitur Sheet khusus Plus, KT-A4).
+  final bool Function() _isPlus;
+
+  Future<void> _onPricesRefreshed(InvestmentPricesRefreshed event, Emitter<WalletState> emit) async {
+    final refresh = _sheetPrices;
+    if (refresh == null || !_isPlus() || state.sheetRefreshing) return;
+    emit(state.copyWith(sheetRefreshing: true));
+    final result = await refresh(force: event.force);
+    final link = (await _sheetLinks?.read())?.getOrElse((_) => null);
+    if (result case Right(value: SheetRefreshOutcome.updated)) {
+      // Lapis Investasi berubah: Beranda dan layar lain ikut segar.
+      _ledgerChanges.notifyChanged(source: this);
+      final investments = await _loadInstruments();
+      emit(state.copyWith(instruments: investments.items, investmentsFailed: investments.failed));
+    }
+    emit(
+      state.copyWith(
+        sheetRefreshing: false,
+        sheetLinked: link != null,
+        sheetFetchedAt: () => link?.lastFetchedAt,
+        // Galat hanya diberitahukan saat pengguna sendiri menekan Segarkan.
+        effect: event.force && result.isLeft() ? _effectMessage(t.assets.invest.sheet.refreshFailed) : null,
+      ),
+    );
+  }
+
   /// Ringkasan instrumen; gagal dibaca → `failed` (lapis Investasi tidak
   /// ditebak 0, rupa B-97 §1.3).
   Future<({List<InstrumentSummary> items, bool failed})> _loadInstruments() async {
@@ -82,12 +119,15 @@ final class WalletBloc extends Bloc<WalletEvent, WalletState> {
         emit(state.copyWith(isLoading: false, loadFailed: true, effect: _effectError(failure)));
       case Right(value: final wallets):
         final investments = await _loadInstruments();
+        final link = (await _sheetLinks?.read())?.getOrElse((_) => null);
         emit(
           state.copyWith(
             wallets: wallets,
             goals: await _loadGoals(),
             instruments: investments.items,
             investmentsFailed: investments.failed,
+            sheetLinked: link != null,
+            sheetFetchedAt: () => link?.lastFetchedAt,
             isLoading: false,
             loadFailed: false,
           ),

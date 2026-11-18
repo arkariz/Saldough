@@ -1,5 +1,6 @@
 import 'package:di/di.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
+import 'package:saldough/core/presentation/plan/active_plan.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/shared/category/category.dart';
@@ -48,6 +49,9 @@ final class RecordScope extends IsolatedScope {
     if (parent.isRegistered<InvestmentRepository>()) {
       c.registerSingleton<InvestmentRepository>(parent<InvestmentRepository>());
     }
+    if (parent.isRegistered<RefreshSheetPrices>()) {
+      c.registerSingleton<RefreshSheetPrices>(parent<RefreshSheetPrices>());
+    }
   }
 
   @override
@@ -70,6 +74,8 @@ final class RecordScope extends IsolatedScope {
             ? c<GoalSplitMemory>()
             : null,
         investments: c.isRegistered<InvestmentRepository>() ? c<InvestmentRepository>() : null,
+        sheetPrices: c.isRegistered<RefreshSheetPrices>() ? c<RefreshSheetPrices>() : null,
+        isPlus: () => ActivePlan.isPlus,
         recordTransaction: RecordTransaction(
           transferOnlyWallets: parent.isRegistered<TransferOnlyWallets>() ? parent<TransferOnlyWallets>() : const NoTransferOnlyWallets(),
           investmentGuard: parent.isRegistered<InvestmentLedgerGuard>()

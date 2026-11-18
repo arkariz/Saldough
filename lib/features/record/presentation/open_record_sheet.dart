@@ -5,6 +5,7 @@ import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/features/freelance/presentation/navigation/freelance_route_keys.dart';
 import 'package:saldough/features/record/domain/record_defaults.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
+import 'package:saldough/features/record/presentation/bloc/record_state.dart';
 import 'package:saldough/features/record/presentation/navigation/record_route_keys.dart';
 import 'package:saldough/features/record/presentation/widgets/expense_form_sheet.dart';
 import 'package:saldough/features/record/presentation/widgets/income_form_sheet.dart';
@@ -212,14 +213,20 @@ Future<bool> openRecordSheet(
             rememberedSplit: bloc.state.rememberedSplit,
             startInSplit: splitToGoals,
           ),
-          RecordChoice.investment => InvestmentFormSheet(
-            wallets: bloc.state.incomeExpenseWallets,
-            instruments: bloc.state.instruments,
-            trades: bloc.state.investmentTrades,
-            kindSwitcher: kindSwitcher,
-            initialSide: investmentSide,
-            initialInstrumentId: initialInstrumentId,
-            initialWalletId: initialWalletId,
+          // Instrumen diikuti dari bloc: harga Google Sheet yang tiba sesudah
+          // lembar terbuka ikut menyegarkan saran nominal (ADR-051 §3.4).
+          RecordChoice.investment => BlocBuilder<RecordBloc, RecordState>(
+            bloc: bloc,
+            buildWhen: (a, b) => a.instruments != b.instruments,
+            builder: (context, state) => InvestmentFormSheet(
+              wallets: state.incomeExpenseWallets,
+              instruments: state.instruments,
+              trades: state.investmentTrades,
+              kindSwitcher: kindSwitcher,
+              initialSide: investmentSide,
+              initialInstrumentId: initialInstrumentId,
+              initialWalletId: initialWalletId,
+            ),
           ),
         };
       },

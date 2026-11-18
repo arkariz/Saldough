@@ -12,6 +12,7 @@ final class InvestmentState extends UiState<InvestmentState> {
     this.loadFailed = false,
     this.saveCount = 0,
     this.lastFailure,
+    this.sheetFetchedAt,
     super.effect,
   });
 
@@ -43,6 +44,9 @@ final class InvestmentState extends UiState<InvestmentState> {
   /// Kode galat simpan terakhir (formulir menampilkannya di bawah kolom).
   final FailureCode? lastFailure;
 
+  /// Kapan harga terakhir diambil dari Google Sheet.
+  final DateTime? sheetFetchedAt;
+
   /// Ringkasan instrumen [id], atau `null`.
   InstrumentSummary? summaryOf(String id) => summaries.where((s) => s.instrument.id == id).firstOrNull;
 
@@ -67,6 +71,7 @@ final class InvestmentState extends UiState<InvestmentState> {
     bool? loadFailed,
     int? saveCount,
     FailureCode? Function()? lastFailure,
+    DateTime? Function()? sheetFetchedAt,
     UiEffect? effect,
   }) => InvestmentState(
     summaries: summaries ?? this.summaries,
@@ -77,9 +82,20 @@ final class InvestmentState extends UiState<InvestmentState> {
     loadFailed: loadFailed ?? this.loadFailed,
     saveCount: saveCount ?? this.saveCount,
     lastFailure: lastFailure == null ? null : lastFailure(),
+    sheetFetchedAt: sheetFetchedAt == null ? this.sheetFetchedAt : sheetFetchedAt(),
     effect: effect,
   );
 
   @override
-  List<Object?> get props => [summaries, valuations, trades, wallets, isLoading, loadFailed, saveCount, lastFailure];
+  List<Object?> get props => [
+    summaries,
+    valuations,
+    trades,
+    wallets,
+    isLoading,
+    loadFailed,
+    saveCount,
+    lastFailure,
+    sheetFetchedAt,
+  ];
 }

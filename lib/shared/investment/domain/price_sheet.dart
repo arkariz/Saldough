@@ -298,3 +298,71 @@ List<InstrumentValuation> sheetValuationsToSave(
       if (!manualToday.contains('${v.instrumentId}|${v.date.toIso8601String()}')) v,
   ];
 }
+
+/// Hasil [RefreshSheetPrices].
+enum SheetRefreshOutcome {
+  /// Belum terhubung ke Sheet: tidak ada yang dilakukan.
+  notLinked,
+
+  /// Diambil kurang dari [RefreshSheetPrices.minInterval] lalu.
+  fresh,
+
+  /// Harga diambil dan disimpan.
+  updated,
+}
+
+/// Mengambil harga dari Sheet pengguna dan menyimpannya sebagai valuasi
+/// (ADR-051 §3.4): paling cepat tiap [minInterval] kecuali [force], baris
+/// diselaraskan dulu, isian manual hari itu tidak ditimpa, waktu ambil
+/// dicatat di tautan. Tidak pernah menampilkan layar izin.
+final class RefreshSheetPrices {
+  /// Membuat [RefreshSheetPrices].
+  const RefreshSheetPrices({
+    required this.sync,
+    required this.read,
+    required this.links,
+    required this.investments,
+    this.now = DateTime.now,
+    this.minInterval = const Duration(minutes: 15),
+  });
+
+  /// Penyelaras baris.
+  final SyncPriceSheet sync;
+
+  /// Pembaca harga.
+  final ReadSheetPrices read;
+
+  /// Tautan tersimpan.
+  final PriceSheetLinkStore links;
+
+  /// Valuasi tersimpan.
+  final InvestmentRepository investments;
+
+  /// Jam sekarang (uji).
+  final DateTime Function() now;
+
+  /// Jeda minimum antarpengambilan otomatis.
+  final Duration minInterval;
+
+  /// Menjalankan pengambilan. [force] = tombol Segarkan.
+  Future<Either<Failure, SheetRefreshOutcome>> call({bool force = false}) async {
+    final stored = await links.read();
+    if (stored case Left(value: final f)) return left(f);
+    final link = stored.getOrElse((_) => null);
+    if (link == null) return right(SheetRefreshOutcome.notLinked);
+    final time = now();
+    final last = link.lastFetchedAt;
+    if (!force && last != null && time.difference(last) < minInterval) return right(SheetRefreshOutcome.fresh);
+    final synced = await sync();
+    if (synced case Left(value: final f)) return left(f);
+    final today = DateTime(time.year, time.month, time.day);
+    final fetched = await read(link.sheetId, today: today);
+    if (fetched case Left(value: final f)) return left(f);
+    final existing = await investments.listValuations();
+    if (existing case Left(value: final f)) return left(f);
+    final toSave = sheetValuationsToSave(fetched.getOrElse((_) => const []), existing.getOrElse((_) => const []));
+    if (await investments.saveValuations(toSave) case Left(value: final f)) return left(f);
+    if (await links.save(link.fetchedAt(time)) case Left(value: final f)) return left(f);
+    return right(SheetRefreshOutcome.updated);
+  }
+}

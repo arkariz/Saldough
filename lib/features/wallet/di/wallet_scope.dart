@@ -1,4 +1,5 @@
 import 'package:di/di.dart';
+import 'package:saldough/core/presentation/plan/active_plan.dart';
 import 'package:saldough/features/wallet/presentation/bloc/wallet_activity_bloc.dart';
 import 'package:saldough/features/wallet/presentation/bloc/wallet_bloc.dart';
 import 'package:saldough/shared/investment/investment.dart';
@@ -26,6 +27,11 @@ final class WalletScope extends IsolatedScope {
     if (parent.isRegistered<InvestmentRepository>()) {
       c.registerSingleton<InvestmentRepository>(parent<InvestmentRepository>());
     }
+    if (parent.isRegistered<RefreshSheetPrices>()) {
+      c
+        ..registerSingleton<RefreshSheetPrices>(parent<RefreshSheetPrices>())
+        ..registerSingleton<PriceSheetLinkStore>(parent<PriceSheetLinkStore>());
+    }
   }
 
   @override
@@ -38,6 +44,9 @@ final class WalletScope extends IsolatedScope {
           transactionRepository: c<TransactionRepository>(),
           goalRepository: c<SavingsGoalRepository>(),
           investmentRepository: c.isRegistered<InvestmentRepository>() ? c<InvestmentRepository>() : null,
+          sheetPrices: c.isRegistered<RefreshSheetPrices>() ? c<RefreshSheetPrices>() : null,
+          sheetLinks: c.isRegistered<PriceSheetLinkStore>() ? c<PriceSheetLinkStore>() : null,
+          isPlus: () => ActivePlan.isPlus,
           recordTransaction: RecordTransaction(
             transferOnlyWallets: parent.isRegistered<TransferOnlyWallets>() ? parent<TransferOnlyWallets>() : const NoTransferOnlyWallets(),
             ledgerChanges: c<LedgerChanges>(),

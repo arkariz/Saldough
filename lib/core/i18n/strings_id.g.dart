@@ -6346,6 +6346,7 @@ class Translations$assets$invest$id {
 	/// id: 'Papan angka mengisi nominal'
 	String get amountActive => 'Papan angka mengisi nominal';
 
+	late final Translations$assets$invest$sheet$id sheet = Translations$assets$invest$sheet$id.internal(_root);
 	late final Translations$assets$invest$bulk$id bulk = Translations$assets$invest$bulk$id.internal(_root);
 }
 
@@ -6634,6 +6635,27 @@ class Translations$assets$invest$price$id {
 
 	/// id: '% dari nominal'
 	String get bondPercent => '% dari nominal';
+}
+
+// Path: assets.invest.sheet
+class Translations$assets$invest$sheet$id {
+	Translations$assets$invest$sheet$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Segarkan'
+	String get refresh => 'Segarkan';
+
+	/// id: 'Harga dari Google Sheet belum bisa diambil. Coba lagi nanti.'
+	String get refreshFailed => 'Harga dari Google Sheet belum bisa diambil. Coba lagi nanti.';
+
+	/// id: 'Dari Google Sheet · $time'
+	String fromSheet({required Object time}) => 'Dari Google Sheet · ${time}';
+
+	/// id: 'Perkiraan dari harga emas dunia · $time'
+	String estimate({required Object time}) => 'Perkiraan dari harga emas dunia · ${time}';
 }
 
 // Path: assets.invest.bulk
@@ -8805,6 +8827,10 @@ extension on Translations {
 			'assets.invest.sellRecorded' => ({required Object name}) => 'Penjualan ${name} dicatat.',
 			'assets.invest.qtyActive' => 'Papan angka mengisi jumlah',
 			'assets.invest.amountActive' => 'Papan angka mengisi nominal',
+			'assets.invest.sheet.refresh' => 'Segarkan',
+			'assets.invest.sheet.refreshFailed' => 'Harga dari Google Sheet belum bisa diambil. Coba lagi nanti.',
+			'assets.invest.sheet.fromSheet' => ({required Object time}) => 'Dari Google Sheet · ${time}',
+			'assets.invest.sheet.estimate' => ({required Object time}) => 'Perkiraan dari harga emas dunia · ${time}',
 			'assets.invest.bulk.title' => 'Perbarui nilai',
 			'assets.invest.bulk.dateLabel' => 'Tanggal nilai',
 			'assets.invest.bulk.intro' => 'Isi harga terbaru dari aplikasi sekuritas atau situs resminya. Yang dikosongkan tidak berubah.',

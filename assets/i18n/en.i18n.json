@@ -2145,7 +2145,13 @@
       "sellRecorded": "Sale of $name recorded.",
       "qtyActive": "Keypad fills the quantity",
       "amountActive": "Keypad fills the amount",
-      "bulk": {
+      "sheet": {
+      "refresh": "Refresh",
+      "refreshFailed": "Couldn't get prices from Google Sheet. Try again later.",
+      "fromSheet": "From Google Sheet · $time",
+      "estimate": "Estimated from world gold price · $time"
+    },
+    "bulk": {
         "title": "Update values",
         "dateLabel": "Value date",
         "intro": "Enter the latest prices from your broker app or official site. Empty rows stay the same.",

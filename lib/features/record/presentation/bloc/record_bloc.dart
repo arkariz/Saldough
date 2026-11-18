@@ -45,8 +45,11 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
     this._savingsGoals,
     this._splitMemory,
     this._investments,
+    this._sheetPrices,
+    bool Function()? isPlus,
     this._now = DateTime.now,
-  }) : super(RecordState.initial()) {
+  }) : _isPlus = isPlus ?? (() => false),
+       super(RecordState.initial()) {
     on<RecordWalletsLoaded>(_onWalletsLoaded);
     on<IncomeRecorded>(_onIncomeRecorded);
     on<ExpenseRecorded>(_onExpenseRecorded);
@@ -78,6 +81,21 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
 
   /// Instrumen untuk jenis Investasi (ADR-049); `null` di lingkup tanpanya.
   final InvestmentRepository? _investments;
+
+  /// Pengambil harga Google Sheet (ADR-051 §3.4): saran nominal CATAT ikut segar.
+  final RefreshSheetPrices? _sheetPrices;
+  final bool Function() _isPlus;
+
+  /// Mengambil harga Sheet sesudah lembar terbuka, tanpa menahannya; bila ada
+  /// harga baru, instrumen dimuat ulang.
+  Future<void> _refreshSheetPrices(Emitter<RecordState> emit) async {
+    final refresh = _sheetPrices;
+    if (refresh == null || !_isPlus() || state.instruments.isEmpty) return;
+    if (await refresh() case Right(value: SheetRefreshOutcome.updated)) {
+      final investments = await _loadInvestments();
+      emit(state.copyWith(instruments: investments.instruments, investmentTrades: investments.trades));
+    }
+  }
 
   /// Instrumen dan transaksi investasi. Riwayat penuh hanya dibaca bila
   /// sudah ada instrumen (NFR-PERF-002).
@@ -135,6 +153,7 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
             loadFailed: false,
           ),
         );
+        await _refreshSheetPrices(emit);
     }
   }
 

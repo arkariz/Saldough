@@ -2657,6 +2657,7 @@ class _Translations$assets$invest$en extends Translations$assets$invest$id {
 	@override String sellRecorded({required Object name}) => 'Sale of ${name} recorded.';
 	@override String get qtyActive => 'Keypad fills the quantity';
 	@override String get amountActive => 'Keypad fills the amount';
+	@override late final _Translations$assets$invest$sheet$en sheet = _Translations$assets$invest$sheet$en._(_root);
 	@override late final _Translations$assets$invest$bulk$en bulk = _Translations$assets$invest$bulk$en._(_root);
 }
 
@@ -2845,6 +2846,19 @@ class _Translations$assets$invest$price$en extends Translations$assets$invest$pr
 	@override String get perUnit => 'per unit';
 	@override String get perGram => 'per gram';
 	@override String get bondPercent => '% of face value';
+}
+
+// Path: assets.invest.sheet
+class _Translations$assets$invest$sheet$en extends Translations$assets$invest$sheet$id {
+	_Translations$assets$invest$sheet$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get refresh => 'Refresh';
+	@override String get refreshFailed => 'Couldn\'t get prices from Google Sheet. Try again later.';
+	@override String fromSheet({required Object time}) => 'From Google Sheet · ${time}';
+	@override String estimate({required Object time}) => 'Estimated from world gold price · ${time}';
 }
 
 // Path: assets.invest.bulk
@@ -4942,6 +4956,10 @@ extension on TranslationsEn {
 			'assets.invest.sellRecorded' => ({required Object name}) => 'Sale of ${name} recorded.',
 			'assets.invest.qtyActive' => 'Keypad fills the quantity',
 			'assets.invest.amountActive' => 'Keypad fills the amount',
+			'assets.invest.sheet.refresh' => 'Refresh',
+			'assets.invest.sheet.refreshFailed' => 'Couldn\'t get prices from Google Sheet. Try again later.',
+			'assets.invest.sheet.fromSheet' => ({required Object time}) => 'From Google Sheet · ${time}',
+			'assets.invest.sheet.estimate' => ({required Object time}) => 'Estimated from world gold price · ${time}',
 			'assets.invest.bulk.title' => 'Update values',
 			'assets.invest.bulk.dateLabel' => 'Value date',
 			'assets.invest.bulk.intro' => 'Enter the latest prices from your broker app or official site. Empty rows stay the same.',

@@ -187,7 +187,13 @@ class _InvestmentDetailPageState extends State<InvestmentDetailPage> {
                       child: DsCard(
                         child: Row(
                           children: [
-                            Expanded(child: InvestmentFreshness(summary: summary, today: today)),
+                            Expanded(
+                              child: InvestmentFreshness(
+                                summary: summary,
+                                today: today,
+                                sheetFetchedAt: state.sheetFetchedAt,
+                              ),
+                            ),
                             const SizedBox(width: 8),
                             DsInlineAction(
                               key: const ValueKey('instrument-update-value'),

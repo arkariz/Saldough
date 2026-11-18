@@ -172,6 +172,36 @@ void main() {
       expect(values.every((v) => v.date == today), isTrue);
     });
 
+    test('RefreshSheetPrices: belum terhubung, jeda 15 menit, Segarkan, isian manual menang', () async {
+      final gateway = _FakeGateway()..reads = [
+        {'a': 5750, 'g': 2401234.5, 'm': null},
+      ];
+      var clock = DateTime(2026, 11, 18, 9);
+      RefreshSheetPrices refresher() => RefreshSheetPrices(
+        sync: SyncPriceSheet(gateway: gateway, links: links, investments: investments, transactions: transactions),
+        read: ReadSheetPrices(gateway: gateway, investments: investments, retryDelay: Duration.zero),
+        links: links,
+        investments: investments,
+        now: () => clock,
+      );
+      expect((await refresher()()).getOrElse((_) => throw StateError('x')), SheetRefreshOutcome.notLinked);
+      await links.save(const PriceSheetLink(sheetId: 'S1'));
+      // Isian manual BBCA hari ini tidak boleh ditimpa.
+      await investments.saveValuations([
+        InstrumentValuation(instrumentId: 'a', date: DateTime(2026, 11, 18), unitPrice: 600000),
+      ]);
+      expect((await refresher()()).getOrElse((_) => throw StateError('x')), SheetRefreshOutcome.updated);
+      final saved = (await investments.listValuations()).getOrElse((_) => const []);
+      expect({for (final v in saved) v.instrumentId: (v.unitPrice, v.source)}, {
+        'a': (600000, ValuationSource.manual),
+        'g': (240123450, ValuationSource.sheetEstimate),
+      });
+      expect((await links.read()).getOrElse((_) => null)?.lastFetchedAt, clock);
+      clock = clock.add(const Duration(minutes: 10));
+      expect((await refresher()()).getOrElse((_) => throw StateError('x')), SheetRefreshOutcome.fresh);
+      expect((await refresher()(force: true)).getOrElse((_) => throw StateError('x')), SheetRefreshOutcome.updated);
+    });
+
     test('model valuasi bolak-balik untuk sumber perkiraan', () {
       final v = InstrumentValuation(
         instrumentId: 'g',

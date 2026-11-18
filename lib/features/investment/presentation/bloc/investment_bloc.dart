@@ -23,7 +23,12 @@ final class InvestmentBloc extends Bloc<InvestmentEvent, InvestmentState> {
     required this._transactions,
     required this._wallets,
     required this._ledgerChanges,
-  }) : super(InvestmentState.initial()) {
+    this._sheetPrices,
+    this._sheetLinks,
+    bool Function()? isPlus,
+  }) : _isPlus = isPlus ?? (() => false),
+       super(InvestmentState.initial()) {
+    on<InvestmentSheetRefreshed>(_onSheetRefreshed);
     on<InvestmentStarted>(_onStarted);
     on<InstrumentSaved>(_onSaved);
     on<InstrumentDeleted>(_onDeleted);
@@ -38,6 +43,21 @@ final class InvestmentBloc extends Bloc<InvestmentEvent, InvestmentState> {
   final LedgerChanges _ledgerChanges;
   late final StreamSubscription<void> _ledgerSubscription;
 
+  /// Pengambil harga Google Sheet (ADR-051 §3.4).
+  final RefreshSheetPrices? _sheetPrices;
+  final PriceSheetLinkStore? _sheetLinks;
+  final bool Function() _isPlus;
+
+  Future<void> _onSheetRefreshed(InvestmentSheetRefreshed event, Emitter<InvestmentState> emit) async {
+    final refresh = _sheetPrices;
+    if (refresh == null || !_isPlus()) return;
+    final result = await refresh();
+    if (result case Right(value: SheetRefreshOutcome.updated)) {
+      _ledgerChanges.notifyChanged(source: this);
+      await _load(emit);
+    }
+  }
+
   LoadInstrumentSummaries get _summaries =>
       LoadInstrumentSummaries(investments: _investments, transactions: _transactions);
 
@@ -48,6 +68,7 @@ final class InvestmentBloc extends Bloc<InvestmentEvent, InvestmentState> {
     final valuations = await _investments.listValuations();
     final ledger = await _transactions.listAllTransactions();
     final wallets = await _wallets.listWallets();
+    final sheetLink = (await _sheetLinks?.read())?.getOrElse((_) => null);
     switch ((summaries, valuations, ledger, wallets)) {
       case (Right(value: final s), Right(value: final v), Right(value: final l), Right(value: final w)):
         emit(
@@ -56,6 +77,7 @@ final class InvestmentBloc extends Bloc<InvestmentEvent, InvestmentState> {
             valuations: v,
             trades: [for (final t in l) if (t is InvestmentTransaction) t],
             wallets: w,
+            sheetFetchedAt: () => sheetLink?.lastFetchedAt,
             isLoading: false,
             loadFailed: false,
             saveCount: saved ? state.saveCount + 1 : null,

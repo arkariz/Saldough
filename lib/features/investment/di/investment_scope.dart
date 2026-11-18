@@ -1,4 +1,5 @@
 import 'package:di/di.dart';
+import 'package:saldough/core/presentation/plan/active_plan.dart';
 import 'package:saldough/features/investment/presentation/bloc/investment_bloc.dart';
 import 'package:saldough/shared/investment/investment.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
@@ -18,6 +19,11 @@ final class InvestmentScope extends IsolatedScope {
       ..registerSingleton<WalletRepository>(parent<WalletRepository>())
       ..registerSingleton<TransactionRepository>(parent<TransactionRepository>())
       ..registerSingleton<LedgerChanges>(parent<LedgerChanges>());
+    if (parent.isRegistered<RefreshSheetPrices>()) {
+      c
+        ..registerSingleton<RefreshSheetPrices>(parent<RefreshSheetPrices>())
+        ..registerSingleton<PriceSheetLinkStore>(parent<PriceSheetLinkStore>());
+    }
   }
 
   @override
@@ -28,6 +34,9 @@ final class InvestmentScope extends IsolatedScope {
         transactions: c<TransactionRepository>(),
         wallets: c<WalletRepository>(),
         ledgerChanges: c<LedgerChanges>(),
+        sheetPrices: c.isRegistered<RefreshSheetPrices>() ? c<RefreshSheetPrices>() : null,
+        sheetLinks: c.isRegistered<PriceSheetLinkStore>() ? c<PriceSheetLinkStore>() : null,
+        isPlus: () => ActivePlan.isPlus,
       ),
       dispose: (bloc) => bloc.close(),
     );

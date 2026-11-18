@@ -11,6 +11,12 @@ final class InvestmentStarted extends InvestmentEvent {
   const InvestmentStarted();
 }
 
+/// Ambil harga dari Google Sheet bila sudah 15 menit (ADR-051 §3.4).
+final class InvestmentSheetRefreshed extends InvestmentEvent {
+  /// Membuat [InvestmentSheetRefreshed].
+  const InvestmentSheetRefreshed();
+}
+
 /// Simpan instrumen baru atau ubahan. [activeLimit] `null` = Plus.
 final class InstrumentSaved extends InvestmentEvent {
   /// Membuat [InstrumentSaved].

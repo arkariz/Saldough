@@ -6,7 +6,8 @@
 - **Tanggal:** 2026-11-17
 - **Fase roadmap:** Fase 30 (B-96, lihat TASK_LIST)
 - **Status:** Accepted (17 Nov 2026); Revisi 1 Accepted 17 Nov 2026 (§8: dompet
-  milik tujuan, hanya transfer, hapus menghapus semuanya)
+  milik tujuan, hanya transfer, hapus menghapus semuanya); Revisi 2 Accepted
+  18 Nov 2026 (§9: menabung ke beberapa tujuan sekaligus)
 - **Cakupan:** `shared/savings_goal` (baru: entitas, repositori, use case,
   tampilan bersama), `features/savings_goal` (baru: layar), `features/wallet`
   (bagian Tujuan di tab Dompet, lencana dompet tabungan, putus tautan saat
@@ -180,7 +181,8 @@ tanggal"** bila perkiraan > `targetDate`. Peringatan aktif lewat Penjaga
 ### 3.10 Analitik
 
 `goal_created` (`collected`: `initial`/`empty`; sejak Revisi 1 menggantikan `linked_wallets`), `goal_completed`,
-`paywall_shown` dengan pemicu P11 dan `goal_estimate` (T-30.7). Tanpa nama tujuan atau nominal (ADR-023).
+`paywall_shown` dengan pemicu P11 dan `goal_estimate` (T-30.7), `goal_split_recorded` (`goals`: banyaknya
+tujuan, §9). Tanpa nama tujuan atau nominal (ADR-023).
 
 ## 4. Opsi yang dipertimbangkan
 
@@ -288,3 +290,72 @@ yang sama, catatan rekening itu akan lebih kecil dari saldo bank.
 'wallet_all', unique: true)`; dokumen tetap skema 1 karena belum pernah
 dirilis.
 - 2026-11-17: Revisi 1 disetujui pemilik, ditambah §8.2a (hanya transfer) dan hapus menghapus semuanya.
+- 2026-11-18: Revisi 2 (§9), keputusan pemilik atas menabung ke beberapa tujuan sekaligus.
+
+## 9. Revisi 2: menabung ke beberapa tujuan sekaligus (Accepted, 18 Nov 2026)
+
+Permintaan pemilik (18 Nov 2026): satu kali menabung dibagi ke beberapa
+tujuan dengan persentase, misalnya 50% tujuan A, 30% B, 20% C. Jawaban
+pemilik atas empat pertanyaan: pintu masuk **keduanya**, **ingat pembagian
+terakhir**, Riwayat **transfer terpisah**, dan **Gratis**.
+
+### 9.1 Bentuk data
+
+- Hasilnya **satu `TransferTransaction` per tujuan** dari dompet asal yang
+  sama ke dompet milik tiap tujuan, dengan tanggal dan catatan yang sama.
+  Tidak ada entitas atau field baru di transaksi, tidak ada grup, dan skema
+  transaksi tidak naik (tidak bertabrakan dengan Fase 31). Di Riwayat tiap
+  transfer tampil, diubah, dan dihapus sendiri-sendiri.
+- Tetap tanpa alokasi virtual (WEALTH_ASSETS keputusan 2): uang benar-benar
+  dicatat pindah ke dompet tiap tujuan, jadi kemajuan tiap tujuan langsung
+  mengikuti saldonya.
+- Semua transfer ditulis **sekaligus**: `RecordTransaction.recordAll`
+  menyimpan daftar transaksi baru lewat `TransactionRepository.saveNewTransactions`
+  (satu tulis per dokumen bulan; karena tanggalnya sama, satu tulis saja),
+  lalu menghitung ulang semua dompet yang tersentuh dan memberi satu sinyal
+  `LedgerChanges`. Gagal berarti tidak ada yang tersimpan.
+
+### 9.2 Pembagian nominal
+
+- Persen per tujuan bilangan bulat 0–100; tujuan ber-0% tidak ikut. Tombol
+  Catat aktif hanya bila jumlah persen tepat 100, minimal dua tujuan ikut,
+  dan tiap tujuan yang ikut mendapat lebih dari 0.
+- Nominal tujuan = `total × persen ~/ 100` (sen, dibulatkan ke bawah). Sisa
+  sen akibat pembulatan diberikan ke tujuan dengan persen terbesar (yang
+  pertama bila sama), sehingga jumlah semua transfer tepat sama dengan total.
+  Hitungan ini fungsi murni `splitByPercent` di `shared/savings_goal`.
+
+### 9.3 Formulir (CATAT, aturan 8)
+
+- **CATAT › Transfer** mendapat sakelar **Bagi ke beberapa tujuan**, tampil
+  saat mencatat transfer baru (bukan menyunting, draf, rutin, kemunculan
+  rutin, atau Jadikan Rutin) dan ada minimal dua tujuan **Active**. Tujuan
+  Completed dan Archived tidak ditawarkan.
+- Mode bagi: kolom Ke dompet diganti daftar **tujuan yang ikut** (ikon, nama,
+  nominal hasil bagi, kotak persen, tombol keluarkan) dan baris **Tambah
+  tujuan** untuk tujuan Active lainnya. Supaya tetap ringkas walau tujuannya
+  banyak (18 Nov 2026): persen diisi lewat **papan angka Catat** (kotak
+  persen yang diketuk menjadi target, ketuk nominal untuk kembali; tanpa
+  keyboard sistem, nilai > 100 ditolak); **jumlah persen** tampil tetap di
+  atas tombol Catat dengan kekurangan atau kelebihannya; kepala daftar punya
+  **Bagi rata** (sisa ke tujuan pertama) dan **Isi sisa** (kekurangan sampai
+  100% ke tujuan yang sedang diisi). Dompet asal tidak
+  menawarkan dompet tujuan. Pos anggaran dan Ulangi disembunyikan (transfer
+  bagi tidak ditautkan ke pos dan tidak dijadikan rutin; bila dibutuhkan,
+  menjadi keputusan baru).
+- Tombol **Menabung** di segmen Tabungan membuka CATAT › Transfer: dalam mode
+  bagi bila ada minimal dua tujuan Active, atau dengan tujuan satu-satunya
+  sebagai dompet tujuan bila hanya ada satu.
+- **Ingat pembagian terakhir:** persen terakhir yang dicatat disimpan lokal
+  per `goalId` (kunci `savings_goal_split`), dan dipakai mengisi formulir
+  berikutnya: hanya tujuan yang persennya > 0 yang ikut, sisanya lewat Tambah
+  tujuan. Bila belum ada simpanan sama sekali, semua tujuan Active ikut
+  dengan persen dibagi rata (sisa ke tujuan pertama).
+  Kunci itu dikecualikan dari cadangan karena hanya kenyamanan isian, bukan
+  data keuangan.
+
+### 9.4 Paket
+
+Gratis. Gratis sudah dibatasi dua tujuan Active (P11), jadi membagi ke lebih
+dari dua tujuan dengan sendirinya hanya terjadi di Plus.
+

@@ -221,6 +221,11 @@ class Translations$record$id {
 	/// id: 'Transfer tercatat.'
 	String get transferSavedMessage => 'Transfer tercatat.';
 
+	/// id: 'Tabungan dibagi ke $n tujuan.'
+	String splitSavedMessage({required Object n}) => 'Tabungan dibagi ke ${n} tujuan.';
+
+	late final Translations$record$split$id split = Translations$record$split$id.internal(_root);
+
 	/// id: 'Belum dipilih'
 	String get walletNotSelectedPrompt => 'Belum dipilih';
 
@@ -4333,6 +4338,51 @@ class Translations$assets$id {
 	late final Translations$assets$adjust$id adjust = Translations$assets$adjust$id.internal(_root);
 }
 
+// Path: record.split
+class Translations$record$split$id {
+	Translations$record$split$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Bagi ke beberapa tujuan'
+	String get toggleTitle => 'Bagi ke beberapa tujuan';
+
+	/// id: 'Satu transfer per tujuan, dibagi menurut persen.'
+	String get toggleBody => 'Satu transfer per tujuan, dibagi menurut persen.';
+
+	/// id: 'Ke tujuan'
+	String get goalsLabel => 'Ke tujuan';
+
+	/// id: 'Jumlah persen'
+	String get totalLabel => 'Jumlah persen';
+
+	/// id: 'kurang $n%'
+	String totalShort({required Object n}) => 'kurang ${n}%';
+
+	/// id: 'lebih $n%'
+	String totalOver({required Object n}) => 'lebih ${n}%';
+
+	/// id: 'Bagi rata'
+	String get evenAction => 'Bagi rata';
+
+	/// id: 'Isi sisa'
+	String get fillRestAction => 'Isi sisa';
+
+	/// id: 'Tambah tujuan'
+	String get addAction => 'Tambah tujuan';
+
+	/// id: 'Tambah tujuan'
+	String get addTitle => 'Tambah tujuan';
+
+	/// id: 'Keluarkan $name'
+	String removeAction({required Object name}) => 'Keluarkan ${name}';
+
+	/// id: 'Persen untuk $name'
+	String percentSemantics({required Object name}) => 'Persen untuk ${name}';
+}
+
 // Path: record.draftIssue
 class Translations$record$draftIssue$id {
 	Translations$record$draftIssue$id.internal(this._root);
@@ -5691,6 +5741,9 @@ class Translations$assets$goal$id {
 	/// id: 'Buat tujuan'
 	String get create => 'Buat tujuan';
 
+	/// id: 'Menabung'
+	String get saveMoney => 'Menabung';
+
 	/// id: 'Kumpulkan uang untuk sesuatu, mis. dana darurat. Setiap tujuan punya dompet sendiri yang kamu isi lewat transfer; kemajuannya mengikuti saldonya.'
 	String get emptyBody => 'Kumpulkan uang untuk sesuatu, mis. dana darurat. Setiap tujuan punya dompet sendiri yang kamu isi lewat transfer; kemajuannya mengikuti saldonya.';
 
@@ -6240,6 +6293,19 @@ extension on Translations {
 			'record.incomeSavedMessage' => 'Pemasukan tercatat.',
 			'record.expenseSavedMessage' => 'Pengeluaran tercatat.',
 			'record.transferSavedMessage' => 'Transfer tercatat.',
+			'record.splitSavedMessage' => ({required Object n}) => 'Tabungan dibagi ke ${n} tujuan.',
+			'record.split.toggleTitle' => 'Bagi ke beberapa tujuan',
+			'record.split.toggleBody' => 'Satu transfer per tujuan, dibagi menurut persen.',
+			'record.split.goalsLabel' => 'Ke tujuan',
+			'record.split.totalLabel' => 'Jumlah persen',
+			'record.split.totalShort' => ({required Object n}) => 'kurang ${n}%',
+			'record.split.totalOver' => ({required Object n}) => 'lebih ${n}%',
+			'record.split.evenAction' => 'Bagi rata',
+			'record.split.fillRestAction' => 'Isi sisa',
+			'record.split.addAction' => 'Tambah tujuan',
+			'record.split.addTitle' => 'Tambah tujuan',
+			'record.split.removeAction' => ({required Object name}) => 'Keluarkan ${name}',
+			'record.split.percentSemantics' => ({required Object name}) => 'Persen untuk ${name}',
 			'record.walletNotSelectedPrompt' => 'Belum dipilih',
 			'record.savingMessage' => 'Menyimpan...',
 			'record.editStepLabel' => 'Ubah transaksi',
@@ -6700,6 +6766,8 @@ extension on Translations {
 			'budget.itemsRequiredHint' => 'Tambahkan minimal satu pos. Pengeluaran dihitung per pos, jadi anggaran tanpa pos tidak bisa memantau pengeluaran.',
 			'budget.walletUnchangedNote' => ({required Object wallet}) => 'Saldo ${wallet} tidak berubah',
 			'budget.itemKindLabel' => 'Jenis pos',
+			_ => null,
+		} ?? switch (path) {
 			'budget.itemKindExpense' => 'Pengeluaran',
 			'budget.itemKindTransfer' => 'Transfer',
 			'budget.itemKindLockedHint' => 'Jenis tidak bisa diganti karena pos ini sudah punya transaksi tertaut.',
@@ -6713,8 +6781,6 @@ extension on Translations {
 			'budget.templatesSavedBadge' => ({required Object count}) => '${count} tersimpan',
 			'budget.templatesInfoTitle' => 'Apa itu template anggaran?',
 			'budget.templatesInfoBody' => 'Susunan pos rencana yang bisa dipakai ulang tanpa mengetik dari nol. Setiap pemakaian membuat anggaran baru yang berdiri sendiri.',
-			_ => null,
-		} ?? switch (path) {
 			'budget.templateItemCount' => ({required Object count}) => '${count} pos',
 			'budget.templateItemsLabel' => 'Daftar pos rencana',
 			'budget.templateTotalLabel' => 'Total rencana',
@@ -7214,6 +7280,8 @@ extension on Translations {
 			'appearance.presets.tanuki' => 'Tanuki',
 			'appearance.presets.laut' => 'Laut',
 			'discovery.payday.title' => ({required Object d}) => 'Gajian tanggal ${d}?',
+			_ => null,
+		} ?? switch (path) {
 			'discovery.payday.body' => ({required Object d}) => 'Mulai bulan keuangan dari tanggal ${d}, supaya Rencana dan Analisis mengikuti gajianmu.',
 			'discovery.payday.action' => 'Atur',
 			'discovery.period.hint' => 'Atur',
@@ -7227,8 +7295,6 @@ extension on Translations {
 			'discovery.reminder.body' => 'Diingatkan sebelum tagihan jatuh tempo.',
 			'discovery.reminder.rowNote' => 'Pengingat belum menyala untuk semua transaksi berulang.',
 			'discovery.allowAccess' => 'Izinkan',
-			_ => null,
-		} ?? switch (path) {
 			'discovery.quickStart.title' => 'Pilih aplikasi bank atau dompet digitalmu',
 			'discovery.quickStart.body' => 'Notifikasi dari aplikasi yang kamu pilih dibaca di perangkat dan jadi draf catatan. Kamu tinjau dulu.',
 			'discovery.quickStart.screenTitle' => 'Mulai cepat',
@@ -7728,6 +7794,8 @@ extension on Translations {
 			'analysis.emptyMonth' => ({required Object period}) => 'Belum ada pengeluaran di ${period}.',
 			'analysis.error' => 'Analisis gagal dimuat. Tarik ke bawah untuk mencoba lagi.',
 			'analysis.donutSemantics' => ({required Object kind, required Object period, required Object parts}) => '${kind} ${period}: ${parts}',
+			_ => null,
+		} ?? switch (path) {
 			'analysis.rowSemantics' => ({required Object name, required Object percent, required Object amount}) => '${name}, ${percent}, ${amount}',
 			'analysis.fix' => 'Beri kategori',
 			'analysis.shareOf' => ({required Object percent, required Object kind}) => '${percent} dari ${kind}',
@@ -7741,8 +7809,6 @@ extension on Translations {
 			'analysis.compare.vs' => ({required Object label}) => 'dibanding ${label}',
 			'analysis.compare.newThisMonth' => 'baru bulan ini',
 			'analysis.compare.srHigher' => ({required Object amount, required Object label}) => '${amount} lebih tinggi, ${label}',
-			_ => null,
-		} ?? switch (path) {
 			'analysis.compare.srLower' => ({required Object amount, required Object label}) => '${amount} lebih rendah, ${label}',
 			'analysis.highlight.higher' => ({required Object subject, required Object compare}) => '${subject} lebih tinggi dari ${compare}',
 			'analysis.highlight.lower' => ({required Object subject, required Object compare}) => '${subject} lebih rendah dari ${compare}',
@@ -7913,6 +7979,7 @@ extension on Translations {
 			'assets.homeLayers' => ({required Object operational, required Object savings}) => 'Dompet ${operational} · Tabungan ${savings}',
 			'assets.goal.title' => 'Tujuan',
 			'assets.goal.create' => 'Buat tujuan',
+			'assets.goal.saveMoney' => 'Menabung',
 			'assets.goal.emptyBody' => 'Kumpulkan uang untuk sesuatu, mis. dana darurat. Setiap tujuan punya dompet sendiri yang kamu isi lewat transfer; kemajuannya mengikuti saldonya.',
 			'assets.goal.progress' => ({required Object saved, required Object target}) => '${saved} dari ${target}',
 			'assets.goal.reached' => 'Tercapai',

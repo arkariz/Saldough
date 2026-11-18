@@ -16,6 +16,7 @@ import 'package:saldough/features/record/presentation/bloc/record_state.dart';
 import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
+import 'package:saldough/shared/savings_goal/savings_goal.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 import 'package:state_management/state_management.dart';
@@ -39,12 +40,15 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
     required this._recurringRepository,
     required this._recurringChanges,
     this._financialMonth,
+    this._savingsGoals,
+    this._splitMemory,
     this._now = DateTime.now,
   }) : super(RecordState.initial()) {
     on<RecordWalletsLoaded>(_onWalletsLoaded);
     on<IncomeRecorded>(_onIncomeRecorded);
     on<ExpenseRecorded>(_onExpenseRecorded);
     on<TransferRecorded>(_onTransferRecorded);
+    on<SplitTransferRecorded>(_onSplitTransferRecorded);
     on<RecordMadeRecurring>(_onMadeRecurring);
     on<RecordRuleEdited>(_onRuleEdited);
     on<RecordOccurrenceRecorded>(_onOccurrenceRecorded);
@@ -61,6 +65,12 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
 
   /// Status tawaran awal bulan (FINANCIAL_PERIOD F2); `null` = tanpa tawaran.
   final FinancialMonthPreferenceRepository? _financialMonth;
+
+  /// Tujuan tabungan untuk mode bagi (ADR-048 §9); `null` = tanpa mode bagi.
+  final SavingsGoalRepository? _savingsGoals;
+
+  /// Persen pembagian terakhir (ADR-048 §9.3).
+  final GoalSplitMemory? _splitMemory;
   final DateTime Function() _now;
 
   /// Jumlah transaksi terbaru yang dibaca untuk isian bawaan.
@@ -82,9 +92,18 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
         final recent = (await _transactionRepository.listRecentTransactions(_recentLimit)).getOrElse((_) => const []);
         // Dompet tujuan hanya untuk transfer (ADR-048 §8.2a).
         final transferOnly = await _recordTransaction.transferOnlyWallets.walletIds();
+        // Mode bagi ke beberapa tujuan juga data sekunder (ADR-048 §9.3).
+        final activeIds = {for (final w in active) w.id};
+        final goals = (await _savingsGoals?.listGoals())?.getOrElse((_) => const []) ?? const <SavingsGoal>[];
+        final remembered = (await _splitMemory?.read())?.getOrElse((_) => const {}) ?? const <String, int>{};
         emit(
           state.copyWith(
             transferOnlyWalletIds: transferOnly,
+            activeGoals: [
+              for (final g in goals)
+                if (g.status == SavingsGoalStatus.active && activeIds.contains(g.walletId)) g,
+            ],
+            rememberedSplit: remembered,
             wallets: active,
             budgetItems: budgetItems,
             defaults: RecordDefaults.from(recent, activeWalletIds: {for (final w in active) w.id}),
@@ -141,6 +160,46 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
   /// hanya rutinnya yang tersimpan ("Simpan Jadwal"). Rutin ditulis lebih
   /// dulu; kalau transaksinya gagal dicatat, rutin itu dihapus lagi supaya
   /// tidak ada rutin setengah jadi.
+  Future<void> _onSplitTransferRecorded(SplitTransferRecorded event, Emitter<RecordState> emit) async {
+    final walletOf = {for (final g in state.activeGoals) g.id: g.walletId};
+    final parts = splitByPercent(event.amount, {
+      for (final MapEntry(:key, :value) in event.percents.entries)
+        if (walletOf.containsKey(key)) key: value,
+    });
+    final transfers = [
+      for (final MapEntry(key: goalId, value: amount) in parts.entries)
+        if (amount > 0)
+          TransferTransaction(
+            id: _newId(),
+            date: event.date,
+            amount: amount,
+            note: event.note,
+            fromWalletId: event.fromWalletId,
+            toWalletId: walletOf[goalId]!,
+          ),
+    ];
+    if (transfers.length < 2) return;
+    emit(state.copyWith(isSaving: true));
+    final result = await _recordTransaction.recordTransfers(transfers);
+    switch (result) {
+      case Left(value: final failure):
+        emit(state.copyWith(isSaving: false, effect: _effectError(failure)));
+      case Right():
+        final remembered = Map<String, int>.of(event.percents);
+        await _splitMemory?.save(remembered);
+        transfers.forEach(_logRecorded);
+        AppAnalytics.log(WealthEvents.goalSplitRecorded(transfers.length));
+        emit(
+          state.copyWith(
+            isSaving: false,
+            saveCount: state.saveCount + 1,
+            rememberedSplit: remembered,
+            effect: _effectSaved(t.record.splitSavedMessage(n: transfers.length)),
+          ),
+        );
+    }
+  }
+
   Future<void> _saveOrSchedule(
     Transaction transaction,
     RecurringPattern? repeat,

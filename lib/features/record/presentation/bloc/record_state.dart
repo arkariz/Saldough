@@ -1,5 +1,6 @@
 import 'package:saldough/features/record/domain/record_defaults.dart';
 import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
+import 'package:saldough/shared/savings_goal/savings_goal.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 import 'package:state_management/state_management.dart';
 
@@ -15,6 +16,8 @@ final class RecordState extends UiState<RecordState> {
     this.loadFailed = false,
     this.saveCount = 0,
     this.transferOnlyWalletIds = const {},
+    this.activeGoals = const [],
+    this.rememberedSplit = const {},
     super.effect,
   });
 
@@ -58,6 +61,13 @@ final class RecordState extends UiState<RecordState> {
   /// Dompet untuk pemilih pemasukan dan pengeluaran.
   List<Wallet> get incomeExpenseWallets => wallets.where((w) => !transferOnlyWalletIds.contains(w.id)).toList();
 
+  /// Tujuan Active yang dompetnya aktif, untuk mode bagi CATAT › Transfer
+  /// (ADR-048 §9.3), urut seperti di tab Dompet.
+  final List<SavingsGoal> activeGoals;
+
+  /// Persen pembagian terakhir (`goalId` → persen, ADR-048 §9.3).
+  final Map<String, int> rememberedSplit;
+
   @override
   RecordState copyWith({
     List<Wallet>? wallets,
@@ -68,6 +78,8 @@ final class RecordState extends UiState<RecordState> {
     bool? loadFailed,
     int? saveCount,
     Set<String>? transferOnlyWalletIds,
+    List<SavingsGoal>? activeGoals,
+    Map<String, int>? rememberedSplit,
     UiEffect? effect,
   }) {
     return RecordState(
@@ -79,6 +91,8 @@ final class RecordState extends UiState<RecordState> {
       loadFailed: loadFailed ?? this.loadFailed,
       saveCount: saveCount ?? this.saveCount,
       transferOnlyWalletIds: transferOnlyWalletIds ?? this.transferOnlyWalletIds,
+      activeGoals: activeGoals ?? this.activeGoals,
+      rememberedSplit: rememberedSplit ?? this.rememberedSplit,
       effect: effect,
     );
   }
@@ -93,5 +107,7 @@ final class RecordState extends UiState<RecordState> {
     loadFailed,
     saveCount,
     transferOnlyWalletIds,
+    activeGoals,
+    rememberedSplit,
   ];
 }

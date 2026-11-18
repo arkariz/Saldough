@@ -33,6 +33,8 @@ class RecordFormFrame extends StatelessWidget {
     this.kindSwitcher,
     this.amountController,
     this.onAmountChanged,
+    this.onKeyOverride,
+    this.bottomStatus,
     super.key,
   });
 
@@ -66,11 +68,26 @@ class RecordFormFrame extends StatelessWidget {
   /// Isi formulir, dari atas ke bawah.
   final List<Widget> children;
 
+  /// Bila terisi, papan angka mengisi target lain (mis. persen tujuan di
+  /// mode bagi, ADR-048 §9.3) alih-alih nominal: tiap tombol, termasuk
+  /// hapus ([moneyKeyBackspace]), diteruskan ke sini. Hapus semua (tekan lama
+  /// hapus) diteruskan sebagai [frameClearKey].
+  final ValueChanged<String>? onKeyOverride;
+
+  /// Baris status tetap di atas papan angka dan tombol simpan (mis. jumlah
+  /// persen mode bagi), selalu terlihat walau isi formulir panjang.
+  final Widget? bottomStatus;
+
+  /// Kunci yang diteruskan ke [onKeyOverride] saat hapus semua.
+  static const frameClearKey = 'clear';
+
   void _onKey(String key) {
+    if (onKeyOverride case final override?) return override(key);
     if (amountController!.applyKey(key)) onAmountChanged?.call();
   }
 
   void _onClear() {
+    if (onKeyOverride case final override?) return override(frameClearKey);
     amountController!.clear();
     onAmountChanged?.call();
   }
@@ -152,6 +169,7 @@ class RecordFormFrame extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
+                      if (bottomStatus case final status?) ...[status, const SizedBox(height: DsSpacing.xs)],
                       if (amountController != null && !keyboardOpen) ...[
                         DsKeypad(
                           rows: _keypadRows,

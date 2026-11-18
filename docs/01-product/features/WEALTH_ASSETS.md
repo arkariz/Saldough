@@ -60,6 +60,7 @@ riwayat kekayaan bisa dipercaya.
 | 13 | Penyesuaian saldo **bisa dihapus**, nominalnya **tidak bisa disunting**. |
 | 14 | **Setiap tujuan punya tepat satu dompet sendiri yang dibuat otomatis** (17 Nov 2026), dengan kolom opsional "Sudah terkumpul" sebagai saldo awalnya; tidak ada menautkan dompet yang sudah ada. Dompet itu tampil di bagian Tujuan, bukan di grid dompet, dan tetap bisa dipilih di CATAT **hanya untuk transfer** (pemasukan dan pengeluaran ke dompet tujuan ditolak). Menghapus tujuan menghapus dompet dan semua catatannya. Menggantikan "satu tujuan banyak dompet" di keputusan 2 (ADR-048 §8). |
 | 15 | **Hero tab Dompet dan Beranda menjadi Total aset berlapis** (17 Nov 2026): Dana operasional, Tabungan, Investasi, dengan rincian per dompet, tujuan, dan instrumen tetap ada; dikerjakan di Fase 30 (ADR-050). Lapis uang sehari-hari bernama **Dompet** / **Wallets** (keputusan pemilik, bukan "Dana operasional"); tab Dompet berisi hero Total aset, kartu Sebaran aset per lapis, dan segmen Dompet | Tabungan. |
+| 16 | **Menabung ke beberapa tujuan sekaligus** (18 Nov 2026): CATAT › Transfer punya mode "Bagi ke beberapa tujuan" dengan persen per tujuan (jumlah 100%), juga dibuka dari tombol Menabung di segmen Tabungan. Hasilnya satu transfer per tujuan (Riwayat terpisah), persen terakhir diingat, Gratis (ADR-048 §9). |
 
 Perbandingan dengan dokumen sumber, supaya tidak dibuka ulang: mata uang per
 aset dihapus (ADR-025: satu mata uang per aplikasi); klasifikasi aset tidak

@@ -82,6 +82,7 @@ final appBackupRegistry = BackupRegistry(
     'entitlement_cache': 'hak dari akun Play/RevenueCat, bukan berkas',
     'entitlement_quota': 'jatah per periode milik perangkat',
     'savings_goal_draft': 'draf formulir tujuan milik perangkat (ADR-048 §3.5)',
+    'savings_goal_split': 'persen terakhir isian menabung ke beberapa tujuan, kenyamanan (ADR-048 §9.3)',
     'entitlement_debug_override': 'pilihan paket uji milik perangkat, hanya dibaca di build non-rilis',
   },
   transactionIndexKey: 'transaction__index',

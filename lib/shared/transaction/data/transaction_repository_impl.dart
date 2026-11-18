@@ -128,6 +128,24 @@ final class TransactionRepositoryImpl with RepositoryGuard implements Transactio
       });
 
   @override
+  Future<Either<Failure, Unit>> saveNewTransactions(List<Transaction> transactions) => guardVoid(() async {
+        final byMonth = <String, List<Transaction>>{};
+        for (final transaction in transactions) {
+          byMonth.putIfAbsent(_monthKeyFor(transaction.date), () => []).add(transaction);
+        }
+        for (final MapEntry(key: monthKey, value: added) in byMonth.entries) {
+          final store = _monthStore(monthKey);
+          final ids = {for (final t in added) t.id};
+          final models = await store.read() ?? <TransactionModel>[];
+          await store.write([
+            ...models.where((m) => !ids.contains(m.id)),
+            for (final t in added) TransactionModel.fromEntity(t),
+          ]);
+          await _markMonthPresent(monthKey);
+        }
+      });
+
+  @override
   Future<Either<Failure, Unit>> deleteTransaction(String id, DateTime date) => guardVoid(() async {
         final store = _monthStore(_monthKeyFor(date));
         final models = await store.read() ?? <TransactionModel>[];

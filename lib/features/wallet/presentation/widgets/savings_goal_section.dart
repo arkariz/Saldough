@@ -5,6 +5,7 @@ import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
+import 'package:saldough/features/record/presentation/navigation/record_route_keys.dart';
 import 'package:saldough/features/savings_goal/presentation/navigation/savings_goal_route_keys.dart';
 import 'package:saldough/features/wallet/presentation/bloc/wallet_bloc.dart';
 import 'package:saldough/shared/savings_goal/savings_goal.dart';
@@ -46,6 +47,18 @@ class SavingsGoalSection extends StatelessWidget {
       ),
     );
     void create() => _open(context, SavingsGoalRouteKeys.form, const SavingsGoalFormInput());
+    final active = goals.where((g) => g.status == SavingsGoalStatus.active).toList();
+    // Menabung (ADR-048 §9.3): mode bagi bila tujuan Active ≥ 2, selain itu
+    // transfer ke tujuan satu-satunya.
+    void save() => _open(
+      context,
+      RecordRouteKeys.sheet,
+      RecordSheetInput(
+        initialChoice: RecordChoice.transfer,
+        splitToGoals: active.length >= 2,
+        initialToWalletId: active.length == 1 ? active.single.walletId : null,
+      ),
+    );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -55,6 +68,16 @@ class SavingsGoalSection extends StatelessWidget {
           child: DsSectionHeader(title: t.assets.goal.title, actionLabel: t.assets.goal.create, onAction: create),
         ),
         const SizedBox(height: 8),
+        if (active.isNotEmpty) ...[
+          DsButton(
+            key: const ValueKey('goal-save-money'),
+            label: t.assets.goal.saveMoney,
+            icon: Symbols.savings_rounded,
+            expand: true,
+            onPressed: save,
+          ),
+          const SizedBox(height: 12),
+        ],
         if (goals.isEmpty)
           DsCard(
             child: Column(

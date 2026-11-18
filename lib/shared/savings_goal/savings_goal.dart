@@ -3,9 +3,11 @@
 /// Beranda serta Buku Periode.
 library;
 
+export 'data/goal_split_memory.dart';
 export 'data/savings_goal_draft_store.dart';
 export 'data/savings_goal_model.dart';
 export 'data/savings_goal_repository_impl.dart';
+export 'domain/goal_split.dart';
 export 'domain/savings_goal.dart';
 export 'domain/savings_goal_estimate.dart';
 export 'domain/savings_goal_repository.dart';

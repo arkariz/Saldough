@@ -74,6 +74,10 @@ import 'package:state_management/state_management.dart';
 /// menautkan transaksi itu sebagai kemunculan pertama rutin baru -- tidak
 /// ada transaksi baru yang tercatat.
 ///
+/// [splitToGoals] membuka Transfer dalam mode **Bagi ke beberapa tujuan**
+/// (tombol Menabung di segmen Tabungan, ADR-048 §9.3) bila ada minimal dua
+/// tujuan Active.
+///
 /// Mengembalikan `true` bila transaksi benar-benar tersimpan (kotak masuk
 /// Catat dari notifikasi menghapus itemnya hanya saat itu, ADR-032 §3.6).
 Future<bool> openRecordSheet(
@@ -90,6 +94,7 @@ Future<bool> openRecordSheet(
   RecurringRule? editRule,
   RecurringRule? occurrenceRule,
   DateTime? occurrenceDate,
+  bool splitToGoals = false,
   void Function(RecordSavedInfo info)? onSaved,
 }) async {
   final recordDraft = switch ((makeRecurringFrom, editRule)) {
@@ -199,6 +204,10 @@ Future<bool> openRecordSheet(
             repeatLocked: repeatLocked,
             scheduleOnly: scheduleOnly,
             occurrence: occurrence,
+            splitGoals: bloc.state.activeGoals,
+            goalWalletIds: bloc.state.transferOnlyWalletIds,
+            rememberedSplit: bloc.state.rememberedSplit,
+            startInSplit: splitToGoals,
           ),
         };
       },

@@ -242,6 +242,8 @@ abstract final class RootModule {
       ..registerLazySingleton<SavingsGoalDraftStore>(
         () => SavingsGoalDraftStore(storage: container<KeyValueStorage>()),
       )
+      // Persen terakhir menabung ke beberapa tujuan (ADR-048 §9.3).
+      ..registerLazySingleton<GoalSplitMemory>(() => GoalSplitMemory(storage: container<KeyValueStorage>()))
       // Dompet milik tujuan hanya untuk transfer (ADR-048 §8.2a), dibaca
       // RecordTransaction di semua lingkup.
       ..registerLazySingleton<TransferOnlyWallets>(() => GoalTransferOnlyWallets(container<SavingsGoalRepository>()))

@@ -140,6 +140,8 @@ class _Translations$record$en extends Translations$record$id {
 	@override String get incomeSavedMessage => 'Income recorded.';
 	@override String get expenseSavedMessage => 'Expense recorded.';
 	@override String get transferSavedMessage => 'Transfer recorded.';
+	@override String splitSavedMessage({required Object n}) => 'Savings split across ${n} goals.';
+	@override late final _Translations$record$split$en split = _Translations$record$split$en._(_root);
 	@override String get walletNotSelectedPrompt => 'Not selected yet';
 	@override String get savingMessage => 'Saving...';
 	@override String get editStepLabel => 'Edit transaction';
@@ -1714,6 +1716,27 @@ class _Translations$assets$en extends Translations$assets$id {
 	@override late final _Translations$assets$adjust$en adjust = _Translations$assets$adjust$en._(_root);
 }
 
+// Path: record.split
+class _Translations$record$split$en extends Translations$record$split$id {
+	_Translations$record$split$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get toggleTitle => 'Split across goals';
+	@override String get toggleBody => 'One transfer per goal, split by percentage.';
+	@override String get goalsLabel => 'To goals';
+	@override String get totalLabel => 'Total percentage';
+	@override String totalShort({required Object n}) => '${n}% short';
+	@override String totalOver({required Object n}) => '${n}% over';
+	@override String get evenAction => 'Split evenly';
+	@override String get fillRestAction => 'Fill the rest';
+	@override String get addAction => 'Add a goal';
+	@override String get addTitle => 'Add a goal';
+	@override String removeAction({required Object name}) => 'Remove ${name}';
+	@override String percentSemantics({required Object name}) => 'Percentage for ${name}';
+}
+
 // Path: record.draftIssue
 class _Translations$record$draftIssue$en extends Translations$record$draftIssue$id {
 	_Translations$record$draftIssue$en._(TranslationsEn root) : this._root = root, super.internal(root);
@@ -2404,6 +2427,7 @@ class _Translations$assets$goal$en extends Translations$assets$goal$id {
 	// Translations
 	@override String get title => 'Goals';
 	@override String get create => 'Create goal';
+	@override String get saveMoney => 'Add savings';
 	@override String get emptyBody => 'Save up for something, e.g. an emergency fund. Each goal has its own wallet that you fill with transfers; its progress follows that balance.';
 	@override String progress({required Object saved, required Object target}) => '${saved} of ${target}';
 	@override String get reached => 'Reached';
@@ -2753,6 +2777,19 @@ extension on TranslationsEn {
 			'record.incomeSavedMessage' => 'Income recorded.',
 			'record.expenseSavedMessage' => 'Expense recorded.',
 			'record.transferSavedMessage' => 'Transfer recorded.',
+			'record.splitSavedMessage' => ({required Object n}) => 'Savings split across ${n} goals.',
+			'record.split.toggleTitle' => 'Split across goals',
+			'record.split.toggleBody' => 'One transfer per goal, split by percentage.',
+			'record.split.goalsLabel' => 'To goals',
+			'record.split.totalLabel' => 'Total percentage',
+			'record.split.totalShort' => ({required Object n}) => '${n}% short',
+			'record.split.totalOver' => ({required Object n}) => '${n}% over',
+			'record.split.evenAction' => 'Split evenly',
+			'record.split.fillRestAction' => 'Fill the rest',
+			'record.split.addAction' => 'Add a goal',
+			'record.split.addTitle' => 'Add a goal',
+			'record.split.removeAction' => ({required Object name}) => 'Remove ${name}',
+			'record.split.percentSemantics' => ({required Object name}) => 'Percentage for ${name}',
 			'record.walletNotSelectedPrompt' => 'Not selected yet',
 			'record.savingMessage' => 'Saving...',
 			'record.editStepLabel' => 'Edit transaction',
@@ -3213,6 +3250,8 @@ extension on TranslationsEn {
 			'budget.itemsRequiredHint' => 'Add at least one item. Spending is tracked per item, so a budget without items can\'t track anything.',
 			'budget.walletUnchangedNote' => ({required Object wallet}) => '${wallet} balance unchanged',
 			'budget.itemKindLabel' => 'Item type',
+			_ => null,
+		} ?? switch (path) {
 			'budget.itemKindExpense' => 'Expense',
 			'budget.itemKindTransfer' => 'Transfer',
 			'budget.itemKindLockedHint' => 'The type can\'t be changed because this item already has linked transactions.',
@@ -3226,8 +3265,6 @@ extension on TranslationsEn {
 			'budget.templatesSavedBadge' => ({required Object count}) => 'Saved: ${count}',
 			'budget.templatesInfoTitle' => 'What is a budget template?',
 			'budget.templatesInfoBody' => 'A reusable set of plan items, so you never start from scratch. Each use creates a new, independent budget.',
-			_ => null,
-		} ?? switch (path) {
 			'budget.templateItemCount' => ({required Object count}) => 'Items: ${count}',
 			'budget.templateItemsLabel' => 'Planned items',
 			'budget.templateTotalLabel' => 'Planned total',
@@ -3727,6 +3764,8 @@ extension on TranslationsEn {
 			'appearance.presets.tanuki' => 'Tanuki',
 			'appearance.presets.laut' => 'Sea',
 			'discovery.payday.title' => ({required Object d}) => 'Payday on the ${d}?',
+			_ => null,
+		} ?? switch (path) {
 			'discovery.payday.body' => ({required Object d}) => 'Start your financial month on day ${d} so Plan and Analysis follow your payday.',
 			'discovery.payday.action' => 'Set',
 			'discovery.period.hint' => 'Set',
@@ -3740,8 +3779,6 @@ extension on TranslationsEn {
 			'discovery.reminder.body' => 'Get reminded before bills are due.',
 			'discovery.reminder.rowNote' => 'Reminders aren\'t on for every recurring item yet.',
 			'discovery.allowAccess' => 'Allow',
-			_ => null,
-		} ?? switch (path) {
 			'discovery.quickStart.title' => 'Pick your bank or e-wallet apps',
 			'discovery.quickStart.body' => 'Notifications from the apps you pick are read on this device and become draft transactions. You review them first.',
 			'discovery.quickStart.screenTitle' => 'Quick start',
@@ -4241,6 +4278,8 @@ extension on TranslationsEn {
 			'analysis.emptyMonth' => ({required Object period}) => 'No expenses in ${period} yet.',
 			'analysis.error' => 'Couldn\'t load analysis. Pull down to try again.',
 			'analysis.donutSemantics' => ({required Object kind, required Object period, required Object parts}) => '${kind} ${period}: ${parts}',
+			_ => null,
+		} ?? switch (path) {
 			'analysis.rowSemantics' => ({required Object name, required Object percent, required Object amount}) => '${name}, ${percent}, ${amount}',
 			'analysis.fix' => 'Add category',
 			'analysis.shareOf' => ({required Object percent, required Object kind}) => '${percent} of ${kind}',
@@ -4254,8 +4293,6 @@ extension on TranslationsEn {
 			'analysis.compare.vs' => ({required Object label}) => 'vs ${label}',
 			'analysis.compare.newThisMonth' => 'new this month',
 			'analysis.compare.srHigher' => ({required Object amount, required Object label}) => '${amount} higher, ${label}',
-			_ => null,
-		} ?? switch (path) {
 			'analysis.compare.srLower' => ({required Object amount, required Object label}) => '${amount} lower, ${label}',
 			'analysis.highlight.higher' => ({required Object subject, required Object compare}) => '${subject} higher than ${compare}',
 			'analysis.highlight.lower' => ({required Object subject, required Object compare}) => '${subject} lower than ${compare}',
@@ -4426,6 +4463,7 @@ extension on TranslationsEn {
 			'assets.homeLayers' => ({required Object operational, required Object savings}) => 'Wallets ${operational} · Savings ${savings}',
 			'assets.goal.title' => 'Goals',
 			'assets.goal.create' => 'Create goal',
+			'assets.goal.saveMoney' => 'Add savings',
 			'assets.goal.emptyBody' => 'Save up for something, e.g. an emergency fund. Each goal has its own wallet that you fill with transfers; its progress follows that balance.',
 			'assets.goal.progress' => ({required Object saved, required Object target}) => '${saved} of ${target}',
 			'assets.goal.reached' => 'Reached',

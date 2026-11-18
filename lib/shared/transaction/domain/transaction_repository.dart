@@ -50,6 +50,13 @@ abstract interface class TransactionRepository {
   /// Biarkan `null` untuk transaksi baru.
   Future<Either<Failure, Unit>> saveTransaction(Transaction transaction, {DateTime? previousDate});
 
+  /// Menambah beberapa transaksi BARU sekaligus (ADR-048 §9.1): satu tulis
+  /// per dokumen bulan, jadi transaksi sebulan tersimpan semua atau tidak
+  /// sama sekali. Transaksi ber-`id` yang sudah ada ditimpa.
+  Future<Either<Failure, Unit>> saveNewTransactions(
+    List<Transaction> transactions,
+  );
+
   /// Menghapus transaksi ber-`id` [id] yang tercatat pada bulan [date].
   /// Tidak berefek kalau `id` tidak ditemukan pada bulan itu.
   Future<Either<Failure, Unit>> deleteTransaction(String id, DateTime date);

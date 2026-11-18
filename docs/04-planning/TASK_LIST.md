@@ -92,7 +92,7 @@ Terakhir diperbarui: 29 Oktober 2026 (penyelarasan dokumen dengan `main` di `0.1
 | 25 — Design system baru dan preset tema ([ADR-043](../02-architecture/adr/0043-design-system-v2-dan-preset-tema.md), Proposed) | 6 | 4 | Berjalan sejak 29 Okt 2026 -- T-25.1 fondasi selesai (spek Tanukonomy Matcha); KT-DS1–KT-DS4 diputuskan; T-25.2 widget komponen dan T-25.5 animasi selesai (animasi belum dinilai di perangkat); T-25.3 terpasang; T-25.4 berjalan: hampir semua fitur sudah memakai v2 (sisa: `freelance` sama sekali, layar Catat dari notifikasi, dan satu-dua berkas lama di Analisis/Anggaran/Rencana, B-90); T-25.6 (ikon tanah liat) belum |
 | 26 — Catat dari notifikasi v2 ([ADR-044](../02-architecture/adr/0044-catat-dari-notifikasi-v2.md), Proposed; [NOTIFICATION_CAPTURE_V2.md](../01-product/features/NOTIFICATION_CAPTURE_V2.md)) | 27 | 25 | Dimulai 4 Nov 2026; tanpa saklar build, jalur internal test. Kode T-26.1–T-26.25 selesai 5 Nov 2026 (T-26.28 6 Nov) di branch `claude/rombak-design-system-theming-5747b4` (125 komit di depan `main`, belum jadi PR): fondasi, MVP dalam aplikasi, notifikasi bertindak lewat mesin tanpa layar, E1–E3, pola buatan dicabut (T-26.23), snackbar v2 satu slot. **Sisa:** T-26.26 uji perangkat nyata (gerbang Accepted; baru 1 emulator dan perangkat pemilik) dan T-26.27 kebijakan privasi situs; antrean B-88–B-92 |
 | 29 — Penyesuaian saldo ([ADR-047](../02-architecture/adr/0047-penyesuaian-saldo.md), Accepted; [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §6) | 9 | 9 | **Selesai 17 Nov 2026** (dari B-99): ADR-047 Accepted; T-29.1–T-29.7 (rupa dan UI oleh agen atas permintaan pemilik; 2.831 uji lulus, `flutter analyze` 3 info lama); QA T-29.8 lulus menurut pemeriksaan pemilik di emulator dan perangkat. Branch `claude/penyesuaian-saldo-fase-29`, belum digabung ke induk `claude/aset-kekayaan`. Fase pertama rangkaian aset (Fase 29–33, branch induk `claude/aset-kekayaan`) |
-| 30 — Tujuan tabungan ([ADR-048](../02-architecture/adr/0048-tujuan-tabungan.md), Accepted; [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §4) | 17 | 16 | Dijadwalkan 17 Nov 2026 (dari B-96); T-30.0–T-30.6, T-30.10 (dompet milik tujuan, hanya transfer), T-30.11 (hero Total aset berlapis, ADR-050), dan T-30.12 (rombak tab Dompet: Sebaran aset dan segmen) selesai 17 Nov 2026 (2.849 uji lulus); T-30.15 (sebaran ringkas, warna kartu) 17 Nov, T-30.7 (perkiraan Plus), T-30.8 (dokumen), dan T-30.16 (audit tur) 18 Nov 2026 selesai (2.866 uji lulus); sisa T-30.9 (QA: Android selesai 18 Nov 2026, tinggal iOS) |
+| 30 — Tujuan tabungan ([ADR-048](../02-architecture/adr/0048-tujuan-tabungan.md), Accepted; [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §4) | 19 | 18 | Dijadwalkan 17 Nov 2026 (dari B-96); T-30.0–T-30.6, T-30.10 (dompet milik tujuan, hanya transfer), T-30.11 (hero Total aset berlapis, ADR-050), dan T-30.12 (rombak tab Dompet: Sebaran aset dan segmen) selesai 17 Nov 2026 (2.849 uji lulus); T-30.15 (sebaran ringkas, warna kartu) 17 Nov, T-30.7 (perkiraan Plus), T-30.8 (dokumen), dan T-30.16 (audit tur) 18 Nov 2026 selesai (2.866 uji lulus); sisa T-30.9 (QA: Android selesai 18 Nov 2026, tinggal iOS) ; T-30.17 (menabung ke beberapa tujuan) selesai 18 Nov 2026 |
 | Antrean (`B-n`, belum dijadwalkan) | 75 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
 
 ## Keputusan terbuka
@@ -7294,6 +7294,31 @@ Diawali perapian dompet T-30.0.
       baru tur Dompet: `walletSegments` (segmen Dompet/Tabungan) dan
       `walletGoals` (kepala bagian Tujuan, disorot saat segmen Tabungan
       pertama dibuka). ONBOARDING_PLAN §4.2–4.3 diperbarui. 2.866 uji lulus.
+- [x] **T-30.17** (M) Menabung ke beberapa tujuan sekaligus (permintaan
+      pemilik 18 Nov 2026, ADR-048 §9). `splitByPercent` (sisa sen ke persen
+      terbesar), `RecordTransaction.recordAll` +
+      `TransactionRepository.saveNewTransactions` (sekaligus, satu sinyal),
+      ingatan persen `savings_goal_split` (dikecualikan dari cadangan), sakelar
+      "Bagi ke beberapa tujuan" di CATAT › Transfer (≥2 tujuan Active; tanpa
+      pos anggaran dan Ulangi), tombol Menabung di segmen Tabungan, teks id/en,
+      analitik `goal_split_recorded`. Kriteria: jumlah transfer = total tepat
+      sampai sen; persen ≠ 100 tidak bisa dicatat; tiap transfer tampil dan
+      bisa dihapus sendiri di Riwayat; gagal simpan tidak meninggalkan
+      sebagian transfer.
+      Selesai 18 Nov 2026: kolom persen memilih seluruh isi saat diketuk dan
+      menolak nilai di atas 100; selama jumlah belum 100, nominal tiap tujuan
+      tampil apa adanya (sisa pembulatan hanya dibagikan saat tepat 100).
+      Emulator (Plus, id): Menabung membuka mode bagi dengan pembagian rata,
+      dompet asal tanpa dompet tujuan, 50/30/20 dari Rp1.000.000 tercatat
+      sebagai tiga transfer terpisah (Total aset tetap, Arus 0), dan persen
+      diingat saat dibuka lagi. 2.885 uji lulus.
+- [x] **T-30.18** (S) Formulir bagi tetap ringkas walau tujuannya banyak
+      (permintaan pemilik 18 Nov 2026, ADR-048 §9.3): jumlah persen di bilah
+      tetap atas tombol Catat (`RecordFormFrame.bottomStatus`); hanya tujuan
+      yang ikut tampil, dengan keluarkan dan Tambah tujuan; persen diisi lewat
+      papan angka Catat (`RecordFormFrame.onKeyOverride`, `percentAfterKey`),
+      bukan keyboard sistem; Bagi rata dan Isi sisa. Dicek di emulator
+      (Plus, id); 2.887 uji lulus.
 - [ ] **T-30.9** (QA) Skenario B-96 artefak serah terima (tab QA, #1–#11) di
       emulator Android dan iOS; tanpa Gagal S1/S2. Skenario #2, #3, #5 (dompet
       ganda, tautan) diganti sesuai ADR-048 §8.

@@ -11,11 +11,14 @@ import 'package:saldough/features/record/presentation/widgets/record_budget_item
 import 'package:saldough/features/record/presentation/widgets/record_date_field.dart';
 import 'package:saldough/features/record/presentation/widgets/record_draft_card.dart';
 import 'package:saldough/features/record/presentation/widgets/record_form_frame.dart';
+import 'package:saldough/features/record/presentation/widgets/record_goal_split_field.dart';
 import 'package:saldough/features/record/presentation/widgets/record_note_field.dart';
 import 'package:saldough/features/record/presentation/widgets/record_repeat_field.dart';
 import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/shared/capture/capture.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
+import 'package:saldough/shared/savings_goal/savings_goal.dart';
+import 'package:saldough/shared/savings_goal/savings_goal_presentation.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 import 'package:saldough/shared/wallet/wallet_presentation.dart';
@@ -52,6 +55,10 @@ class TransferFormSheet extends StatefulWidget {
     this.repeatLocked = false,
     this.scheduleOnly = false,
     this.occurrence,
+    this.splitGoals = const [],
+    this.goalWalletIds = const {},
+    this.rememberedSplit = const {},
+    this.startInSplit = false,
     super.key,
   });
 
@@ -112,6 +119,20 @@ class TransferFormSheet extends StatefulWidget {
   /// tujuan pos itu). Diabaikan kalau [initial] terisi.
   final String? initialToWalletId;
 
+  /// Tujuan Active untuk mode **Bagi ke beberapa tujuan** (ADR-048 §9.3);
+  /// sakelarnya tampil bila minimal dua dan formulir mencatat transfer baru
+  /// biasa (bukan sunting, draf, rutin, atau kemunculan).
+  final List<SavingsGoal> splitGoals;
+
+  /// Dompet milik tujuan: tidak ditawarkan sebagai dompet asal mode bagi.
+  final Set<String> goalWalletIds;
+
+  /// Persen terakhir (`goalId` → persen) untuk mengisi mode bagi.
+  final Map<String, int> rememberedSplit;
+
+  /// Dibuka langsung dalam mode bagi (tombol Menabung di segmen Tabungan).
+  final bool startInSplit;
+
   /// Draf Catat Cerdas (ADR-027 §3.4): mengisi formulir seperti [prefill]
   /// (mode CATAT, transaksi baru) dan menampilkan teks yang tertangkap serta
   /// hal yang perlu diperiksa. Diabaikan kalau [initial] atau [prefill]
@@ -130,6 +151,26 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
   String? _budgetItemId;
   DateTime _date = DateTime.now();
   late RecurringPattern? _repeat = widget.initial == null ? widget.initialRepeat : null;
+  late final bool _splitAvailable =
+      widget.splitGoals.length >= 2 &&
+      widget.initial == null &&
+      widget.prefill == null &&
+      widget.draft == null &&
+      widget.initialRepeat == null &&
+      !widget.repeatLocked &&
+      !widget.scheduleOnly &&
+      widget.occurrence == null;
+  late bool _split = _splitAvailable && widget.startInSplit;
+  /// Tujuan yang ikut beserta persennya (ADR-048 §9.3): hanya yang persen
+  /// terakhirnya > 0, atau semua dibagi rata bila belum pernah.
+  late final Map<String, int> _percentValues = {
+    for (final MapEntry(:key, :value)
+        in initialSplitPercents([for (final g in widget.splitGoals) g.id], widget.rememberedSplit).entries)
+      if (value > 0) key: value,
+  };
+
+  /// Tujuan yang persennya sedang diisi papan angka; `null` = nominal.
+  String? _activeGoal;
 
   @override
   void initState() {
@@ -171,6 +212,7 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
   void dispose() {
     _amountController.dispose();
     _noteController.dispose();
+
     super.dispose();
   }
 
@@ -186,7 +228,76 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
   /// pratinjau untuk dompet yang sama saling bertentangan (QA PR #43 F6).
   int? get _preview => widget.repeatLocked || _sameWallet ? null : _amountSen;
 
-  bool get _canSubmit => _amountSen != null && _fromWalletId != null && _toWalletId != null && !_sameWallet;
+  bool get _canSubmit => _split
+      ? _amountSen != null && _fromWalletId != null && !_fromIsGoal && isValidSplit(_amountSen!, _percents)
+      : _amountSen != null && _fromWalletId != null && _toWalletId != null && !_sameWallet;
+
+  Map<String, int> get _percents => Map.of(_percentValues);
+
+  List<SavingsGoal> get _includedGoals => [
+    for (final g in widget.splitGoals)
+      if (_percentValues.containsKey(g.id)) g,
+  ];
+
+  void _onPercentKey(String key) {
+    final id = _activeGoal;
+    if (id == null) return;
+    setState(() => _percentValues[id] = percentAfterKey(_percentValues[id] ?? 0, key));
+  }
+
+  void _removeGoal(String id) => setState(() {
+    _percentValues.remove(id);
+    if (_activeGoal == id) _activeGoal = null;
+  });
+
+  void _splitEvenly() => setState(() {
+    _percentValues.addAll(initialSplitPercents([for (final g in _includedGoals) g.id], const {}));
+  });
+
+  /// Isi sisa: kekurangan (atau kelebihan) sampai 100% ditimpakan ke tujuan
+  /// aktif, selama hasilnya 0–100.
+  int? get _fillRestValue {
+    final id = _activeGoal;
+    if (id == null) return null;
+    final next = (_percentValues[id] ?? 0) + 100 - splitPercentTotal(_percentValues);
+    return next == _percentValues[id] || next < 0 || next > 100 ? null : next;
+  }
+
+  Future<void> _addGoal() async {
+    final others = [
+      for (final g in widget.splitGoals)
+        if (!_percentValues.containsKey(g.id)) g,
+    ];
+    final picked = await showOptionSheet<String>(
+      context,
+      title: t.record.split.addTitle,
+      current: null,
+      options: [
+        for (final g in others)
+          OptionSheetItem(
+            key: ValueKey('split-add-${g.id}'),
+            value: g.id,
+            label: g.name,
+            leading: savingsGoalTile(g.iconKey, size: DsIconTileSize.sm),
+          ),
+      ],
+    );
+    if (picked == null || !mounted) return;
+    setState(() {
+      _percentValues[picked] = 0;
+      _activeGoal = picked;
+    });
+  }
+
+  bool get _fromIsGoal => widget.goalWalletIds.contains(_fromWalletId);
+
+  /// Dompet asal yang ditawarkan: mode bagi tanpa dompet milik tujuan.
+  List<Wallet> get _fromWallets => _split
+      ? [
+          for (final w in widget.wallets)
+            if (!widget.goalWalletIds.contains(w.id)) w,
+        ]
+      : widget.wallets;
 
   /// Tanggal yang menentukan pos anggaran (KT-1): tanggal kemunculan bila
   /// transaksi ini tertaut rutin dan selisihnya paling banyak 7 hari
@@ -203,6 +314,7 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
 
 
   void _submit() {
+    if (_split) return _submitSplit();
     final amount = _amountSen;
     final from = _fromWalletId;
     final to = _toWalletId;
@@ -219,6 +331,30 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
       ),
     );
   }
+
+  void _submitSplit() {
+    final amount = _amountSen;
+    final from = _fromWalletId;
+    if (amount == null || from == null || !isValidSplit(amount, _percents)) return;
+    Navigator.of(context).pop(
+      SplitTransferRecorded(
+        fromWalletId: from,
+        amount: amount,
+        percents: _percents,
+        date: _date,
+        note: _noteController.text.trim(),
+      ),
+    );
+  }
+
+  void _setSplit(bool on) => setState(() {
+    _split = on;
+    if (on && _fromIsGoal) _fromWalletId = null;
+    if (on) {
+      _repeat = null;
+      _date = dateWithoutRepeat(_date);
+    }
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -242,20 +378,40 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
               plain: t.record.transferAction,
             ),
       onSubmit: _canSubmit ? _submit : null,
+      onKeyOverride: _split && _activeGoal != null ? _onPercentKey : null,
+      bottomStatus: _split ? RecordSplitTotalBar(total: splitPercentTotal(_percentValues)) : null,
       children: [
         if (widget.initial == null && widget.prefill == null && widget.draft != null)
           RecordDraftCard(draft: widget.draft!),
         SpotlightTarget(
           spotlightKey: SpotlightKey.recordAmount,
-          child: RecordAmountField(
-            controller: _amountController,
-            kind: TransactionKind.transfer,
-            onChanged: () => setState(() {}),
+          // Mode bagi: mengetuk nominal mengembalikan papan angka ke nominal.
+          child: GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onTap: _activeGoal == null ? null : () => setState(() => _activeGoal = null),
+            child: RecordAmountField(
+              controller: _amountController,
+              kind: TransactionKind.transfer,
+              onChanged: () => setState(() {}),
+            ),
           ),
         ),
+        if (_splitAvailable)
+          DsFieldGroup(
+            children: [
+              DsSwitchRow(
+                key: const ValueKey('split-toggle'),
+                leading: const DsIconTile(icon: Icons.call_split_rounded),
+                title: t.record.split.toggleTitle,
+                subtitle: t.record.split.toggleBody,
+                value: _split,
+                onChanged: _setSplit,
+              ),
+            ],
+          ),
         // Galat dompet sama di atas daftar, supaya terlihat tanpa menggulir
         // (QA PR #43 F6).
-        if (_sameWallet)
+        if (!_split && _sameWallet)
           DecoratedBox(
             decoration: BoxDecoration(color: context.ds.colors.errorContainer, borderRadius: DsRadius.lgAll),
             child: Padding(
@@ -281,14 +437,15 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
               child: WalletSelectField(
                 useDs: true,
                 label: t.record.fromWalletFieldLabel,
-                wallets: widget.wallets,
+                wallets: _fromWallets,
                 selectedId: _fromWalletId,
                 onSelected: (id) => setState(() => _fromWalletId = id),
                 previewAmountSen: _preview,
                 previewIsCredit: false,
               ),
             ),
-            WalletSelectField(
+            if (!_split)
+              WalletSelectField(
                 useDs: true,
               label: t.record.destinationWalletFieldLabel,
               wallets: widget.wallets,
@@ -297,7 +454,7 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
               previewAmountSen: _preview,
             ),
             RecordNoteField(controller: _noteController, kind: TransactionKind.transfer),
-            if (_budgetChoices.isNotEmpty)
+            if (!_split && _budgetChoices.isNotEmpty)
               SpotlightTarget(
                 spotlightKey: SpotlightKey.recordBudgetItem,
                 child: RecordBudgetItemField(
@@ -314,7 +471,7 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
                 allowFuture: _repeat != null,
                 onChanged: (date) => setState(() => _date = date),
               ),
-              if (!editing && widget.occurrence == null)
+              if (!editing && widget.occurrence == null && !_split)
                 SpotlightTarget(
                   spotlightKey: SpotlightKey.recordRepeat,
                   child: RecordRepeatField(
@@ -332,7 +489,19 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
             ),
           ],
         ),
-        if (budgetItemOutsidePeriod(widget.budgetItems, _budgetItemId, _periodDate) case final dropped?)
+        if (_split)
+          RecordGoalSplitField(
+            goals: _includedGoals,
+            percents: _percentValues,
+            amountSen: _amountSen,
+            activeGoalId: _activeGoal,
+            onSelect: (id) => setState(() => _activeGoal = id),
+            onRemove: _removeGoal,
+            onEven: _splitEvenly,
+            onFillRest: _fillRestValue == null ? null : () => setState(() => _percentValues[_activeGoal!] = _fillRestValue!),
+            onAdd: _includedGoals.length < widget.splitGoals.length ? _addGoal : null,
+          ),
+        if (budgetItemOutsidePeriod(widget.budgetItems, _split ? null : _budgetItemId, _periodDate) case final dropped?)
           RecordBudgetItemOutOfPeriodNotice(option: dropped),
         if (widget.occurrence case final occurrence?)
           RecordOccurrenceNotice(occurrence: occurrence, amount: _amountSen, date: _date),

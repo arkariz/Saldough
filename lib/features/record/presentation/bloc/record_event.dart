@@ -133,6 +133,34 @@ final class TransferRecorded extends RecordEvent {
   final RecurringPattern? repeat;
 }
 
+/// Menabung ke beberapa tujuan sekaligus (ADR-048 §9): satu transfer per
+/// tujuan dari [fromWalletId], nominal dibagi menurut [percents].
+final class SplitTransferRecorded extends RecordEvent {
+  /// Membuat [SplitTransferRecorded].
+  const SplitTransferRecorded({
+    required this.fromWalletId,
+    required this.amount,
+    required this.percents,
+    required this.date,
+    required this.note,
+  });
+
+  /// Dompet asal semua transfer.
+  final String fromWalletId;
+
+  /// Total nominal dalam sen.
+  final int amount;
+
+  /// `goalId` → persen (urutan tampil); tujuan ber-0% tidak ikut.
+  final Map<String, int> percents;
+
+  /// Tanggal semua transfer.
+  final DateTime date;
+
+  /// Catatan semua transfer.
+  final String note;
+}
+
 /// **Jadikan Rutin** (T-15.3, J2): rutin baru dari isian [recorded] yang
 /// menautkan [source] sebagai kemunculan pertamanya. Tidak ada transaksi
 /// baru, sehingga tidak ada yang tercatat dua kali.

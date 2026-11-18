@@ -86,6 +86,25 @@ final class RecordTransaction {
     }, source);
   }
 
+  /// Mencatat beberapa transfer BARU sekaligus (menabung ke beberapa tujuan,
+  /// ADR-048 §9.1): semua tersimpan atau tidak sama sekali, lalu dompet yang
+  /// tersentuh dihitung ulang dan [ledgerChanges] diberi tahu sekali.
+  Future<Either<Failure, Unit>> recordTransfers(
+    List<TransferTransaction> transfers, {
+    Object? source,
+  }) async {
+    if (transfers.isEmpty) return right(unit);
+    final saveResult = await transactionRepository.saveNewTransactions(
+      transfers,
+    );
+    return _announced(switch (saveResult) {
+      Left(value: final failure) => left<Failure, Unit>(failure),
+      Right() => await recomputeWalletBalances.forWallets({
+        for (final t in transfers) ...walletIdsOf(t),
+      }),
+    }, source);
+  }
+
   /// Menghapus [transaction], lalu menghitung ulang dompet yang
   /// disentuhnya.
   Future<Either<Failure, Unit>> delete(Transaction transaction, {Object? source}) async {

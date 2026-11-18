@@ -177,6 +177,54 @@ void main() {
     });
   });
 
+  group('recordTransfers (ADR-048 §9.1)', () {
+    test('menyimpan semua transfer sekaligus dengan satu sinyal', () async {
+      await walletRepository.saveWallet(
+        const Wallet(id: 'goal', name: 'Tujuan', iconKey: 'walletSavings', initialBalance: 0, currentBalance: 0),
+      );
+      var signals = 0;
+      final subscription = ledgerChanges.changes.listen((_) => signals++);
+      addTearDown(subscription.cancel);
+
+      final result = await record.recordTransfers([
+        TransferTransaction(id: 's1', date: DateTime(2026, 11, 18), amount: 6000, note: '', fromWalletId: 'bca', toWalletId: 'gopay'),
+        TransferTransaction(id: 's2', date: DateTime(2026, 11, 18), amount: 4000, note: '', fromWalletId: 'bca', toWalletId: 'goal'),
+      ]);
+      await pumpEventQueue();
+
+      expect(result.isRight(), isTrue);
+      expect(signals, 1);
+      expect(await balanceOf('bca'), 500000000 - 10000);
+      expect(await balanceOf('gopay'), 6000);
+      expect(await balanceOf('goal'), 4000);
+      final month = (await transactionRepository.listTransactionsInMonth(DateTime(2026, 11))).getOrElse((_) => []);
+      expect(month.map((t) => t.id), unorderedEquals(['s1', 's2']));
+    });
+
+    test('gagal simpan: tidak ada yang tersimpan dan tidak memancar', () async {
+      final failing = MockTransactionRepository();
+      when(() => failing.saveNewTransactions(any())).thenAnswer(
+        (_) async => left(const SystemFailure(code: FailureCode.unknown, message: 'disk penuh')),
+      );
+      var signals = 0;
+      final subscription = ledgerChanges.changes.listen((_) => signals++);
+      addTearDown(subscription.cancel);
+
+      final result = await RecordTransaction(
+        transactionRepository: failing,
+        recomputeWalletBalances: RecomputeWalletBalances(walletRepository: walletRepository, transactionRepository: failing),
+        ledgerChanges: ledgerChanges,
+      ).recordTransfers([
+        TransferTransaction(id: 's1', date: DateTime(2026, 11, 18), amount: 6000, note: '', fromWalletId: 'bca', toWalletId: 'gopay'),
+      ]);
+      await pumpEventQueue();
+
+      expect(result.isLeft(), isTrue);
+      expect(signals, 0);
+      expect(await balanceOf('bca'), 500000000);
+    });
+  });
+
   group('invarian 15: satu kemunculan rutin paling banyak satu transaksi', () {
     ExpenseTransaction netflix(String id, DateTime date) => ExpenseTransaction(
       id: id,

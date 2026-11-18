@@ -126,6 +126,10 @@ abstract final class WealthEvents {
 
   /// Tujuan tabungan baru tercapai.
   static const goalCompleted = AnalyticsEvent('goal_completed');
+
+  /// Satu kali menabung dibagi ke beberapa tujuan (ADR-048 §9). [goals]:
+  /// banyaknya tujuan yang ikut, tanpa nama atau nominal.
+  static AnalyticsEvent goalSplitRecorded(int goals) => AnalyticsEvent('goal_split_recorded', {'goals': goals});
 }
 
 /// Peristiwa rutin R1 (ADR-035 §7) dan R3 (ADR-037 §3.5), tanpa nominal.

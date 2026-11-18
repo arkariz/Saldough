@@ -38,6 +38,7 @@ final class RecordSheetInput extends RouteInput {
     this.editRule,
     this.occurrenceRule,
     this.occurrenceDate,
+    this.splitToGoals = false,
     this.onSaved,
   });
 
@@ -82,6 +83,10 @@ final class RecordSheetInput extends RouteInput {
 
   /// Tanggal kemunculan untuk [occurrenceRule].
   final DateTime? occurrenceDate;
+
+  /// Transfer dibuka dalam mode **Bagi ke beberapa tujuan** (tombol Menabung
+  /// di segmen Tabungan, ADR-048 §9.3); diabaikan bila tujuan Active < 2.
+  final bool splitToGoals;
 
   /// Dipanggil sekali sesudah transaksi benar-benar tersimpan, dengan kategori,
   /// catatan, dompet, dan pos akhirnya (kategori `null` bila kosong atau transfer). Dipakai

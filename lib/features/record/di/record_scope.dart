@@ -4,6 +4,7 @@ import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
+import 'package:saldough/shared/savings_goal/savings_goal.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
@@ -32,6 +33,16 @@ final class RecordScope extends IsolatedScope {
     if (parent.isRegistered<FinancialMonthPreferenceRepository>()) {
       c.registerSingleton<FinancialMonthPreferenceRepository>(parent<FinancialMonthPreferenceRepository>());
     }
+    // Mode bagi ke beberapa tujuan (ADR-048 §9); sebagian uji tidak
+    // menyediakannya.
+    if (parent.isRegistered<SavingsGoalRepository>()) {
+      c.registerSingleton<SavingsGoalRepository>(
+        parent<SavingsGoalRepository>(),
+      );
+    }
+    if (parent.isRegistered<GoalSplitMemory>()) {
+      c.registerSingleton<GoalSplitMemory>(parent<GoalSplitMemory>());
+    }
   }
 
   @override
@@ -46,6 +57,12 @@ final class RecordScope extends IsolatedScope {
         recurringChanges: c<RecurringChanges>(),
         financialMonth: c.isRegistered<FinancialMonthPreferenceRepository>()
             ? c<FinancialMonthPreferenceRepository>()
+            : null,
+        savingsGoals: c.isRegistered<SavingsGoalRepository>()
+            ? c<SavingsGoalRepository>()
+            : null,
+        splitMemory: c.isRegistered<GoalSplitMemory>()
+            ? c<GoalSplitMemory>()
             : null,
         recordTransaction: RecordTransaction(
           transferOnlyWallets: parent.isRegistered<TransferOnlyWallets>() ? parent<TransferOnlyWallets>() : const NoTransferOnlyWallets(),

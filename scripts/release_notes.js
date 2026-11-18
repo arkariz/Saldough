@@ -17,6 +17,8 @@ const path = require('path');
 const KEY_PREFIX = 'whats_new_';
 const CATEGORIES = ['new', 'faster', 'fixed', 'security'];
 const MAX_NOTES = 3;
+/** Tautan butir catatan hanya ke situs sendiri (mis. video tutorial). */
+const LINK_PREFIXES = ['https://arkariz.github.io/tanukonomy-web/'];
 const MAX_ATTEMPTS = 3;
 const PLAY_LIMIT = 500;
 const PLAY_TITLE = { id: (v) => `🚀 Apa yang baru di versi ${v}`, en: (v) => `🚀 What's new in version ${v}` };
@@ -79,6 +81,17 @@ function validateNote(raw, { pubspecVersion } = {}) {
       else if (BANNED_ID.test(id)) problems.push(`teks id memuat kata terlarang: "${id}"`);
       if (typeof en !== 'string' || en.trim() === '') problems.push('butir tanpa teks en');
       else if (en.includes('!')) problems.push(`teks en memuat tanda seru: "${en}"`);
+      if (item && item.link !== undefined) {
+        const link = item.link;
+        if (typeof link !== 'object' || link === null || Array.isArray(link)) problems.push('link harus objek {id, en}');
+        else {
+          for (const lang of ['id', 'en']) {
+            if (typeof link[lang] !== 'string' || !LINK_PREFIXES.some((p) => link[lang].startsWith(p))) {
+              problems.push(`link.${lang} harus URL https di situs Tanukonomy (${LINK_PREFIXES.join(', ')})`);
+            }
+          }
+        }
+      }
     }
   }
   if (count < 1) problems.push('catatan wajib: minimal satu butir untuk setiap build yang dipublikasikan');

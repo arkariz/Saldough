@@ -33,7 +33,7 @@ enum NoteCategory {
 /// Satu butir catatan dalam dua bahasa.
 final class LocalizedNote extends Equatable {
   /// Membuat [LocalizedNote].
-  const LocalizedNote({required this.id, required this.en});
+  const LocalizedNote({required this.id, required this.en, this.linkId, this.linkEn});
 
   /// Teks bahasa Indonesia.
   final String id;
@@ -41,11 +41,23 @@ final class LocalizedNote extends Equatable {
   /// Teks bahasa Inggris.
   final String en;
 
+  /// Tautan opsional bahasa Indonesia (mis. video tutorial), `https` saja.
+  final String? linkId;
+
+  /// Tautan opsional bahasa Inggris.
+  final String? linkEn;
+
   /// Teks untuk bahasa aktif; Inggris sebagai cadangan.
   String text({required bool english}) => english ? en : (id.isEmpty ? en : id);
 
+  /// Tautan untuk bahasa aktif, dengan cadangan bahasa lain; `null` bila tidak ada.
+  Uri? link({required bool english}) {
+    final raw = english ? (linkEn ?? linkId) : (linkId ?? linkEn);
+    return raw == null ? null : Uri.tryParse(raw);
+  }
+
   @override
-  List<Object?> get props => [id, en];
+  List<Object?> get props => [id, en, linkId, linkEn];
 }
 
 /// Butir-butir satu kategori. [category] `null` = kategori tak dikenal:

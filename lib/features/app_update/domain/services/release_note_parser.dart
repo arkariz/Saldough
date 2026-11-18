@@ -42,7 +42,15 @@ ReleaseNote? parseReleaseNote(ReleaseKey key, String json) {
         final en = note['en'];
         if (id is! String || en is! String) return null;
         if (id.trim().isEmpty && en.trim().isEmpty) continue;
-        items.add(LocalizedNote(id: id.trim(), en: en.trim()));
+        final link = note['link'];
+        items.add(
+          LocalizedNote(
+            id: id.trim(),
+            en: en.trim(),
+            linkId: link is Map<String, dynamic> ? _httpsOrNull(link['id']) : null,
+            linkEn: link is Map<String, dynamic> ? _httpsOrNull(link['en']) : null,
+          ),
+        );
       }
       if (items.isNotEmpty) parsed.add(NoteGroup(category: NoteCategory.fromSlug(category), notes: items));
     }
@@ -50,6 +58,14 @@ ReleaseNote? parseReleaseNote(ReleaseKey key, String json) {
   } on FormatException {
     return null;
   }
+}
+
+/// [value] bila berupa URL `https` yang sah, selain itu `null` (tautan rusak
+/// diabaikan tanpa membuang butirnya).
+String? _httpsOrNull(Object? value) {
+  if (value is! String) return null;
+  final uri = Uri.tryParse(value.trim());
+  return uri != null && uri.scheme == 'https' && uri.host.isNotEmpty ? value.trim() : null;
 }
 
 /// Isi entri [note] sebagai JSON, untuk salinan lokal.
@@ -60,7 +76,12 @@ String encodeReleaseNote(ReleaseNote note) => jsonEncode({
       {
         'category': group.category?.slug ?? 'unknown',
         'notes': [
-          for (final item in group.notes) {'id': item.id, 'en': item.en},
+          for (final item in group.notes)
+            {
+              'id': item.id,
+              'en': item.en,
+              if (item.linkId != null || item.linkEn != null) 'link': {'id': ?item.linkId, 'en': ?item.linkEn},
+            },
         ],
       },
   ],

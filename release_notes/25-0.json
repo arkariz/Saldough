@@ -1,0 +1,26 @@
+{
+  "version": "1.2.0",
+  "groups": [
+    {
+      "category": "new",
+      "notes": [
+        {
+          "id": "Tujuan tabungan: tiap tujuan punya dompet sendiri, dan tab Dompet kini menampilkan Total aset beserta kemajuannya.",
+          "en": "Savings goals: each goal has its own wallet, and the Wallet tab now shows Total assets and their progress."
+        },
+        {
+          "id": "Menabung ke beberapa tujuan sekaligus dengan membagi satu setoran menurut persen.",
+          "en": "Save to several goals at once by splitting one deposit by percentage.",
+          "link": {
+            "id": "https://arkariz.github.io/tanukonomy-web/tutorial/menabung/",
+            "en": "https://arkariz.github.io/tanukonomy-web/en/tutorial/saving/"
+          }
+        },
+        {
+          "id": "Mengubah saldo dompet kini dicatat sebagai penyesuaian, jadi saldo bulan-bulan sebelumnya tetap.",
+          "en": "Changing a wallet balance is now recorded as an adjustment, so earlier months stay the same."
+        }
+      ]
+    }
+  ]
+}

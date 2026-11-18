@@ -167,3 +167,11 @@ test('formatPlayChangelog: lewat 500 karakter, butir terbawah dibuang dan katego
   assert.ok(!text.includes('Perbaikan'), 'kategori yang butirnya terbuang ikut hilang');
   assert.ok(text.includes('✨ Baru'));
 });
+
+test('link opsional: hanya https ke situs Tanukonomy', () => {
+  const withLink = (link) => json({ version: '0.6.0', groups: [{ category: 'new', notes: [{ id: 'Satu.', en: 'One.', link }] }] });
+  const site = 'https://arkariz.github.io/tanukonomy-web/';
+  assert.deepEqual(validateNote(withLink({ id: `${site}tutorial/menabung/`, en: `${site}en/tutorial/saving/` })), []);
+  assert.match(validateNote(withLink({ id: 'https://contoh.com/x', en: `${site}en/` })).join(), /link\.id/);
+  assert.match(validateNote(withLink('https://arkariz.github.io')).join(), /link harus objek/);
+});

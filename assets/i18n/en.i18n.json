@@ -1609,6 +1609,7 @@
     "reviewSeeAgain": "See again"
   },
   "appUpdate": {
+    "noteLink": "View guide",
     "banner": {
       "storeAvailable": "A new version is available",
       "storeDownloading": "Downloading the new version",

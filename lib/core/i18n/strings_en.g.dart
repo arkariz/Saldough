@@ -1626,6 +1626,7 @@ class _Translations$appUpdate$en extends Translations$appUpdate$id {
 	final TranslationsEn _root; // ignore: unused_field
 
 	// Translations
+	@override String get noteLink => 'View guide';
 	@override late final _Translations$appUpdate$banner$en banner = _Translations$appUpdate$banner$en._(_root);
 	@override late final _Translations$appUpdate$action$en action = _Translations$appUpdate$action$en._(_root);
 	@override late final _Translations$appUpdate$whatsNew$en whatsNew = _Translations$appUpdate$whatsNew$en._(_root);
@@ -4239,6 +4240,7 @@ extension on TranslationsEn {
 			'plan.installmentFree' => ({required Object name, required Object month, required Object amount}) => 'After ${name} ends, from ${month} your unplanned money grows +${amount}/mo.',
 			'plan.lookbackSeeAnalysis' => ({required Object month}) => 'See ${month} details',
 			'plan.reviewSeeAgain' => 'See again',
+			'appUpdate.noteLink' => 'View guide',
 			'appUpdate.banner.storeAvailable' => 'A new version is available',
 			'appUpdate.banner.storeDownloading' => 'Downloading the new version',
 			'appUpdate.banner.storeDownloadingNote' => 'You can keep recording.',
@@ -4277,9 +4279,9 @@ extension on TranslationsEn {
 			'analysis.empty.cta' => 'Record a transaction',
 			'analysis.emptyMonth' => ({required Object period}) => 'No expenses in ${period} yet.',
 			'analysis.error' => 'Couldn\'t load analysis. Pull down to try again.',
-			'analysis.donutSemantics' => ({required Object kind, required Object period, required Object parts}) => '${kind} ${period}: ${parts}',
 			_ => null,
 		} ?? switch (path) {
+			'analysis.donutSemantics' => ({required Object kind, required Object period, required Object parts}) => '${kind} ${period}: ${parts}',
 			'analysis.rowSemantics' => ({required Object name, required Object percent, required Object amount}) => '${name}, ${percent}, ${amount}',
 			'analysis.fix' => 'Add category',
 			'analysis.shareOf' => ({required Object percent, required Object kind}) => '${percent} of ${kind}',

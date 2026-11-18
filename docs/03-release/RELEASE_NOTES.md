@@ -34,6 +34,11 @@ Shorebird untuk pembaruan kecil. Contoh `release_notes/7-0.json`:
   `fixed` (Perbaikan), `security` (Keamanan, hanya yang konkret). Satu
   kelompok per kategori; urutan kelompok dan butir = urutan tampil, yang
   paling penting di atas.
+- `link` (opsional, per butir): `{"id": "<url>", "en": "<url>"}`, tampil
+  sebagai tombol **Lihat panduan** di bawah butirnya dan membuka browser.
+  Hanya ke situs sendiri (`https://arkariz.github.io/tanukonomy-web/…`,
+  dijaga `scripts/release_notes.js`), mis. video tutorial. Tidak ikut teks
+  "What's new" Play Console. Versi aplikasi sebelum 1.2.0 mengabaikannya.
 - 1–3 butir per berkas, masing-masing **satu kalimat manfaat** dalam `id`
   dan `en`. Hanya perubahan yang terasa pengguna.
 - Gaya `id`: "kamu", tanpa tanda seru, tanpa "Anda", "patch", "tambalan",

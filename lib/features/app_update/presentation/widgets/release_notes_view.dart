@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/features/app_update/domain/entities/release_note.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 /// Ikon kategori (tile kecil di label kategori, APP_UPDATE §7); kategori
 /// yang tidak dikenal memakai ikon catatan netral.
@@ -103,7 +104,21 @@ class ReleaseNoteGroups extends StatelessWidget {
                     ),
                   ),
                   Expanded(
-                    child: Text(note.text(english: english), style: ds.typography.bodyMd),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(note.text(english: english), style: ds.typography.bodyMd),
+                        // Tautan opsional, mis. video tutorial di situs (RELEASE_NOTES.md).
+                        if (note.link(english: english) case final uri?)
+                          TextButton.icon(
+                            key: const ValueKey('release-note-link'),
+                            style: TextButton.styleFrom(padding: EdgeInsets.zero, visualDensity: VisualDensity.compact),
+                            onPressed: () => launchUrl(uri, mode: LaunchMode.externalApplication),
+                            icon: const Icon(Icons.play_circle_outline, size: 20),
+                            label: Text(t.appUpdate.noteLink),
+                          ),
+                      ],
+                    ),
                   ),
                 ],
               ),

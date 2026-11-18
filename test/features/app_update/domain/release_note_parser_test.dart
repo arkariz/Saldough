@@ -25,6 +25,18 @@ void main() {
 
   group('parseReleaseNote', () {
     const key = (build: 7, patch: 0);
+
+    test('tautan opsional: https dibawa dan ikut tersalin, selain itu diabaikan', () {
+      const raw = '{"version":"1.2.0","groups":[{"category":"new","notes":['
+          '{"id":"Satu.","en":"One.","link":{"id":"https://contoh.id/a","en":"https://contoh.id/b"}},'
+          '{"id":"Dua.","en":"Two.","link":{"id":"http://tidak-aman","en":5}}]}]}';
+      final note = parseReleaseNote(key, raw)!;
+      final first = note.groups.single.notes.first;
+      expect(first.link(english: false), Uri.parse('https://contoh.id/a'));
+      expect(first.link(english: true), Uri.parse('https://contoh.id/b'));
+      expect(note.groups.single.notes.last.link(english: false), isNull);
+      expect(parseReleaseNote(key, encodeReleaseNote(note)), note);
+    });
     const json = '''
 {"version":"0.6.0","groups":[
   {"category":"new","notes":[{"id":"Satu.","en":"One."},{"id":"Dua.","en":"Two."}]},

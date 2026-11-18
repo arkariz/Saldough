@@ -4160,6 +4160,10 @@ class Translations$appUpdate$id {
 	final Translations _root; // ignore: unused_field
 
 	// Translations
+
+	/// id: 'Lihat panduan'
+	String get noteLink => 'Lihat panduan';
+
 	late final Translations$appUpdate$banner$id banner = Translations$appUpdate$banner$id.internal(_root);
 	late final Translations$appUpdate$action$id action = Translations$appUpdate$action$id.internal(_root);
 	late final Translations$appUpdate$whatsNew$id whatsNew = Translations$appUpdate$whatsNew$id.internal(_root);
@@ -7755,6 +7759,7 @@ extension on Translations {
 			'plan.installmentFree' => ({required Object name, required Object month, required Object amount}) => 'Setelah ${name} selesai, mulai ${month} uang nganggurmu bertambah +${amount}/bln.',
 			'plan.lookbackSeeAnalysis' => ({required Object month}) => 'Lihat rincian ${month}',
 			'plan.reviewSeeAgain' => 'Lihat lagi',
+			'appUpdate.noteLink' => 'Lihat panduan',
 			'appUpdate.banner.storeAvailable' => 'Versi baru tersedia',
 			'appUpdate.banner.storeDownloading' => 'Mengunduh versi baru',
 			'appUpdate.banner.storeDownloadingNote' => 'Kamu tetap bisa mencatat.',
@@ -7793,9 +7798,9 @@ extension on Translations {
 			'analysis.empty.cta' => 'Catat transaksi',
 			'analysis.emptyMonth' => ({required Object period}) => 'Belum ada pengeluaran di ${period}.',
 			'analysis.error' => 'Analisis gagal dimuat. Tarik ke bawah untuk mencoba lagi.',
-			'analysis.donutSemantics' => ({required Object kind, required Object period, required Object parts}) => '${kind} ${period}: ${parts}',
 			_ => null,
 		} ?? switch (path) {
+			'analysis.donutSemantics' => ({required Object kind, required Object period, required Object parts}) => '${kind} ${period}: ${parts}',
 			'analysis.rowSemantics' => ({required Object name, required Object percent, required Object amount}) => '${name}, ${percent}, ${amount}',
 			'analysis.fix' => 'Beri kategori',
 			'analysis.shareOf' => ({required Object percent, required Object kind}) => '${percent} dari ${kind}',

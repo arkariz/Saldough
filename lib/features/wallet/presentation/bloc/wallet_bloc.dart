@@ -130,7 +130,8 @@ final class WalletBloc extends Bloc<WalletEvent, WalletState> {
         sheetId: () => null,
         sheetFetchedAt: () => null,
         sheetProblem: PriceSheetProblem.none,
-        effect: _effectMessage(t.assets.invest.sheet.disconnected),
+        // Putuskan berhasil dilakukan, bukan galat.
+        effect: _effectSaved(t.assets.invest.sheet.disconnected),
       ),
     );
   }

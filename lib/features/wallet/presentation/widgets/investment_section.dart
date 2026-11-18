@@ -452,6 +452,11 @@ class PriceSheetCard extends StatelessWidget {
     switch (picked) {
       case 'open' when sheetId != null:
         await launchUrl(Uri.parse('https://docs.google.com/spreadsheets/d/$sheetId'), mode: LaunchMode.externalApplication);
+      case 'refresh' when !isPlus:
+        // Plus berakhir: tautan tetap, mengambil harga membuka paywall (ADR-051 §3.5).
+        if (context.mounted) {
+          await context.pushRoute(PremiumRouteKeys.paywall, const PaywallInput(PaywallTrigger.sheetPrices));
+        }
       case 'refresh':
         onRefresh();
       case 'disconnect':

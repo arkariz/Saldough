@@ -149,6 +149,30 @@ void main() {
     );
   });
 
+  test('investasi: valuasi harus menunjuk instrumen yang ada (ADR-049 §3.9)', () {
+    final base = sampleDocs();
+    final instruments = jsonEncode({
+      'schemaVersion': 1,
+      'items': [
+        {'id': 'bbca', 'name': 'BBCA', 'type': 'stock', 'createdAt': '2026-11-01T00:00:00.000'},
+      ],
+    });
+    String valuations(String instrumentId) => jsonEncode({
+      'schemaVersion': 1,
+      'items': [
+        {'instrumentId': instrumentId, 'date': '2026-11-02T00:00:00.000', 'unitPrice': 987500, 'source': 'manual'},
+      ],
+    });
+    expect(
+      () => validate({...base, 'investment_instruments': instruments, 'investment_valuations': valuations('bbca')}),
+      returnsNormally,
+    );
+    expect(
+      () => validate({...base, 'investment_instruments': instruments, 'investment_valuations': valuations('hilang')}),
+      throwsBackup(BackupFailureCodes.inconsistent),
+    );
+  });
+
   test('indeks menyebut bulan tanpa dokumen, atau dokumen bulan tanpa indeks: inconsistent', () {
     final noDoc = sampleDocs(months: ['2026-09', '2026-10'])..remove('transaction_2026-09');
     expect(() => validate(noDoc), throwsBackup(BackupFailureCodes.inconsistent));

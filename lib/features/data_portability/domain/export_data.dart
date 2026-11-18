@@ -2,6 +2,7 @@ import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
 import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
+import 'package:saldough/shared/investment/investment.dart';
 import 'package:saldough/shared/savings_goal/savings_goal.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
@@ -23,6 +24,8 @@ final class ExportData {
     required this.schedule,
     required this.currency,
     this.goals = const [],
+    this.instruments = const [],
+    this.valuations = const [],
   });
 
   /// Seluruh transaksi.
@@ -34,6 +37,12 @@ final class ExportData {
   /// Seluruh tujuan tabungan (ADR-048 §3.4); lembar Tujuan hanya ditulis bila
   /// tidak kosong.
   final List<SavingsGoal> goals;
+
+  /// Instrumen investasi untuk lembar Investasi (ADR-049 §3.9).
+  final List<Instrument> instruments;
+
+  /// Riwayat nilai untuk lembar Valuasi (ADR-049 §3.9).
+  final List<InstrumentValuation> valuations;
 
   /// `categoryId → nama`, termasuk kategori terarsip.
   final Map<String, String> categoryNames;

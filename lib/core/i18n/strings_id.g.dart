@@ -1071,9 +1071,17 @@ class Translations$dataPortability$id {
 	/// id: 'Dompet'
 	String get sheetWallets => 'Dompet';
 
+	/// id: 'Investasi'
+	String get sheetInvestments => 'Investasi';
+
+	/// id: 'Valuasi'
+	String get sheetValuations => 'Valuasi';
+
 	/// id: 'Tujuan'
 	String get sheetGoals => 'Tujuan';
 
+	late final Translations$dataPortability$investmentColumns$id investmentColumns = Translations$dataPortability$investmentColumns$id.internal(_root);
+	late final Translations$dataPortability$valuationColumns$id valuationColumns = Translations$dataPortability$valuationColumns$id.internal(_root);
 	late final Translations$dataPortability$goalColumns$id goalColumns = Translations$dataPortability$goalColumns$id.internal(_root);
 	late final Translations$dataPortability$columns$id columns = Translations$dataPortability$columns$id.internal(_root);
 	late final Translations$dataPortability$types$id types = Translations$dataPortability$types$id.internal(_root);
@@ -4637,6 +4645,87 @@ class Translations$record$calc$id {
 	String get tooLarge => 'Hasilnya terlalu besar';
 }
 
+// Path: dataPortability.investmentColumns
+class Translations$dataPortability$investmentColumns$id {
+	Translations$dataPortability$investmentColumns$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Nama'
+	String get name => 'Nama';
+
+	/// id: 'Jenis'
+	String get type => 'Jenis';
+
+	/// id: 'Kode'
+	String get code => 'Kode';
+
+	/// id: 'Jumlah'
+	String get quantity => 'Jumlah';
+
+	/// id: 'Satuan'
+	String get unit => 'Satuan';
+
+	/// id: 'Nilai perolehan'
+	String get cost => 'Nilai perolehan';
+
+	/// id: 'Harga terakhir'
+	String get lastPrice => 'Harga terakhir';
+
+	/// id: 'Satuan harga'
+	String get priceUnit => 'Satuan harga';
+
+	/// id: 'Tanggal harga'
+	String get priceDate => 'Tanggal harga';
+
+	/// id: 'Nilai pasar'
+	String get marketValue => 'Nilai pasar';
+
+	/// id: 'Untung/rugi belum terwujud'
+	String get unrealized => 'Untung/rugi belum terwujud';
+
+	/// id: 'Untung/rugi terwujud'
+	String get realized => 'Untung/rugi terwujud';
+
+	/// id: 'Status'
+	String get status => 'Status';
+
+	/// id: 'Aktif'
+	String get statusActive => 'Aktif';
+}
+
+// Path: dataPortability.valuationColumns
+class Translations$dataPortability$valuationColumns$id {
+	Translations$dataPortability$valuationColumns$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Tanggal'
+	String get date => 'Tanggal';
+
+	/// id: 'Investasi'
+	String get investment => 'Investasi';
+
+	/// id: 'Harga'
+	String get price => 'Harga';
+
+	/// id: 'Satuan harga'
+	String get priceUnit => 'Satuan harga';
+
+	/// id: 'Sumber'
+	String get source => 'Sumber';
+
+	/// id: 'Manual'
+	String get sourceManual => 'Manual';
+
+	/// id: 'Google Sheet'
+	String get sourceSheet => 'Google Sheet';
+}
+
 // Path: dataPortability.goalColumns
 class Translations$dataPortability$goalColumns$id {
 	Translations$dataPortability$goalColumns$id.internal(this._root);
@@ -7159,7 +7248,30 @@ extension on Translations {
 			'dataPortability.errorOtherBody' => 'Pemulihan gagal disiapkan. Coba lagi. Datamu tidak berubah.',
 			'dataPortability.sheetTransactions' => 'Transaksi',
 			'dataPortability.sheetWallets' => 'Dompet',
+			'dataPortability.sheetInvestments' => 'Investasi',
+			'dataPortability.sheetValuations' => 'Valuasi',
 			'dataPortability.sheetGoals' => 'Tujuan',
+			'dataPortability.investmentColumns.name' => 'Nama',
+			'dataPortability.investmentColumns.type' => 'Jenis',
+			'dataPortability.investmentColumns.code' => 'Kode',
+			'dataPortability.investmentColumns.quantity' => 'Jumlah',
+			'dataPortability.investmentColumns.unit' => 'Satuan',
+			'dataPortability.investmentColumns.cost' => 'Nilai perolehan',
+			'dataPortability.investmentColumns.lastPrice' => 'Harga terakhir',
+			'dataPortability.investmentColumns.priceUnit' => 'Satuan harga',
+			'dataPortability.investmentColumns.priceDate' => 'Tanggal harga',
+			'dataPortability.investmentColumns.marketValue' => 'Nilai pasar',
+			'dataPortability.investmentColumns.unrealized' => 'Untung/rugi belum terwujud',
+			'dataPortability.investmentColumns.realized' => 'Untung/rugi terwujud',
+			'dataPortability.investmentColumns.status' => 'Status',
+			'dataPortability.investmentColumns.statusActive' => 'Aktif',
+			'dataPortability.valuationColumns.date' => 'Tanggal',
+			'dataPortability.valuationColumns.investment' => 'Investasi',
+			'dataPortability.valuationColumns.price' => 'Harga',
+			'dataPortability.valuationColumns.priceUnit' => 'Satuan harga',
+			'dataPortability.valuationColumns.source' => 'Sumber',
+			'dataPortability.valuationColumns.sourceManual' => 'Manual',
+			'dataPortability.valuationColumns.sourceSheet' => 'Google Sheet',
 			'dataPortability.goalColumns.name' => 'Nama',
 			'dataPortability.goalColumns.target' => 'Target',
 			'dataPortability.goalColumns.saved' => 'Terkumpul',
@@ -7251,6 +7363,8 @@ extension on Translations {
 			'budget.deleteConfirmTitle' => 'Hapus anggaran?',
 			'budget.deleteConfirmMessage' => ({required Object name}) => 'Anggaran "${name}" beserta posnya akan dihapus. Transaksi yang tertaut tetap tercatat dan saldo dompet tidak berubah.',
 			'budget.itemAddTitle' => 'Tambah pos',
+			_ => null,
+		} ?? switch (path) {
 			'budget.itemEditTitle' => 'Ubah pos',
 			'budget.itemNameLabel' => 'Nama pos',
 			'budget.itemNameHint' => 'Contoh: Beras',
@@ -7274,8 +7388,6 @@ extension on Translations {
 			'budget.detailHowTitle' => 'Cara kerja pos anggaran',
 			'budget.unknownWallet' => 'Dompet tidak ditemukan',
 			'budget.totalPlannedLabel' => 'Total rencana',
-			_ => null,
-		} ?? switch (path) {
 			'budget.itemsRequiredHint' => 'Tambahkan minimal satu pos. Pengeluaran dihitung per pos, jadi anggaran tanpa pos tidak bisa memantau pengeluaran.',
 			'budget.walletUnchangedNote' => ({required Object wallet}) => 'Saldo ${wallet} tidak berubah',
 			'budget.itemKindLabel' => 'Jenis pos',
@@ -7765,6 +7877,8 @@ extension on Translations {
 			'category.addTitle' => 'Kategori baru',
 			'category.renameTitle' => 'Ubah kategori',
 			'category.iconLabel' => 'Ikon',
+			_ => null,
+		} ?? switch (path) {
 			'category.iconOption' => ({required Object n}) => 'Ikon ${n}',
 			'category.nameHint' => 'Nama kategori',
 			'category.archiveAction' => 'Arsipkan',
@@ -7788,8 +7902,6 @@ extension on Translations {
 			'appearance.presetPickerTitle' => 'Pilih warna aplikasi',
 			'appearance.presets.matcha' => 'Matcha',
 			'appearance.presets.pink' => 'Pink',
-			_ => null,
-		} ?? switch (path) {
 			'appearance.presets.taro' => 'Taro',
 			'appearance.presets.tanuki' => 'Tanuki',
 			'appearance.presets.laut' => 'Laut',
@@ -8279,6 +8391,8 @@ extension on Translations {
 			'appUpdate.action.later' => 'Nanti',
 			'appUpdate.action.ok' => 'Oke',
 			'appUpdate.whatsNew.title' => ({required Object version}) => 'Apa yang baru di versi ${version}',
+			_ => null,
+		} ?? switch (path) {
 			'appUpdate.whatsNew.titlePatch' => 'Apa yang baru',
 			'appUpdate.whatsNew.empty' => 'Belum ada catatan pembaruan.',
 			'appUpdate.whatsNew.close' => 'Tutup',
@@ -8302,8 +8416,6 @@ extension on Translations {
 			'analysis.kind.expense' => 'Pengeluaran',
 			'analysis.kind.income' => 'Pemasukan',
 			'analysis.empty.title' => 'Belum ada yang bisa dianalisis',
-			_ => null,
-		} ?? switch (path) {
 			'analysis.empty.body' => 'Catat transaksi untuk melihat alur pengeluaranmu.',
 			'analysis.empty.cta' => 'Catat transaksi',
 			'analysis.emptyMonth' => ({required Object period}) => 'Belum ada pengeluaran di ${period}.',

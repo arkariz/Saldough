@@ -181,6 +181,7 @@ abstract final class RootModule {
           rules: container<RecurringRuleRepository>(),
           freelance: container<FreelanceRepository>(),
           goals: container<SavingsGoalRepository>(),
+          investments: container<InvestmentRepository>(),
         ),
       )
       ..registerLazySingleton<ExportGateway>(

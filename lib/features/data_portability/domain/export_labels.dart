@@ -19,6 +19,29 @@ final class ExportLabels {
     this.goalsSheet = 'Goals',
     this.goalColumns = const ['Name', 'Target', 'Saved', 'Status', 'Target date', 'Wallets'],
     this.goalStatuses = const ['Active', 'Reached', 'Archived'],
+    this.investmentsSheet = 'Investments',
+    this.investmentColumns = const [
+      'Name',
+      'Type',
+      'Ticker',
+      'Quantity',
+      'Unit',
+      'Cost',
+      'Last price',
+      'Price unit',
+      'Price date',
+      'Market value',
+      'Unrealized gain/loss',
+      'Realized gain/loss',
+      'Status',
+    ],
+    this.investmentTypes = const ['Stock', 'Mutual fund', 'Bond', 'Gold', 'Other'],
+    this.quantityUnits = const ['lot', 'units', 'face value', 'g', 'units'],
+    this.priceUnits = const ['per share', 'per unit', '% of face value', 'per gram', 'per unit'],
+    this.investmentStatuses = const ['Active', 'Closed'],
+    this.valuationsSheet = 'Values',
+    this.valuationColumns = const ['Date', 'Investment', 'Price', 'Price unit', 'Source'],
+    this.valuationSources = const ['Manual', 'Google Sheet'],
   });
 
   /// Kata di nama berkas: `ekspor` atau `export`
@@ -69,4 +92,31 @@ final class ExportLabels {
 
   /// Teks status tujuan, urut `SavingsGoalStatus.values`.
   final List<String> goalStatuses;
+
+  /// Nama lembar investasi (ADR-049 §3.9).
+  final String investmentsSheet;
+
+  /// Judul 13 kolom investasi.
+  final List<String> investmentColumns;
+
+  /// Teks jenis, urut `InstrumentType.values`.
+  final List<String> investmentTypes;
+
+  /// Satuan jumlah, urut `InstrumentType.values`.
+  final List<String> quantityUnits;
+
+  /// Satuan harga, urut `InstrumentType.values`.
+  final List<String> priceUnits;
+
+  /// Teks Aktif dan Selesai.
+  final List<String> investmentStatuses;
+
+  /// Nama lembar riwayat nilai.
+  final String valuationsSheet;
+
+  /// Judul 5 kolom valuasi.
+  final List<String> valuationColumns;
+
+  /// Teks sumber valuasi, urut `ValuationSource.values`.
+  final List<String> valuationSources;
 }

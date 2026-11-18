@@ -8,6 +8,7 @@ import 'package:saldough/features/data_portability/data/export_writers.dart';
 import 'package:saldough/features/data_portability/domain/export_data.dart';
 import 'package:saldough/features/data_portability/domain/export_labels.dart';
 import 'package:saldough/features/data_portability/domain/export_rows.dart';
+import 'package:saldough/shared/investment/investment.dart';
 import 'package:saldough/shared/savings_goal/savings_goal.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 
@@ -119,6 +120,50 @@ void main() {
       expect(sheet, contains('<v>${wallet.currentBalance ~/ 100}</v>'));
       expect(sheet, contains('2027-06-30'));
       expect(sheet, contains(wallet.name));
+    });
+
+    test('lembar Investasi dan Valuasi (ADR-049 §3.9): posisi, harga, untung/rugi, tanpa double', () {
+      final base = sampleExportData();
+      final wallet = base.wallets.first;
+      final instrument = Instrument(id: 'bbca', name: 'BBCA', type: InstrumentType.stock, createdAt: DateTime(2026));
+      final buy = InvestmentTransaction(
+        id: 'b1',
+        date: DateTime(2026, 11, 2),
+        amount: 1110000000,
+        note: '',
+        walletId: wallet.id,
+        instrumentId: 'bbca',
+        side: InvestmentSide.buy,
+        quantity: 125000,
+      );
+      final data = ExportData(
+        transactions: [...base.transactions, buy],
+        wallets: base.wallets,
+        categoryNames: base.categoryNames,
+        budgetLabels: base.budgetLabels,
+        ruleNames: base.ruleNames,
+        freelanceProjectByPaymentId: base.freelanceProjectByPaymentId,
+        schedule: base.schedule,
+        currency: base.currency,
+        instruments: [instrument],
+        valuations: [InstrumentValuation(instrumentId: 'bbca', date: DateTime(2026, 11, 3), unitPrice: 987500)],
+      );
+      final rows = buildExportRows(data);
+      expect(rows.singleWhere((r) => r.kind == ExportKind.investBuy).flow, 0);
+      final a = unzip(ExportWriters.xlsx(data, rows, idLabels));
+      final workbook = part(a, 'xl/workbook.xml');
+      expect(workbook, contains('name="Investments"'));
+      expect(workbook, contains('name="Values"'));
+      final sheet = part(a, 'xl/worksheets/sheet3.xml');
+      expect(sheet, contains('BBCA'));
+      expect(sheet, contains('<v>12.5</v>'));
+      expect(sheet, contains('<v>11100000</v>'));
+      // 12,5 lot × 100 × Rp9.875 = Rp12.343.750.
+      expect(sheet, contains('<v>12343750</v>'));
+      expect(sheet, contains('<v>1243750</v>'));
+      final values = part(a, 'xl/worksheets/sheet4.xml');
+      expect(values, contains('2026-11-03'));
+      expect(values, contains('<v>9875</v>'));
     });
 
     test('tanggal berupa nomor seri Excel berformat tanggal; nominal berupa angka, bukan teks', () {

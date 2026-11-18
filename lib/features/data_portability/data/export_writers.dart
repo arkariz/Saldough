@@ -5,6 +5,7 @@ import 'package:archive/archive.dart';
 import 'package:saldough/features/data_portability/domain/export_data.dart';
 import 'package:saldough/features/data_portability/domain/export_labels.dart';
 import 'package:saldough/features/data_portability/domain/export_rows.dart';
+import 'package:saldough/shared/investment/investment.dart';
 import 'package:saldough/shared/savings_goal/savings_goal.dart';
 
 /// Penulis berkas ekspor (ADR-040 §3.6). Murni dan tanpa `double`: nominal
@@ -19,6 +20,15 @@ abstract final class ExportWriters {
     ExportKind.investBuy => labels.investBuy,
     ExportKind.investSell => labels.investSell,
   };
+
+  /// Bilangan berskala ×10.000 tanpa nol buntut, titik desimal: "12.3456".
+  static String _scaled(int value) {
+    final negative = value < 0;
+    final abs = value.abs();
+    final fraction = (abs % quantityScale).toString().padLeft(4, '0').replaceFirst(RegExp(r'0+$'), '');
+    final text = '${abs ~/ quantityScale}${fraction.isEmpty ? '' : '.$fraction'}';
+    return negative ? '-$text' : text;
+  }
 
   static String _day(DateTime d) =>
       '${d.year.toString().padLeft(4, '0')}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
@@ -115,11 +125,55 @@ abstract final class ExportWriters {
           _Cell.text(walletNames[g.walletId] ?? ''),
         ],
     ];
+    // Investasi (ADR-049 §3.9): posisi dan riwayat nilai, tanpa `double`.
+    String quantity(InstrumentType type, int q) => type.usesNominal ? formatSen(q, fractionDigits: digits) : _scaled(q);
+    String price(InstrumentType type, int p) => type.usesNominal ? _scaled(p) : formatSen(p, fractionDigits: digits);
+    final summaries = [
+      for (final i in data.instruments) InstrumentSummary.of(i, data.transactions, data.valuations),
+    ];
+    final instrumentNames = {for (final i in data.instruments) i.id: i.name};
+    final instrumentTypes = {for (final i in data.instruments) i.id: i.type};
+    final investments = <List<_Cell>>[
+      [for (final h in labels.investmentColumns) _Cell.header(h)],
+      for (final s in summaries)
+        [
+          _Cell.text(s.instrument.name),
+          _Cell.text(labels.investmentTypes[s.instrument.type.index]),
+          _Cell.text(s.instrument.code ?? ''),
+          _Cell.number(quantity(s.instrument.type, s.position.quantity)),
+          _Cell.text(labels.quantityUnits[s.instrument.type.index]),
+          _Cell.number(formatSen(s.position.cost, fractionDigits: digits)),
+          if (s.valuation case final v?) _Cell.number(price(s.instrument.type, v.unitPrice)) else const _Cell.text(''),
+          _Cell.text(labels.priceUnits[s.instrument.type.index]),
+          _Cell.text(s.valuation == null ? '' : _day(s.valuation!.date)),
+          _Cell.number(formatSen(s.marketValue, fractionDigits: digits)),
+          _Cell.number(formatSen(s.unrealized, fractionDigits: digits)),
+          _Cell.number(formatSen(s.position.realized, fractionDigits: digits)),
+          _Cell.text(labels.investmentStatuses[s.position.isActive ? 0 : 1]),
+        ],
+    ];
+    final sortedValuations = [...data.valuations]..sort((a, b) => a.date.compareTo(b.date));
+    final valuations = <List<_Cell>>[
+      [for (final h in labels.valuationColumns) _Cell.header(h)],
+      for (final v in sortedValuations)
+        if (instrumentTypes[v.instrumentId] case final type?)
+          [
+            _Cell.text(_day(v.date)),
+            _Cell.text(instrumentNames[v.instrumentId] ?? ''),
+            _Cell.number(price(type, v.unitPrice)),
+            _Cell.text(labels.priceUnits[type.index]),
+            _Cell.text(labels.valuationSources[v.source.index]),
+          ],
+    ];
     return _package([
       _Sheet(labels.transactionsSheet, transactions, const [12, 12, 13, 15, 15, 9, 18, 18, 18, 32, 24, 18, 20, 28]),
       _Sheet(labels.walletsSheet, wallets, const [24, 16, 16]),
       // Tujuan tabungan (ADR-048 §3.4): hanya bila ada, berkas lama tetap sama.
       if (data.goals.isNotEmpty) _Sheet(labels.goalsSheet, goals, const [24, 16, 16, 12, 14, 28]),
+      // Investasi dan riwayat nilainya (ADR-049 §3.9): hanya bila ada.
+      if (data.instruments.isNotEmpty)
+        _Sheet(labels.investmentsSheet, investments, const [24, 12, 10, 12, 10, 16, 14, 16, 12, 16, 16, 16, 10]),
+      if (sortedValuations.isNotEmpty) _Sheet(labels.valuationsSheet, valuations, const [12, 24, 14, 16, 14]),
     ]);
   }
 

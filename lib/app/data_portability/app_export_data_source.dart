@@ -7,6 +7,7 @@ import 'package:saldough/features/data_portability/domain/export_data.dart';
 import 'package:saldough/features/freelance/domain/repositories/freelance_repository.dart';
 import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/shared/category/category.dart';
+import 'package:saldough/shared/investment/investment.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/savings_goal/savings_goal.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
@@ -25,6 +26,7 @@ final class AppExportDataSource with RepositoryGuard implements ExportDataSource
     required this.rules,
     required this.freelance,
     required this.goals,
+    this.investments,
   });
 
   /// Buku besar.
@@ -48,6 +50,9 @@ final class AppExportDataSource with RepositoryGuard implements ExportDataSource
   /// Tujuan tabungan untuk lembar Tujuan (ADR-048 §3.4).
   final SavingsGoalRepository goals;
 
+  /// Instrumen dan valuasi untuk lembar Investasi dan Valuasi (ADR-049 §3.9).
+  final InvestmentRepository? investments;
+
   @override
   Future<Either<Failure, ExportData>> load() => guard(() async {
     final txs = await _ok(transactions.listAllTransactions());
@@ -58,6 +63,8 @@ final class AppExportDataSource with RepositoryGuard implements ExportDataSource
     final projects = await _ok(freelance.listProjects());
     final payments = await _ok(freelance.listPayments());
     final goal = await _ok(goals.listGoals());
+    final instruments = investments == null ? const <Instrument>[] : await _ok(investments!.listInstruments());
+    final valuations = investments == null ? const <InstrumentValuation>[] : await _ok(investments!.listValuations());
 
     final projectNames = {for (final p in projects) p.id: p.name};
     return ExportData(
@@ -70,6 +77,8 @@ final class AppExportDataSource with RepositoryGuard implements ExportDataSource
       schedule: ActiveFinancialMonth.schedule,
       currency: ActiveCurrency.value,
       goals: goal,
+      instruments: instruments,
+      valuations: valuations,
     );
   });
 

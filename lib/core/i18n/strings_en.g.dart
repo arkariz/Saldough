@@ -472,7 +472,11 @@ class _Translations$dataPortability$en extends Translations$dataPortability$id {
 	@override String get errorOtherBody => 'Couldn\'t prepare the restore. Try again. Your data hasn\'t changed.';
 	@override String get sheetTransactions => 'Transactions';
 	@override String get sheetWallets => 'Wallets';
+	@override String get sheetInvestments => 'Investments';
+	@override String get sheetValuations => 'Values';
 	@override String get sheetGoals => 'Goals';
+	@override late final _Translations$dataPortability$investmentColumns$en investmentColumns = _Translations$dataPortability$investmentColumns$en._(_root);
+	@override late final _Translations$dataPortability$valuationColumns$en valuationColumns = _Translations$dataPortability$valuationColumns$en._(_root);
 	@override late final _Translations$dataPortability$goalColumns$en goalColumns = _Translations$dataPortability$goalColumns$en._(_root);
 	@override late final _Translations$dataPortability$columns$en columns = _Translations$dataPortability$columns$en._(_root);
 	@override late final _Translations$dataPortability$types$en types = _Translations$dataPortability$types$en._(_root);
@@ -1845,6 +1849,45 @@ class _Translations$record$calc$en extends Translations$record$calc$id {
 	@override String get notPositive => 'The result must be more than 0';
 	@override String get divideByZero => 'Cannot divide by 0';
 	@override String get tooLarge => 'The result is too large';
+}
+
+// Path: dataPortability.investmentColumns
+class _Translations$dataPortability$investmentColumns$en extends Translations$dataPortability$investmentColumns$id {
+	_Translations$dataPortability$investmentColumns$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get name => 'Name';
+	@override String get type => 'Type';
+	@override String get code => 'Ticker';
+	@override String get quantity => 'Quantity';
+	@override String get unit => 'Unit';
+	@override String get cost => 'Cost';
+	@override String get lastPrice => 'Last price';
+	@override String get priceUnit => 'Price unit';
+	@override String get priceDate => 'Price date';
+	@override String get marketValue => 'Market value';
+	@override String get unrealized => 'Unrealized gain/loss';
+	@override String get realized => 'Realized gain/loss';
+	@override String get status => 'Status';
+	@override String get statusActive => 'Active';
+}
+
+// Path: dataPortability.valuationColumns
+class _Translations$dataPortability$valuationColumns$en extends Translations$dataPortability$valuationColumns$id {
+	_Translations$dataPortability$valuationColumns$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get date => 'Date';
+	@override String get investment => 'Investment';
+	@override String get price => 'Price';
+	@override String get priceUnit => 'Price unit';
+	@override String get source => 'Source';
+	@override String get sourceManual => 'Manual';
+	@override String get sourceSheet => 'Google Sheet';
 }
 
 // Path: dataPortability.goalColumns
@@ -3350,7 +3393,30 @@ extension on TranslationsEn {
 			'dataPortability.errorOtherBody' => 'Couldn\'t prepare the restore. Try again. Your data hasn\'t changed.',
 			'dataPortability.sheetTransactions' => 'Transactions',
 			'dataPortability.sheetWallets' => 'Wallets',
+			'dataPortability.sheetInvestments' => 'Investments',
+			'dataPortability.sheetValuations' => 'Values',
 			'dataPortability.sheetGoals' => 'Goals',
+			'dataPortability.investmentColumns.name' => 'Name',
+			'dataPortability.investmentColumns.type' => 'Type',
+			'dataPortability.investmentColumns.code' => 'Ticker',
+			'dataPortability.investmentColumns.quantity' => 'Quantity',
+			'dataPortability.investmentColumns.unit' => 'Unit',
+			'dataPortability.investmentColumns.cost' => 'Cost',
+			'dataPortability.investmentColumns.lastPrice' => 'Last price',
+			'dataPortability.investmentColumns.priceUnit' => 'Price unit',
+			'dataPortability.investmentColumns.priceDate' => 'Price date',
+			'dataPortability.investmentColumns.marketValue' => 'Market value',
+			'dataPortability.investmentColumns.unrealized' => 'Unrealized gain/loss',
+			'dataPortability.investmentColumns.realized' => 'Realized gain/loss',
+			'dataPortability.investmentColumns.status' => 'Status',
+			'dataPortability.investmentColumns.statusActive' => 'Active',
+			'dataPortability.valuationColumns.date' => 'Date',
+			'dataPortability.valuationColumns.investment' => 'Investment',
+			'dataPortability.valuationColumns.price' => 'Price',
+			'dataPortability.valuationColumns.priceUnit' => 'Price unit',
+			'dataPortability.valuationColumns.source' => 'Source',
+			'dataPortability.valuationColumns.sourceManual' => 'Manual',
+			'dataPortability.valuationColumns.sourceSheet' => 'Google Sheet',
 			'dataPortability.goalColumns.name' => 'Name',
 			'dataPortability.goalColumns.target' => 'Target',
 			'dataPortability.goalColumns.saved' => 'Saved',
@@ -3442,6 +3508,8 @@ extension on TranslationsEn {
 			'budget.deleteConfirmTitle' => 'Delete budget?',
 			'budget.deleteConfirmMessage' => ({required Object name}) => 'Budget "${name}" and its items will be deleted. Linked transactions stay recorded and wallet balances do not change.',
 			'budget.itemAddTitle' => 'Add item',
+			_ => null,
+		} ?? switch (path) {
 			'budget.itemEditTitle' => 'Edit item',
 			'budget.itemNameLabel' => 'Item name',
 			'budget.itemNameHint' => 'Example: Rice',
@@ -3465,8 +3533,6 @@ extension on TranslationsEn {
 			'budget.detailHowTitle' => 'How budget items work',
 			'budget.unknownWallet' => 'Wallet not found',
 			'budget.totalPlannedLabel' => 'Planned total',
-			_ => null,
-		} ?? switch (path) {
 			'budget.itemsRequiredHint' => 'Add at least one item. Spending is tracked per item, so a budget without items can\'t track anything.',
 			'budget.walletUnchangedNote' => ({required Object wallet}) => '${wallet} balance unchanged',
 			'budget.itemKindLabel' => 'Item type',
@@ -3956,6 +4022,8 @@ extension on TranslationsEn {
 			'category.addTitle' => 'New category',
 			'category.renameTitle' => 'Edit category',
 			'category.iconLabel' => 'Icon',
+			_ => null,
+		} ?? switch (path) {
 			'category.iconOption' => ({required Object n}) => 'Icon ${n}',
 			'category.nameHint' => 'Category name',
 			'category.archiveAction' => 'Archive',
@@ -3979,8 +4047,6 @@ extension on TranslationsEn {
 			'appearance.presetPickerTitle' => 'Choose app colors',
 			'appearance.presets.matcha' => 'Matcha',
 			'appearance.presets.pink' => 'Pink',
-			_ => null,
-		} ?? switch (path) {
 			'appearance.presets.taro' => 'Taro',
 			'appearance.presets.tanuki' => 'Tanuki',
 			'appearance.presets.laut' => 'Sea',
@@ -4470,6 +4536,8 @@ extension on TranslationsEn {
 			'appUpdate.action.later' => 'Later',
 			'appUpdate.action.ok' => 'OK',
 			'appUpdate.whatsNew.title' => ({required Object version}) => 'What\'s new in version ${version}',
+			_ => null,
+		} ?? switch (path) {
 			'appUpdate.whatsNew.titlePatch' => 'What\'s new',
 			'appUpdate.whatsNew.empty' => 'No update notes yet.',
 			'appUpdate.whatsNew.close' => 'Close',
@@ -4493,8 +4561,6 @@ extension on TranslationsEn {
 			'analysis.kind.expense' => 'Expenses',
 			'analysis.kind.income' => 'Income',
 			'analysis.empty.title' => 'Nothing to analyze yet',
-			_ => null,
-		} ?? switch (path) {
 			'analysis.empty.body' => 'Record transactions to see where your money goes.',
 			'analysis.empty.cta' => 'Record a transaction',
 			'analysis.emptyMonth' => ({required Object period}) => 'No expenses in ${period} yet.',

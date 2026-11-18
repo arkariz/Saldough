@@ -94,7 +94,7 @@ Terakhir diperbarui: 29 Oktober 2026 (penyelarasan dokumen dengan `main` di `0.1
 | 29 — Penyesuaian saldo ([ADR-047](../02-architecture/adr/0047-penyesuaian-saldo.md), Accepted; [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §6) | 9 | 9 | **Selesai 17 Nov 2026** (dari B-99): ADR-047 Accepted; T-29.1–T-29.7 (rupa dan UI oleh agen atas permintaan pemilik; 2.831 uji lulus, `flutter analyze` 3 info lama); QA T-29.8 lulus menurut pemeriksaan pemilik di emulator dan perangkat. Branch `claude/penyesuaian-saldo-fase-29`, belum digabung ke induk `claude/aset-kekayaan`. Fase pertama rangkaian aset (Fase 29–33, branch induk `claude/aset-kekayaan`) |
 | 30 — Tujuan tabungan ([ADR-048](../02-architecture/adr/0048-tujuan-tabungan.md), Accepted; [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §4) | 19 | 18 | Dijadwalkan 17 Nov 2026 (dari B-96); T-30.0–T-30.6, T-30.10 (dompet milik tujuan, hanya transfer), T-30.11 (hero Total aset berlapis, ADR-050), dan T-30.12 (rombak tab Dompet: Sebaran aset dan segmen) selesai 17 Nov 2026 (2.849 uji lulus); T-30.15 (sebaran ringkas, warna kartu) 17 Nov, T-30.7 (perkiraan Plus), T-30.8 (dokumen), dan T-30.16 (audit tur) 18 Nov 2026 selesai (2.866 uji lulus); sisa T-30.9 (QA: Android selesai 18 Nov 2026, tinggal iOS) ; T-30.17 (menabung ke beberapa tujuan) selesai 18 Nov 2026 |
 | 31 — Investasi manual ([ADR-049](../02-architecture/adr/0049-investasi-manual.md), Accepted; [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §5) | 12 | 12 | Dijadwalkan 18 Nov 2026 (dari B-97); ADR-049 disetujui 18 Nov 2026 (T-31.0); domain, transaksi investasi, data, dan batas (T-31.2–T-31.5) selesai 18 Nov 2026; rupa T-31.1 dan layar T-31.6/T-31.7 selesai 18 Nov 2026 (2.919 uji lulus); T-31.8–T-31.11 selesai 18 Nov 2026 (QA Android tanpa Gagal S1/S2; sisa jalur Plus dan iOS) |
-| 33 — Harga investasi dari Google Sheet (ADR-051 belum ditulis; [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §5.4) | 8 | 6 | Dijadwalkan 18 Nov 2026 (dari B-101); KT-A4 = Plus; spike lulus untuk saham; ADR-051 Accepted; T-33.3–T-33.5 selesai 18 Nov 2026; sisa T-33.6–T-33.7 |
+| 33 — Harga investasi dari Google Sheet (ADR-051 belum ditulis; [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §5.4) | 8 | 7 | Dijadwalkan 18 Nov 2026 (dari B-101); KT-A4 = Plus; spike lulus untuk saham; ADR-051 Accepted; T-33.3–T-33.6 selesai 18 Nov 2026; sisa QA T-33.7 dan kebijakan privasi situs |
 | Antrean (`B-n`, belum dijadwalkan) | 75 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
 
 ## Keputusan terbuka
@@ -7676,9 +7676,18 @@ Riset awal (18 Nov 2026, untuk spike):
       `PLAN_OVERRIDE=plus`): Hubungkan berhasil, perkiraan emas 5 g ≈
       Rp11.010.137 tersimpan, Total aset naik, penanda "Perkiraan dari harga
       emas dunia · jam". Putuskan dan Buka belum dicoba.
-- [ ] **T-33.6** (S) Analitik `sheet_linked`, `valuation_sheet_synced`;
+- [x] **T-33.6** (S) Analitik `sheet_linked`, `valuation_sheet_synced`;
       dokumen: PLAY_DATA_SAFETY, EXPORT_BACKUP, glosarium; catatan untuk
       kebijakan privasi situs (repo `tanukonomy-web`). Hapus layar uji spike.
+      Hasil (18 Nov 2026): analitik sudah sejak T-33.5. PLAY_DATA_SAFETY
+      bagian "Fase 33" (izin `drive.file`, Sheets API ke Drive pengguna tanpa
+      server kami, analitik, Remote Config `gold_gld_micro_ounces`, syarat
+      layar izin OAuth **In production** sebelum rilis publik, dan isi yang
+      perlu masuk kebijakan privasi), EXPORT_BACKUP (`investment_sheet_link`,
+      sumber valuasi), glosarium (Google Sheet harga), `writing.md` (Hubungkan,
+      Putuskan, Segarkan; emas selalu "perkiraan"). Layar uji spike dihapus.
+      **Belum:** paragraf kebijakan privasi di repo `tanukonomy-web` (teksnya
+      sudah disiapkan di PLAY_DATA_SAFETY). 2.936 uji lulus.
 - [ ] **T-33.7** (M) QA di ponsel dengan akun Google (Plus lewat
       `PLAN_OVERRIDE=plus`): hubungkan, ambil otomatis, perkiraan emas,
       isian manual menang, luring, izin dicabut, Gratis melihat paywall.

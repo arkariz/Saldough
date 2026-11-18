@@ -184,6 +184,38 @@ instruksi: "Ketuk ikon akun di kanan atas Beranda, pilih *Masuk dengan email*,
 masukkan kredensial; seluruh fitur Plus terbuka." Mencatat dasar tetap bisa
 diuji tanpa akun.
 
+### Fase 33: harga investasi dari Google Sheet pengguna (T-33.6)
+
+Dari ADR-051. **Draf; isi formulir persis sebelum build berfitur ini
+diunggah.** Fitur khusus Plus, hanya untuk yang masuk dengan Google, dan
+hanya bila pengguna menekan Hubungkan Google Sheet.
+
+| Mekanisme | Ke mana | Data | Status | Dampak ke formulir |
+|---|---|---|---|---|
+| **Izin `drive.file`** (Google Sign-In, layar izin Google) | Google | Token akses OAuth untuk berkas buatan aplikasi saja; tidak bisa membaca berkas lain di Drive | Baru | Tidak ada jenis data baru (izin, bukan data yang dikumpulkan) |
+| **Sheets API** langsung dari perangkat | Google Sheets milik pengguna (Drive pengguna) | Satu spreadsheet berisi **ID instrumen, nama, kode bursa, dan rumus/harga**. **Tanpa** jumlah, nilai perolehan, saldo, atau transaksi. Data tidak melewati server kami | Baru | Menurut panduan Google, data yang dikirim ke layanan milik pengguna sendiri atas permintaannya umumnya bukan "dibagikan"; bila ragu, deklarasikan "Info finansial: Info finansial lainnya" (dikumpulkan? **Tidak**, karena tidak sampai ke kami; dibagikan: ke Google atas tindakan pengguna) — konfirmasi dengan panduan terbaru |
+| **Analytics**: `sheet_linked`, `valuation_sheet_synced` (`count_bucket`) | Firebase Analytics | Peristiwa dan kelompok jumlah saja. **Tanpa** kode, nama, harga, atau nominal | Baru, jenis data sama | Tidak ada baris baru (sudah "Interaksi aplikasi") |
+| **Remote Config**: `gold_gld_micro_ounces` | Firebase | Konstanta perkiraan emas, tanpa data pengguna | Baru | Tidak ada |
+
+Yang **tidak** berubah: data keuangan tetap di perangkat; Sheet berada di
+Drive milik pengguna dan aplikasi tidak pernah menghapusnya (Putuskan hanya
+melupakan tautannya).
+
+**Google Cloud (sudah disiapkan pemilik 18 Nov 2026):** Sheets API dan Drive
+API aktif; scope `drive.file` ada di layar izin OAuth. Sebelum rilis publik:
+pastikan layar izin OAuth berstatus **In production** (bukan *Testing*, yang
+membatasi ke pengguna uji), dan nama aplikasi, logo, tautan kebijakan
+privasi di layar izin sesuai.
+
+**Kebijakan privasi (`tanukonomy-web`) perlu menyebut:** bila pengguna Plus
+menghubungkan Google Sheet, aplikasi membuat satu spreadsheet di Google Drive
+pengguna (izin `drive.file`, hanya berkas buatan aplikasi), menulis nama dan
+kode instrumen investasi serta rumus harga, dan membacanya kembali untuk harga
+terbaru; tidak ada jumlah kepemilikan atau nominal yang ditulis; data tidak
+melewati server Tanukonomy; pengguna dapat memutus dan menghapus berkasnya
+kapan saja. Ini juga syarat Google untuk aplikasi yang memakai Google API
+(Limited Use).
+
 ### Belum termasuk di draf ini
 
 - **Sinkronisasi data keuangan ke server** — belum ada di kode. Kalau

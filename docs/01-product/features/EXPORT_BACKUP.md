@@ -144,7 +144,7 @@ Beli dan jual investasi (ADR-049) tampil berjenis "Pembelian investasi" /
 memuat lembar **Investasi** (nama, jenis, kode, jumlah, satuan, nilai
 perolehan, harga terakhir, satuan harga, tanggal harga, nilai pasar,
 untung/rugi belum dan sudah terwujud, status) dan **Valuasi** (riwayat harga:
-tanggal, investasi, harga, satuan harga, sumber). Jumlah pecahan ditulis
+tanggal, investasi, harga, satuan harga, sumber: Manual, Google Sheet, atau Google Sheet (perkiraan) untuk emas). Jumlah pecahan ditulis
 desimal (12.5 lot), harga obligasi dalam persen.
 
 **Contoh** (periode mulai tanggal 25, IDR):
@@ -208,6 +208,7 @@ hilang."
 | Setelan pengingat (sakelar global dan per rutin) | |
 | Aplikasi sumber dan pola Catat dari notifikasi (bukan isi notifikasi) | |
 | Tujuan tabungan (`savings_goal_all`; tiap `walletId` wajib menunjuk dompet yang ada dan unik antartujuan) | Draf formulir tujuan yang tertahan paywall (`savings_goal_draft`, milik perangkat) |
+| Tautan Google Sheet harga (`investment_sheet_link`: ID Sheet dan waktu ambil terakhir, ADR-051; sesudah pulihkan diperiksa ulang, Sheet tak terjangkau → tautan dilupakan) | |
 | Instrumen dan riwayat nilai investasi (`investment_instruments`, `investment_valuations`; `instrumentId` di transaksi dan valuasi wajib menunjuk instrumen yang ada) | Draf formulir instrumen yang tertahan paywall (`investment_draft`, milik perangkat) |
 | Warna kartu dompet (`colorKey`, bagian dari dompet) | |
 

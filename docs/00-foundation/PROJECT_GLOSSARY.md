@@ -61,6 +61,7 @@ terjadi padanya.
 | Nilai perolehan | `InstrumentPosition.cost` | Uang yang dikeluarkan untuk bagian yang masih dipegang, termasuk biaya dan pajak. |
 | Nilai pasar | `InstrumentSummary.marketValue` | Jumlah × harga terakhir yang dicatat; nilai perolehan bila belum pernah diperbarui. |
 | Untung/rugi belum terwujud / terwujud | `unrealized` / `realized` | Nilai pasar − nilai perolehan; hasil bersih jual − bagian nilai perolehan yang dijual (rata-rata tertimbang). Tidak pernah pemasukan atau pengeluaran. |
+| Google Sheet harga | `PriceSheetLink`, `RefreshSheetPrices` | Spreadsheet milik pengguna yang dibuat aplikasi (ADR-051, Plus): harga saham dari Google Finance diambil otomatis saat layar investasi dibuka; emas berupa **perkiraan** dari ETF GLD dan kurs; lainnya diisi pengguna di Sheet. Isian manual hari itu selalu menang. |
 | Transaksi investasi | `InvestmentTransaction` | Catat pembelian atau penjualan dari dompet lewat CATAT. Mengubah saldo dompet, 0 di Arus. |
 | Penyesuaian saldo | `BalanceAdjustmentTransaction` | Selisih yang dicatat saat pemilik mengubah saldo dompet di Ubah dompet, bertanggal hari itu (ADR-047). Mengubah saldo satu dompet tetapi bukan pemasukan dan bukan pengeluaran: 0 di Arus, Analisis, dan anggaran. Hanya dari Ubah dompet; bisa dihapus, tidak bisa disunting. |
 | Kategori | `Category` / `categoryId` | Pengelompokan pemasukan atau pengeluaran, misalnya Makan & Minum. Daftar bawaan yang bisa diubah (ADR-026); transfer tidak berkategori. |

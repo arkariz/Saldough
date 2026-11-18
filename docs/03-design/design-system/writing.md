@@ -32,6 +32,7 @@ Teks Tanukonomy ditulis seperti teman yang rapi mencatat: hangat, pendek, dan te
 | Transaksi | log, entri, catatan kas | Pemasukan, pengeluaran, atau transfer |
 | Pemasukan / Pengeluaran | uang masuk / uang keluar, masuk / keluar (di judul) | "Masuk" dan "Keluar" boleh di ruang sempit seperti badge |
 | Transfer | mutasi, mutasi internal | Uang pindah antardompet; tidak mengubah total saldo |
+| Hubungkan Google Sheet, Putuskan, Segarkan | Sinkronkan, Integrasikan, Login Drive | Pintu harga otomatis (ADR-051); harga emas selalu disebut "perkiraan" |
 | Catat pembelian / Catat penjualan | Beli, Jual, Investasikan | Tombol jenis Investasi di CATAT dan rincian instrumen (ADR-049) |
 | Nilai pasar, nilai perolehan | saldo investasi, modal | Kata "saldo" hanya untuk dompet |
 | Untung/rugi belum terwujud, untung/rugi terwujud | profit, cuan, capital gain | Tidak pernah disebut pemasukan |

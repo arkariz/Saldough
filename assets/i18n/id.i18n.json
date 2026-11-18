@@ -466,7 +466,9 @@
       "expense": "Pengeluaran",
       "transfer": "Transfer",
       "adjustmentIncrease": "Penyesuaian saldo (tambah)",
-      "adjustmentDecrease": "Penyesuaian saldo (kurang)"
+      "adjustmentDecrease": "Penyesuaian saldo (kurang)",
+      "investBuy": "Pembelian investasi",
+      "investSell": "Penjualan investasi"
     }
   },
   "budget": {
@@ -1837,6 +1839,10 @@
           "title": "Tujuan aktif ketiga ada di Plus",
           "body": "Kamu sudah punya 2 tujuan aktif. Dengan Plus, tujuan berapa pun, plus perkiraan kapan tercapai. Isianmu disimpan sebagai draf."
         },
+        "instrument": {
+          "title": "Investasi aktif ketiga ada di Plus",
+          "body": "Kamu sudah mencatat 2 investasi aktif. Dengan Plus, instrumen berapa pun. Isianmu disimpan sebagai draf."
+        },
         "goalEstimate": {
           "title": "Perkiraan tujuan ada di Plus",
           "body": "Tujuan dan kemajuannya tetap gratis."
@@ -1970,6 +1976,15 @@
       "savedMessage": "Selisih $amount dicatat sebagai penyesuaian saldo.",
       "filterLabel": "Penyesuaian $count",
       "signToggle": "Ganti tanda plus atau minus"
+    },
+    "invest": {
+      "title": "Investasi",
+      "buyTitle": "Pembelian investasi",
+      "sellTitle": "Penjualan investasi",
+      "instrumentLabel": "Instrumen",
+      "walletLabel": "Dompet",
+      "detailNote": "Uang berpindah antara dompet dan investasi. Bukan pemasukan atau pengeluaran. Hapus untuk mengembalikan saldo dompet.",
+      "filterLabel": "Investasi $count"
     }
   }
 }

@@ -30,6 +30,9 @@ final class CalculateWalletBalance {
           if (from == wallet.id) balance -= amount;
         case BalanceAdjustmentTransaction(:final walletId, :final signedAmount):
           if (walletId == wallet.id) balance += signedAmount;
+        // Beli mengurangi, jual menambah saldo (ADR-049 §3.3).
+        case InvestmentTransaction(:final walletId, :final signedAmount):
+          if (walletId == wallet.id) balance += signedAmount;
       }
     }
     return balance;

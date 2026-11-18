@@ -96,6 +96,7 @@ import 'package:saldough/features/wallet/presentation/navigation/wallet_route_mo
 import 'package:saldough/shared/auth/auth.dart';
 import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/shared/category/category.dart';
+import 'package:saldough/shared/investment/investment.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/savings_goal/savings_goal.dart';
 import 'package:saldough/shared/transaction/source_icons.dart';
@@ -247,6 +248,17 @@ abstract final class RootModule {
       // Dompet milik tujuan hanya untuk transfer (ADR-048 §8.2a), dibaca
       // RecordTransaction di semua lingkup.
       ..registerLazySingleton<TransferOnlyWallets>(() => GoalTransferOnlyWallets(container<SavingsGoalRepository>()))
+      // Instrumen investasi dan valuasinya (ADR-049).
+      ..registerLazySingleton<InvestmentRepository>(() => InvestmentRepositoryImpl(storage: container<KeyValueStorage>()))
+      ..registerLazySingleton<InstrumentDraftStore>(() => InstrumentDraftStore(storage: container<KeyValueStorage>()))
+      // Penolak beli/jual yang membuat posisi negatif (ADR-049 §3.6), dibaca
+      // RecordTransaction di lingkup Catat dan Riwayat.
+      ..registerLazySingleton<InvestmentLedgerGuard>(
+        () => InvestmentPositionGuard(
+          investments: container<InvestmentRepository>(),
+          transactions: container<TransactionRepository>(),
+        ),
+      )
       // Log tautan otomatis rutin dari catat notifikasi (ADR-035 §3.4), 7 hari.
       // Saran Sepertinya rutin yang ditolak (ADR-037 §3.3).
       ..registerLazySingleton<RecurringSuggestionDismissals>(

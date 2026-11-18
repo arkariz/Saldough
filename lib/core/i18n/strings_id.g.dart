@@ -4340,6 +4340,7 @@ class Translations$assets$id {
 
 	late final Translations$assets$goal$id goal = Translations$assets$goal$id.internal(_root);
 	late final Translations$assets$adjust$id adjust = Translations$assets$adjust$id.internal(_root);
+	late final Translations$assets$invest$id invest = Translations$assets$invest$id.internal(_root);
 }
 
 // Path: record.split
@@ -4750,6 +4751,12 @@ class Translations$dataPortability$types$id {
 
 	/// id: 'Penyesuaian saldo (kurang)'
 	String get adjustmentDecrease => 'Penyesuaian saldo (kurang)';
+
+	/// id: 'Pembelian investasi'
+	String get investBuy => 'Pembelian investasi';
+
+	/// id: 'Penjualan investasi'
+	String get investSell => 'Penjualan investasi';
 }
 
 // Path: home.preview
@@ -5901,6 +5908,36 @@ class Translations$assets$adjust$id {
 	String get signToggle => 'Ganti tanda plus atau minus';
 }
 
+// Path: assets.invest
+class Translations$assets$invest$id {
+	Translations$assets$invest$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Investasi'
+	String get title => 'Investasi';
+
+	/// id: 'Pembelian investasi'
+	String get buyTitle => 'Pembelian investasi';
+
+	/// id: 'Penjualan investasi'
+	String get sellTitle => 'Penjualan investasi';
+
+	/// id: 'Instrumen'
+	String get instrumentLabel => 'Instrumen';
+
+	/// id: 'Dompet'
+	String get walletLabel => 'Dompet';
+
+	/// id: 'Uang berpindah antara dompet dan investasi. Bukan pemasukan atau pengeluaran. Hapus untuk mengembalikan saldo dompet.'
+	String get detailNote => 'Uang berpindah antara dompet dan investasi. Bukan pemasukan atau pengeluaran. Hapus untuk mengembalikan saldo dompet.';
+
+	/// id: 'Investasi $count'
+	String filterLabel({required Object count}) => 'Investasi ${count}';
+}
+
 // Path: record.voice.failure
 class Translations$record$voice$failure$id {
 	Translations$record$voice$failure$id.internal(this._root);
@@ -6031,6 +6068,7 @@ class Translations$premium$paywall$messages$id {
 	late final Translations$premium$paywall$messages$auto$id auto = Translations$premium$paywall$messages$auto$id.internal(_root);
 	late final Translations$premium$paywall$messages$template$id template = Translations$premium$paywall$messages$template$id.internal(_root);
 	late final Translations$premium$paywall$messages$savingsGoal$id savingsGoal = Translations$premium$paywall$messages$savingsGoal$id.internal(_root);
+	late final Translations$premium$paywall$messages$instrument$id instrument = Translations$premium$paywall$messages$instrument$id.internal(_root);
 	late final Translations$premium$paywall$messages$goalEstimate$id goalEstimate = Translations$premium$paywall$messages$goalEstimate$id.internal(_root);
 	late final Translations$premium$paywall$messages$project$id project = Translations$premium$paywall$messages$project$id.internal(_root);
 	late final Translations$premium$paywall$messages$forecast$id forecast = Translations$premium$paywall$messages$forecast$id.internal(_root);
@@ -6188,6 +6226,21 @@ class Translations$premium$paywall$messages$savingsGoal$id {
 
 	/// id: 'Kamu sudah punya 2 tujuan aktif. Dengan Plus, tujuan berapa pun, plus perkiraan kapan tercapai. Isianmu disimpan sebagai draf.'
 	String get body => 'Kamu sudah punya 2 tujuan aktif. Dengan Plus, tujuan berapa pun, plus perkiraan kapan tercapai. Isianmu disimpan sebagai draf.';
+}
+
+// Path: premium.paywall.messages.instrument
+class Translations$premium$paywall$messages$instrument$id {
+	Translations$premium$paywall$messages$instrument$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Investasi aktif ketiga ada di Plus'
+	String get title => 'Investasi aktif ketiga ada di Plus';
+
+	/// id: 'Kamu sudah mencatat 2 investasi aktif. Dengan Plus, instrumen berapa pun. Isianmu disimpan sebagai draf.'
+	String get body => 'Kamu sudah mencatat 2 investasi aktif. Dengan Plus, instrumen berapa pun. Isianmu disimpan sebagai draf.';
 }
 
 // Path: premium.paywall.messages.goalEstimate
@@ -6686,6 +6739,8 @@ extension on Translations {
 			'dataPortability.types.transfer' => 'Transfer',
 			'dataPortability.types.adjustmentIncrease' => 'Penyesuaian saldo (tambah)',
 			'dataPortability.types.adjustmentDecrease' => 'Penyesuaian saldo (kurang)',
+			'dataPortability.types.investBuy' => 'Pembelian investasi',
+			'dataPortability.types.investSell' => 'Penjualan investasi',
 			'budget.activeBadge' => ({required Object count}) => '${count} aktif',
 			'budget.plannedLabel' => 'Rencana',
 			'budget.spentLabel' => 'Terpakai',
@@ -6768,10 +6823,10 @@ extension on Translations {
 			'budget.unknownWallet' => 'Dompet tidak ditemukan',
 			'budget.totalPlannedLabel' => 'Total rencana',
 			'budget.itemsRequiredHint' => 'Tambahkan minimal satu pos. Pengeluaran dihitung per pos, jadi anggaran tanpa pos tidak bisa memantau pengeluaran.',
-			'budget.walletUnchangedNote' => ({required Object wallet}) => 'Saldo ${wallet} tidak berubah',
-			'budget.itemKindLabel' => 'Jenis pos',
 			_ => null,
 		} ?? switch (path) {
+			'budget.walletUnchangedNote' => ({required Object wallet}) => 'Saldo ${wallet} tidak berubah',
+			'budget.itemKindLabel' => 'Jenis pos',
 			'budget.itemKindExpense' => 'Pengeluaran',
 			'budget.itemKindTransfer' => 'Transfer',
 			'budget.itemKindLockedHint' => 'Jenis tidak bisa diganti karena pos ini sudah punya transaksi tertaut.',
@@ -7282,10 +7337,10 @@ extension on Translations {
 			'appearance.presets.pink' => 'Pink',
 			'appearance.presets.taro' => 'Taro',
 			'appearance.presets.tanuki' => 'Tanuki',
-			'appearance.presets.laut' => 'Laut',
-			'discovery.payday.title' => ({required Object d}) => 'Gajian tanggal ${d}?',
 			_ => null,
 		} ?? switch (path) {
+			'appearance.presets.laut' => 'Laut',
+			'discovery.payday.title' => ({required Object d}) => 'Gajian tanggal ${d}?',
 			'discovery.payday.body' => ({required Object d}) => 'Mulai bulan keuangan dari tanggal ${d}, supaya Rencana dan Analisis mengikuti gajianmu.',
 			'discovery.payday.action' => 'Atur',
 			'discovery.period.hint' => 'Atur',
@@ -7796,10 +7851,10 @@ extension on Translations {
 			'analysis.empty.title' => 'Belum ada yang bisa dianalisis',
 			'analysis.empty.body' => 'Catat transaksi untuk melihat alur pengeluaranmu.',
 			'analysis.empty.cta' => 'Catat transaksi',
-			'analysis.emptyMonth' => ({required Object period}) => 'Belum ada pengeluaran di ${period}.',
-			'analysis.error' => 'Analisis gagal dimuat. Tarik ke bawah untuk mencoba lagi.',
 			_ => null,
 		} ?? switch (path) {
+			'analysis.emptyMonth' => ({required Object period}) => 'Belum ada pengeluaran di ${period}.',
+			'analysis.error' => 'Analisis gagal dimuat. Tarik ke bawah untuk mencoba lagi.',
 			'analysis.donutSemantics' => ({required Object kind, required Object period, required Object parts}) => '${kind} ${period}: ${parts}',
 			'analysis.rowSemantics' => ({required Object name, required Object percent, required Object amount}) => '${name}, ${percent}, ${amount}',
 			'analysis.fix' => 'Beri kategori',
@@ -7930,6 +7985,8 @@ extension on Translations {
 			'premium.paywall.messages.template.body' => 'Template yang sudah ada tetap tersimpan dan bisa dipakai.',
 			'premium.paywall.messages.savingsGoal.title' => 'Tujuan aktif ketiga ada di Plus',
 			'premium.paywall.messages.savingsGoal.body' => 'Kamu sudah punya 2 tujuan aktif. Dengan Plus, tujuan berapa pun, plus perkiraan kapan tercapai. Isianmu disimpan sebagai draf.',
+			'premium.paywall.messages.instrument.title' => 'Investasi aktif ketiga ada di Plus',
+			'premium.paywall.messages.instrument.body' => 'Kamu sudah mencatat 2 investasi aktif. Dengan Plus, instrumen berapa pun. Isianmu disimpan sebagai draf.',
 			'premium.paywall.messages.goalEstimate.title' => 'Perkiraan tujuan ada di Plus',
 			'premium.paywall.messages.goalEstimate.body' => 'Tujuan dan kemajuannya tetap gratis.',
 			'premium.paywall.messages.project.title' => 'Proyek aktif ketiga ada di Plus',
@@ -8044,6 +8101,13 @@ extension on Translations {
 			'assets.adjust.savedMessage' => ({required Object amount}) => 'Selisih ${amount} dicatat sebagai penyesuaian saldo.',
 			'assets.adjust.filterLabel' => ({required Object count}) => 'Penyesuaian ${count}',
 			'assets.adjust.signToggle' => 'Ganti tanda plus atau minus',
+			'assets.invest.title' => 'Investasi',
+			'assets.invest.buyTitle' => 'Pembelian investasi',
+			'assets.invest.sellTitle' => 'Penjualan investasi',
+			'assets.invest.instrumentLabel' => 'Instrumen',
+			'assets.invest.walletLabel' => 'Dompet',
+			'assets.invest.detailNote' => 'Uang berpindah antara dompet dan investasi. Bukan pemasukan atau pengeluaran. Hapus untuk mengembalikan saldo dompet.',
+			'assets.invest.filterLabel' => ({required Object count}) => 'Investasi ${count}',
 			_ => null,
 		};
 	}

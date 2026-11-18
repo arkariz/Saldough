@@ -51,7 +51,7 @@ List<RecurringSuggestion> suggestRecurring(
     final (kind, wallet) = switch (t) {
       IncomeTransaction(:final walletId) => (RecurringKind.income, walletId),
       ExpenseTransaction(:final walletId) => (RecurringKind.expense, walletId),
-      TransferTransaction() || BalanceAdjustmentTransaction() => (null, null),
+      TransferTransaction() || BalanceAdjustmentTransaction() || InvestmentTransaction() => (null, null),
     };
     if (kind == null || covered.contains('${kind.name}|$wallet|${norm(t.note)}')) continue;
     (groups['${kind.name}|$wallet|${t.amount}|${norm(t.note)}'] ??= []).add(t);

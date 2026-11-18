@@ -146,7 +146,8 @@ class TransactionRow extends StatelessWidget {
         '${_walletName(fromWalletId)} → ${_walletName(toWalletId)} · $time',
       IncomeTransaction(:final walletId) ||
       ExpenseTransaction(:final walletId) ||
-      BalanceAdjustmentTransaction(:final walletId) => '${_walletName(walletId)} · $time',
+      BalanceAdjustmentTransaction(:final walletId) ||
+      InvestmentTransaction(:final walletId) => '${_walletName(walletId)} · $time',
     };
   }
 
@@ -155,11 +156,13 @@ class TransactionRow extends StatelessWidget {
     final kind = switch (transaction) {
       IncomeTransaction() => MoneyKind.income,
       ExpenseTransaction() => MoneyKind.expense,
-      TransferTransaction() || BalanceAdjustmentTransaction() => MoneyKind.transfer,
+      TransferTransaction() || BalanceAdjustmentTransaction() || InvestmentTransaction() => MoneyKind.transfer,
     };
     return AppListRow(
       leading: transaction is BalanceAdjustmentTransaction
           ? const DsIconTile(icon: Symbols.balance_rounded)
+          : transaction is InvestmentTransaction
+          ? const DsIconTile(icon: Symbols.show_chart_rounded)
           : TransactionIcon.of(
               transaction,
               ringColor: context.appColors.surface,

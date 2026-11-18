@@ -66,6 +66,9 @@ final class RecordScope extends IsolatedScope {
             : null,
         recordTransaction: RecordTransaction(
           transferOnlyWallets: parent.isRegistered<TransferOnlyWallets>() ? parent<TransferOnlyWallets>() : const NoTransferOnlyWallets(),
+          investmentGuard: parent.isRegistered<InvestmentLedgerGuard>()
+              ? parent<InvestmentLedgerGuard>()
+              : const NoInvestmentLedgerGuard(),
           ledgerChanges: c<LedgerChanges>(),
           transactionRepository: c<TransactionRepository>(),
           recomputeWalletBalances: RecomputeWalletBalances(

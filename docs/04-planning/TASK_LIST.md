@@ -93,6 +93,7 @@ Terakhir diperbarui: 29 Oktober 2026 (penyelarasan dokumen dengan `main` di `0.1
 | 26 — Catat dari notifikasi v2 ([ADR-044](../02-architecture/adr/0044-catat-dari-notifikasi-v2.md), Proposed; [NOTIFICATION_CAPTURE_V2.md](../01-product/features/NOTIFICATION_CAPTURE_V2.md)) | 27 | 25 | Dimulai 4 Nov 2026; tanpa saklar build, jalur internal test. Kode T-26.1–T-26.25 selesai 5 Nov 2026 (T-26.28 6 Nov) di branch `claude/rombak-design-system-theming-5747b4` (125 komit di depan `main`, belum jadi PR): fondasi, MVP dalam aplikasi, notifikasi bertindak lewat mesin tanpa layar, E1–E3, pola buatan dicabut (T-26.23), snackbar v2 satu slot. **Sisa:** T-26.26 uji perangkat nyata (gerbang Accepted; baru 1 emulator dan perangkat pemilik) dan T-26.27 kebijakan privasi situs; antrean B-88–B-92 |
 | 29 — Penyesuaian saldo ([ADR-047](../02-architecture/adr/0047-penyesuaian-saldo.md), Accepted; [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §6) | 9 | 9 | **Selesai 17 Nov 2026** (dari B-99): ADR-047 Accepted; T-29.1–T-29.7 (rupa dan UI oleh agen atas permintaan pemilik; 2.831 uji lulus, `flutter analyze` 3 info lama); QA T-29.8 lulus menurut pemeriksaan pemilik di emulator dan perangkat. Branch `claude/penyesuaian-saldo-fase-29`, belum digabung ke induk `claude/aset-kekayaan`. Fase pertama rangkaian aset (Fase 29–33, branch induk `claude/aset-kekayaan`) |
 | 30 — Tujuan tabungan ([ADR-048](../02-architecture/adr/0048-tujuan-tabungan.md), Accepted; [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §4) | 19 | 18 | Dijadwalkan 17 Nov 2026 (dari B-96); T-30.0–T-30.6, T-30.10 (dompet milik tujuan, hanya transfer), T-30.11 (hero Total aset berlapis, ADR-050), dan T-30.12 (rombak tab Dompet: Sebaran aset dan segmen) selesai 17 Nov 2026 (2.849 uji lulus); T-30.15 (sebaran ringkas, warna kartu) 17 Nov, T-30.7 (perkiraan Plus), T-30.8 (dokumen), dan T-30.16 (audit tur) 18 Nov 2026 selesai (2.866 uji lulus); sisa T-30.9 (QA: Android selesai 18 Nov 2026, tinggal iOS) ; T-30.17 (menabung ke beberapa tujuan) selesai 18 Nov 2026 |
+| 31 — Investasi manual ([ADR-049](../02-architecture/adr/0049-investasi-manual.md), Accepted; [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §5) | 12 | 5 | Dijadwalkan 18 Nov 2026 (dari B-97); ADR-049 disetujui 18 Nov 2026 (T-31.0); domain, transaksi investasi, data, dan batas (T-31.2–T-31.5) selesai 18 Nov 2026 (2.913 uji lulus); sisa rupa T-31.1 lalu layar |
 | Antrean (`B-n`, belum dijadwalkan) | 75 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
 
 ## Keputusan terbuka
@@ -7359,6 +7360,86 @@ Diawali perapian dompet T-30.0.
       pemilih sendiri (dibuat dan diubah lewat CATAT, yang sudah menyaring).
       2.870 uji lulus.
 
+## Fase 31: Investasi manual
+
+Dijadwalkan 18 Nov 2026 (dari B-97), fase ketiga rangkaian aset
+([WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §5, §10). Branch
+`claude/investasi-fase-31` dari induk `claude/aset-kekayaan` (disamakan dengan
+`main` `d2ef3375`). Keputusan domain di
+[ADR-049](../02-architecture/adr/0049-investasi-manual.md) (Accepted 18 Nov 2026).
+
+- [x] **T-31.0** (S, pemilik) Setujui ADR-049, termasuk lima pertanyaan §6
+      (hapus instrumen bercatatan ditolak, satuan obligasi, tautan dividen
+      ditunda, letak di CATAT, split saham di luar cakupan). Kode baru dimulai
+      sesudahnya.
+      Memenuhi FR-AST-002.
+      Hasil (18 Nov 2026): disetujui, kelima pertanyaan mengikuti usul
+      engineer.
+- [ ] **T-31.1** (M, designer) Rupa: segmen Investasi di tab Dompet, rincian
+      instrumen (posisi, untung/rugi, histori valuasi), formulir Tambah
+      investasi, jenis Investasi di CATAT (Catat pembelian/penjualan, instrumen
+      baru di dalam formulir), Perbarui massal, penanda kesegaran, keadaan
+      kosong/Selesai. `context.ds`; layar UI menunggu rupa disetujui.
+- [x] **T-31.2** (M) Domain `shared/investment`: `Instrument`,
+      `InstrumentType` + satuan, jumlah berskala ×10.000, `InstrumentValuation`
+      (harga per satuan, obligasi basis poin), `InstrumentPosition.replay`
+      (rata-rata tertimbang, jual habis tanpa sisa pembulatan), nilai pasar
+      dan kesegaran 30 hari, status Aktif/Selesai (ADR-049 §3.1–§3.5).
+      Verifikasi: uji unit hitungan termasuk pembulatan dan obligasi.
+      Hasil (18 Nov 2026): selesai. `mulDivRound` memakai `BigInt` supaya
+      jumlah × harga tidak meluap; `unitPriceFor` untuk formulir "isi nilai
+      total"; `InstrumentSummary`, `investmentLayerValue`,
+      `activeInstrumentCount`. Uji `test/shared/investment/instrument_position_test.dart`.
+- [x] **T-31.3** (M) `InvestmentTransaction` (anggota kelima): DTO
+      `'investment'`, skema transaksi 3 → 4 (`transactionSchema` registri),
+      saldo dompet, sapuan semua switch `Transaction` dengan Arus 0, Riwayat
+      (filter, baris, ikon), detail (sunting lewat CATAT, hapus) (ADR-049 §3.3).
+      ⚠ Aturan 7: tidak pernah pemasukan/pengeluaran; uji angka Arus, Analisis,
+      anggaran, dan periode lampau identik sebelum/sesudah.
+      Hasil (18 Nov 2026): selesai, 39 titik switch diputuskan eksplisit
+      (Arus 0, saldo ±). Riwayat: chip Investasi (tampil bila ada), baris dan
+      detail netral berikon grafik dengan tanda −/+. Detail sementara hanya
+      Hapus; sunting lewat CATAT di T-31.6. Ekspor `investBuy`/`investSell`
+      (Arus 0) ikut dikerjakan di sini.
+- [x] **T-31.4** (M) Data dan use case: repositori `investment_instruments`,
+      `investment_valuations`; `RecordInvestment` (instrumen baru + transaksi
+      bersama), simpan/hapus instrumen (tolak bila bercatatan), valuasi
+      tunggal dan massal; validasi jual > dimiliki dan sunting yang membuat
+      posisi negatif (ADR-049 §3.6–§3.7, §3.11).
+      Hasil (18 Nov 2026): selesai. Validasi posisi ditegakkan di satu titik:
+      port `InvestmentLedgerGuard` di `RecordTransaction` (catat, sunting,
+      hapus), implementasinya `InvestmentPositionGuard`, dipasang di lingkup
+      Catat dan Riwayat. Kunci `investment_instruments`/`investment_valuations`
+      masuk `BackupRegistry` (skema 1, referensi `instrumentId`). Hapus dompet
+      yang punya catatan investasi sudah ditolak (`walletIdsOf`). Uji
+      `test/shared/investment/investment_usecases_test.dart`.
+- [x] **T-31.5** (S) Batas Gratis: `freeInstruments` 2 (Remote Config
+      `free_instruments`), `PlusFeature.instruments`,
+      `PaywallTrigger.instrumentLimit` (P12) dan teksnya, draf
+      `investment_draft` (ADR-049 §3.12).
+      Hasil (18 Nov 2026): domain dan teks P12 selesai; draf disimpan
+      `InstrumentDraftStore` (di luar cadangan). Pemakaian di layar menyusul
+      T-31.6/T-31.7. 2.913 uji lulus.
+- [ ] **T-31.6** (M) CATAT jenis Investasi: formulir beli/jual (dompet,
+      instrumen atau instrumen baru, jumlah dengan satuan, total
+      dibayar/hasil bersih), event bloc, sunting (ADR-049 §3.3, §3.7). Sesudah
+      T-31.1.
+- [ ] **T-31.7** (L) `features/investment`: segmen Investasi di tab Dompet,
+      rincian instrumen, formulir Tambah investasi, Perbarui massal, lapis
+      Investasi di hero dan Beranda (`WealthLayers`), baris catatan
+      kedaluwarsa, tur bila perlu (ADR-049 §3.10–§3.11). Sesudah T-31.1.
+- [ ] **T-31.8** (S) Kategori bawaan pemasukan **Investasi** (dividen, kupon),
+      termasuk pengguna lama (ADR-049 §3.8).
+- [ ] **T-31.9** (S) Cadangan dan ekspor: kunci baru + referensi di
+      `BackupRegistry`, `ExportKind.investBuy`/`investSell`, lembar Investasi
+      dan Valuasi; uji bolak-balik cadangan (ADR-049 §3.9). Analitik §3.13.
+- [ ] **T-31.10** (S) Dokumen: DOMAIN_MODEL, PROJECT_GLOSSARY, `writing.md`,
+      EXPORT_BACKUP, AGENT_CONTEXT, B-97; ADR-049 Accepted.
+- [ ] **T-31.11** (M) QA emulator (qa-engineer): beli/jual/jual habis,
+      kepemilikan awal, untung/rugi, valuasi tunggal dan massal, kesegaran,
+      P12 dan draf, Total aset, Arus tidak berubah, cadangan; 360dp,
+      terang/gelap, id/en, Sembunyikan nominal, `PLAN_OVERRIDE=plus`.
+
 ## Antrean (belum dijadwalkan)
 
 Hal yang sudah diketahui perlu dikerjakan tapi belum masuk fase. Cara
@@ -7408,7 +7489,7 @@ menambah dan memindahkannya ada di
 | B-58 | Kartu kredit dan paylater sebagai **dompet tagihan** (tagihan berjalan, jatuh tempo); gratis dasar, peringatan jatuh tempo di Penjaga (Plus). Butuh ADR. | agen + pemilik | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §7, PRD §6 |
 | B-59 | **Kekayaan bersih** (Plus): Total aset (B-98) dikurangi utang dan kewajiban; memakai nama Kekayaan bersih hanya sesudah utang tercatat. Bukan koneksi broker. | agen + pemilik | [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §9, butuh B-48 dan B-98 |
 | B-96 | **Tujuan tabungan** (rencana Fase 30, ADR-048) (menggantikan B-47): tab Dompet › Tujuan; tujuan terhubung ke dompet (satu tujuan banyak dompet, satu dompet satu tujuan), kemajuan = saldo dompet tertaut, menabung lewat transfer yang ada, status Active/Completed/Archived. **Gratis 2 Active**, Plus tanpa batas, perkiraan tanggal tercapai dan peringatan meleset Plus (pemicu P11). ADR domain dulu (rencana, aturan 5). Diawali perapian "ikon murni" (T-30.0): dompet tidak punya jenis, lencana jenis dari ikon dihapus, peran dompet tabungan hanya dari tautan tujuan (keputusan pemilik 17 Nov 2026). Completed tetap Completed walau saldo turun (usul engineer, konfirmasi PO). Peringatan meleset menunggu Penjaga (B-44). | agen + pemilik | [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §4, §10 |
-| B-97 | **Investasi manual** (rencana Fase 31, ADR-049): instrumen (saham, reksa dana, obligasi, emas, lainnya), kepemilikan yang sudah ada, beli/jual dari dompet lewat CATAT (jenis catatan baru, bukan pemasukan/pengeluaran, pengecualian aturan 8), dividen/kupon sebagai pemasukan, nilai perolehan termasuk biaya, valuasi manual dengan histori, penanda 30 hari. **Gratis 2 Active** per instrumen (pemicu P12). ADR domain dulu; sentuh `BackupRegistry`, ekspor. Tanpa harga otomatis; termasuk layar **Perbarui massal** (juga pratinjau B-101). KT-A1 = rata-rata tertimbang, KT-A2 = satuan usul PO (diputuskan 17 Nov 2026). | agen + pemilik | [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §5, KT-A1, KT-A2 |
+| B-97 | **Investasi manual** (dijadwalkan sebagai Fase 31 18 Nov 2026, ADR-049 Accepted): instrumen (saham, reksa dana, obligasi, emas, lainnya), kepemilikan yang sudah ada, beli/jual dari dompet lewat CATAT (jenis catatan baru, bukan pemasukan/pengeluaran; bukan pengecualian aturan 8 karena lewat CATAT, ADR-049 §3.3), dividen/kupon sebagai pemasukan, nilai perolehan termasuk biaya, valuasi manual dengan histori, penanda 30 hari. **Gratis 2 Active** per instrumen (pemicu P12). ADR domain dulu; sentuh `BackupRegistry`, ekspor. Tanpa harga otomatis; termasuk layar **Perbarui massal** (juga pratinjau B-101). KT-A1 = rata-rata tertimbang, KT-A2 = satuan usul PO (diputuskan 17 Nov 2026). | agen + pemilik | [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §5, KT-A1, KT-A2 |
 | B-98 | **Gambaran aset** (rencana Fase 32 bersama B-100, ADR-050) di tab Dompet: Total aset (dompet harian + dompet tabungan + nilai pasar investasi), sebaran tiga bagian, perubahan dipecah transaksi/valuasi/penyesuaian. Butuh B-96 dan B-97. ADR-050 memutuskan `Wallet.createdAt` dan golongan "pencatatan awal" (saldo awal dompet baru, kepemilikan yang sudah ada) di pecahan perubahan. | agen | [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §7 |
 | B-100 | **Riwayat kekayaan** (rencana Fase 32): grafik Total aset per periode; gratis 6 periode, Plus seluruhnya. Butuh B-99 dan B-98. | agen | [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §8 |
 | B-101 | **Ambil nilai investasi dari Google Sheet pengguna** (rencana Fase 33, ADR-051; keputusan pemilik 17 Nov 2026, opsi E riset harga tanpa API berbayar): pengguna yang masuk dengan Google memberi izin `drive.file`; aplikasi membuatkan Sheet privat berisi kode dan `GOOGLEFINANCE(...;"price")` (tanpa jumlah/nominal), membaca harga lewat Sheets API, lalu membuka Perbarui massal sebagai pratinjau yang disetujui pengguna. Tanpa server, tanpa API berbayar, tanpa scraping. Spike T-33.0 dulu (nilai terbaca lewat API, cakupan emas/reksa dana, alur izin). Gratis/Plus di KT-A4. Butuh B-97. | agen + pemilik | [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §5.4 |

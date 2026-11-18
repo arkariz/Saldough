@@ -168,6 +168,8 @@ void main() {
         transfer: '',
         adjustmentIncrease: '',
         adjustmentDecrease: '',
+        investBuy: '',
+        investSell: '',
       );
       final data = sampleExportData(transactions: const []);
       final workbook = part(unzip(ExportWriters.xlsx(data, const [], labels)), 'xl/workbook.xml');

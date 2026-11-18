@@ -15,6 +15,7 @@ final class EntitlementLimits extends Equatable {
     required this.freeBudgetTemplates,
     required this.freeProjects,
     required this.freeSavingsGoals,
+    required this.freeInstruments,
     required this.fairUseInterpretations,
     required this.fairUsePhoto,
     required this.fairUseAsk,
@@ -62,6 +63,7 @@ final class EntitlementLimits extends Equatable {
       ),
       freeProjects: count('free_projects', d.freeProjects),
       freeSavingsGoals: count('free_savings_goals', d.freeSavingsGoals),
+      freeInstruments: count('free_instruments', d.freeInstruments),
       fairUseInterpretations: count(
         'plus_fair_use_interpretations',
         d.fairUseInterpretations,
@@ -93,6 +95,7 @@ final class EntitlementLimits extends Equatable {
     freeBudgetTemplates: 1,
     freeProjects: 2,
     freeSavingsGoals: 2,
+    freeInstruments: 2,
     fairUseInterpretations: 1000,
     fairUsePhoto: 150,
     fairUseAsk: 300,
@@ -112,6 +115,7 @@ final class EntitlementLimits extends Equatable {
     'free_budget_templates',
     'free_projects',
     'free_savings_goals',
+    'free_instruments',
     'plus_fair_use_interpretations',
     'plus_fair_use_photo',
     'plus_fair_use_ask',
@@ -148,6 +152,10 @@ final class EntitlementLimits extends Equatable {
   /// 4a–4b, ADR-048 §3.5).
   final int freeSavingsGoals;
 
+  /// Instrumen investasi Aktif di Gratis (WEALTH_ASSETS keputusan 4a–4b,
+  /// ADR-049 §3.12).
+  final int freeInstruments;
+
   /// Batas wajar tafsir cerdas per bulan untuk Plus (tidak ditampilkan).
   final int fairUseInterpretations;
 
@@ -183,6 +191,7 @@ final class EntitlementLimits extends Equatable {
     PlusFeature.budgetTemplates => freeBudgetTemplates,
     PlusFeature.freelanceProjects => freeProjects,
     PlusFeature.savingsGoals => freeSavingsGoals,
+    PlusFeature.instruments => freeInstruments,
     PlusFeature.ask => tasteAsk,
     PlusFeature.guardian => tasteGuardian,
     PlusFeature.notificationAutoRecord || PlusFeature.recurringAutomation => 0,
@@ -205,6 +214,7 @@ final class EntitlementLimits extends Equatable {
     freeBudgetTemplates,
     freeProjects,
     freeSavingsGoals,
+    freeInstruments,
     fairUseInterpretations,
     fairUsePhoto,
     fairUseAsk,

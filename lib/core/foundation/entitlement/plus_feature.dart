@@ -29,6 +29,9 @@ enum PlusFeature {
   /// Tujuan tabungan; Gratis terbatas jumlah yang Active (ADR-048 §3.5).
   savingsGoals,
 
+  /// Instrumen investasi; Gratis terbatas jumlah yang Aktif (ADR-049 §3.12).
+  instruments,
+
   /// Tanya Tanuki (jatah cicip di Gratis).
   ask,
 

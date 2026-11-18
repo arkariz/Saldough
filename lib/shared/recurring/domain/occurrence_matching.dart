@@ -69,12 +69,16 @@ OccurrenceMatch? matchOccurrences(
   required Iterable<Transaction> transactions,
 }) {
   // Penyesuaian saldo tidak pernah menautkan rutin (ADR-047 §3.1).
-  if (transaction.recurrence != null || transaction is BalanceAdjustmentTransaction) return null;
+  if (transaction.recurrence != null ||
+      transaction is BalanceAdjustmentTransaction ||
+      transaction is InvestmentTransaction) {
+    return null;
+  }
   final (kind, wallet, to) = switch (transaction) {
     IncomeTransaction(:final walletId) => (RecurringKind.income, walletId, null),
     ExpenseTransaction(:final walletId) => (RecurringKind.expense, walletId, null),
     TransferTransaction(:final fromWalletId, :final toWalletId) => (RecurringKind.transfer, fromWalletId, toWalletId),
-    BalanceAdjustmentTransaction() => throw StateError('Penyesuaian saldo sudah disaring di atas.'),
+    BalanceAdjustmentTransaction() || InvestmentTransaction() => throw StateError('Sudah disaring di atas.'),
   };
   final candidates = occurrenceCandidates(
     kind: kind,

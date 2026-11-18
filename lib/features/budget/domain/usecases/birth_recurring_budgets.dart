@@ -76,7 +76,7 @@ List<Transaction> relinkedToBorn(Budget born, Iterable<Budget> budgets, Iterable
   for (final t in transactions) {
     final itemId = switch (t) {
       ExpenseTransaction(:final budgetItemId) || TransferTransaction(:final budgetItemId) => budgetItemId,
-      IncomeTransaction() || BalanceAdjustmentTransaction() => null,
+      IncomeTransaction() || BalanceAdjustmentTransaction() || InvestmentTransaction() => null,
     };
     if (itemId == null) continue;
     for (final owner in siblings) {
@@ -91,6 +91,7 @@ List<Transaction> relinkedToBorn(Budget born, Iterable<Budget> budgets, Iterable
         final TransferTransaction e => e.copyWith(budgetItemId: target.id),
         final IncomeTransaction e => e,
         final BalanceAdjustmentTransaction e => e,
+        final InvestmentTransaction e => e,
       });
       break;
     }

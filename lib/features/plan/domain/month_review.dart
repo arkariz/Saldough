@@ -118,6 +118,8 @@ int balanceBefore(
       // Saldo pada tanggal ikut penyesuaian sesudahnya (ADR-047 §3.3).
       BalanceAdjustmentTransaction(:final walletId, :final signedAmount) =>
         walletIds.contains(walletId) ? signedAmount : 0,
+      // Beli/jual investasi juga mengubah saldo dompet (ADR-049 §3.3).
+      InvestmentTransaction(:final walletId, :final signedAmount) => walletIds.contains(walletId) ? signedAmount : 0,
     };
   }
   return currentBalance - after;

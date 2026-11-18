@@ -43,6 +43,11 @@ final class PaywallMessage {
         m.savingsGoal.body,
         hasKicker: true,
       ),
+      PaywallTrigger.instrumentLimit => PaywallMessage._(
+        m.instrument.title,
+        m.instrument.body,
+        hasKicker: true,
+      ),
       PaywallTrigger.goalEstimate => PaywallMessage._(
         m.goalEstimate.title,
         m.goalEstimate.body,

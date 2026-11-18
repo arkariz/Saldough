@@ -29,10 +29,12 @@ class _TopBar extends StatelessWidget {
 Widget _transactionTile(BuildContext context, Transaction transaction, {DsIconTileSize size = DsIconTileSize.md}) {
   // Penyesuaian saldo: tile netral bertimbangan (rupa B-99).
   if (transaction is BalanceAdjustmentTransaction) return DsIconTile(icon: Symbols.balance_rounded, size: size);
+  // Investasi: tile netral bergrafik (ADR-049 §3.3).
+  if (transaction is InvestmentTransaction) return DsIconTile(icon: Symbols.show_chart_rounded, size: size);
   final txKind = switch (transaction) {
     IncomeTransaction() => TransactionKind.income,
     ExpenseTransaction() => TransactionKind.expense,
-    TransferTransaction() || BalanceAdjustmentTransaction() => TransactionKind.transfer,
+    TransferTransaction() || BalanceAdjustmentTransaction() || InvestmentTransaction() => TransactionKind.transfer,
   };
   final iconKey = TransactionIcon.iconKeyFor(
     kind: txKind,
@@ -81,6 +83,12 @@ class _HeroCard extends StatelessWidget {
         t.transaction.detailTransferTitle,
         DsBadgeTone.neutral,
         AppMoneyFormatter.format(transaction.amount),
+        c.textSecondary,
+      ),
+      InvestmentTransaction(:final side) => (
+        side == InvestmentSide.buy ? t.assets.invest.buyTitle : t.assets.invest.sellTitle,
+        DsBadgeTone.neutral,
+        '${side == InvestmentSide.sell ? '+' : '−'}${AppMoneyFormatter.format(transaction.amount)}',
         c.textSecondary,
       ),
       BalanceAdjustmentTransaction(:final direction) => (
@@ -147,6 +155,8 @@ class _DetailsCard extends StatelessWidget {
       ExpenseTransaction() => t.transaction.detailExpenseType,
       TransferTransaction() => t.transaction.detailTransferType,
       BalanceAdjustmentTransaction() => t.assets.adjust.title,
+      InvestmentTransaction(:final side) =>
+        side == InvestmentSide.buy ? t.assets.invest.buyTitle : t.assets.invest.sellTitle,
     };
     final category = ActiveCategories.byId(tx.categoryId);
     final money = AppMoneyFormatter.format(tx.amount);
@@ -173,6 +183,9 @@ class _DetailsCard extends StatelessWidget {
           ],
           BalanceAdjustmentTransaction(:final walletId) => [
             _walletRow(t.assets.adjust.walletLabel, walletsById[walletId]),
+          ],
+          InvestmentTransaction(:final walletId) => [
+            _walletRow(t.assets.invest.walletLabel, walletsById[walletId]),
           ],
         },
         if (budgetItem case final item?)

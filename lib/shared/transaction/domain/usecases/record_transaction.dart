@@ -1,5 +1,6 @@
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
+import 'package:saldough/shared/transaction/domain/investment_ledger_guard.dart';
 import 'package:saldough/shared/transaction/domain/ledger_changes.dart';
 import 'package:saldough/shared/transaction/domain/transaction.dart';
 import 'package:saldough/shared/transaction/domain/transaction_query.dart';
@@ -21,6 +22,7 @@ final class RecordTransaction {
     required this.recomputeWalletBalances,
     required this.ledgerChanges,
     this.transferOnlyWallets = const NoTransferOnlyWallets(),
+    this.investmentGuard = const NoInvestmentLedgerGuard(),
   });
 
   /// Repository yang menyimpan buku besar.
@@ -33,6 +35,9 @@ final class RecordTransaction {
   /// Dompet milik tujuan tabungan: pemasukan dan pengeluaran ke sana ditolak
   /// (ADR-048 §8.2a).
   final TransferOnlyWallets transferOnlyWallets;
+
+  /// Penolak transaksi investasi yang membuat posisi negatif (ADR-049 §3.6).
+  final InvestmentLedgerGuard investmentGuard;
 
   /// Diberi tahu sekali sesudah transaksi DAN saldo dompetnya tertulis
   /// (ADR-030 §3.4) -- tidak saat gagal. `source` di [call]/[delete]
@@ -54,6 +59,8 @@ final class RecordTransaction {
   Future<Either<Failure, Unit>> call(Transaction transaction, {Transaction? previousTransaction, Object? source}) async {
     final incomeOrExpenseWallet = switch (transaction) {
       IncomeTransaction(:final walletId) || ExpenseTransaction(:final walletId) => walletId,
+      // Dompet tujuan juga tidak dipakai beli/jual investasi (ADR-049 §3.6).
+      InvestmentTransaction(:final walletId) => walletId,
       TransferTransaction() || BalanceAdjustmentTransaction() => null,
     };
     if (incomeOrExpenseWallet != null && (await transferOnlyWallets.walletIds()).contains(incomeOrExpenseWallet)) {
@@ -63,6 +70,10 @@ final class RecordTransaction {
           message: 'Dompet tujuan hanya untuk transfer.',
         ),
       );
+    }
+    if (transaction is InvestmentTransaction || previousTransaction is InvestmentTransaction) {
+      final checked = await investmentGuard.check(next: transaction, previous: previousTransaction);
+      if (checked case Left(value: final failure)) return left(failure);
     }
     if (transaction.recurrence case final link?) {
       final taken = await _occurrenceTaken(transaction, link);
@@ -108,6 +119,10 @@ final class RecordTransaction {
   /// Menghapus [transaction], lalu menghitung ulang dompet yang
   /// disentuhnya.
   Future<Either<Failure, Unit>> delete(Transaction transaction, {Object? source}) async {
+    if (transaction is InvestmentTransaction) {
+      final checked = await investmentGuard.check(previous: transaction);
+      if (checked case Left(value: final failure)) return left(failure);
+    }
     final deleteResult = await transactionRepository.deleteTransaction(transaction.id, transaction.date);
     return _announced(switch (deleteResult) {
       Left(value: final failure) => left<Failure, Unit>(failure),

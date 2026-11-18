@@ -466,7 +466,9 @@
       "expense": "Expense",
       "transfer": "Transfer",
       "adjustmentIncrease": "Balance adjustment (increase)",
-      "adjustmentDecrease": "Balance adjustment (decrease)"
+      "adjustmentDecrease": "Balance adjustment (decrease)",
+      "investBuy": "Investment purchase",
+      "investSell": "Investment sale"
     }
   },
   "budget": {
@@ -1840,6 +1842,10 @@
           "title": "A third active goal is in Plus",
           "body": "You already have 2 active goals. With Plus, set as many goals as you like, with an estimate of when each is reached. What you entered is kept as a draft."
         },
+        "instrument": {
+          "title": "A third active investment is in Plus",
+          "body": "You already track 2 active investments. With Plus, track as many as you like. What you entered is kept as a draft."
+        },
         "goalEstimate": {
           "title": "Goal estimates are in Plus",
           "body": "Your goals and their progress stay free."
@@ -1973,6 +1979,15 @@
       "savedMessage": "A difference of $amount was recorded as a balance adjustment.",
       "filterLabel": "Adjustments $count",
       "signToggle": "Switch between plus and minus"
+    },
+    "invest": {
+      "title": "Investments",
+      "buyTitle": "Investment purchase",
+      "sellTitle": "Investment sale",
+      "instrumentLabel": "Instrument",
+      "walletLabel": "Wallet",
+      "detailNote": "Money moved between a wallet and an investment. Not income or expense. Delete it to restore the wallet balance.",
+      "filterLabel": "Investments $count"
     }
   }
 }

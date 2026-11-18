@@ -14,6 +14,8 @@ final class ExportLabels {
     required this.transfer,
     required this.adjustmentIncrease,
     required this.adjustmentDecrease,
+    required this.investBuy,
+    required this.investSell,
     this.goalsSheet = 'Goals',
     this.goalColumns = const ['Name', 'Target', 'Saved', 'Status', 'Target date', 'Wallets'],
     this.goalStatuses = const ['Active', 'Reached', 'Archived'],
@@ -51,6 +53,12 @@ final class ExportLabels {
 
   /// Teks jenis penyesuaian saldo yang mengurangi saldo (ADR-047 §3.7).
   final String adjustmentDecrease;
+
+  /// Teks jenis pembelian investasi (ADR-049 §3.9).
+  final String investBuy;
+
+  /// Teks jenis penjualan investasi (ADR-049 §3.9).
+  final String investSell;
 
   /// Nama lembar tujuan tabungan (ADR-048 §3.4).
   final String goalsSheet;

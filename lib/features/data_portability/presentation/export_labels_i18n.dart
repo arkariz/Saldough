@@ -33,6 +33,8 @@ ExportLabels exportLabelsFromI18n() {
     transfer: t.dataPortability.types.transfer,
     adjustmentIncrease: t.dataPortability.types.adjustmentIncrease,
     adjustmentDecrease: t.dataPortability.types.adjustmentDecrease,
+    investBuy: t.dataPortability.types.investBuy,
+    investSell: t.dataPortability.types.investSell,
     goalsSheet: t.dataPortability.sheetGoals,
     goalColumns: [g.name, g.target, g.saved, g.status, g.targetDate, g.wallets],
     goalStatuses: [g.statusActive, g.statusReached, g.statusArchived],

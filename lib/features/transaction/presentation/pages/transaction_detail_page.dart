@@ -53,7 +53,7 @@ class TransactionDetailPage extends StatelessWidget {
     IncomeTransaction(:final walletId) => {walletId},
     ExpenseTransaction(:final walletId) => {walletId},
     TransferTransaction(:final fromWalletId, :final toWalletId) => {fromWalletId, toWalletId},
-    BalanceAdjustmentTransaction(:final walletId) => {walletId},
+    BalanceAdjustmentTransaction(:final walletId) || InvestmentTransaction(:final walletId) => {walletId},
   };
 
   Future<void> _edit(BuildContext context, TransactionState state) async {
@@ -138,7 +138,7 @@ class TransactionDetailPage extends StatelessWidget {
             final walletsById = {for (final wallet in state.wallets) wallet.id: wallet};
             final budgetItem = state.budgetItemOf(switch (transaction) {
               ExpenseTransaction(:final budgetItemId) || TransferTransaction(:final budgetItemId) => budgetItemId,
-              IncomeTransaction() || BalanceAdjustmentTransaction() => null,
+              IncomeTransaction() || BalanceAdjustmentTransaction() || InvestmentTransaction() => null,
             });
             // Pemasukan milik pembayaran freelance hanya diubah lewat
             // pembayarannya (ADR-019): tanpa sunting dan hapus di sini.
@@ -165,6 +165,12 @@ class TransactionDetailPage extends StatelessWidget {
                 // Penyesuaian saldo hanya bisa dihapus (ADR-047 §3.5).
                 else if (transaction is BalanceAdjustmentTransaction) ...[
                   _ManualNote(text: t.assets.adjust.detailNote),
+                  const SizedBox(height: 16),
+                  DsButton.danger(label: t.transaction.deleteAction, expand: true, onPressed: () => _delete(context)),
+                ]
+                // Investasi: sunting lewat CATAT menyusul (T-31.6); kini hapus saja.
+                else if (transaction is InvestmentTransaction) ...[
+                  _ManualNote(text: t.assets.invest.detailNote),
                   const SizedBox(height: 16),
                   DsButton.danger(label: t.transaction.deleteAction, expand: true, onPressed: () => _delete(context)),
                 ] else ...[

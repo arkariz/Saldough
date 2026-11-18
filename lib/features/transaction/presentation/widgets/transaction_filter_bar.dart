@@ -42,13 +42,17 @@ class TransactionTypeFilterRow extends StatelessWidget {
         count: count,
       ),
       TransactionTypeFilter.adjustment => t.assets.adjust.filterLabel(count: count),
+      TransactionTypeFilter.investment => t.assets.invest.filterLabel(count: count),
     };
   }
 
-  /// Chip Penyesuaian hanya tampil bila ada penyesuaian atau sedang terpilih
-  /// (rupa B-99): penyesuaian jarang, jadi chipnya tidak memenuhi baris.
+  /// Chip Penyesuaian dan Investasi hanya tampil bila ada catatannya atau
+  /// sedang terpilih (rupa B-99, ADR-049): jarang, jadi chipnya tidak
+  /// memenuhi baris.
   bool _visible(TransactionTypeFilter filter) =>
-      filter != TransactionTypeFilter.adjustment || typeFilter == filter || (typeCounts[filter] ?? 0) > 0;
+      !const {TransactionTypeFilter.adjustment, TransactionTypeFilter.investment}.contains(filter) ||
+      typeFilter == filter ||
+      (typeCounts[filter] ?? 0) > 0;
 
   @override
   Widget build(BuildContext context) {

@@ -29,7 +29,7 @@ final class CalculateBudgetProgress {
     for (final transaction in transactions) {
       final itemId = switch (transaction) {
         ExpenseTransaction(:final budgetItemId) || TransferTransaction(:final budgetItemId) => budgetItemId,
-        IncomeTransaction() || BalanceAdjustmentTransaction() => null,
+        IncomeTransaction() || BalanceAdjustmentTransaction() || InvestmentTransaction() => null,
       };
       final item = itemsById[itemId];
       if (item == null || !countsTowardBudgetItem(budget, item, transaction)) continue;

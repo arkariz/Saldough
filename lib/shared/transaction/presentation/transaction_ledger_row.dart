@@ -33,7 +33,8 @@ class TransactionLedgerRow extends StatelessWidget {
         '${_walletName(fromWalletId)} → ${_walletName(toWalletId)} · $time',
       IncomeTransaction(:final walletId) ||
       ExpenseTransaction(:final walletId) ||
-      BalanceAdjustmentTransaction(:final walletId) => '${_walletName(walletId)} · $time',
+      BalanceAdjustmentTransaction(:final walletId) ||
+      InvestmentTransaction(:final walletId) => '${_walletName(walletId)} · $time',
     };
   }
 
@@ -44,7 +45,11 @@ class TransactionLedgerRow extends StatelessWidget {
       ExpenseTransaction() => (MoneyKind.expense, DsLedgerKind.expense, TransactionKind.expense),
       TransferTransaction() => (MoneyKind.transfer, DsLedgerKind.transfer, TransactionKind.transfer),
       // Netral: bukan pemasukan atau pengeluaran (ADR-047 §3.5).
-      BalanceAdjustmentTransaction() => (MoneyKind.transfer, DsLedgerKind.transfer, TransactionKind.transfer),
+      BalanceAdjustmentTransaction() || InvestmentTransaction() => (
+        MoneyKind.transfer,
+        DsLedgerKind.transfer,
+        TransactionKind.transfer,
+      ),
     };
     final iconKey = TransactionIcon.iconKeyFor(
       kind: txKind,
@@ -56,6 +61,8 @@ class TransactionLedgerRow extends StatelessWidget {
     return DsLedgerRow(
       leading: transaction is BalanceAdjustmentTransaction
           ? const DsIconTile(icon: Symbols.balance_rounded)
+          : transaction is InvestmentTransaction
+          ? const DsIconTile(icon: Symbols.show_chart_rounded)
           : clay != null
           ? DsIconTile.asset(
               asset: clay,
@@ -69,6 +76,8 @@ class TransactionLedgerRow extends StatelessWidget {
       amount: switch (transaction) {
         BalanceAdjustmentTransaction(:final direction) =>
           '${direction == AdjustmentDirection.increase ? '+' : '−'}${AppMoneyText.format(transaction.amount, moneyKind)}',
+        InvestmentTransaction(:final side) =>
+          '${side == InvestmentSide.sell ? '+' : '−'}${AppMoneyText.format(transaction.amount, moneyKind)}',
         _ => AppMoneyText.format(transaction.amount, moneyKind),
       },
       subtitle: _subtitle,

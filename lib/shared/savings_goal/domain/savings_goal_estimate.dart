@@ -139,5 +139,5 @@ int netOfGoalWallet(Transaction tx, String walletId) => switch (tx) {
   ExpenseTransaction(walletId: final w) => w == walletId ? -tx.amount : 0,
   TransferTransaction(:final fromWalletId, :final toWalletId) =>
     (toWalletId == walletId ? tx.amount : 0) - (fromWalletId == walletId ? tx.amount : 0),
-  BalanceAdjustmentTransaction() => 0,
+  BalanceAdjustmentTransaction() || InvestmentTransaction() => 0,
 };

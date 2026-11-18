@@ -50,6 +50,9 @@ enum PaywallTrigger {
   /// P11: mencoba membuat tujuan tabungan aktif ketiga (ADR-048 §3.5).
   savingsGoalLimit('savings_goal_limit'),
 
+  /// P12: mencoba membuat atau membeli lagi instrumen aktif ketiga (ADR-049 §3.12).
+  instrumentLimit('instrument_limit'),
+
   /// Perkiraan tanggal tercapai tujuan tabungan (ADR-048 §3.6).
   goalEstimate('goal_estimate');
 

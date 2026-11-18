@@ -16,6 +16,8 @@ abstract final class ExportWriters {
     ExportKind.transfer => labels.transfer,
     ExportKind.adjustmentIncrease => labels.adjustmentIncrease,
     ExportKind.adjustmentDecrease => labels.adjustmentDecrease,
+    ExportKind.investBuy => labels.investBuy,
+    ExportKind.investSell => labels.investSell,
   };
 
   static String _day(DateTime d) =>

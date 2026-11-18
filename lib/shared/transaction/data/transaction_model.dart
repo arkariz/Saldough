@@ -4,7 +4,7 @@ import 'package:saldough/shared/transaction/domain/transaction.dart';
 /// `freezed`, mengikuti konvensi monorepo — lihat ARCHITECTURE_OVERVIEW.md).
 ///
 /// [Transaction] adalah tipe tertutup dengan empat bentuk field yang
-/// berbeda; model ini meratakannya jadi satu bentuk JSON beranotasi [type],
+/// berbeda (lima jenis); model ini meratakannya jadi satu bentuk JSON beranotasi [type],
 /// dengan field yang tidak relevan untuk jenis itu dibiarkan `null`.
 final class TransactionModel {
   /// Membuat [TransactionModel].
@@ -24,6 +24,9 @@ final class TransactionModel {
     this.sourceIconId,
     this.recurrence,
     this.direction,
+    this.instrumentId,
+    this.side,
+    this.quantity,
   });
 
   /// Membaca [TransactionModel] dari JSON.
@@ -43,6 +46,9 @@ final class TransactionModel {
         sourceIconId: json['sourceIconId'] as String?,
         recurrence: _recurrenceFromJson(json['recurrence'] as Map<String, dynamic>?),
         direction: json['direction'] as String?,
+        instrumentId: json['instrumentId'] as String?,
+        side: json['side'] as String?,
+        quantity: json['quantity'] as int?,
       );
 
   /// Membuat [TransactionModel] dari entitas domain [Transaction].
@@ -92,12 +98,24 @@ final class TransactionModel {
             walletId: transaction.walletId,
             direction: transaction.direction.name,
           ),
+        InvestmentTransaction() => TransactionModel(
+            id: transaction.id,
+            type: _typeInvestment,
+            date: transaction.date,
+            amount: transaction.amount,
+            note: transaction.note,
+            walletId: transaction.walletId,
+            instrumentId: transaction.instrumentId,
+            side: transaction.side.name,
+            quantity: transaction.quantity,
+          ),
       };
 
   static const _typeIncome = 'income';
   static const _typeExpense = 'expense';
   static const _typeTransfer = 'transfer';
   static const _typeAdjustment = 'adjustment';
+  static const _typeInvestment = 'investment';
 
   /// Versi skema dokumen ini. Naikkan kalau bentuk field berubah.
   ///
@@ -105,7 +123,9 @@ final class TransactionModel {
   /// Versi 3 (ADR-047): jenis `'adjustment'` dengan field `direction`
   /// (`'increase'`/`'decrease'`). Hanya menambah; dokumen versi 2 terbaca
   /// apa adanya.
-  static const schemaVersion = 3;
+  /// Versi 4 (ADR-049): jenis `'investment'` dengan field `instrumentId`,
+  /// `side` (`'buy'`/`'sell'`), dan `quantity`. Hanya menambah.
+  static const schemaVersion = 4;
 
   /// Identitas transaksi.
   final String id;
@@ -159,6 +179,15 @@ final class TransactionModel {
   /// `'adjustment'` (ADR-047).
   final String? direction;
 
+  /// Instrumen, hanya untuk jenis `'investment'` (ADR-049).
+  final String? instrumentId;
+
+  /// Arah investasi (`'buy'`/`'sell'`), hanya untuk jenis `'investment'`.
+  final String? side;
+
+  /// Jumlah berskala, hanya untuk jenis `'investment'`.
+  final int? quantity;
+
   static RecurrenceLink? _recurrenceFromJson(Map<String, dynamic>? json) => json == null
       ? null
       : RecurrenceLink(
@@ -175,7 +204,7 @@ final class TransactionModel {
         date: date,
         amount: amount,
         note: note,
-        categoryId: isTransfer || isAdjustment ? null : (this.categoryId ?? categoryId),
+        categoryId: isTransfer || isAdjustment || isInvestment ? null : (this.categoryId ?? categoryId),
         walletId: walletId,
         budgetItemId: budgetItemId,
         fromWalletId: fromWalletId,
@@ -184,13 +213,16 @@ final class TransactionModel {
         sourceIconId: sourceIconId,
         recurrence: recurrence,
         direction: direction,
+        instrumentId: instrumentId,
+        side: side,
+        quantity: quantity,
       );
 
   /// Salinan yang membawa [legacyCategoryKey] milik [previous] — dipakai saat
   /// menimpa dokumen skema 1 yang belum dimigrasi, supaya labelnya tidak
   /// hilang karena entitas domain tidak mengenalnya.
   TransactionModel keepingLegacyCategoryOf(TransactionModel previous) =>
-      categoryId != null || previous.legacyCategoryKey == null || isTransfer || isAdjustment
+      categoryId != null || previous.legacyCategoryKey == null || isTransfer || isAdjustment || isInvestment
           ? this
           : TransactionModel(
               id: id,
@@ -214,6 +246,9 @@ final class TransactionModel {
   /// Apakah ini penyesuaian saldo (ADR-047).
   bool get isAdjustment => type == _typeAdjustment;
 
+  /// Apakah ini transaksi investasi (ADR-049).
+  bool get isInvestment => type == _typeInvestment;
+
   /// `true` untuk pemasukan.
   bool get isIncome => type == _typeIncome;
 
@@ -233,6 +268,9 @@ final class TransactionModel {
         if (freelancePaymentId != null) 'freelancePaymentId': freelancePaymentId,
         if (sourceIconId != null) 'sourceIconId': sourceIconId,
         if (direction != null) 'direction': direction,
+        if (instrumentId != null) 'instrumentId': instrumentId,
+        if (side != null) 'side': side,
+        if (quantity != null) 'quantity': quantity,
         if (recurrence case final link?)
           'recurrence': {
             'ruleId': link.ruleId,
@@ -291,6 +329,21 @@ final class TransactionModel {
               'decrease' => AdjustmentDirection.decrease,
               _ => throw FormatException('TransactionModel adjustment dengan direction tidak dikenal: $direction ($id)'),
             },
+          ),
+        _typeInvestment => InvestmentTransaction(
+            id: id,
+            date: date,
+            amount: amount,
+            note: note,
+            walletId: walletId ?? (throw FormatException('TransactionModel investment tanpa walletId: $id')),
+            instrumentId:
+                instrumentId ?? (throw FormatException('TransactionModel investment tanpa instrumentId: $id')),
+            side: switch (side) {
+              'buy' => InvestmentSide.buy,
+              'sell' => InvestmentSide.sell,
+              _ => throw FormatException('TransactionModel investment dengan side tidak dikenal: $side ($id)'),
+            },
+            quantity: quantity ?? (throw FormatException('TransactionModel investment tanpa quantity: $id')),
           ),
         _ => throw FormatException('Jenis transaksi tidak dikenal: $type ($id)'),
       };

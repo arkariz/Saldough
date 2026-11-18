@@ -5,6 +5,7 @@ library;
 
 export 'data/source_icon_repository_impl.dart';
 export 'data/transaction_repository_impl.dart';
+export 'domain/investment_ledger_guard.dart';
 export 'domain/ledger_changes.dart';
 export 'domain/period_date.dart';
 export 'domain/period_filter.dart';

@@ -17,6 +17,8 @@ String transactionTitle(Transaction transaction) {
     IncomeTransaction() => t.record.kindIncome,
     TransferTransaction() => t.record.kindTransfer,
     BalanceAdjustmentTransaction() => t.assets.adjust.title,
+    InvestmentTransaction(:final side) =>
+      side == InvestmentSide.buy ? t.assets.invest.buyTitle : t.assets.invest.sellTitle,
   };
 }
 

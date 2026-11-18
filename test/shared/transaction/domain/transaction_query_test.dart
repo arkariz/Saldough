@@ -108,6 +108,7 @@ void main() {
       TransactionTypeFilter.expense: 2,
       TransactionTypeFilter.transfer: 1,
       TransactionTypeFilter.adjustment: 0,
+      TransactionTypeFilter.investment: 0,
     });
   });
 

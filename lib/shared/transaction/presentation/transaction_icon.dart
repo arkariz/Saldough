@@ -37,7 +37,7 @@ class TransactionIcon extends StatelessWidget {
           IncomeTransaction() => TransactionKind.income,
           ExpenseTransaction() => TransactionKind.expense,
           // Penyesuaian saldo memakai ikon netral transfer sampai rupa B-99 ada.
-          TransferTransaction() || BalanceAdjustmentTransaction() => TransactionKind.transfer,
+          TransferTransaction() || BalanceAdjustmentTransaction() || InvestmentTransaction() => TransactionKind.transfer,
         },
         categoryId: transaction.categoryId,
         sourceIconId: transaction.sourceIconId,

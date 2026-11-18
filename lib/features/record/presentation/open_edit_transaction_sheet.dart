@@ -42,6 +42,8 @@ Future<Transaction?> openEditTransactionSheet(
 }) async {
   // Penyesuaian saldo hanya bisa dihapus, tidak disunting (ADR-047 §3.5).
   if (transaction is BalanceAdjustmentTransaction) return null;
+  // Investasi disunting lewat formulirnya sendiri (T-31.6), belum di sini.
+  if (transaction is InvestmentTransaction) return null;
   final baseWallets = _withoutEffectOf(transaction, wallets);
   final result = await showFullScreenSheet<Object>(
     context,
@@ -63,6 +65,7 @@ Future<Transaction?> openEditTransactionSheet(
       ),
       TransferTransaction() => TransferFormSheet(wallets: baseWallets, initial: transaction, budgetItems: budgetItems),
       BalanceAdjustmentTransaction() => throw StateError('Penyesuaian saldo tidak pernah lewat CATAT (ADR-047 §3.5).'),
+      InvestmentTransaction() => throw StateError('Investasi disaring di atas.'),
     },
   );
 
@@ -145,4 +148,5 @@ int _effectOn(Transaction transaction, String walletId) => switch (transaction) 
   TransferTransaction(:final fromWalletId, :final toWalletId, :final amount) =>
     (fromWalletId == walletId ? -amount : 0) + (toWalletId == walletId ? amount : 0),
   BalanceAdjustmentTransaction(walletId: final id, :final signedAmount) => id == walletId ? signedAmount : 0,
+  InvestmentTransaction(walletId: final id, :final signedAmount) => id == walletId ? signedAmount : 0,
 };

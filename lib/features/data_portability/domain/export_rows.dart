@@ -17,6 +17,12 @@ enum ExportKind {
 
   /// Penyesuaian saldo yang mengurangi saldo (ADR-047 §3.7).
   adjustmentDecrease,
+
+  /// Pembelian investasi (ADR-049 §3.9).
+  investBuy,
+
+  /// Penjualan investasi (ADR-049 §3.9).
+  investSell,
 }
 
 /// Satu baris lembar Transaksi (EXPORT_BACKUP §5.2). Nominal tetap `int` sen;
@@ -89,7 +95,11 @@ final class ExportRow {
 int flowOf(ExportKind kind, int amount) => switch (kind) {
   ExportKind.income => amount,
   ExportKind.expense => -amount,
-  ExportKind.transfer || ExportKind.adjustmentIncrease || ExportKind.adjustmentDecrease => 0,
+  ExportKind.transfer ||
+  ExportKind.adjustmentIncrease ||
+  ExportKind.adjustmentDecrease ||
+  ExportKind.investBuy ||
+  ExportKind.investSell => 0,
 };
 
 /// Menyusun baris lembar Transaksi dari [data], terurut tanggal naik lalu id.
@@ -105,6 +115,13 @@ List<ExportRow> buildExportRows(ExportData data) {
       TransferTransaction() => (ExportKind.transfer, t.fromWalletId, t.toWalletId, null, t.budgetItemId),
       BalanceAdjustmentTransaction() => (
         t.direction == AdjustmentDirection.increase ? ExportKind.adjustmentIncrease : ExportKind.adjustmentDecrease,
+        t.walletId,
+        null,
+        null,
+        null,
+      ),
+      InvestmentTransaction() => (
+        t.side == InvestmentSide.buy ? ExportKind.investBuy : ExportKind.investSell,
         t.walletId,
         null,
         null,

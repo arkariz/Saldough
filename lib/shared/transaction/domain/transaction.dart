@@ -257,6 +257,53 @@ final class BalanceAdjustmentTransaction extends Transaction {
   List<Object?> get props => [id, date, amount, note, walletId, direction];
 }
 
+/// Arah transaksi investasi (ADR-049 §3.3).
+enum InvestmentSide {
+  /// Catat pembelian: uang keluar dari dompet menjadi nilai perolehan.
+  buy,
+
+  /// Catat penjualan (atau jatuh tempo): hasil bersih masuk ke dompet.
+  sell,
+}
+
+/// Beli atau jual instrumen dari dompet (ADR-049 §3.3), anggota kelima
+/// [Transaction]. Dicatat lewat CATAT. Mengubah saldo [walletId] tetapi
+/// **bukan** pemasukan atau pengeluaran: 0 di semua hitungan Arus, Analisis,
+/// anggaran, dan Rencana. [amount] = total dibayar termasuk biaya (beli) atau
+/// hasil bersih sesudah biaya (jual).
+final class InvestmentTransaction extends Transaction {
+  /// Membuat [InvestmentTransaction].
+  const InvestmentTransaction({
+    required super.id,
+    required super.date,
+    required super.amount,
+    required super.note,
+    required this.walletId,
+    required this.instrumentId,
+    required this.side,
+    required this.quantity,
+  }) : assert(quantity > 0, 'jumlah harus positif');
+
+  /// Dompet sumber (beli) atau tujuan (jual).
+  final String walletId;
+
+  /// Instrumen yang dibeli atau dijual.
+  final String instrumentId;
+
+  /// Beli atau jual.
+  final InvestmentSide side;
+
+  /// Jumlah berskala (ADR-049 §3.2), atau nominal untuk obligasi.
+  final int quantity;
+
+  /// Pengaruh ke saldo [walletId] dalam sen: negatif saat beli, positif saat
+  /// jual.
+  int get signedAmount => side == InvestmentSide.buy ? -amount : amount;
+
+  @override
+  List<Object?> get props => [id, date, amount, note, walletId, instrumentId, side, quantity];
+}
+
 /// Siapa yang menautkan transaksi ke kemunculan rutin.
 enum RecurrenceLinkedBy {
   /// Dicatat dari rutin, atau ditautkan pemilik.
@@ -331,5 +378,7 @@ extension TransactionRecurrence on Transaction {
     ),
     // Penyesuaian saldo tidak pernah menautkan rutin (ADR-047 §3.1).
     final BalanceAdjustmentTransaction t => t,
+    // Transaksi investasi tidak pernah menautkan rutin (ADR-049 §3.3).
+    final InvestmentTransaction t => t,
   };
 }

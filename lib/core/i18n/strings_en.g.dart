@@ -1715,6 +1715,7 @@ class _Translations$assets$en extends Translations$assets$id {
 	@override String homeLayers({required Object operational, required Object savings}) => 'Wallets ${operational} · Savings ${savings}';
 	@override late final _Translations$assets$goal$en goal = _Translations$assets$goal$en._(_root);
 	@override late final _Translations$assets$adjust$en adjust = _Translations$assets$adjust$en._(_root);
+	@override late final _Translations$assets$invest$en invest = _Translations$assets$invest$en._(_root);
 }
 
 // Path: record.split
@@ -1900,6 +1901,8 @@ class _Translations$dataPortability$types$en extends Translations$dataPortabilit
 	@override String get transfer => 'Transfer';
 	@override String get adjustmentIncrease => 'Balance adjustment (increase)';
 	@override String get adjustmentDecrease => 'Balance adjustment (decrease)';
+	@override String get investBuy => 'Investment purchase';
+	@override String get investSell => 'Investment sale';
 }
 
 // Path: home.preview
@@ -2488,6 +2491,22 @@ class _Translations$assets$adjust$en extends Translations$assets$adjust$id {
 	@override String get signToggle => 'Switch between plus and minus';
 }
 
+// Path: assets.invest
+class _Translations$assets$invest$en extends Translations$assets$invest$id {
+	_Translations$assets$invest$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Investments';
+	@override String get buyTitle => 'Investment purchase';
+	@override String get sellTitle => 'Investment sale';
+	@override String get instrumentLabel => 'Instrument';
+	@override String get walletLabel => 'Wallet';
+	@override String get detailNote => 'Money moved between a wallet and an investment. Not income or expense. Delete it to restore the wallet balance.';
+	@override String filterLabel({required Object count}) => 'Investments ${count}';
+}
+
 // Path: record.voice.failure
 class _Translations$record$voice$failure$en extends Translations$record$voice$failure$id {
 	_Translations$record$voice$failure$en._(TranslationsEn root) : this._root = root, super.internal(root);
@@ -2582,6 +2601,7 @@ class _Translations$premium$paywall$messages$en extends Translations$premium$pay
 	@override late final _Translations$premium$paywall$messages$auto$en auto = _Translations$premium$paywall$messages$auto$en._(_root);
 	@override late final _Translations$premium$paywall$messages$template$en template = _Translations$premium$paywall$messages$template$en._(_root);
 	@override late final _Translations$premium$paywall$messages$savingsGoal$en savingsGoal = _Translations$premium$paywall$messages$savingsGoal$en._(_root);
+	@override late final _Translations$premium$paywall$messages$instrument$en instrument = _Translations$premium$paywall$messages$instrument$en._(_root);
 	@override late final _Translations$premium$paywall$messages$goalEstimate$en goalEstimate = _Translations$premium$paywall$messages$goalEstimate$en._(_root);
 	@override late final _Translations$premium$paywall$messages$project$en project = _Translations$premium$paywall$messages$project$en._(_root);
 	@override late final _Translations$premium$paywall$messages$forecast$en forecast = _Translations$premium$paywall$messages$forecast$en._(_root);
@@ -2685,6 +2705,17 @@ class _Translations$premium$paywall$messages$savingsGoal$en extends Translations
 	// Translations
 	@override String get title => 'A third active goal is in Plus';
 	@override String get body => 'You already have 2 active goals. With Plus, set as many goals as you like, with an estimate of when each is reached. What you entered is kept as a draft.';
+}
+
+// Path: premium.paywall.messages.instrument
+class _Translations$premium$paywall$messages$instrument$en extends Translations$premium$paywall$messages$instrument$id {
+	_Translations$premium$paywall$messages$instrument$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'A third active investment is in Plus';
+	@override String get body => 'You already track 2 active investments. With Plus, track as many as you like. What you entered is kept as a draft.';
 }
 
 // Path: premium.paywall.messages.goalEstimate
@@ -3167,6 +3198,8 @@ extension on TranslationsEn {
 			'dataPortability.types.transfer' => 'Transfer',
 			'dataPortability.types.adjustmentIncrease' => 'Balance adjustment (increase)',
 			'dataPortability.types.adjustmentDecrease' => 'Balance adjustment (decrease)',
+			'dataPortability.types.investBuy' => 'Investment purchase',
+			'dataPortability.types.investSell' => 'Investment sale',
 			'budget.activeBadge' => ({required Object count}) => '${count} active',
 			'budget.plannedLabel' => 'Planned',
 			'budget.spentLabel' => 'Spent',
@@ -3249,10 +3282,10 @@ extension on TranslationsEn {
 			'budget.unknownWallet' => 'Wallet not found',
 			'budget.totalPlannedLabel' => 'Planned total',
 			'budget.itemsRequiredHint' => 'Add at least one item. Spending is tracked per item, so a budget without items can\'t track anything.',
-			'budget.walletUnchangedNote' => ({required Object wallet}) => '${wallet} balance unchanged',
-			'budget.itemKindLabel' => 'Item type',
 			_ => null,
 		} ?? switch (path) {
+			'budget.walletUnchangedNote' => ({required Object wallet}) => '${wallet} balance unchanged',
+			'budget.itemKindLabel' => 'Item type',
 			'budget.itemKindExpense' => 'Expense',
 			'budget.itemKindTransfer' => 'Transfer',
 			'budget.itemKindLockedHint' => 'The type can\'t be changed because this item already has linked transactions.',
@@ -3763,10 +3796,10 @@ extension on TranslationsEn {
 			'appearance.presets.pink' => 'Pink',
 			'appearance.presets.taro' => 'Taro',
 			'appearance.presets.tanuki' => 'Tanuki',
-			'appearance.presets.laut' => 'Sea',
-			'discovery.payday.title' => ({required Object d}) => 'Payday on the ${d}?',
 			_ => null,
 		} ?? switch (path) {
+			'appearance.presets.laut' => 'Sea',
+			'discovery.payday.title' => ({required Object d}) => 'Payday on the ${d}?',
 			'discovery.payday.body' => ({required Object d}) => 'Start your financial month on day ${d} so Plan and Analysis follow your payday.',
 			'discovery.payday.action' => 'Set',
 			'discovery.period.hint' => 'Set',
@@ -4277,10 +4310,10 @@ extension on TranslationsEn {
 			'analysis.empty.title' => 'Nothing to analyze yet',
 			'analysis.empty.body' => 'Record transactions to see where your money goes.',
 			'analysis.empty.cta' => 'Record a transaction',
-			'analysis.emptyMonth' => ({required Object period}) => 'No expenses in ${period} yet.',
-			'analysis.error' => 'Couldn\'t load analysis. Pull down to try again.',
 			_ => null,
 		} ?? switch (path) {
+			'analysis.emptyMonth' => ({required Object period}) => 'No expenses in ${period} yet.',
+			'analysis.error' => 'Couldn\'t load analysis. Pull down to try again.',
 			'analysis.donutSemantics' => ({required Object kind, required Object period, required Object parts}) => '${kind} ${period}: ${parts}',
 			'analysis.rowSemantics' => ({required Object name, required Object percent, required Object amount}) => '${name}, ${percent}, ${amount}',
 			'analysis.fix' => 'Add category',
@@ -4411,6 +4444,8 @@ extension on TranslationsEn {
 			'premium.paywall.messages.template.body' => 'The template you have stays saved and keeps working.',
 			'premium.paywall.messages.savingsGoal.title' => 'A third active goal is in Plus',
 			'premium.paywall.messages.savingsGoal.body' => 'You already have 2 active goals. With Plus, set as many goals as you like, with an estimate of when each is reached. What you entered is kept as a draft.',
+			'premium.paywall.messages.instrument.title' => 'A third active investment is in Plus',
+			'premium.paywall.messages.instrument.body' => 'You already track 2 active investments. With Plus, track as many as you like. What you entered is kept as a draft.',
 			'premium.paywall.messages.goalEstimate.title' => 'Goal estimates are in Plus',
 			'premium.paywall.messages.goalEstimate.body' => 'Your goals and their progress stay free.',
 			'premium.paywall.messages.project.title' => 'A third active project is in Plus',
@@ -4525,6 +4560,13 @@ extension on TranslationsEn {
 			'assets.adjust.savedMessage' => ({required Object amount}) => 'A difference of ${amount} was recorded as a balance adjustment.',
 			'assets.adjust.filterLabel' => ({required Object count}) => 'Adjustments ${count}',
 			'assets.adjust.signToggle' => 'Switch between plus and minus',
+			'assets.invest.title' => 'Investments',
+			'assets.invest.buyTitle' => 'Investment purchase',
+			'assets.invest.sellTitle' => 'Investment sale',
+			'assets.invest.instrumentLabel' => 'Instrument',
+			'assets.invest.walletLabel' => 'Wallet',
+			'assets.invest.detailNote' => 'Money moved between a wallet and an investment. Not income or expense. Delete it to restore the wallet balance.',
+			'assets.invest.filterLabel' => ({required Object count}) => 'Investments ${count}',
 			_ => null,
 		};
 	}

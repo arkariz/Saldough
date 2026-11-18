@@ -136,7 +136,7 @@ Future<bool> openRecordSheet(
         IncomeTransaction() => RecordChoice.income,
         ExpenseTransaction() => RecordChoice.expense,
         TransferTransaction() => RecordChoice.transfer,
-        BalanceAdjustmentTransaction() || null => RecordChoice.expense,
+        BalanceAdjustmentTransaction() || InvestmentTransaction() || null => RecordChoice.expense,
       };
   final wallets = bloc.state.wallets;
   final budgetItems = bloc.state.budgetItems;
@@ -308,6 +308,7 @@ RecordDraft draftFromTransaction(Transaction transaction) => switch (transaction
     date: transaction.date,
   ),
   BalanceAdjustmentTransaction() => throw ArgumentError.value(transaction, 'transaction', 'Penyesuaian saldo tidak pernah lewat CATAT (ADR-047 §3.5).'),
+  InvestmentTransaction() => throw ArgumentError.value(transaction, 'transaction', 'Investasi tidak dijadikan rutin (ADR-049 §3.3).'),
 };
 
 /// Draf CATAT dari [rule]. Tanpa [date] (Ubah rutin): kemunculan berikutnya

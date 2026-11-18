@@ -1086,6 +1086,7 @@ class _Translations$category$en extends Translations$category$id {
 		'freelance': 'Freelance',
 		'bonus': 'Bonus',
 		'gift': 'Gifts',
+		'investment': 'Investments',
 		'incomeOther': 'Other',
 	};
 	@override String get title => 'Categories';
@@ -3944,6 +3945,7 @@ extension on TranslationsEn {
 			'category.builtIn.freelance' => 'Freelance',
 			'category.builtIn.bonus' => 'Bonus',
 			'category.builtIn.gift' => 'Gifts',
+			'category.builtIn.investment' => 'Investments',
 			'category.builtIn.incomeOther' => 'Other',
 			'category.title' => 'Categories',
 			'category.accountEntryTitle' => 'Categories',
@@ -3977,9 +3979,9 @@ extension on TranslationsEn {
 			'appearance.presetPickerTitle' => 'Choose app colors',
 			'appearance.presets.matcha' => 'Matcha',
 			'appearance.presets.pink' => 'Pink',
-			'appearance.presets.taro' => 'Taro',
 			_ => null,
 		} ?? switch (path) {
+			'appearance.presets.taro' => 'Taro',
 			'appearance.presets.tanuki' => 'Tanuki',
 			'appearance.presets.laut' => 'Sea',
 			'discovery.payday.title' => ({required Object d}) => 'Payday on the ${d}?',
@@ -4491,9 +4493,9 @@ extension on TranslationsEn {
 			'analysis.kind.expense' => 'Expenses',
 			'analysis.kind.income' => 'Income',
 			'analysis.empty.title' => 'Nothing to analyze yet',
-			'analysis.empty.body' => 'Record transactions to see where your money goes.',
 			_ => null,
 		} ?? switch (path) {
+			'analysis.empty.body' => 'Record transactions to see where your money goes.',
 			'analysis.empty.cta' => 'Record a transaction',
 			'analysis.emptyMonth' => ({required Object period}) => 'No expenses in ${period} yet.',
 			'analysis.error' => 'Couldn\'t load analysis. Pull down to try again.',

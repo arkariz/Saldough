@@ -93,7 +93,7 @@ Terakhir diperbarui: 29 Oktober 2026 (penyelarasan dokumen dengan `main` di `0.1
 | 26 — Catat dari notifikasi v2 ([ADR-044](../02-architecture/adr/0044-catat-dari-notifikasi-v2.md), Proposed; [NOTIFICATION_CAPTURE_V2.md](../01-product/features/NOTIFICATION_CAPTURE_V2.md)) | 27 | 25 | Dimulai 4 Nov 2026; tanpa saklar build, jalur internal test. Kode T-26.1–T-26.25 selesai 5 Nov 2026 (T-26.28 6 Nov) di branch `claude/rombak-design-system-theming-5747b4` (125 komit di depan `main`, belum jadi PR): fondasi, MVP dalam aplikasi, notifikasi bertindak lewat mesin tanpa layar, E1–E3, pola buatan dicabut (T-26.23), snackbar v2 satu slot. **Sisa:** T-26.26 uji perangkat nyata (gerbang Accepted; baru 1 emulator dan perangkat pemilik) dan T-26.27 kebijakan privasi situs; antrean B-88–B-92 |
 | 29 — Penyesuaian saldo ([ADR-047](../02-architecture/adr/0047-penyesuaian-saldo.md), Accepted; [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §6) | 9 | 9 | **Selesai 17 Nov 2026** (dari B-99): ADR-047 Accepted; T-29.1–T-29.7 (rupa dan UI oleh agen atas permintaan pemilik; 2.831 uji lulus, `flutter analyze` 3 info lama); QA T-29.8 lulus menurut pemeriksaan pemilik di emulator dan perangkat. Branch `claude/penyesuaian-saldo-fase-29`, belum digabung ke induk `claude/aset-kekayaan`. Fase pertama rangkaian aset (Fase 29–33, branch induk `claude/aset-kekayaan`) |
 | 30 — Tujuan tabungan ([ADR-048](../02-architecture/adr/0048-tujuan-tabungan.md), Accepted; [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §4) | 19 | 18 | Dijadwalkan 17 Nov 2026 (dari B-96); T-30.0–T-30.6, T-30.10 (dompet milik tujuan, hanya transfer), T-30.11 (hero Total aset berlapis, ADR-050), dan T-30.12 (rombak tab Dompet: Sebaran aset dan segmen) selesai 17 Nov 2026 (2.849 uji lulus); T-30.15 (sebaran ringkas, warna kartu) 17 Nov, T-30.7 (perkiraan Plus), T-30.8 (dokumen), dan T-30.16 (audit tur) 18 Nov 2026 selesai (2.866 uji lulus); sisa T-30.9 (QA: Android selesai 18 Nov 2026, tinggal iOS) ; T-30.17 (menabung ke beberapa tujuan) selesai 18 Nov 2026 |
-| 31 — Investasi manual ([ADR-049](../02-architecture/adr/0049-investasi-manual.md), Accepted; [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §5) | 12 | 8 | Dijadwalkan 18 Nov 2026 (dari B-97); ADR-049 disetujui 18 Nov 2026 (T-31.0); domain, transaksi investasi, data, dan batas (T-31.2–T-31.5) selesai 18 Nov 2026; rupa T-31.1 dan layar T-31.6/T-31.7 selesai 18 Nov 2026 (2.919 uji lulus); sisa T-31.8–T-31.11 |
+| 31 — Investasi manual ([ADR-049](../02-architecture/adr/0049-investasi-manual.md), Accepted; [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §5) | 12 | 9 | Dijadwalkan 18 Nov 2026 (dari B-97); ADR-049 disetujui 18 Nov 2026 (T-31.0); domain, transaksi investasi, data, dan batas (T-31.2–T-31.5) selesai 18 Nov 2026; rupa T-31.1 dan layar T-31.6/T-31.7 selesai 18 Nov 2026 (2.919 uji lulus); T-31.8 selesai 18 Nov 2026; sisa T-31.9–T-31.11 |
 | Antrean (`B-n`, belum dijadwalkan) | 75 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
 
 ## Keputusan terbuka
@@ -7491,8 +7491,15 @@ Dijadwalkan 18 Nov 2026 (dari B-97), fase ketiga rangkaian aset
       jual berlebih.
       Selisih dari rupa B-97: rincian memakai kartu ringkasan gelap (rupa
       awal menghindari hero), atas permintaan pemilik.
-- [ ] **T-31.8** (S) Kategori bawaan pemasukan **Investasi** (dividen, kupon),
+- [x] **T-31.8** (S) Kategori bawaan pemasukan **Investasi** (dividen, kupon),
       termasuk pengguna lama (ADR-049 §3.8).
+      Hasil (18 Nov 2026): `BuiltInCategories` mendapat `investment` (pemasukan,
+      ikon `categoryInvestment`, alias dividen/kupon/bunga obligasi), nama id
+      "Investasi" / en "Investments". Pengguna lama mendapatkannya lewat use
+      case baru `AddMissingBuiltInCategories` yang dijalankan `bootstrap.dart`
+      sesudah migrasi ADR-026: kategori bawaan yang belum tersimpan ditambah di
+      belakang urutan, yang sudah ada (termasuk diarsipkan atau diganti nama)
+      tidak disentuh. 2.921 uji lulus.
 - [ ] **T-31.9** (S) Cadangan dan ekspor: kunci baru + referensi di
       `BackupRegistry`, `ExportKind.investBuy`/`investSell`, lembar Investasi
       dan Valuasi; uji bolak-balik cadangan (ADR-049 §3.9). Analitik §3.13.

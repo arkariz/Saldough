@@ -17,6 +17,7 @@ const Map<String, TileTint> _builtInTints = {
   'gift': TileTint.rose,
   'shopping': TileTint.amber,
   'bonus': TileTint.amber,
+  'investment': TileTint.teal,
   'education': TileTint.indigo,
   'entertainment': TileTint.indigo,
   'freelance': TileTint.indigo,

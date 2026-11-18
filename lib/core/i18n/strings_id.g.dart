@@ -2705,6 +2705,7 @@ class Translations$category$id {
 		'freelance': 'Freelance',
 		'bonus': 'Bonus',
 		'gift': 'Hadiah',
+		'investment': 'Investasi',
 		'incomeOther': 'Lainnya',
 	};
 
@@ -7753,6 +7754,7 @@ extension on Translations {
 			'category.builtIn.freelance' => 'Freelance',
 			'category.builtIn.bonus' => 'Bonus',
 			'category.builtIn.gift' => 'Hadiah',
+			'category.builtIn.investment' => 'Investasi',
 			'category.builtIn.incomeOther' => 'Lainnya',
 			'category.title' => 'Kategori',
 			'category.accountEntryTitle' => 'Kategori',
@@ -7786,9 +7788,9 @@ extension on Translations {
 			'appearance.presetPickerTitle' => 'Pilih warna aplikasi',
 			'appearance.presets.matcha' => 'Matcha',
 			'appearance.presets.pink' => 'Pink',
-			'appearance.presets.taro' => 'Taro',
 			_ => null,
 		} ?? switch (path) {
+			'appearance.presets.taro' => 'Taro',
 			'appearance.presets.tanuki' => 'Tanuki',
 			'appearance.presets.laut' => 'Laut',
 			'discovery.payday.title' => ({required Object d}) => 'Gajian tanggal ${d}?',
@@ -8300,9 +8302,9 @@ extension on Translations {
 			'analysis.kind.expense' => 'Pengeluaran',
 			'analysis.kind.income' => 'Pemasukan',
 			'analysis.empty.title' => 'Belum ada yang bisa dianalisis',
-			'analysis.empty.body' => 'Catat transaksi untuk melihat alur pengeluaranmu.',
 			_ => null,
 		} ?? switch (path) {
+			'analysis.empty.body' => 'Catat transaksi untuk melihat alur pengeluaranmu.',
 			'analysis.empty.cta' => 'Catat transaksi',
 			'analysis.emptyMonth' => ({required Object period}) => 'Belum ada pengeluaran di ${period}.',
 			'analysis.error' => 'Analisis gagal dimuat. Tarik ke bawah untuk mencoba lagi.',

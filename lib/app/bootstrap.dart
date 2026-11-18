@@ -114,6 +114,14 @@ Future<void> bootstrapApp() async {
     developer.log('Migrasi kategori gagal, dicoba lagi nanti', error: failure, name: 'MigrateLegacyCategories');
     AppBootstrap.recordNonFatal(failure, reason: 'MigrateLegacyCategories');
   }
+  // Kategori bawaan yang datang belakangan (mis. Investasi, ADR-049 §3.8)
+  // untuk pengguna yang sudah lewat migrasi.
+  final added = await AddMissingBuiltInCategories(categoryRepository: categoryRepository)(
+    builtInName: (key) => t.category.builtIn[key] ?? key,
+  );
+  if (added case Left(value: final failure)) {
+    developer.log('Kategori bawaan baru gagal ditambahkan', error: failure, name: 'AddMissingBuiltInCategories');
+  }
   // Mengisi `ActiveCategories` (lewat repository) untuk judul transaksi.
   await categoryRepository.listCategories();
 

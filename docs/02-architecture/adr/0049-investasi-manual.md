@@ -184,7 +184,8 @@ dompet, beda dengan dompet tujuan yang memang milik tujuan (ADR-048 §8).
 Pemasukan biasa (keputusan 5). Kategori bawaan baru **Investasi**
 (`key: 'investment'`, ikon `categoryInvestment`, alias dividen/kupon/bunga
 obligasi) ditambahkan ke kategori bawaan ADR-026, termasuk untuk pengguna
-lama lewat mekanisme yang sama dengan kategori bawaan lain. Menautkan pemasukan
+lama lewat `AddMissingBuiltInCategories` (dijalankan sesudah migrasi ADR-026
+saat aplikasi dibuka; kategori yang sudah ada tidak disentuh). Menautkan pemasukan
 ke instrumen (`IncomeTransaction.instrumentId`) **tidak** dikerjakan di fase
 ini; dicatat sebagai butir lanjutan bila pemilik ingin "Dividen diterima" di
 layar instrumen.

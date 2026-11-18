@@ -221,6 +221,15 @@ abstract final class BuiltInCategories {
       iconKey: 'income',
       aliases: ['hadiah', 'angpao', 'angpau', 'kado', 'gift'],
     ),
+    // Dividen, kupon, bunga obligasi (ADR-049 §3.8). Ditambahkan sesudah
+    // migrasi ADR-026, jadi pengguna lama mendapatkannya lewat
+    // [AddMissingBuiltInCategories].
+    BuiltInCategory(
+      key: 'investment',
+      kind: CategoryKind.income,
+      iconKey: 'categoryInvestment',
+      aliases: ['dividen', 'dividend', 'kupon', 'coupon', 'bunga obligasi', 'investasi'],
+    ),
     BuiltInCategory(key: 'incomeOther', kind: CategoryKind.income, iconKey: 'categoryOther', aliases: ['lainnya']),
   ];
 

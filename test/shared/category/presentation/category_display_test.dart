@@ -44,6 +44,7 @@ void main() {
       'donation': IconKey.categoryDonation,
       'bonus': IconKey.categoryBonus,
       'gift': IconKey.categoryGift,
+      'investment': IconKey.categoryInvestment,
       'expenseOther': IconKey.categoryOther,
       'incomeOther': IconKey.categoryOther,
     };

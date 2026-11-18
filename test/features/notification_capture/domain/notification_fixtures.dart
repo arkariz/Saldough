@@ -29,6 +29,7 @@ const _names = {
   'freelance': 'Freelance',
   'bonus': 'Bonus',
   'gift': 'Hadiah',
+  'investment': 'Investasi',
   'incomeOther': 'Lainnya',
 };
 

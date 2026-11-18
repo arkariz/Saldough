@@ -22,6 +22,7 @@ const Map<String, IconKey> _builtInIcons = {
   'freelance': IconKey.freelance,
   'bonus': IconKey.categoryBonus,
   'gift': IconKey.categoryGift,
+  'investment': IconKey.categoryInvestment,
   'incomeOther': IconKey.categoryOther,
 };
 

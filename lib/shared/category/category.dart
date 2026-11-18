@@ -9,6 +9,7 @@ export 'domain/category.dart';
 export 'domain/category_matcher.dart';
 export 'domain/category_repository.dart';
 export 'domain/legacy_category_labels.dart';
+export 'domain/usecases/add_missing_built_in_categories.dart';
 export 'domain/usecases/create_category.dart';
 export 'domain/usecases/migrate_legacy_categories.dart';
 export 'domain/usecases/relocalize_built_in_categories.dart';

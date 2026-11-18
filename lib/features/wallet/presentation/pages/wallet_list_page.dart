@@ -251,6 +251,20 @@ class _WalletListPageState extends State<WalletListPage> {
                             onRefreshSheet: state.sheetLinked && ActivePlan.isPlus
                                 ? () => context.read<WalletBloc>().add(const InvestmentPricesRefreshed(force: true))
                                 : null,
+                            sheetCard: state.sheetAvailable
+                                ? PriceSheetCard(
+                                    linked: state.sheetLinked,
+                                    problem: state.sheetProblem,
+                                    connecting: state.sheetConnecting,
+                                    isPlus: ActivePlan.isPlus,
+                                    sheetId: state.sheetId,
+                                    fetchedAt: state.sheetFetchedAt,
+                                    onConnect: () => context.read<WalletBloc>().add(const PriceSheetConnected()),
+                                    onDisconnect: () => context.read<WalletBloc>().add(const PriceSheetDisconnected()),
+                                    onRefresh: () =>
+                                        context.read<WalletBloc>().add(const InvestmentPricesRefreshed(force: true)),
+                                  )
+                                : null,
                           )
                         else if (segment == AssetLayer.savings) ...[
                           if (goalShares.length > 1) ...[

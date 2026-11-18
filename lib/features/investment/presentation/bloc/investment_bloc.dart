@@ -52,7 +52,8 @@ final class InvestmentBloc extends Bloc<InvestmentEvent, InvestmentState> {
     final refresh = _sheetPrices;
     if (refresh == null || !_isPlus()) return;
     final result = await refresh();
-    if (result case Right(value: SheetRefreshOutcome.updated)) {
+    if (result case Right(value: (outcome: SheetRefreshOutcome.updated, :final saved))) {
+      AppAnalytics.log(WealthEvents.valuationSheetSynced(saved));
       _ledgerChanges.notifyChanged(source: this);
       await _load(emit);
     }

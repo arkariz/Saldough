@@ -1875,6 +1875,10 @@
           "title": "Investasi aktif ketiga ada di Plus",
           "body": "Kamu sudah mencatat 2 investasi aktif. Dengan Plus, instrumen berapa pun. Isianmu disimpan sebagai draf."
         },
+        "sheetPrices": {
+          "title": "Harga saham otomatis ada di Plus",
+          "body": "Hubungkan Google Sheet milikmu, lalu harga saham diambil sendiri setiap kamu membuka Investasi. Perbarui nilai manual tetap gratis."
+        },
         "goalEstimate": {
           "title": "Perkiraan tujuan ada di Plus",
           "body": "Tujuan dan kemajuannya tetap gratis."
@@ -2143,6 +2147,21 @@
       "qtyActive": "Papan angka mengisi jumlah",
       "amountActive": "Papan angka mengisi nominal",
       "sheet": {
+      "connectTitle": "Harga saham otomatis",
+      "connectBody": "Hubungkan Google Sheet milikmu. Harga saham dari Google Finance diambil setiap kamu membuka Investasi; emas berupa perkiraan, reksa dana bisa kamu isi sendiri di Sheet.",
+      "connect": "Hubungkan Google Sheet",
+      "connecting": "Menghubungkan…",
+      "linkedTitle": "Google Sheet",
+      "linkedStatus": "Terhubung · diperbarui $time",
+      "linkedNever": "Terhubung",
+      "open": "Buka di Google Sheets",
+      "disconnect": "Putuskan",
+      "disconnected": "Google Sheet diputus. Berkasnya tetap ada di Drive-mu.",
+      "connected": "Google Sheet terhubung.",
+      "notAuthorized": "Izin Google Sheet dicabut. Hubungkan lagi untuk mengambil harga.",
+      "notFound": "Google Sheet tidak ditemukan. Hubungkan lagi untuk membuat yang baru.",
+      "denied": "Izin tidak diberikan, jadi Google Sheet belum terhubung.",
+      "optionsTitle": "Google Sheet harga",
       "refresh": "Segarkan",
       "refreshFailed": "Harga dari Google Sheet belum bisa diambil. Coba lagi nanti.",
       "fromSheet": "Dari Google Sheet · $time",

@@ -2,6 +2,7 @@ import 'package:di/di.dart';
 import 'package:saldough/core/presentation/plan/active_plan.dart';
 import 'package:saldough/features/wallet/presentation/bloc/wallet_activity_bloc.dart';
 import 'package:saldough/features/wallet/presentation/bloc/wallet_bloc.dart';
+import 'package:saldough/shared/auth/auth.dart';
 import 'package:saldough/shared/investment/investment.dart';
 import 'package:saldough/shared/savings_goal/savings_goal.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
@@ -30,8 +31,10 @@ final class WalletScope extends IsolatedScope {
     if (parent.isRegistered<RefreshSheetPrices>()) {
       c
         ..registerSingleton<RefreshSheetPrices>(parent<RefreshSheetPrices>())
-        ..registerSingleton<PriceSheetLinkStore>(parent<PriceSheetLinkStore>());
+        ..registerSingleton<PriceSheetLinkStore>(parent<PriceSheetLinkStore>())
+        ..registerSingleton<ConnectPriceSheet>(parent<ConnectPriceSheet>());
     }
+    if (parent.isRegistered<AuthRepository>()) c.registerSingleton<AuthRepository>(parent<AuthRepository>());
   }
 
   @override
@@ -46,7 +49,11 @@ final class WalletScope extends IsolatedScope {
           investmentRepository: c.isRegistered<InvestmentRepository>() ? c<InvestmentRepository>() : null,
           sheetPrices: c.isRegistered<RefreshSheetPrices>() ? c<RefreshSheetPrices>() : null,
           sheetLinks: c.isRegistered<PriceSheetLinkStore>() ? c<PriceSheetLinkStore>() : null,
+          connectSheet: c.isRegistered<ConnectPriceSheet>() ? c<ConnectPriceSheet>() : null,
           isPlus: () => ActivePlan.isPlus,
+          // Google Sheet hanya untuk yang masuk dengan Google (ADR-051 §3.2).
+          isGoogleUser: () =>
+              c.isRegistered<AuthRepository>() && c<AuthRepository>().currentUser?.method == SignInMethod.google,
           recordTransaction: RecordTransaction(
             transferOnlyWallets: parent.isRegistered<TransferOnlyWallets>() ? parent<TransferOnlyWallets>() : const NoTransferOnlyWallets(),
             ledgerChanges: c<LedgerChanges>(),

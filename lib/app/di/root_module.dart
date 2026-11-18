@@ -262,18 +262,29 @@ abstract final class RootModule {
         () => GoogleSheetsPriceGateway(accessToken: container<GoogleDriveAuthorizer>().silentToken),
       )
       ..registerLazySingleton<PriceSheetConfigSource>(FirebasePriceSheetConfig.new)
+      ..registerLazySingleton<SyncPriceSheet>(
+        () => SyncPriceSheet(
+          gateway: container<PriceSheetGateway>(),
+          links: container<PriceSheetLinkStore>(),
+          investments: container<InvestmentRepository>(),
+          transactions: container<TransactionRepository>(),
+          configSource: container<PriceSheetConfigSource>(),
+        ),
+      )
       ..registerLazySingleton<RefreshSheetPrices>(
         () => RefreshSheetPrices(
-          sync: SyncPriceSheet(
-            gateway: container<PriceSheetGateway>(),
-            links: container<PriceSheetLinkStore>(),
-            investments: container<InvestmentRepository>(),
-            transactions: container<TransactionRepository>(),
-            configSource: container<PriceSheetConfigSource>(),
-          ),
+          sync: container<SyncPriceSheet>(),
           read: ReadSheetPrices(gateway: container<PriceSheetGateway>(), investments: container<InvestmentRepository>()),
           links: container<PriceSheetLinkStore>(),
           investments: container<InvestmentRepository>(),
+        ),
+      )
+      // Hubungkan: izin drive.file dengan layar Google, dari ketukan pengguna.
+      ..registerLazySingleton<ConnectPriceSheet>(
+        () => ConnectPriceSheet(
+          authorize: () async => await container<GoogleDriveAuthorizer>().requestToken() != null,
+          sync: container<SyncPriceSheet>(),
+          refresh: container<RefreshSheetPrices>(),
         ),
       )
       // Penolak beli/jual yang membuat posisi negatif (ADR-049 §3.6), dibaca

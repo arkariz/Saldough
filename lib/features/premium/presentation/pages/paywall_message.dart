@@ -48,6 +48,11 @@ final class PaywallMessage {
         m.instrument.body,
         hasKicker: true,
       ),
+      PaywallTrigger.sheetPrices => PaywallMessage._(
+        m.sheetPrices.title,
+        m.sheetPrices.body,
+        hasKicker: true,
+      ),
       PaywallTrigger.goalEstimate => PaywallMessage._(
         m.goalEstimate.title,
         m.goalEstimate.body,

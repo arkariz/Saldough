@@ -184,13 +184,13 @@ void main() {
         investments: investments,
         now: () => clock,
       );
-      expect((await refresher()()).getOrElse((_) => throw StateError('x')), SheetRefreshOutcome.notLinked);
+      expect((await refresher()()).getOrElse((_) => throw StateError('x')).outcome, SheetRefreshOutcome.notLinked);
       await links.save(const PriceSheetLink(sheetId: 'S1'));
       // Isian manual BBCA hari ini tidak boleh ditimpa.
       await investments.saveValuations([
         InstrumentValuation(instrumentId: 'a', date: DateTime(2026, 11, 18), unitPrice: 600000),
       ]);
-      expect((await refresher()()).getOrElse((_) => throw StateError('x')), SheetRefreshOutcome.updated);
+      expect((await refresher()()).getOrElse((_) => throw StateError('x')).outcome, SheetRefreshOutcome.updated);
       final saved = (await investments.listValuations()).getOrElse((_) => const []);
       expect({for (final v in saved) v.instrumentId: (v.unitPrice, v.source)}, {
         'a': (600000, ValuationSource.manual),
@@ -198,8 +198,27 @@ void main() {
       });
       expect((await links.read()).getOrElse((_) => null)?.lastFetchedAt, clock);
       clock = clock.add(const Duration(minutes: 10));
-      expect((await refresher()()).getOrElse((_) => throw StateError('x')), SheetRefreshOutcome.fresh);
-      expect((await refresher()(force: true)).getOrElse((_) => throw StateError('x')), SheetRefreshOutcome.updated);
+      expect((await refresher()()).getOrElse((_) => throw StateError('x')).outcome, SheetRefreshOutcome.fresh);
+      expect((await refresher()(force: true)).getOrElse((_) => throw StateError('x')).outcome, SheetRefreshOutcome.updated);
+    });
+
+    test('ConnectPriceSheet: izin ditolak tidak membuat Sheet; izin diberikan membuat dan mengambil', () async {
+      final gateway = _FakeGateway()..reads = [
+        {'a': 5750},
+      ];
+      final sync = SyncPriceSheet(gateway: gateway, links: links, investments: investments, transactions: transactions);
+      final refresh = RefreshSheetPrices(
+        sync: sync,
+        read: ReadSheetPrices(gateway: gateway, investments: investments, retryDelay: Duration.zero),
+        links: links,
+        investments: investments,
+      );
+      final denied = await ConnectPriceSheet(authorize: () async => false, sync: sync, refresh: refresh)();
+      expect(denied.fold((f) => f.code, (_) => null), PriceSheetFailures.notAuthorized);
+      expect(gateway.created, 0);
+      final granted = await ConnectPriceSheet(authorize: () async => true, sync: sync, refresh: refresh)();
+      expect(granted.getOrElse((_) => throw StateError('x')), (outcome: SheetRefreshOutcome.updated, saved: 1));
+      expect(gateway.created, 1);
     });
 
     test('model valuasi bolak-balik untuk sumber perkiraan', () {

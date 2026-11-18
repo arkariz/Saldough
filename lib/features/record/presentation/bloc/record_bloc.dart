@@ -91,7 +91,8 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
   Future<void> _refreshSheetPrices(Emitter<RecordState> emit) async {
     final refresh = _sheetPrices;
     if (refresh == null || !_isPlus() || state.instruments.isEmpty) return;
-    if (await refresh() case Right(value: SheetRefreshOutcome.updated)) {
+    if (await refresh() case Right(value: (outcome: SheetRefreshOutcome.updated, :final saved))) {
+      AppAnalytics.log(WealthEvents.valuationSheetSynced(saved));
       final investments = await _loadInvestments();
       emit(state.copyWith(instruments: investments.instruments, investmentTrades: investments.trades));
     }

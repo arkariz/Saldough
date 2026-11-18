@@ -136,6 +136,14 @@ abstract final class WealthEvents {
   static AnalyticsEvent instrumentAdded(String type, String via) =>
       AnalyticsEvent('instrument_added', {'type': type, 'via': via});
 
+  /// Google Sheet harga terhubung (ADR-051 §3.7).
+  static const sheetLinked = AnalyticsEvent('sheet_linked');
+
+  /// Harga diambil dari Google Sheet; [count] dikelompokkan, tanpa kode atau harga.
+  static AnalyticsEvent valuationSheetSynced(int count) => AnalyticsEvent('valuation_sheet_synced', {
+    'count_bucket': count <= 1 ? '1' : (count <= 5 ? '2-5' : '6+'),
+  });
+
   /// Beli atau jual investasi dicatat. [side]: `buy` atau `sell`.
   static AnalyticsEvent investmentRecorded(String side) => AnalyticsEvent('investment_recorded', {'side': side});
 

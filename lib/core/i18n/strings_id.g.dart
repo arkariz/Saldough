@@ -6481,6 +6481,7 @@ class Translations$premium$paywall$messages$id {
 	late final Translations$premium$paywall$messages$template$id template = Translations$premium$paywall$messages$template$id.internal(_root);
 	late final Translations$premium$paywall$messages$savingsGoal$id savingsGoal = Translations$premium$paywall$messages$savingsGoal$id.internal(_root);
 	late final Translations$premium$paywall$messages$instrument$id instrument = Translations$premium$paywall$messages$instrument$id.internal(_root);
+	late final Translations$premium$paywall$messages$sheetPrices$id sheetPrices = Translations$premium$paywall$messages$sheetPrices$id.internal(_root);
 	late final Translations$premium$paywall$messages$goalEstimate$id goalEstimate = Translations$premium$paywall$messages$goalEstimate$id.internal(_root);
 	late final Translations$premium$paywall$messages$project$id project = Translations$premium$paywall$messages$project$id.internal(_root);
 	late final Translations$premium$paywall$messages$forecast$id forecast = Translations$premium$paywall$messages$forecast$id.internal(_root);
@@ -6644,6 +6645,51 @@ class Translations$assets$invest$sheet$id {
 	final Translations _root; // ignore: unused_field
 
 	// Translations
+
+	/// id: 'Harga saham otomatis'
+	String get connectTitle => 'Harga saham otomatis';
+
+	/// id: 'Hubungkan Google Sheet milikmu. Harga saham dari Google Finance diambil setiap kamu membuka Investasi; emas berupa perkiraan, reksa dana bisa kamu isi sendiri di Sheet.'
+	String get connectBody => 'Hubungkan Google Sheet milikmu. Harga saham dari Google Finance diambil setiap kamu membuka Investasi; emas berupa perkiraan, reksa dana bisa kamu isi sendiri di Sheet.';
+
+	/// id: 'Hubungkan Google Sheet'
+	String get connect => 'Hubungkan Google Sheet';
+
+	/// id: 'Menghubungkan…'
+	String get connecting => 'Menghubungkan…';
+
+	/// id: 'Google Sheet'
+	String get linkedTitle => 'Google Sheet';
+
+	/// id: 'Terhubung · diperbarui $time'
+	String linkedStatus({required Object time}) => 'Terhubung · diperbarui ${time}';
+
+	/// id: 'Terhubung'
+	String get linkedNever => 'Terhubung';
+
+	/// id: 'Buka di Google Sheets'
+	String get open => 'Buka di Google Sheets';
+
+	/// id: 'Putuskan'
+	String get disconnect => 'Putuskan';
+
+	/// id: 'Google Sheet diputus. Berkasnya tetap ada di Drive-mu.'
+	String get disconnected => 'Google Sheet diputus. Berkasnya tetap ada di Drive-mu.';
+
+	/// id: 'Google Sheet terhubung.'
+	String get connected => 'Google Sheet terhubung.';
+
+	/// id: 'Izin Google Sheet dicabut. Hubungkan lagi untuk mengambil harga.'
+	String get notAuthorized => 'Izin Google Sheet dicabut. Hubungkan lagi untuk mengambil harga.';
+
+	/// id: 'Google Sheet tidak ditemukan. Hubungkan lagi untuk membuat yang baru.'
+	String get notFound => 'Google Sheet tidak ditemukan. Hubungkan lagi untuk membuat yang baru.';
+
+	/// id: 'Izin tidak diberikan, jadi Google Sheet belum terhubung.'
+	String get denied => 'Izin tidak diberikan, jadi Google Sheet belum terhubung.';
+
+	/// id: 'Google Sheet harga'
+	String get optionsTitle => 'Google Sheet harga';
 
 	/// id: 'Segarkan'
 	String get refresh => 'Segarkan';
@@ -6815,6 +6861,21 @@ class Translations$premium$paywall$messages$instrument$id {
 
 	/// id: 'Kamu sudah mencatat 2 investasi aktif. Dengan Plus, instrumen berapa pun. Isianmu disimpan sebagai draf.'
 	String get body => 'Kamu sudah mencatat 2 investasi aktif. Dengan Plus, instrumen berapa pun. Isianmu disimpan sebagai draf.';
+}
+
+// Path: premium.paywall.messages.sheetPrices
+class Translations$premium$paywall$messages$sheetPrices$id {
+	Translations$premium$paywall$messages$sheetPrices$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Harga saham otomatis ada di Plus'
+	String get title => 'Harga saham otomatis ada di Plus';
+
+	/// id: 'Hubungkan Google Sheet milikmu, lalu harga saham diambil sendiri setiap kamu membuka Investasi. Perbarui nilai manual tetap gratis.'
+	String get body => 'Hubungkan Google Sheet milikmu, lalu harga saham diambil sendiri setiap kamu membuka Investasi. Perbarui nilai manual tetap gratis.';
 }
 
 // Path: premium.paywall.messages.goalEstimate
@@ -8589,6 +8650,8 @@ extension on Translations {
 			'premium.paywall.messages.savingsGoal.body' => 'Kamu sudah punya 2 tujuan aktif. Dengan Plus, tujuan berapa pun, plus perkiraan kapan tercapai. Isianmu disimpan sebagai draf.',
 			'premium.paywall.messages.instrument.title' => 'Investasi aktif ketiga ada di Plus',
 			'premium.paywall.messages.instrument.body' => 'Kamu sudah mencatat 2 investasi aktif. Dengan Plus, instrumen berapa pun. Isianmu disimpan sebagai draf.',
+			'premium.paywall.messages.sheetPrices.title' => 'Harga saham otomatis ada di Plus',
+			'premium.paywall.messages.sheetPrices.body' => 'Hubungkan Google Sheet milikmu, lalu harga saham diambil sendiri setiap kamu membuka Investasi. Perbarui nilai manual tetap gratis.',
 			'premium.paywall.messages.goalEstimate.title' => 'Perkiraan tujuan ada di Plus',
 			'premium.paywall.messages.goalEstimate.body' => 'Tujuan dan kemajuannya tetap gratis.',
 			'premium.paywall.messages.project.title' => 'Proyek aktif ketiga ada di Plus',
@@ -8827,6 +8890,21 @@ extension on Translations {
 			'assets.invest.sellRecorded' => ({required Object name}) => 'Penjualan ${name} dicatat.',
 			'assets.invest.qtyActive' => 'Papan angka mengisi jumlah',
 			'assets.invest.amountActive' => 'Papan angka mengisi nominal',
+			'assets.invest.sheet.connectTitle' => 'Harga saham otomatis',
+			'assets.invest.sheet.connectBody' => 'Hubungkan Google Sheet milikmu. Harga saham dari Google Finance diambil setiap kamu membuka Investasi; emas berupa perkiraan, reksa dana bisa kamu isi sendiri di Sheet.',
+			'assets.invest.sheet.connect' => 'Hubungkan Google Sheet',
+			'assets.invest.sheet.connecting' => 'Menghubungkan…',
+			'assets.invest.sheet.linkedTitle' => 'Google Sheet',
+			'assets.invest.sheet.linkedStatus' => ({required Object time}) => 'Terhubung · diperbarui ${time}',
+			'assets.invest.sheet.linkedNever' => 'Terhubung',
+			'assets.invest.sheet.open' => 'Buka di Google Sheets',
+			'assets.invest.sheet.disconnect' => 'Putuskan',
+			'assets.invest.sheet.disconnected' => 'Google Sheet diputus. Berkasnya tetap ada di Drive-mu.',
+			'assets.invest.sheet.connected' => 'Google Sheet terhubung.',
+			'assets.invest.sheet.notAuthorized' => 'Izin Google Sheet dicabut. Hubungkan lagi untuk mengambil harga.',
+			'assets.invest.sheet.notFound' => 'Google Sheet tidak ditemukan. Hubungkan lagi untuk membuat yang baru.',
+			'assets.invest.sheet.denied' => 'Izin tidak diberikan, jadi Google Sheet belum terhubung.',
+			'assets.invest.sheet.optionsTitle' => 'Google Sheet harga',
 			'assets.invest.sheet.refresh' => 'Segarkan',
 			'assets.invest.sheet.refreshFailed' => 'Harga dari Google Sheet belum bisa diambil. Coba lagi nanti.',
 			'assets.invest.sheet.fromSheet' => ({required Object time}) => 'Dari Google Sheet · ${time}',

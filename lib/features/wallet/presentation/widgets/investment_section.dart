@@ -6,8 +6,10 @@ import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/features/investment/presentation/navigation/investment_route_keys.dart';
+import 'package:saldough/features/premium/presentation/navigation/premium_route_keys.dart';
 import 'package:saldough/features/record/presentation/navigation/record_route_keys.dart';
 import 'package:saldough/features/wallet/presentation/bloc/wallet_bloc.dart';
+import 'package:saldough/features/wallet/presentation/bloc/wallet_state.dart';
 import 'package:saldough/features/wallet/presentation/wallet_shares.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_card.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_spread_card.dart';
@@ -16,6 +18,7 @@ import 'package:saldough/shared/investment/investment_presentation.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 import 'package:state_management/state_management.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 /// Membuka rute [key] lalu memuat ulang tab Dompet.
 Future<void> _open<T extends RouteInput>(BuildContext context, RouteKey<T> key, T input) async {
@@ -70,8 +73,12 @@ class InvestmentSection extends StatelessWidget {
     this.sheetFetchedAt,
     this.onRefreshSheet,
     this.refreshing = false,
+    this.sheetCard,
     super.key,
   });
+
+  /// Kartu Google Sheet harga (ADR-051), atau `null` bila tidak tersedia.
+  final Widget? sheetCard;
 
   /// Instrumen Aktif, nilai pasar terbesar dulu.
   final List<InstrumentSummary> active;
@@ -147,6 +154,8 @@ class InvestmentSection extends StatelessWidget {
             ),
             const SizedBox(height: 16),
           ],
+          ?sheetCard,
+          if (sheetCard != null) const SizedBox(height: 12),
           // Berdampingan bila muat; di layar sempit atau teks besar menumpuk
           // (rupa B-97 §1.2), supaya label tidak terpotong.
           LayoutBuilder(
@@ -369,6 +378,154 @@ class _Empty extends StatelessWidget {
           DsButton.secondary(key: const ValueKey('investment-buy-empty'), label: s.recordBuy, expand: true, onPressed: onBuy),
           const SizedBox(height: 8),
           Text(s.emptyHint, style: ds.typography.bodySm.copyWith(color: ds.colors.textMuted)),
+        ],
+      ),
+    );
+  }
+}
+
+/// Kartu Google Sheet harga di segmen Investasi (ADR-051 §3.2, §3.5, §3.6):
+/// ajakan Hubungkan bila belum, baris status bila sudah, dan ajakan
+/// menghubungkan lagi bila izin dicabut. Hanya untuk yang masuk dengan Google.
+class PriceSheetCard extends StatelessWidget {
+  /// Membuat [PriceSheetCard].
+  const PriceSheetCard({
+    required this.linked,
+    required this.problem,
+    required this.connecting,
+    required this.isPlus,
+    required this.onConnect,
+    required this.onDisconnect,
+    required this.onRefresh,
+    this.sheetId,
+    this.fetchedAt,
+    super.key,
+  });
+
+  /// Sudah terhubung.
+  final bool linked;
+
+  /// Masalah terakhir.
+  final PriceSheetProblem problem;
+
+  /// Alur Hubungkan berjalan.
+  final bool connecting;
+
+  /// Plus aktif; Gratis membuka paywall.
+  final bool isPlus;
+
+  /// ID Sheet, untuk Buka di Google Sheets.
+  final String? sheetId;
+
+  /// Kapan harga terakhir diambil.
+  final DateTime? fetchedAt;
+
+  /// Hubungkan (atau hubungkan lagi).
+  final VoidCallback onConnect;
+
+  /// Putuskan.
+  final VoidCallback onDisconnect;
+
+  /// Segarkan sekarang.
+  final VoidCallback onRefresh;
+
+  Future<void> _connect(BuildContext context) async {
+    if (!isPlus) {
+      await context.pushRoute(PremiumRouteKeys.paywall, const PaywallInput(PaywallTrigger.sheetPrices));
+      return;
+    }
+    onConnect();
+  }
+
+  Future<void> _options(BuildContext context) async {
+    final s = t.assets.invest.sheet;
+    final picked = await showOptionSheet<String>(
+      context,
+      title: s.optionsTitle,
+      current: null,
+      options: [
+        OptionSheetItem(value: 'open', label: s.open, leading: const Icon(Symbols.open_in_new_rounded)),
+        OptionSheetItem(value: 'refresh', label: s.refresh, leading: const Icon(Symbols.update_rounded)),
+        OptionSheetItem(value: 'disconnect', label: s.disconnect, leading: const Icon(Symbols.link_off_rounded)),
+      ],
+    );
+    switch (picked) {
+      case 'open' when sheetId != null:
+        await launchUrl(Uri.parse('https://docs.google.com/spreadsheets/d/$sheetId'), mode: LaunchMode.externalApplication);
+      case 'refresh':
+        onRefresh();
+      case 'disconnect':
+        onDisconnect();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final ds = context.ds;
+    final c = ds.colors;
+    final s = t.assets.invest.sheet;
+    if (linked && problem != PriceSheetProblem.notAuthorized) {
+      final time = fetchedAt;
+      return DsFieldGroup(
+        key: const ValueKey('price-sheet-linked'),
+        children: [
+          DsFieldRow(
+            icon: Symbols.table_chart_rounded,
+            leading: DsIconTile.asset(asset: ClayIcons.priceRefresh, size: DsIconTileSize.sm),
+            label: s.linkedTitle,
+            title: time == null ? s.linkedNever : s.linkedStatus(time: formatClock(time)),
+            chevron: true,
+            onTap: () => _options(context),
+          ),
+        ],
+      );
+    }
+    final reconnect = problem != PriceSheetProblem.none;
+    return DsCard(
+      key: const ValueKey('price-sheet-connect'),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              DsIdleMotion(
+                kind: DsIdleKind.float,
+                child: DsIconTile.asset(asset: ClayIcons.priceRefresh),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Flexible(child: Text(s.connectTitle, style: ds.typography.titleMd.copyWith(fontSize: 15))),
+                        if (!isPlus) ...[const SizedBox(width: 6), const DsBadge(label: 'Plus')],
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      switch (problem) {
+                        PriceSheetProblem.notAuthorized => s.notAuthorized,
+                        PriceSheetProblem.notFound => s.notFound,
+                        PriceSheetProblem.none => s.connectBody,
+                      },
+                      style: ds.typography.bodySm.copyWith(color: reconnect ? c.warning : c.textSecondary),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          DsButton.secondary(
+            key: const ValueKey('price-sheet-connect-button'),
+            label: connecting ? s.connecting : s.connect,
+            icon: Symbols.add_link_rounded,
+            expand: true,
+            onPressed: connecting ? null : () => _connect(context),
+          ),
         ],
       ),
     );

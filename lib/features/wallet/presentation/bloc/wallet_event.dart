@@ -20,6 +20,18 @@ final class WalletRefreshed extends WalletEvent {
   const WalletRefreshed();
 }
 
+/// Hubungkan Google Sheet harga (ADR-051 §3.2): izin, buat Sheet, ambil harga.
+final class PriceSheetConnected extends WalletEvent {
+  /// Membuat [PriceSheetConnected].
+  const PriceSheetConnected();
+}
+
+/// Putuskan Google Sheet harga: tautan dilupakan, berkasnya tetap di Drive.
+final class PriceSheetDisconnected extends WalletEvent {
+  /// Membuat [PriceSheetDisconnected].
+  const PriceSheetDisconnected();
+}
+
 /// Ambil harga investasi dari Google Sheet pengguna (ADR-051 §3.4): saat
 /// segmen Investasi tampil (paling cepat tiap 15 menit) atau dari tombol
 /// Segarkan ([force]). Hanya Plus dan hanya bila Sheet sudah terhubung.

@@ -4,6 +4,18 @@ import 'package:saldough/shared/wallet/wallet.dart';
 import 'package:saldough/shared/wealth/wealth.dart';
 import 'package:state_management/state_management.dart';
 
+/// Masalah Google Sheet harga yang perlu tindakan pengguna (ADR-051 §3.6).
+enum PriceSheetProblem {
+  /// Tidak ada.
+  none,
+
+  /// Izin `drive.file` dicabut.
+  notAuthorized,
+
+  /// Sheet dihapus atau milik akun lain; tautan sudah dilupakan.
+  notFound,
+}
+
 /// State `WalletBloc`.
 final class WalletState extends UiState<WalletState> {
   /// Membuat [WalletState].
@@ -17,6 +29,10 @@ final class WalletState extends UiState<WalletState> {
     this.sheetLinked = false,
     this.sheetFetchedAt,
     this.sheetRefreshing = false,
+    this.sheetProblem = PriceSheetProblem.none,
+    this.sheetConnecting = false,
+    this.sheetAvailable = false,
+    this.sheetId,
     super.effect,
   });
 
@@ -52,6 +68,18 @@ final class WalletState extends UiState<WalletState> {
 
   /// Pengambilan harga sedang berjalan.
   final bool sheetRefreshing;
+
+  /// Masalah Sheet terakhir.
+  final PriceSheetProblem sheetProblem;
+
+  /// Alur Hubungkan sedang berjalan.
+  final bool sheetConnecting;
+
+  /// Pintu Google Sheet boleh tampil: masuk dengan Google dan fitur terpasang.
+  final bool sheetAvailable;
+
+  /// ID Google Sheet yang terhubung, untuk membukanya.
+  final String? sheetId;
 
   /// Instrumen Aktif, nilai pasar terbesar dulu (rupa B-97 §1.2).
   List<InstrumentSummary> get activeInstruments =>
@@ -97,6 +125,10 @@ final class WalletState extends UiState<WalletState> {
     bool? sheetLinked,
     DateTime? Function()? sheetFetchedAt,
     bool? sheetRefreshing,
+    PriceSheetProblem? sheetProblem,
+    bool? sheetConnecting,
+    bool? sheetAvailable,
+    String? Function()? sheetId,
     UiEffect? effect,
   }) {
     return WalletState(
@@ -109,6 +141,10 @@ final class WalletState extends UiState<WalletState> {
       sheetLinked: sheetLinked ?? this.sheetLinked,
       sheetFetchedAt: sheetFetchedAt == null ? this.sheetFetchedAt : sheetFetchedAt(),
       sheetRefreshing: sheetRefreshing ?? this.sheetRefreshing,
+      sheetProblem: sheetProblem ?? this.sheetProblem,
+      sheetConnecting: sheetConnecting ?? this.sheetConnecting,
+      sheetAvailable: sheetAvailable ?? this.sheetAvailable,
+      sheetId: sheetId == null ? this.sheetId : sheetId(),
       effect: effect,
     );
   }
@@ -124,5 +160,9 @@ final class WalletState extends UiState<WalletState> {
     sheetLinked,
     sheetFetchedAt,
     sheetRefreshing,
+    sheetProblem,
+    sheetConnecting,
+    sheetAvailable,
+    sheetId,
   ];
 }

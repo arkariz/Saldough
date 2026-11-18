@@ -32,6 +32,9 @@ enum PlusFeature {
   /// Instrumen investasi; Gratis terbatas jumlah yang Aktif (ADR-049 §3.12).
   instruments,
 
+  /// Harga investasi dari Google Sheet pengguna; khusus Plus (ADR-051 §3.5).
+  sheetPrices,
+
   /// Tanya Tanuki (jatah cicip di Gratis).
   ask,
 

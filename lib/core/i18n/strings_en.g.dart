@@ -2756,6 +2756,7 @@ class _Translations$premium$paywall$messages$en extends Translations$premium$pay
 	@override late final _Translations$premium$paywall$messages$template$en template = _Translations$premium$paywall$messages$template$en._(_root);
 	@override late final _Translations$premium$paywall$messages$savingsGoal$en savingsGoal = _Translations$premium$paywall$messages$savingsGoal$en._(_root);
 	@override late final _Translations$premium$paywall$messages$instrument$en instrument = _Translations$premium$paywall$messages$instrument$en._(_root);
+	@override late final _Translations$premium$paywall$messages$sheetPrices$en sheetPrices = _Translations$premium$paywall$messages$sheetPrices$en._(_root);
 	@override late final _Translations$premium$paywall$messages$goalEstimate$en goalEstimate = _Translations$premium$paywall$messages$goalEstimate$en._(_root);
 	@override late final _Translations$premium$paywall$messages$project$en project = _Translations$premium$paywall$messages$project$en._(_root);
 	@override late final _Translations$premium$paywall$messages$forecast$en forecast = _Translations$premium$paywall$messages$forecast$en._(_root);
@@ -2855,6 +2856,21 @@ class _Translations$assets$invest$sheet$en extends Translations$assets$invest$sh
 	final TranslationsEn _root; // ignore: unused_field
 
 	// Translations
+	@override String get connectTitle => 'Automatic stock prices';
+	@override String get connectBody => 'Connect your own Google Sheet. Stock prices from Google Finance are fetched whenever you open Investments; gold is an estimate, and you can fill in mutual funds yourself in the Sheet.';
+	@override String get connect => 'Connect Google Sheet';
+	@override String get connecting => 'Connecting…';
+	@override String get linkedTitle => 'Google Sheet';
+	@override String linkedStatus({required Object time}) => 'Connected · updated ${time}';
+	@override String get linkedNever => 'Connected';
+	@override String get open => 'Open in Google Sheets';
+	@override String get disconnect => 'Disconnect';
+	@override String get disconnected => 'Google Sheet disconnected. The file stays in your Drive.';
+	@override String get connected => 'Google Sheet connected.';
+	@override String get notAuthorized => 'Google Sheet access was revoked. Connect again to fetch prices.';
+	@override String get notFound => 'Google Sheet not found. Connect again to create a new one.';
+	@override String get denied => 'Permission wasn\'t granted, so Google Sheet isn\'t connected.';
+	@override String get optionsTitle => 'Price Google Sheet';
 	@override String get refresh => 'Refresh';
 	@override String get refreshFailed => 'Couldn\'t get prices from Google Sheet. Try again later.';
 	@override String fromSheet({required Object time}) => 'From Google Sheet · ${time}';
@@ -2960,6 +2976,17 @@ class _Translations$premium$paywall$messages$instrument$en extends Translations$
 	// Translations
 	@override String get title => 'A third active investment is in Plus';
 	@override String get body => 'You already track 2 active investments. With Plus, track as many as you like. What you entered is kept as a draft.';
+}
+
+// Path: premium.paywall.messages.sheetPrices
+class _Translations$premium$paywall$messages$sheetPrices$en extends Translations$premium$paywall$messages$sheetPrices$id {
+	_Translations$premium$paywall$messages$sheetPrices$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Automatic stock prices are in Plus';
+	@override String get body => 'Connect your own Google Sheet and stock prices update themselves whenever you open Investments. Updating values manually stays free.';
 }
 
 // Path: premium.paywall.messages.goalEstimate
@@ -4718,6 +4745,8 @@ extension on TranslationsEn {
 			'premium.paywall.messages.savingsGoal.body' => 'You already have 2 active goals. With Plus, set as many goals as you like, with an estimate of when each is reached. What you entered is kept as a draft.',
 			'premium.paywall.messages.instrument.title' => 'A third active investment is in Plus',
 			'premium.paywall.messages.instrument.body' => 'You already track 2 active investments. With Plus, track as many as you like. What you entered is kept as a draft.',
+			'premium.paywall.messages.sheetPrices.title' => 'Automatic stock prices are in Plus',
+			'premium.paywall.messages.sheetPrices.body' => 'Connect your own Google Sheet and stock prices update themselves whenever you open Investments. Updating values manually stays free.',
 			'premium.paywall.messages.goalEstimate.title' => 'Goal estimates are in Plus',
 			'premium.paywall.messages.goalEstimate.body' => 'Your goals and their progress stay free.',
 			'premium.paywall.messages.project.title' => 'A third active project is in Plus',
@@ -4956,6 +4985,21 @@ extension on TranslationsEn {
 			'assets.invest.sellRecorded' => ({required Object name}) => 'Sale of ${name} recorded.',
 			'assets.invest.qtyActive' => 'Keypad fills the quantity',
 			'assets.invest.amountActive' => 'Keypad fills the amount',
+			'assets.invest.sheet.connectTitle' => 'Automatic stock prices',
+			'assets.invest.sheet.connectBody' => 'Connect your own Google Sheet. Stock prices from Google Finance are fetched whenever you open Investments; gold is an estimate, and you can fill in mutual funds yourself in the Sheet.',
+			'assets.invest.sheet.connect' => 'Connect Google Sheet',
+			'assets.invest.sheet.connecting' => 'Connecting…',
+			'assets.invest.sheet.linkedTitle' => 'Google Sheet',
+			'assets.invest.sheet.linkedStatus' => ({required Object time}) => 'Connected · updated ${time}',
+			'assets.invest.sheet.linkedNever' => 'Connected',
+			'assets.invest.sheet.open' => 'Open in Google Sheets',
+			'assets.invest.sheet.disconnect' => 'Disconnect',
+			'assets.invest.sheet.disconnected' => 'Google Sheet disconnected. The file stays in your Drive.',
+			'assets.invest.sheet.connected' => 'Google Sheet connected.',
+			'assets.invest.sheet.notAuthorized' => 'Google Sheet access was revoked. Connect again to fetch prices.',
+			'assets.invest.sheet.notFound' => 'Google Sheet not found. Connect again to create a new one.',
+			'assets.invest.sheet.denied' => 'Permission wasn\'t granted, so Google Sheet isn\'t connected.',
+			'assets.invest.sheet.optionsTitle' => 'Price Google Sheet',
 			'assets.invest.sheet.refresh' => 'Refresh',
 			'assets.invest.sheet.refreshFailed' => 'Couldn\'t get prices from Google Sheet. Try again later.',
 			'assets.invest.sheet.fromSheet' => ({required Object time}) => 'From Google Sheet · ${time}',

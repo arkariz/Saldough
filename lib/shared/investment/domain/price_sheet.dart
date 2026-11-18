@@ -299,7 +299,10 @@ List<InstrumentValuation> sheetValuationsToSave(
   ];
 }
 
-/// Hasil [RefreshSheetPrices].
+/// Hasil [RefreshSheetPrices]: [outcome] dan banyak harga yang tersimpan.
+typedef SheetRefreshResult = ({SheetRefreshOutcome outcome, int saved});
+
+/// Keadaan akhir [RefreshSheetPrices].
 enum SheetRefreshOutcome {
   /// Belum terhubung ke Sheet: tidak ada yang dilakukan.
   notLinked,
@@ -345,14 +348,16 @@ final class RefreshSheetPrices {
   final Duration minInterval;
 
   /// Menjalankan pengambilan. [force] = tombol Segarkan.
-  Future<Either<Failure, SheetRefreshOutcome>> call({bool force = false}) async {
+  Future<Either<Failure, SheetRefreshResult>> call({bool force = false}) async {
     final stored = await links.read();
     if (stored case Left(value: final f)) return left(f);
     final link = stored.getOrElse((_) => null);
-    if (link == null) return right(SheetRefreshOutcome.notLinked);
+    if (link == null) return right((outcome: SheetRefreshOutcome.notLinked, saved: 0));
     final time = now();
     final last = link.lastFetchedAt;
-    if (!force && last != null && time.difference(last) < minInterval) return right(SheetRefreshOutcome.fresh);
+    if (!force && last != null && time.difference(last) < minInterval) {
+      return right((outcome: SheetRefreshOutcome.fresh, saved: 0));
+    }
     final synced = await sync();
     if (synced case Left(value: final f)) return left(f);
     final today = DateTime(time.year, time.month, time.day);
@@ -363,6 +368,35 @@ final class RefreshSheetPrices {
     final toSave = sheetValuationsToSave(fetched.getOrElse((_) => const []), existing.getOrElse((_) => const []));
     if (await investments.saveValuations(toSave) case Left(value: final f)) return left(f);
     if (await links.save(link.fetchedAt(time)) case Left(value: final f)) return left(f);
-    return right(SheetRefreshOutcome.updated);
+    return right((outcome: SheetRefreshOutcome.updated, saved: toSave.length));
+  }
+}
+
+/// Menghubungkan Google Sheet harga (ADR-051 §3.2–§3.3): meminta izin
+/// `drive.file` (layar Google bila perlu, dari ketukan pengguna), membuat atau
+/// menyelaraskan Sheet, lalu langsung mengambil harga.
+final class ConnectPriceSheet {
+  /// Membuat [ConnectPriceSheet].
+  const ConnectPriceSheet({required this.authorize, required this.sync, required this.refresh});
+
+  /// Meminta izin; `true` bila diberikan.
+  final Future<bool> Function() authorize;
+
+  /// Penyelaras (membuat Sheet bila belum ada).
+  final SyncPriceSheet sync;
+
+  /// Pengambil harga.
+  final RefreshSheetPrices refresh;
+
+  /// Menjalankan alur hubungkan.
+  Future<Either<Failure, SheetRefreshResult>> call() async {
+    if (!await authorize()) {
+      return left(
+        const AuthorizationFailure(code: PriceSheetFailures.notAuthorized, message: 'Izin Google Sheet tidak diberikan.'),
+      );
+    }
+    final synced = await sync();
+    if (synced case Left(value: final f)) return left(f);
+    return refresh(force: true);
   }
 }

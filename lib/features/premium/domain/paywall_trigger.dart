@@ -53,6 +53,9 @@ enum PaywallTrigger {
   /// P12: mencoba membuat atau membeli lagi instrumen aktif ketiga (ADR-049 §3.12).
   instrumentLimit('instrument_limit'),
 
+  /// Hubungkan Google Sheet untuk harga investasi otomatis (ADR-051 §3.5).
+  sheetPrices('sheet_prices'),
+
   /// Perkiraan tanggal tercapai tujuan tabungan (ADR-048 §3.6).
   goalEstimate('goal_estimate');
 

@@ -1878,6 +1878,10 @@
           "title": "A third active investment is in Plus",
           "body": "You already track 2 active investments. With Plus, track as many as you like. What you entered is kept as a draft."
         },
+        "sheetPrices": {
+          "title": "Automatic stock prices are in Plus",
+          "body": "Connect your own Google Sheet and stock prices update themselves whenever you open Investments. Updating values manually stays free."
+        },
         "goalEstimate": {
           "title": "Goal estimates are in Plus",
           "body": "Your goals and their progress stay free."
@@ -2146,6 +2150,21 @@
       "qtyActive": "Keypad fills the quantity",
       "amountActive": "Keypad fills the amount",
       "sheet": {
+      "connectTitle": "Automatic stock prices",
+      "connectBody": "Connect your own Google Sheet. Stock prices from Google Finance are fetched whenever you open Investments; gold is an estimate, and you can fill in mutual funds yourself in the Sheet.",
+      "connect": "Connect Google Sheet",
+      "connecting": "Connecting…",
+      "linkedTitle": "Google Sheet",
+      "linkedStatus": "Connected · updated $time",
+      "linkedNever": "Connected",
+      "open": "Open in Google Sheets",
+      "disconnect": "Disconnect",
+      "disconnected": "Google Sheet disconnected. The file stays in your Drive.",
+      "connected": "Google Sheet connected.",
+      "notAuthorized": "Google Sheet access was revoked. Connect again to fetch prices.",
+      "notFound": "Google Sheet not found. Connect again to create a new one.",
+      "denied": "Permission wasn't granted, so Google Sheet isn't connected.",
+      "optionsTitle": "Price Google Sheet",
       "refresh": "Refresh",
       "refreshFailed": "Couldn't get prices from Google Sheet. Try again later.",
       "fromSheet": "From Google Sheet · $time",

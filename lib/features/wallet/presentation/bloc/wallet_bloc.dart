@@ -36,10 +36,15 @@ final class WalletBloc extends Bloc<WalletEvent, WalletState> {
     this._investmentRepository,
     this._sheetPrices,
     this._sheetLinks,
+    this._connectSheet,
     bool Function()? isPlus,
+    bool Function()? isGoogleUser,
   }) : _isPlus = isPlus ?? (() => false),
+       _isGoogleUser = isGoogleUser ?? (() => false),
        super(WalletState.initial()) {
     on<InvestmentPricesRefreshed>(_onPricesRefreshed);
+    on<PriceSheetConnected>(_onSheetConnected);
+    on<PriceSheetDisconnected>(_onSheetDisconnected);
     on<WalletStarted>(_onStarted);
     on<WalletRefreshed>(_onRefreshed);
     // ADR-030 §3.4: transaksi/saldo berubah di layar lain -> muat ulang
@@ -77,25 +82,109 @@ final class WalletBloc extends Bloc<WalletEvent, WalletState> {
   /// Paket Plus aktif (fitur Sheet khusus Plus, KT-A4).
   final bool Function() _isPlus;
 
+  /// Masuk dengan Google: syarat Google Sheet (ADR-051 §3.2).
+  final bool Function() _isGoogleUser;
+
+  /// Alur Hubungkan Google Sheet (ADR-051 §3.2).
+  final ConnectPriceSheet? _connectSheet;
+
+  /// Pintu Google Sheet boleh tampil.
+  bool get _sheetAvailable => _connectSheet != null && _isGoogleUser();
+
   Future<void> _onPricesRefreshed(InvestmentPricesRefreshed event, Emitter<WalletState> emit) async {
     final refresh = _sheetPrices;
     if (refresh == null || !_isPlus() || state.sheetRefreshing) return;
     emit(state.copyWith(sheetRefreshing: true));
-    final result = await refresh(force: event.force);
-    final link = (await _sheetLinks?.read())?.getOrElse((_) => null);
-    if (result case Right(value: SheetRefreshOutcome.updated)) {
+    switch (await refresh(force: event.force)) {
+      case Left(value: final failure):
+        // Izin dicabut dan Sheet hilang selalu diberitahukan (perlu tindakan);
+        // galat jaringan hanya saat pengguna sendiri menekan Segarkan.
+        final actionable =
+            failure.code == PriceSheetFailures.notAuthorized || failure.code == PriceSheetFailures.notFound;
+        await _applySheetFailure(failure, emit, announce: event.force || actionable);
+      case Right(value: final result):
+        await _afterSheetFetch(result, emit);
+        emit(state.copyWith(sheetRefreshing: false));
+    }
+  }
+
+  Future<void> _onSheetConnected(PriceSheetConnected event, Emitter<WalletState> emit) async {
+    final connect = _connectSheet;
+    if (connect == null || !_isPlus() || state.sheetConnecting) return;
+    emit(state.copyWith(sheetConnecting: true));
+    final result = await connect();
+    if (result case Left(value: final failure)) {
+      await _applySheetFailure(failure, emit, connecting: true);
+      return;
+    }
+    AppAnalytics.log(WealthEvents.sheetLinked);
+    await _afterSheetFetch(result.getOrElse((_) => (outcome: SheetRefreshOutcome.notLinked, saved: 0)), emit);
+    emit(state.copyWith(sheetConnecting: false, effect: _effectSaved(t.assets.invest.sheet.connected)));
+  }
+
+  Future<void> _onSheetDisconnected(PriceSheetDisconnected event, Emitter<WalletState> emit) async {
+    await _sheetLinks?.clear();
+    emit(
+      state.copyWith(
+        sheetLinked: false,
+        sheetId: () => null,
+        sheetFetchedAt: () => null,
+        sheetProblem: PriceSheetProblem.none,
+        effect: _effectMessage(t.assets.invest.sheet.disconnected),
+      ),
+    );
+  }
+
+  /// Sesudah pengambilan: muat ulang instrumen bila ada harga baru, perbarui
+  /// penanda tautan.
+  Future<void> _afterSheetFetch(SheetRefreshResult result, Emitter<WalletState> emit) async {
+    if (result.outcome == SheetRefreshOutcome.updated) {
+      AppAnalytics.log(WealthEvents.valuationSheetSynced(result.saved));
       // Lapis Investasi berubah: Beranda dan layar lain ikut segar.
       _ledgerChanges.notifyChanged(source: this);
       final investments = await _loadInstruments();
       emit(state.copyWith(instruments: investments.items, investmentsFailed: investments.failed));
     }
+    final link = (await _sheetLinks?.read())?.getOrElse((_) => null);
     emit(
       state.copyWith(
+        sheetLinked: link != null,
+        sheetId: () => link?.sheetId,
+        sheetFetchedAt: () => link?.lastFetchedAt,
+        sheetProblem: PriceSheetProblem.none,
+      ),
+    );
+  }
+
+  /// Galat Sheet (ADR-051 §3.6): izin dicabut tetap terhubung dengan ajakan
+  /// menghubungkan lagi; Sheet hilang melupakan tautan.
+  Future<void> _applySheetFailure(
+    Failure failure,
+    Emitter<WalletState> emit, {
+    bool connecting = false,
+    bool announce = true,
+  }) async {
+    final problem = switch (failure.code) {
+      PriceSheetFailures.notAuthorized => PriceSheetProblem.notAuthorized,
+      PriceSheetFailures.notFound => PriceSheetProblem.notFound,
+      _ => PriceSheetProblem.none,
+    };
+    if (problem == PriceSheetProblem.notFound) await _sheetLinks?.clear();
+    final link = (await _sheetLinks?.read())?.getOrElse((_) => null);
+    final message = switch (problem) {
+      PriceSheetProblem.notAuthorized when connecting => t.assets.invest.sheet.denied,
+      PriceSheetProblem.notAuthorized => t.assets.invest.sheet.notAuthorized,
+      PriceSheetProblem.notFound => t.assets.invest.sheet.notFound,
+      PriceSheetProblem.none => t.assets.invest.sheet.refreshFailed,
+    };
+    emit(
+      state.copyWith(
+        sheetConnecting: false,
         sheetRefreshing: false,
         sheetLinked: link != null,
-        sheetFetchedAt: () => link?.lastFetchedAt,
-        // Galat hanya diberitahukan saat pengguna sendiri menekan Segarkan.
-        effect: event.force && result.isLeft() ? _effectMessage(t.assets.invest.sheet.refreshFailed) : null,
+        sheetId: () => link?.sheetId,
+        sheetProblem: connecting ? state.sheetProblem : problem,
+        effect: announce ? _effectMessage(message) : null,
       ),
     );
   }
@@ -127,7 +216,9 @@ final class WalletBloc extends Bloc<WalletEvent, WalletState> {
             instruments: investments.items,
             investmentsFailed: investments.failed,
             sheetLinked: link != null,
+            sheetId: () => link?.sheetId,
             sheetFetchedAt: () => link?.lastFetchedAt,
+            sheetAvailable: _sheetAvailable,
             isLoading: false,
             loadFailed: false,
           ),
@@ -154,6 +245,8 @@ final class WalletBloc extends Bloc<WalletEvent, WalletState> {
             goals: await _loadGoals(),
             instruments: investments.items,
             investmentsFailed: investments.failed,
+            // Masuk atau keluar akun Google bisa terjadi di Akun.
+            sheetAvailable: _sheetAvailable,
             isLoading: false,
             loadFailed: false,
             effect: reached.isEmpty ? null : _effectSaved(t.assets.goal.reachedMessage(name: reached.first.name)),

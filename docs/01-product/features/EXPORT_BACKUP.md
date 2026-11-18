@@ -117,7 +117,7 @@ aplikasi; kolom ID selalu ada di ujung agar baris bisa ditelusuri.
 |---|---|---|
 | Tanggal | `YYYY-MM-DD` | `date` transaksi |
 | Awal periode | `YYYY-MM-DD` | Tanggal awal periode keuangan tempat transaksi dihitung, lewat `periodDateOf` (gajian maju ≤ 7 hari ikut periode kemunculannya, FINANCIAL_PERIOD). Dipakai untuk pivot per periode; bisa berbeda dari Tanggal, sengaja. |
-| Jenis | Pemasukan / Pengeluaran / Transfer / Penyesuaian saldo (tambah) / Penyesuaian saldo (kurang) | Penyesuaian saldo sejak ADR-047 |
+| Jenis | Pemasukan / Pengeluaran / Transfer / Penyesuaian saldo (tambah) / Penyesuaian saldo (kurang) / Pembelian investasi / Penjualan investasi | Penyesuaian saldo sejak ADR-047; investasi sejak ADR-049 (Arus 0) |
 | Nominal | Angka positif dalam satuan utama, tanpa pemisah ribuan | Dari `int` sen; desimal hanya bila mata uangnya berdesimal (ADR-025). Di xlsx bertipe angka. |
 | Arus | Pemasukan `+Nominal`, Pengeluaran `−Nominal`, Transfer dan Penyesuaian saldo `0` | Jumlah kolom ini per periode = Arus di aplikasi (aturan 7, ADR-047 §3.7). |
 | Mata uang | Kode, mis. `IDR` | |
@@ -139,6 +139,13 @@ Target, Terkumpul, Status (Aktif/Tercapai/Diarsipkan), Target tanggal,
 Dompet. Terkumpul = saldo dompet milik tujuan saat ekspor. Berkas tanpa tujuan
 sama persis dengan sebelum Fase 30. Penyesuaian saldo (ADR-047) tampil di
 lembar Transaksi berjenis "Penyesuaian saldo (tambah/kurang)" dengan Arus 0.
+Beli dan jual investasi (ADR-049) tampil berjenis "Pembelian investasi" /
+"Penjualan investasi" dengan Arus 0. Bila ada instrumen, berkas xlsx juga
+memuat lembar **Investasi** (nama, jenis, kode, jumlah, satuan, nilai
+perolehan, harga terakhir, satuan harga, tanggal harga, nilai pasar,
+untung/rugi belum dan sudah terwujud, status) dan **Valuasi** (riwayat harga:
+tanggal, investasi, harga, satuan harga, sumber). Jumlah pecahan ditulis
+desimal (12.5 lot), harga obligasi dalam persen.
 
 **Contoh** (periode mulai tanggal 25, IDR):
 
@@ -201,6 +208,7 @@ hilang."
 | Setelan pengingat (sakelar global dan per rutin) | |
 | Aplikasi sumber dan pola Catat dari notifikasi (bukan isi notifikasi) | |
 | Tujuan tabungan (`savings_goal_all`; tiap `walletId` wajib menunjuk dompet yang ada dan unik antartujuan) | Draf formulir tujuan yang tertahan paywall (`savings_goal_draft`, milik perangkat) |
+| Instrumen dan riwayat nilai investasi (`investment_instruments`, `investment_valuations`; `instrumentId` di transaksi dan valuasi wajib menunjuk instrumen yang ada) | Draf formulir instrumen yang tertahan paywall (`investment_draft`, milik perangkat) |
 | Warna kartu dompet (`colorKey`, bagian dari dompet) | |
 
 Daftar persis disusun engineer dari repositori yang ada (T-22.1); bila ada

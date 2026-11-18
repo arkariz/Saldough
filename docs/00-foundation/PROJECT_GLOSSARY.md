@@ -57,6 +57,11 @@ terjadi padanya.
 | Pemasukan | `IncomeTransaction` | Menambah saldo satu dompet. |
 | Pengeluaran | `ExpenseTransaction` | Mengurangi saldo satu dompet. Boleh ditautkan ke satu pos anggaran. |
 | Transfer | `TransferTransaction` | Memindahkan catatan uang dari satu dompet ke dompet lain. Total saldo tidak berubah, hanya tempatnya. Boleh ditautkan ke satu pos anggaran, untuk pos yang berupa rencana pemindahan seperti setoran tabungan. |
+| Investasi / instrumen | `Instrument` | Satu kepemilikan: saham, reksa dana, obligasi, emas, lainnya (ADR-049). Bukan dompet; nilainya tidak disebut saldo. Gratis 2 Aktif. |
+| Nilai perolehan | `InstrumentPosition.cost` | Uang yang dikeluarkan untuk bagian yang masih dipegang, termasuk biaya dan pajak. |
+| Nilai pasar | `InstrumentSummary.marketValue` | Jumlah × harga terakhir yang dicatat; nilai perolehan bila belum pernah diperbarui. |
+| Untung/rugi belum terwujud / terwujud | `unrealized` / `realized` | Nilai pasar − nilai perolehan; hasil bersih jual − bagian nilai perolehan yang dijual (rata-rata tertimbang). Tidak pernah pemasukan atau pengeluaran. |
+| Transaksi investasi | `InvestmentTransaction` | Catat pembelian atau penjualan dari dompet lewat CATAT. Mengubah saldo dompet, 0 di Arus. |
 | Penyesuaian saldo | `BalanceAdjustmentTransaction` | Selisih yang dicatat saat pemilik mengubah saldo dompet di Ubah dompet, bertanggal hari itu (ADR-047). Mengubah saldo satu dompet tetapi bukan pemasukan dan bukan pengeluaran: 0 di Arus, Analisis, dan anggaran. Hanya dari Ubah dompet; bisa dihapus, tidak bisa disunting. |
 | Kategori | `Category` / `categoryId` | Pengelompokan pemasukan atau pengeluaran, misalnya Makan & Minum. Daftar bawaan yang bisa diubah (ADR-026); transfer tidak berkategori. |
 | Catat | `record` | Satu-satunya titik masuk pembuatan transaksi manual. Lihat bagian berikutnya. |

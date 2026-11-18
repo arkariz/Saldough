@@ -214,6 +214,46 @@ pencatatan, jadi saldo hari-hari sebelumnya tidak bergeser. Hanya lahir dari
 Ubah dompet; bisa dihapus (saldo kembali), tidak bisa disunting. Saldo awal
 (`initialBalance`) hanya diisi saat dompet dibuat.
 
+### Transaksi investasi
+
+`InvestmentTransaction` mencatat pembelian atau penjualan instrumen dari satu
+dompet lewat CATAT ([ADR-049](adr/0049-investasi-manual.md)). Beli mengurangi
+saldo dompet, jual menambahnya, tetapi **bukan pemasukan dan bukan
+pengeluaran**: bernilai 0 di Arus, Analisis, anggaran, dan Rencana, sama
+seperti penyesuaian saldo.
+
+| Field | Tipe | Keterangan |
+|---|---|---|
+| `walletId` | `String` | Dompet sumber (beli) atau tujuan (jual); bukan dompet milik tujuan tabungan. |
+| `instrumentId` | `String` | Instrumen yang dibeli atau dijual. |
+| `side` | `InvestmentSide` | `buy` atau `sell`. |
+| `quantity` | `int` | Jumlah berskala ×10.000 (lot, unit, gram), atau nominal obligasi dalam sen. |
+
+`amount` = total dibayar termasuk biaya (beli) atau hasil bersih sesudah biaya
+(jual). Tanpa kategori, pos anggaran, atau rutin. Dividen dan kupon bukan
+transaksi investasi: dicatat sebagai pemasukan berkategori Investasi.
+
+## Instrumen investasi
+
+`Instrument` (`shared/investment`, ADR-049) adalah satu kepemilikan: nama,
+jenis (`stock`, `mutualFund`, `bond`, `gold`, `other`), kode opsional, dan
+kepemilikan awal opsional (`OpeningHolding`: tanggal, jumlah, nilai perolehan,
+tanpa dompet). Satuan diturunkan dari jenis: saham lot (1 lot = 100 lembar),
+reksa dana unit, emas gram, obligasi nominal, lainnya unit.
+
+`InstrumentValuation` menyimpan **harga per satuan harga** pada satu tanggal
+(sen per lembar/unit/gram; obligasi basis poin ×100 dari nominal), satu per
+instrumen per tanggal, dengan sumber `manual` atau `sheet`.
+
+Posisi tidak disimpan: `InstrumentPosition.replay` memutar ulang kepemilikan
+awal dan transaksi investasi urut tanggal lalu `id`, memakai **rata-rata
+tertimbang**. Jual: `bagian = round(nilai perolehan × jumlah jual ÷ jumlah)`
+(jual habis memakai seluruh nilai perolehan), `untung/rugi terwujud += hasil −
+bagian`. Nilai pasar = jumlah × harga valuasi terakhir, atau nilai perolehan
+bila belum pernah divaluasi; ditandai kedaluwarsa sesudah 30 hari. Aktif bila
+jumlah > 0 atau belum ada aktivitas; Selesai bila jumlah 0 sesudah ada
+aktivitas.
+
 ## Anggaran
 
 `Budget` adalah rencana pengeluaran, bukan pemesanan uang. Membuatnya tidak
@@ -645,6 +685,11 @@ sendiri.
     mengubah saldo dompetnya, tetapi tidak pernah terhitung sebagai
     pemasukan, pengeluaran, `spent` anggaran, uang nganggur, maupun laju
     tujuan.
+18a. **Transaksi investasi bernilai 0 di Arus**, dan posisi instrumen tidak
+    pernah negatif: penjualan, sunting, atau hapus yang membuat jumlah
+    negatif di titik mana pun ditolak `RecordTransaction` lewat
+    `InvestmentLedgerGuard`. Instrumen yang masih punya transaksi tidak bisa
+    dihapus.
 19. **Tujuan tidak menyentuh saldo.** Membuat, mengubah, mengarsipkan, atau
     mengaktifkan lagi `SavingsGoal` tidak membuat transaksi. "Sudah
     terkumpul" menjadi saldo awal dompet baru, bukan transaksi.

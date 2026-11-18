@@ -148,6 +148,9 @@ gejala yang kelihatan**.
   `BalanceAdjustmentTransaction` dari Ubah dompet, untuk menyamakan catatan
   dengan uang nyata saat sumber selisihnya tidak diketahui (ADR-047 §3.8).
   Kode lain tidak boleh membuatnya.
+- Menghitung `InvestmentTransaction` (beli/jual investasi) sebagai pemasukan
+  atau pengeluaran, atau menyebut nilai investasi "saldo". Untung/rugi
+  investasi tidak pernah masuk Arus (ADR-049).
 - Memperlakukan `initialBalance` sebagai transaksi pemasukan.
 - Membuat formulir pencatatan transaksi di luar alur CATAT.
 - Menghitung transfer sebagai pemasukan atau pengeluaran.

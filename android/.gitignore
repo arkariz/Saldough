@@ -12,3 +12,5 @@ GeneratedPluginRegistrant.java
 key.properties
 **/*.keystore
 **/*.jks
+# Kunci debug proyek sengaja ikut repo (hanya untuk build debug).
+!/debug.keystore

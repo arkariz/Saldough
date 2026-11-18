@@ -52,6 +52,16 @@ android {
     }
 
     signingConfigs {
+        // Kunci debug milik proyek (bukan ~/.android/debug.keystore yang dibuat
+        // ulang tiap SDK dipasang ulang), supaya SHA-1 debug yang terdaftar di
+        // Firebase tetap sama di mesin mana pun dan masuk Google tetap jalan.
+        // SHA-1: D1:1C:8A:91:CE:F4:11:14:18:C1:B6:0A:BD:52:42:B6:C6:F9:B0:BD.
+        getByName("debug") {
+            storeFile = rootProject.file("debug.keystore")
+            storePassword = "android"
+            keyAlias = "androiddebugkey"
+            keyPassword = "android"
+        }
         if (hasKeystoreProperties) {
             create("release") {
                 storeFile = rootProject.file(keystoreProperties["storeFile"] as String)

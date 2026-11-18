@@ -590,6 +590,9 @@ class Translations$wallet$id {
 	/// id: '$percent dari total saldo'
 	String spreadOfTotal({required Object percent}) => '${percent} dari total saldo';
 
+	/// id: 'Lainnya ($n)'
+	String spreadOthers({required Object n}) => 'Lainnya (${n})';
+
 	/// id: 'Lihat total'
 	String get spreadSeeTotal => 'Lihat total';
 
@@ -604,21 +607,6 @@ class Translations$wallet$id {
 		one: '${n} dompet · tidak muncul di Catat',
 		other: '${n} dompet · tidak muncul di Catat',
 	);
-
-	/// id: 'Bank'
-	String get typeBank => 'Bank';
-
-	/// id: 'Uang tunai'
-	String get typeCash => 'Uang tunai';
-
-	/// id: 'Dompet digital'
-	String get typeEwallet => 'Dompet digital';
-
-	/// id: 'Tabungan'
-	String get typeSavings => 'Tabungan';
-
-	/// id: 'Kartu'
-	String get typeCard => 'Kartu';
 
 	/// id: 'Belum ada dompet'
 	String get emptyTitle => 'Belum ada dompet';
@@ -658,6 +646,18 @@ class Translations$wallet$id {
 
 	/// id: 'Pilih ikon'
 	String get iconLabel => 'Pilih ikon';
+
+	/// id: 'Warna kartu'
+	String get colorLabel => 'Warna kartu';
+
+	/// id: 'Bawaan'
+	String get colorDefault => 'Bawaan';
+
+	/// id: 'Warna $n'
+	String colorOption({required Object n}) => 'Warna ${n}';
+
+	/// id: 'Ikon $n'
+	String iconOption({required Object n}) => 'Ikon ${n}';
 
 	/// id: 'Saldo awal'
 	String get initialBalanceLabel => 'Saldo awal';
@@ -1063,6 +1063,10 @@ class Translations$dataPortability$id {
 	/// id: 'Dompet'
 	String get sheetWallets => 'Dompet';
 
+	/// id: 'Tujuan'
+	String get sheetGoals => 'Tujuan';
+
+	late final Translations$dataPortability$goalColumns$id goalColumns = Translations$dataPortability$goalColumns$id.internal(_root);
 	late final Translations$dataPortability$columns$id columns = Translations$dataPortability$columns$id.internal(_root);
 	late final Translations$dataPortability$types$id types = Translations$dataPortability$types$id.internal(_root);
 }
@@ -2220,11 +2224,11 @@ class Translations$tour$id {
 	/// id: 'Langkah $current/$total: $title. $body'
 	String stepSemantics({required Object current, required Object total, required Object title, required Object body}) => 'Langkah ${current}/${total}: ${title}. ${body}';
 
-	/// id: 'Total saldo tercatat'
-	String get homeBalanceTitle => 'Total saldo tercatat';
+	/// id: 'Total aset'
+	String get homeBalanceTitle => 'Total aset';
 
-	/// id: 'Jumlah saldo semua dompet aktif, terlihat dalam sekali pandang.'
-	String get homeBalanceBody => 'Jumlah saldo semua dompet aktif, terlihat dalam sekali pandang.';
+	/// id: 'Semua uang tercatat di dompet dan tabunganmu, beserta pemasukan dan pengeluaran periode ini.'
+	String get homeBalanceBody => 'Semua uang tercatat di dompet dan tabunganmu, beserta pemasukan dan pengeluaran periode ini.';
 
 	/// id: 'Satu pintu mencatat'
 	String get homeRecordTitle => 'Satu pintu mencatat';
@@ -2232,17 +2236,11 @@ class Translations$tour$id {
 	/// id: 'Semua pemasukan, pengeluaran, dan transfer dicatat dari sini.'
 	String get homeRecordBody => 'Semua pemasukan, pengeluaran, dan transfer dicatat dari sini.';
 
-	/// id: 'Arus bulan ini'
-	String get homeCashFlowTitle => 'Arus bulan ini';
-
-	/// id: 'Uang yang benar-benar masuk dan keluar di periode ini. Ketuk untuk melihat alurnya.'
-	String get homeCashFlowBody => 'Uang yang benar-benar masuk dan keluar di periode ini. Ketuk untuk melihat alurnya.';
-
 	/// id: 'Sisa anggaran aktif'
 	String get homeBudgetTitle => 'Sisa anggaran aktif';
 
-	/// id: 'Sisa rencana dari anggaran yang sedang berjalan. Ketuk untuk rinciannya.'
-	String get homeBudgetBody => 'Sisa rencana dari anggaran yang sedang berjalan. Ketuk untuk rinciannya.';
+	/// id: 'Kartu Anggaran di deretan ini menunjukkan sisa rencana anggaran yang sedang berjalan. Ketuk kartunya untuk rincian.'
+	String get homeBudgetBody => 'Kartu Anggaran di deretan ini menunjukkan sisa rencana anggaran yang sedang berjalan. Ketuk kartunya untuk rincian.';
 
 	/// id: 'Ringkasan freelance'
 	String get homeFreelanceTitle => 'Ringkasan freelance';
@@ -2283,14 +2281,14 @@ class Translations$tour$id {
 	/// id: 'Tautkan ke anggaran'
 	String get recordBudgetItemTitle => 'Tautkan ke anggaran';
 
-	/// id: 'Opsional. Pengeluaran yang ditautkan menambah angka terpakai pos itu, selama tanggalnya di dalam periode anggaran.'
-	String get recordBudgetItemBody => 'Opsional. Pengeluaran yang ditautkan menambah angka terpakai pos itu, selama tanggalnya di dalam periode anggaran.';
+	/// id: 'Opsional. Pengeluaran atau transfer yang ditautkan menambah angka terpakai pos itu, selama tanggalnya di dalam periode anggaran.'
+	String get recordBudgetItemBody => 'Opsional. Pengeluaran atau transfer yang ditautkan menambah angka terpakai pos itu, selama tanggalnya di dalam periode anggaran.';
 
-	/// id: 'Total semua dompet'
-	String get walletSummaryTitle => 'Total semua dompet';
+	/// id: 'Total aset'
+	String get walletSummaryTitle => 'Total aset';
 
-	/// id: 'Jumlah saldo tercatat dompet aktif.'
-	String get walletSummaryBody => 'Jumlah saldo tercatat dompet aktif.';
+	/// id: 'Semua uang tercatat, dipecah jadi Dompet dan Tabungan. Ketuk satu lapis untuk melihat isinya.'
+	String get walletSummaryBody => 'Semua uang tercatat, dipecah jadi Dompet dan Tabungan. Ketuk satu lapis untuk melihat isinya.';
 
 	/// id: 'Rincian dompet'
 	String get walletCardTitle => 'Rincian dompet';
@@ -2301,8 +2299,20 @@ class Translations$tour$id {
 	/// id: 'Tambah dompet'
 	String get walletAddTitle => 'Tambah dompet';
 
-	/// id: 'Rekening, e-wallet, atau tunai. Saldo awalnya bisa diubah kapan saja, dan saldo tercatat ikut menyesuaikan.'
-	String get walletAddBody => 'Rekening, e-wallet, atau tunai. Saldo awalnya bisa diubah kapan saja, dan saldo tercatat ikut menyesuaikan.';
+	/// id: 'Rekening, e-wallet, atau tunai. Saldonya bisa diubah kapan saja; selisihnya dicatat sebagai penyesuaian saldo.'
+	String get walletAddBody => 'Rekening, e-wallet, atau tunai. Saldonya bisa diubah kapan saja; selisihnya dicatat sebagai penyesuaian saldo.';
+
+	/// id: 'Dompet dan Tabungan'
+	String get walletSegmentsTitle => 'Dompet dan Tabungan';
+
+	/// id: 'Dompet berisi rekening, e-wallet, dan tunai untuk sehari-hari. Tabungan berisi tujuanmu. Ketuk untuk berpindah.'
+	String get walletSegmentsBody => 'Dompet berisi rekening, e-wallet, dan tunai untuk sehari-hari. Tabungan berisi tujuanmu. Ketuk untuk berpindah.';
+
+	/// id: 'Tujuan tabungan'
+	String get walletGoalsTitle => 'Tujuan tabungan';
+
+	/// id: 'Setiap tujuan punya dompet sendiri. Isi lewat Catat › Transfer dari dompet lain; kemajuannya mengikuti saldo dompet itu.'
+	String get walletGoalsBody => 'Setiap tujuan punya dompet sendiri. Isi lewat Catat › Transfer dari dompet lain; kemajuannya mengikuti saldo dompet itu.';
 
 	/// id: 'Satu periode per tampilan'
 	String get txnMonthTitle => 'Satu periode per tampilan';
@@ -2405,12 +2415,6 @@ class Translations$tour$id {
 
 	/// id: 'Perkiraan saldo dompet di akhir bulan, lengkap dengan saldo terendahnya. Ketuk untuk rinciannya di Rencana.'
 	String get homeForecastBody => 'Perkiraan saldo dompet di akhir bulan, lengkap dengan saldo terendahnya. Ketuk untuk rinciannya di Rencana.';
-
-	/// id: 'Menunggu dicatat'
-	String get homePendingTitle => 'Menunggu dicatat';
-
-	/// id: 'Tagihan dan pemasukan berulang yang sudah jatuh tempo. Ketuk sekali untuk mencatat, ubah dulu, atau Lewati.'
-	String get homePendingBody => 'Tagihan dan pemasukan berulang yang sudah jatuh tempo. Ketuk sekali untuk mencatat, ubah dulu, atau Lewati.';
 
 	/// id: 'Catat dari notifikasi'
 	String get homeNotificationTitle => 'Catat dari notifikasi';
@@ -4288,6 +4292,44 @@ class Translations$assets$id {
 	final Translations _root; // ignore: unused_field
 
 	// Translations
+
+	/// id: '$n tujuan'
+	String goalCount({required Object n}) => '${n} tujuan';
+
+	/// id: 'Sebaran aset'
+	String get spreadTitle => 'Sebaran aset';
+
+	/// id: 'Ketuk satu lapis untuk melihat isinya.'
+	String get spreadHint => 'Ketuk satu lapis untuk melihat isinya.';
+
+	/// id: 'Sebaran dompet'
+	String get spreadWallets => 'Sebaran dompet';
+
+	/// id: 'Sebaran tabungan'
+	String get spreadGoals => 'Sebaran tabungan';
+
+	/// id: '$n lapis'
+	String layerCount({required Object n}) => '${n} lapis';
+
+	/// id: 'Total aset'
+	String get totalAssets => 'Total aset';
+
+	/// id: 'Dompet'
+	String get layerOperational => 'Dompet';
+
+	/// id: 'Tabungan'
+	String get layerSavings => 'Tabungan';
+
+	/// id: 'Investasi'
+	String get layerInvestment => 'Investasi';
+
+	/// id: '$wallets dompet · $goals tujuan'
+	String heroCaption({required Object wallets, required Object goals}) => '${wallets} dompet · ${goals} tujuan';
+
+	/// id: 'Dompet $operational · Tabungan $savings'
+	String homeLayers({required Object operational, required Object savings}) => 'Dompet ${operational} · Tabungan ${savings}';
+
+	late final Translations$assets$goal$id goal = Translations$assets$goal$id.internal(_root);
 	late final Translations$assets$adjust$id adjust = Translations$assets$adjust$id.internal(_root);
 }
 
@@ -4534,6 +4576,42 @@ class Translations$record$calc$id {
 
 	/// id: 'Hasilnya terlalu besar'
 	String get tooLarge => 'Hasilnya terlalu besar';
+}
+
+// Path: dataPortability.goalColumns
+class Translations$dataPortability$goalColumns$id {
+	Translations$dataPortability$goalColumns$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Nama'
+	String get name => 'Nama';
+
+	/// id: 'Target'
+	String get target => 'Target';
+
+	/// id: 'Terkumpul'
+	String get saved => 'Terkumpul';
+
+	/// id: 'Status'
+	String get status => 'Status';
+
+	/// id: 'Target tanggal'
+	String get targetDate => 'Target tanggal';
+
+	/// id: 'Dompet'
+	String get wallets => 'Dompet';
+
+	/// id: 'Aktif'
+	String get statusActive => 'Aktif';
+
+	/// id: 'Tercapai'
+	String get statusReached => 'Tercapai';
+
+	/// id: 'Diarsipkan'
+	String get statusArchived => 'Diarsipkan';
 }
 
 // Path: dataPortability.columns
@@ -5599,6 +5677,140 @@ class Translations$premium$paywall$id {
 	String get notSellingBody => 'Berlangganan Plus belum tersedia. Mencatat tetap gratis.';
 }
 
+// Path: assets.goal
+class Translations$assets$goal$id {
+	Translations$assets$goal$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Tujuan'
+	String get title => 'Tujuan';
+
+	/// id: 'Buat tujuan'
+	String get create => 'Buat tujuan';
+
+	/// id: 'Kumpulkan uang untuk sesuatu, mis. dana darurat. Setiap tujuan punya dompet sendiri yang kamu isi lewat transfer; kemajuannya mengikuti saldonya.'
+	String get emptyBody => 'Kumpulkan uang untuk sesuatu, mis. dana darurat. Setiap tujuan punya dompet sendiri yang kamu isi lewat transfer; kemajuannya mengikuti saldonya.';
+
+	/// id: '$saved dari $target'
+	String progress({required Object saved, required Object target}) => '${saved} dari ${target}';
+
+	/// id: 'Tercapai'
+	String get reached => 'Tercapai';
+
+	/// id: 'Kurang $amount'
+	String remaining({required Object amount}) => 'Kurang ${amount}';
+
+	/// id: 'Diarsipkan'
+	String get archivedHeading => 'Diarsipkan';
+
+	/// id: 'Tujuan: $name'
+	String walletBadge({required Object name}) => 'Tujuan: ${name}';
+
+	/// id: 'Tujuan baru'
+	String get formTitleNew => 'Tujuan baru';
+
+	/// id: 'Ubah tujuan'
+	String get formTitleEdit => 'Ubah tujuan';
+
+	/// id: 'Nama'
+	String get nameLabel => 'Nama';
+
+	/// id: 'Mis. Dana darurat'
+	String get nameHint => 'Mis. Dana darurat';
+
+	/// id: 'Target'
+	String get targetLabel => 'Target';
+
+	/// id: 'Ikon'
+	String get iconLabel => 'Ikon';
+
+	/// id: 'Target tanggal (opsional)'
+	String get targetDateLabel => 'Target tanggal (opsional)';
+
+	/// id: 'Pilih tanggal'
+	String get targetDateNone => 'Pilih tanggal';
+
+	/// id: 'Hapus tanggal'
+	String get targetDateClear => 'Hapus tanggal';
+
+	/// id: 'Target $date'
+	String targetDate({required Object date}) => 'Target ${date}';
+
+	/// id: 'Mis. untuk jaga-jaga 6 bulan pengeluaran'
+	String get descriptionHint => 'Mis. untuk jaga-jaga 6 bulan pengeluaran';
+
+	/// id: 'Keterangan (opsional)'
+	String get descriptionLabel => 'Keterangan (opsional)';
+
+	/// id: 'Simpan tujuan'
+	String get save => 'Simpan tujuan';
+
+	/// id: 'Melanjutkan draf yang belum tersimpan.'
+	String get draftResumed => 'Melanjutkan draf yang belum tersimpan.';
+
+	/// id: 'Buang draf'
+	String get discardDraft => 'Buang draf';
+
+	/// id: 'Tujuan tersimpan.'
+	String get savedMessage => 'Tujuan tersimpan.';
+
+	/// id: '$name tercapai.'
+	String reachedMessage({required Object name}) => '${name} tercapai.';
+
+	/// id: 'Catatan di dompet ini'
+	String get detailHistory => 'Catatan di dompet ini';
+
+	/// id: 'Belum ada catatan di dompet ini.'
+	String get historyEmpty => 'Belum ada catatan di dompet ini.';
+
+	/// id: 'Ubah'
+	String get editAction => 'Ubah';
+
+	/// id: 'Arsipkan'
+	String get archiveAction => 'Arsipkan';
+
+	/// id: 'Aktifkan lagi'
+	String get reactivateAction => 'Aktifkan lagi';
+
+	/// id: 'Hapus tujuan'
+	String get deleteAction => 'Hapus tujuan';
+
+	/// id: 'Hapus tujuan ini?'
+	String get deleteConfirmTitle => 'Hapus tujuan ini?';
+
+	/// id: 'Tujuan diarsipkan.'
+	String get archivedMessage => 'Tujuan diarsipkan.';
+
+	/// id: 'Tujuan dihapus.'
+	String get deletedMessage => 'Tujuan dihapus.';
+
+	/// id: 'Tujuan aktif lagi.'
+	String get reactivatedMessage => 'Tujuan aktif lagi.';
+
+	/// id: 'Dompet ini milik tujuan $name. Hapus tujuannya untuk menghapus dompet ini.'
+	String walletOwnedMessage({required Object name}) => 'Dompet ini milik tujuan ${name}. Hapus tujuannya untuk menghapus dompet ini.';
+
+	/// id: 'Sudah terkumpul (opsional)'
+	String get collectedLabel => 'Sudah terkumpul (opsional)';
+
+	/// id: 'Tujuan ini punya dompet sendiri. Isi dengan Catat › Transfer dari dompet lain; dompet ini hanya menerima dan mengirim transfer. Cocok bila uangnya memang dipisah (rekening terpisah, deposito, amplop); bila uangnya tetap di rekening yang sama, catatan rekening itu akan lebih kecil dari saldo bank.'
+	String get goalWalletHelp => 'Tujuan ini punya dompet sendiri. Isi dengan Catat › Transfer dari dompet lain; dompet ini hanya menerima dan mengirim transfer. Cocok bila uangnya memang dipisah (rekening terpisah, deposito, amplop); bila uangnya tetap di rekening yang sama, catatan rekening itu akan lebih kecil dari saldo bank.';
+
+	/// id: 'Lihat dompet'
+	String get viewWalletAction => 'Lihat dompet';
+
+	/// id: 'Tujuan, dompetnya, dan semua catatan transfer ke dan dari tujuan ini dihapus. Saldo dompet asal di catatan kembali seperti sebelum uang dipindahkan. Tidak bisa dibatalkan.'
+	String get deleteConfirmBodyAll => 'Tujuan, dompetnya, dan semua catatan transfer ke dan dari tujuan ini dihapus. Saldo dompet asal di catatan kembali seperti sebelum uang dipindahkan. Tidak bisa dibatalkan.';
+
+	/// id: 'Tujuan ini sudah tidak ada.'
+	String get notFound => 'Tujuan ini sudah tidak ada.';
+
+	late final Translations$assets$goal$estimate$id estimate = Translations$assets$goal$estimate$id.internal(_root);
+}
+
 // Path: assets.adjust
 class Translations$assets$adjust$id {
 	Translations$assets$adjust$id.internal(this._root);
@@ -5761,6 +5973,8 @@ class Translations$premium$paywall$messages$id {
 	late final Translations$premium$paywall$messages$notification$id notification = Translations$premium$paywall$messages$notification$id.internal(_root);
 	late final Translations$premium$paywall$messages$auto$id auto = Translations$premium$paywall$messages$auto$id.internal(_root);
 	late final Translations$premium$paywall$messages$template$id template = Translations$premium$paywall$messages$template$id.internal(_root);
+	late final Translations$premium$paywall$messages$savingsGoal$id savingsGoal = Translations$premium$paywall$messages$savingsGoal$id.internal(_root);
+	late final Translations$premium$paywall$messages$goalEstimate$id goalEstimate = Translations$premium$paywall$messages$goalEstimate$id.internal(_root);
 	late final Translations$premium$paywall$messages$project$id project = Translations$premium$paywall$messages$project$id.internal(_root);
 	late final Translations$premium$paywall$messages$forecast$id forecast = Translations$premium$paywall$messages$forecast$id.internal(_root);
 	late final Translations$premium$paywall$messages$reading$id reading = Translations$premium$paywall$messages$reading$id.internal(_root);
@@ -5782,6 +5996,51 @@ class Translations$premium$paywall$benefits$id {
 
 	/// id: 'Tanya, rencanakan, dan lapor'
 	String get ask => 'Tanya, rencanakan, dan lapor';
+}
+
+// Path: assets.goal.estimate
+class Translations$assets$goal$estimate$id {
+	Translations$assets$goal$estimate$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Perkiraan tercapai'
+	String get title => 'Perkiraan tercapai';
+
+	/// id: 'Dengan laju sekarang'
+	String get rateLabel => 'Dengan laju sekarang';
+
+	/// id: 'Rata-rata $amount masuk per bulan'
+	String rateBody({required Object amount}) => 'Rata-rata ${amount} masuk per bulan';
+
+	/// id: 'Bila uang nganggur ikut ditabung'
+	String get idleLabel => 'Bila uang nganggur ikut ditabung';
+
+	/// id: 'Pengandaian: seluruh uang nganggur masuk ke tujuan ini'
+	String get idleBody => 'Pengandaian: seluruh uang nganggur masuk ke tujuan ini';
+
+	/// id: 'Belum bisa'
+	String get notYet => 'Belum bisa';
+
+	/// id: 'Tunggu sampai tujuan ini berumur satu bulan penuh.'
+	String get notEnoughHistory => 'Tunggu sampai tujuan ini berumur satu bulan penuh.';
+
+	/// id: 'Belum ada uang yang masuk bersih ke tujuan ini dalam 3 bulan terakhir.'
+	String get notSaving => 'Belum ada uang yang masuk bersih ke tujuan ini dalam 3 bulan terakhir.';
+
+	/// id: 'Perkiraan melewati target tanggal'
+	String get beyondTarget => 'Perkiraan melewati target tanggal';
+
+	/// id: 'Dari rata-rata 3 bulan terakhir. Perkiraan, bukan janji.'
+	String get footnote => 'Dari rata-rata 3 bulan terakhir. Perkiraan, bukan janji.';
+
+	/// id: 'Perkiraan kapan tercapai'
+	String get lockedTitle => 'Perkiraan kapan tercapai';
+
+	/// id: 'Lihat kapan tujuan ini tercapai dari laju menabungmu.'
+	String get lockedBody => 'Lihat kapan tujuan ini tercapai dari laju menabungmu.';
 }
 
 // Path: premium.paywall.messages.general
@@ -5857,6 +6116,36 @@ class Translations$premium$paywall$messages$template$id {
 
 	/// id: 'Template yang sudah ada tetap tersimpan dan bisa dipakai.'
 	String get body => 'Template yang sudah ada tetap tersimpan dan bisa dipakai.';
+}
+
+// Path: premium.paywall.messages.savingsGoal
+class Translations$premium$paywall$messages$savingsGoal$id {
+	Translations$premium$paywall$messages$savingsGoal$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Tujuan aktif ketiga ada di Plus'
+	String get title => 'Tujuan aktif ketiga ada di Plus';
+
+	/// id: 'Kamu sudah punya 2 tujuan aktif. Dengan Plus, tujuan berapa pun, plus perkiraan kapan tercapai. Isianmu disimpan sebagai draf.'
+	String get body => 'Kamu sudah punya 2 tujuan aktif. Dengan Plus, tujuan berapa pun, plus perkiraan kapan tercapai. Isianmu disimpan sebagai draf.';
+}
+
+// Path: premium.paywall.messages.goalEstimate
+class Translations$premium$paywall$messages$goalEstimate$id {
+	Translations$premium$paywall$messages$goalEstimate$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Perkiraan tujuan ada di Plus'
+	String get title => 'Perkiraan tujuan ada di Plus';
+
+	/// id: 'Tujuan dan kemajuannya tetap gratis.'
+	String get body => 'Tujuan dan kemajuannya tetap gratis.';
 }
 
 // Path: premium.paywall.messages.project
@@ -6141,15 +6430,11 @@ extension on Translations {
 			'wallet.spreadTapOpen' => 'Ketuk untuk melihat diagram',
 			'wallet.spreadTapClose' => 'Ketuk untuk menutup diagram',
 			'wallet.spreadOfTotal' => ({required Object percent}) => '${percent} dari total saldo',
+			'wallet.spreadOthers' => ({required Object n}) => 'Lainnya (${n})',
 			'wallet.spreadSeeTotal' => 'Lihat total',
 			'wallet.spreadHide' => 'Sembunyikan',
 			'wallet.spreadSemantics' => ({required Object list}) => 'Sebaran saldo: ${list}',
 			'wallet.inactiveRowSub' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n, one: '${n} dompet · tidak muncul di Catat', other: '${n} dompet · tidak muncul di Catat', ), 
-			'wallet.typeBank' => 'Bank',
-			'wallet.typeCash' => 'Uang tunai',
-			'wallet.typeEwallet' => 'Dompet digital',
-			'wallet.typeSavings' => 'Tabungan',
-			'wallet.typeCard' => 'Kartu',
 			'wallet.emptyTitle' => 'Belum ada dompet',
 			'wallet.emptyBody' => 'Tambahkan dompet pertamamu untuk mulai melacak uangmu. Bisa rekening bank, e-wallet, atau uang tunai.',
 			'wallet.loadErrorTitle' => 'Dompet gagal dimuat',
@@ -6163,6 +6448,10 @@ extension on Translations {
 			'wallet.nameRequiredHint' => 'Wajib',
 			'wallet.nameMaxHint' => 'Maks. 24 karakter',
 			'wallet.iconLabel' => 'Pilih ikon',
+			'wallet.colorLabel' => 'Warna kartu',
+			'wallet.colorDefault' => 'Bawaan',
+			'wallet.colorOption' => ({required Object n}) => 'Warna ${n}',
+			'wallet.iconOption' => ({required Object n}) => 'Ikon ${n}',
 			'wallet.initialBalanceLabel' => 'Saldo awal',
 			'wallet.initialBalanceHelp' => 'Isi dengan jumlah uang di dompet ini sekarang. Setiap transaksi berikutnya dihitung dari angka ini.',
 			'wallet.currentBalanceLabel' => 'Saldo sekarang',
@@ -6295,6 +6584,16 @@ extension on Translations {
 			'dataPortability.errorOtherBody' => 'Pemulihan gagal disiapkan. Coba lagi. Datamu tidak berubah.',
 			'dataPortability.sheetTransactions' => 'Transaksi',
 			'dataPortability.sheetWallets' => 'Dompet',
+			'dataPortability.sheetGoals' => 'Tujuan',
+			'dataPortability.goalColumns.name' => 'Nama',
+			'dataPortability.goalColumns.target' => 'Target',
+			'dataPortability.goalColumns.saved' => 'Terkumpul',
+			'dataPortability.goalColumns.status' => 'Status',
+			'dataPortability.goalColumns.targetDate' => 'Target tanggal',
+			'dataPortability.goalColumns.wallets' => 'Dompet',
+			'dataPortability.goalColumns.statusActive' => 'Aktif',
+			'dataPortability.goalColumns.statusReached' => 'Tercapai',
+			'dataPortability.goalColumns.statusArchived' => 'Diarsipkan',
 			'dataPortability.columns.date' => 'Tanggal',
 			'dataPortability.columns.periodStart' => 'Awal periode',
 			'dataPortability.columns.type' => 'Jenis',
@@ -6414,6 +6713,8 @@ extension on Translations {
 			'budget.templatesSavedBadge' => ({required Object count}) => '${count} tersimpan',
 			'budget.templatesInfoTitle' => 'Apa itu template anggaran?',
 			'budget.templatesInfoBody' => 'Susunan pos rencana yang bisa dipakai ulang tanpa mengetik dari nol. Setiap pemakaian membuat anggaran baru yang berdiri sendiri.',
+			_ => null,
+		} ?? switch (path) {
 			'budget.templateItemCount' => ({required Object count}) => '${count} pos',
 			'budget.templateItemsLabel' => 'Daftar pos rencana',
 			'budget.templateTotalLabel' => 'Total rencana',
@@ -6424,8 +6725,6 @@ extension on Translations {
 			'budget.templateAddAction' => 'Buat template',
 			'budget.templatesFooter' => 'Template bisa disunting kapan saja tanpa mengubah anggaran yang sudah dibuat darinya.',
 			'budget.templatesEmptyBadge' => 'Belum ada template',
-			_ => null,
-		} ?? switch (path) {
 			'budget.templatesEmptyTitle' => 'Belum ada template',
 			'budget.templatesEmptyBody' => 'Simpan susunan pos yang sering dipakai, misalnya belanja bulanan, supaya anggaran berikutnya tinggal dipakai.',
 			'budget.templateNeedsWallet' => 'Buat dompet aktif dulu untuk memakai template.',
@@ -6694,14 +6993,12 @@ extension on Translations {
 			'tour.skipAction' => 'Lewati tur',
 			'tour.stepCounter' => ({required Object current, required Object total}) => '${current}/${total}',
 			'tour.stepSemantics' => ({required Object current, required Object total, required Object title, required Object body}) => 'Langkah ${current}/${total}: ${title}. ${body}',
-			'tour.homeBalanceTitle' => 'Total saldo tercatat',
-			'tour.homeBalanceBody' => 'Jumlah saldo semua dompet aktif, terlihat dalam sekali pandang.',
+			'tour.homeBalanceTitle' => 'Total aset',
+			'tour.homeBalanceBody' => 'Semua uang tercatat di dompet dan tabunganmu, beserta pemasukan dan pengeluaran periode ini.',
 			'tour.homeRecordTitle' => 'Satu pintu mencatat',
 			'tour.homeRecordBody' => 'Semua pemasukan, pengeluaran, dan transfer dicatat dari sini.',
-			'tour.homeCashFlowTitle' => 'Arus bulan ini',
-			'tour.homeCashFlowBody' => 'Uang yang benar-benar masuk dan keluar di periode ini. Ketuk untuk melihat alurnya.',
 			'tour.homeBudgetTitle' => 'Sisa anggaran aktif',
-			'tour.homeBudgetBody' => 'Sisa rencana dari anggaran yang sedang berjalan. Ketuk untuk rinciannya.',
+			'tour.homeBudgetBody' => 'Kartu Anggaran di deretan ini menunjukkan sisa rencana anggaran yang sedang berjalan. Ketuk kartunya untuk rincian.',
 			'tour.homeFreelanceTitle' => 'Ringkasan freelance',
 			'tour.homeFreelanceBody' => 'Penghasilan yang sudah dikerjakan dan yang masih tertunda. Saldo dompet baru bertambah saat tagihan dicatat diterima.',
 			'tour.homeRecentTitle' => 'Transaksi terbaru',
@@ -6715,13 +7012,17 @@ extension on Translations {
 			'tour.recordWalletTitle' => 'Dompet terisi otomatis',
 			'tour.recordWalletBody' => 'Dompet terakhir yang kamu pakai sudah terpilih. Ganti kalau perlu.',
 			'tour.recordBudgetItemTitle' => 'Tautkan ke anggaran',
-			'tour.recordBudgetItemBody' => 'Opsional. Pengeluaran yang ditautkan menambah angka terpakai pos itu, selama tanggalnya di dalam periode anggaran.',
-			'tour.walletSummaryTitle' => 'Total semua dompet',
-			'tour.walletSummaryBody' => 'Jumlah saldo tercatat dompet aktif.',
+			'tour.recordBudgetItemBody' => 'Opsional. Pengeluaran atau transfer yang ditautkan menambah angka terpakai pos itu, selama tanggalnya di dalam periode anggaran.',
+			'tour.walletSummaryTitle' => 'Total aset',
+			'tour.walletSummaryBody' => 'Semua uang tercatat, dipecah jadi Dompet dan Tabungan. Ketuk satu lapis untuk melihat isinya.',
 			'tour.walletCardTitle' => 'Rincian dompet',
 			'tour.walletCardBody' => 'Ketuk untuk melihat riwayat dompet ini dan mencatat langsung dari sana.',
 			'tour.walletAddTitle' => 'Tambah dompet',
-			'tour.walletAddBody' => 'Rekening, e-wallet, atau tunai. Saldo awalnya bisa diubah kapan saja, dan saldo tercatat ikut menyesuaikan.',
+			'tour.walletAddBody' => 'Rekening, e-wallet, atau tunai. Saldonya bisa diubah kapan saja; selisihnya dicatat sebagai penyesuaian saldo.',
+			'tour.walletSegmentsTitle' => 'Dompet dan Tabungan',
+			'tour.walletSegmentsBody' => 'Dompet berisi rekening, e-wallet, dan tunai untuk sehari-hari. Tabungan berisi tujuanmu. Ketuk untuk berpindah.',
+			'tour.walletGoalsTitle' => 'Tujuan tabungan',
+			'tour.walletGoalsBody' => 'Setiap tujuan punya dompet sendiri. Isi lewat Catat › Transfer dari dompet lain; kemajuannya mengikuti saldo dompet itu.',
 			'tour.txnMonthTitle' => 'Satu periode per tampilan',
 			'tour.txnMonthBody' => 'Geser periode untuk melihat riwayat lain. Daftar dan Analisis selalu memakai periode yang sama.',
 			'tour.txnFilterTitle' => 'Cari dan saring',
@@ -6756,8 +7057,6 @@ extension on Translations {
 			'tour.planForecastBody' => 'Perkiraan saldo sampai akhir bulan, lengkap dengan perkiraan saldo terendahmu.',
 			'tour.homeForecastTitle' => 'Perkiraan saldo',
 			'tour.homeForecastBody' => 'Perkiraan saldo dompet di akhir bulan, lengkap dengan saldo terendahnya. Ketuk untuk rinciannya di Rencana.',
-			'tour.homePendingTitle' => 'Menunggu dicatat',
-			'tour.homePendingBody' => 'Tagihan dan pemasukan berulang yang sudah jatuh tempo. Ketuk sekali untuk mencatat, ubah dulu, atau Lewati.',
 			'tour.homeNotificationTitle' => 'Catat dari notifikasi',
 			'tour.homeNotificationBody' => 'Pilih aplikasi bank atau dompet digitalmu, lalu notifikasi transaksinya jadi draf catatan. Pintunya selalu ada di tombol Notifikasi ini.',
 			'tour.homeReminderTitle' => 'Pengingat tagihan rutin',
@@ -6928,6 +7227,8 @@ extension on Translations {
 			'discovery.reminder.body' => 'Diingatkan sebelum tagihan jatuh tempo.',
 			'discovery.reminder.rowNote' => 'Pengingat belum menyala untuk semua transaksi berulang.',
 			'discovery.allowAccess' => 'Izinkan',
+			_ => null,
+		} ?? switch (path) {
 			'discovery.quickStart.title' => 'Pilih aplikasi bank atau dompet digitalmu',
 			'discovery.quickStart.body' => 'Notifikasi dari aplikasi yang kamu pilih dibaca di perangkat dan jadi draf catatan. Kamu tinjau dulu.',
 			'discovery.quickStart.screenTitle' => 'Mulai cepat',
@@ -6938,8 +7239,6 @@ extension on Translations {
 			'discovery.quickStart.plusTeaser' => 'Pantau banyak bank dan e-wallet sekaligus?',
 			'discovery.quickStart.plusInfo' => 'Info Plus',
 			'discovery.quickStart.privacyLine' => 'Izin akses notifikasi hanya dipakai membaca aplikasi yang kamu pilih.',
-			_ => null,
-		} ?? switch (path) {
 			'discovery.quickStart.turnOn' => 'Nyalakan',
 			'discovery.quickStart.walletHint' => 'Pilih dompet untuk tiap aplikasi',
 			'discovery.quickStart.pickHint' => 'Pilih minimal satu aplikasi',
@@ -7442,6 +7741,8 @@ extension on Translations {
 			'analysis.compare.vs' => ({required Object label}) => 'dibanding ${label}',
 			'analysis.compare.newThisMonth' => 'baru bulan ini',
 			'analysis.compare.srHigher' => ({required Object amount, required Object label}) => '${amount} lebih tinggi, ${label}',
+			_ => null,
+		} ?? switch (path) {
 			'analysis.compare.srLower' => ({required Object amount, required Object label}) => '${amount} lebih rendah, ${label}',
 			'analysis.highlight.higher' => ({required Object subject, required Object compare}) => '${subject} lebih tinggi dari ${compare}',
 			'analysis.highlight.lower' => ({required Object subject, required Object compare}) => '${subject} lebih rendah dari ${compare}',
@@ -7452,8 +7753,6 @@ extension on Translations {
 			'analysis.trend.toDate' => ({required Object date}) => 's.d. ${date}',
 			'analysis.trend.days' => ({required Object n}) => '${n} hari',
 			'analysis.trend.seePeriod' => ({required Object period}) => 'Lihat analisis ${period}',
-			_ => null,
-		} ?? switch (path) {
 			'analysis.trend.column' => ({required Object period, required Object income, required Object expense, required Object net}) => '${period}, pemasukan ${income}, pengeluaran ${expense}, selisih ${net}',
 			'analysis.category.frequency' => ({required Object count, required Object amount}) => '${count} transaksi · rata-rata ${amount} per transaksi',
 			'analysis.category.frequencyOne' => ({required Object count, required Object amount}) => '${count} transaksi · rata-rata ${amount} per transaksi',
@@ -7558,6 +7857,10 @@ extension on Translations {
 			'premium.paywall.messages.auto.body' => 'Gratis: tiap jatuh tempo tetap tercatat dengan satu ketuk.',
 			'premium.paywall.messages.template.title' => 'Template kedua ada di Plus',
 			'premium.paywall.messages.template.body' => 'Template yang sudah ada tetap tersimpan dan bisa dipakai.',
+			'premium.paywall.messages.savingsGoal.title' => 'Tujuan aktif ketiga ada di Plus',
+			'premium.paywall.messages.savingsGoal.body' => 'Kamu sudah punya 2 tujuan aktif. Dengan Plus, tujuan berapa pun, plus perkiraan kapan tercapai. Isianmu disimpan sebagai draf.',
+			'premium.paywall.messages.goalEstimate.title' => 'Perkiraan tujuan ada di Plus',
+			'premium.paywall.messages.goalEstimate.body' => 'Tujuan dan kemajuannya tetap gratis.',
 			'premium.paywall.messages.project.title' => 'Proyek aktif ketiga ada di Plus',
 			'premium.paywall.messages.project.body' => 'Proyek dan pembayarannya tetap seperti sekarang.',
 			'premium.paywall.messages.forecast.title' => 'Perkiraan 12 bulan ada di Plus',
@@ -7596,6 +7899,71 @@ extension on Translations {
 			'premium.paywall.done' => 'Selesai',
 			'premium.paywall.notSellingTitle' => 'Plus belum dijual',
 			'premium.paywall.notSellingBody' => 'Berlangganan Plus belum tersedia. Mencatat tetap gratis.',
+			'assets.goalCount' => ({required Object n}) => '${n} tujuan',
+			'assets.spreadTitle' => 'Sebaran aset',
+			'assets.spreadHint' => 'Ketuk satu lapis untuk melihat isinya.',
+			'assets.spreadWallets' => 'Sebaran dompet',
+			'assets.spreadGoals' => 'Sebaran tabungan',
+			'assets.layerCount' => ({required Object n}) => '${n} lapis',
+			'assets.totalAssets' => 'Total aset',
+			'assets.layerOperational' => 'Dompet',
+			'assets.layerSavings' => 'Tabungan',
+			'assets.layerInvestment' => 'Investasi',
+			'assets.heroCaption' => ({required Object wallets, required Object goals}) => '${wallets} dompet · ${goals} tujuan',
+			'assets.homeLayers' => ({required Object operational, required Object savings}) => 'Dompet ${operational} · Tabungan ${savings}',
+			'assets.goal.title' => 'Tujuan',
+			'assets.goal.create' => 'Buat tujuan',
+			'assets.goal.emptyBody' => 'Kumpulkan uang untuk sesuatu, mis. dana darurat. Setiap tujuan punya dompet sendiri yang kamu isi lewat transfer; kemajuannya mengikuti saldonya.',
+			'assets.goal.progress' => ({required Object saved, required Object target}) => '${saved} dari ${target}',
+			'assets.goal.reached' => 'Tercapai',
+			'assets.goal.remaining' => ({required Object amount}) => 'Kurang ${amount}',
+			'assets.goal.archivedHeading' => 'Diarsipkan',
+			'assets.goal.walletBadge' => ({required Object name}) => 'Tujuan: ${name}',
+			'assets.goal.formTitleNew' => 'Tujuan baru',
+			'assets.goal.formTitleEdit' => 'Ubah tujuan',
+			'assets.goal.nameLabel' => 'Nama',
+			'assets.goal.nameHint' => 'Mis. Dana darurat',
+			'assets.goal.targetLabel' => 'Target',
+			'assets.goal.iconLabel' => 'Ikon',
+			'assets.goal.targetDateLabel' => 'Target tanggal (opsional)',
+			'assets.goal.targetDateNone' => 'Pilih tanggal',
+			'assets.goal.targetDateClear' => 'Hapus tanggal',
+			'assets.goal.targetDate' => ({required Object date}) => 'Target ${date}',
+			'assets.goal.descriptionHint' => 'Mis. untuk jaga-jaga 6 bulan pengeluaran',
+			'assets.goal.descriptionLabel' => 'Keterangan (opsional)',
+			'assets.goal.save' => 'Simpan tujuan',
+			'assets.goal.draftResumed' => 'Melanjutkan draf yang belum tersimpan.',
+			'assets.goal.discardDraft' => 'Buang draf',
+			'assets.goal.savedMessage' => 'Tujuan tersimpan.',
+			'assets.goal.reachedMessage' => ({required Object name}) => '${name} tercapai.',
+			'assets.goal.detailHistory' => 'Catatan di dompet ini',
+			'assets.goal.historyEmpty' => 'Belum ada catatan di dompet ini.',
+			'assets.goal.editAction' => 'Ubah',
+			'assets.goal.archiveAction' => 'Arsipkan',
+			'assets.goal.reactivateAction' => 'Aktifkan lagi',
+			'assets.goal.deleteAction' => 'Hapus tujuan',
+			'assets.goal.deleteConfirmTitle' => 'Hapus tujuan ini?',
+			'assets.goal.archivedMessage' => 'Tujuan diarsipkan.',
+			'assets.goal.deletedMessage' => 'Tujuan dihapus.',
+			'assets.goal.reactivatedMessage' => 'Tujuan aktif lagi.',
+			'assets.goal.walletOwnedMessage' => ({required Object name}) => 'Dompet ini milik tujuan ${name}. Hapus tujuannya untuk menghapus dompet ini.',
+			'assets.goal.collectedLabel' => 'Sudah terkumpul (opsional)',
+			'assets.goal.goalWalletHelp' => 'Tujuan ini punya dompet sendiri. Isi dengan Catat › Transfer dari dompet lain; dompet ini hanya menerima dan mengirim transfer. Cocok bila uangnya memang dipisah (rekening terpisah, deposito, amplop); bila uangnya tetap di rekening yang sama, catatan rekening itu akan lebih kecil dari saldo bank.',
+			'assets.goal.viewWalletAction' => 'Lihat dompet',
+			'assets.goal.deleteConfirmBodyAll' => 'Tujuan, dompetnya, dan semua catatan transfer ke dan dari tujuan ini dihapus. Saldo dompet asal di catatan kembali seperti sebelum uang dipindahkan. Tidak bisa dibatalkan.',
+			'assets.goal.notFound' => 'Tujuan ini sudah tidak ada.',
+			'assets.goal.estimate.title' => 'Perkiraan tercapai',
+			'assets.goal.estimate.rateLabel' => 'Dengan laju sekarang',
+			'assets.goal.estimate.rateBody' => ({required Object amount}) => 'Rata-rata ${amount} masuk per bulan',
+			'assets.goal.estimate.idleLabel' => 'Bila uang nganggur ikut ditabung',
+			'assets.goal.estimate.idleBody' => 'Pengandaian: seluruh uang nganggur masuk ke tujuan ini',
+			'assets.goal.estimate.notYet' => 'Belum bisa',
+			'assets.goal.estimate.notEnoughHistory' => 'Tunggu sampai tujuan ini berumur satu bulan penuh.',
+			'assets.goal.estimate.notSaving' => 'Belum ada uang yang masuk bersih ke tujuan ini dalam 3 bulan terakhir.',
+			'assets.goal.estimate.beyondTarget' => 'Perkiraan melewati target tanggal',
+			'assets.goal.estimate.footnote' => 'Dari rata-rata 3 bulan terakhir. Perkiraan, bukan janji.',
+			'assets.goal.estimate.lockedTitle' => 'Perkiraan kapan tercapai',
+			'assets.goal.estimate.lockedBody' => 'Lihat kapan tujuan ini tercapai dari laju menabungmu.',
 			'assets.adjust.walletLabel' => 'Dompet',
 			'assets.adjust.title' => 'Penyesuaian saldo',
 			'assets.adjust.detailNote' => 'Selisih saat saldo dompet diubah di Ubah dompet. Bukan pemasukan atau pengeluaran. Hapus untuk mengembalikan saldo seperti sebelumnya.',

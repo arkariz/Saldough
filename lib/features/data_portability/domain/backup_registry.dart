@@ -14,10 +14,11 @@ final class BackupKeySpec {
 
 /// Rujukan antardokumen yang diperiksa saat pemulihan (R-3): setiap nilai
 /// field [fields] pada item-item dokumen [from] harus berupa `id` item di
-/// dokumen [target].
+/// dokumen [target]. Field boleh berisi satu `id` atau daftar `id`
+/// (mis. `walletIds` tujuan tabungan, ADR-048).
 final class BackupReference {
   /// Membuat [BackupReference].
-  const BackupReference({required this.from, required this.fields, required this.target});
+  const BackupReference({required this.from, required this.fields, required this.target, this.unique = false});
 
   /// Kunci dokumen sumber; akhiran `*` berarti semua kunci berawalan itu
   /// (mis. `transaction_*`).
@@ -28,6 +29,10 @@ final class BackupReference {
 
   /// Kunci dokumen yang memuat `items[].id` tujuan.
   final String target;
+
+  /// Apakah setiap `id` yang dirujuk hanya boleh muncul sekali di seluruh
+  /// item [from] (mis. satu dompet satu tujuan, ADR-048 §3.3).
+  final bool unique;
 }
 
 /// Daftar seluruh kunci penyimpanan dan statusnya terhadap cadangan

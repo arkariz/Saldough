@@ -14,6 +14,7 @@ final class RecordState extends UiState<RecordState> {
     this.defaults = const RecordDefaults(),
     this.loadFailed = false,
     this.saveCount = 0,
+    this.transferOnlyWalletIds = const {},
     super.effect,
   });
 
@@ -50,6 +51,13 @@ final class RecordState extends UiState<RecordState> {
   /// (kotak masuk Catat dari notifikasi, ADR-032 §3.6).
   final int saveCount;
 
+  /// Dompet milik tujuan tabungan: hanya ditawarkan di formulir transfer,
+  /// tidak di pemasukan dan pengeluaran (ADR-048 §8.2a).
+  final Set<String> transferOnlyWalletIds;
+
+  /// Dompet untuk pemilih pemasukan dan pengeluaran.
+  List<Wallet> get incomeExpenseWallets => wallets.where((w) => !transferOnlyWalletIds.contains(w.id)).toList();
+
   @override
   RecordState copyWith({
     List<Wallet>? wallets,
@@ -59,6 +67,7 @@ final class RecordState extends UiState<RecordState> {
     bool? isSaving,
     bool? loadFailed,
     int? saveCount,
+    Set<String>? transferOnlyWalletIds,
     UiEffect? effect,
   }) {
     return RecordState(
@@ -69,10 +78,20 @@ final class RecordState extends UiState<RecordState> {
       isSaving: isSaving ?? this.isSaving,
       loadFailed: loadFailed ?? this.loadFailed,
       saveCount: saveCount ?? this.saveCount,
+      transferOnlyWalletIds: transferOnlyWalletIds ?? this.transferOnlyWalletIds,
       effect: effect,
     );
   }
 
   @override
-  List<Object?> get props => [wallets, budgetItems, defaults, isLoading, isSaving, loadFailed, saveCount];
+  List<Object?> get props => [
+    wallets,
+    budgetItems,
+    defaults,
+    isLoading,
+    isSaving,
+    loadFailed,
+    saveCount,
+    transferOnlyWalletIds,
+  ];
 }

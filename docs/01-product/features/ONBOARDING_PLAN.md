@@ -121,7 +121,7 @@ buatan tangan 27 Sep 2026 ditolak dan sudah dihapus.
 |---|---|---|---|---|
 | TR-HOME | Beranda | Pertama dibuka sesudah onboarding **dan** ada ≥1 dompet | 4 | Wajib |
 | TR-CATAT | Alur CATAT | Pertama kali CATAT dibuka | 3–4 (bergantung UX-1) | Wajib |
-| TR-WALLET | Dompet | Pertama dibuka | 3 | Wajib |
+| TR-WALLET | Dompet | Pertama dibuka; langkah tujuan saat segmen Tabungan pertama dibuka | 4–5 | Wajib |
 | TR-TXN | Transaksi | Pertama dibuka dengan ≥1 transaksi | 3 | Wajib |
 | TR-PLAN-MONTH | Rencana › Bulan ini | Pertama dibuka dengan rencana berisi *(T-15.13)* | 3 | Wajib |
 | TR-RECURRING | Rencana › Rutin | Pertama dibuka *(2 Okt 2026)* | 2–5 | Wajib |
@@ -138,13 +138,13 @@ targetnya. Nama kunci = `<tur>.<elemen>`. Teks adalah draf `id`.
 
 | Key | Target (widget/berkas) | Judul | Isi | Syarat |
 |---|---|---|---|---|
-| `home.balance` | `HomeBalanceCard` (`home_cards.dart`) | Total saldo tercatat | Jumlah saldo semua dompet aktif. Ini catatanmu, bukan saldo bank yang disinkron. | Selalu |
+| `home.balance` | `HomeBalanceCard` (`home_cards.dart`) | Total aset | Semua uang tercatat di dompet dan tabunganmu, beserta pemasukan dan pengeluaran periode ini. *(diperbarui 18 Nov 2026, ADR-050)* | Ada dompet |
 | `home.record` | Slot CATAT navigasi bawah (`_RecordNavIcon`, `app_shell_page.dart`) | Satu pintu mencatat | Semua uang masuk, keluar, dan pindah dompet dicatat dari sini. | Selalu |
-| `home.cashFlow` | `HomeCashFlowRow` | Arus bulan ini | Pemasukan dan pengeluaran bulan berjalan. Transfer antar dompet tidak dihitung. | Ada transaksi |
-| `home.budget` | `HomeBudgetCard` | Sisa anggaran aktif | Sisa rencana dari anggaran yang sedang berjalan. Ketuk untuk rinciannya. | Ada anggaran aktif |
+| ~~`home.cashFlow`~~ | — | — | Dihapus 18 Nov 2026: arus periode kini bagian kartu Total aset (`home.balance`), dan kunci ini tidak lagi punya target. | — |
+| `home.budget` | Carousel status (kartu Anggaran adalah slide terakhir, ADR-043) | Sisa anggaran aktif | Kartu Anggaran di deretan ini menunjukkan sisa rencana anggaran yang sedang berjalan. Ketuk kartunya untuk rincian. | Ada anggaran aktif |
 | `home.freelance` | `HomeFreelanceCard` | Ringkasan freelance | Penghasilan yang sudah dikerjakan dan yang masih tertunda. Saldo dompet baru bertambah saat pembayaran dicatat diterima. | Ada data freelance *(ditambah 28 Sep 2026)* |
 | `home.forecast` | Baris perkiraan saldo (`PlanForecastRow`) | Perkiraan saldo | Saldo dompet perkiraan di akhir bulan dan titik paling tipisnya. Ketuk untuk rinciannya di Rencana. | Ada rutin *(2 Okt 2026)* |
-| `home.pending` | Kartu Menunggu dicatat (`RecurringPendingCard`) | Menunggu dicatat | Tagihan dan pemasukan rutin yang sudah tiba. Catat satu ketuk, ubah dulu, atau Lewati. | Ada kemunculan menunggu *(2 Okt 2026)* |
+| ~~`home.pending`~~ | — | — | Dihapus 18 Nov 2026: kartu Menunggu dicatat digantikan carousel status (`homeStatus`, ADR-043), dan kunci ini tidak lagi punya target. | — |
 | `home.recent` | Kepala "Transaksi terbaru" | Transaksi terbaru | Catatan terakhirmu. Ketuk salah satunya untuk rincian, atau Lihat semua untuk riwayat per bulan. | Ada transaksi *(ditambah 28 Sep 2026)* |
 
 **TR-CATAT — Alur CATAT** *(bergantung bentuk UX-1, KO-5)*
@@ -155,16 +155,18 @@ targetnya. Nama kunci = `<tur>.<elemen>`. Teks adalah draf `id`.
 | `record.freelance` | Kartu "Honor freelance?" formulir Pemasukan (dipindah ke atas nominal) | Honor freelance lewat jalur sendiri | Uang dari proyek freelance dicatat sebagai pembayaran diterima di Freelance, bukan pemasukan biasa. Jam kerja dan tagihannya tetap nyambung. | Formulir Pemasukan *(ditambah 28 Sep 2026)* |
 | `record.amount` | `RecordAmountField` | Nominal | Ketik nominalnya, atau pakai tombol cepat. | Selalu |
 | `record.wallet` | `WalletSelectField` | Dompet terisi otomatis | Dompet terakhir yang kamu pakai sudah terpilih. Ganti kalau perlu. | ≥2 dompet aktif |
-| `record.budgetItem` | `RecordBudgetItemField` | Tautkan ke anggaran | Opsional. Pengeluaran yang ditautkan menambah angka terpakai pos itu, selama tanggalnya di dalam periode anggaran. | Ada pos yang ditawarkan |
+| `record.budgetItem` | `RecordBudgetItemField` | Tautkan ke anggaran | Opsional. Pengeluaran atau transfer yang ditautkan menambah angka terpakai pos itu, selama tanggalnya di dalam periode anggaran. | Ada pos yang ditawarkan |
 | `record.repeat` | `RecordRepeatField` | Ulangi | Untuk tagihan, gaji, atau langganan. Kemunculan berikutnya akan menunggu kamu catat; tidak pernah dicatat diam-diam. | Transaksi baru, bukan dari kemunculan *(2 Okt 2026)* |
 
 **TR-WALLET — Dompet**
 
 | Key | Target | Judul | Isi | Syarat |
 |---|---|---|---|---|
-| `wallet.summary` | `WalletSummaryCard` | Total semua dompet | Jumlah saldo tercatat dompet aktif. | Ada dompet |
-| `wallet.card` | `WalletCard` pertama | Rincian dompet | Ketuk untuk melihat riwayat dompet ini dan mencatat langsung dari sana. | Ada dompet |
-| `wallet.add` | Tombol tambah dompet | Tambah dompet | Rekening, e-wallet, atau tunai. Saldo awal bisa diubah nanti; saldo tercatat dihitung ulang. | Selalu |
+| `wallet.summary` | Hero Total aset (`WalletHeroCard`) | Total aset | Semua uang tercatat, dipecah jadi Dompet dan Tabungan. Ketuk satu lapis untuk melihat isinya. *(18 Nov 2026, ADR-050)* | Ada dompet |
+| `wallet.segments` | Segmen Dompet / Tabungan (menempel di bawah app bar) | Dompet dan Tabungan | Dompet berisi rekening, e-wallet, dan tunai untuk sehari-hari. Tabungan berisi tujuanmu. Ketuk untuk berpindah. *(18 Nov 2026)* | Ada dompet |
+| `wallet.card` | `WalletCard` pertama | Rincian dompet | Ketuk untuk melihat riwayat dompet ini dan mencatat langsung dari sana. | Ada dompet, segmen Dompet |
+| `wallet.add` | Slot Tambah dompet di bawah daftar | Tambah dompet | Rekening, e-wallet, atau tunai. Saldonya bisa diubah kapan saja; selisihnya dicatat sebagai penyesuaian saldo. *(diperbarui 18 Nov 2026, ADR-047)* | Segmen Dompet |
+| `wallet.goals` | Kepala bagian Tujuan di segmen Tabungan | Tujuan tabungan | Setiap tujuan punya dompet sendiri. Isi lewat Catat › Transfer dari dompet lain; kemajuannya mengikuti saldo dompet itu. *(18 Nov 2026, ADR-048)* | Segmen Tabungan dibuka |
 
 **TR-TXN — Transaksi**
 
@@ -183,7 +185,7 @@ targetnya. Nama kunci = `<tur>.<elemen>`. Teks adalah draf `id`.
 | `analysis.uncategorized` | Baris Tanpa kategori | Tanpa kategori | Beri kategori supaya analisisnya lebih tepat. | Baris itu tampil |
 | `analysis.trend` | Tren enam periode | Enam periode terakhir | Ketuk satu kolom untuk melihat angkanya. Periode yang masih berjalan ditandai. | Tren tampil (≥2 periode data) |
 
-Kartu Beranda yang dimuat sendiri (`home.forecast`, `home.pending`) memasang
+Kartu Beranda yang dimuat sendiri (`home.forecast`, carousel `home.status`) memasang
 `TourTrigger` TR-HOME-nya sendiri, supaya disorot saat pertama tampil tanpa
 menunggu Beranda dibangun ulang. `RecurringPendingCard` juga dipakai di
 Rencana › Bulan ini, jadi sorotannya opsional (`spotlight:`) dan hanya diisi di

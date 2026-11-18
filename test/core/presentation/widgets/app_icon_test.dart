@@ -182,11 +182,13 @@ void main() {
       expect(walletIconKey('walletCard'), IconKey.walletCard);
     });
 
-    test('kunci tidak dikenal atau bukan jenis dompet jatuh ke ikon dompet generik, bukan melempar', () {
+    test('kunci tidak dikenal jatuh ke ikon dompet generik, bukan melempar', () {
       expect(walletIconKey('bank'), IconKey.wallets);
       expect(walletIconKey(''), IconKey.wallets);
-      // Nama IconKey yang valid tapi bukan jenis dompet tidak boleh lolos.
-      expect(walletIconKey('categoryFood'), IconKey.wallets);
+    });
+
+    test('dompet milik tujuan memakai ikon tujuannya (ADR-048 §8.1)', () {
+      expect(walletIconKey('categoryCoffee'), IconKey.categoryCoffee);
     });
   });
 

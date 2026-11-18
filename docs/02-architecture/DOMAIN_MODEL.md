@@ -45,7 +45,7 @@ murni, bukan `~/` yang memotong ke arah nol dan salah untuk nilai negatif
 
 ## Ringkasan entitas
 
-Sepuluh entitas, dikelompokkan jadi tiga lingkaran: inti, rencana, dan
+Sebelas entitas, dikelompokkan jadi tiga lingkaran: inti, rencana, dan
 pendukung.
 
 | Entitas | Lingkaran | Peran |
@@ -56,13 +56,15 @@ pendukung.
 | `BudgetItem` | Rencana | Satu baris di dalam rencana itu |
 | `BudgetTemplate` | Rencana | Definisi yang bisa dipakai ulang |
 | `RecurringRule` | Rencana | Transaksi yang dijadwalkan berulang ([ADR-035](adr/0035-transaksi-rutin-rencana-dan-perkiraan.md)) |
+| `SavingsGoal` | Rencana | Tujuan tabungan yang memiliki satu dompet sendiri ([ADR-048](adr/0048-tujuan-tabungan.md)) |
 | `FreelanceProject` | Pendukung | Klien beserta tarif dan potongannya |
 | `WorklogEntry` | Pendukung | Kerja yang sudah selesai |
 | `FreelancePayment` | Pendukung | Tagihan yang menunggu dibayar |
 | ~~`FreelanceTemplate`~~ | Pendukung | Deprecated 26 Sep 2026, tidak dikerjakan |
 
 Tidak ada entitas untuk saldo turunan, ringkasan bulanan, `spent`, `remaining`,
-`progress`, `status`, kemunculan rutin, uang nganggur, maupun perkiraan saldo.
+`progress`, `status`, kemunculan rutin, uang nganggur, perkiraan saldo,
+kemajuan tujuan, perkiraan tanggal tercapai, maupun Total aset dan lapisannya.
 Semuanya dihitung ulang saat diakses.
 
 ## Dompet
@@ -75,7 +77,8 @@ tercatat ada Rp5.000.000 di sana".
 |---|---|---|
 | `id` | `String` | Identitas dompet. |
 | `name` | `String` | Nama yang dipilih pemilik, misalnya `BCA` atau `GoPay`. |
-| `iconKey` | `String` | Kunci semantik ikon, bukan path aset. Lihat [ADR-015](adr/0015-adopsi-bahasa-visual-pixel-kas.md). |
+| `iconKey` | `String` | Kunci semantik ikon, bukan path aset. Lihat [ADR-015](adr/0015-adopsi-bahasa-visual-pixel-kas.md). **Hanya tampilan:** dompet tidak punya jenis, dan ikon tidak memberi kemampuan apa pun (keputusan pemilik 17 Nov 2026, WEALTH_ASSETS keputusan 11). Peran dompet tabungan hanya berasal dari tujuan yang memilikinya (ADR-048 Revisi 1): dompet milik tujuan dibuat otomatis bersama tujuannya, lihat [Tujuan tabungan](#tujuan-tabungan). |
+| `colorKey` | `String?` | Warna latar kartu pilihan pengguna (kunci warna kategori design system, mis. `teal`); kosong = bawaan. **Hanya tampilan**, tanpa arti domain (T-30.15). |
 | `initialBalance` | `int` | Saldo saat dompet dibuat, dalam sen. Boleh nol, boleh negatif. |
 | `currentBalance` | `int` | Saldo tercatat saat ini, dalam sen. Disimpan demi kecepatan, lihat catatan di bawah. |
 | `isActive` | `bool` | Dompet tidak aktif tidak muncul di pemilih, tapi transaksinya tetap ada. |
@@ -94,9 +97,14 @@ currentBalance = initialBalance
                − Σ expense.amount    dengan expense.walletId    = wallet.id
                + Σ transfer.amount   dengan transfer.toWalletId = wallet.id
                − Σ transfer.amount   dengan transfer.fromWalletId = wallet.id
+               ± Σ adjustment.amount dengan adjustment.walletId = wallet.id
+                                     (+ increase, − decrease; ADR-047)
 
 totalBalance   = Σ wallet.currentBalance  untuk wallet.isActive
 ```
+
+Sejak ADR-050, angka teratas tab Dompet dan Beranda adalah **Total aset**,
+yang memecah `totalBalance` per lapis; lihat [Total aset](#total-aset).
 
 Rumus pertama itulah yang dipakai `recomputeWalletBalances()` untuk membuktikan
 bahwa nilai tersimpan tidak melenceng. Bukti: dompet bersaldo awal Rp5.000.000
@@ -497,6 +505,83 @@ Hubungannya dengan `FreelanceProject` sama persis dengan hubungan
 dibuat darinya, dan membuat atau menyunting template tidak pernah menyentuh
 saldo dompet mana pun.
 
+## Tujuan tabungan
+
+`SavingsGoal` ([ADR-048](adr/0048-tujuan-tabungan.md), Revisi 1) adalah rencana
+mengumpulkan sejumlah uang, mis. "Dana darurat Rp20 jt". Ia **rencana, bukan
+pemesanan uang** (aturan 5): tujuan sendiri tidak pernah membuat transaksi dan
+tidak mengubah saldo dompet mana pun.
+
+| Field | Tipe | Keterangan |
+|---|---|---|
+| `id` | `String` | Identitas tujuan. |
+| `name` | `String` | Nama pilihan pemilik; data pengguna. Disalin ke dompetnya. |
+| `targetAmount` | `int` | Target dalam sen, > 0. |
+| `iconKey` | `String` | Ikon tujuan; disalin ke dompetnya. |
+| `walletId` | `String` | Dompet milik tujuan (wajib, tepat satu). |
+| `createdAt` | `DateTime` | Saat dibuat; awal riwayat untuk perkiraan. |
+| `status` | `SavingsGoalStatus` | `active`, `completed`, atau `archived`. |
+| `targetDate` | `DateTime?` | Target tanggal; hanya penanda. |
+| `description` | `String?` | Keterangan bebas. |
+| `completedAt` | `DateTime?` | Saat pertama tercapai. |
+
+**Dompet milik tujuan.** `CreateSavingsGoal` membuat satu dompet bernama dan
+berikon sama dengan tujuannya; kolom opsional "Sudah terkumpul" menjadi
+`initialBalance` dompet itu (saldo awal, bukan transaksi). Dompet ini
+**hanya menerima dan mengirim transfer**: `RecordTransaction` menolak
+pemasukan dan pengeluaran ber-`walletId` dompet tujuan (`ValidationFailure`
+`goalWalletTransferOnly`), sedangkan penyesuaian saldo tetap boleh. Ia tidak
+tampil di grid tab Dompet, tidak bisa dihapus dari Dompet, dan ikut terhapus
+bersama semua transaksinya saat tujuannya dihapus (§8.2).
+
+Nilai turunan:
+
+```
+collected  = wallet(goal.walletId).currentBalance
+remaining  = max(0, targetAmount − collected)
+percent    = collected ≤ 0 ? 0 : floor(collected × 100 ÷ targetAmount)  (boleh > 100)
+reached    = collected ≥ targetAmount
+```
+
+`active` menjadi `completed` saat `reached`, lewat `SyncSavingsGoalStatus`
+yang dipicu `LedgerChanges`. **Completed tidak kembali ke Active otomatis**
+bila saldo turun; pengguna bisa mengaktifkannya lagi, tunduk batas Gratis
+(2 tujuan Active, `EntitlementLimits.freeSavingsGoals`).
+
+**Perkiraan tanggal tercapai (Plus, ADR-048 §3.6).** `SavingsGoalEstimate`:
+
+```
+periode   = paling banyak 3 periode keuangan lengkap terakhir yang berakhir
+            sesudah goal.createdAt
+laju      = Σ netto dompet tujuan di periode itu ÷ jumlah periode
+            netto = pemasukan + transfer masuk − pengeluaran − transfer keluar
+            (penyesuaian saldo = 0; anggota periode lewat periodDateOf)
+tanggal   = awal (periode berjalan + ceil(remaining ÷ laju) periode)
+skenario  = laju (atau 0 bila ≤ 0) + rata-rata uang nganggur periode lengkap
+            terakhir (port IdleMoneyAverage, dihitung features/plan)
+```
+
+Tanpa periode lengkap atau laju ≤ 0: "Belum bisa diperkirakan". Uang nganggur
+≤ 0 menyembunyikan skenario. Perkiraan dengan laju sesudah `targetDate`
+memberi baris "Perkiraan melewati target tanggal".
+
+## Total aset
+
+`WealthLayers` ([ADR-050](adr/0050-total-aset-berlapis.md),
+`shared/wealth`) memecah uang tercatat ke tiga lapis. Setiap dompet aktif masuk
+**tepat satu** lapis, jadi tidak ada hitung ganda:
+
+```
+dompet     = Σ currentBalance dompet aktif yang bukan milik tujuan
+tabungan   = Σ currentBalance dompet aktif milik tujuan
+investasi  = Σ nilai pasar instrumen aktif (Fase 31; 0 sampai ada)
+totalAset  = dompet + tabungan + investasi
+```
+
+Lapis negatif (mis. kartu) tetap dijumlah apa adanya; batang proporsi hanya
+menggambar bagian positif. Nama **Kekayaan bersih** baru dipakai sesudah utang
+tercatat (B-48, B-59).
+
 ## Periode keuangan
 
 Bukan entitas tersimpan selain pengaturannya. Detail di
@@ -556,6 +641,19 @@ sendiri.
 17. **Pos anggaran dengan rutin tertaut tidak dihitung ganda** di uang
     nganggur maupun perkiraan: `keluar_pos = max(sisa_pos, rutin tertaut yang
     belum tercatat)`.
+18. **Penyesuaian saldo bernilai 0 di Arus.** `BalanceAdjustmentTransaction`
+    mengubah saldo dompetnya, tetapi tidak pernah terhitung sebagai
+    pemasukan, pengeluaran, `spent` anggaran, uang nganggur, maupun laju
+    tujuan.
+19. **Tujuan tidak menyentuh saldo.** Membuat, mengubah, mengarsipkan, atau
+    mengaktifkan lagi `SavingsGoal` tidak membuat transaksi. "Sudah
+    terkumpul" menjadi saldo awal dompet baru, bukan transaksi.
+20. **Satu tujuan tepat satu dompet, satu dompet paling banyak satu tujuan.**
+    `walletId` unik di seluruh tujuan.
+21. **Dompet tujuan hanya untuk transfer.** Tidak ada pemasukan atau
+    pengeluaran ber-`walletId` dompet milik tujuan.
+22. **Total aset tanpa hitung ganda.** Setiap dompet aktif masuk tepat satu
+    lapis, dan jumlah lapis Dompet + Tabungan sama dengan `totalBalance`.
 
 ## Nilai terkonfirmasi
 

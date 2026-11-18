@@ -36,6 +36,7 @@ import 'package:saldough/shared/auth/auth.dart';
 import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
+import 'package:saldough/shared/savings_goal/savings_goal.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
@@ -72,6 +73,9 @@ void main() {
       ..registerLazySingleton<RecurringChanges>(RecurringChanges.new)
       ..registerLazySingleton<RecurringRuleRepository>(
         () => RecurringRuleRepositoryImpl(storage: InMemoryKeyValueStorage()),
+      )
+      ..registerLazySingleton<SavingsGoalRepository>(
+        () => SavingsGoalRepositoryImpl(storage: InMemoryKeyValueStorage()),
       )
       ..registerLazySingleton<PlanBudgetSource>(EmptyPlanBudgetSource.new)
       ..registerLazySingleton<PlanFreelanceSource>(EmptyPlanFreelanceSource.new)
@@ -436,7 +440,7 @@ void main() {
       }
     }
 
-    testWidgets('Dompet: ringkasan, dompet pertama, lalu tambah — hanya saat tab Dompet dibuka', (tester) async {
+    testWidgets('Dompet: Total aset, segmen, dompet pertama, tambah, lalu tujuan di Tabungan', (tester) async {
       tallViewport(tester);
       await seedFull();
       await openShellWithTours(tester);
@@ -445,9 +449,15 @@ void main() {
       await openTab(tester, t.appShell.walletsTabLabel);
       await walkThrough(tester, [
         (t.tour.walletSummaryTitle, t.tour.walletSummaryBody),
+        (t.tour.walletSegmentsTitle, t.tour.walletSegmentsBody),
         (t.tour.walletCardTitle, t.tour.walletCardBody),
         (t.tour.walletAddTitle, t.tour.walletAddBody),
       ]);
+
+      // Segmen Tabungan pertama dibuka: hanya langkah tujuan yang tampil.
+      await tester.tap(find.textContaining(t.assets.layerSavings).last);
+      await tester.pumpAndSettle();
+      await walkThrough(tester, [(t.tour.walletGoalsTitle, t.tour.walletGoalsBody)]);
 
       await openTab(tester, t.appShell.homeTabLabel);
       await openTab(tester, t.appShell.walletsTabLabel);

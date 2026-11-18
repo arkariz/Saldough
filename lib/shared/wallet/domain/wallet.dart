@@ -14,6 +14,7 @@ final class Wallet extends Equatable {
     required this.initialBalance,
     required this.currentBalance,
     this.isActive = true,
+    this.colorKey,
   });
 
   /// Identitas dompet.
@@ -46,6 +47,11 @@ final class Wallet extends Equatable {
   /// tetap ada dan tetap dihitung.
   final bool isActive;
 
+  /// Warna latar kartu dompet pilihan pemilik: nama warna palet kategori
+  /// design system (mis. `blue`), atau `null` untuk bawaan. **Hanya tampilan**
+  /// (seperti [iconKey]); tidak memengaruhi hitungan apa pun.
+  final String? colorKey;
+
   /// Salinan [Wallet] dengan field yang disebutkan diganti.
   Wallet copyWith({
     String? name,
@@ -53,6 +59,8 @@ final class Wallet extends Equatable {
     int? initialBalance,
     int? currentBalance,
     bool? isActive,
+    String? colorKey,
+    bool clearColor = false,
   }) {
     return Wallet(
       id: id,
@@ -61,6 +69,7 @@ final class Wallet extends Equatable {
       initialBalance: initialBalance ?? this.initialBalance,
       currentBalance: currentBalance ?? this.currentBalance,
       isActive: isActive ?? this.isActive,
+      colorKey: clearColor ? null : (colorKey ?? this.colorKey),
     );
   }
 
@@ -72,5 +81,6 @@ final class Wallet extends Equatable {
         initialBalance,
         currentBalance,
         isActive,
+        colorKey,
       ];
 }

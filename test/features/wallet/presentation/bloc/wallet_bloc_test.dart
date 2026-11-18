@@ -2,10 +2,12 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:memory_storage/memory_storage.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/features/wallet/presentation/bloc/wallet_bloc.dart';
 import 'package:saldough/features/wallet/presentation/bloc/wallet_state.dart';
+import 'package:saldough/shared/savings_goal/savings_goal.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 import 'package:state_management/state_management.dart';
@@ -21,6 +23,7 @@ void main() {
   late MockWalletRepository walletRepository;
   late MockTransactionRepository transactionRepository;
   late LedgerChanges ledgerChanges;
+  late SavingsGoalRepositoryImpl goalRepository;
 
   setUpAll(() {
     registerFallbackValue(fallbackWallet);
@@ -31,12 +34,14 @@ void main() {
     walletRepository = MockWalletRepository();
     transactionRepository = MockTransactionRepository();
     ledgerChanges = LedgerChanges();
+    goalRepository = SavingsGoalRepositoryImpl(storage: InMemoryKeyValueStorage());
   });
 
   WalletBloc buildBloc() => WalletBloc(
     ledgerChanges: ledgerChanges,
     walletRepository: walletRepository,
     transactionRepository: transactionRepository,
+    goalRepository: goalRepository,
     recordTransaction: RecordTransaction(
       ledgerChanges: ledgerChanges,
       transactionRepository: transactionRepository,
@@ -63,8 +68,7 @@ void main() {
     isActive: isActive,
   );
 
-  String? messageOf(WalletState state) =>
-      (state.effect as ShowSnackBarEffect?)?.message;
+  String? messageOf(WalletState state) => (state.effect as ShowSnackBarEffect?)?.message;
 
   group('WalletBloc -- memuat', () {
     blocTest<WalletBloc, WalletState>(
@@ -73,8 +77,7 @@ void main() {
         when(
           () => walletRepository.listWallets(),
         ).thenAnswer(
-          (_) async =>
-              Right([wallet('a'), wallet('b', name: 'Lama', isActive: false)]),
+          (_) async => Right([wallet('a'), wallet('b', name: 'Lama', isActive: false)]),
         );
       },
       build: buildBloc,
@@ -310,7 +313,10 @@ void main() {
           expect(adjustment.categoryId, isNull);
           expect(adjustment.recurrence, isNull);
           final today = DateTime.now();
-          expect(DateTime(adjustment.date.year, adjustment.date.month, adjustment.date.day), DateTime(today.year, today.month, today.day));
+          expect(
+            DateTime(adjustment.date.year, adjustment.date.month, adjustment.date.day),
+            DateTime(today.year, today.month, today.day),
+          );
           final edited = verify(() => walletRepository.saveWallet(captureAny())).captured.first as Wallet;
           expect(edited.initialBalance, 0, reason: 'saldo awal tidak digeser lagi');
           expect(messageOf(bloc.state), t.assets.adjust.savedMessage(amount: '+Rp500'));
@@ -452,6 +458,29 @@ void main() {
         expect(bloc.state.wallets.map((w) => w.id), ['b']);
         expect(messageOf(bloc.state), t.wallet.deletedMessage);
         verify(() => walletRepository.deleteWallet('a')).called(1);
+      },
+    );
+
+    blocTest<WalletBloc, WalletState>(
+      'dompet milik tujuan tidak bisa dihapus dari Dompet (ADR-048 §8.2)',
+      setUp: () async {
+        await goalRepository.saveGoal(
+          SavingsGoal(
+            id: 'g',
+            name: 'Dana darurat',
+            targetAmount: 1000,
+            iconKey: 'home',
+            walletId: 'a',
+            createdAt: DateTime(2026, 11),
+          ),
+        );
+        when(() => transactionRepository.listAllTransactions()).thenAnswer((_) async => const Right([]));
+      },
+      build: buildBloc,
+      act: (bloc) => bloc.add(WalletDeleted(wallet('a'))),
+      verify: (bloc) {
+        verifyNever(() => walletRepository.deleteWallet(any()));
+        expect(messageOf(bloc.state), t.assets.goal.walletOwnedMessage(name: 'Dana darurat'));
       },
     );
 

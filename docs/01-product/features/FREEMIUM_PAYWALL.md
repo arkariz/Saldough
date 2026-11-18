@@ -273,11 +273,14 @@ singkat, kepatuhan terhadap aturan proyek, biaya, dan ketergantungan.
   transaksi atau rutin sungguhan kecuali pengguna memilih "Jadikan rutin".
 - **Tujuan tabungan** (dulu "Target"; diubah 17 Nov 2026,
   [WEALTH_ASSETS.md](WEALTH_ASSETS.md)): "Dana darurat Rp15 jt", "Liburan Rp6 jt
-  Juni". Tujuan **terhubung ke dompet** dan kemajuannya dibaca dari saldo dompet
-  itu (uang yang benar-benar ada); menabung lewat transfer yang sudah ada.
-  Rencana, bukan pemesanan uang (aturan 5). **Gratis: 2 tujuan aktif**; Plus:
-  tanpa batas, **perkiraan tanggal tercapai** dari uang nganggur rata-rata, dan
-  peringatan bila meleset lewat Penjaga.
+  Juni". Setiap tujuan **punya satu dompet sendiri** yang dibuat otomatis
+  (ADR-048 Revisi 1) dan kemajuannya dibaca dari saldo dompet itu (uang yang
+  benar-benar ada); menabung lewat transfer. Rencana, bukan pemesanan uang
+  (aturan 5). **Gratis: 2 tujuan aktif** (Remote Config `free_savings_goals`,
+  paywall P11); Plus: tanpa batas, **perkiraan tanggal tercapai** dari laju
+  uang masuk ke dompet tujuan plus skenario uang nganggur (T-30.7; Gratis
+  melihat baris terkunci, paywall `goal_estimate`), dan peringatan bila
+  meleset lewat Penjaga (menunggu B-44).
 - **Kenapa premium:** keputusan besar (cicilan, resign, beli barang mahal)
   adalah saat orang paling butuh kepastian dan paling mau membayar.
 - **Cara kerja:** di atas `projectCashflow` yang sudah ada (ADR-035/036).
@@ -440,6 +443,7 @@ itu diam 30 hari; selalu memakai angka milik pengguna; nada mengikuti
 | P9 | Desember dan Januari | "Tahun Tanuki-mu sudah siap" dan "Rekap SPT 2026-mu sudah bisa disusun" | ⑤ |
 | P10 | Layar Akun | Baris tetap "Tanukonomy Plus" | — |
 | P11 | Mencoba membuat tujuan tabungan ke-3 (gratis maks. 2 aktif) | "Kamu sudah punya 2 tujuan aktif. Dengan Plus, tujuan berapa pun, plus perkiraan kapan tercapai." Tombol Nanti saja | ④ |
+| P12a (`goal_estimate`) | Mengetuk baris terkunci "Perkiraan kapan tercapai" di rincian tujuan (Gratis, T-30.7) | "Perkiraan tujuan ada di Plus." / "Tujuan dan kemajuannya tetap gratis." Tombol Nanti saja | ④ |
 | P12 | Mencoba mencatat investasi ke-3 (gratis maks. 2 aktif) | "Kamu sudah mencatat 2 investasi aktif. Dengan Plus, instrumen berapa pun." Tombol Nanti saja | ④ |
 
 Isi layar paywall: judul sesuai pemicu, enam pilar dengan pilar pemicu di

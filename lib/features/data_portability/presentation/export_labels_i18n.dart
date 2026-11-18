@@ -6,6 +6,7 @@ import 'package:saldough/features/data_portability/domain/export_labels.dart';
 /// layanan dibuat, supaya mengikuti pergantian bahasa.
 ExportLabels exportLabelsFromI18n() {
   final c = t.dataPortability.columns;
+  final g = t.dataPortability.goalColumns;
   return ExportLabels(
     fileStem: t.dataPortability.fileStem,
     transactionsSheet: t.dataPortability.sheetTransactions,
@@ -32,5 +33,8 @@ ExportLabels exportLabelsFromI18n() {
     transfer: t.dataPortability.types.transfer,
     adjustmentIncrease: t.dataPortability.types.adjustmentIncrease,
     adjustmentDecrease: t.dataPortability.types.adjustmentDecrease,
+    goalsSheet: t.dataPortability.sheetGoals,
+    goalColumns: [g.name, g.target, g.saved, g.status, g.targetDate, g.wallets],
+    goalStatuses: [g.statusActive, g.statusReached, g.statusArchived],
   );
 }

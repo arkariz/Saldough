@@ -33,10 +33,12 @@ import 'package:saldough/features/recurring/domain/reminder_scheduler.dart';
 import 'package:saldough/features/recurring/domain/reminder_settings.dart';
 import 'package:saldough/features/transaction/presentation/pages/transaction_list_page.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_form_sheet.dart';
+import 'package:saldough/features/wallet/presentation/widgets/wallet_top_bar.dart';
 import 'package:saldough/shared/auth/auth.dart';
 import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
+import 'package:saldough/shared/savings_goal/savings_goal.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
@@ -77,6 +79,9 @@ void main() {
       ..registerLazySingleton<RecurringChanges>(RecurringChanges.new)
       ..registerLazySingleton<RecurringRuleRepository>(
         () => RecurringRuleRepositoryImpl(storage: InMemoryKeyValueStorage()),
+      )
+      ..registerLazySingleton<SavingsGoalRepository>(
+        () => SavingsGoalRepositoryImpl(storage: InMemoryKeyValueStorage()),
       )
       ..registerLazySingleton<PlanBudgetSource>(EmptyPlanBudgetSource.new)
       ..registerLazySingleton<PlanFreelanceSource>(EmptyPlanFreelanceSource.new)
@@ -166,7 +171,7 @@ void main() {
       await tester.tap(find.descendant(of: find.byType(DsNavBar), matching: find.text(t.appShell.walletsTabLabel)));
       await tester.pumpAndSettle();
 
-      expect(find.widgetWithText(AppBar, t.appShell.walletsTabLabel), findsOneWidget);
+      expect(find.widgetWithText(WalletTopBar, t.appShell.walletsTabLabel), findsOneWidget);
       final nav = tester.widget<DsNavBar>(find.byType(DsNavBar));
       expect(nav.currentIndex, 3);
     });
@@ -538,6 +543,9 @@ void main() {
         ..registerLazySingleton<RecurringChanges>(RecurringChanges.new)
         ..registerLazySingleton<RecurringRuleRepository>(
           () => RecurringRuleRepositoryImpl(storage: InMemoryKeyValueStorage()),
+        )
+        ..registerLazySingleton<SavingsGoalRepository>(
+          () => SavingsGoalRepositoryImpl(storage: InMemoryKeyValueStorage()),
         )
         ..registerLazySingleton<PlanBudgetSource>(EmptyPlanBudgetSource.new)
         ..registerLazySingleton<PlanFreelanceSource>(EmptyPlanFreelanceSource.new)

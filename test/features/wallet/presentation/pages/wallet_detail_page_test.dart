@@ -24,6 +24,7 @@ import 'package:saldough/shared/auth/auth.dart';
 import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
+import 'package:saldough/shared/savings_goal/savings_goal.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
@@ -62,6 +63,9 @@ void main() {
       ..registerLazySingleton<RecurringChanges>(RecurringChanges.new)
       ..registerLazySingleton<RecurringRuleRepository>(
         () => RecurringRuleRepositoryImpl(storage: InMemoryKeyValueStorage()),
+      )
+      ..registerLazySingleton<SavingsGoalRepository>(
+        () => SavingsGoalRepositoryImpl(storage: InMemoryKeyValueStorage()),
       )
       ..registerLazySingleton<PlanBudgetSource>(EmptyPlanBudgetSource.new)
       ..registerLazySingleton<PlanFreelanceSource>(EmptyPlanFreelanceSource.new)
@@ -115,7 +119,7 @@ void main() {
   }
 
   group('WalletDetailPage', () {
-    testWidgets('menampilkan nama, ikon jenis, dan saldo tercatat dompet', (
+    testWidgets('menampilkan nama dan saldo tercatat dompet, tanpa label jenis (ikon hanya tampilan)', (
       tester,
     ) async {
       await seedWallet('a', 'BCA', current: 130000000);
@@ -123,7 +127,7 @@ void main() {
 
       expect(find.byType(WalletDetailPage), findsOneWidget);
       expect(find.text('BCA'), findsWidgets);
-      expect(find.text(t.wallet.typeBank), findsOneWidget);
+      expect(find.text('Bank'), findsNothing, reason: 'dompet tidak punya jenis (WEALTH_ASSETS keputusan 11)');
       expect(find.text('1.300.000'), findsWidgets);
     });
 

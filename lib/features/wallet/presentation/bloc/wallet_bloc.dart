@@ -5,6 +5,7 @@ import 'package:failures/failures.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/features/wallet/presentation/bloc/wallet_state.dart';
+import 'package:saldough/shared/savings_goal/savings_goal.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/transaction/transaction_presentation.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
@@ -29,6 +30,7 @@ final class WalletBloc extends Bloc<WalletEvent, WalletState> {
     required this._walletRepository,
     required this._transactionRepository,
     required this._recordTransaction,
+    required this._goalRepository,
     required this._ledgerChanges,
   }) : super(WalletState.initial()) {
     on<WalletStarted>(_onStarted);
@@ -46,8 +48,15 @@ final class WalletBloc extends Bloc<WalletEvent, WalletState> {
   late final StreamSubscription<void> _ledgerSubscription;
   final WalletRepository _walletRepository;
   final TransactionRepository _transactionRepository;
+
   /// Mencatat penyesuaian saldo saat saldo dompet diubah (ADR-047 §3.2).
   final RecordTransaction _recordTransaction;
+
+  /// Tujuan tabungan untuk bagian Tujuan di tab Dompet (ADR-048 §3.8).
+  final SavingsGoalRepository _goalRepository;
+
+  /// Tujuan terbaru, `const []` bila gagal dibaca (bagian Tujuan bukan inti).
+  Future<List<SavingsGoal>> _loadGoals() async => (await _goalRepository.listGoals()).getOrElse((_) => const []);
 
   Future<void> _onStarted(WalletStarted event, Emitter<WalletState> emit) async {
     emit(state.copyWith(isLoading: true, loadFailed: false));
@@ -55,18 +64,34 @@ final class WalletBloc extends Bloc<WalletEvent, WalletState> {
       case Left(value: final failure):
         emit(state.copyWith(isLoading: false, loadFailed: true, effect: _effectError(failure)));
       case Right(value: final wallets):
-        emit(state.copyWith(wallets: wallets, isLoading: false, loadFailed: false));
+        emit(state.copyWith(wallets: wallets, goals: await _loadGoals(), isLoading: false, loadFailed: false));
     }
   }
 
+  /// Buku besar berubah: muat ulang, lalu tandai tujuan yang baru tercapai
+  /// (ADR-048 §3.3, §3.9) dengan satu pesan singkat.
   Future<void> _onRefreshed(WalletRefreshed event, Emitter<WalletState> emit) async {
+    final reached = (await SyncSavingsGoalStatus(goalRepository: _goalRepository, walletRepository: _walletRepository)())
+        .getOrElse((_) => const []);
+    for (final _ in reached) {
+      AppAnalytics.log(WealthEvents.goalCompleted);
+    }
     switch (await _walletRepository.listWallets()) {
       case Left(value: final failure):
         emit(state.copyWith(effect: _effectError(failure)));
       case Right(value: final wallets):
-        emit(state.copyWith(wallets: wallets, isLoading: false, loadFailed: false));
+        emit(
+          state.copyWith(
+            wallets: wallets,
+            goals: await _loadGoals(),
+            isLoading: false,
+            loadFailed: false,
+            effect: reached.isEmpty ? null : _effectSaved(t.assets.goal.reachedMessage(name: reached.first.name)),
+          ),
+        );
     }
   }
+
 
   Future<void> _onAdded(WalletAdded event, Emitter<WalletState> emit) async {
     final wallet = Wallet(
@@ -75,6 +100,7 @@ final class WalletBloc extends Bloc<WalletEvent, WalletState> {
       iconKey: event.iconKey,
       initialBalance: event.initialBalance,
       currentBalance: event.initialBalance,
+      colorKey: event.colorKey,
     );
     final result = await _walletRepository.saveWallet(wallet);
     if (result.isRight()) AppAnalytics.log(ActivationEvents.walletCreated);
@@ -103,6 +129,8 @@ final class WalletBloc extends Bloc<WalletEvent, WalletState> {
       name: event.name.trim(),
       iconKey: event.iconKey,
       isActive: event.isActive,
+      colorKey: event.colorKey,
+      clearColor: event.colorKey == null,
     );
     var result = await _walletRepository.saveWallet(updated);
     if (result.isRight() && difference != 0) {
@@ -135,6 +163,12 @@ final class WalletBloc extends Bloc<WalletEvent, WalletState> {
           emit(state.copyWith(effect: _effectMessage(t.wallet.deleteBlockedMessage)));
           return;
         }
+        // Dompet milik tujuan hanya dihapus bersama tujuannya (ADR-048 §8.2).
+        final owner = (await _loadGoals()).where((g) => g.walletId == event.wallet.id).firstOrNull;
+        if (owner != null) {
+          emit(state.copyWith(effect: _effectMessage(t.assets.goal.walletOwnedMessage(name: owner.name))));
+          return;
+        }
         await _afterWrite(await _walletRepository.deleteWallet(event.wallet.id), t.wallet.deletedMessage, emit);
     }
   }
@@ -164,7 +198,7 @@ final class WalletBloc extends Bloc<WalletEvent, WalletState> {
           case Left(value: final failure):
             emit(state.copyWith(effect: _effectError(failure)));
           case Right(value: final wallets):
-            emit(state.copyWith(wallets: wallets, effect: _effectSaved(successMessage)));
+            emit(state.copyWith(wallets: wallets, goals: await _loadGoals(), effect: _effectSaved(successMessage)));
         }
     }
   }

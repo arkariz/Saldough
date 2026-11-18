@@ -73,7 +73,7 @@ void main() {
       final results = await open(tester);
 
       await tester.enterText(field(0), '  Dompet Saku  ');
-      await tester.tap(find.text(t.wallet.typeCash));
+      await tester.tap(find.byKey(const ValueKey('wallet-icon-walletCash')));
       await tester.pump();
       await tester.tap(find.text('+500rb'));
       await tester.tap(find.text('+1jt'));
@@ -233,6 +233,14 @@ void main() {
 
       await save(tester, t.transaction.saveChangesAction);
       expect((results.single! as WalletFormSaved).balance, isNull, reason: 'tidak disentuh, tidak mengubah apa pun');
+    });
+
+    testWidgets('warna kartu: terisi dari dompet, bisa diganti, dan dikirim', (tester) async {
+      final results = await open(tester, initial: existing.copyWith(colorKey: 'teal'));
+      await tester.tap(find.byKey(const ValueKey('wallet-color-rose')));
+      await tester.pump();
+      await save(tester, t.transaction.saveChangesAction);
+      expect((results.single! as WalletFormSaved).colorKey, 'rose');
     });
 
     testWidgets('sakelar aktif menonaktifkan dompet', (tester) async {

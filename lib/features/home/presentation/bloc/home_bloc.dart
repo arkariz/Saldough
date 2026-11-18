@@ -34,6 +34,7 @@ final class HomeBloc extends Bloc<HomeEvent, HomeState> {
     required this._freelanceOverviewSource,
     required LedgerChanges ledgerChanges,
     DateTime Function()? now,
+    this._transferOnlyWallets = const NoTransferOnlyWallets(),
   }) : _now = now ?? DateTime.now,
        super(HomeState.initial()) {
     on<HomeStarted>(_onStarted);
@@ -59,6 +60,9 @@ final class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final BudgetOverviewSource _budgetOverviewSource;
   final FreelanceOverviewSource _freelanceOverviewSource;
   final DateTime Function() _now;
+
+  /// Dompet milik tujuan tabungan, untuk lapis Total aset (ADR-050 §3.4).
+  final TransferOnlyWallets _transferOnlyWallets;
 
   Future<void> _onStarted(HomeStarted event, Emitter<HomeState> emit) async {
     emit(state.copyWith(isLoading: true, loadFailed: false));
@@ -95,6 +99,7 @@ final class HomeBloc extends Bloc<HomeEvent, HomeState> {
             budget: budget.activeCount == 0 ? null : budget,
             freelance: freelance,
             isLoading: false,
+            goalWalletIds: await _transferOnlyWallets.walletIds(),
           ),
         );
       default:

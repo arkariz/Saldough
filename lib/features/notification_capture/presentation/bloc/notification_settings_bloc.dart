@@ -12,6 +12,7 @@ import 'package:saldough/features/notification_capture/domain/repositories/notif
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_store.dart';
 import 'package:saldough/features/notification_capture/domain/services/quick_start_apps.dart';
 import 'package:saldough/features/notification_capture/presentation/host/sync_notification_capture.dart';
+import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 import 'package:state_management/state_management.dart';
 
@@ -127,6 +128,7 @@ final class NotificationSettingsBloc extends Bloc<NotificationSettingsEvent, Not
     required this._store,
     required this._walletRepository,
     this._statusChanges,
+    this._transferOnlyWallets = const NoTransferOnlyWallets(),
   }) : super(const NotificationSettingsState()) {
     on<NotificationSettingsStarted>(_onStarted);
     on<NotificationSettingsResumed>(_onResumed);
@@ -164,11 +166,16 @@ final class NotificationSettingsBloc extends Bloc<NotificationSettingsEvent, Not
   final FeatureStatusChanges? _statusChanges;
   final WalletRepository _walletRepository;
 
+  /// Dompet milik tujuan: tidak ditawarkan di aturan dompet, karena catatan
+  /// dari notifikasi adalah pemasukan atau pengeluaran (ADR-048 §8.2a).
+  final TransferOnlyWallets _transferOnlyWallets;
+
   Future<void> _onStarted(NotificationSettingsStarted event, Emitter<NotificationSettingsState> emit) async {
     final settings = (await _store.loadSettings()).getOrElse((_) => const NotificationCaptureSettings());
+    final transferOnly = await _transferOnlyWallets.walletIds();
     final wallets = (await _walletRepository.listWallets())
         .getOrElse((_) => const [])
-        .where((w) => w.isActive)
+        .where((w) => w.isActive && !transferOnly.contains(w.id))
         .toList();
     emit(
       state.copyWith(

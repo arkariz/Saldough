@@ -50,6 +50,7 @@ abstract final class NotificationCaptureModule {
     NotificationRuleInterpreter rules(CaptureLanguage language) =>
         NotificationRuleInterpreter(language: language, categories: () => ActiveCategories.notifier.value);
     RecordTransaction recordTransaction() => RecordTransaction(
+      transferOnlyWallets: c.isRegistered<TransferOnlyWallets>() ? c<TransferOnlyWallets>() : const NoTransferOnlyWallets(),
       ledgerChanges: c<LedgerChanges>(),
       transactionRepository: c<TransactionRepository>(),
       recomputeWalletBalances: RecomputeWalletBalances(

@@ -95,8 +95,7 @@ class _Hero extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final symbol = ActiveCurrency.value.symbol;
-    final typeLabel = walletTypeLabel(wallet.iconKey);
-    final caption = [?typeLabel, if (!wallet.isActive) t.wallet.inactiveBadge].join(' · ');
+    final caption = wallet.isActive ? '' : t.wallet.inactiveBadge;
     final asset = ClayIcons.forIcon(walletIconKey(wallet.iconKey)) ?? ClayIcons.walletNav;
     final totals = this.totals;
     return Opacity(

@@ -4,6 +4,7 @@ import 'package:saldough/shared/transaction/domain/ledger_changes.dart';
 import 'package:saldough/shared/transaction/domain/transaction.dart';
 import 'package:saldough/shared/transaction/domain/transaction_query.dart';
 import 'package:saldough/shared/transaction/domain/transaction_repository.dart';
+import 'package:saldough/shared/transaction/domain/transfer_only_wallets.dart';
 import 'package:saldough/shared/transaction/domain/usecases/recompute_wallet_balances.dart';
 
 /// Mencatat, menyunting, atau menghapus satu [Transaction], lalu menjaga
@@ -19,6 +20,7 @@ final class RecordTransaction {
     required this.transactionRepository,
     required this.recomputeWalletBalances,
     required this.ledgerChanges,
+    this.transferOnlyWallets = const NoTransferOnlyWallets(),
   });
 
   /// Repository yang menyimpan buku besar.
@@ -27,6 +29,10 @@ final class RecordTransaction {
   /// Pemelihara `currentBalance`, dipanggil setelah [transactionRepository]
   /// berhasil ditulis.
   final RecomputeWalletBalances recomputeWalletBalances;
+
+  /// Dompet milik tujuan tabungan: pemasukan dan pengeluaran ke sana ditolak
+  /// (ADR-048 §8.2a).
+  final TransferOnlyWallets transferOnlyWallets;
 
   /// Diberi tahu sekali sesudah transaksi DAN saldo dompetnya tertulis
   /// (ADR-030 §3.4) -- tidak saat gagal. `source` di [call]/[delete]
@@ -46,6 +52,18 @@ final class RecordTransaction {
   /// kalau `transaction.recurrence` menunjuk kemunculan yang sudah dicatat
   /// transaksi lain (invarian 15, ADR-035 §3.2).
   Future<Either<Failure, Unit>> call(Transaction transaction, {Transaction? previousTransaction, Object? source}) async {
+    final incomeOrExpenseWallet = switch (transaction) {
+      IncomeTransaction(:final walletId) || ExpenseTransaction(:final walletId) => walletId,
+      TransferTransaction() || BalanceAdjustmentTransaction() => null,
+    };
+    if (incomeOrExpenseWallet != null && (await transferOnlyWallets.walletIds()).contains(incomeOrExpenseWallet)) {
+      return left(
+        const ValidationFailure(
+          code: goalWalletTransferOnlyCode,
+          message: 'Dompet tujuan hanya untuk transfer.',
+        ),
+      );
+    }
     if (transaction.recurrence case final link?) {
       final taken = await _occurrenceTaken(transaction, link);
       if (taken case Left(value: final failure)) return left(failure);
@@ -81,6 +99,10 @@ final class RecordTransaction {
   /// Kode [ValidationFailure] saat kemunculan rutin sudah dicatat transaksi
   /// lain.
   static const occurrenceTakenCode = FailureCode('RECURRENCE_OCCURRENCE_TAKEN');
+
+  /// Kode [ValidationFailure] saat pemasukan atau pengeluaran memakai dompet
+  /// milik tujuan tabungan (ADR-048 §8.2a).
+  static const goalWalletTransferOnlyCode = FailureCode('GOAL_WALLET_TRANSFER_ONLY');
 
   /// Apakah transaksi lain (id berbeda) sudah menautkan kemunculan [link].
   ///

@@ -52,6 +52,9 @@ final class NotificationCaptureScope extends IsolatedScope {
           store: c<NotificationCaptureStore>(),
           walletRepository: c<WalletRepository>(),
           statusChanges: c.isRegistered<FeatureStatusChanges>() ? c<FeatureStatusChanges>() : null,
+          transferOnlyWallets: parent.isRegistered<TransferOnlyWallets>()
+              ? parent<TransferOnlyWallets>()
+              : const NoTransferOnlyWallets(),
         ),
         dispose: (bloc) => bloc.close(),
       )

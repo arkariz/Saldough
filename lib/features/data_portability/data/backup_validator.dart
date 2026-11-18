@@ -73,16 +73,27 @@ abstract final class BackupValidator {
     final targetIds = {for (final item in _items(parsed[reference.target])) item['id']};
     final isPrefix = reference.from.endsWith('*');
     final prefix = isPrefix ? reference.from.substring(0, reference.from.length - 1) : reference.from;
+    final seen = <Object?>{};
     for (final entry in parsed.entries) {
       if (isPrefix ? !entry.key.startsWith(prefix) : entry.key != prefix) continue;
       for (final item in _items(entry.value)) {
         for (final field in reference.fields) {
-          final value = item[field];
-          if (value is String && !targetIds.contains(value)) {
-            throw BackupException(
-              BackupFailureCodes.inconsistent,
-              '${entry.key}.$field merujuk $value yang tidak ada di ${reference.target}',
-            );
+          final raw = item[field];
+          final values = raw is List ? raw : [raw];
+          for (final value in values) {
+            if (value is! String) continue;
+            if (!targetIds.contains(value)) {
+              throw BackupException(
+                BackupFailureCodes.inconsistent,
+                '${entry.key}.$field merujuk $value yang tidak ada di ${reference.target}',
+              );
+            }
+            if (reference.unique && !seen.add(value)) {
+              throw BackupException(
+                BackupFailureCodes.inconsistent,
+                '${entry.key}.$field merujuk $value lebih dari sekali',
+              );
+            }
           }
         }
       }

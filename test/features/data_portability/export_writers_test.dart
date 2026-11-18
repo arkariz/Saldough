@@ -5,8 +5,10 @@ import 'package:archive/archive.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/features/data_portability/data/export_writers.dart';
+import 'package:saldough/features/data_portability/domain/export_data.dart';
 import 'package:saldough/features/data_portability/domain/export_labels.dart';
 import 'package:saldough/features/data_portability/domain/export_rows.dart';
+import 'package:saldough/shared/savings_goal/savings_goal.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 
 import '../../helpers/export_fixtures.dart';
@@ -83,6 +85,40 @@ void main() {
         'xl/worksheets/sheet2.xml',
       });
       expect(part(a, 'xl/workbook.xml'), allOf(contains('name="Transaksi"'), contains('name="Dompet"')));
+    });
+
+    test('lembar Tujuan hanya ditulis bila ada tujuan, terkumpul dari saldo dompet tertaut (ADR-048 §3.4)', () {
+      final base = sampleExportData();
+      final wallet = base.wallets.first;
+      final data = ExportData(
+        transactions: base.transactions,
+        wallets: base.wallets,
+        categoryNames: base.categoryNames,
+        budgetLabels: base.budgetLabels,
+        ruleNames: base.ruleNames,
+        freelanceProjectByPaymentId: base.freelanceProjectByPaymentId,
+        schedule: base.schedule,
+        currency: base.currency,
+        goals: [
+          SavingsGoal(
+            id: 'g',
+            name: 'Dana darurat',
+            targetAmount: 2000000000,
+            iconKey: 'walletSavings',
+            walletId: wallet.id,
+            createdAt: DateTime(2026, 11),
+            targetDate: DateTime(2027, 6, 30),
+          ),
+        ],
+      );
+      final a = unzip(ExportWriters.xlsx(data, buildExportRows(data), idLabels));
+      expect(part(a, 'xl/workbook.xml'), contains('name="Goals"'));
+      final sheet = part(a, 'xl/worksheets/sheet3.xml');
+      expect(sheet, contains('Dana darurat'));
+      expect(sheet, contains('<v>20000000</v>'));
+      expect(sheet, contains('<v>${wallet.currentBalance ~/ 100}</v>'));
+      expect(sheet, contains('2027-06-30'));
+      expect(sheet, contains(wallet.name));
     });
 
     test('tanggal berupa nomor seri Excel berformat tanggal; nominal berupa angka, bukan teks', () {

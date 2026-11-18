@@ -32,9 +32,13 @@ final class FreelanceScope extends IsolatedScope {
       () => FreelanceBloc(
         freelanceRepository: c<FreelanceRepository>(),
         walletRepository: c<WalletRepository>(),
+        transferOnlyWallets: parent.isRegistered<TransferOnlyWallets>()
+            ? parent<TransferOnlyWallets>()
+            : const NoTransferOnlyWallets(),
         receivePayment: ReceiveFreelancePayment(
           freelanceRepository: c<FreelanceRepository>(),
           recordTransaction: RecordTransaction(
+            transferOnlyWallets: parent.isRegistered<TransferOnlyWallets>() ? parent<TransferOnlyWallets>() : const NoTransferOnlyWallets(),
             ledgerChanges: c<LedgerChanges>(),
             transactionRepository: c<TransactionRepository>(),
             recomputeWalletBalances: RecomputeWalletBalances(

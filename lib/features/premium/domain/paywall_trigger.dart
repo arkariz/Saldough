@@ -45,7 +45,13 @@ enum PaywallTrigger {
   templateLimit('template_limit'),
 
   /// Batas jumlah proyek freelance.
-  projectLimit('project_limit');
+  projectLimit('project_limit'),
+
+  /// P11: mencoba membuat tujuan tabungan aktif ketiga (ADR-048 §3.5).
+  savingsGoalLimit('savings_goal_limit'),
+
+  /// Perkiraan tanggal tercapai tujuan tabungan (ADR-048 §3.6).
+  goalEstimate('goal_estimate');
 
   const PaywallTrigger(this.analyticsName);
 

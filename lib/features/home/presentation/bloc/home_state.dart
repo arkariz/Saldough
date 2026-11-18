@@ -3,6 +3,7 @@ import 'package:saldough/features/home/domain/budget_overview_source.dart';
 import 'package:saldough/features/home/domain/freelance_overview_source.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
+import 'package:saldough/shared/wealth/wealth.dart';
 import 'package:state_management/state_management.dart';
 
 /// State `HomeBloc`. Seluruh nominal dalam sen.
@@ -18,6 +19,7 @@ final class HomeState extends UiState<HomeState> {
     required this.freelance,
     required this.isLoading,
     this.loadFailed = false,
+    this.goalWalletIds = const {},
     super.effect,
   });
 
@@ -73,6 +75,12 @@ final class HomeState extends UiState<HomeState> {
   /// `WalletState.totalBalance`. Boleh negatif.
   int get totalBalance => activeWallets.fold(0, (sum, w) => sum + w.currentBalance);
 
+  /// Dompet milik tujuan tabungan: lapis Tabungan (ADR-050).
+  final Set<String> goalWalletIds;
+
+  /// Total aset per lapis (ADR-050 §3.4).
+  WealthLayers get layers => WealthLayers.of(wallets, goalWalletIds: goalWalletIds);
+
   /// Peta `id` → dompet, untuk baris transaksi.
   Map<String, Wallet> get walletsById => {for (final w in wallets) w.id: w};
 
@@ -87,6 +95,7 @@ final class HomeState extends UiState<HomeState> {
     freelance: freelance,
     isLoading: isLoading ?? this.isLoading,
     loadFailed: loadFailed ?? this.loadFailed,
+    goalWalletIds: goalWalletIds,
     effect: effect,
   );
 
@@ -101,5 +110,6 @@ final class HomeState extends UiState<HomeState> {
     freelance,
     isLoading,
     loadFailed,
+    goalWalletIds,
   ];
 }

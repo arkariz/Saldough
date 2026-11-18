@@ -1,12 +1,13 @@
-import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 
-/// Ikon jenis dompet yang bisa dipilih di formulir, sesuai urutan tampil.
+/// Ikon yang bisa dipilih untuk dompet di formulir, sesuai urutan tampil.
 ///
-/// `Wallet.iconKey` menyimpan `IconKey.name` salah satunya; jenis dompet
-/// TIDAK disimpan terpisah -- ia diturunkan dari ikon ([walletTypeLabel]),
-/// karena rujukan visual "Tipe kategori" dan "Pilih ikon" adalah pilihan yang
-/// sama.
+/// Ikon dompet **hanya tampilan**: dompet tidak punya jenis, dan memilih ikon
+/// tertentu tidak memberi dompet kemampuan apa pun (keputusan pemilik
+/// 17 Nov 2026, WEALTH_ASSETS keputusan 11). Peran dompet, mis. dompet
+/// tabungan, hanya berasal dari tautan ke tujuan. `Wallet.iconKey` menyimpan
+/// `IconKey.name` salah satunya.
 const List<IconKey> walletIconChoices = [
   IconKey.walletBank,
   IconKey.walletCash,
@@ -15,14 +16,36 @@ const List<IconKey> walletIconChoices = [
   IconKey.walletCard,
 ];
 
-/// Label jenis dompet dari [iconKey] ("Bank / Rekening", "Uang Tunai", ...),
-/// atau `null` kalau [iconKey] bukan salah satu [walletIconChoices] (data
-/// tersimpan dari versi lain) -- lencananya tidak ditampilkan.
-String? walletTypeLabel(String iconKey) => switch (walletIconKey(iconKey)) {
-  IconKey.walletBank => t.wallet.typeBank,
-  IconKey.walletCash => t.wallet.typeCash,
-  IconKey.walletEwallet => t.wallet.typeEwallet,
-  IconKey.walletSavings => t.wallet.typeSavings,
-  IconKey.walletCard => t.wallet.typeCard,
-  _ => null,
-};
+/// Pilihan warna latar kartu dompet, urutan tampil (nama warna palet kategori
+/// design system). `null` di `Wallet.colorKey` berarti bawaan.
+const List<String> walletColorChoices = [
+  'blue',
+  'green',
+  'teal',
+  'amber',
+  'orange',
+  'rose',
+  'purple',
+  'indigo',
+  'brown',
+  'slate',
+];
+
+/// Pasangan warna untuk [key] dari palet kategori, atau `null` bila bawaan
+/// atau tidak dikenal (data dari versi lain).
+DsColorPair? walletColorPair(DsColorScheme scheme, String? key) {
+  final cats = scheme.categories;
+  return switch (key) {
+    'blue' => cats.blue,
+    'green' => cats.green,
+    'teal' => cats.teal,
+    'amber' => cats.amber,
+    'orange' => cats.orange,
+    'rose' => cats.rose,
+    'purple' => cats.purple,
+    'indigo' => cats.indigo,
+    'brown' => cats.brown,
+    'slate' => cats.slate,
+    _ => null,
+  };
+}

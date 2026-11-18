@@ -35,6 +35,24 @@ void main() {
       expect(wallets.single, wallet);
     });
 
+    test('warna kartu ikut tersimpan; dompet tanpa warna terbaca null', () async {
+      const colored = Wallet(
+        id: 'w1',
+        name: 'BCA',
+        iconKey: 'walletBank',
+        initialBalance: 0,
+        currentBalance: 0,
+        colorKey: 'teal',
+      );
+      const plain = Wallet(id: 'w2', name: 'Tunai', iconKey: 'walletCash', initialBalance: 0, currentBalance: 0);
+      await repository.saveWallet(colored);
+      await repository.saveWallet(plain);
+
+      final wallets = (await repository.listWallets()).getOrElse((_) => throw StateError('expected Right'));
+      expect(wallets.firstWhere((w) => w.id == 'w1').colorKey, 'teal');
+      expect(wallets.firstWhere((w) => w.id == 'w2').colorKey, isNull);
+    });
+
     test('menyimpan ulang dompet ber-id sama menimpa, bukan menambah', () async {
       const wallet = Wallet(
         id: 'w1',

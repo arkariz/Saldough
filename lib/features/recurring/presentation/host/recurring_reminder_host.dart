@@ -82,6 +82,7 @@ class _RecurringReminderHostState extends State<RecurringReminderHost> with Widg
       fundingWarnings: widget.fundingWarnings,
     );
     _record = RecordTransaction(
+      transferOnlyWallets: c.isRegistered<TransferOnlyWallets>() ? c<TransferOnlyWallets>() : const NoTransferOnlyWallets(),
       ledgerChanges: c<LedgerChanges>(),
       transactionRepository: c<TransactionRepository>(),
       recomputeWalletBalances: RecomputeWalletBalances(

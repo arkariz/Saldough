@@ -53,6 +53,7 @@ final class RecurringScope extends IsolatedScope {
             ? c<RecurringSuggestionDismissals>()
             : null,
         recordTransaction: RecordTransaction(
+          transferOnlyWallets: parent.isRegistered<TransferOnlyWallets>() ? parent<TransferOnlyWallets>() : const NoTransferOnlyWallets(),
           ledgerChanges: c<LedgerChanges>(),
           transactionRepository: c<TransactionRepository>(),
           recomputeWalletBalances: RecomputeWalletBalances(

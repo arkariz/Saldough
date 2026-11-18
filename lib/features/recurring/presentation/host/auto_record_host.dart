@@ -48,6 +48,7 @@ class _AutoRecordHostState extends State<AutoRecordHost> {
     _rules = c<RecurringRuleRepository>();
     _transactions = c<TransactionRepository>();
     _record = RecordTransaction(
+      transferOnlyWallets: c.isRegistered<TransferOnlyWallets>() ? c<TransferOnlyWallets>() : const NoTransferOnlyWallets(),
       ledgerChanges: c<LedgerChanges>(),
       transactionRepository: _transactions,
       recomputeWalletBalances: RecomputeWalletBalances(

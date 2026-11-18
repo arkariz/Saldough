@@ -43,10 +43,16 @@ terjadi padanya.
 
 | Nama Indonesia | Nama kode | Arti |
 |---|---|---|
-| Dompet | `Wallet` | Tempat uang pemilik tercatat berada. Contoh: `BCA`, `Bank Capital`, `Tunai`, `GoPay`, `Tabungan`. Tidak terhubung ke lembaga keuangan mana pun. |
+| Dompet | `Wallet` | Tempat uang pemilik tercatat berada. Contoh: `BCA`, `Bank Capital`, `Tunai`, `GoPay`, `Tabungan`. Tidak terhubung ke lembaga keuangan mana pun. Dompet tidak punya jenis; ikonnya hanya tampilan (WEALTH_ASSETS keputusan 11). |
 | Saldo awal | `initialBalance` | Nominal yang dinyatakan pemilik saat dompet dibuat. Bukan transaksi setoran. |
 | Saldo tercatat | `currentBalance` | Saldo dompet saat ini menurut catatan aplikasi. |
-| Total saldo | `totalBalance` | Jumlah saldo seluruh dompet aktif. Angka utama di Beranda. |
+| Total saldo | `totalBalance` | Jumlah saldo seluruh dompet aktif. Sejak ADR-050 tidak lagi tampil sebagai angka utama; dipecah menjadi lapis Dompet dan Tabungan di Total aset. |
+| Total aset | `WealthLayers.total` | Angka utama tab Dompet dan Beranda (ADR-050): jumlah lapis **Dompet** (dompet aktif yang bukan milik tujuan), **Tabungan** (dompet milik tujuan), dan **Investasi** (nilai pasar instrumen, Fase 31). Setiap dompet masuk tepat satu lapis. Disebut **Kekayaan bersih** baru sesudah utang tercatat (B-59). |
+| Lapis | `AssetLayer` | Satu dari tiga bagian Total aset: Dompet / Wallets, Tabungan / Savings, Investasi / Investments. "Dana operasional" tidak dipakai di antarmuka. |
+| Tujuan tabungan | `SavingsGoal` | Rencana mengumpulkan sejumlah uang, mis. Dana darurat Rp20 jt (ADR-048). Rencana, bukan pemesanan uang: tidak membuat transaksi. Status Aktif, Tercapai, Diarsipkan; Tercapai tidak kembali Aktif sendiri. Gratis 2 tujuan Aktif. |
+| Dompet milik tujuan | `SavingsGoal.walletId`, `goalWalletIds` | Dompet yang dibuat otomatis bersama tujuannya, bernama dan berikon sama. Hanya menerima dan mengirim transfer; tidak tampil di grid tab Dompet; ikut terhapus bersama tujuannya. Jangan disebut "dompet tujuan" di teks: istilah itu sudah berarti dompet penerima transfer. |
+| Sudah terkumpul | `initialAmount` (formulir) | Kolom opsional saat membuat tujuan; menjadi saldo awal dompet milik tujuan, bukan transaksi. |
+| Perkiraan tercapai | `SavingsGoalEstimate` | Perkiraan bulan tujuan tercapai (Plus): dari laju uang masuk bersih ke dompet milik tujuan, dan skenario bila uang nganggur ikut ditabung. Selalu berlabel perkiraan. |
 | Transaksi | `Transaction` | Satu peristiwa keuangan yang benar-benar terjadi. Punya tanggal. Empat jenis di bawah ini. |
 | Pemasukan | `IncomeTransaction` | Menambah saldo satu dompet. |
 | Pengeluaran | `ExpenseTransaction` | Mengurangi saldo satu dompet. Boleh ditautkan ke satu pos anggaran. |

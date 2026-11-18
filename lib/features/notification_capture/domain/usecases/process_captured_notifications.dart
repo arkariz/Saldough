@@ -193,7 +193,10 @@ final class ProcessCapturedNotifications {
 
     await negativeShapes?.refresh();
     await approvedShapes?.refresh();
-    final wallets = await loadActiveWallets(walletRepository);
+    final wallets = await loadActiveWallets(
+      walletRepository,
+      exclude: await recordTransaction.transferOnlyWallets.walletIds(),
+    );
     final plus = isPlus?.call() ?? true;
     final policy = AutoRecordPolicy(plus ? settings.autoRecordLevel : AutoRecordLevel.reviewAll);
     const approvedPolicy = AutoRecordPolicy(AutoRecordLevel.whenAmountAndWallet);

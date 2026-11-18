@@ -8,6 +8,7 @@ import 'package:saldough/features/freelance/domain/entities/worklog_entry.dart';
 import 'package:saldough/features/freelance/domain/repositories/freelance_repository.dart';
 import 'package:saldough/features/freelance/domain/usecases/receive_freelance_payment.dart';
 import 'package:saldough/features/freelance/presentation/bloc/freelance_state.dart';
+import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 import 'package:state_management/state_management.dart';
 
@@ -33,6 +34,7 @@ final class FreelanceBloc extends Bloc<FreelanceEvent, FreelanceState> {
     required this._freelanceRepository,
     required this._walletRepository,
     required this._receivePayment,
+    this._transferOnlyWallets = const NoTransferOnlyWallets(),
   }) : super(FreelanceState.initial()) {
     on<FreelanceStarted>(_onStarted);
     on<FreelanceProjectAdded>(_onProjectAdded);
@@ -51,6 +53,9 @@ final class FreelanceBloc extends Bloc<FreelanceEvent, FreelanceState> {
   final FreelanceRepository _freelanceRepository;
   final WalletRepository _walletRepository;
   final ReceiveFreelancePayment _receivePayment;
+
+  /// Dompet milik tujuan, disaring dari pilihan dompet Catat diterima.
+  final TransferOnlyWallets _transferOnlyWallets;
 
   static String _newId() => DateTime.now().microsecondsSinceEpoch.toString();
 
@@ -227,6 +232,7 @@ final class FreelanceBloc extends Bloc<FreelanceEvent, FreelanceState> {
     final entries = await _freelanceRepository.listEntries();
     final payments = await _freelanceRepository.listPayments();
     final wallets = await _walletRepository.listWallets();
+    final transferOnly = await _transferOnlyWallets.walletIds();
     switch ((projects, entries, payments, wallets)) {
       case (
         Right(value: final projects),
@@ -240,6 +246,7 @@ final class FreelanceBloc extends Bloc<FreelanceEvent, FreelanceState> {
             entries: entries,
             payments: payments,
             wallets: wallets,
+            transferOnlyWalletIds: transferOnly,
             isLoading: false,
             loadFailed: false,
             effect: onSuccess,

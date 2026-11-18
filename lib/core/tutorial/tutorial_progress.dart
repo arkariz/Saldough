@@ -54,16 +54,13 @@ const Map<TourId, List<SpotlightKey>> tourSteps = {
     // Kartu di Beranda dari Rencana; muncul belakangan (sesudah rutin
     // pertama), jadi disorot sendiri saat pertama tampil.
     SpotlightKey.homeForecast,
-    // Carousel status Beranda menggantikan tiga kartu di bawah ini sejak
-    // ADR-043; kunci lama tetap ada (kartu penuh masih dipakai uji dan
-    // segmen lain) tetapi tidak terdaftar di Beranda.
+    // Carousel status Beranda (ADR-043) menggantikan kartu Menunggu
+    // dicatat; arus bulan ini ada di kartu Total aset.
     SpotlightKey.homeStatus,
-    SpotlightKey.homePending,
     // Pintu permanen Fase 21: ada di Beranda belakangan (pengingat hilang
     // saat efektif), jadi tiap langkah disorot sekali saat pertama tampil.
     SpotlightKey.homeNotification,
     SpotlightKey.homeReminder,
-    SpotlightKey.homeCashFlow,
     SpotlightKey.homeBudget,
     SpotlightKey.homeFreelance,
     SpotlightKey.homeRecent,
@@ -78,7 +75,15 @@ const Map<TourId, List<SpotlightKey>> tourSteps = {
     SpotlightKey.recordBudgetItem,
     SpotlightKey.recordRepeat,
   ],
-  TourId.wallet: [SpotlightKey.walletSummary, SpotlightKey.walletCard, SpotlightKey.walletAdd],
+  // Langkah tujuan hanya terdaftar di segmen Tabungan, jadi disorot sendiri
+  // saat segmen itu pertama dibuka (progres per langkah).
+  TourId.wallet: [
+    SpotlightKey.walletSummary,
+    SpotlightKey.walletSegments,
+    SpotlightKey.walletCard,
+    SpotlightKey.walletAdd,
+    SpotlightKey.walletGoals,
+  ],
   // Segmen Analisis disorot lebih dulu supaya pengguna lama yang sudah
   // menamatkan tur ini tetap melihatnya sekali (progres per langkah).
   TourId.transaction: [

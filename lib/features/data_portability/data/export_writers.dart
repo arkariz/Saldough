@@ -5,6 +5,7 @@ import 'package:archive/archive.dart';
 import 'package:saldough/features/data_portability/domain/export_data.dart';
 import 'package:saldough/features/data_portability/domain/export_labels.dart';
 import 'package:saldough/features/data_portability/domain/export_rows.dart';
+import 'package:saldough/shared/savings_goal/savings_goal.dart';
 
 /// Penulis berkas ekspor (ADR-040 §3.6). Murni dan tanpa `double`: nominal
 /// ditulis dari sen lewat [formatSen].
@@ -99,9 +100,24 @@ abstract final class ExportWriters {
           _Cell.number(formatSen(w.currentBalance, fractionDigits: digits)),
         ],
     ];
+    final walletNames = {for (final w in data.wallets) w.id: w.name};
+    final goals = <List<_Cell>>[
+      [for (final h in labels.goalColumns) _Cell.header(h)],
+      for (final g in data.goals)
+        [
+          _Cell.text(g.name),
+          _Cell.number(formatSen(g.targetAmount, fractionDigits: digits)),
+          _Cell.number(formatSen(SavingsGoalProgress.of(g, data.wallets).collected, fractionDigits: digits)),
+          _Cell.text(labels.goalStatuses[g.status.index]),
+          _Cell.text(g.targetDate == null ? '' : _day(g.targetDate!)),
+          _Cell.text(walletNames[g.walletId] ?? ''),
+        ],
+    ];
     return _package([
       _Sheet(labels.transactionsSheet, transactions, const [12, 12, 13, 15, 15, 9, 18, 18, 18, 32, 24, 18, 20, 28]),
       _Sheet(labels.walletsSheet, wallets, const [24, 16, 16]),
+      // Tujuan tabungan (ADR-048 §3.4): hanya bila ada, berkas lama tetap sama.
+      if (data.goals.isNotEmpty) _Sheet(labels.goalsSheet, goals, const [24, 16, 16, 12, 14, 28]),
     ]);
   }
 

@@ -15,9 +15,6 @@ enum SpotlightKey {
   /// Baris perkiraan saldo di Beranda (T-15.13).
   homeForecast,
 
-  /// Kartu Menunggu dicatat di Beranda (T-15.6).
-  homePending,
-
   /// Kartu Kotak masuk notifikasi di Beranda, pintu permanen Catat dari
   /// notifikasi; hanya Android (Fase 21, T-21.6).
   homeNotification,
@@ -29,9 +26,6 @@ enum SpotlightKey {
   /// Carousel status Beranda ("Perlu dicek": rutin menunggu, tangkapan
   /// notifikasi, pengingat; ADR-043). Terdaftar hanya bila ada slide nyata.
   homeStatus,
-
-  /// Arus bulan ini di Beranda.
-  homeCashFlow,
 
   /// Kartu anggaran aktif Beranda.
   homeBudget,
@@ -63,11 +57,18 @@ enum SpotlightKey {
   /// Kartu ringkasan tab Dompet.
   walletSummary,
 
+  /// Segmen Dompet / Tabungan di tab Dompet (ADR-050 Revisi 2, Fase 30).
+  walletSegments,
+
   /// Kartu dompet pertama.
   walletCard,
 
   /// Tombol tambah dompet.
   walletAdd,
+
+  /// Kepala bagian Tujuan di segmen Tabungan; terdaftar hanya saat segmen
+  /// itu tampil, jadi disorot saat pertama dibuka (ADR-048, Fase 30).
+  walletGoals,
 
   /// Sub-tab Analisis di tab Riwayat (T-19.8); langkah pertama tur Transaksi.
   txnAnalysisSegment,

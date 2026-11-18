@@ -26,6 +26,9 @@ enum PlusFeature {
   /// Proyek freelance; Gratis terbatas jumlahnya (semua proyek dihitung).
   freelanceProjects,
 
+  /// Tujuan tabungan; Gratis terbatas jumlah yang Active (ADR-048 §3.5).
+  savingsGoals,
+
   /// Tanya Tanuki (jatah cicip di Gratis).
   ask,
 

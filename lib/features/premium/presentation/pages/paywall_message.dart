@@ -38,6 +38,16 @@ final class PaywallMessage {
         m.project.body,
         hasKicker: true,
       ),
+      PaywallTrigger.savingsGoalLimit => PaywallMessage._(
+        m.savingsGoal.title,
+        m.savingsGoal.body,
+        hasKicker: true,
+      ),
+      PaywallTrigger.goalEstimate => PaywallMessage._(
+        m.goalEstimate.title,
+        m.goalEstimate.body,
+        hasKicker: true,
+      ),
       PaywallTrigger.forecast => PaywallMessage._(
         m.forecast.title,
         m.forecast.body,

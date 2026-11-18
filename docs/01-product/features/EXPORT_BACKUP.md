@@ -131,7 +131,14 @@ aplikasi; kolom ID selalu ada di ujung agar baris bisa ditelusuri.
 | ID | ID transaksi | |
 
 Lembar **Dompet** (hanya xlsx): Nama, Saldo awal, Saldo sekarang. Saldo
-sekarang = saldo di aplikasi saat ekspor.
+sekarang = saldo di aplikasi saat ekspor. Dompet milik tujuan tabungan ikut
+sebagai baris biasa (ia dompet sungguhan).
+
+Lembar **Tujuan** (hanya xlsx, hanya bila ada tujuan; ADR-048 §3.4): Nama,
+Target, Terkumpul, Status (Aktif/Tercapai/Diarsipkan), Target tanggal,
+Dompet. Terkumpul = saldo dompet milik tujuan saat ekspor. Berkas tanpa tujuan
+sama persis dengan sebelum Fase 30. Penyesuaian saldo (ADR-047) tampil di
+lembar Transaksi berjenis "Penyesuaian saldo (tambah/kurang)" dengan Arus 0.
 
 **Contoh** (periode mulai tanggal 25, IDR):
 
@@ -193,6 +200,8 @@ hilang."
 | Mata uang aplikasi | |
 | Setelan pengingat (sakelar global dan per rutin) | |
 | Aplikasi sumber dan pola Catat dari notifikasi (bukan isi notifikasi) | |
+| Tujuan tabungan (`savings_goal_all`; tiap `walletId` wajib menunjuk dompet yang ada dan unik antartujuan) | Draf formulir tujuan yang tertahan paywall (`savings_goal_draft`, milik perangkat) |
+| Warna kartu dompet (`colorKey`, bagian dari dompet) | |
 
 Daftar persis disusun engineer dari repositori yang ada (T-22.1); bila ada
 data yang tidak jelas masuk kolom mana, berhenti dan tanya PO.

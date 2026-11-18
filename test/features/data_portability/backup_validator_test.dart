@@ -118,6 +118,37 @@ void main() {
     );
   });
 
+  test('tujuan tabungan: walletId harus dompet yang ada dan dimiliki satu tujuan saja (ADR-048 §8)', () {
+    final base = sampleDocs();
+    String goals(List<String> walletIds) => jsonEncode({
+      'schemaVersion': 1,
+      'items': [
+        for (final (i, id) in walletIds.indexed) {'id': 'g$i', 'walletId': id},
+      ],
+    });
+    expect(
+      () => validate({
+        ...base,
+        'savings_goal_all': goals(['w1']),
+      }),
+      returnsNormally,
+    );
+    expect(
+      () => validate({
+        ...base,
+        'savings_goal_all': goals(['hilang']),
+      }),
+      throwsBackup(BackupFailureCodes.inconsistent),
+    );
+    expect(
+      () => validate({
+        ...base,
+        'savings_goal_all': goals(['w1', 'w1']),
+      }),
+      throwsBackup(BackupFailureCodes.inconsistent),
+    );
+  });
+
   test('indeks menyebut bulan tanpa dokumen, atau dokumen bulan tanpa indeks: inconsistent', () {
     final noDoc = sampleDocs(months: ['2026-09', '2026-10'])..remove('transaction_2026-09');
     expect(() => validate(noDoc), throwsBackup(BackupFailureCodes.inconsistent));

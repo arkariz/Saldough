@@ -277,6 +277,7 @@ class _Translations$wallet$en extends Translations$wallet$id {
 	@override String get spreadTapOpen => 'Tap to see the chart';
 	@override String get spreadTapClose => 'Tap to close the chart';
 	@override String spreadOfTotal({required Object percent}) => '${percent} of total balance';
+	@override String spreadOthers({required Object n}) => 'Others (${n})';
 	@override String get spreadSeeTotal => 'See total';
 	@override String get spreadHide => 'Hide';
 	@override String spreadSemantics({required Object list}) => 'Balance spread: ${list}';
@@ -284,11 +285,6 @@ class _Translations$wallet$en extends Translations$wallet$id {
 		one: '${n} wallet · hidden in Record',
 		other: '${n} wallets · hidden in Record',
 	);
-	@override String get typeBank => 'Bank account';
-	@override String get typeCash => 'Cash';
-	@override String get typeEwallet => 'Digital wallet';
-	@override String get typeSavings => 'Savings';
-	@override String get typeCard => 'Card';
 	@override String get emptyTitle => 'No wallets yet';
 	@override String get emptyBody => 'Add your first wallet to start tracking your money. It can be a bank account, an e-wallet, or cash.';
 	@override String get loadErrorTitle => 'Couldn\'t load wallets';
@@ -302,6 +298,10 @@ class _Translations$wallet$en extends Translations$wallet$id {
 	@override String get nameRequiredHint => 'Required';
 	@override String get nameMaxHint => 'Max. 24 characters';
 	@override String get iconLabel => 'Pick an icon';
+	@override String get colorLabel => 'Card color';
+	@override String get colorDefault => 'Default';
+	@override String colorOption({required Object n}) => 'Color ${n}';
+	@override String iconOption({required Object n}) => 'Icon ${n}';
 	@override String get initialBalanceLabel => 'Starting balance';
 	@override String get initialBalanceHelp => 'Enter the money in this wallet right now. Every transaction after that is counted from here.';
 	@override String get currentBalanceLabel => 'Current balance';
@@ -469,6 +469,8 @@ class _Translations$dataPortability$en extends Translations$dataPortability$id {
 	@override String get errorOtherBody => 'Couldn\'t prepare the restore. Try again. Your data hasn\'t changed.';
 	@override String get sheetTransactions => 'Transactions';
 	@override String get sheetWallets => 'Wallets';
+	@override String get sheetGoals => 'Goals';
+	@override late final _Translations$dataPortability$goalColumns$en goalColumns = _Translations$dataPortability$goalColumns$en._(_root);
 	@override late final _Translations$dataPortability$columns$en columns = _Translations$dataPortability$columns$en._(_root);
 	@override late final _Translations$dataPortability$types$en types = _Translations$dataPortability$types$en._(_root);
 }
@@ -886,14 +888,12 @@ class _Translations$tour$en extends Translations$tour$id {
 	@override String get skipAction => 'Skip tour';
 	@override String stepCounter({required Object current, required Object total}) => '${current}/${total}';
 	@override String stepSemantics({required Object current, required Object total, required Object title, required Object body}) => 'Step ${current}/${total}: ${title}. ${body}';
-	@override String get homeBalanceTitle => 'Total recorded balance';
-	@override String get homeBalanceBody => 'The sum of all active wallets — where your money stands at a glance.';
+	@override String get homeBalanceTitle => 'Total assets';
+	@override String get homeBalanceBody => 'All the money you track in wallets and savings, with this period\'s income and expenses.';
 	@override String get homeRecordTitle => 'One door for recording';
 	@override String get homeRecordBody => 'Every income, expense, and transfer is recorded from here.';
-	@override String get homeCashFlowTitle => 'This month\'s flow';
-	@override String get homeCashFlowBody => 'The money that actually came in and went out this period. Tap to see where it went.';
 	@override String get homeBudgetTitle => 'Active budget left';
-	@override String get homeBudgetBody => 'What\'s left of the plan in budgets running now. Tap for details.';
+	@override String get homeBudgetBody => 'The Budget card in this row shows what\'s left of the budgets running now. Tap the card for details.';
 	@override String get homeFreelanceTitle => 'Freelance summary';
 	@override String get homeFreelanceBody => 'Income you\'ve earned and what\'s still pending. A wallet balance only goes up when you record an invoice as paid.';
 	@override String get homeRecentTitle => 'Recent transactions';
@@ -907,13 +907,17 @@ class _Translations$tour$en extends Translations$tour$id {
 	@override String get recordWalletTitle => 'Wallet pre-selected';
 	@override String get recordWalletBody => 'The wallet you used last is already selected. Change it if needed.';
 	@override String get recordBudgetItemTitle => 'Link to a budget';
-	@override String get recordBudgetItemBody => 'Optional. A linked expense counts toward that item\'s spent amount, as long as its date falls within the budget period.';
-	@override String get walletSummaryTitle => 'Total across wallets';
-	@override String get walletSummaryBody => 'The sum of recorded balances of active wallets.';
+	@override String get recordBudgetItemBody => 'Optional. A linked expense or transfer counts toward that item\'s spent amount, as long as its date falls within the budget period.';
+	@override String get walletSummaryTitle => 'Total assets';
+	@override String get walletSummaryBody => 'All the money you track, split into Wallets and Savings. Tap a layer to see what\'s in it.';
 	@override String get walletCardTitle => 'Wallet details';
 	@override String get walletCardBody => 'Tap to see this wallet\'s history and record straight from there.';
 	@override String get walletAddTitle => 'Add a wallet';
-	@override String get walletAddBody => 'Bank account, e-wallet, or cash. You can change its starting balance anytime, and the balance updates with it.';
+	@override String get walletAddBody => 'Bank account, e-wallet, or cash. You can change its balance anytime; the difference is recorded as a balance adjustment.';
+	@override String get walletSegmentsTitle => 'Wallets and Savings';
+	@override String get walletSegmentsBody => 'Wallets hold your everyday bank accounts, e-wallets, and cash. Savings holds your goals. Tap to switch.';
+	@override String get walletGoalsTitle => 'Savings goals';
+	@override String get walletGoalsBody => 'Each goal has its own wallet. Fill it with Record › Transfer from another wallet; its progress follows that wallet\'s balance.';
 	@override String get txnMonthTitle => 'One period per view';
 	@override String get txnMonthBody => 'Switch periods to see other history. List and Analysis always use the same period.';
 	@override String get txnFilterTitle => 'Search and filter';
@@ -948,8 +952,6 @@ class _Translations$tour$en extends Translations$tour$id {
 	@override String get planForecastBody => 'Forecast balance through month end, including the lowest it\'s expected to reach.';
 	@override String get homeForecastTitle => 'Balance forecast';
 	@override String get homeForecastBody => 'Your forecast wallet balance at month end and its lowest point. Tap for the breakdown in Plan.';
-	@override String get homePendingTitle => 'Waiting to record';
-	@override String get homePendingBody => 'Recurring bills and income that are due. Record in one tap, edit first, or Skip.';
 	@override String get homeNotificationTitle => 'Record from notifications';
 	@override String get homeNotificationBody => 'Pick your bank or e-wallet apps and their transaction notifications become draft transactions. The door is always the Notifications button here.';
 	@override String get homeReminderTitle => 'Recurring reminders';
@@ -1696,6 +1698,19 @@ class _Translations$assets$en extends Translations$assets$id {
 	final TranslationsEn _root; // ignore: unused_field
 
 	// Translations
+	@override String goalCount({required Object n}) => '${n} goals';
+	@override String get spreadTitle => 'Asset spread';
+	@override String get spreadHint => 'Tap a layer to see what\'s in it.';
+	@override String get spreadWallets => 'Wallet spread';
+	@override String get spreadGoals => 'Savings spread';
+	@override String layerCount({required Object n}) => '${n} layers';
+	@override String get totalAssets => 'Total assets';
+	@override String get layerOperational => 'Wallets';
+	@override String get layerSavings => 'Savings';
+	@override String get layerInvestment => 'Investments';
+	@override String heroCaption({required Object wallets, required Object goals}) => '${wallets} wallets · ${goals} goals';
+	@override String homeLayers({required Object operational, required Object savings}) => 'Wallets ${operational} · Savings ${savings}';
+	@override late final _Translations$assets$goal$en goal = _Translations$assets$goal$en._(_root);
 	@override late final _Translations$assets$adjust$en adjust = _Translations$assets$adjust$en._(_root);
 }
 
@@ -1803,6 +1818,24 @@ class _Translations$record$calc$en extends Translations$record$calc$id {
 	@override String get notPositive => 'The result must be more than 0';
 	@override String get divideByZero => 'Cannot divide by 0';
 	@override String get tooLarge => 'The result is too large';
+}
+
+// Path: dataPortability.goalColumns
+class _Translations$dataPortability$goalColumns$en extends Translations$dataPortability$goalColumns$id {
+	_Translations$dataPortability$goalColumns$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get name => 'Name';
+	@override String get target => 'Target';
+	@override String get saved => 'Saved';
+	@override String get status => 'Status';
+	@override String get targetDate => 'Target date';
+	@override String get wallets => 'Wallets';
+	@override String get statusActive => 'Active';
+	@override String get statusReached => 'Reached';
+	@override String get statusArchived => 'Archived';
 }
 
 // Path: dataPortability.columns
@@ -2362,6 +2395,57 @@ class _Translations$premium$paywall$en extends Translations$premium$paywall$id {
 	@override String get notSellingBody => 'Subscribing to Plus is not available yet. Recording stays free.';
 }
 
+// Path: assets.goal
+class _Translations$assets$goal$en extends Translations$assets$goal$id {
+	_Translations$assets$goal$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Goals';
+	@override String get create => 'Create goal';
+	@override String get emptyBody => 'Save up for something, e.g. an emergency fund. Each goal has its own wallet that you fill with transfers; its progress follows that balance.';
+	@override String progress({required Object saved, required Object target}) => '${saved} of ${target}';
+	@override String get reached => 'Reached';
+	@override String remaining({required Object amount}) => '${amount} to go';
+	@override String get archivedHeading => 'Archived';
+	@override String walletBadge({required Object name}) => 'Goal: ${name}';
+	@override String get formTitleNew => 'New goal';
+	@override String get formTitleEdit => 'Edit goal';
+	@override String get nameLabel => 'Name';
+	@override String get nameHint => 'E.g. Emergency fund';
+	@override String get targetLabel => 'Target';
+	@override String get iconLabel => 'Icon';
+	@override String get targetDateLabel => 'Target date (optional)';
+	@override String get targetDateNone => 'Pick a date';
+	@override String get targetDateClear => 'Clear date';
+	@override String targetDate({required Object date}) => 'Target ${date}';
+	@override String get descriptionHint => 'E.g. six months of expenses, just in case';
+	@override String get descriptionLabel => 'Note (optional)';
+	@override String get save => 'Save goal';
+	@override String get draftResumed => 'Continuing an unsaved draft.';
+	@override String get discardDraft => 'Discard draft';
+	@override String get savedMessage => 'Goal saved.';
+	@override String reachedMessage({required Object name}) => '${name} reached.';
+	@override String get detailHistory => 'Records in this wallet';
+	@override String get historyEmpty => 'No records in this wallet yet.';
+	@override String get editAction => 'Edit';
+	@override String get archiveAction => 'Archive';
+	@override String get reactivateAction => 'Make active again';
+	@override String get deleteAction => 'Delete goal';
+	@override String get deleteConfirmTitle => 'Delete this goal?';
+	@override String get archivedMessage => 'Goal archived.';
+	@override String get deletedMessage => 'Goal deleted.';
+	@override String get reactivatedMessage => 'Goal is active again.';
+	@override String walletOwnedMessage({required Object name}) => 'This wallet belongs to the goal ${name}. Delete the goal to delete this wallet.';
+	@override String get collectedLabel => 'Already saved (optional)';
+	@override String get goalWalletHelp => 'This goal has its own wallet. Fill it with Record › Transfer from another wallet; a goal wallet only takes and sends transfers. Best when the money is truly set aside (a separate account, a deposit, an envelope); if it stays in the same account, that account\'s record will be lower than its bank balance.';
+	@override String get viewWalletAction => 'View wallet';
+	@override String get deleteConfirmBodyAll => 'The goal, its wallet, and every transfer into and out of it are deleted. The source wallets\' recorded balances go back to how they were before the money moved. This can\'t be undone.';
+	@override String get notFound => 'This goal no longer exists.';
+	@override late final _Translations$assets$goal$estimate$en estimate = _Translations$assets$goal$estimate$en._(_root);
+}
+
 // Path: assets.adjust
 class _Translations$assets$adjust$en extends Translations$assets$adjust$id {
 	_Translations$assets$adjust$en._(TranslationsEn root) : this._root = root, super.internal(root);
@@ -2472,6 +2556,8 @@ class _Translations$premium$paywall$messages$en extends Translations$premium$pay
 	@override late final _Translations$premium$paywall$messages$notification$en notification = _Translations$premium$paywall$messages$notification$en._(_root);
 	@override late final _Translations$premium$paywall$messages$auto$en auto = _Translations$premium$paywall$messages$auto$en._(_root);
 	@override late final _Translations$premium$paywall$messages$template$en template = _Translations$premium$paywall$messages$template$en._(_root);
+	@override late final _Translations$premium$paywall$messages$savingsGoal$en savingsGoal = _Translations$premium$paywall$messages$savingsGoal$en._(_root);
+	@override late final _Translations$premium$paywall$messages$goalEstimate$en goalEstimate = _Translations$premium$paywall$messages$goalEstimate$en._(_root);
 	@override late final _Translations$premium$paywall$messages$project$en project = _Translations$premium$paywall$messages$project$en._(_root);
 	@override late final _Translations$premium$paywall$messages$forecast$en forecast = _Translations$premium$paywall$messages$forecast$en._(_root);
 	@override late final _Translations$premium$paywall$messages$reading$en reading = _Translations$premium$paywall$messages$reading$en._(_root);
@@ -2487,6 +2573,27 @@ class _Translations$premium$paywall$benefits$en extends Translations$premium$pay
 	@override String get photo => 'Record from photos and every bank notification';
 	@override String get warn => 'Warnings before a budget runs out';
 	@override String get ask => 'Ask, plan, and get reports';
+}
+
+// Path: assets.goal.estimate
+class _Translations$assets$goal$estimate$en extends Translations$assets$goal$estimate$id {
+	_Translations$assets$goal$estimate$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Estimated to reach';
+	@override String get rateLabel => 'At your current pace';
+	@override String rateBody({required Object amount}) => 'Averaging ${amount} in per month';
+	@override String get idleLabel => 'If unplanned money is saved too';
+	@override String get idleBody => 'Assuming all your unplanned money goes to this goal';
+	@override String get notYet => 'Not yet';
+	@override String get notEnoughHistory => 'Check back once this goal is a full month old.';
+	@override String get notSaving => 'No money has come into this goal on balance in the last 3 months.';
+	@override String get beyondTarget => 'Estimate is past the target date';
+	@override String get footnote => 'From the average of the last 3 months. An estimate, not a promise.';
+	@override String get lockedTitle => 'See when it\'s reached';
+	@override String get lockedBody => 'Estimate when this goal is reached at your saving pace.';
 }
 
 // Path: premium.paywall.messages.general
@@ -2542,6 +2649,28 @@ class _Translations$premium$paywall$messages$template$en extends Translations$pr
 	// Translations
 	@override String get title => 'A second template is in Plus';
 	@override String get body => 'The template you have stays saved and keeps working.';
+}
+
+// Path: premium.paywall.messages.savingsGoal
+class _Translations$premium$paywall$messages$savingsGoal$en extends Translations$premium$paywall$messages$savingsGoal$id {
+	_Translations$premium$paywall$messages$savingsGoal$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'A third active goal is in Plus';
+	@override String get body => 'You already have 2 active goals. With Plus, set as many goals as you like, with an estimate of when each is reached. What you entered is kept as a draft.';
+}
+
+// Path: premium.paywall.messages.goalEstimate
+class _Translations$premium$paywall$messages$goalEstimate$en extends Translations$premium$paywall$messages$goalEstimate$id {
+	_Translations$premium$paywall$messages$goalEstimate$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Goal estimates are in Plus';
+	@override String get body => 'Your goals and their progress stay free.';
 }
 
 // Path: premium.paywall.messages.project
@@ -2814,15 +2943,11 @@ extension on TranslationsEn {
 			'wallet.spreadTapOpen' => 'Tap to see the chart',
 			'wallet.spreadTapClose' => 'Tap to close the chart',
 			'wallet.spreadOfTotal' => ({required Object percent}) => '${percent} of total balance',
+			'wallet.spreadOthers' => ({required Object n}) => 'Others (${n})',
 			'wallet.spreadSeeTotal' => 'See total',
 			'wallet.spreadHide' => 'Hide',
 			'wallet.spreadSemantics' => ({required Object list}) => 'Balance spread: ${list}',
 			'wallet.inactiveRowSub' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '${n} wallet · hidden in Record', other: '${n} wallets · hidden in Record', ), 
-			'wallet.typeBank' => 'Bank account',
-			'wallet.typeCash' => 'Cash',
-			'wallet.typeEwallet' => 'Digital wallet',
-			'wallet.typeSavings' => 'Savings',
-			'wallet.typeCard' => 'Card',
 			'wallet.emptyTitle' => 'No wallets yet',
 			'wallet.emptyBody' => 'Add your first wallet to start tracking your money. It can be a bank account, an e-wallet, or cash.',
 			'wallet.loadErrorTitle' => 'Couldn\'t load wallets',
@@ -2836,6 +2961,10 @@ extension on TranslationsEn {
 			'wallet.nameRequiredHint' => 'Required',
 			'wallet.nameMaxHint' => 'Max. 24 characters',
 			'wallet.iconLabel' => 'Pick an icon',
+			'wallet.colorLabel' => 'Card color',
+			'wallet.colorDefault' => 'Default',
+			'wallet.colorOption' => ({required Object n}) => 'Color ${n}',
+			'wallet.iconOption' => ({required Object n}) => 'Icon ${n}',
 			'wallet.initialBalanceLabel' => 'Starting balance',
 			'wallet.initialBalanceHelp' => 'Enter the money in this wallet right now. Every transaction after that is counted from here.',
 			'wallet.currentBalanceLabel' => 'Current balance',
@@ -2968,6 +3097,16 @@ extension on TranslationsEn {
 			'dataPortability.errorOtherBody' => 'Couldn\'t prepare the restore. Try again. Your data hasn\'t changed.',
 			'dataPortability.sheetTransactions' => 'Transactions',
 			'dataPortability.sheetWallets' => 'Wallets',
+			'dataPortability.sheetGoals' => 'Goals',
+			'dataPortability.goalColumns.name' => 'Name',
+			'dataPortability.goalColumns.target' => 'Target',
+			'dataPortability.goalColumns.saved' => 'Saved',
+			'dataPortability.goalColumns.status' => 'Status',
+			'dataPortability.goalColumns.targetDate' => 'Target date',
+			'dataPortability.goalColumns.wallets' => 'Wallets',
+			'dataPortability.goalColumns.statusActive' => 'Active',
+			'dataPortability.goalColumns.statusReached' => 'Reached',
+			'dataPortability.goalColumns.statusArchived' => 'Archived',
 			'dataPortability.columns.date' => 'Date',
 			'dataPortability.columns.periodStart' => 'Period start',
 			'dataPortability.columns.type' => 'Type',
@@ -3087,6 +3226,8 @@ extension on TranslationsEn {
 			'budget.templatesSavedBadge' => ({required Object count}) => 'Saved: ${count}',
 			'budget.templatesInfoTitle' => 'What is a budget template?',
 			'budget.templatesInfoBody' => 'A reusable set of plan items, so you never start from scratch. Each use creates a new, independent budget.',
+			_ => null,
+		} ?? switch (path) {
 			'budget.templateItemCount' => ({required Object count}) => 'Items: ${count}',
 			'budget.templateItemsLabel' => 'Planned items',
 			'budget.templateTotalLabel' => 'Planned total',
@@ -3097,8 +3238,6 @@ extension on TranslationsEn {
 			'budget.templateAddAction' => 'Create template',
 			'budget.templatesFooter' => 'Templates can be edited any time without changing budgets already created from them.',
 			'budget.templatesEmptyBadge' => 'No templates yet',
-			_ => null,
-		} ?? switch (path) {
 			'budget.templatesEmptyTitle' => 'No templates yet',
 			'budget.templatesEmptyBody' => 'Save item sets you use often, such as monthly groceries, so your next budget is one tap away.',
 			'budget.templateNeedsWallet' => 'Create an active wallet first to use a template.',
@@ -3367,14 +3506,12 @@ extension on TranslationsEn {
 			'tour.skipAction' => 'Skip tour',
 			'tour.stepCounter' => ({required Object current, required Object total}) => '${current}/${total}',
 			'tour.stepSemantics' => ({required Object current, required Object total, required Object title, required Object body}) => 'Step ${current}/${total}: ${title}. ${body}',
-			'tour.homeBalanceTitle' => 'Total recorded balance',
-			'tour.homeBalanceBody' => 'The sum of all active wallets — where your money stands at a glance.',
+			'tour.homeBalanceTitle' => 'Total assets',
+			'tour.homeBalanceBody' => 'All the money you track in wallets and savings, with this period\'s income and expenses.',
 			'tour.homeRecordTitle' => 'One door for recording',
 			'tour.homeRecordBody' => 'Every income, expense, and transfer is recorded from here.',
-			'tour.homeCashFlowTitle' => 'This month\'s flow',
-			'tour.homeCashFlowBody' => 'The money that actually came in and went out this period. Tap to see where it went.',
 			'tour.homeBudgetTitle' => 'Active budget left',
-			'tour.homeBudgetBody' => 'What\'s left of the plan in budgets running now. Tap for details.',
+			'tour.homeBudgetBody' => 'The Budget card in this row shows what\'s left of the budgets running now. Tap the card for details.',
 			'tour.homeFreelanceTitle' => 'Freelance summary',
 			'tour.homeFreelanceBody' => 'Income you\'ve earned and what\'s still pending. A wallet balance only goes up when you record an invoice as paid.',
 			'tour.homeRecentTitle' => 'Recent transactions',
@@ -3388,13 +3525,17 @@ extension on TranslationsEn {
 			'tour.recordWalletTitle' => 'Wallet pre-selected',
 			'tour.recordWalletBody' => 'The wallet you used last is already selected. Change it if needed.',
 			'tour.recordBudgetItemTitle' => 'Link to a budget',
-			'tour.recordBudgetItemBody' => 'Optional. A linked expense counts toward that item\'s spent amount, as long as its date falls within the budget period.',
-			'tour.walletSummaryTitle' => 'Total across wallets',
-			'tour.walletSummaryBody' => 'The sum of recorded balances of active wallets.',
+			'tour.recordBudgetItemBody' => 'Optional. A linked expense or transfer counts toward that item\'s spent amount, as long as its date falls within the budget period.',
+			'tour.walletSummaryTitle' => 'Total assets',
+			'tour.walletSummaryBody' => 'All the money you track, split into Wallets and Savings. Tap a layer to see what\'s in it.',
 			'tour.walletCardTitle' => 'Wallet details',
 			'tour.walletCardBody' => 'Tap to see this wallet\'s history and record straight from there.',
 			'tour.walletAddTitle' => 'Add a wallet',
-			'tour.walletAddBody' => 'Bank account, e-wallet, or cash. You can change its starting balance anytime, and the balance updates with it.',
+			'tour.walletAddBody' => 'Bank account, e-wallet, or cash. You can change its balance anytime; the difference is recorded as a balance adjustment.',
+			'tour.walletSegmentsTitle' => 'Wallets and Savings',
+			'tour.walletSegmentsBody' => 'Wallets hold your everyday bank accounts, e-wallets, and cash. Savings holds your goals. Tap to switch.',
+			'tour.walletGoalsTitle' => 'Savings goals',
+			'tour.walletGoalsBody' => 'Each goal has its own wallet. Fill it with Record › Transfer from another wallet; its progress follows that wallet\'s balance.',
 			'tour.txnMonthTitle' => 'One period per view',
 			'tour.txnMonthBody' => 'Switch periods to see other history. List and Analysis always use the same period.',
 			'tour.txnFilterTitle' => 'Search and filter',
@@ -3429,8 +3570,6 @@ extension on TranslationsEn {
 			'tour.planForecastBody' => 'Forecast balance through month end, including the lowest it\'s expected to reach.',
 			'tour.homeForecastTitle' => 'Balance forecast',
 			'tour.homeForecastBody' => 'Your forecast wallet balance at month end and its lowest point. Tap for the breakdown in Plan.',
-			'tour.homePendingTitle' => 'Waiting to record',
-			'tour.homePendingBody' => 'Recurring bills and income that are due. Record in one tap, edit first, or Skip.',
 			'tour.homeNotificationTitle' => 'Record from notifications',
 			'tour.homeNotificationBody' => 'Pick your bank or e-wallet apps and their transaction notifications become draft transactions. The door is always the Notifications button here.',
 			'tour.homeReminderTitle' => 'Recurring reminders',
@@ -3601,6 +3740,8 @@ extension on TranslationsEn {
 			'discovery.reminder.body' => 'Get reminded before bills are due.',
 			'discovery.reminder.rowNote' => 'Reminders aren\'t on for every recurring item yet.',
 			'discovery.allowAccess' => 'Allow',
+			_ => null,
+		} ?? switch (path) {
 			'discovery.quickStart.title' => 'Pick your bank or e-wallet apps',
 			'discovery.quickStart.body' => 'Notifications from the apps you pick are read on this device and become draft transactions. You review them first.',
 			'discovery.quickStart.screenTitle' => 'Quick start',
@@ -3611,8 +3752,6 @@ extension on TranslationsEn {
 			'discovery.quickStart.plusTeaser' => 'Track many banks and e-wallets at once?',
 			'discovery.quickStart.plusInfo' => 'About Plus',
 			'discovery.quickStart.privacyLine' => 'Notification access is only used to read the apps you choose.',
-			_ => null,
-		} ?? switch (path) {
 			'discovery.quickStart.turnOn' => 'Turn on',
 			'discovery.quickStart.walletHint' => 'Pick a wallet for each app',
 			'discovery.quickStart.pickHint' => 'Pick at least one app',
@@ -4115,6 +4254,8 @@ extension on TranslationsEn {
 			'analysis.compare.vs' => ({required Object label}) => 'vs ${label}',
 			'analysis.compare.newThisMonth' => 'new this month',
 			'analysis.compare.srHigher' => ({required Object amount, required Object label}) => '${amount} higher, ${label}',
+			_ => null,
+		} ?? switch (path) {
 			'analysis.compare.srLower' => ({required Object amount, required Object label}) => '${amount} lower, ${label}',
 			'analysis.highlight.higher' => ({required Object subject, required Object compare}) => '${subject} higher than ${compare}',
 			'analysis.highlight.lower' => ({required Object subject, required Object compare}) => '${subject} lower than ${compare}',
@@ -4125,8 +4266,6 @@ extension on TranslationsEn {
 			'analysis.trend.toDate' => ({required Object date}) => 'through ${date}',
 			'analysis.trend.days' => ({required Object n}) => '${n} days',
 			'analysis.trend.seePeriod' => ({required Object period}) => 'See ${period} analysis',
-			_ => null,
-		} ?? switch (path) {
 			'analysis.trend.column' => ({required Object period, required Object income, required Object expense, required Object net}) => '${period}, income ${income}, expenses ${expense}, net ${net}',
 			'analysis.category.frequency' => ({required Object count, required Object amount}) => '${count} transactions · ${amount} average each',
 			'analysis.category.frequencyOne' => ({required Object count, required Object amount}) => '${count} transaction · ${amount} average each',
@@ -4231,6 +4370,10 @@ extension on TranslationsEn {
 			'premium.paywall.messages.auto.body' => 'For free, every due date is still recorded with one tap.',
 			'premium.paywall.messages.template.title' => 'A second template is in Plus',
 			'premium.paywall.messages.template.body' => 'The template you have stays saved and keeps working.',
+			'premium.paywall.messages.savingsGoal.title' => 'A third active goal is in Plus',
+			'premium.paywall.messages.savingsGoal.body' => 'You already have 2 active goals. With Plus, set as many goals as you like, with an estimate of when each is reached. What you entered is kept as a draft.',
+			'premium.paywall.messages.goalEstimate.title' => 'Goal estimates are in Plus',
+			'premium.paywall.messages.goalEstimate.body' => 'Your goals and their progress stay free.',
 			'premium.paywall.messages.project.title' => 'A third active project is in Plus',
 			'premium.paywall.messages.project.body' => 'Your projects and their payments stay as they are.',
 			'premium.paywall.messages.forecast.title' => 'The 12-month forecast is in Plus',
@@ -4269,6 +4412,71 @@ extension on TranslationsEn {
 			'premium.paywall.done' => 'Done',
 			'premium.paywall.notSellingTitle' => 'Plus is not on sale yet',
 			'premium.paywall.notSellingBody' => 'Subscribing to Plus is not available yet. Recording stays free.',
+			'assets.goalCount' => ({required Object n}) => '${n} goals',
+			'assets.spreadTitle' => 'Asset spread',
+			'assets.spreadHint' => 'Tap a layer to see what\'s in it.',
+			'assets.spreadWallets' => 'Wallet spread',
+			'assets.spreadGoals' => 'Savings spread',
+			'assets.layerCount' => ({required Object n}) => '${n} layers',
+			'assets.totalAssets' => 'Total assets',
+			'assets.layerOperational' => 'Wallets',
+			'assets.layerSavings' => 'Savings',
+			'assets.layerInvestment' => 'Investments',
+			'assets.heroCaption' => ({required Object wallets, required Object goals}) => '${wallets} wallets · ${goals} goals',
+			'assets.homeLayers' => ({required Object operational, required Object savings}) => 'Wallets ${operational} · Savings ${savings}',
+			'assets.goal.title' => 'Goals',
+			'assets.goal.create' => 'Create goal',
+			'assets.goal.emptyBody' => 'Save up for something, e.g. an emergency fund. Each goal has its own wallet that you fill with transfers; its progress follows that balance.',
+			'assets.goal.progress' => ({required Object saved, required Object target}) => '${saved} of ${target}',
+			'assets.goal.reached' => 'Reached',
+			'assets.goal.remaining' => ({required Object amount}) => '${amount} to go',
+			'assets.goal.archivedHeading' => 'Archived',
+			'assets.goal.walletBadge' => ({required Object name}) => 'Goal: ${name}',
+			'assets.goal.formTitleNew' => 'New goal',
+			'assets.goal.formTitleEdit' => 'Edit goal',
+			'assets.goal.nameLabel' => 'Name',
+			'assets.goal.nameHint' => 'E.g. Emergency fund',
+			'assets.goal.targetLabel' => 'Target',
+			'assets.goal.iconLabel' => 'Icon',
+			'assets.goal.targetDateLabel' => 'Target date (optional)',
+			'assets.goal.targetDateNone' => 'Pick a date',
+			'assets.goal.targetDateClear' => 'Clear date',
+			'assets.goal.targetDate' => ({required Object date}) => 'Target ${date}',
+			'assets.goal.descriptionHint' => 'E.g. six months of expenses, just in case',
+			'assets.goal.descriptionLabel' => 'Note (optional)',
+			'assets.goal.save' => 'Save goal',
+			'assets.goal.draftResumed' => 'Continuing an unsaved draft.',
+			'assets.goal.discardDraft' => 'Discard draft',
+			'assets.goal.savedMessage' => 'Goal saved.',
+			'assets.goal.reachedMessage' => ({required Object name}) => '${name} reached.',
+			'assets.goal.detailHistory' => 'Records in this wallet',
+			'assets.goal.historyEmpty' => 'No records in this wallet yet.',
+			'assets.goal.editAction' => 'Edit',
+			'assets.goal.archiveAction' => 'Archive',
+			'assets.goal.reactivateAction' => 'Make active again',
+			'assets.goal.deleteAction' => 'Delete goal',
+			'assets.goal.deleteConfirmTitle' => 'Delete this goal?',
+			'assets.goal.archivedMessage' => 'Goal archived.',
+			'assets.goal.deletedMessage' => 'Goal deleted.',
+			'assets.goal.reactivatedMessage' => 'Goal is active again.',
+			'assets.goal.walletOwnedMessage' => ({required Object name}) => 'This wallet belongs to the goal ${name}. Delete the goal to delete this wallet.',
+			'assets.goal.collectedLabel' => 'Already saved (optional)',
+			'assets.goal.goalWalletHelp' => 'This goal has its own wallet. Fill it with Record › Transfer from another wallet; a goal wallet only takes and sends transfers. Best when the money is truly set aside (a separate account, a deposit, an envelope); if it stays in the same account, that account\'s record will be lower than its bank balance.',
+			'assets.goal.viewWalletAction' => 'View wallet',
+			'assets.goal.deleteConfirmBodyAll' => 'The goal, its wallet, and every transfer into and out of it are deleted. The source wallets\' recorded balances go back to how they were before the money moved. This can\'t be undone.',
+			'assets.goal.notFound' => 'This goal no longer exists.',
+			'assets.goal.estimate.title' => 'Estimated to reach',
+			'assets.goal.estimate.rateLabel' => 'At your current pace',
+			'assets.goal.estimate.rateBody' => ({required Object amount}) => 'Averaging ${amount} in per month',
+			'assets.goal.estimate.idleLabel' => 'If unplanned money is saved too',
+			'assets.goal.estimate.idleBody' => 'Assuming all your unplanned money goes to this goal',
+			'assets.goal.estimate.notYet' => 'Not yet',
+			'assets.goal.estimate.notEnoughHistory' => 'Check back once this goal is a full month old.',
+			'assets.goal.estimate.notSaving' => 'No money has come into this goal on balance in the last 3 months.',
+			'assets.goal.estimate.beyondTarget' => 'Estimate is past the target date',
+			'assets.goal.estimate.footnote' => 'From the average of the last 3 months. An estimate, not a promise.',
+			'assets.goal.estimate.lockedTitle' => 'See when it\'s reached',
+			'assets.goal.estimate.lockedBody' => 'Estimate when this goal is reached at your saving pace.',
 			'assets.adjust.walletLabel' => 'Wallet',
 			'assets.adjust.title' => 'Balance adjustment',
 			'assets.adjust.detailNote' => 'The difference recorded when the wallet balance was changed in Edit wallet. Not income or expense. Delete it to restore the previous balance.',

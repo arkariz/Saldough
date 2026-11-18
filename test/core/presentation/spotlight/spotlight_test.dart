@@ -16,10 +16,17 @@ void main() {
     addTaps = 0;
   });
 
-  /// Layar uji bertiga target tur Dompet. [withCard] false menghilangkan
-  /// target kedua (langkah bersyarat). [addAtBottom] memindah tombol tambah
-  /// ke dasar layar.
-  Widget screen({bool withCard = true, bool visible = true, bool ready = true, bool addAtBottom = false}) {
+  /// Layar uji berlima target tur Dompet. [withCard] false menghilangkan
+  /// target kartu (langkah bersyarat). [addAtBottom] memindah tombol tambah
+  /// ke dasar layar. [withNew] false menghilangkan target segmen dan tujuan
+  /// (Fase 30) untuk uji yang butuh tur dua langkah.
+  Widget screen({
+    bool withCard = true,
+    bool visible = true,
+    bool ready = true,
+    bool addAtBottom = false,
+    bool withNew = true,
+  }) {
     return TourVisibility(
       visible: visible,
       child: TourTrigger(
@@ -32,6 +39,11 @@ void main() {
                 spotlightKey: SpotlightKey.walletSummary,
                 child: SizedBox(height: 120, child: Placeholder()),
               ),
+              if (withNew)
+                const SpotlightTarget(
+                  spotlightKey: SpotlightKey.walletSegments,
+                  child: SizedBox(height: 40, child: Text('segmen')),
+                ),
               if (withCard)
                 const SpotlightTarget(
                   spotlightKey: SpotlightKey.walletCard,
@@ -42,6 +54,11 @@ void main() {
                 spotlightKey: SpotlightKey.walletAdd,
                 child: TextButton(onPressed: () => addTaps++, child: const Text('tambah')),
               ),
+              if (withNew)
+                const SpotlightTarget(
+                  spotlightKey: SpotlightKey.walletGoals,
+                  child: SizedBox(height: 40, child: Text('tujuan')),
+                ),
             ],
           ),
         ),
@@ -76,17 +93,21 @@ void main() {
   testWidgets('tur tampil sekali, berjalan per langkah, lalu tercatat selesai', (tester) async {
     await pump(tester, screen());
 
-    expect(bubbleWithLabel(1, 3, t.tour.walletSummaryTitle, t.tour.walletSummaryBody), findsOneWidget);
-    await tester.tap(find.text(t.tour.nextAction));
-    await tester.pumpAndSettle();
-    expect(find.text(t.tour.walletCardTitle), findsOneWidget);
-    await tester.tap(find.text(t.tour.nextAction));
-    await tester.pumpAndSettle();
-    expect(find.text(t.tour.walletAddTitle), findsOneWidget);
+    expect(bubbleWithLabel(1, 5, t.tour.walletSummaryTitle, t.tour.walletSummaryBody), findsOneWidget);
+    for (final title in [
+      t.tour.walletSegmentsTitle,
+      t.tour.walletCardTitle,
+      t.tour.walletAddTitle,
+      t.tour.walletGoalsTitle,
+    ]) {
+      await tester.tap(find.text(t.tour.nextAction));
+      await tester.pumpAndSettle();
+      expect(find.text(title), findsOneWidget);
+    }
     await tester.tap(find.text(t.tour.doneAction));
     await tester.pumpAndSettle();
 
-    expect(find.text(t.tour.walletAddTitle), findsNothing);
+    expect(find.text(t.tour.walletGoalsTitle), findsNothing);
     expect((await progress()).hasCompleted(TourId.wallet), isTrue);
 
     // Host baru di atas penyimpanan yang sama: tur tidak tampil lagi.
@@ -120,7 +141,10 @@ void main() {
   testWidgets('langkah yang targetnya tidak ada dilewati diam-diam', (tester) async {
     await pump(tester, screen(withCard: false));
 
-    expect(bubbleWithLabel(1, 2, t.tour.walletSummaryTitle, t.tour.walletSummaryBody), findsOneWidget);
+    expect(bubbleWithLabel(1, 4, t.tour.walletSummaryTitle, t.tour.walletSummaryBody), findsOneWidget);
+    await tester.tap(find.text(t.tour.nextAction));
+    await tester.pumpAndSettle();
+    expect(find.text(t.tour.walletSegmentsTitle), findsOneWidget);
     await tester.tap(find.text(t.tour.nextAction));
     await tester.pumpAndSettle();
     expect(find.text(t.tour.walletAddTitle), findsOneWidget);
@@ -153,7 +177,7 @@ void main() {
   });
 
   testWidgets('gelembung di bawah target atas, di atas target bawah', (tester) async {
-    await pump(tester, screen(withCard: false, addAtBottom: true));
+    await pump(tester, screen(withCard: false, addAtBottom: true, withNew: false));
 
     final summary = tester.getRect(find.byType(Placeholder));
     final bubbleTop = tester.getRect(find.text(t.tour.walletSummaryTitle));
@@ -185,7 +209,7 @@ void main() {
   });
 
   testWidgets('dengan gerak aktif: lubang berpindah, centang penutup, tanpa galat', (tester) async {
-    await pump(tester, screen(withCard: false), animate: true);
+    await pump(tester, screen(withCard: false, withNew: false), animate: true);
 
     expect(find.text(t.tour.walletSummaryTitle), findsOneWidget);
     await tester.tap(find.text(t.tour.nextAction));

@@ -58,6 +58,8 @@ riwayat kekayaan bisa dipercaya.
 | 11 | **Dompet tidak punya jenis ("ikon murni").** Bank/Tunai/E-wallet/Tabungan/Kartu hanya ikon tampilan, tanpa kemampuan. Lencana jenis dari ikon dihapus. Peran *dompet tabungan* hanya berasal dari tautan ke tujuan; dompet berikon celengan tanpa tujuan adalah dompet harian. |
 | 12 | **Harga investasi tanpa API berbayar lewat Google Sheet milik pengguna** (B-101, §5.4): aplikasi membuatkan Sheet privat berisi kode dan `GOOGLEFINANCE`, pengguna menyetujui nilai yang diambil. Bukan scraping, bukan API pihak ketiga. |
 | 13 | Penyesuaian saldo **bisa dihapus**, nominalnya **tidak bisa disunting**. |
+| 14 | **Setiap tujuan punya tepat satu dompet sendiri yang dibuat otomatis** (17 Nov 2026), dengan kolom opsional "Sudah terkumpul" sebagai saldo awalnya; tidak ada menautkan dompet yang sudah ada. Dompet itu tampil di bagian Tujuan, bukan di grid dompet, dan tetap bisa dipilih di CATAT **hanya untuk transfer** (pemasukan dan pengeluaran ke dompet tujuan ditolak). Menghapus tujuan menghapus dompet dan semua catatannya. Menggantikan "satu tujuan banyak dompet" di keputusan 2 (ADR-048 §8). |
+| 15 | **Hero tab Dompet dan Beranda menjadi Total aset berlapis** (17 Nov 2026): Dana operasional, Tabungan, Investasi, dengan rincian per dompet, tujuan, dan instrumen tetap ada; dikerjakan di Fase 30 (ADR-050). Lapis uang sehari-hari bernama **Dompet** / **Wallets** (keputusan pemilik, bukan "Dana operasional"); tab Dompet berisi hero Total aset, kartu Sebaran aset per lapis, dan segmen Dompet | Tabungan. |
 
 Perbandingan dengan dokumen sumber, supaya tidak dibuka ulang: mata uang per
 aset dihapus (ADR-025: satu mata uang per aplikasi); klasifikasi aset tidak
@@ -118,10 +120,17 @@ Rumus: `kemajuan = jumlah saldo dompet tertaut / target × 100%`, ditulis dengan
   mengikuti batas yang sama.
 - **T-5** Dompet tabungan tetap ikut Riwayat, anggaran (bila dipakai belanja),
   dan Analisis seperti dompet lain. Tidak ada saldo terpisah.
-- **T-6** Target tanggal hanya penanda. **Perkiraan tanggal tercapai** (Plus)
-  dihitung dari uang nganggur rata-rata lewat `projectCashflow` dan diberi
-  label perkiraan; **peringatan meleset** (Plus) lewat Penjaga. Tidak ada
-  janji pasti.
+- **T-6** Target tanggal hanya penanda. **Perkiraan tanggal tercapai** (Plus,
+  dikerjakan T-30.7, ADR-048 §3.6) punya dua baris berlabel perkiraan:
+  **dengan laju sekarang** (rata-rata uang masuk bersih ke dompet milik tujuan
+  dalam paling banyak 3 periode keuangan lengkap sejak tujuan dibuat;
+  penyesuaian saldo tidak dihitung) dan **bila uang nganggur ikut ditabung**
+  (laju itu ditambah rata-rata uang nganggur, pengandaian per tujuan). Tanpa
+  periode lengkap atau laju ≤ 0: "Belum bisa diperkirakan". Bila perkiraan
+  melewati target tanggal, rincian menampilkan "Perkiraan melewati target
+  tanggal"; **peringatan meleset** aktif lewat Penjaga menunggu B-44. Gratis
+  melihat baris terkunci yang membuka paywall `goal_estimate`. Tidak ada janji
+  pasti.
 - **T-7** Plus berakhir: tujuan tetap tampil dan kemajuannya terus mengikuti
   saldo; hanya perkiraan dan peringatan berhenti (FREEMIUM §10).
 
@@ -324,7 +333,7 @@ melakukan": tombol memakai "Catat pembelian" dan "Catat penjualan", tidak
 ## 12. Analitik
 
 Mengikuti ADR-023: tanpa nominal, nama instrumen, atau nama tujuan.
-`goal_created` (`linked_wallets`), `goal_completed`, `instrument_added`
+`goal_created` (`collected`: `initial`/`empty`), `goal_completed`, `instrument_added`
 (`type`, `via`: `existing`/`buy`), `valuation_updated`,
 `wealth_overview_viewed`, `wealth_history_viewed` (`periods_bucket`),
 `balance_adjusted` (tanpa nominal), `paywall_shown` untuk P11 dan P12.

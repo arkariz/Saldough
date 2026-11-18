@@ -20,6 +20,8 @@ void main() {
       'record.edit',
       'recurring.detail',
       'recurring.reminders',
+      'savingsGoal.detail',
+      'savingsGoal.form',
       'notificationCapture.settings',
       'notificationCapture.inbox',
       'notificationCapture.quickStart',

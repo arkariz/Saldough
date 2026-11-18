@@ -179,7 +179,11 @@ Map<String, Color> walletColorsDs(DsColorScheme scheme, List<Wallet> wallets) {
       index = [for (var i = 0; i < palette.length; i++) i].firstWhere((i) => !used.contains(i), orElse: () => -1);
     }
     if (index >= 0) used.add(index);
-    result[wallet.id] = index < 0 ? scheme.categories.slate.color : palette[index].color;
+    // Warna pilihan pemilik menimpa warna otomatis (kartu dan irisannya sama
+    // warna). Slot otomatisnya tetap terpakai, jadi warna dompet lain tidak
+    // bergeser saat satu dompet diberi warna.
+    final custom = walletColorPair(scheme, wallet.colorKey);
+    result[wallet.id] = custom?.color ?? (index < 0 ? scheme.categories.slate.color : palette[index].color);
   }
   return result;
 }
@@ -217,14 +221,13 @@ class WalletBentoCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final ds = context.ds;
     final c = ds.colors;
-    final type = walletTypeLabel(wallet.iconKey);
     final asset = ClayIcons.forIcon(walletIconKey(wallet.iconKey)) ?? ClayIcons.walletNav;
     final tile = DsIconTile.asset(asset: asset);
+    final custom = walletColorPair(ds.colors, wallet.colorKey);
     final badges = Wrap(
       spacing: 4,
       runSpacing: 4,
       children: [
-        if (type != null) DsBadge(label: type, tone: DsBadgeTone.neutral),
         if (shareText != null)
           Row(
             mainAxisSize: MainAxisSize.min,
@@ -257,9 +260,13 @@ class WalletBentoCard extends StatelessWidget {
             duration: DsMotion.reduced(context) ? Duration.zero : DsMotion.standard,
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
-              color: linked ? c.actionPrimary.withValues(alpha: 0.06) : c.surfaceCard,
+              // Latar pilihan pemilik (warna "container" palet), bila ada.
+              color: linked ? c.actionPrimary.withValues(alpha: 0.06) : (custom?.container ?? c.surfaceCard),
               borderRadius: DsRadius.xlAll,
-              border: Border.all(color: linked ? c.actionPrimary : c.outlineSubtle, width: linked ? 1.5 : 1),
+              border: Border.all(
+                color: linked ? c.actionPrimary : (custom?.color.withValues(alpha: 0.35) ?? c.outlineSubtle),
+                width: linked ? 1.5 : 1,
+              ),
               boxShadow: const [BoxShadow(color: Color(0x0F000000), blurRadius: 14, offset: Offset(0, 5))],
             ),
             child: Column(

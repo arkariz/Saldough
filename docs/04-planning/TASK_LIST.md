@@ -92,6 +92,7 @@ Terakhir diperbarui: 29 Oktober 2026 (penyelarasan dokumen dengan `main` di `0.1
 | 25 — Design system baru dan preset tema ([ADR-043](../02-architecture/adr/0043-design-system-v2-dan-preset-tema.md), Proposed) | 6 | 4 | Berjalan sejak 29 Okt 2026 -- T-25.1 fondasi selesai (spek Tanukonomy Matcha); KT-DS1–KT-DS4 diputuskan; T-25.2 widget komponen dan T-25.5 animasi selesai (animasi belum dinilai di perangkat); T-25.3 terpasang; T-25.4 berjalan: hampir semua fitur sudah memakai v2 (sisa: `freelance` sama sekali, layar Catat dari notifikasi, dan satu-dua berkas lama di Analisis/Anggaran/Rencana, B-90); T-25.6 (ikon tanah liat) belum |
 | 26 — Catat dari notifikasi v2 ([ADR-044](../02-architecture/adr/0044-catat-dari-notifikasi-v2.md), Proposed; [NOTIFICATION_CAPTURE_V2.md](../01-product/features/NOTIFICATION_CAPTURE_V2.md)) | 27 | 25 | Dimulai 4 Nov 2026; tanpa saklar build, jalur internal test. Kode T-26.1–T-26.25 selesai 5 Nov 2026 (T-26.28 6 Nov) di branch `claude/rombak-design-system-theming-5747b4` (125 komit di depan `main`, belum jadi PR): fondasi, MVP dalam aplikasi, notifikasi bertindak lewat mesin tanpa layar, E1–E3, pola buatan dicabut (T-26.23), snackbar v2 satu slot. **Sisa:** T-26.26 uji perangkat nyata (gerbang Accepted; baru 1 emulator dan perangkat pemilik) dan T-26.27 kebijakan privasi situs; antrean B-88–B-92 |
 | 29 — Penyesuaian saldo ([ADR-047](../02-architecture/adr/0047-penyesuaian-saldo.md), Accepted; [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §6) | 9 | 9 | **Selesai 17 Nov 2026** (dari B-99): ADR-047 Accepted; T-29.1–T-29.7 (rupa dan UI oleh agen atas permintaan pemilik; 2.831 uji lulus, `flutter analyze` 3 info lama); QA T-29.8 lulus menurut pemeriksaan pemilik di emulator dan perangkat. Branch `claude/penyesuaian-saldo-fase-29`, belum digabung ke induk `claude/aset-kekayaan`. Fase pertama rangkaian aset (Fase 29–33, branch induk `claude/aset-kekayaan`) |
+| 30 — Tujuan tabungan ([ADR-048](../02-architecture/adr/0048-tujuan-tabungan.md), Accepted; [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §4) | 17 | 16 | Dijadwalkan 17 Nov 2026 (dari B-96); T-30.0–T-30.6, T-30.10 (dompet milik tujuan, hanya transfer), T-30.11 (hero Total aset berlapis, ADR-050), dan T-30.12 (rombak tab Dompet: Sebaran aset dan segmen) selesai 17 Nov 2026 (2.849 uji lulus); T-30.15 (sebaran ringkas, warna kartu) 17 Nov, T-30.7 (perkiraan Plus), T-30.8 (dokumen), dan T-30.16 (audit tur) 18 Nov 2026 selesai (2.866 uji lulus); sisa T-30.9 (QA: Android selesai 18 Nov 2026, tinggal iOS) |
 | Antrean (`B-n`, belum dijadwalkan) | 75 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
 
 ## Keputusan terbuka
@@ -7070,6 +7071,268 @@ terima per peran: artefak pemilik "Serah terima B-99".
       Hasil (17 Nov 2026): diperiksa pemilik di emulator dan perangkat,
       tampilan dan skenario QA dilaporkan sesuai (lulus). Termasuk
       pemeriksaan tampilan yang dibawa dari T-29.6.
+
+## Fase 30: Tujuan tabungan
+
+Dijadwalkan 17 Nov 2026 (dari B-96), fase kedua rangkaian aset
+([WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §4, §10). Branch
+`claude/tujuan-tabungan-fase-30` dari induk `claude/aset-kekayaan`. Keputusan
+domain di [ADR-048](../02-architecture/adr/0048-tujuan-tabungan.md) (Accepted).
+Diawali perapian dompet T-30.0.
+
+- [x] **T-30.0** (S) Dompet tanpa jenis ("ikon murni", keputusan pemilik
+      17 Nov 2026, WEALTH_ASSETS keputusan 11). Pilihan ikon di formulir dompet
+      dibuat sama seperti pemilih ikon kategori: ubin ikon 48dp tanpa label;
+      lencana jenis di kartu dompet dan kepala rincian dompet dihapus;
+      `walletTypeLabel` dan kunci i18n `wallet.type*` dihapus. Tanpa teks
+      tambahan di formulir (keputusan pemilik), tanpa perubahan data.
+      Verifikasi: uji widget formulir, daftar, dan rincian dompet tanpa label
+      jenis; `flutter analyze`, `flutter test`.
+      Di luar PRD: perapian tampilan sebelum FR-AST-001.
+      Hasil (17 Nov 2026): selesai. Ikut diperbaiki: kartu di mode Atur
+      urutan menyusut selebar isinya karena `Stack` memberi batasan longgar
+      (sebelumnya tertutupi lebar lencana jenis), sehingga sebagian sel tidak
+      bisa diseret; kini kartu mengisi selnya. DOMAIN_MODEL dan glosarium
+      menyebut dompet tanpa jenis.
+- [x] **T-30.1** (S, pemilik) Setujui ADR-048, termasuk tiga pertanyaan §6
+      (Completed menetap, perkiraan dari laju dompet tertaut, siapa membuat
+      rupa). Kode baru dimulai sesudahnya.
+      Memenuhi FR-AST-001.
+      Hasil (17 Nov 2026): disetujui. Completed menetap; perkiraan dari
+      keduanya (laju dompet tertaut utama, uang nganggur sebagai skenario);
+      rupa oleh agen.
+- [x] **T-30.2** (M) Domain dan data `shared/savings_goal`: entitas,
+      `SavingsGoalRepository` (`savings_goal_all` skema 1), hitungan
+      terkumpul/sisa/persen, use case simpan (satu dompet satu tujuan, target
+      turun → Completed), `SyncSavingsGoalStatus`, arsip/aktifkan lagi,
+      hapus, `UnlinkWallet` (ADR-048 §3.1–§3.3).
+      ⚠ Aturan 5: tidak ada use case tujuan yang menyentuh dompet atau
+      transaksi.
+      Verifikasi: uji use case (dompet ganda ditolak, termasuk tujuan
+      diarsipkan; saldo awal dan dompet nonaktif terhitung; negatif 0%;
+      Completed menetap), uji repositori bolak-balik.
+      Memenuhi FR-AST-001.
+      Hasil (17 Nov 2026): `SavingsGoal`, `SavingsGoalProgress`,
+      `SaveSavingsGoal` (batas lewat parameter `activeLimit`, `null` = Plus),
+      `SyncSavingsGoalStatus`, `ChangeSavingsGoalStatus` (arsip/aktifkan
+      lagi), `UnlinkWalletFromGoals`, model dan repositori; didaftarkan di
+      `RootModule`. 15 uji di `test/shared/savings_goal/`.
+- [x] **T-30.3** (S) Cadangan dan ekspor: `BackupRegistry` include +
+      `BackupReference` `walletIds` (perluas pemeriksa untuk field daftar bila
+      perlu), draf `exclude`, lembar ekspor Tujuan, `UnlinkWallet` dipanggil
+      `WalletBloc` sebelum hapus dompet (ADR-048 §3.4).
+      Verifikasi: uji kelengkapan registri, bolak-balik cadangan, rujukan
+      dompet hilang ditolak, ekspor.
+      Memenuhi FR-AST-001.
+      ⚠ Sebagian (17 Nov 2026): `savings_goal_all` di `BackupRegistry`;
+      `BackupReference` kini menerima field daftar dan opsi `unique` (dompet
+      hilang dan dompet ganda antartujuan ditolak saat pemulihan, diuji);
+      `WalletBloc` melepas dompet dari tujuan sebelum menghapusnya (diuji).
+      Lanjutan (17 Nov 2026): kunci `savings_goal_draft` di-`exclude`; lembar
+      ekspor **Tujuan** (xlsx, hanya bila ada tujuan; terkumpul dihitung saat
+      ekspor), diuji. Selesai.
+- [x] **T-30.4** (S) Batas Gratis: `freeSavingsGoals` + Remote Config,
+      `PaywallTrigger.savingsGoalLimit` (P11) dan teksnya, draf tersimpan,
+      perilaku Plus berakhir (ADR-048 §3.5).
+      Verifikasi: uji bloc/widget: tujuan ke-3 Gratis membuka P11 dan
+      menyimpan draf; Completed/Archived tidak dihitung; Plus tanpa batas.
+      Memenuhi FR-AST-001.
+      Hasil (17 Nov 2026): `EntitlementLimits.freeSavingsGoals` (2, Remote
+      Config `free_savings_goals`), `PlusFeature.savingsGoals`,
+      `PaywallTrigger.savingsGoalLimit` dengan teks P11, `SavingsGoalDraftStore`;
+      formulir memeriksa batas saat Simpan, menyimpan draf, membuka P11, dan
+      memuat draf (dengan Buang draf) saat Buat tujuan dibuka lagi; Aktifkan
+      lagi juga tunduk batas. Uji widget: ke-3 Gratis menyimpan draf dan
+      membuka paywall, tujuan tidak bertambah.
+- [x] **T-30.5** (rupa) Rupa B-96: bagian Tujuan di tab Dompet, kartu tujuan,
+      formulir (nama, target, ikon, target tanggal, deskripsi), pemilih
+      dompet (dompet terpakai, buat dompet baru), rincian (kemajuan, sisa,
+      riwayat, perkiraan Plus, baris meleset), status, umpan balik tercapai,
+      lencana dompet tabungan di kartu dompet. Siapa: agen (keputusan pemilik 17 Nov 2026), spek di `docs/03-design/proposals/`.
+      Hasil (17 Nov 2026): [b96-tujuan-tabungan.md](../03-design/proposals/b96-tujuan-tabungan.md),
+      tanpa token atau komponen baru.
+- [x] **T-30.6** (L, sesudah T-30.5) UI `features/savings_goal` dan bagian
+      Tujuan di tab Dompet, `WalletRouteKeys.create`, teks `assets.goal.*`
+      id/en, analitik `goal_created`/`goal_completed`.
+      Verifikasi: uji widget semua keadaan, `translations_test`, batas
+      impor arsitektur.
+      Memenuhi FR-AST-001.
+      Hasil (17 Nov 2026): `features/savings_goal` (bloc, scope, rute
+      `savingsGoal.detail`/`savingsGoal.form`, formulir, rincian dengan
+      riwayat dan tindakan), `shared/savings_goal/presentation` (kartu),
+      bagian Tujuan di tab Dompet, lencana "Tujuan: …" di kartu dompet,
+      `WalletBloc` memuat tujuan dan memberi pesan "… tercapai." sekali saat
+      buku besar berubah (analitik `goal_completed`), `goal_created`.
+      Selisih dari ADR-048 §3.8: `WalletRouteKeys.create` (buat dompet dari
+      formulir tujuan) belum dibuat; formulir mengarahkan ke tab Dompet
+      lewat teks bantu. Uji widget alur buat tujuan (tersimpan, kartu,
+      persen, lencana, saldo tetap) dan bagian kosong; 2.852 uji lulus.
+      ⚠ Belum dilihat di emulator (360dp, gelap, en): dibawa ke T-30.9.
+- [x] **T-30.7** (M, Plus) Perkiraan tanggal tercapai: baris laju dompet
+      tertaut dan baris skenario uang nganggur (port `IdleMoneyAverage` dari
+      akar komposisi), serta baris "Perkiraan melewati target tanggal"
+      (ADR-048 §3.6, §3.7). Peringatan lewat Penjaga menunggu B-44.
+      Verifikasi: uji hitungan (rata-rata ≤ 0, riwayat pendek, transfer
+      antardompet tertaut, penyesuaian diabaikan), gerbang Plus.
+      Memenuhi FR-AST-001.
+      Hasil (18 Nov 2026): `SavingsGoalEstimate` dan port `IdleMoneyAverage`
+      di `shared/savings_goal`, adapter `IdleMoneyAverageImpl` di
+      `features/plan/data` (dikawat `RootModule`), bagian **Perkiraan
+      tercapai** di rincian tujuan Active yang belum tercapai. Gratis melihat
+      satu baris terkunci yang membuka paywall pemicu baru
+      `PaywallTrigger.goalEstimate` (`goal_estimate`). Riwayat pendek dibagi
+      jumlah periode lengkap yang sudah dijalani tujuan (1–3), bukan selalu 3
+      (ADR-048 §3.6 diperjelas). 2.866 uji lulus. Belum dilihat di emulator
+      (emulator mati saat verifikasi).
+- [x] **T-30.8** (S) Dokumen: DOMAIN_MODEL, PROJECT_GLOSSARY, `writing.md`,
+      EXPORT_BACKUP, FREEMIUM_PAYWALL, WEALTH_ASSETS T-6, PLAY_DATA_SAFETY.
+      Hasil (18 Nov 2026): DOMAIN_MODEL bagian Tujuan tabungan dan Total aset,
+      rumus saldo dengan penyesuaian, invarian 18–22; glosarium dan
+      `writing.md` (Total aset, lapis, tujuan, dompet milik tujuan, Sudah
+      terkumpul, perkiraan); EXPORT_BACKUP lembar Tujuan dan isi cadangan;
+      FREEMIUM §6.4 dan WEALTH T-6 mengikuti Revisi 1 dan T-30.7;
+      PLAY_DATA_SAFETY peristiwa Fase 29–30. Ikut diperbaiki: parameter
+      `goal_created` menjadi `collected` (`initial`/`empty`, dulu
+      `linked_wallets` yang basi sejak Revisi 1), dan teks bantuan dompet
+      tujuan tidak lagi menyebut "dompet tujuan" (bentrok dengan dompet
+      penerima transfer).
+- [x] **T-30.10** (M, sesudah ADR-048 Revisi 1 disetujui) Dompet milik
+      tujuan: `walletId` tunggal, `CreateSavingsGoal` membuat dompet (saldo
+      awal dari "Sudah terkumpul"), ubah tujuan menyalin nama/ikon ke
+      dompet, dompet milik tujuan tidak bisa dihapus dari Dompet dan
+      tidak tampil di grid/daftar nonaktif, tetap di pemilih transfer CATAT;
+      dompet tujuan hanya untuk transfer (`RecordTransaction` menolak
+      pemasukan/pengeluaran, pemilih pemasukan/pengeluaran tidak
+      menawarkannya); hapus tujuan menghapus transaksinya, dompetnya, dan
+      tujuannya; formulir
+      tanpa pemilih dompet, rincian dengan Lihat dompet (keputusan pemilik
+      17 Nov 2026, ADR-048 §8).
+      Verifikasi: uji use case dan widget; cadangan `walletId` unik.
+      Memenuhi FR-AST-001.
+      Hasil (17 Nov 2026): `SavingsGoal.walletId`; `CreateSavingsGoal`,
+      `UpdateSavingsGoal`, `DeleteSavingsGoal` (transaksi lewat
+      `RecordTransaction.delete`, lalu dompet, lalu tujuan),
+      `GoalTransferOnlyWallets`; port `TransferOnlyWallets` di
+      `shared/transaction` dipasang di `RootModule` dan dibaca semua lingkup
+      yang membuat `RecordTransaction` (CATAT, Riwayat, Dompet, rutin,
+      freelance, catat notifikasi, pengingat). Pemilih pemasukan dan
+      pengeluaran CATAT tidak menawarkan dompet tujuan; jalur lain (aturan
+      dompet catat notifikasi, formulir rutin, pembayaran freelance) baru
+      dijaga `RecordTransaction` (ditolak dengan pesan galat), belum
+      disaring di pemilihnya. Grid, Sebaran saldo, urutan, dan daftar
+      nonaktif tab Dompet memakai `operationalWallets`; hapus dompet tujuan
+      dari Dompet ditolak dengan pesan. Formulir: kolom Sudah terkumpul dan
+      teks bantu; rincian: Lihat dompet, konfirmasi hapus semuanya. Uji
+      domain (buat, ubah, hanya transfer, hapus semuanya, status) dan widget
+      (buat tujuan, dompet tidak tampil di grid).
+- [x] **T-30.11** (M, sesudah ADR-050 disetujui) Total aset berlapis:
+      `shared/wealth` `WealthLayers`, hero tab Dompet (TOTAL ASET, ubin
+      Dana operasional/Tabungan, batang proporsi), urutan bagian per lapis,
+      kartu Beranda dan judul ringkas, teks tur (ADR-050, sebagian B-98).
+      Verifikasi: uji hitungan (setiap dompet satu lapis, nonaktif tidak
+      dihitung, negatif), uji widget hero dua layar, Sembunyikan nominal.
+      Memenuhi FR-AST-003.
+      Hasil (17 Nov 2026): `shared/wealth` `WealthLayers`; hero tab Dompet
+      TOTAL ASET dengan ubin Dana operasional/Tabungan (Investasi muncul
+      sesudah ada nilainya) dan batang proporsi; bagian tab Dompet berjudul
+      Dana operasional dan Tabungan; Sebaran saldo hanya dompet operasional.
+      Beranda: label Total aset; ubin hero tetap Arus periode (Masuk/Keluar),
+      lapisan tampil di keterangan "Operasional … · Tabungan …" begitu ada
+      tujuan (selisih kecil dari ADR-050 §3.4 supaya Arus tidak hilang).
+      `HomeBloc` membaca dompet tujuan lewat `TransferOnlyWallets`. Teks tur
+      belum diubah. Uji hitungan lapis dan widget hero tab Dompet; 2.849 uji
+      lulus. ⚠ Belum dilihat di emulator.
+- [x] **T-30.12** (M) Rombak tata letak tab Dompet dan sebaran aset
+      (keputusan pemilik 17 Nov 2026, ADR-050 Revisi 1): lapis bernama
+      Dompet/Wallets; hero → kartu Sebaran aset per lapis (`AssetLayerCard`,
+      chip lapis memilih segmen) → `DsSegmentedPill` Dompet | Tabungan → isi
+      segmen dengan sebaran butirnya (`WalletSpreadCard` kini menerima judul
+      dan label tengah, dipakai untuk dompet dan tujuan). Tabungan tidak lagi
+      di dasar halaman.
+      Hasil (17 Nov 2026): uji widget segmen, kartu lapis, dan alur tujuan;
+      2.849 uji lulus. ⚠ Belum dilihat di emulator.
+- [x] **T-30.13** (M) Poles rupa tab Dompet dan formulir tujuan (umpan
+      balik pemilik 17 Nov 2026): Sebaran aset memakai `WalletSpreadCard`;
+      tab Dompet `CustomScrollView` dengan segmen menempel
+      (`SliverPersistentHeader`) dan judul app bar Total aset saat hero
+      tergulir; judul dompet ganda dihapus; formulir tujuan dengan komponen
+      formulir bersama.
+      Hasil (17 Nov 2026): dilihat di emulator Android (Medium Phone API 37,
+      en): hero, Sebaran aset (ringkas dan donut), segmen Dompet/Tabungan,
+      Sebaran tabungan, daftar tujuan, formulir tujuan, judul ringkas saat
+      digulir. Efek segmen menempel belum terlihat karena isi data uji pendek.
+      2.849 uji lulus.
+- [x] **T-30.14** (M) Hero tanpa ubin dan app bar yang mewarisi hero
+      (umpan balik pemilik 17 Nov 2026, ADR-050 Revisi 2): sebaran lapis di
+      kaki hero, kartu Sebaran aset dihapus, `WalletTopBar` beranimasi
+      (warna, bentuk, judul, ikon, bilah status), hero mengecil dan memudar.
+      Hasil (17 Nov 2026): dilihat di emulator Android dengan 9 dompet (data
+      seed): keadaan atas, tengah peralihan, dan ringkas; segmen menempel di
+      bawah app bar. Diperbaiki saat verifikasi: batang lapis setinggi 0
+      (Row tanpa stretch), judul dan nominal bertumpuk di tengah peralihan.
+      2.849 uji lulus.
+- [x] **T-30.15** (S) Sebaran ringkas dan warna kartu dompet (umpan balik
+      pemilik 17 Nov 2026). Kartu sebaran menampilkan paling banyak 5 butir:
+      4 bersaldo terbesar, sisanya digabung jadi satu butir **Lainnya (n)**
+      (warna slate) di batang, kunci, donut, dan legenda; lencana kepala tetap
+      menyebut semua butir, memilih Lainnya tidak menyorot dompet. Dompet
+      punya `colorKey?` opsional (hanya tampilan, tanpa naik `schemaVersion`):
+      dipilih di formulir dompet (**Warna kartu**, 10 warna kategori + bawaan),
+      mewarnai latar dan garis kartu, dan dipakai di irisan sebaran. Warna
+      otomatis dompet lain tidak bergeser saat satu dompet diberi warna.
+      Hasil (17 Nov 2026): dilihat di emulator Android (9 dompet: 4 + Lainnya
+      (5); kartu teal). 2.853 uji lulus sebelum uji warna stabil ditambah.
+      Mode gelap belum dilihat.
+- [x] **T-30.16** (S) Audit tur spotlight (permintaan pemilik 18 Nov 2026).
+      Semua 46 langkah dicocokkan dengan layar sekarang. Dihapus: langkah
+      `homeCashFlow` dan `homePending` yang tidak lagi punya target (arus
+      kini di kartu Total aset, kartu Menunggu digantikan carousel status),
+      sehingga tur Beranda bisa tercatat selesai. Teks diperbarui:
+      `homeBalance` dan `walletSummary` (Total aset, ADR-050), `walletAdd`
+      (ubah saldo = penyesuaian, ADR-047), `homeBudget` (kartu Anggaran
+      adalah slide di carousel), `recordBudgetItem` (transfer juga). Langkah
+      baru tur Dompet: `walletSegments` (segmen Dompet/Tabungan) dan
+      `walletGoals` (kepala bagian Tujuan, disorot saat segmen Tabungan
+      pertama dibuka). ONBOARDING_PLAN §4.2–4.3 diperbarui. 2.866 uji lulus.
+- [ ] **T-30.9** (QA) Skenario B-96 artefak serah terima (tab QA, #1–#11) di
+      emulator Android dan iOS; tanpa Gagal S1/S2. Skenario #2, #3, #5 (dompet
+      ganda, tautan) diganti sesuai ADR-048 §8.
+      Hasil Android (18 Nov 2026, emulator API 37, en, terang, Plus/Gratis
+      lewat menu pengembang): **tanpa Gagal S1/S2**. Lulus di emulator: #1
+      (buat tujuan dengan Sudah terkumpul: Total aset naik sebesar saldo awal,
+      lapis Dompet tetap), #2 (transfer masuk: Total aset tetap, Dompet −,
+      Tabungan +, riwayat tujuan), #3 (pemilih dompet Pengeluaran CATAT tanpa
+      dompet tujuan; Transfer menawarkannya), #4 (transfer keluar), #5 (hapus
+      tujuan: dompet dan transfernya terhapus, dompet asal kembali, Total
+      aset tetap), #8 (Gratis: rincian tetap bisa diubah, perkiraan jadi baris
+      terkunci, paywall `goal_estimate`), #10 (Plus: "Belum bisa" untuk
+      tujuan baru), serta langkah tur `walletSegments` dan `walletGoals`.
+      Lewat uji otomatis: #6 (P11 dan draf, `wallet_list_page_test`), #7 dan
+      #9 (`savings_goal_test`), #11 (`backup_validator_test`,
+      `export_writers_test`). Temuan S3 yang diperbaiki: dompet tujuan tampil
+      dengan ikon dompet generik di pemilih, Riwayat, dan rincian
+      (`walletIconKey` kini mengenali semua `IconKey`); teks en "Records in
+      these wallets"; teks kosong Tujuan masih menyuruh "hubungkan dompet";
+      7 kunci teks tujuan yang tidak terpakai sejak Revisi 1 dihapus. Satu
+      kejadian tidak terulang: layar hitam dengan galat go_router "popped the
+      last page" (`flow_runner.dart:28`) tepat setelah emulator crash dan
+      dinyalakan ulang, saat ketukan bertumpuk dengan sheet Catat dan tombol
+      menu pengembang; tiga kali dicoba ulang tidak muncul. Data emulator mundur
+      ke snapshot lama sesudah crash (bukan dari aplikasi).
+      Lanjutan Android (18 Nov 2026, emulator API 37): **mode gelap** (tab
+      Dompet, segmen Tabungan, rincian tujuan), **360dp** (lebar 945px pada
+      420dpi: Beranda, tab Dompet, Sebaran, segmen Tabungan, formulir tujuan)
+      dan **bahasa Indonesia** (tab Dompet, rincian, Ubah tujuan) tanpa
+      Gagal S1/S2. Temuan S2 yang diperbaiki: formulir tujuan memotong isi
+      saat keyboard terbuka (padding keyboard ganda: `Scaffold` sudah
+      menyempitkan badan, `Padding(viewInsets)` menyempitkannya lagi, sehingga
+      yang terlihat hanya kolom Nama); padding itu dihapus. Temuan S3: teks en
+      `historyEmpty` masih "these wallets" (kini "this wallet"). Sisa: iOS. ADR-048 §8.2a dilengkapi sesudah
+      QA: aturan dompet catat notifikasi, penentu dompet (aplikasi dan worker
+      tanpa layar), dan pilihan dompet Catat diterima freelance tidak lagi
+      menawarkan dompet tujuan (port `TransferOnlyWallets`). Rutin tidak punya
+      pemilih sendiri (dibuat dan diubah lewat CATAT, yang sudah menyaring).
+      2.870 uji lulus.
 
 ## Antrean (belum dijadwalkan)
 

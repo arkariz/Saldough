@@ -5,6 +5,7 @@ import 'package:saldough/features/freelance/domain/entities/freelance_payment.da
 import 'package:saldough/features/freelance/domain/entities/freelance_project.dart';
 import 'package:saldough/features/freelance/domain/entities/worklog_entry.dart';
 import 'package:saldough/features/freelance/presentation/bloc/freelance_state.dart';
+import 'package:saldough/shared/wallet/wallet.dart';
 
 /// Angka ringkasan Ikhtisar Freelance satu layar (T-5.9): total pembayaran
 /// bersih lintas proyek dan urutan kartu proyek.
@@ -64,5 +65,18 @@ void main() {
 
   test('kartu proyek diurutkan menurut perkiraan pembayaran tertunda terdekat', () {
     expect(state.projectsByNextPayment.map((p) => p.id), ['beta', 'alpha']);
+  });
+
+  test('pilihan dompet Catat diterima tanpa dompet milik tujuan (ADR-048 §8.2a)', () {
+    Wallet wallet(String id) => Wallet(id: id, name: id, iconKey: 'walletBank', initialBalance: 0, currentBalance: 0);
+    final withGoal = FreelanceState(
+      projects: const [],
+      entries: const [],
+      payments: const [],
+      wallets: [wallet('bank'), wallet('goal-1')],
+      isLoading: false,
+      transferOnlyWalletIds: const {'goal-1'},
+    );
+    expect(withGoal.activeWallets.map((w) => w.id), ['bank']);
   });
 }

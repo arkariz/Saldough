@@ -157,7 +157,7 @@ Future<bool> openRecordSheet(
         final kindSwitcher = repeatLocked ? null : switcher;
         return switch (choice) {
           RecordChoice.income => IncomeFormSheet(
-            wallets: wallets,
+            wallets: bloc.state.incomeExpenseWallets,
             prefill: incomePrefill,
             draft: recordDraft?.kind == DraftKind.income ? recordDraft : null,
             initialWalletId: walletFor(defaults.incomeWalletId),
@@ -170,7 +170,7 @@ Future<bool> openRecordSheet(
             occurrence: occurrence,
           ),
           RecordChoice.expense => ExpenseFormSheet(
-            wallets: wallets,
+            wallets: bloc.state.incomeExpenseWallets,
             prefill: expensePrefill,
             draft: recordDraft?.kind == DraftKind.expense ? recordDraft : null,
             initialWalletId: walletFor(defaults.expenseWalletId),

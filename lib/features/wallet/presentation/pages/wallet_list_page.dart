@@ -11,11 +11,14 @@ import 'package:saldough/features/wallet/presentation/bloc/wallet_bloc.dart';
 import 'package:saldough/features/wallet/presentation/bloc/wallet_state.dart';
 import 'package:saldough/features/wallet/presentation/navigation/wallet_route_keys.dart';
 import 'package:saldough/features/wallet/presentation/wallet_shares.dart';
+import 'package:saldough/features/wallet/presentation/widgets/asset_layer.dart';
+import 'package:saldough/features/wallet/presentation/widgets/savings_goal_section.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_card.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_empty_states.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_form_sheet.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_hero_card.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_spread_card.dart';
+import 'package:saldough/features/wallet/presentation/widgets/wallet_top_bar.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 import 'package:state_management/state_management.dart';
 
@@ -49,10 +52,38 @@ class _WalletListPageState extends State<WalletListPage> {
   bool _organizing = false;
   List<Wallet> _order = const [];
 
+  final _scroll = ScrollController();
+
+  /// Kemajuan peralihan hero → app bar (0–1), mengikuti gulir (ADR-050
+  /// Revisi 2): mulai saat separuh hero tergulir, penuh saat hero lewat.
+  final _progress = ValueNotifier<double>(0);
+
+  void _onScroll() {
+    _progress.value = ((_scroll.offset - 120) / 140).clamp(0.0, 1.0);
+  }
+
+  @override
+  void dispose() {
+    _scroll
+      ..removeListener(_onScroll)
+      ..dispose();
+    _progress.dispose();
+    super.dispose();
+  }
+
+  /// Segmen terpilih (Dompet atau Tabungan); tidak disimpan.
+  AssetLayer _segment = AssetLayer.wallets;
+
+  void _select(AssetLayer layer) => setState(() {
+    _segment = layer;
+    _linked = null;
+  });
+
   @override
   void initState() {
     super.initState();
     context.read<WalletBloc>().add(const WalletStarted());
+    _scroll.addListener(_onScroll);
   }
 
   /// Membuka formulir TAMBAH dompet baru. Sunting/hapus dompet yang sudah
@@ -63,7 +94,7 @@ class _WalletListPageState extends State<WalletListPage> {
   /// Mulai mode Atur di tempat (B-34): dompet aktif bergoyang dan bisa diseret.
   void _startOrganizing(WalletState state) => setState(() {
     _organizing = true;
-    _order = [...state.activeWallets];
+    _order = [...state.operationalWallets];
     _linked = null;
   });
 
@@ -78,9 +109,17 @@ class _WalletListPageState extends State<WalletListPage> {
   /// Selesai mengatur: simpan urutan bila berubah. Dompet nonaktif tetap di
   /// belakang dompet aktif dengan urutan relatifnya.
   void _finishOrganizing(WalletState state) {
-    final changed = [for (final w in _order) w.id].join(',') != [for (final w in state.activeWallets) w.id].join(',');
+    final changed =
+        [for (final w in _order) w.id].join(',') != [for (final w in state.operationalWallets) w.id].join(',');
     if (changed) {
-      context.read<WalletBloc>().add(WalletsReordered([for (final w in _order) w.id, for (final w in state.inactiveWallets) w.id]));
+      context.read<WalletBloc>().add(
+        WalletsReordered([
+          for (final w in _order) w.id,
+          for (final w in state.inactiveWallets) w.id,
+          // Dompet milik tujuan tidak diurutkan di sini tetapi tetap disimpan.
+          ...state.goalWallets,
+        ]),
+      );
     }
     setState(() => _organizing = false);
   }
@@ -88,13 +127,20 @@ class _WalletListPageState extends State<WalletListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(t.appShell.walletsTabLabel, style: context.ds.typography.headlineMd),
-        centerTitle: false,
-        actions: [
-          const TutorialInfoButton(tour: TourId.wallet),
-          DsIconButton(icon: Icons.add, label: t.wallet.addAction, onPressed: () => _addWallet(context)),
-        ],
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(60),
+        child: BlocBuilder<WalletBloc, WalletState>(
+          buildWhen: (a, b) => a.wallets != b.wallets || a.goals != b.goals,
+          builder: (context, state) => WalletTopBar(
+            progress: _progress,
+            title: t.appShell.walletsTabLabel,
+            totalText: AppMoneyText.format(state.layers.total, MoneyKind.balance),
+            actions: [
+              const TutorialInfoButton(tour: TourId.wallet),
+              DsIconButton(icon: Icons.add, label: t.wallet.addAction, onPressed: () => _addWallet(context)),
+            ],
+          ),
+        ),
       ),
       body: SafeArea(
         child: BlocBuilder<WalletBloc, WalletState>(
@@ -102,8 +148,7 @@ class _WalletListPageState extends State<WalletListPage> {
             if (state.isLoading) return const AppSkeletonPage();
             if (state.loadFailed) {
               return WalletLoadErrorState(
-                onRetry: () =>
-                    context.read<WalletBloc>().add(const WalletStarted()),
+                onRetry: () => context.read<WalletBloc>().add(const WalletStarted()),
               );
             }
             if (state.wallets.isEmpty) {
@@ -113,78 +158,143 @@ class _WalletListPageState extends State<WalletListPage> {
               );
             }
 
-            final active = state.activeWallets;
+            // Grid hanya lapis Dana operasional; dompet tujuan di bagian Tujuan.
+            final active = state.operationalWallets;
             final inactive = state.inactiveWallets;
             final shares = walletShares(active);
             final multi = active.length > 1;
             final walletColorMap = walletColorsDs(context.ds.colors, active);
             final linked = multi ? _linked : null;
-            // TR-WALLET (ADR-021 §3.4): ringkasan, dompet pertama, tambah.
+            // Mode Atur hanya untuk dompet, jadi segmennya dipaksa Dompet.
+            final segment = _organizing ? AssetLayer.wallets : _segment;
+            final goalWalletIds = state.goalWallets;
+            final goalWallets = [
+              for (final w in state.wallets)
+                if (w.isActive && goalWalletIds.contains(w.id)) w,
+            ];
+            final goalShares = walletShares(goalWallets);
+            final goalCount = state.goals.length;
+            // TR-WALLET (ADR-021 §3.4): Total aset, segmen, dompet pertama,
+            // tambah; tujuan disorot saat segmen Tabungan pertama dibuka.
             return TourTrigger(
               tour: TourId.wallet,
               ready: true,
-              child: ListView(
-              padding: const EdgeInsets.fromLTRB(
-                AppSpacing.space4,
-                AppSpacing.space2,
-                AppSpacing.space4,
-                AppSpacing.space12,
-              ),
-              children: [
-                // Dompet v2 (ADR-043): hero total saldo, kartu Sebaran saldo
-                // bila dompetnya dua atau lebih, lalu grid bento dompet.
-                SpotlightTarget(
-                  spotlightKey: SpotlightKey.walletSummary,
-                  child: WalletHeroCard(total: state.totalBalance, activeCount: active.length),
-                ),
-                if (multi && shares.length > 1) ...[
-                  const SizedBox(height: AppSpacing.space4),
-                  WalletSpreadCard(
-                    wallets: active,
-                    shares: shares,
-                    colors: walletColorMap,
-                    total: state.totalBalance,
-                    activeCount: active.length,
-                    onSelected: (id) => setState(() => _linked = id),
+              // Sliver (ADR-050 Revisi 2): hero tergulir dan "diwarisi" app bar,
+              // segmen menempel di bawah app bar, lalu sebaran dan daftar segmen.
+              child: CustomScrollView(
+                controller: _scroll,
+                slivers: [
+                  SliverPadding(
+                    padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space2, AppSpacing.space4, 0),
+                    sliver: SliverList.list(
+                      children: [
+                        SpotlightTarget(
+                          spotlightKey: SpotlightKey.walletSummary,
+                          child: WalletHeroScrollEffect(
+                            progress: _progress,
+                            child: WalletHeroCard(layers: state.layers, selected: segment, onLayerSelected: _select),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ],
-                const SizedBox(height: AppSpacing.space4),
-                _WalletsHeader(
-                  count: active.length,
-                  organizing: _organizing && multi,
-                  onReorder: multi ? () => _startOrganizing(state) : null,
-                  onDone: () => _finishOrganizing(state),
-                ),
-                const SizedBox(height: AppSpacing.space2),
-                _WalletGrid(
-                  wallets: _organizing && multi ? _order : active,
-                  shares: multi ? shares : const {},
-                  colors: multi ? walletColorMap : const {},
-                  linked: _organizing ? null : linked,
-                  organizing: _organizing && multi,
-                  onMove: _moveWallet,
-                ),
-                if (inactive.isNotEmpty) ...[
-                  const SizedBox(height: AppSpacing.space4),
-                  DsFieldGroup(
-                    children: [
-                      DsFieldRow(
-                        key: const ValueKey('wallet-inactive-row'),
-                        icon: Icons.inventory_2_outlined,
-                        label: t.wallet.inactiveHeading,
-                        title: t.wallet.inactiveRowSub(n: inactive.length),
-                        chevron: true,
-                        onTap: () => context.pushRoute(WalletRouteKeys.inactive, const EmptyInput()),
+                  SliverPersistentHeader(
+                    pinned: true,
+                    delegate: _SegmentHeaderDelegate(
+                      background: Theme.of(context).scaffoldBackgroundColor,
+                      child: SpotlightTarget(
+                        spotlightKey: SpotlightKey.walletSegments,
+                        child: DsSegmentedPill<AssetLayer>(
+                          key: const ValueKey('asset-segments'),
+                          segments: [
+                            DsSegment(value: AssetLayer.wallets, label: t.assets.layerOperational, count: active.length),
+                            DsSegment(value: AssetLayer.savings, label: t.assets.layerSavings, count: goalCount),
+                          ],
+                          selected: segment,
+                          onChanged: _select,
+                        ),
                       ),
-                    ],
+                    ),
+                  ),
+                  SliverPadding(
+                    padding: const EdgeInsets.fromLTRB(
+                      AppSpacing.space4,
+                      AppSpacing.space2,
+                      AppSpacing.space4,
+                      AppSpacing.space12,
+                    ),
+                    sliver: SliverList.list(
+                      children: [
+                        if (segment == AssetLayer.savings) ...[
+                          if (goalShares.length > 1) ...[
+                            WalletSpreadCard(
+                              wallets: goalWallets,
+                              shares: goalShares,
+                              colors: walletColorsDs(context.ds.colors, goalWallets),
+                              total: state.layers.savings,
+                              activeCount: goalWallets.length,
+                              title: t.assets.spreadGoals,
+                              totalLabel: t.assets.layerSavings,
+                              countLabel: t.assets.goalCount(n: goalWallets.length),
+                              onSelected: (_) {},
+                            ),
+                            const SizedBox(height: AppSpacing.space4),
+                          ],
+                          SavingsGoalSection(goals: state.goals, wallets: state.wallets),
+                        ] else ...[
+                          if (multi && shares.length > 1) ...[
+                            WalletSpreadCard(
+                              wallets: active,
+                              shares: shares,
+                              colors: walletColorMap,
+                              total: state.layers.operational,
+                              activeCount: active.length,
+                              title: t.assets.spreadWallets,
+                              totalLabel: t.assets.layerOperational,
+                              onSelected: (id) => setState(() => _linked = id),
+                            ),
+                            const SizedBox(height: AppSpacing.space4),
+                          ],
+                          _WalletsHeader(
+                            count: active.length,
+                            organizing: _organizing && multi,
+                            onReorder: multi ? () => _startOrganizing(state) : null,
+                            onDone: () => _finishOrganizing(state),
+                          ),
+                          const SizedBox(height: AppSpacing.space2),
+                          _WalletGrid(
+                            wallets: _organizing && multi ? _order : active,
+                            shares: multi ? shares : const {},
+                            colors: multi ? walletColorMap : const {},
+                            linked: _organizing ? null : linked,
+                            organizing: _organizing && multi,
+                            onMove: _moveWallet,
+                          ),
+                          if (inactive.isNotEmpty) ...[
+                            const SizedBox(height: AppSpacing.space4),
+                            DsFieldGroup(
+                              children: [
+                                DsFieldRow(
+                                  key: const ValueKey('wallet-inactive-row'),
+                                  icon: Icons.inventory_2_outlined,
+                                  label: t.wallet.inactiveHeading,
+                                  title: t.wallet.inactiveRowSub(n: inactive.length),
+                                  chevron: true,
+                                  onTap: () => context.pushRoute(WalletRouteKeys.inactive, const EmptyInput()),
+                                ),
+                              ],
+                            ),
+                          ],
+                          const SizedBox(height: AppSpacing.space6),
+                          SpotlightTarget(
+                            spotlightKey: SpotlightKey.walletAdd,
+                            child: _AddSlot(label: t.wallet.addAction, onTap: () => _addWallet(context)),
+                          ),
+                        ],
+                      ],
+                    ),
                   ),
                 ],
-                const SizedBox(height: AppSpacing.space6),
-                SpotlightTarget(
-                  spotlightKey: SpotlightKey.walletAdd,
-                  child: _AddSlot(label: t.wallet.addAction, onTap: () => _addWallet(context)),
-                ),
-              ],
               ),
             );
           },
@@ -208,6 +318,7 @@ Future<void> openAddWalletSheet(BuildContext context) async {
     :final name,
     :final iconKey,
     :final balance,
+    :final colorKey,
   )) {
     final processed = bloc.stream.first;
     bloc.add(
@@ -215,6 +326,7 @@ Future<void> openAddWalletSheet(BuildContext context) async {
         name: name,
         iconKey: iconKey,
         initialBalance: balance ?? 0,
+        colorKey: colorKey,
       ),
     );
     await processed;
@@ -272,7 +384,10 @@ class _WalletGrid extends StatelessWidget {
               delay: const Duration(milliseconds: 250),
               feedback: Material(
                 color: Colors.transparent,
-                child: SizedBox(width: cardWidth, child: Transform.scale(scale: 1.04, child: bento)),
+                child: SizedBox(
+                  width: cardWidth,
+                  child: Transform.scale(scale: 1.04, child: bento),
+                ),
               ),
               childWhenDragging: Opacity(opacity: 0.35, child: bento),
               child: DsJiggleLoop(
@@ -281,7 +396,9 @@ class _WalletGrid extends StatelessWidget {
                   label: t.wallet.reorderHandleLabel(name: wallet.name),
                   child: Stack(
                     children: [
-                      bento,
+                      // Stack memberi batasan longgar: tanpa lebar penuh kartu
+                      // menyusut selebar isinya dan sisa sel tidak bisa diseret.
+                      SizedBox(width: double.infinity, child: bento),
                       Positioned(
                         top: 8,
                         right: 8,
@@ -426,19 +543,20 @@ class _WalletsHeader extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Wrap(
-                spacing: 8,
-                runSpacing: 4,
-                crossAxisAlignment: WrapCrossAlignment.center,
-                children: [
-                  Semantics(
-                    header: true,
-                    child: Text(organizing ? t.wallet.reorderTitle : t.wallet.listHeading, style: ds.typography.headlineSm),
-                  ),
-                  DsBadge(label: '$count', tone: DsBadgeTone.neutral),
-                ],
-              ),
-              const SizedBox(height: 2),
+              // Judul dan jumlah sudah ada di segmen Dompet; judul hanya tampil
+              // di mode Atur.
+              if (organizing) ...[
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 4,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    Semantics(header: true, child: Text(t.wallet.reorderTitle, style: ds.typography.headlineSm)),
+                    DsBadge(label: '$count', tone: DsBadgeTone.neutral),
+                  ],
+                ),
+                const SizedBox(height: 2),
+              ],
               Text(
                 organizing ? t.wallet.reorderHint : t.wallet.listSubtitle,
                 style: ds.typography.bodySm.copyWith(color: c.textSecondary),
@@ -450,4 +568,42 @@ class _WalletsHeader extends StatelessWidget {
       ],
     );
   }
+}
+
+/// Kepala segmen yang menempel di bawah app bar saat hero dan Sebaran aset
+/// tergulir (ADR-050 Revisi 1). Latar sama dengan halaman supaya isi yang
+/// lewat di bawahnya tertutup.
+class _SegmentHeaderDelegate extends SliverPersistentHeaderDelegate {
+  _SegmentHeaderDelegate({required this.child, required this.background});
+
+  final Widget child;
+  final Color background;
+
+  static const _height = 64.0;
+
+  @override
+  double get minExtent => _height;
+
+  @override
+  double get maxExtent => _height;
+
+  @override
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+    final pinned = overlapsContent || shrinkOffset > 0;
+    // Saat menempel, garis bawah tipis membuatnya terbaca sebagai bilah tab.
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: background,
+        border: Border(bottom: BorderSide(color: pinned ? context.ds.colors.outlineSubtle : Colors.transparent)),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space3, AppSpacing.space4, AppSpacing.space2),
+        child: Align(alignment: Alignment.topCenter, child: child),
+      ),
+    );
+  }
+
+  @override
+  bool shouldRebuild(_SegmentHeaderDelegate oldDelegate) =>
+      oldDelegate.child != child || oldDelegate.background != background;
 }

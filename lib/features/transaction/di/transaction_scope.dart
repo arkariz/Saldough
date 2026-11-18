@@ -32,6 +32,7 @@ final class TransactionScope extends IsolatedScope {
         transactionRepository: c<TransactionRepository>(),
         budgetItemCatalog: c<BudgetItemCatalog>(),
         recordTransaction: RecordTransaction(
+          transferOnlyWallets: parent.isRegistered<TransferOnlyWallets>() ? parent<TransferOnlyWallets>() : const NoTransferOnlyWallets(),
           ledgerChanges: c<LedgerChanges>(),
           transactionRepository: c<TransactionRepository>(),
           recomputeWalletBalances: RecomputeWalletBalances(

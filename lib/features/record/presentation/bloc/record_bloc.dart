@@ -80,8 +80,11 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
         // Isian bawaan juga data sekunder (UX-2, UX-3). Biayanya mengikuti
         // [_recentLimit], bukan panjang riwayat (NFR-PERF-002).
         final recent = (await _transactionRepository.listRecentTransactions(_recentLimit)).getOrElse((_) => const []);
+        // Dompet tujuan hanya untuk transfer (ADR-048 §8.2a).
+        final transferOnly = await _recordTransaction.transferOnlyWallets.walletIds();
         emit(
           state.copyWith(
+            transferOnlyWalletIds: transferOnly,
             wallets: active,
             budgetItems: budgetItems,
             defaults: RecordDefaults.from(recent, activeWalletIds: {for (final w in active) w.id}),

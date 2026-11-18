@@ -274,6 +274,7 @@ gagal, nilai bawaan dipakai** (tidak pernah nol atau tak terbatas).
 | `taste_ask` / `taste_guardian` | 3 / 1 | Jatah cicip per periode |
 | `free_analysis_periods` | 6 | Periode Analisis di Gratis |
 | `free_budget_templates` / `free_projects` | 1 / 2 | Batas template (semua, aktif maupun nonaktif) dan proyek freelance (semua; §3.13) |
+| `free_savings_goals` | 2 | Tujuan tabungan **Active** di Gratis; Completed dan Archived tidak dihitung (ADR-048 §3.5, ditambah Fase 30) |
 | `plus_fair_use_interpretations` / `_photo` / `_ask` | 1000 / 150 / 300 | Batas wajar bulanan Plus, tidak ditampilkan |
 | `paywall_max_per_day` / `paywall_max_per_period` | 1 / 3 | Batas frekuensi paywall kontekstual |
 | `trial_min_days` | 14 | Sisa hari minimum periode berjalan |

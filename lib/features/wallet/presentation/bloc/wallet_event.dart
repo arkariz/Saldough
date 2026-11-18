@@ -24,7 +24,10 @@ final class WalletRefreshed extends WalletEvent {
 /// tercatat awalnya sama dengan itu.
 final class WalletAdded extends WalletEvent {
   /// Membuat [WalletAdded].
-  const WalletAdded({required this.name, required this.iconKey, required this.initialBalance});
+  const WalletAdded({required this.name, required this.iconKey, required this.initialBalance, this.colorKey});
+
+  /// Warna latar kartu, `null` = bawaan.
+  final String? colorKey;
 
   /// Nama dompet.
   final String name;
@@ -51,6 +54,7 @@ final class WalletEdited extends WalletEvent {
     required this.iconKey,
     required this.isActive,
     this.currentBalance,
+    this.colorKey,
   });
 
   /// Dompet sebelum disunting.
@@ -64,6 +68,9 @@ final class WalletEdited extends WalletEvent {
 
   /// Status aktif baru.
   final bool isActive;
+
+  /// Warna latar kartu, `null` = bawaan.
+  final String? colorKey;
 
   /// Saldo saat ini yang dikehendaki (sen), atau `null` kalau tidak diubah.
   final int? currentBalance;

@@ -8,6 +8,7 @@ import 'package:saldough/features/freelance/domain/repositories/freelance_reposi
 import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
+import 'package:saldough/shared/savings_goal/savings_goal.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
@@ -23,6 +24,7 @@ final class AppExportDataSource with RepositoryGuard implements ExportDataSource
     required this.budgets,
     required this.rules,
     required this.freelance,
+    required this.goals,
   });
 
   /// Buku besar.
@@ -43,6 +45,9 @@ final class AppExportDataSource with RepositoryGuard implements ExportDataSource
   /// Freelance.
   final FreelanceRepository freelance;
 
+  /// Tujuan tabungan untuk lembar Tujuan (ADR-048 §3.4).
+  final SavingsGoalRepository goals;
+
   @override
   Future<Either<Failure, ExportData>> load() => guard(() async {
     final txs = await _ok(transactions.listAllTransactions());
@@ -52,6 +57,7 @@ final class AppExportDataSource with RepositoryGuard implements ExportDataSource
     final rule = await _ok(rules.listRules());
     final projects = await _ok(freelance.listProjects());
     final payments = await _ok(freelance.listPayments());
+    final goal = await _ok(goals.listGoals());
 
     final projectNames = {for (final p in projects) p.id: p.name};
     return ExportData(
@@ -63,6 +69,7 @@ final class AppExportDataSource with RepositoryGuard implements ExportDataSource
       freelanceProjectByPaymentId: {for (final p in payments) p.id: ?projectNames[p.projectId]},
       schedule: ActiveFinancialMonth.schedule,
       currency: ActiveCurrency.value,
+      goals: goal,
     );
   });
 

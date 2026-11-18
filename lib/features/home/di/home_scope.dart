@@ -31,6 +31,9 @@ final class HomeScope extends IsolatedScope {
         transactionRepository: c<TransactionRepository>(),
         budgetOverviewSource: c<BudgetOverviewSource>(),
         freelanceOverviewSource: c<FreelanceOverviewSource>(),
+        transferOnlyWallets: parent.isRegistered<TransferOnlyWallets>()
+            ? parent<TransferOnlyWallets>()
+            : const NoTransferOnlyWallets(),
       ),
       dispose: (bloc) => bloc.close(),
     );

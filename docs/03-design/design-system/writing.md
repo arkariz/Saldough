@@ -16,6 +16,13 @@ Teks Tanukonomy ditulis seperti teman yang rapi mencatat: hangat, pendek, dan te
 |---|---|---|
 | Dompet | kantong, kas, rekening (sebagai nama umum) | Tempat uang: bank, dompet digital, tunai, tabungan, kartu |
 | Total saldo | total kas aktif, posisi saldo kas | Jumlah saldo semua dompet aktif |
+| Total aset | kekayaan, kekayaan bersih (sebelum utang tercatat), net worth | Angka utama tab Dompet dan Beranda: lapis Dompet + Tabungan + Investasi (ADR-050) |
+| Dompet / Wallets, Tabungan / Savings, Investasi / Investments | dana operasional, operating funds, kantong | Nama tiga lapis Total aset |
+| Sebaran aset, sebaran dompet, sebaran tabungan | distribusi aset, alokasi | Porsi Total aset per lapis, porsi lapis per dompet atau tujuan; lebih dari 5 butir digabung jadi "Lainnya (n)" |
+| Tujuan, tujuan tabungan | goal, celengan, target (untuk tujuannya) | Rencana mengumpulkan uang (ADR-048). Status: Aktif, Tercapai, Diarsipkan. "Target" hanya untuk nominal yang dituju dan "Target tanggal" |
+| Dompet tujuan ini, dompet milik tujuan | dompet tujuan (tanpa penjelas) | "Dompet tujuan" sudah berarti dompet penerima transfer |
+| Sudah terkumpul | saldo awal tujuan, setoran awal | Kolom opsional di Tujuan baru |
+| Perkiraan tercapai, perkiraan | prediksi, pasti tercapai, janji | Selalu disebut perkiraan, bukan janji (Plus) |
 | Sebaran saldo | distribusi saldo, alokasi, teralokasi | Porsi total saldo di tiap dompet; bukan alokasi anggaran |
 | Ekspor | unduh data, export | Salinan transaksi ke spreadsheet (Excel atau CSV), untuk dibaca manusia |
 | Cadangan, cadangkan | backup, simpan data | Satu berkas berisi seluruh data, untuk dipulihkan oleh Tanukonomy |

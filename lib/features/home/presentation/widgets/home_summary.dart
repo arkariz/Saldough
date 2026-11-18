@@ -9,6 +9,7 @@ import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/home/domain/budget_overview_source.dart';
 import 'package:saldough/features/home/domain/freelance_overview_source.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
+import 'package:saldough/shared/wealth/wealth.dart';
 
 /// Ukuran ikon clay di kepala slide carousel (anggaran, tagihan, hadiah).
 const double kSlideIconSize = 28;
@@ -26,6 +27,7 @@ class HomeBalanceCard extends StatelessWidget {
     required this.walletCount,
     this.cashFlow,
     this.footer,
+    this.layers,
     super.key,
   });
 
@@ -42,6 +44,10 @@ class HomeBalanceCard extends StatelessWidget {
   /// disisipkan akar komposisi dari fitur Rencana. `null` = tidak ada.
   final Widget? footer;
 
+  /// Total aset per lapis; keterangan menyebut lapisnya bila sudah ada tujuan
+  /// (ADR-050 §3.4).
+  final WealthLayers? layers;
+
   @override
   Widget build(BuildContext context) {
     final flow = cashFlow;
@@ -51,7 +57,7 @@ class HomeBalanceCard extends StatelessWidget {
       duration: const Duration(milliseconds: 1100),
       curve: Curves.easeOutCubic,
       builder: (context, shown) => DsHeroBalanceCard(
-        label: t.home.balanceLabel.toUpperCase(),
+        label: t.assets.totalAssets.toUpperCase(),
         currencySymbol: symbol,
         semanticAmount: AppMoneyFormatter.formatRevealed(total),
         mascot: SvgPicture.asset(ClayIcons.mascot),
@@ -61,7 +67,13 @@ class HomeBalanceCard extends StatelessWidget {
         hidden: AmountVisibility.hidden,
         toggleLabel: AmountVisibility.hidden ? t.home.showAmounts : t.home.hideAmounts,
         onToggleHidden: AmountVisibility.toggle,
-        caption: walletCount == 0 ? null : t.home.walletLink(count: walletCount),
+        caption: switch (layers) {
+          final l? when l.hasSavings => t.assets.homeLayers(
+            operational: AppMoneyText.format(l.operational, MoneyKind.balance),
+            savings: AppMoneyText.format(l.savings, MoneyKind.balance),
+          ),
+          _ => walletCount == 0 ? null : t.home.walletLink(count: walletCount),
+        },
         stats: flow == null
             ? const []
             : [

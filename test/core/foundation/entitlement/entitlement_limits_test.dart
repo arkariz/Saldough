@@ -60,6 +60,6 @@ void main() {
   });
 
   test('setiap kunci yang dibaca terdaftar di keys', () {
-    expect(EntitlementLimits.keys, hasLength(16));
+    expect(EntitlementLimits.keys, hasLength(17));
   });
 }

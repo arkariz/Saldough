@@ -609,24 +609,15 @@ class AppIcon extends StatelessWidget {
   }
 }
 
-/// Ikon pixel-art untuk dompet ber-`Wallet.iconKey` [key]. `Wallet.iconKey`
-/// menyimpan nama [IconKey] (`walletBank`, `walletCash`, `walletEwallet`,
-/// `walletSavings`, `walletCard`); nilai lain -- termasuk yang tidak dikenal
-/// -- jatuh ke [IconKey.wallets] alih-alih melempar, karena kunci ini data
+/// Ikon untuk dompet ber-`Wallet.iconKey` [key]. `Wallet.iconKey` menyimpan
+/// nama [IconKey]: ikon dompet (`walletBank`, `walletCash`, `walletEwallet`,
+/// `walletSavings`, `walletCard`), atau ikon tujuan untuk dompet milik
+/// tujuan (ADR-048 §8.1, disalin dari tujuannya). Nilai yang tidak dikenal
+/// jatuh ke [IconKey.wallets] alih-alih melempar, karena kunci ini data
 /// tersimpan yang bisa berasal dari versi aplikasi lain.
-IconKey walletIconKey(String key) {
-  const walletKeys = {
-    IconKey.walletBank,
-    IconKey.walletCash,
-    IconKey.walletEwallet,
-    IconKey.walletSavings,
-    IconKey.walletCard,
-  };
-  for (final candidate in walletKeys) {
-    if (candidate.name == key) return candidate;
-  }
-  return IconKey.wallets;
-}
+IconKey walletIconKey(String key) => _iconKeysByName[key] ?? IconKey.wallets;
+
+final Map<String, IconKey> _iconKeysByName = IconKey.values.asNameMap();
 
 /// Mengganti warna garis tepi ikon piksel ([pixelOutline]) dengan
 /// [outline] -- aturan pewarnaan ulang mode gelap (B-23, ADR-034 §4).

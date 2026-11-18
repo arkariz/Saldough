@@ -12,6 +12,7 @@ export 'domain/source_icon_repository.dart';
 export 'domain/transaction.dart';
 export 'domain/transaction_query.dart';
 export 'domain/transaction_repository.dart';
+export 'domain/transfer_only_wallets.dart';
 export 'domain/usecases/calculate_cash_flow.dart';
 export 'domain/usecases/list_period_transactions.dart';
 export 'domain/usecases/recompute_wallet_balances.dart';

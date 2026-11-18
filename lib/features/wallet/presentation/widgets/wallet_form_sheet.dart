@@ -27,7 +27,11 @@ final class WalletFormSaved extends WalletFormResult {
     required this.iconKey,
     required this.isActive,
     required this.balance,
+    this.colorKey,
   });
+
+  /// Warna latar kartu, `null` = bawaan.
+  final String? colorKey;
 
   /// Nama dompet.
   final String name;
@@ -53,7 +57,7 @@ final class WalletFormDeleted extends WalletFormResult {
 
 /// Formulir tambah dan sunting dompet (FR-WAL-001/002), layar penuh lewat
 /// `showFullScreenSheet`. Tata letaknya mengikuti rujukan visual
-/// `pixel_kas_tambah_dompet` dan `pixel_kas_ubah_dompet`: nama, ikon jenis,
+/// `pixel_kas_tambah_dompet` dan `pixel_kas_ubah_dompet`: nama, ikon,
 /// saldo awal dengan pilihan cepat, dan -- saat menyunting -- saldo tercatat,
 /// sakelar aktif, serta hapus.
 ///
@@ -63,8 +67,8 @@ final class WalletFormDeleted extends WalletFormResult {
 /// formulir ini hanya menampilkan pratinjaunya (rupa B-99). Saldo boleh
 /// negatif lewat tombol ±. Menyunting nama/ikon/status TIDAK mengubah saldo.
 ///
-/// ⚠ Bagian rujukan yang sengaja tidak dibangun: "Tipe kategori" (sama dengan
-/// pilihan ikon, jenis diturunkan dari ikon), "Catatan tambahan" dan subjudul
+/// ⚠ Dompet tidak punya jenis: pilihan ikon hanya tampilan (WEALTH_ASSETS
+/// keputusan 11). Bagian rujukan yang sengaja tidak dibangun: "Tipe kategori", "Catatan tambahan" dan subjudul
 /// dompet (`Wallet` tidak punya field catatan), lencana "UTAMA" dan tombol
 /// "Atur Urutan" (tidak ada konsep dompet utama/urutan di domain).
 class WalletFormSheet extends StatefulWidget {
@@ -88,6 +92,9 @@ class _WalletFormSheetState extends State<WalletFormSheet> {
   /// Tanda kolom saldo; besarannya ada di [_balanceController].
   bool _negative = false;
 
+  /// Warna latar kartu; `null` = bawaan.
+  String? _colorKey;
+
   bool get _editing => widget.initial != null;
 
   @override
@@ -98,6 +105,7 @@ class _WalletFormSheetState extends State<WalletFormSheet> {
     _nameController.text = wallet.name;
     _iconKey = wallet.iconKey;
     _isActive = wallet.isActive;
+    _colorKey = wallet.colorKey;
     // Saldo negatif dan bersen pecahan tetap tampil (rupa B-99): tanda lewat
     // [_negative], dan mata uang tanpa desimal menampilkan bagian utuhnya.
     // Kolom yang tidak disentuh tidak pernah dikirim, jadi tidak mengubah
@@ -154,6 +162,7 @@ class _WalletFormSheetState extends State<WalletFormSheet> {
         iconKey: _iconKey,
         isActive: _isActive,
         balance: _editing && !_balanceTouched ? null : _targetSen,
+        colorKey: _colorKey,
       ),
     );
   }
@@ -223,28 +232,43 @@ class _WalletFormSheetState extends State<WalletFormSheet> {
               const SizedBox(height: DsSpacing.md),
               _FieldLabel(t.wallet.iconLabel),
               const SizedBox(height: DsSpacing.xs),
-              // Tiga kolom sama lebar (ubin ke-4 dan ke-5 di baris kedua), bukan
-              // ubin berlebar tetap yang menyisakan ruang kosong di kanan.
-              LayoutBuilder(
-                builder: (context, constraints) {
-                  const gap = 8.0;
-                  final tileWidth = (constraints.maxWidth - 2 * gap) / 3;
-                  return Wrap(
-                    spacing: gap,
-                    runSpacing: gap,
-                    children: [
-                      for (final choice in walletIconChoices)
-                        SizedBox(
-                          width: tileWidth,
-                          child: _IconChoice(
-                            iconKey: choice,
-                            selected: walletIconKey(_iconKey) == choice,
-                            onTap: () => setState(() => _iconKey = choice.name),
-                          ),
-                        ),
-                    ],
-                  );
-                },
+              // Sama seperti pemilih ikon kategori: ubin ikon 48dp tanpa label.
+              // Ikon dompet hanya tampilan, bukan jenis (WEALTH_ASSETS keputusan 11).
+              Wrap(
+                spacing: 4,
+                runSpacing: 4,
+                children: [
+                  for (final (i, choice) in walletIconChoices.indexed)
+                    _IconChoice(
+                      iconKey: choice,
+                      index: i,
+                      selected: walletIconKey(_iconKey) == choice,
+                      onTap: () => setState(() => _iconKey = choice.name),
+                    ),
+                ],
+              ),
+              const SizedBox(height: DsSpacing.md),
+              _FieldLabel(t.wallet.colorLabel),
+              const SizedBox(height: DsSpacing.xs),
+              Wrap(
+                spacing: 4,
+                runSpacing: 4,
+                children: [
+                  _ColorChoice(
+                    pair: null,
+                    label: t.wallet.colorDefault,
+                    selected: _colorKey == null,
+                    onTap: () => setState(() => _colorKey = null),
+                  ),
+                  for (final (i, key) in walletColorChoices.indexed)
+                    _ColorChoice(
+                      key: ValueKey('wallet-color-$key'),
+                      pair: walletColorPair(c, key),
+                      label: t.wallet.colorOption(n: i + 1),
+                      selected: _colorKey == key,
+                      onTap: () => setState(() => _colorKey = key),
+                    ),
+                ],
               ),
               const SizedBox(height: DsSpacing.md),
               _FieldLabel(_editing ? t.wallet.currentBalanceLabel : t.wallet.initialBalanceLabel),
@@ -527,62 +551,83 @@ class _Header extends StatelessWidget {
   }
 }
 
-/// Satu ubin pilihan jenis dompet: ikon clay di atas, label jenis di bawah.
-/// Terpilih: bingkai dan latar warna aksi preset, ikon bergoyang.
+/// Satu ubin pilihan ikon dompet, sama seperti pemilih ikon kategori: ikon
+/// clay di kotak 48dp tanpa label; yang terpilih berwarna aksi preset.
 class _IconChoice extends StatelessWidget {
-  const _IconChoice({required this.iconKey, required this.selected, required this.onTap});
+  const _IconChoice({required this.iconKey, required this.index, required this.selected, required this.onTap});
 
   final IconKey iconKey;
+  final int index;
   final bool selected;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    final ds = context.ds;
-    final c = ds.colors;
+    final c = context.ds.colors;
     final asset = ClayIcons.forIcon(iconKey) ?? ClayIcons.walletNav;
-    final label = walletTypeLabel(iconKey.name) ?? '';
+    return Semantics(
+      button: true,
+      selected: selected,
+      label: t.wallet.iconOption(n: index + 1),
+      onTap: onTap,
+      excludeSemantics: true,
+      child: GestureDetector(
+        key: ValueKey('wallet-icon-${iconKey.name}'),
+        behavior: HitTestBehavior.opaque,
+        onTap: onTap,
+        child: SizedBox.square(
+          dimension: 48,
+          child: Center(
+            child: DsIconTile.asset(
+              asset: asset,
+              category: selected ? DsColorPair(c.actionPrimary, c.actionPrimary.withValues(alpha: 0.14)) : null,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Satu pilihan warna latar kartu: lingkaran 48dp berisi warna "container"
+/// palet (bawaan: warna kartu biasa); yang terpilih bercincin warna aksi dan
+/// bertanda centang.
+class _ColorChoice extends StatelessWidget {
+  const _ColorChoice({required this.pair, required this.label, required this.selected, required this.onTap, super.key});
+
+  final DsColorPair? pair;
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.ds.colors;
+    final fill = pair?.container ?? c.surfaceCard;
+    final edge = pair?.color ?? c.outlineSubtle;
     return Semantics(
       button: true,
       selected: selected,
       label: label,
+      onTap: onTap,
       excludeSemantics: true,
-      child: DsPressable(
-        onPressed: onTap,
-        pressedScale: 0.96,
-        dimWhenDisabled: false,
-        builder: (context, _) => AnimatedContainer(
-          duration: DsMotion.reduced(context) ? Duration.zero : DsMotion.standard,
-          constraints: const BoxConstraints(minHeight: 92),
-          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 10),
-          decoration: BoxDecoration(
-            color: selected ? c.actionPrimary.withValues(alpha: 0.08) : c.surfaceCard,
-            borderRadius: DsRadius.lgAll,
-            border: Border.all(color: selected ? c.actionPrimary.withValues(alpha: 0.6) : c.outlineSubtle),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              DsWiggle(
-                trigger: selected ? 1 : 0,
-                child: DsIconTile.asset(
-                  asset: asset,
-                  category: selected ? DsColorPair(c.actionPrimary, c.actionPrimary.withValues(alpha: 0.14)) : null,
-                ),
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: onTap,
+        child: SizedBox.square(
+          dimension: 48,
+          child: Center(
+            child: AnimatedContainer(
+              duration: DsMotion.reduced(context) ? Duration.zero : DsMotion.standard,
+              width: 36,
+              height: 36,
+              decoration: BoxDecoration(
+                color: fill,
+                shape: BoxShape.circle,
+                border: Border.all(color: selected ? c.actionPrimary : edge, width: selected ? 2.5 : 1.5),
               ),
-              const SizedBox(height: 6),
-              Text(
-                label,
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: ds.typography.labelMd.copyWith(
-                  fontSize: 11,
-                  letterSpacing: 0,
-                  color: selected ? c.actionPrimary : c.textSecondary,
-                ),
-              ),
-            ],
+              child: selected ? Icon(Icons.check, size: 18, color: pair?.color ?? c.actionPrimary) : null,
+            ),
           ),
         ),
       ),

@@ -108,6 +108,7 @@ final class FreelanceState extends UiState<FreelanceState> {
     required this.wallets,
     required this.isLoading,
     this.loadFailed = false,
+    this.transferOnlyWalletIds = const {},
     super.effect,
   });
 
@@ -136,8 +137,13 @@ final class FreelanceState extends UiState<FreelanceState> {
   /// Pembacaan terakhir gagal.
   final bool loadFailed;
 
-  /// Dompet aktif — pilihan dompet tujuan saat mencatat diterima.
-  List<Wallet> get activeWallets => wallets.where((w) => w.isActive).toList();
+  /// Dompet milik tujuan tabungan: hanya untuk transfer (ADR-048 §8.2a).
+  final Set<String> transferOnlyWalletIds;
+
+  /// Dompet aktif yang boleh menerima honor — pilihan dompet saat mencatat
+  /// diterima. Dompet milik tujuan tidak ditawarkan: honor adalah pemasukan.
+  List<Wallet> get activeWallets =>
+      wallets.where((w) => w.isActive && !transferOnlyWalletIds.contains(w.id)).toList();
 
   /// Proyek ber-`id` [id], atau `null`.
   FreelanceProject? projectOf(String id) => projects.where((p) => p.id == id).firstOrNull;
@@ -317,6 +323,7 @@ final class FreelanceState extends UiState<FreelanceState> {
     List<Wallet>? wallets,
     bool? isLoading,
     bool? loadFailed,
+    Set<String>? transferOnlyWalletIds,
     UiEffect? effect,
   }) {
     return FreelanceState(
@@ -326,10 +333,11 @@ final class FreelanceState extends UiState<FreelanceState> {
       wallets: wallets ?? this.wallets,
       isLoading: isLoading ?? this.isLoading,
       loadFailed: loadFailed ?? this.loadFailed,
+      transferOnlyWalletIds: transferOnlyWalletIds ?? this.transferOnlyWalletIds,
       effect: effect,
     );
   }
 
   @override
-  List<Object?> get props => [projects, entries, payments, wallets, isLoading, loadFailed];
+  List<Object?> get props => [projects, entries, payments, wallets, isLoading, loadFailed, transferOnlyWalletIds];
 }

@@ -11,6 +11,7 @@ final class WalletModel {
     required this.initialBalance,
     required this.currentBalance,
     required this.isActive,
+    this.colorKey,
   });
 
   /// Membaca [WalletModel] dari JSON.
@@ -21,6 +22,7 @@ final class WalletModel {
         initialBalance: json['initialBalance'] as int,
         currentBalance: json['currentBalance'] as int,
         isActive: json['isActive'] as bool,
+        colorKey: json['colorKey'] as String?,
       );
 
   /// Membuat [WalletModel] dari entitas domain [Wallet].
@@ -31,6 +33,7 @@ final class WalletModel {
         initialBalance: wallet.initialBalance,
         currentBalance: wallet.currentBalance,
         isActive: wallet.isActive,
+        colorKey: wallet.colorKey,
       );
 
   /// Versi skema dokumen ini. Naikkan kalau bentuk field berubah.
@@ -54,6 +57,10 @@ final class WalletModel {
   /// Dompet aktif atau tidak.
   final bool isActive;
 
+  /// Warna latar kartu, opsional. Field tambahan tanpa naik skema: pembaca
+  /// lama mengabaikannya, dokumen lama tanpa kunci ini terbaca `null`.
+  final String? colorKey;
+
   /// Menulis [WalletModel] ke JSON.
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -62,6 +69,7 @@ final class WalletModel {
         'initialBalance': initialBalance,
         'currentBalance': currentBalance,
         'isActive': isActive,
+        if (colorKey != null) 'colorKey': colorKey,
       };
 
   /// Mengubah model jadi entitas domain [Wallet].
@@ -72,5 +80,6 @@ final class WalletModel {
         initialBalance: initialBalance,
         currentBalance: currentBalance,
         isActive: isActive,
+        colorKey: colorKey,
       );
 }

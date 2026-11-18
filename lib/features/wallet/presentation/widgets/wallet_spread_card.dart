@@ -27,8 +27,21 @@ class WalletSpreadCard extends StatefulWidget {
     required this.total,
     required this.activeCount,
     required this.onSelected,
+    this.title,
+    this.totalLabel,
+    this.countLabel,
     super.key,
   });
+
+  /// Judul kartu; bawaan "Sebaran saldo". Dipakai juga untuk sebaran tabungan
+  /// (ADR-050 §3.3).
+  final String? title;
+
+  /// Label tengah donat tanpa pilihan; bawaan label saldo Beranda.
+  final String? totalLabel;
+
+  /// Keterangan tengah donat tanpa pilihan; bawaan "N dompet aktif".
+  final String? countLabel;
 
   /// Dompet aktif, urutan tampil. Hanya yang punya [shares] menjadi irisan.
   final List<Wallet> wallets;
@@ -52,6 +65,12 @@ class WalletSpreadCard extends StatefulWidget {
   State<WalletSpreadCard> createState() => _WalletSpreadCardState();
 }
 
+/// Batas butir yang ditampilkan kartu sebaran; lebih dari ini digabung.
+const spreadMaxItems = 5;
+
+/// Id butir gabungan "Lainnya".
+const spreadOthersId = '__others';
+
 class _WalletSpreadCardState extends State<WalletSpreadCard> {
   bool _open = false;
   String? _selected;
@@ -61,9 +80,34 @@ class _WalletSpreadCardState extends State<WalletSpreadCard> {
       if (widget.shares.containsKey(w.id)) w,
   ];
 
+  /// Butir yang ditampilkan di batang, kunci, donut, dan legenda: paling
+  /// banyak [spreadMaxItems] butir, terbesar dulu; sisanya digabung menjadi satu
+  /// butir "Lainnya (n)" supaya kartu tidak menumpuk (umpan balik pemilik
+  /// 17 Nov 2026). Persen dihitung ulang dari total positif yang sama, jadi
+  /// angka butir yang tampil tidak berubah.
+  ({List<Wallet> items, Map<String, WalletShare> shares, Map<String, Color> colors}) _display(
+    List<Wallet> shown,
+    Color othersColor,
+  ) {
+    if (shown.length <= spreadMaxItems) return (items: shown, shares: widget.shares, colors: widget.colors);
+    final sorted = [...shown]..sort((a, b) => b.currentBalance.compareTo(a.currentBalance));
+    final kept = sorted.take(spreadMaxItems - 1).toList();
+    final rest = sorted.skip(spreadMaxItems - 1).toList();
+    final others = Wallet(
+      id: spreadOthersId,
+      name: t.wallet.spreadOthers(n: rest.length),
+      iconKey: '',
+      initialBalance: 0,
+      currentBalance: rest.fold(0, (sum, w) => sum + w.currentBalance),
+    );
+    final items = [...kept, others];
+    return (items: items, shares: walletShares(items), colors: {...widget.colors, spreadOthersId: othersColor});
+  }
+
   void _setSelected(String? id) {
     setState(() => _selected = id);
-    widget.onSelected(id);
+    // "Lainnya" bukan satu dompet: tidak ada yang ditandai di daftar.
+    widget.onSelected(id == spreadOthersId ? null : id);
   }
 
   void _toggle() {
@@ -76,15 +120,17 @@ class _WalletSpreadCardState extends State<WalletSpreadCard> {
     _setSelected(_selected == id ? null : id);
   }
 
-  String _semantics(List<Wallet> shown) => t.wallet.spreadSemantics(
-    list: shown.map((w) => '${w.name} ${widget.shares[w.id]!.text}').join(', '),
+  String _semantics(List<Wallet> shown, Map<String, WalletShare> shares) => t.wallet.spreadSemantics(
+    list: shown.map((w) => '${w.name} ${shares[w.id]!.text}').join(', '),
   );
 
   @override
   Widget build(BuildContext context) {
-    final shown = _shown;
+    final all = _shown;
     final reduceMotion = MediaQuery.disableAnimationsOf(context);
     final c = context.ds.colors;
+    final display = _display(all, c.categories.slate.color);
+    final shown = display.items;
     return Container(
       key: const ValueKey('wallet-spread'),
       clipBehavior: Clip.antiAlias,
@@ -97,14 +143,20 @@ class _WalletSpreadCardState extends State<WalletSpreadCard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _Head(open: _open, reduceMotion: reduceMotion, count: shown.length, onTap: _toggle),
+          _Head(
+            title: widget.title ?? t.wallet.spreadTitle,
+            open: _open,
+            reduceMotion: reduceMotion,
+            count: all.length,
+            onTap: _toggle,
+          ),
           if (!_open) ...[
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4),
               child: Semantics(
-                label: _semantics(shown),
+                label: _semantics(shown, display.shares),
                 image: true,
-                child: WalletSpreadBar(wallets: shown, colors: widget.colors),
+                child: WalletSpreadBar(wallets: shown, colors: display.colors),
               ),
             ),
             Padding(
@@ -115,20 +167,25 @@ class _WalletSpreadCardState extends State<WalletSpreadCard> {
                 AppSpacing.space4,
               ),
               child: ExcludeSemantics(
-                child: _Keys(wallets: shown, shares: widget.shares, colors: widget.colors),
+                child: _Keys(wallets: shown, shares: display.shares, colors: display.colors),
               ),
             ),
           ] else
             _FadeIn(
               enabled: !reduceMotion,
-              child: _body(context, shown),
+              child: _body(context, shown, display.shares, display.colors),
             ),
         ],
       ),
     );
   }
 
-  Widget _body(BuildContext context, List<Wallet> shown) {
+  Widget _body(
+    BuildContext context,
+    List<Wallet> shown,
+    Map<String, WalletShare> shares,
+    Map<String, Color> itemColors,
+  ) {
     final colors = context.ds.colors;
     final selectedIndex = shown.indexWhere((w) => w.id == _selected);
     final selected = selectedIndex < 0 ? null : shown[selectedIndex];
@@ -147,17 +204,17 @@ class _WalletSpreadCardState extends State<WalletSpreadCard> {
                 rounded: true,
                 trackColor: colors.surfaceContainerHigh,
                 slices: [
-                  for (final w in shown) DonutSlice(value: w.currentBalance, color: widget.colors[w.id]!),
+                  for (final w in shown) DonutSlice(value: w.currentBalance, color: itemColors[w.id]!),
                 ],
                 selected: selected == null ? null : selectedIndex,
                 onSelect: (index) => _pick(shown[index].id),
-                semanticsLabel: _semantics(shown),
+                semanticsLabel: _semantics(shown, shares),
                 center: _Center(
-                  label: selected?.name ?? t.home.balanceLabel,
+                  label: selected?.name ?? widget.totalLabel ?? t.home.balanceLabel,
                   sen: selected?.currentBalance ?? widget.total,
                   caption: selected == null
-                      ? t.wallet.activeBadge(count: widget.activeCount)
-                      : t.wallet.spreadOfTotal(percent: widget.shares[selected.id]!.text),
+                      ? widget.countLabel ?? t.wallet.activeBadge(count: widget.activeCount)
+                      : t.wallet.spreadOfTotal(percent: shares[selected.id]!.text),
                 ),
               ),
             ),
@@ -166,8 +223,8 @@ class _WalletSpreadCardState extends State<WalletSpreadCard> {
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4),
               child: _Legend(
                 wallets: shown,
-                shares: widget.shares,
-                colors: widget.colors,
+                shares: shares,
+                colors: itemColors,
                 selected: _selected,
                 onPick: _pick,
               ),
@@ -200,7 +257,15 @@ class _WalletSpreadCardState extends State<WalletSpreadCard> {
 /// jumlah alokasi, subjudul buka/tutup, dan chevron yang berputar 180° saat
 /// terbuka.
 class _Head extends StatelessWidget {
-  const _Head({required this.open, required this.reduceMotion, required this.count, required this.onTap});
+  const _Head({
+    required this.title,
+    required this.open,
+    required this.reduceMotion,
+    required this.count,
+    required this.onTap,
+  });
+
+  final String title;
 
   final bool open;
   final bool reduceMotion;
@@ -215,7 +280,7 @@ class _Head extends StatelessWidget {
     return Semantics(
       button: true,
       expanded: open,
-      label: '${t.wallet.spreadTitle}. $sub',
+      label: '$title. $sub',
       excludeSemantics: true,
       child: DsPressable(
         key: const ValueKey('wallet-spread-head'),
@@ -240,7 +305,7 @@ class _Head extends StatelessWidget {
                         runSpacing: 2,
                         crossAxisAlignment: WrapCrossAlignment.center,
                         children: [
-                          Text(t.wallet.spreadTitle, style: ds.typography.titleMd),
+                          Text(title, style: ds.typography.titleMd),
                           DsBadge(label: '$count', tone: DsBadgeTone.neutral),
                         ],
                       ),

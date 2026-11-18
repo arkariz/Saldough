@@ -14,7 +14,6 @@ import 'package:saldough/features/wallet/presentation/bloc/wallet_bloc.dart';
 import 'package:saldough/features/wallet/presentation/bloc/wallet_state.dart';
 import 'package:saldough/features/wallet/presentation/wallet_shares.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_form_sheet.dart';
-import 'package:saldough/features/wallet/presentation/widgets/wallet_type.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/transaction/transaction_presentation.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
@@ -69,6 +68,7 @@ class WalletDetailPage extends StatelessWidget {
         :final iconKey,
         :final isActive,
         :final balance,
+        :final colorKey,
       ):
         bloc.add(
           WalletEdited(
@@ -77,6 +77,7 @@ class WalletDetailPage extends StatelessWidget {
             iconKey: iconKey,
             isActive: isActive,
             currentBalance: balance,
+            colorKey: colorKey,
           ),
         );
         await bloc.stream.firstWhere((s) => s.effect != null);

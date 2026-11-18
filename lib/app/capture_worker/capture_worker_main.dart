@@ -42,6 +42,7 @@ import 'package:saldough/features/recurring/domain/resync_reminders_for_capture.
 import 'package:saldough/shared/capture/capture.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
+import 'package:saldough/shared/savings_goal/savings_goal.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
@@ -134,7 +135,9 @@ Future<void> _drain(
 ) async {
   final store = NotificationCaptureStoreImpl(storage: storage);
   final settings = (await store.loadSettings()).getOrElse((_) => const NotificationCaptureSettings());
-  final wallets = await loadActiveWallets(WalletRepositoryImpl(storage: storage));
+  // Dompet milik tujuan hanya untuk transfer (ADR-048 §8.2a): tidak ditebak.
+  final goalWallets = await GoalTransferOnlyWallets(SavingsGoalRepositoryImpl(storage: storage)).walletIds();
+  final wallets = await loadActiveWallets(WalletRepositoryImpl(storage: storage), exclude: goalWallets);
   final categories = (await CategoryRepositoryImpl(storage: storage).listCategories()).getOrElse((_) => const []);
   final rules = (await RecurringRuleRepositoryImpl(storage: storage).listRules()).getOrElse((_) => const []);
   final processed = (await store.loadProcessedIds()).getOrElse((_) => {});

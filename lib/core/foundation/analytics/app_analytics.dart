@@ -119,6 +119,13 @@ abstract final class WealthEvents {
   /// `decrease`.
   static AnalyticsEvent balanceAdjusted(String direction) =>
       AnalyticsEvent('balance_adjusted', {'direction': direction});
+
+  /// Tujuan tabungan baru tersimpan (ADR-048 §3.10, Revisi 1). [collected]:
+  /// `initial` bila "Sudah terkumpul" diisi, `empty` bila tidak.
+  static AnalyticsEvent goalCreated(String collected) => AnalyticsEvent('goal_created', {'collected': collected});
+
+  /// Tujuan tabungan baru tercapai.
+  static const goalCompleted = AnalyticsEvent('goal_completed');
 }
 
 /// Peristiwa rutin R1 (ADR-035 §7) dan R3 (ADR-037 §3.5), tanpa nominal.

@@ -14,6 +14,7 @@ final class EntitlementLimits extends Equatable {
     required this.freeAnalysisPeriods,
     required this.freeBudgetTemplates,
     required this.freeProjects,
+    required this.freeSavingsGoals,
     required this.fairUseInterpretations,
     required this.fairUsePhoto,
     required this.fairUseAsk,
@@ -60,6 +61,7 @@ final class EntitlementLimits extends Equatable {
         d.freeBudgetTemplates,
       ),
       freeProjects: count('free_projects', d.freeProjects),
+      freeSavingsGoals: count('free_savings_goals', d.freeSavingsGoals),
       fairUseInterpretations: count(
         'plus_fair_use_interpretations',
         d.fairUseInterpretations,
@@ -90,6 +92,7 @@ final class EntitlementLimits extends Equatable {
     freeAnalysisPeriods: 6,
     freeBudgetTemplates: 1,
     freeProjects: 2,
+    freeSavingsGoals: 2,
     fairUseInterpretations: 1000,
     fairUsePhoto: 150,
     fairUseAsk: 300,
@@ -108,6 +111,7 @@ final class EntitlementLimits extends Equatable {
     'free_analysis_periods',
     'free_budget_templates',
     'free_projects',
+    'free_savings_goals',
     'plus_fair_use_interpretations',
     'plus_fair_use_photo',
     'plus_fair_use_ask',
@@ -139,6 +143,10 @@ final class EntitlementLimits extends Equatable {
 
   /// Proyek freelance di Gratis (semua proyek dihitung, ADR-041 §3.13).
   final int freeProjects;
+
+  /// Tujuan tabungan berstatus Active di Gratis (WEALTH_ASSETS keputusan
+  /// 4a–4b, ADR-048 §3.5).
+  final int freeSavingsGoals;
 
   /// Batas wajar tafsir cerdas per bulan untuk Plus (tidak ditampilkan).
   final int fairUseInterpretations;
@@ -174,6 +182,7 @@ final class EntitlementLimits extends Equatable {
     PlusFeature.analysisHistory => freeAnalysisPeriods,
     PlusFeature.budgetTemplates => freeBudgetTemplates,
     PlusFeature.freelanceProjects => freeProjects,
+    PlusFeature.savingsGoals => freeSavingsGoals,
     PlusFeature.ask => tasteAsk,
     PlusFeature.guardian => tasteGuardian,
     PlusFeature.notificationAutoRecord || PlusFeature.recurringAutomation => 0,
@@ -195,6 +204,7 @@ final class EntitlementLimits extends Equatable {
     freeAnalysisPeriods,
     freeBudgetTemplates,
     freeProjects,
+    freeSavingsGoals,
     fairUseInterpretations,
     fairUsePhoto,
     fairUseAsk,

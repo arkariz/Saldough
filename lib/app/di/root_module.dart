@@ -74,6 +74,7 @@ import 'package:saldough/features/notification_capture/domain/repositories/notif
 import 'package:saldough/features/notification_capture/presentation/navigation/notification_capture_route_module.dart';
 import 'package:saldough/features/onboarding/presentation/onboarding_route.dart';
 import 'package:saldough/features/onboarding/presentation/pages/onboarding_page.dart' show OnboardingOutcome;
+import 'package:saldough/features/plan/data/idle_money_average_impl.dart';
 import 'package:saldough/features/plan/data/month_review_repository_impl.dart';
 import 'package:saldough/features/plan/domain/month_review.dart';
 import 'package:saldough/features/plan/domain/plan_sources.dart';
@@ -86,6 +87,7 @@ import 'package:saldough/features/recurring/domain/reminder_scheduler.dart';
 import 'package:saldough/features/recurring/domain/reminder_settings.dart';
 import 'package:saldough/features/recurring/domain/sync_recurring_reminders.dart';
 import 'package:saldough/features/recurring/presentation/navigation/recurring_route_module.dart';
+import 'package:saldough/features/savings_goal/presentation/navigation/savings_goal_route_module.dart';
 import 'package:saldough/features/transaction/data/history_segment_repository_impl.dart';
 import 'package:saldough/features/transaction/domain/history_segment.dart';
 import 'package:saldough/features/transaction/presentation/navigation/transaction_route_module.dart';
@@ -95,6 +97,7 @@ import 'package:saldough/shared/auth/auth.dart';
 import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
+import 'package:saldough/shared/savings_goal/savings_goal.dart';
 import 'package:saldough/shared/transaction/source_icons.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
@@ -128,6 +131,7 @@ abstract final class RootModule {
     NotificationCaptureRouteModule(),
     RecordRouteModule(),
     RecurringRouteModule(),
+    SavingsGoalRouteModule(),
     TransactionRouteModule(),
     VoiceCaptureRouteModule(),
     WalletRouteModule(),
@@ -173,6 +177,7 @@ abstract final class RootModule {
           budgets: container<BudgetItemCatalog>(),
           rules: container<RecurringRuleRepository>(),
           freelance: container<FreelanceRepository>(),
+          goals: container<SavingsGoalRepository>(),
         ),
       )
       ..registerLazySingleton<ExportGateway>(
@@ -229,6 +234,17 @@ abstract final class RootModule {
       ..registerLazySingleton<RecurringRuleRepository>(
         () => RecurringRuleRepositoryImpl(storage: container<KeyValueStorage>()),
       )
+      // Tujuan tabungan (ADR-048), kunci `savings_goal/all`; dibaca tab Dompet
+      // dan fitur tujuan.
+      ..registerLazySingleton<SavingsGoalRepository>(
+        () => SavingsGoalRepositoryImpl(storage: container<KeyValueStorage>()),
+      )
+      ..registerLazySingleton<SavingsGoalDraftStore>(
+        () => SavingsGoalDraftStore(storage: container<KeyValueStorage>()),
+      )
+      // Dompet milik tujuan hanya untuk transfer (ADR-048 §8.2a), dibaca
+      // RecordTransaction di semua lingkup.
+      ..registerLazySingleton<TransferOnlyWallets>(() => GoalTransferOnlyWallets(container<SavingsGoalRepository>()))
       // Log tautan otomatis rutin dari catat notifikasi (ADR-035 §3.4), 7 hari.
       // Saran Sepertinya rutin yang ditolak (ADR-037 §3.3).
       ..registerLazySingleton<RecurringSuggestionDismissals>(
@@ -276,6 +292,15 @@ abstract final class RootModule {
           budgetRepository: container<BudgetRepository>(),
           transactionRepository: container<TransactionRepository>(),
           templateRepository: container<BudgetTemplateRepository>(),
+        ),
+      )
+      // Port milik `savings_goal` (perkiraan tujuan, ADR-048 §3.6),
+      // diimplementasikan `plan`.
+      ..registerLazySingleton<IdleMoneyAverage>(
+        () => IdleMoneyAverageImpl(
+          transactions: container<TransactionRepository>(),
+          rules: container<RecurringRuleRepository>(),
+          budgets: container<PlanBudgetSource>(),
         ),
       )
       ..registerLazySingleton<PlanFreelanceSource>(

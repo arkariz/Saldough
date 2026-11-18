@@ -15,6 +15,7 @@ import 'package:saldough/features/budget/domain/repositories/budget_repository.d
 import 'package:saldough/features/home/domain/budget_overview_source.dart';
 import 'package:saldough/features/home/domain/freelance_overview_source.dart';
 import 'package:saldough/features/plan/domain/plan_sources.dart';
+import 'package:saldough/features/premium/domain/plus_purchasing.dart';
 import 'package:saldough/features/wallet/presentation/pages/wallet_inactive_page.dart';
 import 'package:saldough/features/wallet/presentation/pages/wallet_list_page.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_card.dart';
@@ -23,10 +24,12 @@ import 'package:saldough/shared/auth/auth.dart';
 import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
+import 'package:saldough/shared/savings_goal/savings_goal.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
 import '../../../../helpers/fake_auth_repository.dart';
+import '../../../../helpers/fake_plus_purchasing.dart';
 import '../../../../helpers/mocks.dart';
 import '../../../../helpers/plan_sources.dart';
 import '../../../../helpers/reduced_motion.dart';
@@ -57,6 +60,9 @@ void main() {
       ..registerLazySingleton<RecurringRuleRepository>(
         () => RecurringRuleRepositoryImpl(storage: InMemoryKeyValueStorage()),
       )
+      ..registerLazySingleton<SavingsGoalRepository>(() => SavingsGoalRepositoryImpl(storage: storage))
+      ..registerLazySingleton<SavingsGoalDraftStore>(() => SavingsGoalDraftStore(storage: storage))
+      ..registerLazySingleton<PlusPurchasing>(() => FakePlusPurchasing(selling: false))
       ..registerLazySingleton<PlanBudgetSource>(EmptyPlanBudgetSource.new)
       ..registerLazySingleton<PlanFreelanceSource>(EmptyPlanFreelanceSource.new)
       ..registerSingleton<RouteRegistry>(appRouteRegistry())
@@ -165,12 +171,13 @@ void main() {
         expect(find.text(t.wallet.activeBadge(count: 2)), findsOneWidget);
         expect(find.text('BCA'), findsOneWidget);
         expect(find.text('GoPay'), findsOneWidget);
-        // Subjudul "Jenis · persen" (prototipe `Dompet.dc.html`): 8.500.000
-        // dari 10.950.000 = 78%, sisanya 22%.
-        expect(find.text(t.wallet.typeBank), findsOneWidget);
+        // Persen sebaran: 8.500.000 dari 10.950.000 = 78%, sisanya 22%.
+        // Tanpa label jenis: ikon dompet hanya tampilan (WEALTH_ASSETS
+        // keputusan 11).
         expect(find.text('78%'), findsWidgets);
-        expect(find.text(t.wallet.typeEwallet), findsOneWidget);
         expect(find.text('22%'), findsWidgets);
+        expect(find.text('Bank'), findsNothing);
+        expect(find.text('Dompet digital'), findsNothing);
         expect(find.byType(WalletSpreadBar), findsOneWidget);
         expect(find.byType(WalletSwatch), findsWidgets);
         // Dompet nonaktif hanya satu baris ringkas (B-66), bukan daftar.
@@ -186,7 +193,7 @@ void main() {
       await openWalletsTab(tester);
 
       expect(find.byType(WalletSpreadCard), findsNothing);
-      expect(find.text(t.wallet.typeBank), findsOneWidget);
+      expect(find.text('Bank'), findsNothing, reason: 'tanpa label jenis');
       expect(find.byType(WalletSwatch), findsNothing);
       expect(find.text(t.wallet.inactiveHeading), findsNothing);
     });
@@ -285,7 +292,10 @@ void main() {
         await seed('a', 'Kartu', current: -12300000, icon: 'walletCard');
         await openWalletsTab(tester);
 
-        final texts = tester.widgetList<Text>(find.text('−Rp123.000'));
+        // Kartu dompet; ubin lapis di hero memakai warna teks hero (ADR-050).
+        final texts = tester.widgetList<Text>(
+          find.descendant(of: find.byType(WalletBentoCard), matching: find.text('−Rp123.000')),
+        );
         expect(texts, isNotEmpty);
         for (final text in texts) {
           expect(text.style?.color, AppColors.light.ink);
@@ -301,7 +311,7 @@ void main() {
 
         await openForm(tester);
         await tester.enterText(find.byType(TextField).first, 'Dompet Saku');
-        await tester.tap(find.text(t.wallet.typeCash));
+        await tester.tap(find.byKey(const ValueKey('wallet-icon-walletCash')));
         await tester.tap(find.text('+500rb'));
         await tester.pump();
         await tester.tap(
@@ -604,7 +614,11 @@ void main() {
       expect(find.text(t.wallet.reorderTitle), findsOneWidget);
       expect(find.text(t.wallet.reorderHint), findsOneWidget);
       expect(find.text('Lama'), findsNothing, reason: 'dompet nonaktif tidak diurutkan');
-      expect(find.text(t.wallet.reorderHandleLabel(name: 'BCA')), findsNothing, reason: 'label hanya untuk pembaca layar');
+      expect(
+        find.text(t.wallet.reorderHandleLabel(name: 'BCA')),
+        findsNothing,
+        reason: 'label hanya untuk pembaca layar',
+      );
       expect(find.byType(WalletBentoCard), findsNWidgets(3), reason: 'bentuk kartu sama dengan mode biasa');
       expect(find.byType(DsJiggleLoop), findsNWidgets(3), reason: 'kartu bergoyang');
 
@@ -653,6 +667,107 @@ void main() {
       await tester.tap(reorderButton());
       await tester.pumpAndSettle();
       expect(find.byType(DsJiggleLoop), findsNWidgets(2));
+    });
+  });
+
+  group('WalletListPage -- tujuan tabungan (ADR-048, rupa B-96)', () {
+    Future<List<SavingsGoal>> storedGoals() async =>
+        (await container<SavingsGoalRepository>().listGoals()).getOrElse((_) => throw StateError('gagal'));
+
+    SavingsGoal goal(String id, {int target = 100000000}) => SavingsGoal(
+      id: id,
+      name: 'Tujuan $id',
+      targetAmount: target,
+      iconKey: 'walletSavings',
+      walletId: 'goal-$id',
+      createdAt: DateTime(2026, 11),
+    );
+
+    Future<void> openSavings(WidgetTester tester) async {
+      await tester.tap(
+        find.descendant(
+          of: find.byKey(const ValueKey('asset-segments')),
+          matching: find.textContaining(t.assets.layerSavings),
+        ),
+      );
+      await tester.pumpAndSettle();
+    }
+
+    testWidgets('tanpa tujuan: bagian Tujuan menawarkan Buat tujuan', (tester) async {
+      tallViewport(tester);
+      await seed('a', 'BCA', current: 100000000);
+      await openWalletsTab(tester);
+      expect(find.byKey(const ValueKey('goal-create-empty')), findsNothing, reason: 'segmen Dompet terpilih');
+      await openSavings(tester);
+      expect(find.text(t.assets.goal.title), findsOneWidget);
+      expect(find.text(t.assets.goal.emptyBody), findsOneWidget);
+    });
+
+    testWidgets('membuat tujuan membuat dompetnya sendiri: tampil di Tujuan, tidak di grid dompet (ADR-048 §8)', (
+      tester,
+    ) async {
+      tallViewport(tester);
+      await seed('a', 'BCA', current: 30000000);
+      await openWalletsTab(tester);
+      await openSavings(tester);
+
+      await tester.tap(find.byKey(const ValueKey('goal-create-empty')));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byKey(const ValueKey('goal-name')), 'Dana darurat');
+      await tester.enterText(find.byKey(const ValueKey('goal-target')), '1000000');
+      await tester.enterText(find.byKey(const ValueKey('goal-collected')), '300000');
+      await tester.pump();
+      await tester.tap(find.byKey(const ValueKey('goal-save')));
+      await tester.pumpAndSettle();
+
+      final saved = (await storedGoals()).single;
+      expect(saved.name, 'Dana darurat');
+      expect(saved.targetAmount, 100000000);
+      final wallets = await stored();
+      final goalWallet = wallets.firstWhere((w) => w.id == saved.walletId);
+      expect((goalWallet.name, goalWallet.initialBalance), ('Dana darurat', 30000000));
+      expect(wallets.firstWhere((w) => w.id == 'a').currentBalance, 30000000, reason: 'dompet lain tidak berubah');
+      expect(find.byKey(ValueKey('goal-card-${saved.id}')), findsOneWidget);
+      expect(find.text('30%'), findsWidgets);
+      expect(
+        find.descendant(of: find.byType(WalletBentoCard), matching: find.text('Dana darurat')),
+        findsNothing,
+        reason: 'dompet tujuan tidak tampil di grid dompet',
+      );
+      // Hero Total aset berlapis (ADR-050 §3.2): 300.000 + 3.000.000 = 3.300.000.
+      expect(
+        find.descendant(of: find.byType(DsHeroBalanceCard), matching: find.text(t.assets.totalAssets.toUpperCase())),
+        findsOneWidget,
+      );
+      // Hero tanpa ubin; sebaran lapis di kaki hero (ADR-050 Revisi 2).
+      expect(find.byKey(const ValueKey('layer-operational')), findsNothing);
+      expect(find.byKey(const ValueKey('hero-layer-wallets')), findsOneWidget);
+      expect(find.byKey(const ValueKey('hero-layer-savings')), findsOneWidget);
+    });
+
+    testWidgets('Gratis dengan 2 tujuan aktif: Simpan menyimpan draf dan membuka P11', (tester) async {
+      tallViewport(tester);
+      await seed('a', 'BCA', current: 100000);
+      await container<SavingsGoalRepository>().saveGoals([goal('g1'), goal('g2')]);
+      await openWalletsTab(tester);
+      await openSavings(tester);
+
+      await tester.tap(find.text(t.assets.goal.create).first);
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byKey(const ValueKey('goal-name')), 'Liburan');
+      await tester.enterText(find.byKey(const ValueKey('goal-target')), '500000');
+      await tester.pump();
+      await tester.tap(find.byKey(const ValueKey('goal-save')));
+      await tester.pumpAndSettle();
+
+      final draft = (await container<SavingsGoalDraftStore>().read()).getOrElse((_) => null);
+      expect(draft?.name, 'Liburan');
+      expect(await storedGoals(), hasLength(2), reason: 'tujuan ke-3 belum tersimpan');
+      expect(
+        find.text(t.premium.signInTitle),
+        findsOneWidget,
+        reason: 'paywall P11 dibuka (tanpa akun: ajakan masuk dulu)',
+      );
     });
   });
 }

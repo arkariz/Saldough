@@ -1890,6 +1890,7 @@ class _Translations$dataPortability$valuationColumns$en extends Translations$dat
 	@override String get source => 'Source';
 	@override String get sourceManual => 'Manual';
 	@override String get sourceSheet => 'Google Sheet';
+	@override String get sourceSheetEstimate => 'Google Sheet (estimate)';
 }
 
 // Path: dataPortability.goalColumns
@@ -3422,6 +3423,7 @@ extension on TranslationsEn {
 			'dataPortability.valuationColumns.source' => 'Source',
 			'dataPortability.valuationColumns.sourceManual' => 'Manual',
 			'dataPortability.valuationColumns.sourceSheet' => 'Google Sheet',
+			'dataPortability.valuationColumns.sourceSheetEstimate' => 'Google Sheet (estimate)',
 			'dataPortability.goalColumns.name' => 'Name',
 			'dataPortability.goalColumns.target' => 'Target',
 			'dataPortability.goalColumns.saved' => 'Saved',
@@ -3510,9 +3512,9 @@ extension on TranslationsEn {
 			'budget.unarchiveAction' => 'Reactivate',
 			'budget.archiveHelp' => 'Inactive budgets are hidden from the active list. Linked transactions stay recorded.',
 			'budget.deleteAction' => 'Delete budget',
-			'budget.deleteConfirmTitle' => 'Delete budget?',
 			_ => null,
 		} ?? switch (path) {
+			'budget.deleteConfirmTitle' => 'Delete budget?',
 			'budget.deleteConfirmMessage' => ({required Object name}) => 'Budget "${name}" and its items will be deleted. Linked transactions stay recorded and wallet balances do not change.',
 			'budget.itemAddTitle' => 'Add item',
 			'budget.itemEditTitle' => 'Edit item',
@@ -4024,9 +4026,9 @@ extension on TranslationsEn {
 			'category.expenseTab' => 'Expense',
 			'category.incomeTab' => 'Income',
 			'category.addAction' => 'Add category',
-			'category.addTitle' => 'New category',
 			_ => null,
 		} ?? switch (path) {
+			'category.addTitle' => 'New category',
 			'category.renameTitle' => 'Edit category',
 			'category.iconLabel' => 'Icon',
 			'category.iconOption' => ({required Object n}) => 'Icon ${n}',
@@ -4538,9 +4540,9 @@ extension on TranslationsEn {
 			'appUpdate.banner.patchReadyNote' => 'Close and reopen the app to use it.',
 			'appUpdate.action.update' => 'Update',
 			'appUpdate.action.install' => 'Install now',
-			'appUpdate.action.later' => 'Later',
 			_ => null,
 		} ?? switch (path) {
+			'appUpdate.action.later' => 'Later',
 			'appUpdate.action.ok' => 'OK',
 			'appUpdate.whatsNew.title' => ({required Object version}) => 'What\'s new in version ${version}',
 			'appUpdate.whatsNew.titlePatch' => 'What\'s new',

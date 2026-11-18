@@ -459,7 +459,8 @@
       "priceUnit": "Price unit",
       "source": "Source",
       "sourceManual": "Manual",
-      "sourceSheet": "Google Sheet"
+      "sourceSheet": "Google Sheet",
+      "sourceSheetEstimate": "Google Sheet (estimate)"
     },
     "goalColumns": {
       "name": "Name",

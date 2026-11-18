@@ -459,7 +459,8 @@
       "priceUnit": "Satuan harga",
       "source": "Sumber",
       "sourceManual": "Manual",
-      "sourceSheet": "Google Sheet"
+      "sourceSheet": "Google Sheet",
+      "sourceSheetEstimate": "Google Sheet (perkiraan)"
     },
     "goalColumns": {
       "name": "Nama",

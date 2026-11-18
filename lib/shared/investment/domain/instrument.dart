@@ -115,8 +115,11 @@ enum ValuationSource {
   /// Diisi pengguna.
   manual,
 
-  /// Diambil dari Google Sheet pengguna lalu disetujui (B-101).
+  /// Diambil dari Google Sheet pengguna (B-101, ADR-051).
   sheet,
+
+  /// Perkiraan dari Google Sheet (emas: ETF GLD × kurs, ADR-051 §3.1).
+  sheetEstimate,
 }
 
 /// Harga satu instrumen pada satu tanggal (ADR-049 §3.4). [unitPrice] dalam

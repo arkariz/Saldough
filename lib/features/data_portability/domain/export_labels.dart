@@ -41,7 +41,7 @@ final class ExportLabels {
     this.investmentStatuses = const ['Active', 'Closed'],
     this.valuationsSheet = 'Values',
     this.valuationColumns = const ['Date', 'Investment', 'Price', 'Price unit', 'Source'],
-    this.valuationSources = const ['Manual', 'Google Sheet'],
+    this.valuationSources = const ['Manual', 'Google Sheet', 'Google Sheet (estimate)'],
   });
 
   /// Kata di nama berkas: `ekspor` atau `export`

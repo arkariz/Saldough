@@ -80,6 +80,6 @@ ExportLabels exportLabelsFromI18n() {
     investmentStatuses: [i.statusActive, t.assets.invest.closedBadge],
     valuationsSheet: t.dataPortability.sheetValuations,
     valuationColumns: [v.date, v.investment, v.price, v.priceUnit, v.source],
-    valuationSources: [v.sourceManual, v.sourceSheet],
+    valuationSources: [v.sourceManual, v.sourceSheet, v.sourceSheetEstimate],
   );
 }

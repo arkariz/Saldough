@@ -4730,6 +4730,9 @@ class Translations$dataPortability$valuationColumns$id {
 
 	/// id: 'Google Sheet'
 	String get sourceSheet => 'Google Sheet';
+
+	/// id: 'Google Sheet (perkiraan)'
+	String get sourceSheetEstimate => 'Google Sheet (perkiraan)';
 }
 
 // Path: dataPortability.goalColumns
@@ -7283,6 +7286,7 @@ extension on Translations {
 			'dataPortability.valuationColumns.source' => 'Sumber',
 			'dataPortability.valuationColumns.sourceManual' => 'Manual',
 			'dataPortability.valuationColumns.sourceSheet' => 'Google Sheet',
+			'dataPortability.valuationColumns.sourceSheetEstimate' => 'Google Sheet (perkiraan)',
 			'dataPortability.goalColumns.name' => 'Nama',
 			'dataPortability.goalColumns.target' => 'Target',
 			'dataPortability.goalColumns.saved' => 'Terkumpul',
@@ -7371,9 +7375,9 @@ extension on Translations {
 			'budget.unarchiveAction' => 'Aktifkan kembali',
 			'budget.archiveHelp' => 'Anggaran nonaktif disembunyikan dari daftar aktif. Transaksi yang tertaut tetap tercatat.',
 			'budget.deleteAction' => 'Hapus anggaran',
-			'budget.deleteConfirmTitle' => 'Hapus anggaran?',
 			_ => null,
 		} ?? switch (path) {
+			'budget.deleteConfirmTitle' => 'Hapus anggaran?',
 			'budget.deleteConfirmMessage' => ({required Object name}) => 'Anggaran "${name}" beserta posnya akan dihapus. Transaksi yang tertaut tetap tercatat dan saldo dompet tidak berubah.',
 			'budget.itemAddTitle' => 'Tambah pos',
 			'budget.itemEditTitle' => 'Ubah pos',
@@ -7885,9 +7889,9 @@ extension on Translations {
 			'category.expenseTab' => 'Pengeluaran',
 			'category.incomeTab' => 'Pemasukan',
 			'category.addAction' => 'Tambah kategori',
-			'category.addTitle' => 'Kategori baru',
 			_ => null,
 		} ?? switch (path) {
+			'category.addTitle' => 'Kategori baru',
 			'category.renameTitle' => 'Ubah kategori',
 			'category.iconLabel' => 'Ikon',
 			'category.iconOption' => ({required Object n}) => 'Ikon ${n}',
@@ -8399,9 +8403,9 @@ extension on Translations {
 			'appUpdate.banner.patchReadyNote' => 'Tutup lalu buka lagi aplikasi untuk memakainya.',
 			'appUpdate.action.update' => 'Perbarui',
 			'appUpdate.action.install' => 'Pasang sekarang',
-			'appUpdate.action.later' => 'Nanti',
 			_ => null,
 		} ?? switch (path) {
+			'appUpdate.action.later' => 'Nanti',
 			'appUpdate.action.ok' => 'Oke',
 			'appUpdate.whatsNew.title' => ({required Object version}) => 'Apa yang baru di versi ${version}',
 			'appUpdate.whatsNew.titlePatch' => 'Apa yang baru',

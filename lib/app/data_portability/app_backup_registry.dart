@@ -37,6 +37,8 @@ final appBackupRegistry = BackupRegistry(
     // Instrumen dan valuasinya (ADR-049 §3.9).
     const BackupKeySpec('investment_instruments', supportedSchema: 1),
     const BackupKeySpec('investment_valuations', supportedSchema: 1),
+    // Tautan Google Sheet harga (ADR-051 §3.3): diperiksa ulang sesudah pulihkan.
+    const BackupKeySpec('investment_sheet_link', supportedSchema: 1),
     const BackupKeySpec('recurring_auto_record_log', supportedSchema: 1),
     const BackupKeySpec('recurring_match_log', supportedSchema: 1),
     const BackupKeySpec('recurring_suggestion_dismissed', supportedSchema: 1),

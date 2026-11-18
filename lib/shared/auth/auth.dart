@@ -2,6 +2,7 @@
 /// menyimpan atau menyinkronkan dompet/transaksi/anggaran — murni identitas.
 library;
 
+export 'data/google_drive_authorizer.dart';
 export 'data/repositories/firebase_auth_repository_impl.dart';
 export 'domain/auth_failure_codes.dart';
 export 'domain/entities/app_user.dart';

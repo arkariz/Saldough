@@ -61,6 +61,13 @@
             {
               "client_id": "696822782042-n1udc0kvopehg7g7td3nqqmcv10urljn.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "696822782042-b5imlohldlpch9jhug42ktleccb6bn7v.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.arkarizdev.tanukonomy"
+              }
             }
           ]
         }

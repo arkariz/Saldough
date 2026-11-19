@@ -9,6 +9,7 @@ import 'package:flutter/widgets.dart' show NavigatorObserver;
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:saldough/core/config/firebase_config.dart';
 import 'package:saldough/core/foundation/boot/boot_trace.dart';
+import 'package:saldough/firebase_options.dart';
 
 const _analyticsInDebug = bool.fromEnvironment('ANALYTICS_IN_DEBUG');
 
@@ -39,7 +40,9 @@ abstract final class AppBootstrap {
   /// `GoogleSignIn.instance` siap dipakai `FirebaseAuthRepositoryImpl`.
   static Future<void> run() async {
     BootTrace.mark('firebase.initializeApp');
-    await Firebase.initializeApp();
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
 
     // Build debug tidak boleh terbaca sebagai pengguna aktif/baru: Analytics
     // dan Crashlytics sama-sama mati. Nyalakan sementara untuk DebugView lewat

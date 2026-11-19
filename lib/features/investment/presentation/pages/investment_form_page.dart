@@ -271,6 +271,8 @@ class _InvestmentFormPageState extends State<InvestmentFormPage> {
                           maxLength: 12,
                           onChanged: refresh,
                         ),
+                        // Kode dibutuhkan untuk harga otomatis (ADR-051 §3.1).
+                        if (type == InstrumentType.stock) help(s.sheet.codeHelp),
                         const SizedBox(height: 16),
                         DsSwitchRow(
                           key: const ValueKey('instrument-owned'),

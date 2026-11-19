@@ -7704,6 +7704,21 @@ Riset awal (18 Nov 2026, untuk spike):
       Segarkan pada tautan yang ada saat Gratis kini membuka paywall (ADR-051
       §3.5). Belum: izin dicabut dari akun Google (butuh Pengaturan akun
       Google di ponsel), pembacaan Sheet yang sehari tidak dibuka, iOS.
+      Tambahan (permintaan pemilik 18 Nov 2026): lembar **Cara kerja harga
+      otomatis** (`showPriceSheetGuide`, dari tautan di kartu Google Sheet
+      sebelum dan sesudah terhubung): yang diambil otomatis hanya saham BEI
+      berkode dan perkiraan emas, reksa dana/obligasi/lainnya diisi sendiri;
+      enam hal yang perlu dipastikan (masuk Google dan izin, kode bursa, jangan
+      ubah kolom id/Kode/rumus, jangan hapus Sheet, butuh internet dan jeda
+      15 menit/tunda 20 menit, isian sendiri tidak ditimpa). Kartu terhubung
+      menampilkan peringatan bila ada saham Aktif tanpa kode bursa; formulir
+      saham memberi petunjuk mengisi kode. Peringatan saham tanpa kode belum
+      dilihat di emulator (butuh Plus dan Sheet terhubung).
+      Umpan balik pemilik (kartu terlalu besar): ajakan Hubungkan kini satu
+      baris ringkas ("Harga saham otomatis · Hubungkan Google Sheet", lencana
+      Plus untuk Gratis); mengetuknya membuka lembar Cara kerja dengan tombol
+      Hubungkan di dasar. Masalah izin/Sheet hilang tampil sebagai "Hubungkan
+      lagi Google Sheet" plus pesan.
 
 ## Antrean (belum dijadwalkan)
 

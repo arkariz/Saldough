@@ -2857,7 +2857,6 @@ class _Translations$assets$invest$sheet$en extends Translations$assets$invest$sh
 
 	// Translations
 	@override String get connectTitle => 'Automatic stock prices';
-	@override String get connectBody => 'Connect your own Google Sheet. Stock prices from Google Finance are fetched whenever you open Investments; gold is an estimate, and you can fill in mutual funds yourself in the Sheet.';
 	@override String get connect => 'Connect Google Sheet';
 	@override String get connecting => 'Connecting…';
 	@override String get linkedTitle => 'Google Sheet';
@@ -2871,6 +2870,25 @@ class _Translations$assets$invest$sheet$en extends Translations$assets$invest$sh
 	@override String get notFound => 'Google Sheet not found. Connect again to create a new one.';
 	@override String get denied => 'Permission wasn\'t granted, so Google Sheet isn\'t connected.';
 	@override String get optionsTitle => 'Price Google Sheet';
+	@override String get guideAction => 'How it works';
+	@override String get guideTitle => 'How automatic prices work';
+	@override String get guideAutoHeading => 'What\'s fetched automatically';
+	@override String get guideStock => 'IDX stocks with a ticker (e.g. BBCA): latest price from Google Finance.';
+	@override String get guideGold => 'Gold: an estimate from the world gold price and the dollar rate, not Antam\'s selling price.';
+	@override String get guideOther => 'Mutual funds, bonds, and others aren\'t automatic. Fill in the Price column in the Google Sheet or use Update values.';
+	@override String get guideCheckHeading => 'Make sure of these so prices don\'t fail';
+	@override List<String> get guideChecks => [
+		'Sign in to Tanukonomy with a Google account, then allow access to files Tanukonomy creates when asked.',
+		'Fill in each stock\'s ticker in Edit investment. Without it, the price isn\'t fetched.',
+		'Don\'t change or delete the id, Ticker, or Price formula columns in the "Tanukonomy – Harga investasi" sheet. Filling in Price for mutual funds is fine.',
+		'Don\'t delete the sheet. If it\'s deleted, connect again to create a new one.',
+		'Needs internet. Prices are fetched when you open Investments, at most every 15 minutes, and Google Finance can be up to 20 minutes behind.',
+		'Prices you entered yourself today aren\'t overwritten.',
+	];
+	@override String get guideDone => 'Got it';
+	@override String missingCode({required Object names}) => 'Missing ticker: ${names}. Prices for these stocks aren\'t fetched automatically.';
+	@override String get codeHelp => 'Add the ticker so the price can be fetched automatically from Google Sheet.';
+	@override String get reconnectShort => 'Reconnect Google Sheet';
 	@override String get refresh => 'Refresh';
 	@override String get refreshFailed => 'Couldn\'t get prices from Google Sheet. Try again later.';
 	@override String fromSheet({required Object time}) => 'From Google Sheet · ${time}';
@@ -4986,7 +5004,6 @@ extension on TranslationsEn {
 			'assets.invest.qtyActive' => 'Keypad fills the quantity',
 			'assets.invest.amountActive' => 'Keypad fills the amount',
 			'assets.invest.sheet.connectTitle' => 'Automatic stock prices',
-			'assets.invest.sheet.connectBody' => 'Connect your own Google Sheet. Stock prices from Google Finance are fetched whenever you open Investments; gold is an estimate, and you can fill in mutual funds yourself in the Sheet.',
 			'assets.invest.sheet.connect' => 'Connect Google Sheet',
 			'assets.invest.sheet.connecting' => 'Connecting…',
 			'assets.invest.sheet.linkedTitle' => 'Google Sheet',
@@ -5000,6 +5017,23 @@ extension on TranslationsEn {
 			'assets.invest.sheet.notFound' => 'Google Sheet not found. Connect again to create a new one.',
 			'assets.invest.sheet.denied' => 'Permission wasn\'t granted, so Google Sheet isn\'t connected.',
 			'assets.invest.sheet.optionsTitle' => 'Price Google Sheet',
+			'assets.invest.sheet.guideAction' => 'How it works',
+			'assets.invest.sheet.guideTitle' => 'How automatic prices work',
+			'assets.invest.sheet.guideAutoHeading' => 'What\'s fetched automatically',
+			'assets.invest.sheet.guideStock' => 'IDX stocks with a ticker (e.g. BBCA): latest price from Google Finance.',
+			'assets.invest.sheet.guideGold' => 'Gold: an estimate from the world gold price and the dollar rate, not Antam\'s selling price.',
+			'assets.invest.sheet.guideOther' => 'Mutual funds, bonds, and others aren\'t automatic. Fill in the Price column in the Google Sheet or use Update values.',
+			'assets.invest.sheet.guideCheckHeading' => 'Make sure of these so prices don\'t fail',
+			'assets.invest.sheet.guideChecks.0' => 'Sign in to Tanukonomy with a Google account, then allow access to files Tanukonomy creates when asked.',
+			'assets.invest.sheet.guideChecks.1' => 'Fill in each stock\'s ticker in Edit investment. Without it, the price isn\'t fetched.',
+			'assets.invest.sheet.guideChecks.2' => 'Don\'t change or delete the id, Ticker, or Price formula columns in the "Tanukonomy – Harga investasi" sheet. Filling in Price for mutual funds is fine.',
+			'assets.invest.sheet.guideChecks.3' => 'Don\'t delete the sheet. If it\'s deleted, connect again to create a new one.',
+			'assets.invest.sheet.guideChecks.4' => 'Needs internet. Prices are fetched when you open Investments, at most every 15 minutes, and Google Finance can be up to 20 minutes behind.',
+			'assets.invest.sheet.guideChecks.5' => 'Prices you entered yourself today aren\'t overwritten.',
+			'assets.invest.sheet.guideDone' => 'Got it',
+			'assets.invest.sheet.missingCode' => ({required Object names}) => 'Missing ticker: ${names}. Prices for these stocks aren\'t fetched automatically.',
+			'assets.invest.sheet.codeHelp' => 'Add the ticker so the price can be fetched automatically from Google Sheet.',
+			'assets.invest.sheet.reconnectShort' => 'Reconnect Google Sheet',
 			'assets.invest.sheet.refresh' => 'Refresh',
 			'assets.invest.sheet.refreshFailed' => 'Couldn\'t get prices from Google Sheet. Try again later.',
 			'assets.invest.sheet.fromSheet' => ({required Object time}) => 'From Google Sheet · ${time}',

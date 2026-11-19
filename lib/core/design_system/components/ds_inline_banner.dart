@@ -7,7 +7,7 @@ import 'package:saldough/core/design_system/ds_theme.dart';
 /// satu tombol ringkas di kanan.
 class DsInlineBanner extends StatelessWidget {
   /// Membuat banner.
-  const DsInlineBanner({required this.icon, required this.message, this.eyebrow, this.action, super.key});
+  const DsInlineBanner({required this.icon, required this.message, this.eyebrow, this.action, this.maxLines = 1, super.key});
 
   /// Ikon tile.
   final IconData icon;
@@ -17,6 +17,9 @@ class DsInlineBanner extends StatelessWidget {
 
   /// Pesan satu baris (terpotong bila panjang).
   final String message;
+
+  /// Batas baris pesan (bawaan satu baris).
+  final int maxLines;
 
   /// Tombol di kanan (`DsButton.compact`).
   final Widget? action;
@@ -39,7 +42,7 @@ class DsInlineBanner extends StatelessWidget {
                 Text(
                   message,
                   style: ds.typography.bodySm.copyWith(fontSize: 12, color: c.textPrimary),
-                  maxLines: 1,
+                  maxLines: maxLines,
                   overflow: TextOverflow.ellipsis,
                 ),
               ],

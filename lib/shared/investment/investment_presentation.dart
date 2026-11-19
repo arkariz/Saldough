@@ -3,3 +3,4 @@
 library;
 
 export 'presentation/investment_display.dart';
+export 'presentation/price_sheet_guide.dart';

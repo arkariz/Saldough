@@ -6649,9 +6649,6 @@ class Translations$assets$invest$sheet$id {
 	/// id: 'Harga saham otomatis'
 	String get connectTitle => 'Harga saham otomatis';
 
-	/// id: 'Hubungkan Google Sheet milikmu. Harga saham dari Google Finance diambil setiap kamu membuka Investasi; emas berupa perkiraan, reksa dana bisa kamu isi sendiri di Sheet.'
-	String get connectBody => 'Hubungkan Google Sheet milikmu. Harga saham dari Google Finance diambil setiap kamu membuka Investasi; emas berupa perkiraan, reksa dana bisa kamu isi sendiri di Sheet.';
-
 	/// id: 'Hubungkan Google Sheet'
 	String get connect => 'Hubungkan Google Sheet';
 
@@ -6690,6 +6687,48 @@ class Translations$assets$invest$sheet$id {
 
 	/// id: 'Google Sheet harga'
 	String get optionsTitle => 'Google Sheet harga';
+
+	/// id: 'Cara kerja'
+	String get guideAction => 'Cara kerja';
+
+	/// id: 'Cara kerja harga otomatis'
+	String get guideTitle => 'Cara kerja harga otomatis';
+
+	/// id: 'Yang diambil otomatis'
+	String get guideAutoHeading => 'Yang diambil otomatis';
+
+	/// id: 'Saham BEI yang punya kode bursa (mis. BBCA): harga terakhir dari Google Finance.'
+	String get guideStock => 'Saham BEI yang punya kode bursa (mis. BBCA): harga terakhir dari Google Finance.';
+
+	/// id: 'Emas: perkiraan dari harga emas dunia dan kurs dolar, bukan harga jual Antam.'
+	String get guideGold => 'Emas: perkiraan dari harga emas dunia dan kurs dolar, bukan harga jual Antam.';
+
+	/// id: 'Reksa dana, obligasi, dan lainnya tidak otomatis. Isi kolom Harga di Google Sheet atau pakai Perbarui nilai.'
+	String get guideOther => 'Reksa dana, obligasi, dan lainnya tidak otomatis. Isi kolom Harga di Google Sheet atau pakai Perbarui nilai.';
+
+	/// id: 'Pastikan ini supaya harga tidak gagal diambil'
+	String get guideCheckHeading => 'Pastikan ini supaya harga tidak gagal diambil';
+
+	List<String> get guideChecks => [
+		'Masuk ke Tanukonomy dengan akun Google, lalu izinkan akses ke berkas buatan Tanukonomy saat diminta.',
+		'Isi kode bursa setiap saham lewat Ubah investasi. Tanpa kode, harganya tidak diambil.',
+		'Jangan ubah atau hapus kolom id, Kode, dan rumus Harga di Sheet "Tanukonomy – Harga investasi". Mengisi Harga untuk reksa dana boleh.',
+		'Jangan hapus Sheet-nya. Kalau terhapus, hubungkan lagi untuk membuat yang baru.',
+		'Butuh internet. Harga diambil saat kamu membuka Investasi, paling cepat tiap 15 menit, dan dari Google Finance bisa tertunda hingga 20 menit.',
+		'Harga yang kamu isi sendiri hari ini tidak ditimpa.',
+	];
+
+	/// id: 'Mengerti'
+	String get guideDone => 'Mengerti';
+
+	/// id: 'Kode bursa belum diisi: $names. Harga saham ini belum diambil otomatis.'
+	String missingCode({required Object names}) => 'Kode bursa belum diisi: ${names}. Harga saham ini belum diambil otomatis.';
+
+	/// id: 'Isi kode bursa supaya harganya bisa diambil otomatis dari Google Sheet.'
+	String get codeHelp => 'Isi kode bursa supaya harganya bisa diambil otomatis dari Google Sheet.';
+
+	/// id: 'Hubungkan lagi Google Sheet'
+	String get reconnectShort => 'Hubungkan lagi Google Sheet';
 
 	/// id: 'Segarkan'
 	String get refresh => 'Segarkan';
@@ -8891,7 +8930,6 @@ extension on Translations {
 			'assets.invest.qtyActive' => 'Papan angka mengisi jumlah',
 			'assets.invest.amountActive' => 'Papan angka mengisi nominal',
 			'assets.invest.sheet.connectTitle' => 'Harga saham otomatis',
-			'assets.invest.sheet.connectBody' => 'Hubungkan Google Sheet milikmu. Harga saham dari Google Finance diambil setiap kamu membuka Investasi; emas berupa perkiraan, reksa dana bisa kamu isi sendiri di Sheet.',
 			'assets.invest.sheet.connect' => 'Hubungkan Google Sheet',
 			'assets.invest.sheet.connecting' => 'Menghubungkan…',
 			'assets.invest.sheet.linkedTitle' => 'Google Sheet',
@@ -8905,6 +8943,23 @@ extension on Translations {
 			'assets.invest.sheet.notFound' => 'Google Sheet tidak ditemukan. Hubungkan lagi untuk membuat yang baru.',
 			'assets.invest.sheet.denied' => 'Izin tidak diberikan, jadi Google Sheet belum terhubung.',
 			'assets.invest.sheet.optionsTitle' => 'Google Sheet harga',
+			'assets.invest.sheet.guideAction' => 'Cara kerja',
+			'assets.invest.sheet.guideTitle' => 'Cara kerja harga otomatis',
+			'assets.invest.sheet.guideAutoHeading' => 'Yang diambil otomatis',
+			'assets.invest.sheet.guideStock' => 'Saham BEI yang punya kode bursa (mis. BBCA): harga terakhir dari Google Finance.',
+			'assets.invest.sheet.guideGold' => 'Emas: perkiraan dari harga emas dunia dan kurs dolar, bukan harga jual Antam.',
+			'assets.invest.sheet.guideOther' => 'Reksa dana, obligasi, dan lainnya tidak otomatis. Isi kolom Harga di Google Sheet atau pakai Perbarui nilai.',
+			'assets.invest.sheet.guideCheckHeading' => 'Pastikan ini supaya harga tidak gagal diambil',
+			'assets.invest.sheet.guideChecks.0' => 'Masuk ke Tanukonomy dengan akun Google, lalu izinkan akses ke berkas buatan Tanukonomy saat diminta.',
+			'assets.invest.sheet.guideChecks.1' => 'Isi kode bursa setiap saham lewat Ubah investasi. Tanpa kode, harganya tidak diambil.',
+			'assets.invest.sheet.guideChecks.2' => 'Jangan ubah atau hapus kolom id, Kode, dan rumus Harga di Sheet "Tanukonomy – Harga investasi". Mengisi Harga untuk reksa dana boleh.',
+			'assets.invest.sheet.guideChecks.3' => 'Jangan hapus Sheet-nya. Kalau terhapus, hubungkan lagi untuk membuat yang baru.',
+			'assets.invest.sheet.guideChecks.4' => 'Butuh internet. Harga diambil saat kamu membuka Investasi, paling cepat tiap 15 menit, dan dari Google Finance bisa tertunda hingga 20 menit.',
+			'assets.invest.sheet.guideChecks.5' => 'Harga yang kamu isi sendiri hari ini tidak ditimpa.',
+			'assets.invest.sheet.guideDone' => 'Mengerti',
+			'assets.invest.sheet.missingCode' => ({required Object names}) => 'Kode bursa belum diisi: ${names}. Harga saham ini belum diambil otomatis.',
+			'assets.invest.sheet.codeHelp' => 'Isi kode bursa supaya harganya bisa diambil otomatis dari Google Sheet.',
+			'assets.invest.sheet.reconnectShort' => 'Hubungkan lagi Google Sheet',
 			'assets.invest.sheet.refresh' => 'Segarkan',
 			'assets.invest.sheet.refreshFailed' => 'Harga dari Google Sheet belum bisa diambil. Coba lagi nanti.',
 			'assets.invest.sheet.fromSheet' => ({required Object time}) => 'Dari Google Sheet · ${time}',

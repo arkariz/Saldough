@@ -21,6 +21,7 @@ import 'package:saldough/features/wallet/presentation/widgets/wallet_form_sheet.
 import 'package:saldough/features/wallet/presentation/widgets/wallet_hero_card.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_spread_card.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_top_bar.dart';
+import 'package:saldough/shared/investment/investment.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 import 'package:state_management/state_management.dart';
 
@@ -259,6 +260,12 @@ class _WalletListPageState extends State<WalletListPage> {
                                     isPlus: ActivePlan.isPlus,
                                     sheetId: state.sheetId,
                                     fetchedAt: state.sheetFetchedAt,
+                                    stocksWithoutCode: [
+                                      for (final i in activeInstruments)
+                                        if (i.instrument.type == InstrumentType.stock &&
+                                            (i.instrument.code?.trim().isEmpty ?? true))
+                                          i.instrument.name,
+                                    ],
                                     onConnect: () => context.read<WalletBloc>().add(const PriceSheetConnected()),
                                     onDisconnect: () => context.read<WalletBloc>().add(const PriceSheetDisconnected()),
                                     onRefresh: () =>

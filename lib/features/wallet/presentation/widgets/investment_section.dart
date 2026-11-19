@@ -399,8 +399,12 @@ class PriceSheetCard extends StatelessWidget {
     required this.onRefresh,
     this.sheetId,
     this.fetchedAt,
+    this.stocksWithoutCode = const [],
     super.key,
   });
+
+  /// Nama saham Aktif tanpa kode bursa: harganya tidak bisa diambil otomatis.
+  final List<String> stocksWithoutCode;
 
   /// Sudah terhubung.
   final bool linked;
@@ -466,73 +470,76 @@ class PriceSheetCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ds = context.ds;
-    final c = ds.colors;
     final s = t.assets.invest.sheet;
     if (linked && problem != PriceSheetProblem.notAuthorized) {
       final time = fetchedAt;
-      return DsFieldGroup(
+      return Column(
         key: const ValueKey('price-sheet-linked'),
-        children: [
-          DsFieldRow(
-            icon: Symbols.table_chart_rounded,
-            leading: DsIconTile.asset(asset: ClayIcons.priceRefresh, size: DsIconTileSize.sm),
-            label: s.linkedTitle,
-            title: time == null ? s.linkedNever : s.linkedStatus(time: formatClock(time)),
-            chevron: true,
-            onTap: () => _options(context),
-          ),
-        ],
-      );
-    }
-    final reconnect = problem != PriceSheetProblem.none;
-    return DsCard(
-      key: const ValueKey('price-sheet-connect'),
-      child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          DsFieldGroup(
             children: [
-              DsIdleMotion(
-                kind: DsIdleKind.float,
-                child: DsIconTile.asset(asset: ClayIcons.priceRefresh),
+              DsFieldRow(
+                icon: Symbols.table_chart_rounded,
+                leading: DsIconTile.asset(asset: ClayIcons.priceRefresh, size: DsIconTileSize.sm),
+                label: s.linkedTitle,
+                title: time == null ? s.linkedNever : s.linkedStatus(time: formatClock(time)),
+                chevron: true,
+                onTap: () => _options(context),
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Flexible(child: Text(s.connectTitle, style: ds.typography.titleMd.copyWith(fontSize: 15))),
-                        if (!isPlus) ...[const SizedBox(width: 6), const DsBadge(label: 'Plus')],
-                      ],
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      switch (problem) {
-                        PriceSheetProblem.notAuthorized => s.notAuthorized,
-                        PriceSheetProblem.notFound => s.notFound,
-                        PriceSheetProblem.none => s.connectBody,
-                      },
-                      style: ds.typography.bodySm.copyWith(color: reconnect ? c.warning : c.textSecondary),
-                    ),
-                  ],
-                ),
+              DsFieldRow(
+                key: const ValueKey('price-sheet-guide-row'),
+                icon: Symbols.help_outline_rounded,
+                label: s.guideAction,
+                title: s.guideTitle,
+                chevron: true,
+                onTap: () => showPriceSheetGuide(context),
               ),
             ],
           ),
-          const SizedBox(height: 12),
-          DsButton.secondary(
-            key: const ValueKey('price-sheet-connect-button'),
-            label: connecting ? s.connecting : s.connect,
-            icon: Symbols.add_link_rounded,
-            expand: true,
-            onPressed: connecting ? null : () => _connect(context),
-          ),
+          // Saham tanpa kode tidak bisa diambil harganya: beri tahu sebelum
+          // pengguna mengira pengambilan gagal.
+          if (stocksWithoutCode.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            DsInlineBanner(
+              key: const ValueKey('price-sheet-missing-code'),
+              icon: Symbols.info_rounded,
+              maxLines: 3,
+              message: s.missingCode(names: stocksWithoutCode.join(', ')),
+            ),
+          ],
         ],
-      ),
+      );
+    }
+    // Ringkas: satu baris (umpan balik pemilik 18 Nov 2026). Penjelasan dan
+    // tombol Hubungkan ada di lembar Cara kerja.
+    final reconnect = problem != PriceSheetProblem.none;
+    return DsFieldGroup(
+      key: const ValueKey('price-sheet-connect'),
+      children: [
+        DsFieldRow(
+          key: const ValueKey('price-sheet-connect-button'),
+          icon: Symbols.add_link_rounded,
+          leading: DsIconTile.asset(asset: ClayIcons.priceRefresh, size: DsIconTileSize.sm),
+          label: s.connectTitle,
+          title: connecting
+              ? s.connecting
+              : switch (problem) {
+                  PriceSheetProblem.notAuthorized => s.reconnectShort,
+                  PriceSheetProblem.notFound => s.reconnectShort,
+                  PriceSheetProblem.none => s.connect,
+                },
+          trailing: isPlus ? null : const DsBadge(label: 'Plus'),
+          chevron: true,
+          onTap: connecting
+              ? null
+              : () => showPriceSheetGuide(
+                  context,
+                  actionLabel: reconnect ? s.reconnectShort : s.connect,
+                  onAction: () => _connect(context),
+                ),
+        ),
+      ],
     );
   }
 }

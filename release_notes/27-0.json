@@ -1,0 +1,26 @@
+{
+  "version": "1.3.1",
+  "groups": [
+    {
+      "category": "new",
+      "notes": [
+        {
+          "id": "Catat investasimu: saham, reksa dana, emas, dan obligasi. Nilai dan untung atau ruginya ada di Dompet › Investasi, dan ikut dihitung di Total aset.",
+          "en": "Track your investments: stocks, mutual funds, gold, and bonds. Their value and gain or loss are in Wallets › Investments, and count toward Total assets.",
+          "link": {
+            "id": "https://arkariz.github.io/tanukonomy-web/tutorial/investasi/",
+            "en": "https://arkariz.github.io/tanukonomy-web/en/tutorial/investing/"
+          }
+        },
+        {
+          "id": "Plus: hubungkan Google Sheet, dan harga saham serta emas terisi otomatis. Harga reksa dana dan obligasi tetap kamu isi sendiri.",
+          "en": "Plus: connect a Google Sheet and stock and gold prices fill in automatically. You still enter mutual fund and bond prices yourself."
+        },
+        {
+          "id": "Riwayat kekayaan: lihat Total aset di tiap periode beserta apa yang mengubahnya. Gratis melihat 6 periode terakhir, Plus melihat seluruhnya.",
+          "en": "Wealth history: see Total assets at the end of each period and what changed them. Free shows the last 6 periods, Plus shows everything."
+        }
+      ]
+    }
+  ]
+}

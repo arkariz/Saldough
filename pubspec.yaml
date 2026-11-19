@@ -1,7 +1,7 @@
 name: saldough
 description: Pencatatan dan pengelolaan keuangan pribadi — dompet, transaksi, dan anggaran.
 publish_to: none
-version: 1.3.0+26
+version: 1.3.1+27
 
 environment:
   # ^3.12.0 (bukan ^3.11.4 seperti bawaan `flutter create`): constructor

@@ -149,6 +149,9 @@ jobs:
         env:
           SHOREBIRD_TOKEN: ${{ secrets.SHOREBIRD_TOKEN }}
           REVENUECAT_ANDROID_KEY: ${{ secrets.REVENUECAT_ANDROID_KEY }}
+          # Shorebird memakai Flutter-nya sendiri; kunci ke versi yang sama dengan
+          # langkah Setup Flutter (lihat Fastfile `flutter_version_arg`).
+          FLUTTER_VERSION: ${{ github.event.inputs.flutter_version }}
         working-directory: android
         run: bundle exec fastlane android release_internal
 

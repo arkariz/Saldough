@@ -17,6 +17,7 @@ import 'package:saldough/core/appearance/appearance.dart';
 import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/foundation/analytics/app_bootstrap_firebase.dart';
+import 'package:saldough/core/foundation/boot/boot_trace.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/language/language.dart';
@@ -49,6 +50,7 @@ Future<void> bootstrapApp() async {
   }
   _generation++;
 
+  BootTrace.mark('di.run');
   await di.run(rootGetIt);
 
   // ADR-040 §3.8: sisa berkas bagi di cache dihapus; isinya data keuangan.
@@ -56,16 +58,19 @@ Future<void> bootstrapApp() async {
 
   // ADR-040 §3.4: bila pemulihan data selesai diterapkan (atau terputus di
   // tengah penerapan), tuntaskan sebelum ada yang membaca data.
+  BootTrace.mark('restore.finish');
   await finishRestoreIfNeeded(rootGetIt);
 
   // ADR-028: bahasa pilihan pengguna (kalau ada) menggantikan bahasa
   // perangkat, sebelum migrasi kategori menanam nama bawaan.
+  BootTrace.mark('language');
   final savedLanguage = (await rootGetIt<LanguagePreferenceRepository>().load()).getOrElse((_) => null);
   if (savedLanguage != null) await LocaleSettings.setLocale(savedLanguage);
   ActiveLanguage.notifier.value = LocaleSettings.currentLocale;
 
   // ADR-025 §3.5: mata uang harus sudah terpasang sebelum layar pertama
   // memformat nominal. Gagal dibaca berarti bawaan (IDR).
+  BootTrace.mark('currency');
   ActiveCurrency.notifier.value = (await rootGetIt<CurrencyPreferenceRepository>().load()).getOrElse(
     (_) => AppCurrency.idr,
   );
@@ -73,6 +78,7 @@ Future<void> bootstrapApp() async {
   // perubahan disimpan. Gagal dibaca = tampil. Pendengar dipasang sekali
   // (bukan tiap boot ulang) dan mencari repositorinya saat dipakai, karena
   // kontainer DI dibuat ulang saat boot ulang.
+  BootTrace.mark('amountVisibility');
   AmountVisibility.notifier.value = (await rootGetIt<AmountVisibilityRepository>().load()).getOrElse((_) => false);
   if (!isReboot) {
     AmountVisibility.notifier.addListener(
@@ -83,6 +89,7 @@ Future<void> bootstrapApp() async {
   // ADR-043: preset warna dan mode terang/gelap. Dibaca sebelum layar
   // pertama supaya tidak berkedip; gagal dibaca = bawaan. Pendengar dipasang
   // sekali, cara kerjanya sama dengan `AmountVisibility`.
+  BootTrace.mark('appearance');
   ActiveAppearance.notifier.value = (await rootGetIt<AppearanceRepository>().load()).getOrElse(
     (_) => AppearanceSettings.initial,
   );
@@ -93,6 +100,7 @@ Future<void> bootstrapApp() async {
   }
 
   // ADR-038: jadwal bulan keuangan berriwayat; gagal dibaca = tanggal 1.
+  BootTrace.mark('financialMonth');
   ActiveFinancialMonth.notifier.value = (await rootGetIt<FinancialMonthPreferenceRepository>().load()).getOrElse(
     (_) => FinancialMonthSchedule.initial,
   );
@@ -100,11 +108,13 @@ Future<void> bootstrapApp() async {
   // ADR-041 §3.4: hak Plus memakai jadwal periode (uji coba) dan status masuk
   // akun; dimulai sebelum layar pertama supaya gerbang membaca keadaan yang
   // benar.
+  BootTrace.mark('entitlements');
   await startEntitlements(rootGetIt);
 
   // ADR-026 §3.4: kategori bawaan + migrasi label lama, sebelum layar pertama
   // membaca judul transaksi. Gagal tidak menghalangi aplikasi terbuka
   // (NFR-REL-001); dicoba lagi pada pembukaan berikutnya.
+  BootTrace.mark('categories');
   final categoryRepository = rootGetIt<CategoryRepository>();
   final migrated = await MigrateLegacyCategories(
     categoryRepository: categoryRepository,
@@ -129,6 +139,7 @@ Future<void> bootstrapApp() async {
   // saat aplikasi tertutup) diterapkan ke Hive sebelum layar pertama, supaya
   // saldo yang pertama terlihat sudah benar. Gagal tidak menghalangi aplikasi
   // terbuka (NFR-REL-001): entrinya tetap di jurnal dan dicoba lagi.
+  BootTrace.mark('captureJournal');
   if (rootGetIt.isRegistered<ApplyCaptureJournal>()) {
     try {
       await rootGetIt<ApplyCaptureJournal>()();
@@ -153,15 +164,18 @@ Future<void> bootstrapApp() async {
   // Pengendali efek tidak boleh didaftarkan dua kali.
   if (!isReboot) registerEffectHandlers();
 
+  BootTrace.mark('router');
   final router = rootGetIt<GoRouter>();
 
   // Intro pembuka hanya di boot pertama; gambarnya dimuat sebelum `runApp`
   // supaya frame pertama sama dengan splash native.
+  BootTrace.mark('startupIntro');
   if (!isReboot) await StartupIntro.preload();
 
   // Daftar langkah pemulihan di layar boot ulang selesai tepat saat aplikasi tampil.
   AppReboot.progress.value = null;
 
+  BootTrace.markShown();
   runApp(
     KeyedSubtree(
       key: ValueKey(_generation),

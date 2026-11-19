@@ -8,15 +8,34 @@ import 'package:saldough/app/bootstrap.dart';
 // ignore: unused_import
 import 'package:saldough/app/capture_worker/capture_worker_main.dart';
 import 'package:saldough/app/data_portability/app_reboot.dart';
+import 'package:saldough/app/startup/boot_failure_app.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/foundation/analytics/app_bootstrap_firebase.dart';
+import 'package:saldough/core/foundation/boot/boot_trace.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/app_icon.dart';
 import 'package:state_management/state_management.dart';
 
+/// Batas startup sebelum layar darurat tampil (langkah yang tertahan disebut).
+/// Cukup longgar untuk perangkat lambat dan pembukaan pertama.
+const _bootWatchdog = Duration(seconds: 20);
+
 Future<void> main() async {
+  BootTrace.mark('main');
   WidgetsFlutterBinding.ensureInitialized();
   WidgetsBinding.instance.addObserver(ActiveDay.observer);
+  // Penjaga startup: bila `runApp` belum terpanggil dalam [_bootWatchdog],
+  // tampilkan layar darurat yang menyebut langkah yang tertahan. Bila startup
+  // akhirnya selesai, `runApp` berikutnya menggantikannya.
+  Timer(_bootWatchdog, () {
+    if (BootTrace.shown) return;
+    final step = BootTrace.step;
+    developer.log('Startup tertahan di $step', name: 'BootWatchdog');
+    AppBootstrap.recordNonFatal(StateError('startup tertahan di $step'), reason: 'BootWatchdog');
+    runApp(BootFailureApp(step: step, stuck: true, onRetry: () => unawaited(_startApp())));
+  });
+
+  BootTrace.mark('pixelIcons');
   await PixelIconAssets.load();
 
   // Urutan ini dipertahankan dari flutter-architecture-studi-bank (minus
@@ -33,13 +52,28 @@ Future<void> main() async {
   // pencatatan inti berjalan (NFR-REL-001) -- aplikasi lanjut tanpa
   // Analytics/Crashlytics/Google Sign-In daripada macet di layar putih.
   try {
+    BootTrace.mark('firebase');
     await AppBootstrap.run();
   } on Object catch (e, st) {
     developer.log('Firebase gagal diinisialisasi, lanjut tanpa itu', error: e, stackTrace: st, name: 'AppBootstrap');
   }
 
+  BootTrace.mark('locale');
   await LocaleSettings.useDeviceLocale();
 
   AppReboot.install(bootstrapApp);
-  await bootstrapApp();
+  await _startApp();
+}
+
+/// Menjalankan [bootstrapApp]; galat apa pun sebelum layar pertama menjadi
+/// layar darurat (bukan splash yang tertahan selamanya tanpa pesan).
+Future<void> _startApp() async {
+  try {
+    await bootstrapApp();
+  } on Object catch (e, st) {
+    final step = BootTrace.step;
+    developer.log('Startup gagal di $step', error: e, stackTrace: st, name: 'BootWatchdog');
+    AppBootstrap.recordNonFatal(e, reason: 'BootFailure:$step');
+    runApp(BootFailureApp(step: step, stuck: false, error: e, onRetry: () => unawaited(_startApp())));
+  }
 }

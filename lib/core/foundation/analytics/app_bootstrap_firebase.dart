@@ -8,6 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart' show NavigatorObserver;
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:saldough/core/config/firebase_config.dart';
+import 'package:saldough/core/foundation/boot/boot_trace.dart';
 
 const _analyticsInDebug = bool.fromEnvironment('ANALYTICS_IN_DEBUG');
 
@@ -37,11 +38,13 @@ abstract final class AppBootstrap {
   /// mengotori dasbor), dan menyiapkan Google Sign-In supaya
   /// `GoogleSignIn.instance` siap dipakai `FirebaseAuthRepositoryImpl`.
   static Future<void> run() async {
+    BootTrace.mark('firebase.initializeApp');
     await Firebase.initializeApp();
 
     // Build debug tidak boleh terbaca sebagai pengguna aktif/baru: Analytics
     // dan Crashlytics sama-sama mati. Nyalakan sementara untuk DebugView lewat
     // `--dart-define=ANALYTICS_IN_DEBUG=true`.
+    BootTrace.mark('firebase.analytics');
     await FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(!kDebugMode || _analyticsInDebug);
     await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode);
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
@@ -55,6 +58,7 @@ abstract final class AppBootstrap {
     // Crashlytics, supaya kegagalannya terlaporkan dan tidak mematikan
     // pelaporan crash; tanpa App Check hanya Firebase AI yang terdampak.
     try {
+      BootTrace.mark('firebase.appCheck');
       await FirebaseAppCheck.instance.activate(
         providerAndroid: kDebugMode ? const AndroidDebugProvider() : const AndroidPlayIntegrityProvider(),
         providerApple: kDebugMode ? const AppleDebugProvider() : const AppleAppAttestWithDeviceCheckFallbackProvider(),
@@ -63,6 +67,7 @@ abstract final class AppBootstrap {
       recordNonFatal(error, reason: 'AppCheck');
     }
 
+    BootTrace.mark('googleSignIn');
     await GoogleSignIn.instance.initialize(serverClientId: FirebaseConfig.googleServerClientId);
   }
 

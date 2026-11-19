@@ -71,11 +71,14 @@ class InvestmentSection extends StatelessWidget {
     required this.closed,
     required this.failed,
     this.sheetFetchedAt,
-    this.onRefreshSheet,
-    this.refreshing = false,
+    this.staleCount = 0,
     this.sheetCard,
     super.key,
   });
+
+  /// Banyak instrumen Aktif yang nilainya kedaluwarsa; baris catatan tampil
+  /// di atas daftar (bukan lagi di bawah hero).
+  final int staleCount;
 
   /// Kartu Google Sheet harga (ADR-051), atau `null` bila tidak tersedia.
   final Widget? sheetCard;
@@ -91,12 +94,6 @@ class InvestmentSection extends StatelessWidget {
 
   /// Kapan harga terakhir diambil dari Google Sheet.
   final DateTime? sheetFetchedAt;
-
-  /// Segarkan harga dari Google Sheet; `null` = belum terhubung atau bukan Plus.
-  final VoidCallback? onRefreshSheet;
-
-  /// Pengambilan harga sedang berjalan.
-  final bool refreshing;
 
   void _buy(BuildContext context) => _open(
     context,
@@ -154,8 +151,6 @@ class InvestmentSection extends StatelessWidget {
             ),
             const SizedBox(height: 16),
           ],
-          ?sheetCard,
-          if (sheetCard != null) const SizedBox(height: 12),
           // Berdampingan bila muat; di layar sempit atau teks besar menumpuk
           // (rupa B-97 §1.2), supaya label tidak terpotong.
           LayoutBuilder(
@@ -185,13 +180,11 @@ class InvestmentSection extends StatelessWidget {
               );
             },
           ),
+          // Satu strip sumber harga (Sheet) di antara aksi dan daftar.
+          if (sheetCard != null) ...[const SizedBox(height: 12), sheetCard!],
+          if (staleCount > 0) InvestmentStaleNote(count: staleCount),
           const SizedBox(height: 16),
-          // Segarkan harga dari Google Sheet (ADR-051 §3.4), bila terhubung.
-          DsSectionHeader(
-            title: s.activeHeading,
-            actionLabel: onRefreshSheet == null ? null : (refreshing ? '…' : s.sheet.refresh),
-            onAction: refreshing ? null : onRefreshSheet,
-          ),
+          DsSectionHeader(title: s.activeHeading),
           const SizedBox(height: 8),
           for (final i in active)
             Padding(
@@ -314,13 +307,29 @@ class InstrumentCard extends StatelessWidget {
                         Row(
                           children: [
                             Expanded(
-                              child: Text(subtitle, style: ds.typography.bodySm.copyWith(color: c.textMuted)),
+                              child: Text.rich(
+                                TextSpan(
+                                  text: subtitle,
+                                  children: [
+                                    if (summary.valuation?.source == ValuationSource.sheetEstimate)
+                                      TextSpan(text: ' · ${s.sheet.estimateTag}'),
+                                  ],
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: ds.typography.bodySm.copyWith(color: c.textMuted),
+                              ),
                             ),
                             if (!summary.neverValued) InvestmentGainPill(amount: summary.unrealized, base: position.cost),
                           ],
                         ),
-                        const SizedBox(height: 6),
-                        InvestmentFreshness(summary: summary, today: today, sheetFetchedAt: sheetFetchedAt),
+                        // Kesegaran hanya bila perlu perhatian (belum pernah
+                        // divaluasi atau kedaluwarsa); sumber dan jam ada di
+                        // strip Sheet, tidak diulang di tiap kartu.
+                        if (summary.neverValued || summary.isStale(today)) ...[
+                          const SizedBox(height: 6),
+                          InvestmentFreshness(summary: summary, today: today, sheetFetchedAt: sheetFetchedAt),
+                        ],
                       ] else
                         Row(
                           children: [
@@ -397,6 +406,7 @@ class PriceSheetCard extends StatelessWidget {
     required this.onConnect,
     required this.onDisconnect,
     required this.onRefresh,
+    this.refreshing = false,
     this.sheetId,
     this.fetchedAt,
     this.stocksWithoutCode = const [],
@@ -433,12 +443,24 @@ class PriceSheetCard extends StatelessWidget {
   /// Segarkan sekarang.
   final VoidCallback onRefresh;
 
+  /// Pengambilan harga sedang berjalan (ikon segarkan jadi indikator).
+  final bool refreshing;
+
   Future<void> _connect(BuildContext context) async {
     if (!isPlus) {
       await context.pushRoute(PremiumRouteKeys.paywall, const PaywallInput(PaywallTrigger.sheetPrices));
       return;
     }
     onConnect();
+  }
+
+  /// Plus berakhir: tautan tetap, mengambil harga membuka paywall (ADR-051 §3.5).
+  Future<void> _refresh(BuildContext context) async {
+    if (!isPlus) {
+      await context.pushRoute(PremiumRouteKeys.paywall, const PaywallInput(PaywallTrigger.sheetPrices));
+      return;
+    }
+    onRefresh();
   }
 
   Future<void> _options(BuildContext context) async {
@@ -450,19 +472,17 @@ class PriceSheetCard extends StatelessWidget {
       options: [
         OptionSheetItem(value: 'open', label: s.open, leading: const Icon(Symbols.open_in_new_rounded)),
         OptionSheetItem(value: 'refresh', label: s.refresh, leading: const Icon(Symbols.update_rounded)),
+        OptionSheetItem(value: 'guide', label: s.guideAction, leading: const Icon(Symbols.help_outline_rounded)),
         OptionSheetItem(value: 'disconnect', label: s.disconnect, leading: const Icon(Symbols.link_off_rounded)),
       ],
     );
     switch (picked) {
       case 'open' when sheetId != null:
         await launchUrl(Uri.parse('https://docs.google.com/spreadsheets/d/$sheetId'), mode: LaunchMode.externalApplication);
-      case 'refresh' when !isPlus:
-        // Plus berakhir: tautan tetap, mengambil harga membuka paywall (ADR-051 §3.5).
-        if (context.mounted) {
-          await context.pushRoute(PremiumRouteKeys.paywall, const PaywallInput(PaywallTrigger.sheetPrices));
-        }
-      case 'refresh':
-        onRefresh();
+      case 'refresh' when context.mounted:
+        await _refresh(context);
+      case 'guide' when context.mounted:
+        await showPriceSheetGuide(context);
       case 'disconnect':
         onDisconnect();
     }
@@ -473,42 +493,64 @@ class PriceSheetCard extends StatelessWidget {
     final s = t.assets.invest.sheet;
     if (linked && problem != PriceSheetProblem.notAuthorized) {
       final time = fetchedAt;
-      return Column(
+      final ds = context.ds;
+      // Satu strip: status dan jam di kiri, segarkan di kanan; catatan (saham
+      // tanpa kode) satu baris di bawahnya. Penjelasan ada di Cara kerja, yang
+      // dibuka dari menu strip (ketuk).
+      return DsCard(
         key: const ValueKey('price-sheet-linked'),
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          DsFieldGroup(
-            children: [
-              DsFieldRow(
-                icon: Symbols.table_chart_rounded,
-                leading: DsIconTile.asset(asset: ClayIcons.priceRefresh, size: DsIconTileSize.sm),
-                label: s.linkedTitle,
-                title: time == null ? s.linkedNever : s.linkedStatus(time: formatClock(time)),
-                chevron: true,
-                onTap: () => _options(context),
+        padding: const EdgeInsets.fromLTRB(12, 8, 4, 8),
+        onTap: () => _options(context),
+        child: Row(
+          children: [
+            DsIconTile.asset(asset: ClayIcons.priceRefresh, size: DsIconTileSize.sm),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(s.linkedTitle, style: ds.typography.labelSm.copyWith(color: ds.colors.textSecondary)),
+                  Text(
+                    time == null ? s.linkedNever : s.linkedStatus(time: formatClock(time)),
+                    style: ds.typography.bodyMd.copyWith(fontWeight: FontWeight.w600),
+                  ),
+                  if (stocksWithoutCode.isNotEmpty)
+                    Padding(
+                      key: const ValueKey('price-sheet-missing-code'),
+                      padding: const EdgeInsets.only(top: 2),
+                      child: Row(
+                        children: [
+                          Icon(Symbols.info_rounded, size: 14, color: ds.colors.warning),
+                          const SizedBox(width: 4),
+                          Expanded(
+                            child: Text(
+                              s.missingCodeShort(names: stocksWithoutCode.join(', ')),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: ds.typography.bodySm.copyWith(color: ds.colors.textSecondary),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                ],
               ),
-              DsFieldRow(
-                key: const ValueKey('price-sheet-guide-row'),
-                icon: Symbols.help_outline_rounded,
-                label: s.guideAction,
-                title: s.guideTitle,
-                chevron: true,
-                onTap: () => showPriceSheetGuide(context),
-              ),
-            ],
-          ),
-          // Saham tanpa kode tidak bisa diambil harganya: beri tahu sebelum
-          // pengguna mengira pengambilan gagal.
-          if (stocksWithoutCode.isNotEmpty) ...[
-            const SizedBox(height: 8),
-            DsInlineBanner(
-              key: const ValueKey('price-sheet-missing-code'),
-              icon: Symbols.info_rounded,
-              maxLines: 3,
-              message: s.missingCode(names: stocksWithoutCode.join(', ')),
             ),
+            if (refreshing)
+              const SizedBox(
+                width: 48,
+                height: 48,
+                child: Center(child: SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2.5))),
+              )
+            else
+              DsIconButton(
+                key: const ValueKey('price-sheet-refresh'),
+                icon: Symbols.update_rounded,
+                label: s.refresh,
+                onPressed: () => _refresh(context),
+              ),
           ],
-        ],
+        ),
       );
     }
     // Ringkas: satu baris (umpan balik pemilik 18 Nov 2026). Penjelasan dan

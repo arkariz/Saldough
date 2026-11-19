@@ -6815,6 +6815,12 @@ class Translations$assets$invest$sheet$id {
 	/// id: 'Kode bursa belum diisi: $names. Harga saham ini belum diambil otomatis.'
 	String missingCode({required Object names}) => 'Kode bursa belum diisi: ${names}. Harga saham ini belum diambil otomatis.';
 
+	/// id: 'Kode bursa kosong: $names'
+	String missingCodeShort({required Object names}) => 'Kode bursa kosong: ${names}';
+
+	/// id: 'Estimasi'
+	String get estimateTag => 'Estimasi';
+
 	/// id: 'Isi kode bursa supaya harganya bisa diambil otomatis dari Google Sheet.'
 	String get codeHelp => 'Isi kode bursa supaya harganya bisa diambil otomatis dari Google Sheet.';
 
@@ -9076,6 +9082,8 @@ extension on Translations {
 			'assets.invest.sheet.guideChecks.5' => 'Harga yang kamu isi sendiri hari ini tidak ditimpa.',
 			'assets.invest.sheet.guideDone' => 'Mengerti',
 			'assets.invest.sheet.missingCode' => ({required Object names}) => 'Kode bursa belum diisi: ${names}. Harga saham ini belum diambil otomatis.',
+			'assets.invest.sheet.missingCodeShort' => ({required Object names}) => 'Kode bursa kosong: ${names}',
+			'assets.invest.sheet.estimateTag' => 'Estimasi',
 			'assets.invest.sheet.codeHelp' => 'Isi kode bursa supaya harganya bisa diambil otomatis dari Google Sheet.',
 			'assets.invest.sheet.reconnectShort' => 'Hubungkan lagi Google Sheet',
 			'assets.invest.sheet.refresh' => 'Segarkan',

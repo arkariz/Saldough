@@ -2924,6 +2924,8 @@ class _Translations$assets$invest$sheet$en extends Translations$assets$invest$sh
 	];
 	@override String get guideDone => 'Got it';
 	@override String missingCode({required Object names}) => 'Missing ticker: ${names}. Prices for these stocks aren\'t fetched automatically.';
+	@override String missingCodeShort({required Object names}) => 'No ticker: ${names}';
+	@override String get estimateTag => 'Estimate';
 	@override String get codeHelp => 'Add the ticker so the price can be fetched automatically from Google Sheet.';
 	@override String get reconnectShort => 'Reconnect Google Sheet';
 	@override String get refresh => 'Refresh';
@@ -5096,6 +5098,8 @@ extension on TranslationsEn {
 			'assets.invest.sheet.guideChecks.5' => 'Prices you entered yourself today aren\'t overwritten.',
 			'assets.invest.sheet.guideDone' => 'Got it',
 			'assets.invest.sheet.missingCode' => ({required Object names}) => 'Missing ticker: ${names}. Prices for these stocks aren\'t fetched automatically.',
+			'assets.invest.sheet.missingCodeShort' => ({required Object names}) => 'No ticker: ${names}',
+			'assets.invest.sheet.estimateTag' => 'Estimate',
 			'assets.invest.sheet.codeHelp' => 'Add the ticker so the price can be fetched automatically from Google Sheet.',
 			'assets.invest.sheet.reconnectShort' => 'Reconnect Google Sheet',
 			'assets.invest.sheet.refresh' => 'Refresh',

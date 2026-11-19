@@ -2203,6 +2203,8 @@
       "guideChecks": ["Sign in to Tanukonomy with a Google account, then allow access to files Tanukonomy creates when asked.", "Fill in each stock's ticker in Edit investment. Without it, the price isn't fetched.", "Don't change or delete the id, Ticker, or Price formula columns in the \"Tanukonomy – Harga investasi\" sheet. Filling in Price for mutual funds is fine.", "Don't delete the sheet. If it's deleted, connect again to create a new one.", "Needs internet. Prices are fetched when you open Investments, at most every 15 minutes, and Google Finance can be up to 20 minutes behind.", "Prices you entered yourself today aren't overwritten."],
       "guideDone": "Got it",
       "missingCode": "Missing ticker: $names. Prices for these stocks aren't fetched automatically.",
+      "missingCodeShort": "No ticker: $names",
+      "estimateTag": "Estimate",
       "codeHelp": "Add the ticker so the price can be fetched automatically from Google Sheet.",
       "reconnectShort": "Reconnect Google Sheet",
       "refresh": "Refresh",

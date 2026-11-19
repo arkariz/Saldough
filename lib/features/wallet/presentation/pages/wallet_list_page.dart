@@ -222,8 +222,6 @@ class _WalletListPageState extends State<WalletListPage> {
                             ),
                           ],
                         ),
-                        // Catatan nilai kedaluwarsa (rupa B-97 §1.1), sebelum segmen.
-                        if (staleCount > 0) InvestmentStaleNote(count: staleCount),
                       ],
                     ),
                   ),
@@ -265,15 +263,13 @@ class _WalletListPageState extends State<WalletListPage> {
                             closed: state.closedInstruments,
                             failed: state.investmentsFailed,
                             sheetFetchedAt: state.sheetFetchedAt,
-                            refreshing: state.sheetRefreshing,
-                            onRefreshSheet: state.sheetLinked && ActivePlan.isPlus
-                                ? () => context.read<WalletBloc>().add(const InvestmentPricesRefreshed(force: true))
-                                : null,
+                            staleCount: staleCount,
                             sheetCard: state.sheetAvailable
                                 ? PriceSheetCard(
                                     linked: state.sheetLinked,
                                     problem: state.sheetProblem,
                                     connecting: state.sheetConnecting,
+                                    refreshing: state.sheetRefreshing,
                                     isPlus: ActivePlan.isPlus,
                                     sheetId: state.sheetId,
                                     fetchedAt: state.sheetFetchedAt,

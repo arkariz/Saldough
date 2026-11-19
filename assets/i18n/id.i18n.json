@@ -2200,6 +2200,8 @@
       "guideChecks": ["Masuk ke Tanukonomy dengan akun Google, lalu izinkan akses ke berkas buatan Tanukonomy saat diminta.", "Isi kode bursa setiap saham lewat Ubah investasi. Tanpa kode, harganya tidak diambil.", "Jangan ubah atau hapus kolom id, Kode, dan rumus Harga di Sheet \"Tanukonomy – Harga investasi\". Mengisi Harga untuk reksa dana boleh.", "Jangan hapus Sheet-nya. Kalau terhapus, hubungkan lagi untuk membuat yang baru.", "Butuh internet. Harga diambil saat kamu membuka Investasi, paling cepat tiap 15 menit, dan dari Google Finance bisa tertunda hingga 20 menit.", "Harga yang kamu isi sendiri hari ini tidak ditimpa."],
       "guideDone": "Mengerti",
       "missingCode": "Kode bursa belum diisi: $names. Harga saham ini belum diambil otomatis.",
+      "missingCodeShort": "Kode bursa kosong: $names",
+      "estimateTag": "Estimasi",
       "codeHelp": "Isi kode bursa supaya harganya bisa diambil otomatis dari Google Sheet.",
       "reconnectShort": "Hubungkan lagi Google Sheet",
       "refresh": "Segarkan",

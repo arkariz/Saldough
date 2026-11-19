@@ -17,6 +17,8 @@ Teks Tanukonomy ditulis seperti teman yang rapi mencatat: hangat, pendek, dan te
 | Dompet | kantong, kas, rekening (sebagai nama umum) | Tempat uang: bank, dompet digital, tunai, tabungan, kartu |
 | Total saldo | total kas aktif, posisi saldo kas | Jumlah saldo semua dompet aktif |
 | Total aset | kekayaan, kekayaan bersih (sebelum utang tercatat), net worth | Angka utama tab Dompet dan Beranda: lapis Dompet + Tabungan + Investasi (ADR-050) |
+| Riwayat kekayaan | riwayat aset, grafik kekayaan, net worth chart | Grafik Total aset per periode keuangan dengan pecahan perubahan; judul layar dan baris di tab Dompet (ADR-050 §3.6) |
+| Pencatatan awal / Opening records | saldo awal (sebagai golongan perubahan), modal awal | Golongan perubahan Total aset: saldo awal dompet baru dan kepemilikan yang sudah ada. Tiga golongan lain: Pemasukan dan pengeluaran, Nilai investasi, Penyesuaian saldo |
 | Dompet / Wallets, Tabungan / Savings, Investasi / Investments | dana operasional, operating funds, kantong | Nama tiga lapis Total aset |
 | Sebaran aset, sebaran dompet, sebaran tabungan | distribusi aset, alokasi | Porsi Total aset per lapis, porsi lapis per dompet atau tujuan; lebih dari 5 butir digabung jadi "Lainnya (n)" |
 | Tujuan, tujuan tabungan | goal, celengan, target (untuk tujuannya) | Rencana mengumpulkan uang (ADR-048). Status: Aktif, Tercapai, Diarsipkan. "Target" hanya untuk nominal yang dituju dan "Target tanggal" |

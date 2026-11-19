@@ -79,6 +79,7 @@ tercatat ada Rp5.000.000 di sana".
 | `name` | `String` | Nama yang dipilih pemilik, misalnya `BCA` atau `GoPay`. |
 | `iconKey` | `String` | Kunci semantik ikon, bukan path aset. Lihat [ADR-015](adr/0015-adopsi-bahasa-visual-pixel-kas.md). **Hanya tampilan:** dompet tidak punya jenis, dan ikon tidak memberi kemampuan apa pun (keputusan pemilik 17 Nov 2026, WEALTH_ASSETS keputusan 11). Peran dompet tabungan hanya berasal dari tujuan yang memilikinya (ADR-048 Revisi 1): dompet milik tujuan dibuat otomatis bersama tujuannya, lihat [Tujuan tabungan](#tujuan-tabungan). |
 | `colorKey` | `String?` | Warna latar kartu pilihan pengguna (kunci warna kategori design system, mis. `teal`); kosong = bawaan. **Hanya tampilan**, tanpa arti domain (T-30.15). |
+| `createdAt` | `DateTime?` | Saat dompet dibuat (ADR-050 §3.6, Fase 32); diisi `WalletBloc` saat membuat dompet. **Tidak memengaruhi saldo.** Dompet dari sebelum Fase 32 `null` dan oleh Riwayat kekayaan dianggap ada sejak transaksi tertuanya. Field tambahan tanpa naik skema (seperti `colorKey`); tidak ikut ekspor spreadsheet, ikut cadangan. |
 | `initialBalance` | `int` | Saldo saat dompet dibuat, dalam sen. Boleh nol, boleh negatif. |
 | `currentBalance` | `int` | Saldo tercatat saat ini, dalam sen. Disimpan demi kecepatan, lihat catatan di bawah. |
 | `isActive` | `bool` | Dompet tidak aktif tidak muncul di pemilih, tapi transaksinya tetap ada. |
@@ -621,6 +622,37 @@ totalAset  = dompet + tabungan + investasi
 Lapis negatif (mis. kartu) tetap dijumlah apa adanya; batang proporsi hanya
 menggambar bagian positif. Nama **Kekayaan bersih** baru dipakai sesudah utang
 tercatat (B-48, B-59).
+
+### Riwayat kekayaan
+
+`WealthHistory` (`shared/wealth/domain/wealth_history.dart`, ADR-050 §3.6,
+Fase 32) menghitung Total aset **pada tanggal mana pun** tanpa menyimpan
+apa pun: murni, dari dompet, transaksi, instrumen, dan valuasi saat ini.
+
+```
+dompet(d)     = initialBalance + efek transaksi bertanggal ≤ d   (rumus CalculateWalletBalance)
+investasi(d)  = Σ jumlah(d) × valuasi terakhir ≤ d               (InstrumentSummary.of(asOf: d))
+totalAset(d)  = Σ dompet(d) + investasi(d)
+```
+
+- Hanya dompet yang **aktif sekarang** dihitung, mulai dari `createdAt` atau,
+  bila `null`, dari transaksi tertuanya. Mengarsipkan dompet tidak membuat
+  riwayat melompat.
+- Titik "kedaluwarsa" bila ada instrumen yang dipegang dengan valuasi terakhir
+  lebih tua dari 30 hari pada tanggal itu (atau belum pernah divaluasi).
+- **Pecahan perubahan** (`change(dari, ke)`) memisah selisih Total aset menjadi
+  empat golongan yang **berjumlah tepat** selisihnya (invarian, diuji untuk
+  semua pasangan tanggal):
+
+| Golongan | Isi |
+|---|---|
+| Arus | Pemasukan − pengeluaran, ditambah transfer ke/dari dompet yang tidak dihitung. Transfer antar dompet yang sama-sama dihitung saling meniadakan. |
+| Nilai investasi | Perubahan nilai instrumen + uang dompet yang masuk/keluar lewat beli/jual − nilai perolehan kepemilikan awal. Bukan pemasukan. |
+| Penyesuaian | Σ penyesuaian saldo (ADR-047). |
+| Pencatatan awal | `initialBalance` dompet yang mulai dihitung pada periode itu, saldo hasil transaksi mundur sebelum periode, dan nilai perolehan kepemilikan awal yang masuk pada periode itu. |
+
+Gratis hanya dihitung untuk `freeAnalysisPeriods` periode terakhir; Plus
+seluruhnya. Tidak ada proyeksi atau janji imbal hasil.
 
 ## Periode keuangan
 

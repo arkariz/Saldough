@@ -264,6 +264,7 @@ final class WalletBloc extends Bloc<WalletEvent, WalletState> {
       iconKey: event.iconKey,
       initialBalance: event.initialBalance,
       currentBalance: event.initialBalance,
+      createdAt: DateTime.now(),
       colorKey: event.colorKey,
     );
     final result = await _walletRepository.saveWallet(wallet);

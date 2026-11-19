@@ -153,6 +153,15 @@ abstract final class WealthEvents {
     'count_bucket': count <= 1 ? '1' : (count <= 5 ? '2-5' : '6+'),
     'via': via,
   });
+
+  /// Riwayat kekayaan dibuka (ADR-050 §3.6). [periods]: jumlah titik yang
+  /// tampil, dikelompokkan; [locked]: Gratis dengan periode tersembunyi.
+  /// Tanpa nominal.
+  static AnalyticsEvent wealthHistoryViewed(int periods, {required bool locked}) =>
+      AnalyticsEvent('wealth_history_viewed', {
+        'periods_bucket': periods <= 1 ? '1' : (periods <= 6 ? '2-6' : (periods <= 12 ? '7-12' : '13+')),
+        'locked': locked,
+      });
 }
 
 /// Peristiwa rutin R1 (ADR-035 §7) dan R3 (ADR-037 §3.5), tanpa nominal.

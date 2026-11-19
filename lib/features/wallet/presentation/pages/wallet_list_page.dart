@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:navigation/navigation.dart';
 import 'package:saldough/core/design_system/design_system.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
@@ -204,6 +207,20 @@ class _WalletListPageState extends State<WalletListPage> {
                             progress: _progress,
                             child: WalletHeroCard(layers: state.layers, selected: segment, onLayerSelected: _select),
                           ),
+                        ),
+                        // Pintu Riwayat kekayaan (B-100): satu baris di bawah hero.
+                        const SizedBox(height: 8),
+                        DsFieldGroup(
+                          children: [
+                            DsFieldRow(
+                              key: const ValueKey('wealth-history-row'),
+                              icon: Symbols.show_chart_rounded,
+                              label: t.assets.wealth.rowTitle,
+                              title: t.assets.wealth.rowSubtitle,
+                              chevron: true,
+                              onTap: () => unawaited(context.pushRoute(WalletRouteKeys.wealthHistory, const EmptyInput())),
+                            ),
+                          ],
                         ),
                         // Catatan nilai kedaluwarsa (rupa B-97 §1.1), sebelum segmen.
                         if (staleCount > 0) InvestmentStaleNote(count: staleCount),

@@ -216,7 +216,6 @@ class _HomePageState extends State<HomePage> {
                 walletCount: state.activeWallets.length,
                 cashFlow: state.hasTransactions ? state.cashFlow : null,
                 footer: widget.forecast,
-                layers: state.layers,
               ),
             ),
           ],

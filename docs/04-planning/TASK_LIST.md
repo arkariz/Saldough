@@ -94,6 +94,7 @@ Terakhir diperbarui: 29 Oktober 2026 (penyelarasan dokumen dengan `main` di `0.1
 | 29 — Penyesuaian saldo ([ADR-047](../02-architecture/adr/0047-penyesuaian-saldo.md), Accepted; [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §6) | 9 | 9 | **Selesai 17 Nov 2026** (dari B-99): ADR-047 Accepted; T-29.1–T-29.7 (rupa dan UI oleh agen atas permintaan pemilik; 2.831 uji lulus, `flutter analyze` 3 info lama); QA T-29.8 lulus menurut pemeriksaan pemilik di emulator dan perangkat. Branch `claude/penyesuaian-saldo-fase-29`, belum digabung ke induk `claude/aset-kekayaan`. Fase pertama rangkaian aset (Fase 29–33, branch induk `claude/aset-kekayaan`) |
 | 30 — Tujuan tabungan ([ADR-048](../02-architecture/adr/0048-tujuan-tabungan.md), Accepted; [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §4) | 19 | 18 | Dijadwalkan 17 Nov 2026 (dari B-96); T-30.0–T-30.6, T-30.10 (dompet milik tujuan, hanya transfer), T-30.11 (hero Total aset berlapis, ADR-050), dan T-30.12 (rombak tab Dompet: Sebaran aset dan segmen) selesai 17 Nov 2026 (2.849 uji lulus); T-30.15 (sebaran ringkas, warna kartu) 17 Nov, T-30.7 (perkiraan Plus), T-30.8 (dokumen), dan T-30.16 (audit tur) 18 Nov 2026 selesai (2.866 uji lulus); sisa T-30.9 (QA: Android selesai 18 Nov 2026, tinggal iOS) ; T-30.17 (menabung ke beberapa tujuan) selesai 18 Nov 2026 |
 | 31 — Investasi manual ([ADR-049](../02-architecture/adr/0049-investasi-manual.md), Accepted; [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §5) | 12 | 12 | Dijadwalkan 18 Nov 2026 (dari B-97); ADR-049 disetujui 18 Nov 2026 (T-31.0); domain, transaksi investasi, data, dan batas (T-31.2–T-31.5) selesai 18 Nov 2026; rupa T-31.1 dan layar T-31.6/T-31.7 selesai 18 Nov 2026 (2.919 uji lulus); T-31.8–T-31.11 selesai 18 Nov 2026 (QA Android tanpa Gagal S1/S2; sisa jalur Plus dan iOS) |
+| 32 — Gambaran aset dan riwayat kekayaan ([ADR-050](../02-architecture/adr/0050-total-aset-berlapis.md) §3.6 Revisi 3, Accepted; [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §7–8) | 10 | 8 | Dimulai 19 Nov 2026 (B-98 sisa + B-100), branch `claude/riwayat-kekayaan-fase-32` dari `claude/harga-sheet-fase-33` (Fase 31 dan 33 belum digabung ke induk); ADR-050 Revisi 3 disetujui pemilik 19 Nov 2026 |
 | 33 — Harga investasi dari Google Sheet (ADR-051 belum ditulis; [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §5.4) | 8 | 8 | Dijadwalkan 18 Nov 2026 (dari B-101); KT-A4 = Plus; spike lulus untuk saham; ADR-051 Accepted; T-33.3–T-33.7 selesai 18 Nov 2026 (QA Android tanpa Gagal S1/S2); sisa kebijakan privasi situs, uji izin dicabut dan Sheet sehari |
 | Antrean (`B-n`, belum dijadwalkan) | 75 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
 
@@ -7549,6 +7550,52 @@ Dijadwalkan 18 Nov 2026 (dari B-97), fase ketiga rangkaian aset
       satu baris (komponen `DsInlineBanner` yang sama dengan formulir tujuan);
       teks tur Total aset di tab Dompet belum menyebut Investasi. 2.923 uji
       lulus.
+
+## Fase 32: Gambaran aset dan riwayat kekayaan
+
+Dimulai 19 Nov 2026 (B-98 sisa, B-100). Hero Total aset berlapis, sebaran, dan
+segmen tab Dompet sudah selesai di Fase 30 (T-30.11, T-30.12, T-30.15) dan
+lapis Investasi di Fase 31; yang tersisa adalah pecahan perubahan dan riwayat.
+Rancangan: [ADR-050](../02-architecture/adr/0050-total-aset-berlapis.md) §3.6
+(Revisi 3, Accepted), [WEALTH_ASSETS.md](../01-product/features/WEALTH_ASSETS.md) §7–8.
+
+- [x] **T-32.0** (S, pemilik) Setujui ADR-050 Revisi 3 (19 Nov 2026: "Setuju semua usul"). Tiga pertanyaan:
+      (1) `Wallet.createdAt?` boleh ditambah (dompet lama = sejak transaksi
+      tertua)? (2) golongan keempat **Pencatatan awal** untuk saldo awal dompet
+      baru dan kepemilikan yang sudah ada? (3) paywall riwayat memakai ulang
+      `PaywallTrigger.analysisHistory`? Kode baru dimulai sesudah ini.
+- [x] **T-32.1** (M) `Wallet.createdAt?`: entitas, DTO, diisi saat membuat
+      dompet; uji bolak-balik repositori dan dompet lama (null). Tanpa naik
+      skema (field tambahan seperti `colorKey`; selisih kecil dari rencana
+      awal "skema +1", dicatat di ADR §3.6).
+- [x] **T-32.2** (L) `WealthAt(date)` di `shared/wealth/` (saldo dompet dan
+      nilai instrumen pada tanggal, satu sapuan kronologis, penanda
+      kedaluwarsa). Uji: sama dengan Total aset hari ini pada tanggal
+      sekarang; angka periode lampau identik sebelum/sesudah penyesuaian
+      dihapus-lalu-dicatat ulang; dompet nonaktif tidak membuat lompatan.
+      Selesai 19 Nov 2026: `WealthHistory` (`at`, `series`, `change`) di
+      `shared/wealth/domain/wealth_history.dart`, rumus saldo dan posisi
+      dipakai ulang (`CalculateWalletBalance`, `InstrumentSummary.of(asOf)`).
+      Dompet lama tanpa `createdAt` muncul sejak transaksi tertuanya.
+- [x] **T-32.3** (M) Pecahan perubahan empat golongan; uji bahwa jumlahnya
+      tepat sama dengan selisih Total aset (termasuk transfer, beli/jual,
+      penyesuaian, dompet dan kepemilikan baru). Selesai 19 Nov 2026: uji
+      identitas untuk seluruh pasangan tanggal; transaksi mundur yang
+      bertanggal di dalam periode ikut Arus.
+- [x] **T-32.4** (S) Pengukuran kinerja (10.000 transaksi, 5 tahun) dan
+      keputusan cuplikan; hasil dicatat di ADR. Selesai 19 Nov 2026: 337 ms
+      untuk 60 titik (JIT), cuplikan tersimpan tidak diperlukan.
+- [x] **T-32.5** (S, designer) Rupa grafik Riwayat kekayaan, kartu pecahan,
+      dan keadaan memuat/kosong/gagal (menunggu rupa sebelum UI). Diputuskan 19 Nov 2026 (pemilik: "buat saja di sini"): rupa dibuat langsung dari komponen design system v2 (`DsCard`, `DsFieldRow`, `DsIconTile`, `DsInlineBanner`, `AppMoneyText`), tanpa komponen atau token baru, jadi tidak ada berkas rupa terpisah; rujukan: kartu Total aset dan kartu Rencana › Bulan ini.
+- [x] **T-32.6** (L) UI riwayat: grafik dari `plan_balance_chart.dart`
+      (dipindah ke `core` bila dipakai bersama), pemilih periode, penanda
+      kedaluwarsa, Sembunyikan nominal, batas Gratis 6 periode dan paywall. Selesai 19 Nov 2026: `WealthHistoryBloc`, `WealthHistoryPage`, `WealthHistoryChart` (CustomPainter baru, bukan `plan_balance_chart`, karena yang itu terikat `ProjectedDay`), rute `WalletRouteKeys.wealthHistory`, baris pintu masuk di bawah hero tab Dompet. Gratis hanya dihitung untuk `freeAnalysisPeriods` periode terakhir (data terkunci tidak sampai ke layar) dengan kartu Plus → paywall `analysisHistory`; sumbu grafik tanpa angka supaya Sembunyikan nominal tidak bocor.
+- [x] **T-32.7** (M) UI pecahan perubahan di kartu Total aset (tab Dompet). Diputuskan: pecahan empat golongan ada di layar Riwayat kekayaan (kartu "Perubahan di <periode>"), bukan di kartu hero, supaya tab Dompet tetap ringan; hero tidak berubah.
+- [x] **T-32.8** (S) Teks id/en, glosarium, `writing.md`, analitik
+      `wealth_overview_viewed` dan `wealth_history_viewed` (tanpa nominal),
+      dokumen (EXPORT_BACKUP bila ada kolom baru, DOMAIN_MODEL). Selesai sebagian 19 Nov 2026: teks `assets.wealth.*` id/en dan analitik `wealth_history_viewed` (`periods_bucket`, `locked`); `wealth_overview_viewed` ditunda (tidak ada layar baru selain riwayat). Sisa: glosarium dan `writing.md` (istilah Riwayat kekayaan, Pencatatan awal), DOMAIN_MODEL (`Wallet.createdAt`).
+- [ ] **T-32.9** (M) QA emulator (360dp, terang/gelap, id/en, Plus dan Gratis,
+      Sembunyikan nominal) lalu `flutter analyze` dan `test` bersih.
 
 ## Fase 33: Ambil harga investasi dari Google Sheet pengguna
 

@@ -101,11 +101,12 @@ class _LayerSpread extends StatelessWidget {
             ),
           ),
         const SizedBox(height: 10),
-        Row(
+        // Satu baris per lapis: label dan persen di kiri, nominal di kanan
+        // (nominal panjang tetap terbaca; tiga kolom sempit memotongnya).
+        Column(
           children: [
             for (final layer in shown)
-              Expanded(
-                child: _LayerLegend(
+              _LayerLegend(
                   key: ValueKey('hero-layer-${layer.name}'),
                   label: layerLabel(layer),
                   percent: shares[layer.name]?.text ?? '0%',
@@ -113,7 +114,6 @@ class _LayerSpread extends StatelessWidget {
                   color: colors[layer]!,
                   selected: layer == selected,
                   onTap: () => onSelected(layer),
-                ),
               ),
           ],
         ),
@@ -152,42 +152,33 @@ class _LayerLegend extends StatelessWidget {
         onPressed: onTap,
         builder: (context, _) => AnimatedContainer(
           duration: DsMotion.reduced(context) ? Duration.zero : DsMotion.standard,
-          constraints: const BoxConstraints(minHeight: 48),
-          margin: const EdgeInsets.only(right: 6),
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+          constraints: const BoxConstraints(minHeight: 44),
+          margin: const EdgeInsets.only(top: 4),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
             color: Colors.black.withValues(alpha: selected ? 0.32 : 0.18),
             borderRadius: DsRadius.mdAll,
             border: Border.all(color: selected ? color.withValues(alpha: 0.9) : Colors.transparent),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
+          child: Row(
             children: [
-              Row(
-                children: [
-                  Container(
-                    width: 8,
-                    height: 8,
-                    decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-                  ),
-                  const SizedBox(width: 6),
-                  Flexible(
-                    child: Text(
-                      '$label · $percent',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: ds.typography.labelMd.copyWith(color: Colors.white),
-                    ),
-                  ),
-                ],
+              Container(
+                width: 8,
+                height: 8,
+                decoration: BoxDecoration(color: color, shape: BoxShape.circle),
               ),
-              const SizedBox(height: 2),
-              Text(
-                amount,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: ds.typography.bodySm.copyWith(color: Colors.white.withValues(alpha: 0.75)),
+              const SizedBox(width: 8),
+              Text(label, style: ds.typography.labelMd.copyWith(color: Colors.white)),
+              const SizedBox(width: 6),
+              Text(percent, style: ds.typography.labelMd.copyWith(color: Colors.white.withValues(alpha: 0.7))),
+              const SizedBox(width: 12),
+              // Nominal panjang mengecil sedikit, tidak dipotong.
+              Expanded(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerRight,
+                  child: Text(amount, maxLines: 1, style: ds.typography.labelMd.copyWith(color: Colors.white)),
+                ),
               ),
             ],
           ),

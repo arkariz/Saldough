@@ -1723,6 +1723,7 @@ class _Translations$assets$en extends Translations$assets$id {
 	@override String layerAmount({required Object label, required Object amount}) => '${label} ${amount}';
 	@override late final _Translations$assets$goal$en goal = _Translations$assets$goal$en._(_root);
 	@override late final _Translations$assets$adjust$en adjust = _Translations$assets$adjust$en._(_root);
+	@override late final _Translations$assets$wealth$en wealth = _Translations$assets$wealth$en._(_root);
 	@override late final _Translations$assets$invest$en invest = _Translations$assets$invest$en._(_root);
 }
 
@@ -2537,6 +2538,42 @@ class _Translations$assets$adjust$en extends Translations$assets$adjust$id {
 	@override String savedMessage({required Object amount}) => 'A difference of ${amount} was recorded as a balance adjustment.';
 	@override String filterLabel({required Object count}) => 'Adjustments ${count}';
 	@override String get signToggle => 'Switch between plus and minus';
+}
+
+// Path: assets.wealth
+class _Translations$assets$wealth$en extends Translations$assets$wealth$id {
+	_Translations$assets$wealth$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get rowTitle => 'Wealth history';
+	@override String get rowSubtitle => 'Total assets each period';
+	@override String get title => 'Wealth history';
+	@override String periodTotal({required Object period}) => 'Total assets at end of ${period}';
+	@override String get periodTotalNow => 'Total assets now';
+	@override String changeUp({required Object amount}) => 'Up ${amount} from the previous period';
+	@override String changeDown({required Object amount}) => 'Down ${amount} from the previous period';
+	@override String get changeFlat => 'Same as the previous period';
+	@override String get firstPeriod => 'First recorded period';
+	@override String changeHeading({required Object period}) => 'Change in ${period}';
+	@override String get flow => 'Income and expenses';
+	@override String get flowHint => 'Income minus expenses.';
+	@override String get investmentValue => 'Investment value';
+	@override String get investmentValueHint => 'Price moves, apart from money you put in or took out.';
+	@override String get adjustment => 'Balance adjustments';
+	@override String get adjustmentHint => 'Wallet balance corrections you recorded.';
+	@override String get opening => 'Opening records';
+	@override String get openingHint => 'Starting balance of new wallets and holdings you already had.';
+	@override String get changeTotal => 'Change in total assets';
+	@override String get stale => 'Some investments haven\'t been updated for over 30 days. Figures use the last known value.';
+	@override String get noChange => 'The first period has nothing to compare with.';
+	@override String get emptyTitle => 'No history yet';
+	@override String get emptyBody => 'History appears once your wallets have records in more than one period.';
+	@override String get lockedTitle => 'Older history is on Plus';
+	@override String lockedBody({required Object n}) => 'You can see the last ${n} periods. Plus shows your full Total assets history.';
+	@override String get chartLabel => 'Total assets per period chart';
+	@override String pointLabel({required Object period, required Object amount}) => '${period}, total assets ${amount}';
 }
 
 // Path: assets.invest
@@ -4879,6 +4916,33 @@ extension on TranslationsEn {
 			'assets.adjust.savedMessage' => ({required Object amount}) => 'A difference of ${amount} was recorded as a balance adjustment.',
 			'assets.adjust.filterLabel' => ({required Object count}) => 'Adjustments ${count}',
 			'assets.adjust.signToggle' => 'Switch between plus and minus',
+			'assets.wealth.rowTitle' => 'Wealth history',
+			'assets.wealth.rowSubtitle' => 'Total assets each period',
+			'assets.wealth.title' => 'Wealth history',
+			'assets.wealth.periodTotal' => ({required Object period}) => 'Total assets at end of ${period}',
+			'assets.wealth.periodTotalNow' => 'Total assets now',
+			'assets.wealth.changeUp' => ({required Object amount}) => 'Up ${amount} from the previous period',
+			'assets.wealth.changeDown' => ({required Object amount}) => 'Down ${amount} from the previous period',
+			'assets.wealth.changeFlat' => 'Same as the previous period',
+			'assets.wealth.firstPeriod' => 'First recorded period',
+			'assets.wealth.changeHeading' => ({required Object period}) => 'Change in ${period}',
+			'assets.wealth.flow' => 'Income and expenses',
+			'assets.wealth.flowHint' => 'Income minus expenses.',
+			'assets.wealth.investmentValue' => 'Investment value',
+			'assets.wealth.investmentValueHint' => 'Price moves, apart from money you put in or took out.',
+			'assets.wealth.adjustment' => 'Balance adjustments',
+			'assets.wealth.adjustmentHint' => 'Wallet balance corrections you recorded.',
+			'assets.wealth.opening' => 'Opening records',
+			'assets.wealth.openingHint' => 'Starting balance of new wallets and holdings you already had.',
+			'assets.wealth.changeTotal' => 'Change in total assets',
+			'assets.wealth.stale' => 'Some investments haven\'t been updated for over 30 days. Figures use the last known value.',
+			'assets.wealth.noChange' => 'The first period has nothing to compare with.',
+			'assets.wealth.emptyTitle' => 'No history yet',
+			'assets.wealth.emptyBody' => 'History appears once your wallets have records in more than one period.',
+			'assets.wealth.lockedTitle' => 'Older history is on Plus',
+			'assets.wealth.lockedBody' => ({required Object n}) => 'You can see the last ${n} periods. Plus shows your full Total assets history.',
+			'assets.wealth.chartLabel' => 'Total assets per period chart',
+			'assets.wealth.pointLabel' => ({required Object period, required Object amount}) => '${period}, total assets ${amount}',
 			'assets.invest.title' => 'Investments',
 			'assets.invest.buyTitle' => 'Investment purchase',
 			'assets.invest.sellTitle' => 'Investment sale',

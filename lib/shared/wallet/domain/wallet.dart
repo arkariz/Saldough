@@ -15,6 +15,7 @@ final class Wallet extends Equatable {
     required this.currentBalance,
     this.isActive = true,
     this.colorKey,
+    this.createdAt,
   });
 
   /// Identitas dompet.
@@ -52,6 +53,11 @@ final class Wallet extends Equatable {
   /// (seperti [iconKey]); tidak memengaruhi hitungan apa pun.
   final String? colorKey;
 
+  /// Saat dompet dibuat (ADR-050 §3.6). `null` untuk dompet lama sebelum Fase
+  /// 32: riwayat kekayaan menganggapnya ada sejak transaksi tertuanya.
+  /// Tidak memengaruhi saldo.
+  final DateTime? createdAt;
+
   /// Salinan [Wallet] dengan field yang disebutkan diganti.
   Wallet copyWith({
     String? name,
@@ -70,6 +76,7 @@ final class Wallet extends Equatable {
       currentBalance: currentBalance ?? this.currentBalance,
       isActive: isActive ?? this.isActive,
       colorKey: clearColor ? null : (colorKey ?? this.colorKey),
+      createdAt: createdAt,
     );
   }
 
@@ -82,5 +89,6 @@ final class Wallet extends Equatable {
         currentBalance,
         isActive,
         colorKey,
+        createdAt,
       ];
 }

@@ -21,4 +21,7 @@ abstract final class WalletRouteKeys {
 
   /// Daftar dompet nonaktif (Dompet v2, B-66).
   static const inactive = RouteKey<EmptyInput>('wallet.inactive');
+
+  /// Riwayat kekayaan: Total aset per periode (B-100, ADR-050 §3.6).
+  static const wealthHistory = RouteKey<EmptyInput>('wallet.wealthHistory');
 }

@@ -53,6 +53,25 @@ void main() {
       expect(wallets.firstWhere((w) => w.id == 'w2').colorKey, isNull);
     });
 
+    test('waktu dibuat ikut tersimpan; dompet lama tanpa kunci terbaca null (ADR-050 §3.6)', () async {
+      final made = DateTime(2026, 11, 19, 8, 30);
+      final dated = Wallet(
+        id: 'w1',
+        name: 'BCA',
+        iconKey: 'walletBank',
+        initialBalance: 0,
+        currentBalance: 0,
+        createdAt: made,
+      );
+      const old = Wallet(id: 'w2', name: 'Tunai', iconKey: 'walletCash', initialBalance: 0, currentBalance: 0);
+      await repository.saveWallet(dated);
+      await repository.saveWallet(old);
+
+      final wallets = (await repository.listWallets()).getOrElse((_) => throw StateError('expected Right'));
+      expect(wallets.firstWhere((w) => w.id == 'w1').createdAt, made);
+      expect(wallets.firstWhere((w) => w.id == 'w2').createdAt, isNull);
+    });
+
     test('menyimpan ulang dompet ber-id sama menimpa, bukan menambah', () async {
       const wallet = Wallet(
         id: 'w1',

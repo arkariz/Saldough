@@ -34,6 +34,7 @@ void main() {
       'voiceCapture.capture',
       'wallet.detail',
       'wallet.inactive',
+      'wallet.wealthHistory',
       'dataPortability.restore',
       'dataPortability.restoreDone',
       'premium.paywall',

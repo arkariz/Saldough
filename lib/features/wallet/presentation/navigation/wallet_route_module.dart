@@ -5,9 +5,11 @@ import 'package:saldough/features/wallet/di/wallet_scope.dart';
 import 'package:saldough/features/wallet/presentation/bloc/wallet_activity_bloc.dart';
 import 'package:saldough/features/wallet/presentation/bloc/wallet_bloc.dart';
 import 'package:saldough/features/wallet/presentation/bloc/wallet_state.dart';
+import 'package:saldough/features/wallet/presentation/bloc/wealth_history_bloc.dart';
 import 'package:saldough/features/wallet/presentation/navigation/wallet_route_keys.dart';
 import 'package:saldough/features/wallet/presentation/pages/wallet_detail_page.dart';
 import 'package:saldough/features/wallet/presentation/pages/wallet_inactive_page.dart';
+import 'package:saldough/features/wallet/presentation/pages/wealth_history_page.dart';
 import 'package:state_management/state_management.dart';
 
 /// Modul rute fitur `wallet` (ADR-030 §3.3). Rincian dompet memasang
@@ -66,6 +68,23 @@ final class WalletRouteModule extends FeatureRouteModule {
                   child: const WalletInactivePage(),
                 ),
               ),
+            );
+          },
+        );
+      },
+    ),
+    RouteNode.typed<EmptyInput>(
+      key: WalletRouteKeys.wealthHistory,
+      defaultInput: () => const EmptyInput(),
+      builder: (context, _) {
+        final parentContainer = ScopeProvider.of(context);
+        return ScopeWidget<WalletScope>(
+          create: () => WalletScope(parentContainer: parentContainer),
+          builder: (context, scope) {
+            final history = scope.container<WealthHistoryBloc>();
+            return BlocProvider.value(
+              value: history,
+              child: RunOnce(action: () => history.add(const WealthHistoryStarted()), child: const WealthHistoryPage()),
             );
           },
         );

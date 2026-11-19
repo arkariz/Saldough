@@ -1,7 +1,9 @@
 import 'package:di/di.dart';
+import 'package:saldough/core/financial_month/financial_period.dart';
 import 'package:saldough/core/presentation/plan/active_plan.dart';
 import 'package:saldough/features/wallet/presentation/bloc/wallet_activity_bloc.dart';
 import 'package:saldough/features/wallet/presentation/bloc/wallet_bloc.dart';
+import 'package:saldough/features/wallet/presentation/bloc/wealth_history_bloc.dart';
 import 'package:saldough/shared/auth/auth.dart';
 import 'package:saldough/shared/investment/investment.dart';
 import 'package:saldough/shared/savings_goal/savings_goal.dart';
@@ -71,6 +73,19 @@ final class WalletScope extends IsolatedScope {
         () => WalletActivityBloc(
           transactionRepository: c<TransactionRepository>(),
           ledgerChanges: c<LedgerChanges>(),
+        ),
+        dispose: (bloc) => bloc.close(),
+      )
+      // Riwayat kekayaan (B-100); hanya dibuat rute Riwayat kekayaan.
+      ..registerLazySingleton<WealthHistoryBloc>(
+        () => WealthHistoryBloc(
+          walletRepository: c<WalletRepository>(),
+          transactionRepository: c<TransactionRepository>(),
+          goalRepository: c<SavingsGoalRepository>(),
+          investmentRepository: c.isRegistered<InvestmentRepository>() ? c<InvestmentRepository>() : null,
+          schedule: () => ActiveFinancialMonth.schedule,
+          isPlus: () => ActivePlan.isPlus,
+          freePeriods: () => ActivePlan.limits.value.freeAnalysisPeriods,
         ),
         dispose: (bloc) => bloc.close(),
       );

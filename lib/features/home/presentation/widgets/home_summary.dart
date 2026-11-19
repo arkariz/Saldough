@@ -9,7 +9,6 @@ import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/home/domain/budget_overview_source.dart';
 import 'package:saldough/features/home/domain/freelance_overview_source.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
-import 'package:saldough/shared/wealth/wealth.dart';
 
 /// Ukuran ikon clay di kepala slide carousel (anggaran, tagihan, hadiah).
 const double kSlideIconSize = 28;
@@ -27,7 +26,6 @@ class HomeBalanceCard extends StatelessWidget {
     required this.walletCount,
     this.cashFlow,
     this.footer,
-    this.layers,
     super.key,
   });
 
@@ -43,10 +41,6 @@ class HomeBalanceCard extends StatelessWidget {
   /// Baris di bawah kotak Masuk/Keluar: perkiraan saldo akhir periode,
   /// disisipkan akar komposisi dari fitur Rencana. `null` = tidak ada.
   final Widget? footer;
-
-  /// Total aset per lapis; keterangan menyebut lapisnya bila sudah ada tujuan
-  /// (ADR-050 §3.4).
-  final WealthLayers? layers;
 
   @override
   Widget build(BuildContext context) {
@@ -67,23 +61,7 @@ class HomeBalanceCard extends StatelessWidget {
         hidden: AmountVisibility.hidden,
         toggleLabel: AmountVisibility.hidden ? t.home.showAmounts : t.home.hideAmounts,
         onToggleHidden: AmountVisibility.toggle,
-        caption: switch (layers) {
-          // Lapis yang berisi, dipisah " · " (rupa B-97 §1.4).
-          final l? when l.hasSavings || l.investment != 0 => [
-            t.assets.layerAmount(
-              label: t.assets.layerOperational,
-              amount: AppMoneyText.format(l.operational, MoneyKind.balance),
-            ),
-            if (l.hasSavings)
-              t.assets.layerAmount(label: t.assets.layerSavings, amount: AppMoneyText.format(l.savings, MoneyKind.balance)),
-            if (l.investment != 0)
-              t.assets.layerAmount(
-                label: t.assets.layerInvestment,
-                amount: AppMoneyText.format(l.investment, MoneyKind.balance),
-              ),
-          ].join(' · '),
-          _ => walletCount == 0 ? null : t.home.walletLink(count: walletCount),
-        },
+        caption: walletCount == 0 ? null : t.home.walletLink(count: walletCount),
         stats: flow == null
             ? const []
             : [

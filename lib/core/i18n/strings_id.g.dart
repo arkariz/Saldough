@@ -4358,6 +4358,7 @@ class Translations$assets$id {
 
 	late final Translations$assets$goal$id goal = Translations$assets$goal$id.internal(_root);
 	late final Translations$assets$adjust$id adjust = Translations$assets$adjust$id.internal(_root);
+	late final Translations$assets$wealth$id wealth = Translations$assets$wealth$id.internal(_root);
 	late final Translations$assets$invest$id invest = Translations$assets$invest$id.internal(_root);
 }
 
@@ -6008,6 +6009,96 @@ class Translations$assets$adjust$id {
 
 	/// id: 'Ganti tanda plus atau minus'
 	String get signToggle => 'Ganti tanda plus atau minus';
+}
+
+// Path: assets.wealth
+class Translations$assets$wealth$id {
+	Translations$assets$wealth$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Riwayat kekayaan'
+	String get rowTitle => 'Riwayat kekayaan';
+
+	/// id: 'Total aset tiap periode'
+	String get rowSubtitle => 'Total aset tiap periode';
+
+	/// id: 'Riwayat kekayaan'
+	String get title => 'Riwayat kekayaan';
+
+	/// id: 'Total aset akhir $period'
+	String periodTotal({required Object period}) => 'Total aset akhir ${period}';
+
+	/// id: 'Total aset sekarang'
+	String get periodTotalNow => 'Total aset sekarang';
+
+	/// id: 'Naik $amount dari periode sebelumnya'
+	String changeUp({required Object amount}) => 'Naik ${amount} dari periode sebelumnya';
+
+	/// id: 'Turun $amount dari periode sebelumnya'
+	String changeDown({required Object amount}) => 'Turun ${amount} dari periode sebelumnya';
+
+	/// id: 'Sama dengan periode sebelumnya'
+	String get changeFlat => 'Sama dengan periode sebelumnya';
+
+	/// id: 'Periode pertama yang tercatat'
+	String get firstPeriod => 'Periode pertama yang tercatat';
+
+	/// id: 'Perubahan di $period'
+	String changeHeading({required Object period}) => 'Perubahan di ${period}';
+
+	/// id: 'Pemasukan dan pengeluaran'
+	String get flow => 'Pemasukan dan pengeluaran';
+
+	/// id: 'Pemasukan dikurangi pengeluaran.'
+	String get flowHint => 'Pemasukan dikurangi pengeluaran.';
+
+	/// id: 'Nilai investasi'
+	String get investmentValue => 'Nilai investasi';
+
+	/// id: 'Naik turunnya harga, di luar uang yang kamu masukkan atau tarik.'
+	String get investmentValueHint => 'Naik turunnya harga, di luar uang yang kamu masukkan atau tarik.';
+
+	/// id: 'Penyesuaian saldo'
+	String get adjustment => 'Penyesuaian saldo';
+
+	/// id: 'Koreksi saldo dompet yang kamu catat.'
+	String get adjustmentHint => 'Koreksi saldo dompet yang kamu catat.';
+
+	/// id: 'Pencatatan awal'
+	String get opening => 'Pencatatan awal';
+
+	/// id: 'Saldo awal dompet baru dan kepemilikan yang sudah ada.'
+	String get openingHint => 'Saldo awal dompet baru dan kepemilikan yang sudah ada.';
+
+	/// id: 'Perubahan Total aset'
+	String get changeTotal => 'Perubahan Total aset';
+
+	/// id: 'Ada investasi yang nilainya belum diperbarui lebih dari 30 hari. Angkanya memakai nilai terakhir yang diketahui.'
+	String get stale => 'Ada investasi yang nilainya belum diperbarui lebih dari 30 hari. Angkanya memakai nilai terakhir yang diketahui.';
+
+	/// id: 'Periode pertama belum punya pembanding.'
+	String get noChange => 'Periode pertama belum punya pembanding.';
+
+	/// id: 'Riwayat belum ada'
+	String get emptyTitle => 'Riwayat belum ada';
+
+	/// id: 'Riwayat muncul setelah dompet punya catatan di lebih dari satu periode.'
+	String get emptyBody => 'Riwayat muncul setelah dompet punya catatan di lebih dari satu periode.';
+
+	/// id: 'Riwayat lebih lama ada di Plus'
+	String get lockedTitle => 'Riwayat lebih lama ada di Plus';
+
+	/// id: 'Kamu melihat $n periode terakhir. Plus menampilkan seluruh riwayat Total aset.'
+	String lockedBody({required Object n}) => 'Kamu melihat ${n} periode terakhir. Plus menampilkan seluruh riwayat Total aset.';
+
+	/// id: 'Grafik Total aset per periode'
+	String get chartLabel => 'Grafik Total aset per periode';
+
+	/// id: '$period, Total aset $amount'
+	String pointLabel({required Object period, required Object amount}) => '${period}, Total aset ${amount}';
 }
 
 // Path: assets.invest
@@ -8805,6 +8896,33 @@ extension on Translations {
 			'assets.adjust.savedMessage' => ({required Object amount}) => 'Selisih ${amount} dicatat sebagai penyesuaian saldo.',
 			'assets.adjust.filterLabel' => ({required Object count}) => 'Penyesuaian ${count}',
 			'assets.adjust.signToggle' => 'Ganti tanda plus atau minus',
+			'assets.wealth.rowTitle' => 'Riwayat kekayaan',
+			'assets.wealth.rowSubtitle' => 'Total aset tiap periode',
+			'assets.wealth.title' => 'Riwayat kekayaan',
+			'assets.wealth.periodTotal' => ({required Object period}) => 'Total aset akhir ${period}',
+			'assets.wealth.periodTotalNow' => 'Total aset sekarang',
+			'assets.wealth.changeUp' => ({required Object amount}) => 'Naik ${amount} dari periode sebelumnya',
+			'assets.wealth.changeDown' => ({required Object amount}) => 'Turun ${amount} dari periode sebelumnya',
+			'assets.wealth.changeFlat' => 'Sama dengan periode sebelumnya',
+			'assets.wealth.firstPeriod' => 'Periode pertama yang tercatat',
+			'assets.wealth.changeHeading' => ({required Object period}) => 'Perubahan di ${period}',
+			'assets.wealth.flow' => 'Pemasukan dan pengeluaran',
+			'assets.wealth.flowHint' => 'Pemasukan dikurangi pengeluaran.',
+			'assets.wealth.investmentValue' => 'Nilai investasi',
+			'assets.wealth.investmentValueHint' => 'Naik turunnya harga, di luar uang yang kamu masukkan atau tarik.',
+			'assets.wealth.adjustment' => 'Penyesuaian saldo',
+			'assets.wealth.adjustmentHint' => 'Koreksi saldo dompet yang kamu catat.',
+			'assets.wealth.opening' => 'Pencatatan awal',
+			'assets.wealth.openingHint' => 'Saldo awal dompet baru dan kepemilikan yang sudah ada.',
+			'assets.wealth.changeTotal' => 'Perubahan Total aset',
+			'assets.wealth.stale' => 'Ada investasi yang nilainya belum diperbarui lebih dari 30 hari. Angkanya memakai nilai terakhir yang diketahui.',
+			'assets.wealth.noChange' => 'Periode pertama belum punya pembanding.',
+			'assets.wealth.emptyTitle' => 'Riwayat belum ada',
+			'assets.wealth.emptyBody' => 'Riwayat muncul setelah dompet punya catatan di lebih dari satu periode.',
+			'assets.wealth.lockedTitle' => 'Riwayat lebih lama ada di Plus',
+			'assets.wealth.lockedBody' => ({required Object n}) => 'Kamu melihat ${n} periode terakhir. Plus menampilkan seluruh riwayat Total aset.',
+			'assets.wealth.chartLabel' => 'Grafik Total aset per periode',
+			'assets.wealth.pointLabel' => ({required Object period, required Object amount}) => '${period}, Total aset ${amount}',
 			'assets.invest.title' => 'Investasi',
 			'assets.invest.buyTitle' => 'Pembelian investasi',
 			'assets.invest.sellTitle' => 'Penjualan investasi',

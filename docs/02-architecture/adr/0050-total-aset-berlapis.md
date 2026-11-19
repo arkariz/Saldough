@@ -76,6 +76,54 @@ perkiraan tetap. Judul ringkas saat digulir memakai Total aset.
 - Perubahan Total aset antarperiode (dari transaksi/valuasi/penyesuaian) dan
   riwayatnya tetap Fase 32 (B-98 sisa, B-100).
 
+### 3.6 Riwayat kekayaan dan pecahan perubahan (Fase 32, Revisi 3, Proposed)
+
+**Nilai pada tanggal d** (`WealthAt`, di `shared/wealth/`, murni, tanpa
+penyimpanan baru):
+
+- **Dompet:** `initialBalance` + efek transaksi (termasuk penyesuaian dan
+  investasi) bertanggal ≤ d, memakai rumus saldo yang sama dengan
+  `CalculateWalletBalance`. Hanya dompet yang **aktif sekarang** (sama dengan
+  Total aset hari ini), jadi mengarsipkan dompet tidak membuat riwayat
+  melompat. Lapis (Dompet atau Tabungan) mengikuti keanggotaan tujuan sekarang.
+- **Investasi:** untuk tiap instrumen, posisi pada d didapat dengan memutar
+  ulang aktivitas ≤ d (`InstrumentPosition.replay`, rata-rata tertimbang),
+  dikali valuasi terakhir ≤ d; belum pernah divaluasi → nilai perolehan.
+  Titik yang valuasi terakhirnya lebih tua dari 30 hari pada d ditandai
+  kedaluwarsa.
+- **Titik grafik:** akhir tiap periode keuangan (`financialPeriodOf`), dan
+  hari ini untuk periode berjalan. Satu sapuan kronologis atas seluruh
+  transaksi (sudah terpartisi per bulan), bukan satu hitungan per titik.
+  Tanpa cuplikan tersimpan; bila pengukuran (10.000 transaksi, 5 tahun)
+  melebihi 200 ms, cuplikan baru diusulkan lewat revisi, bukan ditebak.
+
+**`Wallet.createdAt?`** (usulan, butuh persetujuan): diisi saat dompet dibuat;
+dompet lama dibiarkan `null` dan dianggap ada sejak transaksi tertuanya (atau
+sejak titik riwayat pertama bila belum punya transaksi). Sebelum `createdAt`,
+dompet tidak ikut dihitung, supaya saldo awal tidak muncul di periode
+sebelum dompet ada. Field tambahan tanpa naik skema (seperti `colorKey`): dokumen lama terbaca
+`null`, pembaca lama mengabaikannya, jadi `supportedSchema` tidak berubah;
+uji bolak-balik repositori menjaganya.
+
+**Pecahan perubahan** antara dua titik (Total aset akhir − awal), empat
+golongan yang **harus berjumlah tepat** selisihnya (diuji):
+
+| Golongan | Isi |
+|---|---|
+| **Arus** | Pemasukan − pengeluaran pada periode (transfer dan pembelian/penjualan investasi tidak ikut: hanya memindahkan nilai). |
+| **Nilai investasi** | Perubahan nilai instrumen dikurangi uang bersih yang dimasukkan lewat beli/jual; mencakup untung/rugi belum dan sudah terwujud. Bukan pemasukan. |
+| **Penyesuaian** | Jumlah bersih penyesuaian saldo (ADR-047). |
+| **Pencatatan awal** | Saldo awal dompet yang dibuat pada periode itu dan kepemilikan yang sudah ada (tanpa dompet) yang ditambahkan pada periode itu. |
+
+**Gratis dan Plus:** gratis melihat 6 periode terakhir lewat
+`limits.freeAnalysisPeriods` (sama dengan Analisis); lebih lama memicu
+paywall (`PaywallTrigger.analysisHistory`, diusulkan dipakai ulang agar tidak
+menambah teks P-baru). Plus melihat seluruhnya. Perhitungan tetap dari data
+lokal; pembatasan hanya pada tampilan.
+
+**Tidak berubah:** angka periode lampau tidak boleh bergeser karena fitur ini
+(uji sebelum/sesudah), dan tidak ada proyeksi atau janji imbal hasil.
+
 ## 4. Opsi yang dipertimbangkan
 
 - **Opsi A — Tetap Total saldo, lapisan di halaman terpisah.** Ditolak pemilik.
@@ -113,4 +161,6 @@ perkiraan tetap. Judul ringkas saat digulir memakai Total aset.
   TOTAL ASET dan nominal masuk, ikon dan bilah status terang; hero sedikit
   mengecil dan memudar saat pergi. Urutan di bawah hero: segmen Dompet |
   Tabungan (menempel) → sebaran butir segmen → daftar.
-
+- 2026-11-19: Revisi 3 (Accepted, disetujui pemilik 19 Nov 2026: ketiga usul; Fase 32): §3.6 menambah `WealthAt`
+  (nilai pada tanggal), `Wallet.createdAt?`, pecahan perubahan empat golongan,
+  dan batas Gratis 6 periode. Disetujui semua usul (T-32.0).

@@ -125,7 +125,11 @@ class WalletTopBar extends StatelessWidget implements PreferredSizeWidget {
                                 opacity: totalIn,
                                 child: Transform.translate(
                                   offset: Offset(0, reduced ? 0 : 14 * (1 - totalIn)),
-                                  child: Column(
+                                  // Teks besar: mengecil, bukan meluap dari bilah.
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    alignment: Alignment.centerLeft,
+                                    child: Column(
                                     key: const ValueKey('wallet-top-bar-total'),
                                     mainAxisSize: MainAxisSize.min,
                                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -147,6 +151,7 @@ class WalletTopBar extends StatelessWidget implements PreferredSizeWidget {
                                         ),
                                       ),
                                     ],
+                                  ),
                                   ),
                                 ),
                               ),

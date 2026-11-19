@@ -304,24 +304,33 @@ class InstrumentCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       if (active) ...[
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Text.rich(
-                                TextSpan(
-                                  text: subtitle,
-                                  children: [
-                                    if (summary.valuation?.source == ValuationSource.sheetEstimate)
-                                      TextSpan(text: ' · ${s.sheet.estimateTag}'),
-                                  ],
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: ds.typography.bodySm.copyWith(color: c.textMuted),
+                        Builder(
+                          builder: (context) {
+                            final subtitleText = Text.rich(
+                              TextSpan(
+                                text: subtitle,
+                                children: [
+                                  if (summary.valuation?.source == ValuationSource.sheetEstimate)
+                                    TextSpan(text: ' · ${s.sheet.estimateTag}'),
+                                ],
                               ),
-                            ),
-                            if (!summary.neverValued) InvestmentGainPill(amount: summary.unrealized, base: position.cost),
-                          ],
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: ds.typography.bodySm.copyWith(color: c.textMuted),
+                            );
+                            final pill = summary.neverValued
+                                ? null
+                                : InvestmentGainPill(amount: summary.unrealized, base: position.cost);
+                            // Teks besar: untung/rugi turun ke baris sendiri
+                            // supaya jumlah dan kode tidak terpotong.
+                            if (MediaQuery.textScalerOf(context).scale(14) > 18) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [subtitleText, if (pill != null) ...[const SizedBox(height: 4), pill]],
+                              );
+                            }
+                            return Row(children: [Expanded(child: subtitleText), ?pill]);
+                          },
                         ),
                         // Kesegaran hanya bila perlu perhatian (belum pernah
                         // divaluasi atau kedaluwarsa); sumber dan jam ada di

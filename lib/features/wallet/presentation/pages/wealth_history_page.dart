@@ -177,9 +177,13 @@ class _ChangeCard extends StatelessWidget {
             _ChangeRow(icon: Symbols.tune_rounded, label: w.adjustment, hint: w.adjustmentHint, amount: change.adjustment),
             _ChangeRow(icon: Symbols.flag_rounded, label: w.opening, hint: w.openingHint, amount: change.opening),
             Divider(height: 24, color: ds.colors.outlineSubtle),
-            Row(
+            Wrap(
+              alignment: WrapAlignment.spaceBetween,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              spacing: 12,
+              runSpacing: 4,
               children: [
-                Expanded(child: Text(w.changeTotal, style: ds.typography.titleMd)),
+                Text(w.changeTotal, style: ds.typography.titleMd),
                 _Signed(change.total, size: MoneySize.regular),
               ],
             ),
@@ -202,6 +206,10 @@ class _ChangeRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final ds = context.ds;
     final muted = amount == 0;
+    // Teks besar: nominal turun ke bawah label supaya label tidak terpenggal
+    // di kolom sempit ("Investme/nt value").
+    final stacked = MediaQuery.textScalerOf(context).scale(14) > 18;
+    final value = Opacity(opacity: muted ? 0.5 : 1, child: _Signed(amount));
     return Padding(
       padding: const EdgeInsets.only(bottom: 14),
       child: Row(
@@ -214,13 +222,13 @@ class _ChangeRow extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(label, style: ds.typography.bodyMd.copyWith(fontWeight: FontWeight.w600)),
+                if (stacked) ...[const SizedBox(height: 2), value],
                 const SizedBox(height: 2),
                 Text(hint, style: ds.typography.bodySm.copyWith(color: ds.colors.textSecondary)),
               ],
             ),
           ),
-          const SizedBox(width: 12),
-          Opacity(opacity: muted ? 0.5 : 1, child: _Signed(amount)),
+          if (!stacked) ...[const SizedBox(width: 12), value],
         ],
       ),
     );

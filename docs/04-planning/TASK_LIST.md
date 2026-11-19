@@ -7594,8 +7594,20 @@ Rancangan: [ADR-050](../02-architecture/adr/0050-total-aset-berlapis.md) §3.6
 - [x] **T-32.8** (S) Teks id/en, glosarium, `writing.md`, analitik
       `wealth_overview_viewed` dan `wealth_history_viewed` (tanpa nominal),
       dokumen (EXPORT_BACKUP bila ada kolom baru, DOMAIN_MODEL). Selesai sebagian 19 Nov 2026: teks `assets.wealth.*` id/en dan analitik `wealth_history_viewed` (`periods_bucket`, `locked`); `wealth_overview_viewed` ditunda (tidak ada layar baru selain riwayat). Sisa: glosarium dan `writing.md` (istilah Riwayat kekayaan, Pencatatan awal), DOMAIN_MODEL (`Wallet.createdAt`).
-- [ ] **T-32.9** (M) QA emulator (360dp, terang/gelap, id/en, Plus dan Gratis,
+- [~] **T-32.9** (M) QA emulator (360dp, terang/gelap, id/en, Plus dan Gratis,
       Sembunyikan nominal) lalu `flutter analyze` dan `test` bersih.
+      QA 19 Nov 2026 (emulator Android, Plus dan Gratis): Riwayat kekayaan,
+      hero tab Dompet, segmen Investasi, mode terang dan gelap, teks 1,8x.
+      Perbaikan dari QA: pecahan perubahan menumpuk nominal di bawah label pada
+      teks besar (label terpenggal "Investme/nt value"), untung/rugi kartu
+      instrumen turun ke baris sendiri pada teks besar, dan app bar ringkas
+      tab Dompet meluap 2 px pada teks besar (FittedBox). Uji widget
+      `wealth_history_page_test` mencakup batas Gratis (kartu Plus), Plus,
+      kosong, dan teks 1,8x di 320dp. Belum: iOS, bahasa Indonesia di layar,
+      Gratis dengan lebih dari 6 periode di emulator (data seed hanya 3 bulan;
+      tercakup uji bloc dan widget). Catatan S3 lama (bukan dari Fase 32):
+      pil segmen tab Dompet ("Investm…") dan "Buat tujuan" terpotong pada
+      teks 1,8x.
 
 ## Fase 33: Ambil harga investasi dari Google Sheet pengguna
 

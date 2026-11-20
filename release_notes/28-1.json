@@ -1,0 +1,18 @@
+{
+  "version": "1.3.2",
+  "groups": [
+    {
+      "category": "fixed",
+      "notes": [
+        {
+          "id": "Grafik saldo di Rencana tidak lagi membuat aplikasi tertutup sendiri saat semua saldomu masih nol.",
+          "en": "The balance chart in Plan no longer closes the app on its own when all your balances are still zero."
+        },
+        {
+          "id": "Tur pengenalan tidak lagi membuat aplikasi tertutup sendiri sesudah kamu membuat dompet pertama.",
+          "en": "The intro tour no longer closes the app on its own after you create your first wallet."
+        }
+      ]
+    }
+  ]
+}

@@ -75,8 +75,11 @@ class _TourTriggerState extends State<TourTrigger> {
 
   Future<void> _start() async {
     _scheduled = false;
+    // Callback post-frame bisa jalan sesudah widget dibuang: jangan menyentuh
+    // `context` sebelum cek `mounted`.
+    if (!mounted) return;
     final controller = SpotlightHost.maybeOf(context, listen: false);
-    if (!mounted || controller == null || !_eligible()) return;
+    if (controller == null || !_eligible()) return;
     // Lembar yang masih meluncur masuk (mis. CATAT) membuat target berpindah
     // tempat; tunggu animasi rutenya selesai dulu.
     await _routeSettled();

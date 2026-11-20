@@ -45,6 +45,13 @@ void main() {
   final low = days.reduce((a, b) => a.balance <= b.balance ? a : b);
 
   group('PlanBalanceChart', () {
+    testWidgets('semua saldo 0 tidak melempar LateInitializationError (Crashlytics, 1.1.0)', (tester) async {
+      final zero = [for (var i = 0; i < 10; i++) (date: DateTime(2026, 10, 2 + i), balance: 0)];
+      await tester.pumpWidget(_host(PlanBalanceChart(days: zero, low: zero.first, isFuture: false)));
+      await tester.pump();
+      expect(tester.takeException(), isNull);
+    });
+
     testWidgets('fokus awal di titik terendah dengan tooltip; ketuk memindahkan fokus', (tester) async {
       await tester.pumpWidget(_host(PlanBalanceChart(days: days, low: low, isFuture: false)));
       await tester.pump();

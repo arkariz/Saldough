@@ -212,8 +212,10 @@ class _ChartGeometry {
     final raw = (hi - lo).abs() < 1 ? 1.0 : (hi - lo) / 3;
     step = _niceStep(raw);
     minValue = (lo / step).floorToDouble() * step;
-    maxValue = (hi / step).ceilToDouble() * step;
-    if (maxValue - minValue < step) maxValue = minValue + step;
+    final rawMax = (hi / step).ceilToDouble() * step;
+    // `maxValue` late final: isi sekali saja (mis. semua saldo 0 membuat
+    // rentang < step; mengisi dua kali melempar LateInitializationError).
+    maxValue = rawMax - minValue < step ? minValue + step : rawMax;
   }
 
   /// Ruang label sumbu y di kiri dan label sumbu x di bawah.

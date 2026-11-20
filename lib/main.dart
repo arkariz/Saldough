@@ -12,6 +12,7 @@ import 'package:saldough/app/startup/boot_failure_app.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/foundation/analytics/app_bootstrap_firebase.dart';
 import 'package:saldough/core/foundation/boot/boot_trace.dart';
+import 'package:saldough/core/foundation/storage/android_path_fallback.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/app_icon.dart';
 import 'package:state_management/state_management.dart';
@@ -24,6 +25,11 @@ Future<void> main() async {
   BootTrace.mark('main');
   WidgetsFlutterBinding.ensureInitialized();
   WidgetsBinding.instance.addObserver(ActiveDay.observer);
+  // path_provider_android 2.3.x (JNI) gagal di sebagian perangkat pada langkah
+  // storage; pasang jalur cadangan yang diverifikasi sebelum storage dibuka.
+  FallbackPathProvider.installOnAndroid(
+    onFallback: (error, kind) => AppBootstrap.recordNonFatal(error, reason: 'PathFallback:$kind'),
+  );
   // Penjaga startup: bila `runApp` belum terpanggil dalam [_bootWatchdog],
   // tampilkan layar darurat yang menyebut langkah yang tertahan. Bila startup
   // akhirnya selesai, `runApp` berikutnya menggantikannya.

@@ -1,0 +1,14 @@
+{
+  "version": "1.3.1",
+  "groups": [
+    {
+      "category": "fixed",
+      "notes": [
+        {
+          "id": "Aplikasi tidak lagi tertahan di layar darurat saat dibuka di sebagian perangkat.",
+          "en": "The app no longer gets stuck on the recovery screen when opened on some devices."
+        }
+      ]
+    }
+  ]
+}

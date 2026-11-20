@@ -77,10 +77,11 @@ platform :android do
     end
 
     desc "Shorebird Patch (OTA Update)"
+    # Cabang patch 1.3.1: dikunci ke 1.3.1+27 (di main: `latest`).
     lane :patch_ota do
         shorebird_patch(
             platform: "android",
-            args: "--release-version=latest --allow-asset-diffs #{revenuecat_args}".strip
+            args: "--release-version=1.3.1+27 --allow-asset-diffs #{revenuecat_args}".strip
         )
     end
 
